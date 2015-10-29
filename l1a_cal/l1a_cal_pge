@@ -1,3 +1,43 @@
-#! /usr/bin/env python
+#! /bin/bash
+# For right now, we assume bash. We can probably relax this is needed, but
+# handling pipe failures is a pain with bourne shell. Pretty much any system
+# we deliver to is likely to have bash
 
-print "Hello world!"
+usage()
+{
+    cat <<EOF
+Usage $0 [options]
+
+This is used to run the l1a_cal process.
+
+OPTIONS:
+   -h Show this message
+
+EOF
+}
+while getopts “h” OPTION; do
+    case $OPTION in
+        h)
+            usage
+            exit 1
+            ;;
+        ?)
+            usage
+            exit
+            ;;
+    esac
+done
+
+# Die on error
+set -e
+set -o pipefail
+
+# Where we are running from
+scriptpath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+binpath="${scriptpath}/bin"
+# Source setup
+source "${scriptpath}/setup_ecostress.sh"
+
+# Execute actual process
+"${binpath}/l1a_cal_process"
+

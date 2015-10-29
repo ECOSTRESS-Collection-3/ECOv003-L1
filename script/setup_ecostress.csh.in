@@ -1,0 +1,16 @@
+# This environment variable gives us a way to move the install
+# location.
+if(! $?ECOSTRESSTOP) then
+    setenv ECOSTRESSTOP @prefix@
+endif
+if($?PYTHONPATH) then
+  setenv PYTHONPATH ${ECOSTRESSTOP}/@pythondir@:${ECOSTRESSTOP}/@platpythondir@:${PYTHONPATH}
+else
+  setenv PYTHONPATH ${ECOSTRESSTOP}/@pythondir@:${ECOSTRESSTOP}/@platpythondir@
+endif
+if ($?PATH) then
+  setenv PATH ${ECOSTRESSTOP}/bin:${PATH}
+else
+  setenv PATH ${ECOSTRESSTOP}/bin
+endif
+

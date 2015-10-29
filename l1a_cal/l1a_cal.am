@@ -1,1 +1,2 @@
-dist_bin_SCRIPTS += $(srcdir)/$(l1a_cal_src)/l1a_cal_pge
+dist_installecostress_SCRIPTS += @l1a_cal_src@/l1a_cal_pge
+dist_bin_SCRIPTS += @l1a_cal_src@/l1a_cal_process

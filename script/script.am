@@ -1,0 +1,1 @@
+installecostress_DATA = @srcscript@/setup_ecostress.csh @srcscript@/setup_ecostress.sh

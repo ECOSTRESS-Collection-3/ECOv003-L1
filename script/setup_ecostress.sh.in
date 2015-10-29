@@ -1,0 +1,15 @@
+# This environment variable gives us a way to move the install
+# location.
+if [ -z "$ECOSTRESSTOP" ]; then
+    export ECOSTRESSTOP=@prefix@
+fi
+if [ -n "$PYTHONPATH" ]; then
+  export PYTHONPATH=${ECOSTRESSTOP}/@pythondir@:${ECOSTRESSTOP}/@platpythondir@:${PYTHONPATH}
+else
+  export PYTHONPATH=${ECOSTRESSTOP}/@pythondir@:${ECOSTRESSTOP}/@platpythondir@
+fi
+if [ -n "$PATH" ]; then
+  export PATH=${ECOSTRESSTOP}/bin:${PATH}
+else
+  export PATH=${ECOSTRESSTOP}/bin
+fi

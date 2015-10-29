@@ -1,3 +1,4 @@
 # Stuff specific to ecostress
 
-# Nothing yet
+# Build these up as we go
+dist_installecostress_SCRIPTS = 
