@@ -1,0 +1,9 @@
+autom4te.cache
+*~
+\#*#
+.#*
+.DS_Store
+*.pyc
+*.o
+*.lo
+.ipynb_checkpoints

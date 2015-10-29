@@ -1,0 +1,92 @@
+# This is stuff common to all our makefiles
+#=================================================================
+# Based on Peter Millers well known paper "Recursive Make Considered Harmful"
+# (at http://miller.emu.id.au/pmiller/books/rmch/), we have the whole system
+# described and built with this one Makefile.
+
+#=================================================================
+# We specify all the source directories and all of the directories we 
+# install to in configure.in. We could just as sensibly defined everything
+# here, but we just chose to do it there.
+
+#=================================================================
+# Tell automake to put the object file for foo/bar.c in dir foo
+# Also, don't include -I. and I$(srcdir). This causes a problem with source that
+# includes the C++ file "list", because libtool has a script with the same name
+
+AUTOMAKE_OPTIONS = subdir-objects nostdinc
+
+# Don't worry about Makefile portability warnings. We can assume that we 
+# are using GNU make. Pretty much any modern system will have GNU make on it.
+
+AUTOMAKE_OPTIONS += --warnings=no-portability
+
+# Local autoconf packages
+ACLOCAL_AMFLAGS = -I config/m4
+
+# no operations command
+noop = 
+
+# Build these up as we go
+lib_LTLIBRARIES = 
+noinst_LTLIBRARIES = 
+bin_PROGRAMS =
+dist_bin_SCRIPTS = 
+AM_LDFLAGS =
+BUILT_SOURCES = 
+include_HEADERS = 
+EXTRA_DIST = 
+pkgconfig_DATA =
+
+AM_CPPFLAGS=
+
+#=================================================================
+# Some flags needed for GCC compilers.
+
+#Not used yet
+#if HAVE_GCC
+#AM_CFLAGS = -Wall
+
+# By default, gfortran ignores characters past column 72. Much of the fortan
+# code in this system goes past that column, so tell gfortran to allow this.
+#AM_FFLAGS = -ffixed-line-length-none
+#endif
+
+# hooks for installing. We collect this in one place so automake doesn't
+# complain
+
+INSTALL_DATA_HOOK=
+install-data-hook: $(INSTALL_DATA_HOOK)
+
+UNINSTALL_HOOK=
+uninstall-hook: $(UNINSTALL_HOOK)
+
+CLEAN_HOOK=
+clean-local: $(CLEAN_HOOK)
+
+INSTALLCHECK_HOOK=
+installcheck-local: $(INSTALLCHECK_HOOK)
+
+TESTS=
+check_PROGRAM=
+check_DATA=
+
+# ========================================================================
+# An error we run into every once in a while is somebody trying to build
+# after having doing a setup_afids_env. The problem with this is that
+# the AFIDS distribution contains a program "sort" that interfers with the
+# unix sort.
+
+complain_if_afids:
+	@if test -n "${AFIDSTOP}"; then \
+          echo "${red}You have sourced setup_afids_env.sh or setup_afids_env.csh.";  \
+          echo "This will cause the build to *fail*, because MIPL has";  \
+          echo "a program called 'sort' that interferes with the unix";  \
+          echo "sort command. You need to restart the build *without*"; \
+          echo "sourcing setup_afids_env.sh or setup_afids_env.csh${default}"; \
+          exit 1; \
+        fi
+
+BUILT_SOURCES += complain_if_afids
+
+

@@ -1,0 +1,4 @@
+# Not sure if we want these ignored always, but for now do that.
+*.xml
+*.img
+*.db

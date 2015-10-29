@@ -1,2 +1,5 @@
-# ecostress-level1
-ECOSTRESS Level 1software
+ECOSTRESS Level 1
+=================
+
+This is the ECOSTRESS Level 1 software.
+
