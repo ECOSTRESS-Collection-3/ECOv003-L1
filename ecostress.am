@@ -2,3 +2,16 @@
 
 # Build these up as we go
 dist_installecostress_SCRIPTS = 
+
+# End to end test. This should be run after install
+# (so like an installcheck, but we run this separate because
+# it potentially takes a while to run).
+#
+# We may want to add some kind of check of the results, but right now
+# we just make sure we can run end to end.
+
+end-to-end-check: installcheck-am
+	$(prefix)/l1a_cal_pge
+	$(prefix)/l1b_rad_pge
+	$(prefix)/l1b_geo_pge
+
