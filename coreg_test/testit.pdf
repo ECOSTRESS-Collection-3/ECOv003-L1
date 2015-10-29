@@ -1,0 +1,14 @@
+procedure
+body
+
+
+gtwarp   inp=xxa out=xxaa ref=l7temp.img 'coverref
+
+end-proc
+
+!At n40, the ISS heading is about 38deg from north
+gen      xxa nl=5632 ns=5400 ival=255 linc=0 sinc=0 'byte
+rotate   xxa xxb size=(1,1,10000,10000) angle=52.0 +
+         center=(5000.5,5000.5) line=2816.5 samp=2700.5 'noin
+copy     xxb xxa size=(1140,1120,7722,7761)
+end-proc

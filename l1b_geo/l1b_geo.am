@@ -1,0 +1,1 @@
+dist_bin_SCRIPTS += $(srcdir)/$(l1b_geo_src)/l1b_geo_pge

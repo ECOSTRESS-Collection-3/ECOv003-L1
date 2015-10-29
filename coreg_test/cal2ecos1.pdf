@@ -1,0 +1,87 @@
+procedure
+body
+
+goto start
+!Convert ASTER California mosaick (Band6) to Ecostress test image
+!Along Track = X; Across Track = Y
+!Ecostress pixels are 75.3m (X,Samp) by 68.61m (Y,Line)
+!Ecostress images are 400km (X,Samp) by 402km (Y,Line)
+!After map projecting the raw Ecostress images:
+!Ecostress images are ~5312 (X,Samp) by ~5860 (Y,Line) 
+!California Aster mosaic is ~15m/pxl (Deg/pxl=0.0001388889; Pxl/Deg=7200)
+
+ush cp /raid11/astermos/calnorm_b4.img.Z .
+ush gunzip calnorm_b4.img.Z
+ush cp /raid11/astermos/calnorm_b5.img.Z .
+ush gunzip calnorm_b5.img.Z
+ush cp /raid11/astermos/calnorm_b6.img.Z .
+ush gunzip calnorm_b6.img.Z
+ush cp /raid11/astermos/calnorm_b7.img.Z .
+ush gunzip calnorm_b7.img.Z
+ush cp /raid11/astermos/calnorm_b8.img.Z .
+ush gunzip calnorm_b8.img.Z
+ush cp /raid11/astermos/calnorm_b9.img.Z .
+ush gunzip calnorm_b9.img.Z
+ush cp /raid11/astermos/calnorm_b10.img.Z .
+ush gunzip calnorm_b10.img.Z
+ush cp /raid11/astermos/calnorm_b11.img.Z .
+ush gunzip calnorm_b11.img.Z
+ush cp /raid11/astermos/calnorm_b12.img.Z .
+ush gunzip calnorm_b12.img.Z
+ush cp /raid11/astermos/calnorm_b13.img.Z .
+ush gunzip calnorm_b13.img.Z
+ush cp /raid11/astermos/calnorm_b14.img.Z .
+ush gunzip calnorm_b14.img.Z
+
+!Create ecostree 75.30x68.51 pixel reference
+genpc2   out=72m.ref vpix=68.51 hpix=75.30 lon=-122.0 lat=40.0
+
+!start>
+!Band4 (SWIR 1.6) 
+gtcopy   calnorm_b4.img xxa size=(1,9201,26800,26667)
+gtwarp   inp=xxa out=xxb ref=72m.ref 'coverinp
+!Use the high res 30m/pxl LWM to mask out the ocean and lakes (set to 50DN)
+gtwarp   inp=lwm_30m.img out=lwm_temp +
+         ref=xxb 'coverref
+f2      (xxb,lwm_temp) eco_cal_swir4.img func="(in1*in2)+((in2==0)*50)"
+hist     eco_cal_swir4.img
+gtlist   eco_cal_swir4.img
+
+!Band6 (SWIR 2.2)
+gtcopy   calnorm_b6.img xxa size=(1,9201,26800,26667)
+gtwarp   inp=xxa out=xxb ref=72m.ref 'coverinp
+!Use the high res 30m/pxl LWM to mask out the ocean and lakes (set to 50DN)
+gtwarp   inp=lwm_30m.img out=lwm_temp +
+         ref=xxb 'coverref
+f2      (xxb,lwm_temp) eco_cal_swir6.img func="(in1*in2)+((in2==0)*50)"
+hist     eco_cal_swir6.img
+gtlist   eco_cal_swir6.img
+!end-proc
+
+!start>
+!Average Bands 5-9
+gtcopy   calnorm_b5.img xxa size=(1,9201,26800,26667)
+gtwarp   inp=xxa out=xxb ref=72m.ref 'coverinp
+gtcopy   calnorm_b6.img xxa size=(1,9201,26800,26667)
+gtwarp   inp=xxa out=xxc ref=72m.ref 'coverinp
+gtcopy   calnorm_b7.img xxa size=(1,9201,26800,26667)
+gtwarp   inp=xxa out=xxd ref=72m.ref 'coverinp
+gtcopy   calnorm_b8.img xxa size=(1,9201,26800,26667)
+gtwarp   inp=xxa out=xxe ref=72m.ref 'coverinp
+gtcopy   calnorm_b9.img xxa size=(1,9201,26800,26667)
+gtwarp   inp=xxa out=xxf ref=72m.ref 'coverinp
+f2      (xxb,xxc,xxd,xxe,xxf) xxg func="(in1+in2+in3+in4+in5)/5"
+f2      (xxg,lwm_temp) eco_cal_swir_avg.img func="(in1*in2)+((in2==0)*50)"
+
+!Broadband: Average SWIR 1.6 and SWIR averages
+f2      (eco_cal_swir4.img,eco_cal_swir_avg.img) xxh func="(in1+in2)/2"
+f2      (xxh,lwm_temp) eco_cal_swirbroadband.img func="(in1*in2)+((in2==0)*50)" 
+hist     eco_cal_swirbroadband.img.img
+gtlist   eco_cal_swirbroadband.img.img
+end-proc
+
+
+
+
+!1KM LWM
+gtwarp   inp=/opt/afids/data/vdev/world_30as_lwm.img out=xxa +

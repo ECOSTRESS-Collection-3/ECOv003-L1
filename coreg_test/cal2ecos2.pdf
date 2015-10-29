@@ -1,0 +1,116 @@
+procedure
+local   avg  real
+local   std  real
+local   norm real
+body
+
+goto start
+!Convert ASTER California mosaick (Band6) to Ecostress test image
+!Along Track = X; Across Track = Y
+!Ecostress pixels are 75.3m (X,Samp) by 68.61m (Y,Line)
+!Ecostress images are 400km (X,Samp) by 402km (Y,Line)
+!After map projecting the raw Ecostress images:
+!Ecostress images are ~5312 (X,Samp) by ~5860 (Y,Line) 
+!California Aster mosaic is ~15m/pxl (Deg/pxl=0.0001388889; Pxl/Deg=7200)
+
+!start>
+!Create rotation mask
+!At n40, the ISS heading is about 38deg from north (90-38=52)
+gen      xxa nl=5632 ns=5400 ival=255 linc=0 sinc=0 'byte
+rotate   xxa xxb size=(1,1,10000,10000) angle=52.0 +
+         center=(5000.5,5000.5) line=2816.5 samp=2700.5 'noin
+copy     xxb rot_mask.img size=(1140,1120,7722,7761)
+
+start>
+!Aster Band4 (SWIR 1.6) ECOSTRESS Band 1?
+gtcopy   calnorm_b4.img xxa size=(1,1,37000,40000)
+gtwarp   inp=xxa out=xxb ref=72m.ref 'coverinp
+gtcopy   xxb xxa size=(2,1,7722,7761)
+!Use the high res 30m/pxl LWM to mask out the ocean and lakes (set to 50DN)
+f2      (xxa,lwm_temp2) xxb func="(in1*in2)+((in2==0)*50)"
+!Noise model provided by W. Johnson 
+!noise step 1, calculate Uncertainity_Rad_ASTER
+f2      inp=xxb out=zz1 func="sqrt((in1*3.2418)+3.9541)"
+hist    zz1 'nohi mean=avg sigma=std
+let     norm = (std / avg)
+write   "mean= &avg  sigma= &std norm= &norm "
+gausnois zz2 nl=7722 ns=7761 mean=1.0 sigma=&norm seed=2015 'real ???? 
+
+!Apply rotation mask
+f2      (xxb,rot_mask.img) xxa func="(in1*(in2==255))"
+!No Cal-ASTER data past sample 7210. Remove water/mosaic artifacts
+f2       xxa eco_b1_swir4.img func="in1*(samp<=7206)"
+hist     eco_b1_swir4.img
+gtlist   eco_b1_swir4.img
+
+!start>
+!Aster Band6 (SWIR 2.2) ECOSTRESS Band 1? 
+gtcopy   calnorm_b6.img xxa size=(1,1,37000,40000) 
+gtwarp   inp=xxa out=xxb ref=72m.ref 'coverinp
+gtcopy   xxb xxa size=(2,1,7722,7761)
+!Use the high res 30m/pxl LWM to mask out the ocean and lakes (set to 50DN) 
+f2      (xxa,lwm_temp2) xxb func="(in1*in2)+((in2==0)*50)" 
+!Noise model provided by W. Johnson 
+
+!Apply rotation mask
+f2      (xxb,rot_mask.img) xxa func="(in1*(in2==255))"
+!No Cal-ASTER data past sample 7206. Remove water/mosaic artifacts
+f2       xxa eco_b1_swir6.img func="in1*(samp<=7206)"
+hist     eco_b1_swir6.img
+gtlist   eco_b1_swir6.img
+end-proc
+
+start>
+!Aster Band10 (TIR 8.125-8.475) ECOSTRESS Band 2
+gtcopy   calnorm_b10.img xxa size=(1,1,37000,40000)
+gtwarp   inp=xxa out=xxb ref=72m.ref 'coverinp
+gtcopy   xxb xxa size=(2,1,7722,7761)
+!Use the high res 30m/pxl LWM to mask out the ocean and lakes (set to 850DN)
+f2      (xxa,lwm_temp2) xxb func="(in1*in2)+((in2==0)*850)"
+!Apply rotation mask
+f2      (xxb,rot_mask.img) xxa func="(in1*(in2==255))"
+!No Cal-ASTER data past sample 7206. Remove water/mosaic artifacts
+f2       xxa eco_b2_tir10.img func="in1*(samp<=7206)"
+hist     eco_b2_tir10.img
+gtlist   eco_b2_tir10.img
+
+!Aster Band11 (TIR 8.475-8.825) ECOSTRESS Band 3
+gtcopy   calnorm_b11.img xxa size=(1,1,37000,40000)
+gtwarp   inp=xxa out=xxb ref=72m.ref 'coverinp
+gtcopy   xxb xxa size=(2,1,7722,7761)
+!Use the high res 30m/pxl LWM to mask out the ocean and lakes (set to 930DN)
+f2      (xxa,lwm_temp2) xxb func="(in1*in2)+((in2==0)*930)"
+!Apply rotation mask
+f2      (xxb,rot_mask.img) xxa func="(in1*(in2==255))"
+!No Cal-ASTER data past sample 7206. Remove water/mosaic artifacts
+f2       xxa eco_b3_tir11.img func="in1*(samp<=7206)"    
+hist     eco_b3_tir11.img
+gtlist   eco_b3_tir11.img
+
+!Aster Band12 (TIR 8.925-9.275) ECOSTRESS Band 4
+gtcopy   calnorm_b12.img xxa size=(1,1,37000,40000)
+gtwarp   inp=xxa out=xxb ref=72m.ref 'coverinp
+gtcopy   xxb xxa size=(2,1,7722,7761)              
+!Use the high res 30m/pxl LWM to mask out the ocean and lakes (set to 980DN)
+f2      (xxa,lwm_temp2) xxb func="(in1*in2)+((in2==0)*980)"
+!Apply rotation mask
+f2      (xxb,rot_mask.img) xxa func="(in1*(in2==255))"
+!No Cal-ASTER data past sample 7206. Remove water/mosaic artifacts
+f2       xxa eco_b4_tir12.img func="in1*(samp<=7206)"
+hist     eco_b4_tir12.img                    
+gtlist   eco_b4_tir12.img
+
+!Aster Band14 (TIR 10.95-11.65) ECOSTRESS Band 5
+gtcopy   calnorm_b14.img xxa size=(1,1,37000,40000)
+gtwarp   inp=xxa out=xxb ref=72m.ref 'coverinp
+gtcopy   xxb xxa size=(2,1,7722,7761)              
+!Use the high res 30m/pxl LWM to mask out the ocean and lakes (set to 1180DN)
+f2      (xxa,lwm_temp2) xxb func="(in1*in2)+((in2==0)*1180)"
+!Apply rotation mask
+f2      (xxb,rot_mask.img) xxa func="(in1*(in2==255))"
+!No Cal-ASTER data past sample 7206. Remove water/mosaic artifacts
+f2       xxa eco_b5_tir14.img func="in1*(samp<=7206)"
+hist     eco_b5_tir14.img                    
+gtlist   eco_b5_tir14.img
+
+end-proc

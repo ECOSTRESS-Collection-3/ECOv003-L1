@@ -1,0 +1,181 @@
+!mos_dem.pdf (02FEB2005; updated 25APR2012) by TLL)
+!Updated 22OCT2014 TLL Add auto-creation of 100% water cells
+!Mosaic individual srtmL2 (30m) dem files (in vicar gt format) into one mosaick.
+!
+!Output choice of geotiff or Vicar gt format (default), 16-bit.
+! 
+!Input Parameters:
+!slat  - Startling latitude of DEM AOI; Bottom lat of AOI box (integer)
+!slon  - Starting longitude of DEM AOI; Left lon of AOI box (integer)
+!elat  - Ending latitude of DEM AOI; Top lat of AOI bounding box (integer)
+!elon  - Ending longitute of DEM AOI; Right lon of AOI bounding box (integer)
+! (NOTE: DEMs are specified by their LOWER LEFT lat/lon, when viewed North up)
+! (NOTE: A DEM with the same name as the elat and elon coordinates is NOT processed)
+! (NOTE: AOI can cross the equator and Prime Meridian, but NOT the
+!        International Dateline)
+! (NOTE: An error in featherv requires that 500dn be added then substracted)
+!out   - Output filename (.hlf auto-added to vicar files; .tif auto-added to tiff files) 
+!DIRin - Directory path for input dem data (hard disk or cdrom/dvd)
+!DIRout- Output directory path; Example: /data/tdps_srtm
+!format- Vicar (1) or Geotiff (0) output format
+!ellips- Ellipse (1) or Geoid/Sea Level (0)
+!smooth- Boxfilter (11x11) and gtsize (to 90m) to reduce SRTM radar artifacts
+!        Smooth (1), No smoothing and keep at 30m (0)
+!
+!NOTE: This procedure SIGNIFICANTLY SLOWS DOWN with increasing numbers of
+!dems, not does limit the number.
+!NOTE: 100% water 1x1 degree quads are created as necessary.
+!
+!Example call:
+!mos_dem 21 -106 23 -104 dem_mosaick.img
+!mos_dem -2   33  2   35 dem_mosaick.img /data/tdps_srtm /home/tll/work 1 
+
+procedure
+parm       slat    integer          !bottom lat of playbox
+parm       slon    integer          !left lon of playbox
+parm       elat    integer          !top lat of playbox
+parm       elon    integer          !right lon of playbox
+parm       out     string    def="dem_mosaic" !Output filename (.hlf/.tif auto-added)
+parm       DIRin   string    def="/raid25/SRTM_2014_update/srtm_v3_dem_L2/" !Input dem data dir
+parm       DIRout  string    def="./" !Ouput dem data dir
+parm       format  integer   def=1  !0 for geotiff, 1 for vicar
+parm       ellips  integer   def=1  !0 for geoid (sea level); 1 for ellipsoid
+parm       smooth  integer   def=0  !0 for no smoothing; 1 for smoothing data
+local      mlat    integer          !elat minus 1
+local      mlon    integer          !elon minus 1
+local      lns     string    init="n"  !north or south in lowercase
+local      lew     string    init="e"  !east or west in lowercase
+local      I       integer          !Increment lat (n/s)
+local      J       integer          !Increment lon (e/w)
+local      M       integer          !Loop counter
+local      I2      integer          !I without the - sign
+local      J2      integer          !J without the - sign
+local      found   integer          !0=no file; 1=file found (file2tcl)
+local      inl     integer          !number of lines
+local      ins     integer          !number of samples
+local      ntl     integer          !number of tiles in line direction
+local      nts     integer          !number of tiles in samp direction
+
+body
+
+!Set n/s/e/w codes
+if             (slat >= 0) let lns = "n"
+if             (slat <  0) let lns = "s"
+if             (slon >= 0) let lew = "e"
+if             (slon <  0) let lew = "w"
+let             mlat = elat - 1
+let             mlon = elon - 1
+
+
+!Master Loop
+
+   let          I = slat - 1        !Inc latitude; n/s
+   let          J = slon - 1        !Inc longitude; e/w
+   let          M = 0               !Loop Counter
+
+loop
+   let          J = J + 1
+   if          (J > mlon) break
+
+   loop
+      let       I = I + 1
+      if       (I > mlat) break
+!Remove I and J negative signs
+      if       (I < 0)
+               let I2 = I * (-1)
+      else
+               let I2 = I
+      end-if
+      if       (J < 0)
+               let J2 = J * (-1)
+      else
+               let J2 = J
+      end-if
+!Reset n/s/e/w codes for crossing the Equator/Prime Meridian
+       if      (I >= 0) let lns = "n"
+       if      (I <  0) let lns = "s"
+       if      (J >= 0) let lew = "e"
+       if      (J <  0) let lew = "w"
+
+       let      M = M + 1
+write  "M= &M File= &"DIRin"/&"lns"&"I2"&"lew"&"J2"_L2.hlf"
+                file2tcl inp=&"DIRin"/&"lns"&"I2"&"lew"&"J2"_L2.hlf +
+                val=found
+       if      (M = 1)
+        if     (found = 1)
+                f2 &"DIRin"/&"lns"&"I2"&"lew"&"J2"_L2.hlf xxA +
+                func="in1+500"  !offset for featherv error
+        else
+               gen xxA nl=3601 ns=3601 ival=500 linc=0 sinc=0 format=half
+               gtgen xxA +
+               geotiff=("ModelTiePointTag=(0.0,3600.0,0.0,&J,&I,0.0)", +
+               "GTModelTypeGeoKey=2(ModelTypeGeographic)", +
+               "ModelPixelScaleTag=(0.0002777777778,0.0002777777778,0.0)", +
+               "GeogEllipsoidGeoKey=7030(Ellipse_WGS84)", +
+               "GTRasterTypeGeoKey=2(RasterPixelIsPoint)", +
+               "VerticalCStypeGeoKey=5773(VertCS_EGM96_Geoid)")
+        end-if
+       else
+        if     (found = 1)
+        f2     &"DIRin"/&"lns"&"I2"&"lew"&"J2"_L2.hlf xxC +
+                func="in1+500"
+        else
+                gen xxC nl=3601 ns=3601 ival=500 linc=0 sinc=0 format=half
+                gtgen xxC +
+                geotiff=("ModelTiePointTag=(0.0,3600.0,0.0,&J,&I,0.0)", +
+                "GTModelTypeGeoKey=2(ModelTypeGeographic)", +
+                "ModelPixelScaleTag=(0.0002777777778,0.0002777777778,0.0)", +
+                "GeogEllipsoidGeoKey=7030(Ellipse_WGS84)", +
+                "GTRasterTypeGeoKey=2(RasterPixelIsPoint)", +
+                "VerticalCStypeGeoKey=5773(VertCS_EGM96_Geoid)")
+       end-if
+      end-if      
+       if      (M = 1) goto next1
+write "Beginning VICAR task fthfastmos"
+       fthfastmos xxfth xxA xxC +
+                  out=xxB toler=.4
+       gtcopy   xxB xxA
+       next1>
+   end-loop
+   let          I = slat - 1
+end-loop
+f2              xxA xxB func="in1-500" !reset offset due to featherv
+stretch         xxB xxA dnmin=-500 dnmax=9000 +
+                table=(-500,0.,-499,-499.,9000,9000.)
+
+!Reset line and samples to a multiple of 3600
+form            xxA nl=inl ns=ins
+let             ntl = (inl / 3600)
+let             inl = (ntl * 3600)
+let             nts = (ins / 3600)
+let             ins = (nts * 3600)
+gtcopy          xxA xxB size=(1,1,&inl,&ins)
+
+!Ellipse vs Geoid
+if             (ellips = 1)
+   egm2wgs      xxB xxA 
+else
+   gtcopy       xxB xxA
+end-if
+         
+!Smooth and reduce scale 3x (from 30m->90m) to remove radar artifacts
+if             (smooth = 1)
+   median       xxA xxB nlw=11 nsw=11
+   gtsize       xxB xxC pzoom=-3
+else
+   gtcopy       xxA xxC
+end-if  
+
+!VICAR vs GeoTiff Output Format
+if             (format = 1) 
+   gtcopy       xxC &"DIRout"/&"out".hlf
+else
+   vtiff3-fr    xxC &"DIRout"/&"out".tif
+end-if
+
+write  "&M DEM tiles mosaicked**********************************"
+!ush            rm xx*
+
+write "MSG: PROCESSING COMPLETED"
+
+end-proc

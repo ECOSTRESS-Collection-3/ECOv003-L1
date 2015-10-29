@@ -1,0 +1,23 @@
+procedure
+parm  dir  string  def="/raid27/tllogan/all_lwm_links"
+parm  suf  string  def="_lwm_L2.img"
+body
+
+fthfastmos out=xxa toler=1.0 +
+ inp1=&dir/n42w124&suf  inp2=&dir/n42w123&suf  inp3=&dir/n42w122&suf  inp4=&dir/n42w121&suf +
+ inp5=&dir/n42w120&suf  inp6=&dir/n42w119&suf +
+ inp7=&dir/n41w124&suf  inp8=&dir/n41w123&suf  inp9=&dir/n41w122&suf inp10=&dir/n41w121&suf +
+inp11=&dir/n41w120&suf inp12=&dir/n41w119&suf +
+inp13=&dir/n40w124&suf inp14=&dir/n40w123&suf inp15=&dir/n40w122&suf inp16=&dir/n40w121&suf +
+inp17=&dir/n40w120&suf inp18=&dir/n40w119&suf inp19=&dir/n42w125&suf inp20=&dir/n41w125&suf +
+inp21=&dir/n40w125&suf
+fthfastmos out=xxb toler=1.0 +
+inp1=&dir/n39w124&suf inp2=&dir/n39w123&suf inp3=&dir/n39w122&suf inp4=&dir/n39w121&suf +
+inp5=&dir/n39w120&suf inp6=&dir/n39w119&suf +
+inp7=&dir/n38w124&suf inp8=&dir/n38w123&suf inp9=&dir/n38w122&suf inp10=&dir/n38w121&suf +
+inp11=&dir/n38w120&suf inp12=&dir/n38w119&suf inp13=&dir/n39w125&suf inp14=&dir/n37w124&suf +
+inp15=&dir/n37w123&suf inp16=&dir/n37w122&suf inp17=&dir/n37w121&suf inp18=&dir/n37w120&suf +
+inp19=&dir/n37w119&suf
+fthfastmos out=lwm_30m.img toler=1.0 inp1=xxa inp2=xxb
+hist       lwm_30m.img
+end-proc

@@ -30,6 +30,10 @@
 # Also, don't include -I. and I$(srcdir). This causes a problem with source that
 # includes the C++ file "list", because libtool has a script with the same name
 
+# List of automakes to include.
+
+# Stuff specific to ecostress
+
 
 
 
@@ -70,10 +74,12 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-DIST_COMMON = $(srcdir)/common.am INSTALL NEWS README AUTHORS \
-	ChangeLog $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
-	$(top_srcdir)/configure $(am__configure_deps) \
-	$(dist_bin_SCRIPTS) $(include_HEADERS) \
+DIST_COMMON = $(srcdir)/common.am $(srcdir)/include.am \
+	$(srcdir)/ecostress.am $(srcdir)/l1a_cal/l1a_cal.am \
+	$(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am \
+	INSTALL NEWS README AUTHORS ChangeLog $(srcdir)/Makefile.in \
+	$(srcdir)/Makefile.am $(top_srcdir)/configure \
+	$(am__configure_deps) $(dist_bin_SCRIPTS) $(include_HEADERS) \
 	$(top_srcdir)/config/test-driver COPYING config/config.guess \
 	config/config.sub config/install-sh config/missing \
 	config/ltmain.sh $(top_srcdir)/config/config.guess \
@@ -448,6 +454,9 @@ htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
+l1a_cal_src = @l1a_cal_src@
+l1b_geo_src = @l1b_geo_src@
+l1b_rad_src = @l1b_rad_src@
 libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
@@ -482,7 +491,9 @@ noop =
 # Build these up as we go
 lib_LTLIBRARIES = 
 noinst_LTLIBRARIES = 
-dist_bin_SCRIPTS = 
+dist_bin_SCRIPTS = $(srcdir)/$(l1a_cal_src)/l1a_cal_pge \
+	$(srcdir)/$(l1b_rad_src)/l1b_rad_pge \
+	$(srcdir)/$(l1b_geo_src)/l1b_geo_pge
 AM_LDFLAGS = 
 BUILT_SOURCES = complain_if_afids
 include_HEADERS = 
@@ -517,7 +528,7 @@ all: $(BUILT_SOURCES)
 .SUFFIXES: .log .test .test$(EXEEXT) .trs
 am--refresh: Makefile
 	@:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/common.am $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -540,7 +551,7 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe);; \
 	esac;
-$(srcdir)/common.am:
+$(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am:
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
@@ -1220,6 +1231,7 @@ complain_if_afids:
           exit 1; \
         fi
 
+# Nothing yet
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

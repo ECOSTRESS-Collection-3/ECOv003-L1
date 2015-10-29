@@ -1,0 +1,14 @@
+procedure
+body
+
+!Calculate the geolocation accuracy of the Landsat7 mosaic b8 (pan) vs WV pan
+
+gtwarp   inp=/raid22/band8_VICAR/n35w125_band8 out=lsatmos_15m_gtwarp2wv.img +
+         ref=/raid27/tllogan/ecostress/wv01_california/corning_15m_orthobase.hlf + 
+         'coverref
+!cform    /raid27/tllogan/ecostress/wv01_california/corning_15m_orthobase.hlf +
+!         out=wv_cal_15m.img iran=(0,1280) oran=(0,255) 'byte
+
+accck    image1=wv_cal_15m.img +
+         image2=lsatmos_15m_gtwarp2wv.img remap="n" fftsize=256 magnif=3.0
+end-proc

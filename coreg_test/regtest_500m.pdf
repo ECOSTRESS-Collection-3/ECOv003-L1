@@ -1,0 +1,111 @@
+procedure
+parm   inp     string  def="eco_b5_tir14.img"
+parm   outint  string  def="eb5_lb62_reg_24x24"
+local  offinc  integer init=500 !0.5km at 40deg north (parallel 85000m)
+local  numcase integer init=26
+local  elev    string  init="ncal_dem_L2.hlf"
+local  l7ortho string  init="l7ortho_57m_b62.img"
+local  I       integer
+local  offset  integer
+local  loff    real
+local  soff    real
+local  indx    integer
+local  rms     real
+local  lerr    real
+local  serr    real
+local  int     string init=".int"
+body
+
+goto start
+!Subset Landsat7 orthobase to match ecostress plate carree test image
+gtwarp         inp=&l7ortho out=xxa ref=&inp 'coverref
+cform          xxa l7temp.img 'half
+
+!start>
+!Create ibis file of registration offset and accuracies.
+!Cols 3/4 are line/samp pixel offsets for input to gtmove,
+!where the offsets are in 500m increments (col2),
+!calcuated counter clockwise in 45def spiral increments (starting at right).
+! Sin45deg=0.7071, Example at 2000m: 
+!   Line offset = (0.7071*2000)/68.51=20.64 (negative = up)
+!   Samp offset = (0.7071*2000)/75.30=18.78 (negative = to left)
+ibis-gen       out=&outint&int nr=&numcase nc=7 datacols=(3,4) +
+data=(0.0,0.0,0.0,6.64,-10.32,9.39,-21.90,0.0,-20.64,-18.78,+
+0.0,-33.20,30.96,-28.17,51.09,0.0,41.28,37.56,0.0,59.76,-51.61,46.95,+
+-80.28,0.0,-61.93,-56.34,0.0,-86.32,72.25,-65.73,109.47,0.0,82.57,75.12,+
+0.0,112.88,-92.89,84.51,-138.67,0.0,-103.21,-93.90,0.0,-139.44,+
+113.53,-103.29,167.86,0.0,123.85,112.69,0.0,166.0)
+mf3            &outint&int func="c1=@index"
+mf3            &outint&int func="c2=(c1-1)*500"
+ibis-l         &outint&int cols=(1,2,3,4)
+
+let            I = 0
+let            offset = -1*&offinc
+
+!Loop through offsets
+
+loop
+
+let            I = I + 1
+let            offset = offset + &offinc
+if            (I > &numcase) break
+datetime
+
+!Apply offset to the georeference
+ibis2tcl       &outint&int loff soff ibisloc=(&I,3,&I,4) vartype=(0,0)
+write  " "
+write  "Image Index= &I Offset= &offset LOFF= &loff  SOFF= &soff "
+write  " "
+gtmove         &inp xxa shift=(&loff,&soff)
+
+!Register offset image to landsat7 othobase
+gtpwarp        inp=xxa out=xxd ref=l7temp.img nav=200 nah=200 +
+               fftgrid=(24,24) fftsize=256 magnify=4.0 magmin=2.0 +
+               toler=1.5 polyfit="quad" redo=36 ffthalf=2 seed=562 +
+               accoff="y" 'bilin 'coverref
+accck          image1=xxd image2=l7temp.img fftsize=256 magnif=2 +
+               outnl=1200 remap="n" echo="no"
+plab2tcl       xxd property=COREG_META_DATA val=rms +
+               keyword=ACCURACY vtype=7
+plab2tcl       xxd property=COREG_META_DATA val=lerr +
+               keyword=CENTERING_ACCURACY vtype=7 sequence=1
+plab2tcl       xxd property=COREG_META_DATA val=serr +
+               keyword=CENTERING_ACCURACY vtype=7 sequence=2
+edibis         &outint&int comm=("(&I,5 ) set &rms")
+edibis         &outint&int comm=("(&I,6 ) set &lerr")
+edibis         &outint&int comm=("(&I,7 ) set &serr")
+write  "Image &I = &rms RMS lerr= &lerr serr= &serr"
+end-loop
+ibis-l         &outint&int cols=(1,2,3,4,5,6,7)
+
+start>
+!Calculate Statistics
+ibis-co        &outint&int xxInt
+ibisstat       xxInt cols=(5,6,7) colnames=("PXL_RMS","LINE_ERR","SAMP_ERR") 'summary
+
+!Make a gnuplot of Pixel RMS errors
+ibis2asc       xxInt xxB cols=(1,5)
+start>
+tcl2file       xxA tcltext=(+
+              "set title 'ECOSTRESS B5/TIR Registration to L7 Orthobase'" +
+              "set grid" +
+              "set xlabel 'IMAGE REGISTRATION INDEX'" +
+              "set ylabel 'RMS PIXELS'" +
+              "set xrange [1:&"numcase"]" +
+              "set yrange [0:1.0]" +
+              "set size 1" +
+              "set terminal x11" +
+              "plot 'xxB' using 1:2 with linespoints lt 1 lw 1" +
+              "#Create postscript output file" +
+              "set terminal postscript color" +
+              "set output '&"outint".ps'" +
+              "plot 'xxB' using 1:2 with linespoints lt 1 lw 1" +
+              "pause 3600")
+ush           gnuplot xxA &
+
+theend>
+write  "Processing Complete"
+end-proc
+
+
+

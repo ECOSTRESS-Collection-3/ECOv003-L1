@@ -1,0 +1,1 @@
+dist_bin_SCRIPTS += $(srcdir)/$(l1b_rad_src)/l1b_rad_pge

@@ -1,0 +1,11 @@
+procedure
+body
+
+!China UTM input ASTER file
+gtlist   /raid21/aster_china/AST_L1BE_003_04162007032516_04162007001430_master.img_SWIR6
+genpc2   out=68m.ref vpix=68.51 hpix=75.30 lon=111.10 lat=34.5
+gtwarp   inp=/raid21/aster_china/AST_L1BE_003_04162007032516_04162007001430_master.img_SWIR6 +
+         out=eco_china_swir6.img ref=68m.ref 'coverinp
+hist     eco_china_swir6.img
+gtlist   eco_china_swir6.img
+end-proc

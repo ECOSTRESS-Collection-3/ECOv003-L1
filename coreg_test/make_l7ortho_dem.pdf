@@ -1,0 +1,23 @@
+procedure
+body
+
+goto start
+!Landsat7 orthobase
+gtcopy  /raid22/band62_VICAR/n35w125_band62 xxa
+gtcopy  /raid22/band62_VICAR/n35w120_band62 xxb
+gtcopy  /raid22/band62_VICAR/n40w125_band62 xxc
+gtcopy  /raid22/band62_VICAR/n40w120_band62 xxd
+fthfastmos inp1=xxa inp2=xxb inp3=xxc inp4=xxd +
+           out=l7ortho_57m_b62.img toler=0.05
+
+gtcopy  /raid22/band61_VICAR/n35w125_band61 xxa
+gtcopy  /raid22/band61_VICAR/n35w120_band61 xxb     
+gtcopy  /raid22/band61_VICAR/n40w125_band61 xxc
+gtcopy  /raid22/band61_VICAR/n40w120_band61 xxd
+fthfastmos inp1=xxa inp2=xxb inp3=xxc inp4=xxd +
+           out=l7ortho_57m_b61.img toler=0.05 
+
+start>
+!SRTM DEM
+mos_l2_dem  37 -126 43 -119 out=ncal_dem_L2.hlf
+end-proc
