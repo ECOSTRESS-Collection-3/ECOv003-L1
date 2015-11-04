@@ -46,7 +46,7 @@ but not needed by AFIDS when we build without afids_python.
 We depend on pkg.m4 which isn't installed since we aren't building pkg,
 so we just manually copy that from pistol. Nothing special about the pistol
 version except it matches the autotools version we use in the Cartlab (which
-is slightly older than the default system on on eco-scf).
+is slightly older than the default one on the eco-scf system).
 
 Python Setup
 ------------
