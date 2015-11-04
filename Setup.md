@@ -62,6 +62,12 @@ installed virtualenv do:
 
 (can skip if you already have this).
 
+Make sure you are pointing to the afids installed libraries
+
+    export GDAL_DRIVER_PATH=/pkg/afids/afids_latest/lib/gdalplugins
+    export PATH=/pkg/afids/afids_latest/bin:${PATH}
+    export LD_LIBRARY_PATH=/pkg/afids/afids_latest/lib64:/pkg/afids/afids_latest/lib:${LD_LIBRARY_PATH}
+
 Then
 
     cd /pkg/afids
@@ -88,7 +94,24 @@ afids_latest rather than the system area:
 GeoCal Setup
 ------------
 
-TBD
+Make sure you are pointing to the afids installed libraries
+
+    export GDAL_DRIVER_PATH=/pkg/afids/afids_latest/lib/gdalplugins
+    export PATH=/pkg/afids/afids_latest/bin:${PATH}
+    export LD_LIBRARY_PATH=/pkg/afids/afids_latest/lib64:/pkg/afids/afids_latest/lib:${LD_LIBRARY_PATH}
+
+Then
+
+    cd ~
+    mkdir GeoCalBuild/build
+    cd GeoCalBuild/build
+    ../../GeoCal/configure --prefix=/home/smyth/GeoCalBuild/install \
+       THIRDPARTY=/pkg/afids/afids_latest --enable-maintainer-mode \
+       --with-afids=/pkg/afids/afids_latest \
+       PYTHON=/pkg/afids/afids_pythonenv/bin/python \
+       NOSETESTS=/pkg/afids/afids_pythonenv/bin/nosetests \
+       SPHINXBUILD=/pkg/afids/afids_pythonenv/bin/sphinx-build
+    make -j 12 all && make install && make -j 12 check && make -j 12 installcheck
 
 
 
