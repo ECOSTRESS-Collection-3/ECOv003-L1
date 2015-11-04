@@ -13,10 +13,10 @@ The dependencies are:
 
 Get this software, for example:
 
-   cd ~
-   git clone git@github.jpl.nasa.gov:Cartography/afids.git Afids
-   git clone git@github.jpl.nasa.gov:Cartography/afids-data.git AfidsData
-   git clone git@github.jpl.nasa.gov:Cartography/geocal.git GeoCal
+    cd ~
+    git clone git@github.jpl.nasa.gov:Cartography/afids.git Afids
+    git clone git@github.jpl.nasa.gov:Cartography/afids-data.git AfidsData
+    git clone git@github.jpl.nasa.gov:Cartography/geocal.git GeoCal
 
 AFIDS Setup
 -----------
