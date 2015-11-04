@@ -5,6 +5,19 @@ The software depends on AFIDS and the latest GeoCal. GeoCal is a subset of
 AFIDS, but in separate repository which tends to run ahead of the version
 we have GeoCal. GeoCal is also referred to as afids-python.
 
+The dependencies are:
+
+* [AFIDS Software](https://github.jpl.nasa.gov/Cartography/afids)
+* [AFIDS Test Data](https://github.jpl.nasa.gov/Cartography/afids-data) - test data used by unit tests, only needed if you want to run the AFIDS unit tests (so not needed to just build the software).
+* [GeoCal] (https://github.jpl.nasa.gov/Cartography/geocal) - this is part of AFIDS, however we also make this subset available on its own for use in areas where we don't want the full AFIDS package. This particular packages also contains more recent changes that haven't yet been merged in the the AFIDS Software package (it is under active development).
+
+Get this software, for example:
+
+   cd ~
+   git clone git@github.jpl.nasa.gov:Cartography/afids.git Afids
+   git clone git@github.jpl.nasa.gov:Cartography/afids-data.git AfidsData
+   git clone git@github.jpl.nasa.gov:Cartography/geocal.git GeoCal
+
 AFIDS Setup
 -----------
 
@@ -12,6 +25,9 @@ The setup of AFIDS is as follows:
 
 We install in a directory with the date (so we can have multiple versions).
 
+    cd ~
+    mkdir -p AfidsBuild/build_afids_install
+    cd AfidsBuild/build_afids_install
     ../../Afids/configure --prefix=/pkg/afids/afids_20151103 \
         --with-blitz=build --with-gsl=build --with-hdf5=build \
 	--with-hdf4=build --with-gnuplot=build --with-fftw=build \
