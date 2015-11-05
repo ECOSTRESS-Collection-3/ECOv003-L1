@@ -8,14 +8,19 @@ AC_CONFIG_FILES([script/setup_ecostress.csh script/setup_ecostress.sh])
 ECOSTRESS_COMMON
 
 #=================================================================
-# Find python
-
-AFIDS_PYTHON(required, cannot_build, default_search)
-
-#=================================================================
 # Find location of afids and geocal
 
 AFIDS_LOCATION
+
+#=================================================================
+# Find python. Note that the virtual environment has modules that
+# depend on the afids build, so set LD_LIBRARY_PATH here for AFIDS
+# before checking all the modules.
+
+original_ld_library_path="${LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH="${afidsdir}/lib64:${afidsdir}/lib:${LD_LIBRARY_PATH}"
+AFIDS_PYTHON(required, cannot_build, default_search)
+LD_LIBRARY_PATH="${original_ld_library_path}"
 
 #=================================================================
 # Location of all the source code directories

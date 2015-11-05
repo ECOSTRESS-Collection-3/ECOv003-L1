@@ -640,8 +640,6 @@ srcscript
 l1b_geo_src
 l1b_rad_src
 l1a_cal_src
-geocaldir
-afidsdir
 BUILD_PYTHON_FALSE
 BUILD_PYTHON_TRUE
 build_python
@@ -666,6 +664,8 @@ PYTHON_EXEC_PREFIX
 PYTHON_PREFIX
 PYTHON_VERSION
 PYTHON
+geocaldir
+afidsdir
 pkgconfigdir
 PKG_CONFIG
 CPP
@@ -797,9 +797,9 @@ enable_dependency_tracking
 with_gnu_ld
 with_sysroot
 enable_libtool_lock
-with_python
 with_afids
 with_geocal
+with_python
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1457,13 +1457,13 @@ Optional Packages:
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-sysroot=DIR Search for dependent libraries within DIR
                         (or the compiler's sysroot if not specified).
-  --with-python[=DIR]     use Python (default is yes if found) - it is
-                          possible to specify the root directory for Python
-                          (optional).
   --with-afids=DIR        give directory where afids can be found (optional,
                           default is /pkg/afids/afids_latest)
   --with-geocal=DIR       give directory where geocal can be found (optional,
                           default is /pkg/afids/geocal_latest)
+  --with-python[=DIR]     use Python (default is yes if found) - it is
+                          possible to specify the root directory for Python
+                          (optional).
 
 Some influential environment variables:
   CC          C compiler command
@@ -11587,8 +11587,39 @@ pkgconfigdir=${libdir}/pkgconfig
 
 
 #=================================================================
-# Find python
+# Find location of afids and geocal
 
+
+
+# Check whether --with-afids was given.
+if test "${with_afids+set}" = set; then :
+  withval=$with_afids;  ac_afids_dir="$withval"
+else
+   ac_afids_dir="/pkg/afids/afids_latest"
+fi
+
+afidsdir="$ac_afids_dir"
+
+
+
+# Check whether --with-geocal was given.
+if test "${with_geocal+set}" = set; then :
+  withval=$with_geocal;  ac_geocal_dir="$withval"
+else
+   ac_geocal_dir="/pkg/afids/geocal_latest"
+fi
+
+geocaldir="$ac_geocal_dir"
+
+
+
+#=================================================================
+# Find python. Note that the virtual environment has modules that
+# depend on the afids build, so set LD_LIBRARY_PATH here for AFIDS
+# before checking all the modules.
+
+original_ld_library_path="${LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH="${afidsdir}/lib64:${afidsdir}/lib:${LD_LIBRARY_PATH}"
 
 
 have_python="no"
@@ -12408,33 +12439,7 @@ fi
 
 
 
-
-#=================================================================
-# Find location of afids and geocal
-
-
-
-# Check whether --with-afids was given.
-if test "${with_afids+set}" = set; then :
-  withval=$with_afids;  ac_afids_dir="$withval"
-else
-   ac_afids_dir="/pkg/afids/afids_latest"
-fi
-
-afidsdir="$ac_afids_dir"
-
-
-
-# Check whether --with-geocal was given.
-if test "${with_geocal+set}" = set; then :
-  withval=$with_geocal;  ac_geocal_dir="$withval"
-else
-   ac_geocal_dir="/pkg/afids/geocal_latest"
-fi
-
-geocaldir="$ac_geocal_dir"
-
-
+LD_LIBRARY_PATH="${original_ld_library_path}"
 
 #=================================================================
 # Location of all the source code directories
