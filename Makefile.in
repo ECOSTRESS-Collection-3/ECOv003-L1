@@ -99,6 +99,7 @@ am__aclocal_m4_deps = $(top_srcdir)/config/m4/ac_check_found.m4 \
 	$(top_srcdir)/config/m4/ac_python_module_with_version.m4 \
 	$(top_srcdir)/config/m4/ac_python_nosetests.m4 \
 	$(top_srcdir)/config/m4/ac_python_sphinx.m4 \
+	$(top_srcdir)/config/m4/afids_location.m4 \
 	$(top_srcdir)/config/m4/afids_python.m4 \
 	$(top_srcdir)/config/m4/ax_python_module.m4 \
 	$(top_srcdir)/config/m4/ecostress_common.m4 \
@@ -426,8 +427,6 @@ PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
-PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
-PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 PYTHON = @PYTHON@
 PYTHON_CONFIG = @PYTHON_CONFIG@
 PYTHON_CPPFLAGS = @PYTHON_CPPFLAGS@
@@ -443,7 +442,6 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SPHINXBUILD = @SPHINXBUILD@
 STRIP = @STRIP@
-THIRDPARTY = @THIRDPARTY@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
@@ -452,6 +450,7 @@ abs_top_srcdir = @abs_top_srcdir@
 ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
+afidsdir = @afidsdir@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
@@ -470,6 +469,7 @@ datarootdir = @datarootdir@
 docdir = @docdir@
 dvidir = @dvidir@
 exec_prefix = @exec_prefix@
+geocaldir = @geocaldir@
 host = @host@
 host_alias = @host_alias@
 host_cpu = @host_cpu@
@@ -500,6 +500,7 @@ program_transform_name = @program_transform_name@
 psdir = @psdir@
 pyexecdir = @pyexecdir@
 pythondir = @pythondir@
+pythonpath = @pythonpath@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@

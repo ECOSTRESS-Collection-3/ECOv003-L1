@@ -7,17 +7,15 @@ AC_CONFIG_FILES([script/setup_ecostress.csh script/setup_ecostress.sh])
 
 ECOSTRESS_COMMON
 
-AC_ARG_VAR([THIRDPARTY], [
-It is common that you have a central location not already
-searched for that you want to be searched for third party libraries. 
-You can specify THIRDPARTY=<directory>. This gets added to all
-the third party library checks.
-])
-
 #=================================================================
 # Find python
 
 AFIDS_PYTHON(required, cannot_build, default_search)
+
+#=================================================================
+# Find location of afids and geocal
+
+AFIDS_LOCATION
 
 #=================================================================
 # Location of all the source code directories

@@ -34,6 +34,7 @@ if test "x$want_python" = "xyes"; then
    if test "$build_python" == "yes"; then
      AM_PATH_PYTHON(,, [:])
      PYTHON=`pwd`"/external/python_wrap.sh" 
+     pythonpath="\${prefix}/bin"
      PYTHON_CPPFLAGS="-I\${prefix}/include/python2.7"
      PYTHON_NUMPY_CPPFLAGS="-I\${prefix}/lib/python2.7/site-packages/numpy/core/include"
      pythondir="lib/python2.7/site-packages" 
@@ -43,6 +44,7 @@ if test "x$want_python" = "xyes"; then
      AC_SUBST(PYTHON_CPPFLAGS)
      AC_SUBST(PYTHON_NUMPY_CPPFLAGS)
      AC_SUBST([platpythondir])
+     AC_SUBST([pythonpath])
      SPHINXBUILD="\${prefix}/bin/sphinx-build"
      NOSETESTS="\${prefix}/bin/nosetests"
      AM_CONDITIONAL([HAVE_SPHINX], [true])
@@ -58,8 +60,10 @@ if test "x$want_python" = "xyes"; then
      pythondir=`$PYTHON -c "from distutils.sysconfig import *; print get_python_lib(False,False,'')"`
      platpythondir=`$PYTHON -c "from distutils.sysconfig import *; print get_python_lib(True,False,'')"`
      PYTHON_NUMPY_CPPFLAGS=`$PYTHON -c "from numpy.distutils.misc_util import *; print '-I' + ' -I'.join(get_numpy_include_dirs())"`
+     pythonpath=`dirname $PYTHON`
      AC_SUBST([PYTHON_NUMPY_CPPFLAGS])
      AC_SUBST([platpythondir])
+     AC_SUBST([pythonpath])
      AC_PROG_SPHINX
      AC_PROG_NOSETESTS
      if test -z "$NOSETESTS" ; then

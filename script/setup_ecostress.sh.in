@@ -3,13 +3,17 @@
 if [ -z "$ECOSTRESSTOP" ]; then
     export ECOSTRESSTOP=@prefix@
 fi
+
+export AFIDSPYTHONTOP=@geocaldir@
+source @afidsdir@/setup_afids_env.sh
+
 if [ -n "$PYTHONPATH" ]; then
   export PYTHONPATH=${ECOSTRESSTOP}/@pythondir@:${ECOSTRESSTOP}/@platpythondir@:${PYTHONPATH}
 else
   export PYTHONPATH=${ECOSTRESSTOP}/@pythondir@:${ECOSTRESSTOP}/@platpythondir@
 fi
 if [ -n "$PATH" ]; then
-  export PATH=${ECOSTRESSTOP}/bin:${PATH}
+  export PATH=${ECOSTRESSTOP}/bin:@pythonpath@:${PATH}
 else
-  export PATH=${ECOSTRESSTOP}/bin
+  export PATH=${ECOSTRESSTOP}/bin:@pythonpath@
 fi
