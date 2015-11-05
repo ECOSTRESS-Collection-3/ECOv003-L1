@@ -64,8 +64,11 @@ if test "x$want_python" = "xyes"; then
      AC_SUBST([PYTHON_NUMPY_CPPFLAGS])
      AC_SUBST([platpythondir])
      AC_SUBST([pythonpath])
+     old_path="${PATH}"
+     PATH="${pythonpath}:${PATH}"
      AC_PROG_SPHINX
      AC_PROG_NOSETESTS
+     PATH="${old_path}"
      if test -z "$NOSETESTS" ; then
         AC_MSG_ERROR(required program nosetests not found)
         exit 1

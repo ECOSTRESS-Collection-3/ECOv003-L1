@@ -12283,6 +12283,8 @@ $as_echo "no" >&6; }
 
 
 
+     old_path="${PATH}"
+     PATH="${pythonpath}:${PATH}"
 
         have_sphinx=no
 
@@ -12407,6 +12409,7 @@ else
 fi
 
 
+     PATH="${old_path}"
      if test -z "$NOSETESTS" ; then
         as_fn_error $? "required program nosetests not found" "$LINENO" 5
         exit 1
