@@ -1,0 +1,2 @@
+ecostresspkgpython_PYTHON+= @srcpythonlib@/dummy.py
+

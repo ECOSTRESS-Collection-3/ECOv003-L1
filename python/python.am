@@ -1,0 +1,18 @@
+ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py
+
+nosetests.sh:
+	echo "# /bin/sh" > $@
+	echo "source $(abs_builddir)/script/setup_ecostress.sh" >> $@
+	echo "$(NOSETESTS) $(abs_srcdir)/@srcpython@/*/" >> $@
+	chmod +x $@
+
+# Shortcut for just running nosetests.
+python_check: nosetests.sh
+	./nosetests.sh
+
+TESTS += nosetests.sh
+
+include python/lib/lib.am
+
+
+

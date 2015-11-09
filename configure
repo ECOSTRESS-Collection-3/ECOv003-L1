@@ -635,7 +635,10 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+ecostresspkgpythondir
 installecostressdir
+srcpythonlib
+srcpython
 srcscript
 l1b_geo_src
 l1b_rad_src
@@ -12466,7 +12469,13 @@ l1b_geo_src=l1b_geo
 
 srcscript=script
 
+srcpython=python
+
+srcpythonlib=${srcpython}/lib
+
 installecostressdir=\${prefix}
+
+ecostresspkgpythondir=\${prefix}/${pythondir}/ecostress
 
 
 
