@@ -667,6 +667,8 @@ PYTHON
 geocaldir
 afidsdir
 pkgconfigdir
+PKG_CONFIG_LIBDIR
+PKG_CONFIG_PATH
 PKG_CONFIG
 CPP
 OTOOL64
@@ -811,6 +813,8 @@ LIBS
 CPPFLAGS
 CPP
 PKG_CONFIG
+PKG_CONFIG_PATH
+PKG_CONFIG_LIBDIR
 PYTHON
 PYTHON_VERSION
 SPHINXBUILD
@@ -1475,6 +1479,10 @@ Some influential environment variables:
               you have headers in a nonstandard directory <include dir>
   CPP         C preprocessor
   PKG_CONFIG  path to pkg-config utility
+  PKG_CONFIG_PATH
+              directories to add to pkg-config's search path
+  PKG_CONFIG_LIBDIR
+              path overriding pkg-config's built-in search path
   PYTHON      the Python interpreter
   PYTHON_VERSION
               The installed Python version to use, for example '2.3'. This
@@ -11454,6 +11462,10 @@ CC="$lt_save_CC"
 
 
 
+
+
+
+
 if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
 	if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}pkg-config", so it can be a program name with args.
@@ -11566,7 +11578,6 @@ $as_echo "yes" >&6; }
 $as_echo "no" >&6; }
 		PKG_CONFIG=""
 	fi
-
 fi
 
 if test "x$THIRDPARTY" = x ; then
