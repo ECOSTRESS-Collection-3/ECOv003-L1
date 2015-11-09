@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE boost_serialization>
+<boost_serialization signature="serialization::archive" version="9">
+<geocal_object class_id="0" tracking_level="0" version="1">
+	<px class_id="2" class_name="GeoCal::TleOrbit" tracking_level="1" version="0" object_id="_0">
+		<Orbit class_id="3" tracking_level="0" version="0">
+			<min_tm class_id="4" tracking_level="1" version="0" object_id="_1">
+				<time_pgs>-1009843218</time_pgs>
+			</min_tm>
+			<max_tm object_id="_2">
+				<time_pgs>252676368006</time_pgs>
+			</max_tm>
+		</Orbit>
+		<tle>1 25544U 98067A   15301.64187079  .00010243  00000-0  15860-3 0  9995
+2 25544  51.6438 138.0120 0006887  88.7083 356.4634 15.54663652968802
+</tle>
+	</px>
+</geocal_object>
+</boost_serialization>
+
