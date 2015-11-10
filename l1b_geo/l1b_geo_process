@@ -27,9 +27,12 @@ Options:
 
 args = docopt_simple(usage, version=version)
 
-print "Waiting a short time"
-import time
-time.sleep(20)
+# Can use this to wait a short time so we can attach strace to this
+# process, useful to find all the files that we are accessing.
+if(False):
+    print "Waiting a short time"
+    import time
+    time.sleep(20)
 
 # Explicitly list input file
 datum = "/pkg/afids/afids_latest/data/vdev/EGM96_20_x100.HLF"

@@ -667,6 +667,7 @@ PYTHON_EXEC_PREFIX
 PYTHON_PREFIX
 PYTHON_VERSION
 PYTHON
+testdatadir
 geocaldir
 afidsdir
 pkgconfigdir
@@ -804,6 +805,7 @@ with_sysroot
 enable_libtool_lock
 with_afids
 with_geocal
+with_test_data
 with_python
 '
       ac_precious_vars='build_alias
@@ -1468,6 +1470,9 @@ Optional Packages:
                           default is /pkg/afids/afids_latest)
   --with-geocal=DIR       give directory where geocal can be found (optional,
                           default is /pkg/afids/geocal_latest)
+  --with-test-data=DIR    give directory where end to end test data can be
+                          found (optional, default is
+                          /project/ancillary/ASTER/EndToEndTest)
   --with-python[=DIR]     use Python (default is yes if found) - it is
                           possible to specify the root directory for Python
                           (optional).
@@ -11624,6 +11629,18 @@ else
 fi
 
 geocaldir="$ac_geocal_dir"
+
+
+
+# Check whether --with-test-data was given.
+if test "${with_test_data+set}" = set; then :
+  withval=$with_test_data;  ac_test_data_dir="$withval"
+else
+   ac_test_data_dir="/project/ancillary/ASTER/EndToEndTest"
+fi
+
+testdatadir="$ac_test_data_dir"
+
 
 
 
