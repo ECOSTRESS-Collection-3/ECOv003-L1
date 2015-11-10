@@ -18,5 +18,8 @@ dem = SrtmDem("",False)
 igc = IpiImageGroundConnection(ipi, dem, None)
 
 def test_l1b_geo_generate():
-    L1bGeoGenerate(igc, "l1b_geo.h5")
+    l1bgeo = L1bGeoGenerate(igc, "l1b_geo.h5")
+    l1bgeo.run(start_line = 0, number_line = 10, 
+               start_sample = 0, number_sample = 100)
+
 
