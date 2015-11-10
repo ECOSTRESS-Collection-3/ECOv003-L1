@@ -11,16 +11,24 @@ Usage $0 [options]
 This is used to run the l1b_geo process.
 
 OPTIONS:
+
+   -n Specify number of lines to process, default is whole scene but useful
+      to use smaller set for testing.
+
    -h Show this message
 
 EOF
 }
-while getopts “h” OPTION; do
+number_line="-1"
+while getopts “hn:” OPTION; do
     case $OPTION in
         h)
             usage
             exit 1
             ;;
+        n)
+	    number_line=$OPTARG
+	    ;;
         ?)
             usage
             exit
@@ -39,5 +47,5 @@ binpath="${scriptpath}/bin"
 source "${scriptpath}/setup_ecostress.sh"
 
 # Execute actual process
-"${binpath}/l1b_geo_process"
+"${binpath}/l1b_geo_process" --number-line=${number_line}
 

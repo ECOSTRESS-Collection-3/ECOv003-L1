@@ -1,3 +1,42 @@
 #! /usr/bin/env python
+#
+# This runs the L1B Geo process.
+from geocal import *
+from ecostress import *
 
-print "Hello world!"
+version = "1.0"
+usage='''Usage:
+  l1b_geo_process [options]
+  l1b_geo_process -h | --help
+  l1b_geo_process -v | --version
+
+This runs the L1B Geo process.
+
+Options:
+  -h --help         
+       Print this message
+
+  --number-line=d
+       Number of lines to process. Normally you process the whole scene, but
+       can be useful for testing to process only a subset. [default: -1]
+
+  -v --version      
+       Print program version
+'''
+
+args = docopt_simple(usage, version=version)
+
+orb = read_shelve("/project/ancillary/ASTER/EndToEndTest/ECOSTRESS_L1A_RAW_ATT_800001_00001_20151024020211_0100_01.xml")
+cam = read_shelve("/project/ancillary/ASTER/EndToEndTest/camera.xml")
+tt = read_shelve("/project/ancillary/ASTER/EndToEndTest/ECOSTRESS_L1B_RAD_800001_00001_20151024020211_0100_01.xml")
+ofile = "./ECOSTRESS_L1B_GEO_800001_00001_20151024020211_0100_01.h5"
+band = 0
+ipi = Ipi(orb, cam, band, tt.min_time, tt.max_time, tt)
+# False here says it ok for SrtmDem to not have tile. This gives support
+# for data that is over the ocean.
+dem = SrtmDem("",False)
+igc = IpiImageGroundConnection(ipi, dem, None)
+l1bgeo = L1bGeoGenerate(igc, ofile, number_line = args.number_line)
+pool = Pool(10)
+l1bgeo.run(pool)
+
