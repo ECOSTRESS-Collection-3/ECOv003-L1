@@ -3,6 +3,7 @@
 # This runs the L1B Geo process.
 from geocal import *
 from ecostress import *
+import os
 
 version = "1.0"
 usage='''Usage:
@@ -26,17 +27,33 @@ Options:
 
 args = docopt_simple(usage, version=version)
 
+print "Waiting a short time"
+import time
+time.sleep(20)
+
+# Explicitly list input file
+datum = "/pkg/afids/afids_latest/data/vdev/EGM96_20_x100.HLF"
+srtm_dir = "/project/ancillary/SRTM/srtm_v3_dem_L2"
+spice_data = "/pkg/afids/afids_latest/data/cspice"
+ncpu = 10
 orb = read_shelve("/project/ancillary/ASTER/EndToEndTest/ECOSTRESS_L1A_RAW_ATT_800001_00001_20151024020211_0100_01.xml")
 cam = read_shelve("/project/ancillary/ASTER/EndToEndTest/camera.xml")
 tt = read_shelve("/project/ancillary/ASTER/EndToEndTest/ECOSTRESS_L1B_RAD_800001_00001_20151024020211_0100_01.xml")
 ofile = "./ECOSTRESS_L1B_GEO_800001_00001_20151024020211_0100_01.h5"
+
+# Spice directory passed down as an environment variable
+os.environ["SPICEDATA"] = spice_data
+
+# Create IGC
 band = 0
 ipi = Ipi(orb, cam, band, tt.min_time, tt.max_time, tt)
-# False here says it ok for SrtmDem to not have tile. This gives support
-# for data that is over the ocean.
-dem = SrtmDem("",False)
+# Create DEM. False here says it ok for SrtmDem to not have tile. This 
+# gives support for data that is over the ocean.
+dem = SrtmDem(srtm_dir,False, DatumGeoid96(datum))
 igc = IpiImageGroundConnection(ipi, dem, None)
+
+# Generate output
 l1bgeo = L1bGeoGenerate(igc, ofile, number_line = args.number_line)
-pool = Pool(10)
+pool = Pool(ncpu)
 l1bgeo.run(pool)
 
