@@ -67,6 +67,7 @@ Make sure you are pointing to the afids installed libraries
     export GDAL_DRIVER_PATH=/pkg/afids/afids_latest/lib/gdalplugins
     export PATH=/pkg/afids/afids_latest/bin:${PATH}
     export LD_LIBRARY_PATH=/pkg/afids/afids_latest/lib64:/pkg/afids/afids_latest/lib:${LD_LIBRARY_PATH}
+    export PYTHONPATH=/pkg/afids/afids_latest/lib/python2.7/site-packages:/pkg/afids/afids_latest/lib64/python2.7/site-packages:${PYTHONPATH}
 
 Then
 
