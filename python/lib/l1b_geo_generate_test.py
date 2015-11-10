@@ -2,6 +2,7 @@ from nose.tools import *
 from nose.plugins.skip import Skip, SkipTest
 from geocal import *
 from l1b_geo_generate import *
+from multiprocessing import Pool
 
 # Right now depend on end to end testing. May want to have a subset
 # of this defined at some point
@@ -18,8 +19,10 @@ dem = SrtmDem("",False)
 igc = IpiImageGroundConnection(ipi, dem, None)
 
 def test_l1b_geo_generate():
-    l1bgeo = L1bGeoGenerate(igc, "l1b_geo.h5")
-    l1bgeo.run(start_line = 0, number_line = 10, 
-               start_sample = 0, number_sample = 100)
+    # Only do 100 lines so this runs quickly as a test
+    l1bgeo = L1bGeoGenerate(igc, "l1b_geo.h5", number_line = 100)
+    pool = Pool(10)
+    l1bgeo.run(pool)
+
 
 

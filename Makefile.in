@@ -574,7 +574,8 @@ dist_installecostress_SCRIPTS = @l1a_cal_src@/l1a_cal_pge \
 	@l1b_rad_src@/l1b_rad_pge @l1b_geo_src@/l1b_geo_pge
 installecostress_DATA = @srcscript@/setup_ecostress.csh @srcscript@/setup_ecostress.sh
 ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
-	@srcpythonlib@/dummy.py
+	@srcpythonlib@/dummy.py @srcpythonlib@/l1b_geo_generate.py \
+	@srcpythonlib@/pickle_method.py
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
