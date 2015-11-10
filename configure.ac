@@ -13,6 +13,13 @@ ECOSTRESS_COMMON
 AFIDS_LOCATION
 
 #=================================================================
+# Find h5diff
+AC_PATH_PROG([H5DIFF], [h5diff], "", [$PATH$PATH_SEPARATOR${ac_afids_dir}/bin])
+if test -z "$H5DIFF"; then
+   AC_MSG_ERROR([Cannot find h5diff])
+fi
+
+#=================================================================
 # Find python. Note that the virtual environment has modules that
 # depend on the afids build, so set LD_LIBRARY_PATH here for AFIDS
 # before checking all the modules.

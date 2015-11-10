@@ -667,6 +667,7 @@ PYTHON_EXEC_PREFIX
 PYTHON_PREFIX
 PYTHON_VERSION
 PYTHON
+H5DIFF
 testdatadir
 geocaldir
 afidsdir
@@ -11643,6 +11644,53 @@ testdatadir="$ac_test_data_dir"
 
 
 
+
+#=================================================================
+# Find h5diff
+# Extract the first word of "h5diff", so it can be a program name with args.
+set dummy h5diff; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_path_H5DIFF+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  case $H5DIFF in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_H5DIFF="$H5DIFF" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH$PATH_SEPARATOR${ac_afids_dir}/bin
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_H5DIFF="$as_dir/$ac_word$ac_exec_ext"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  test -z "$ac_cv_path_H5DIFF" && ac_cv_path_H5DIFF=""""
+  ;;
+esac
+fi
+H5DIFF=$ac_cv_path_H5DIFF
+if test -n "$H5DIFF"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $H5DIFF" >&5
+$as_echo "$H5DIFF" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+if test -z "$H5DIFF"; then
+   as_fn_error $? "Cannot find h5diff" "$LINENO" 5
+fi
 
 #=================================================================
 # Find python. Note that the virtual environment has modules that

@@ -18,4 +18,4 @@ end-to-end-check: installcheck-am
 	$(prefix)/l1a_cal_pge
 	$(prefix)/l1b_rad_pge
 	$(prefix)/l1b_geo_pge
-	h5diff $(l1b_geo_product) $(l1b_geo_product_expected)
+	$(H5DIFF) $(l1b_geo_product) $(l1b_geo_product_expected)
