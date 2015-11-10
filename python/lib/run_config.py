@@ -1,4 +1,4 @@
-from xml.etree.ElementTree import parse
+import xml.etree.ElementTree as ET
 
 class RunConfig(object):
     '''This class does a simple parsing of the run config file supplied
@@ -6,7 +6,7 @@ class RunConfig(object):
     def __init__(self, fname):
         '''Parse the given run config file.'''
         self.fname = fname
-        doc = parse(fname)
+        doc = ET.parse(fname)
         root = doc.getroot()
         if(root.tag != 'input'):
             raise RuntimeException("Don't recognize the root tag in file %s" % fname)
