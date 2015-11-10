@@ -7,7 +7,7 @@ import os
 
 version = "1.0"
 usage='''Usage:
-  l1b_geo_process [options]
+  l1b_geo_process [options] <run_config>
   l1b_geo_process -h | --help
   l1b_geo_process -v | --version
 
@@ -35,14 +35,16 @@ if(False):
     time.sleep(20)
 
 # Explicitly list input file
-datum = "/pkg/afids/afids_latest/data/vdev/EGM96_20_x100.HLF"
-srtm_dir = "/project/ancillary/SRTM/srtm_v3_dem_L2"
-spice_data = "/pkg/afids/afids_latest/data/cspice"
-ncpu = 10
-orb = read_shelve("/project/ancillary/ASTER/EndToEndTest/ECOSTRESS_L1A_RAW_ATT_800001_00001_20151024020211_0100_01.xml")
-cam = read_shelve("/project/ancillary/ASTER/EndToEndTest/camera.xml")
-tt = read_shelve("/project/ancillary/ASTER/EndToEndTest/ECOSTRESS_L1B_RAD_800001_00001_20151024020211_0100_01.xml")
-ofile = "./ECOSTRESS_L1B_GEO_800001_00001_20151024020211_0100_01.h5"
+config = RunConfig(args.run_config)
+
+datum = config["StaticAncillaryFileGroup", "Datum"]
+srtm_dir = config["StaticAncillaryFileGroup", "StrmDir"]
+spice_data = config["StaticAncillaryFileGroup", "SpiceData"]
+cam = read_shelve(config["StaticAncillaryFileGroup", "Camera"])
+ncpu = int(config["Process", "NumberCpu"])
+orb = read_shelve(config["InputFileGroup", "L1A_RAW_ATT"])
+tt = read_shelve(config["InputFileGroup", "L1B_RAD"])
+ofile = config["ProductGroup", "OutputFile"]
 
 # Spice directory passed down as an environment variable
 os.environ["SPICEDATA"] = spice_data
