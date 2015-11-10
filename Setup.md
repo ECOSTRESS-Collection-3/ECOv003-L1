@@ -38,7 +38,7 @@ We install in a directory with the date (so we can have multiple versions).
 	--without-afids-python
     make -j 12 all && make install && make autotools_install
     make -j 12 blas lapack umfpack swig
-    scp pistol:/usr/share/aclocal/pkg.m4 /pkg/afids/afids_latest/share/aclocal
+    scp pistol:/opt/afids_support/share/aclocal/pkg.m4 /pkg/afids/afids_latest/share/aclocal
 
 The blas etc. make line is stuff needed by the virtualenv described next,
 but not needed by AFIDS when we build without afids_python.
