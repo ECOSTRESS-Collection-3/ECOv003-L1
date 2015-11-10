@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<input xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xalan="http://xml.apache.org/xslt"
+       xmlns:cas="http://oodt.jpl.nasa.gov/1.0/cas"
+       xsi:noNamespaceSchemaLocation="">
+   <group name="DynamicAncillaryFileGroup">
+      <scalar name="RFIParameters">/ops/LOM/ANCILLARY/RFIParameters/RFIParameters_130901_v008.h5</scalar>
+      <scalar name="DirectGalaxyLUT">/ops/LOM/ANCILLARY/DirectGalaxyLUT/DirectGalaxyLUT_0228_v002.h5</scalar>
+      <vector name="SpiceAntennaAzimuth">
+         <element>/ops/LOM/PREPROCESSOR_OUT/ANTAZ/001/2015/02/28/smap_ar_1502282014_1502282059_v01.bc</element>
+         <element>/ops/LOM/PREPROCESSOR_OUT/ANTAZ/001/2015/02/28/smap_ar_1502281929_1502282014_v01.bc</element>
+         <element>/ops/LOM/PREPROCESSOR_OUT/ANTAZ/001/2015/02/28/smap_ar_1502282059_1502282144_v01.bc</element>
+      </vector>
+      <vector name="SpiceSpacecraftTrajectory">
+         <element>/ops/LOM/ANCILLARY/SpiceSpacecraftTrajectory/2015/02/25/traj_SPK_1502251516_1503021515_1502271515_sci_OD0030_v00.bsp</element>
+      </vector>
+      <scalar name="FullBandCoeffs">/ops/LOM/ANCILLARY/FullBandCoeffs/FullBandCoeffs_130901_v006.h5</scalar>
+      <scalar name="SubBandCoeffs">/ops/LOM/ANCILLARY/SubBandCoeffs/SubBandCoeffs_130901_v006.h5</scalar>
+      <scalar name="RFIKurtosisParameters">/ops/LOM/ANCILLARY/RFIKurtosisParameters/RFIKurtosisParameters_130901_v006.h5</scalar>
+      <scalar name="ReflectedGalaxyLUT">/ops/LOM/ANCILLARY/ReflectedGalaxyLUT/ReflectedGalaxyLUT_0228_v003.h5</scalar>
+      <scalar name="LinearCoeffs">/ops/LOM/ANCILLARY/LinearCoeffs/LinearCoeffs_130901_v005.h5</scalar>
+      <vector name="GEOS3HourInstantaneousData">
+         <element>/ops/LOM/ANCILLARY/GEOS_INST3_FCST/2015/02/28/GEOS.fp.fcst.inst3_2d_smp_Nx.20150228_12+20150228_1800.V01.nc4</element>
+         <element>/ops/LOM/ANCILLARY/GEOS_INST3_FCST/2015/02/28/GEOS.fp.fcst.inst3_2d_smp_Nx.20150228_12+20150228_2100.V01.nc4</element>
+         <element>/ops/LOM/ANCILLARY/GEOS_INST3_FCST/2015/02/28/GEOS.fp.fcst.inst3_2d_smp_Nx.20150228_12+20150301_0000.V01.nc4</element>
+      </vector>
+      <vector name="SpiceSpacecraftAttitude">
+         <element>/ops/LOM/ANCILLARY/SpiceSpacecraftAttitude/2015/02/28/smap_at_1502280023_1502282132_v01.bc</element>
+      </vector>
+      <scalar name="ReflectedSunLUT">/ops/LOM/ANCILLARY/ReflectedSunLUT/ReflectedSunLUT_0228_v003.h5</scalar>
+      <scalar name="SolarRadioFlux">/ops/LOM/ANCILLARY/SolarRadioFlux/2015/02/28/SolarRadioFlux_20150228T221200_v001.txt</scalar>
+   </group>
+   <group name="StaticAncillaryFileGroup">
+      <scalar name="Parameter">/ops/sds/deploy/sps/R11240/config/SMAP_L1B_TB_SPS_Parameter.xml</scalar>
+      <scalar name="SpiceEarthFixedFrame">/ops/LOM/ANCILLARY/SpiceEarthFixedFrame/earth_assoc_itrf93.tf</scalar>
+      <scalar name="OutputConfig">/ops/sds/deploy/sps/R11240/config/SMAP_L1B_TB_SPS_OutputConfig_L1B_TB.xml</scalar>
+      <vector name="InputConfig">
+         <element>/ops/sds/deploy/sps/R11240/config/SMAP_L1B_TB_SPS_InputConfig_FullBandCoeffs.xml</element>
+         <element>/ops/sds/deploy/sps/R11240/config/SMAP_L1B_TB_SPS_InputConfig_SubBandCoeffs.xml</element>
+         <element>/ops/sds/deploy/sps/R11240/config/SMAP_L1B_TB_SPS_InputConfig_LinearCoeffs.xml</element>
+         <element>/ops/sds/deploy/sps/R11240/config/SMAP_L1B_TB_SPS_InputConfig_RFIKurtosisParameters.xml</element>
+         <element>/ops/sds/deploy/sps/R11240/config/SMAP_L1B_TB_SPS_InputConfig_RFIParameters.xml</element>
+         <element>/ops/sds/deploy/sps/R11240/config/SMAP_L1B_TB_SPS_InputConfig_APC_AntPatternCorr.xml</element>
+         <element>/ops/sds/deploy/sps/R11240/config/SMAP_L1B_TB_SPS_InputConfig_APC_DirectGalaxyLUT.xml</element>
+         <element>/ops/sds/deploy/sps/R11240/config/SMAP_L1B_TB_SPS_InputConfig_APC_RadiometerAntPattern.xml</element>
+         <element>/ops/sds/deploy/sps/R11240/config/SMAP_L1B_TB_SPS_InputConfig_APC_ReflectedGalaxyLUT.xml</element>
+         <element>/ops/sds/deploy/sps/R11240/config/SMAP_L1B_TB_SPS_InputConfig_APC_ReflectedSunLUT.xml</element>
+         <element>/ops/sds/deploy/sps/R11240/config/SMAP_L1B_TB_SPS_InputConfig_ReflectorTable.xml</element>
+         <element>/ops/sds/deploy/sps/R11240/config/SMAP_L1B_TB_SPS_InputConfig_L1A_Radiometer.xml</element>
+      </vector>
+      <scalar name="MetConfig">/ops/sds/deploy/sps/R11240/config/SMAP_L1B_TB_SPS_MetConfig_L1B_TB.xml</scalar>
+      <scalar name="Reflector">/ops/LOM/ANCILLARY/Reflector/Reflector_141024_v007.h5</scalar>
+      <scalar name="RadiometerAntPattern">/ops/LOM/ANCILLARY/RadiometerAntPattern/RadiometerAntPattern_131203_v005.h5</scalar>
+      <scalar name="SpiceSCLK">/ops/LOM/ANCILLARY/SpiceSCLK/smap_cl_v00016.tsc</scalar>
+      <scalar name="SpiceProjectFrames">/ops/LOM/ANCILLARY/SpiceProjectFrames/smap_pf_v12.tf</scalar>
+      <scalar name="SpiceEarthOrientation">/ops/LOM/ANCILLARY/SpiceEarthOrientation/earth_000101_150521_150227.bpc</scalar>
+      <scalar name="SpicePlanetaryTrajectory">/ops/LOM/ANCILLARY/SpicePlanetaryTrajectory/de421.bsp</scalar>
+      <scalar name="SpicePlanetaryConstants">/ops/LOM/ANCILLARY/SpicePlanetaryConstants/pck00010.tpc</scalar>
+      <scalar name="SpiceLeapSecond">/ops/LOM/ANCILLARY/SpiceLeapSecond/naif0010.tls</scalar>
+      <scalar name="AntPatternCorr">/ops/LOM/ANCILLARY/AntPatternCorr/AntPatternCorr_140224_v006.h5</scalar>
+   </group>
+   <group name="Geometry">
+      <scalar name="OrbitPath">103</scalar>
+      <scalar name="EndEclipseDateTime">NULL</scalar>
+      <scalar name="OrbitNumber">413</scalar>
+      <scalar name="HalfOrbitStopDate">2015-02-28</scalar>
+      <scalar name="HalfOrbitStopTime">21:02:21.000Z</scalar>
+      <scalar name="HalfOrbitStartDate">2015-02-28</scalar>
+      <scalar name="OrbitDirection">Descending</scalar>
+      <scalar name="HalfOrbitStartTime">20:13:18.000Z</scalar>
+      <scalar name="BeginEclipseDateTime">NULL</scalar>
+      <scalar name="NorthernMostCrossingPoint">2015-02-28T20:13:18.000Z</scalar>
+   </group>
+   <group name="ProductPathGroup">
+      <scalar name="ProductPath">/ops/spdm_workspace/processing/L1B_TB_SPS/20150228T224642376/output</scalar>
+      <scalar name="ShortName">L1B_TB</scalar>
+      <scalar name="ProductCounter">001</scalar>
+   </group>
+   <group name="DebugGroup">
+      <scalar name="CaptureLogMessagesSwitch">On</scalar>
+      <scalar name="EchoToScreenSwitch">Off</scalar>
+      <scalar name="DebugPath">/ops/spdm_workspace/processing/L1B_TB_SPS/20150228T224642376/output</scalar>
+      <scalar name="DebugSwitch">Off</scalar>
+   </group>
+   <group name="JobIdentification">
+      <scalar name="WorkflowInstanceId">f658d038-bf97-11e4-ba7f-7947ff135ed7</scalar>
+      <scalar name="ProcessingNode">p022</scalar>
+      <scalar name="JobId">2015-02-28T22:46:41.462+00:00</scalar>
+      <scalar name="ProductionDateTime">2015-02-28T22:46:42.376Z</scalar>
+      <scalar name="ProductionLocation">SMAP Operation</scalar>
+      <scalar name="ProductionLocationCode">OPS</scalar>
+      <scalar name="TaskId">urn:smap:L1BTBTask</scalar>
+   </group>
+   <group name="DebugLevelGroup">
+      <scalar name="L1B_FUNC">MEDIUM</scalar>
+      <scalar name="CALIB_FH">HIGH</scalar>
+      <scalar name="GLINT">MEDIMUM</scalar>
+   </group>
+   <group name="SPSNameGroup">
+      <scalar name="SPSName">L1B_TB_SPS</scalar>
+   </group>
+   <group name="LogMetadata">
+      <vector name="CommandLineParameters">
+         <element>/ops/sds/deploy/sps/R11240/bin/L1B_TB_SPS</element>
+         <element>/ops/spdm_workspace/processing/L1B_TB_SPS/20150228T224642376/output/SMAP_L1B_TB_SPS_RunConfig_20150228T224642376.xml</element>
+         <element>/ops/spdm_workspace/processing/L1B_TB_SPS/20150228T224642376/L1B_TB_SPS_20150228T224642.log</element>
+      </vector>
+   </group>
+   <group name="PrimaryExecutable">
+      <scalar name="Version">0.1.0</scalar>
+      <scalar name="CompositeReleaseID">R11240</scalar>
+      <scalar name="FullPathname">/ops/sds/deploy/sps/R11240/bin/L1B_TB_SPS</scalar>
+      <scalar name="ISOScriptPath">/ops/sds/deploy/sps/R11240</scalar>
+      <scalar name="SWVersionID">016</scalar>
+      <scalar name="AlgorithmVersionID">012</scalar>
+      <scalar name="ParameterVersionID">007</scalar>
+   </group>
+   <group name="InputFileGroup">
+      <scalar name="InputFilePath">/ops/LOM/PRODUCTS/L1A_Radiometer/001/2015/02/28/SMAP_L1A_RADIOMETER_00413_D_20150228T201115_R11240_001.h5</scalar>
+   </group>
+   <group name="AnalysisGroup">
+      <scalar name="PREMOD">Off</scalar>
+      <scalar name="RFICAL">On</scalar>
+   </group>
+</input>
