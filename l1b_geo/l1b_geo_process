@@ -42,23 +42,36 @@ srtm_dir = config["StaticAncillaryFileGroup", "StrmDir"]
 spice_data = config["StaticAncillaryFileGroup", "SpiceData"]
 cam = read_shelve(config["StaticAncillaryFileGroup", "Camera"])
 ncpu = int(config["Process", "NumberCpu"])
-orb = read_shelve(config["InputFileGroup", "L1A_RAW_ATT"])
-tt = read_shelve(config["InputFileGroup", "L1B_RAD"])
-ofile = config["ProductGroup", "OutputFile"]
+
+orblist = config["InputFileGroup", "L1A_RAW_ATT"]
+radlist = config["InputFileGroup", "L1B_RAD"]
+ofilelist = config["ProductGroup", "OutputFile"]
 
 # Spice directory passed down as an environment variable
 os.environ["SPICEDATA"] = spice_data
-
-# Create IGC
-band = 0
-ipi = Ipi(orb, cam, band, tt.min_time, tt.max_time, tt)
-# Create DEM. False here says it ok for SrtmDem to not have tile. This 
-# gives support for data that is over the ocean.
 dem = SrtmDem(srtm_dir,False, DatumGeoid96(datum))
-igc = IpiImageGroundConnection(ipi, dem, None)
 
-# Generate output
-l1bgeo = L1bGeoGenerate(igc, ofile, number_line = args.number_line)
-pool = Pool(ncpu)
-l1bgeo.run(pool)
+if(len(orblist) != len(radlist)):
+    raise RuntimeException("The RunConfig file needs to have the same number of L1A_RAW_ATT files and L1B_RAD")
+if(len(orblist) != len(ofilelist)):
+    raise RuntimeException("The RunConfig file needs to have the same number of L1A_RAW_ATT files and L1B_GEO")
+
+for i in range(len(orblist)):
+    print "Doing scene number %d" %i
+    orb = read_shelve(orblist[i])
+    tt = read_shelve(radlist[i])
+    ofile = ofilelist[i]
+
+
+    # Create IGC
+    band = 0
+    ipi = Ipi(orb, cam, band, tt.min_time, tt.max_time, tt)
+    # Create DEM. False here says it ok for SrtmDem to not have tile. This 
+    # gives support for data that is over the ocean.
+    igc = IpiImageGroundConnection(ipi, dem, None)
+
+    # Generate output
+    l1bgeo = L1bGeoGenerate(igc, ofile, number_line = args.number_line)
+    pool = Pool(ncpu)
+    l1bgeo.run(pool)
 

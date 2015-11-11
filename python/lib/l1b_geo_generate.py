@@ -110,10 +110,10 @@ GEOGCS["WGS 84",
         # Compression doesn't seem to do a lot, so leave turned off. We can always
         # turn this on if needed.
         #t = g.create_dataset("latitude", data=lat, chunks=(250,250), compression="gzip")
-        t = g.create_dataset("latitude", data=lat)
+        t = g.create_dataset("latitude", data=lat, dtype='f8')
         t.attrs["Units"] = "degrees"
-        t = g.create_dataset("longitude", data=lon)
+        t = g.create_dataset("longitude", data=lon, dtype='f8')
         t.attrs["Units"] = "degrees"
-        t = g.create_dataset("height", data=height/1e3)
+        t = g.create_dataset("height", data=height/1e3, dtype='f4')
         t.attrs["Units"] = "km"
         
