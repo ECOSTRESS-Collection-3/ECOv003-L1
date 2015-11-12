@@ -1427,7 +1427,7 @@ end-to-end-check: installcheck-am
 	$(prefix)/l1a_cal_pge
 	$(prefix)/l1b_rad_pge
 	$(prefix)/l1b_geo_pge $(l1b_geo_run_config)
-	$(H5DIFF) $(l1b_geo_product) $(l1b_geo_product_expected)
+	$(H5DIFF) ./end_to_end_test/$(l1b_geo_product) $(l1b_geo_product_expected)
 
 nosetests.sh:
 	echo "# /bin/sh" > $@

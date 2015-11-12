@@ -12,7 +12,7 @@ class L1bGeoGenerate(object):
     def __init__(self, igc, output_name, start_line = 0,
                  number_line = -1,
                  number_integration_step = 1,
-                 dem_resolution = 100, 
+                 raycast_resolution = 100, 
                  max_height=10e3):
         '''Create a L1bGeoGenerate with the given ImageGroundConnection
         and output file name. To actually generate, execute the 'run'
@@ -22,7 +22,7 @@ class L1bGeoGenerate(object):
         self.start_line = start_line
         self.number_line = number_line
         self.number_integration_step = number_integration_step
-        self.dem_resolution = dem_resolution
+        self.raycast_resolution = raycast_resolution
         self.max_height = max_height
 
     def loc_parallel_func(self, it):
@@ -34,7 +34,7 @@ class L1bGeoGenerate(object):
         number_sample = min(it[1], nleft)
         rcast = IgcRayCaster(self.igc, self.start_line,
                              self.number_line, self.number_integration_step,
-                             self.dem_resolution, self.max_height, 
+                             self.raycast_resolution, self.max_height, 
                              start_sample,
                              number_sample)
         # Only print status if we are the last job started, just so 
