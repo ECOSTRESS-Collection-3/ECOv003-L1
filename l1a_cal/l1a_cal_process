@@ -1,3 +1,51 @@
 #! /usr/bin/env python
+#
+# This runs the L1A Cal process.
 
-print "Hello world!"
+from geocal import *
+from ecostress import *
+import os
+import re
+
+version = "1.0"
+usage='''Usage:
+  l1a_cal_process [options] <run_config>
+  l1a_cal_process -h | --help
+  l1a_cal_process -v | --version
+
+This runs the L1B Geo process.
+
+Options:
+  -h --help         
+       Print this message
+
+  -v --version      
+       Print program version
+'''
+
+args = docopt_simple(usage, version=version)
+
+# Can use this to wait a short time so we can attach strace to this
+# process, useful to find all the files that we are accessing.
+if(False):
+    print "Waiting a short time"
+    import time
+    time.sleep(20)
+
+# Explicitly list input file
+config = RunConfig(args.run_config)
+
+l1a_bb = config["InputFileGroup", "L1A_BB"]
+l1a_raw = config["InputFileGroup", "L1A_RAW"]
+dirname = config["ProductPathGroup", "ProductPath"]
+
+makedirs_p(dirname)
+os.chdir(dirname)
+
+ofile = os.path.splitext(os.path.basename(l1a_raw))[0] + ".h5"
+ofile = re.sub(r'L1A_RAW', 'L1A_PIX', ofile)
+
+# Generate output
+l1apix = L1aPixGenerate(l1a_bb, l1a_raw, ofile)
+l1apix.run()
+

@@ -35,7 +35,6 @@ if(False):
     import time
     time.sleep(20)
 
-# Explicitly list input file
 config = RunConfig(args.run_config)
 
 datum = config["StaticAncillaryFileGroup", "Datum"]
