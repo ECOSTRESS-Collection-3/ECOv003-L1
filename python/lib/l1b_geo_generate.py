@@ -118,4 +118,14 @@ GEOGCS["WGS 84",
         t.attrs["Units"] = "degrees"
         t = g.create_dataset("height", data=height/1e3, dtype='f4')
         t.attrs["Units"] = "km"
+        dummy = np.empty(height.shape)
+        dummy[:,:] = -9999.0
+        t = g.create_dataset("view zenith", data=dummy, dtype='f4')
+        t.attrs["Units"] = "degrees"
+        t = g.create_dataset("view azimuth", data=dummy, dtype='f4')
+        t.attrs["Units"] = "degrees"
+        t = g.create_dataset("solar zenith", data=dummy, dtype='f4')
+        t.attrs["Units"] = "degrees"
+        t = g.create_dataset("solar azimuth", data=dummy, dtype='f4')
+        t.attrs["Units"] = "degrees"
         m.write()
