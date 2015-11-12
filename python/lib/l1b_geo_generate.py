@@ -3,6 +3,7 @@ import cPickle
 import pickle_method
 import h5py
 from multiprocessing import Pool
+from write_standard_metadata import WriteStandardMetadata
 
 class L1bGeoGenerate(object):
     '''This generate a L1B geo output file from a given
@@ -82,6 +83,7 @@ class L1bGeoGenerate(object):
         '''Do the actual generation of data.'''
         lat, lon, height = self.loc(pool)
         fout = h5py.File(self.output_name, "w")
+        m = WriteStandardMetadata(fout)
         g = fout.create_group("L1bGeo")
         g.attrs["Projection"] = '''\
 The latitude, longitude, and height are relative to the WGS-84
@@ -116,4 +118,4 @@ GEOGCS["WGS 84",
         t.attrs["Units"] = "degrees"
         t = g.create_dataset("height", data=height/1e3, dtype='f4')
         t.attrs["Units"] = "km"
-        
+        m.write()

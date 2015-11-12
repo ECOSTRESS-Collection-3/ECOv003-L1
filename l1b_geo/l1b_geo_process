@@ -5,6 +5,7 @@ from geocal import *
 from ecostress import *
 import os
 import re
+import shutil
 
 version = "1.0"
 usage='''Usage:
@@ -80,4 +81,9 @@ for i in range(len(orblist)):
     l1bgeo = L1bGeoGenerate(igc, ofile, number_line = args.number_line)
     pool = Pool(ncpu)
     l1bgeo.run(pool)
-
+    
+    # Temp
+    shutil.copyfile(orblist[i], ofile2)
+    f = h5py.File(ofile2, "r+")
+    m = WriteStandardMetadata(f)
+    m.write()

@@ -1,6 +1,7 @@
 from geocal import *
 import h5py
 import shutil
+from write_standard_metadata import WriteStandardMetadata
 
 class L1bRadGenerate(object):
     '''This generates a L1B rad file from the given L1A_PIX file.'''
@@ -14,4 +15,7 @@ class L1bRadGenerate(object):
     def run(self):
         '''Do the actual generation of data.'''
         shutil.copyfile(self.l1a_pix, self.output_name)
+        f = h5py.File(self.output_name, "r+")
+        m = WriteStandardMetadata(f)
+        m.write()
 

@@ -1,6 +1,7 @@
 from geocal import *
 import h5py
 import shutil
+from write_standard_metadata import WriteStandardMetadata
 
 class L1aPixGenerate(object):
     '''This generates a L1A pix file from the given L1A_BB and L1A_RAW
@@ -16,4 +17,6 @@ class L1aPixGenerate(object):
     def run(self):
         '''Do the actual generation of data.'''
         shutil.copyfile(self.l1a_raw, self.output_name)
-
+        f = h5py.File(self.output_name, "r+")
+        m = WriteStandardMetadata(f)
+        m.write()
