@@ -1473,7 +1473,7 @@ Optional Packages:
                           default is /pkg/afids/geocal_latest)
   --with-test-data=DIR    give directory where end to end test data can be
                           found (optional, default is
-                          /project/ancillary/ASTER/EndToEndTest)
+                          /project/ancillary/ASTER/EndToEndTest/latest)
   --with-python[=DIR]     use Python (default is yes if found) - it is
                           possible to specify the root directory for Python
                           (optional).
@@ -11637,7 +11637,7 @@ geocaldir="$ac_geocal_dir"
 if test "${with_test_data+set}" = set; then :
   withval=$with_test_data;  ac_test_data_dir="$withval"
 else
-   ac_test_data_dir="/project/ancillary/ASTER/EndToEndTest"
+   ac_test_data_dir="/project/ancillary/ASTER/EndToEndTest/latest"
 fi
 
 testdatadir="$ac_test_data_dir"
