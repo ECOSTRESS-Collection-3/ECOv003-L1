@@ -3,6 +3,7 @@
 # run in the future.
 
 from geocal import *
+import h5py
 
 if(False):
     # Only on pistol
@@ -78,4 +79,16 @@ print igc.footprint_resolution(1, 5400 / 2)
 write_shelve("orbit.xml", orb)
 write_shelve("camera.xml", cam)
 write_shelve("time_table.xml", tt)
+
+fout = h5py.File("ECOSTRESS_L1A_RAW_ATT_800001_00001_20151024020211_0100_01.h5", "w")
+g = fout.create_group("DummyData")
+t = g.create_dataset("README", data = "This is a placeholder")
+t = g.create_dataset("orbit_xml", data = serialize_write_string(orb))
+fout = h5py.File("ECOSTRESS_L1A_BB_800001_00001_20151024020211_0100_01.h5", "w")
+g = fout.create_group("DummyData")
+t = g.create_dataset("README", data = "This is a placeholder")
+fout = h5py.File("ECOSTRESS_L1A_RAW_800001_00001_20151024020211_0100_01.h5", "w")
+g = fout.create_group("DummyData")
+t = g.create_dataset("README", data = "This is a placeholder")
+t = g.create_dataset("tt_xml", data = serialize_write_string(tt))
 
