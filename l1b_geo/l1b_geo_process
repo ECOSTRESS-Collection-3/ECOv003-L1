@@ -60,8 +60,10 @@ if(len(orblist) != len(radlist)):
 
 for i in range(len(orblist)):
     print "Doing scene number %d" %i
-    orb = read_shelve(orblist[i])
-    tt = read_shelve(radlist[i])
+    f = h5py.File(orblist[i], "r")
+    orb = serialize_read_generic_string(f["DummyData/orbit_xml"][()])
+    f = h5py.File(radlist[i], "r")
+    tt = serialize_read_generic_string(f["DummyData/tt_xml"][()])
     ofile = os.path.splitext(os.path.basename(radlist[i]))[0] + ".h5"
     ofile = re.sub(r'L1B_RAD', 'L1B_GEO', ofile)
     ofile2 = re.sub(r'L1B_GEO', 'L1B_ATT', ofile)
