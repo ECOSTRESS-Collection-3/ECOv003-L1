@@ -1,3 +1,50 @@
 #! /usr/bin/env python
+#
+# This runs the L1B Rad process.
 
-print "Hello world!"
+from geocal import *
+from ecostress import *
+import os
+import re
+
+version = "1.0"
+usage='''Usage:
+  l1a_cal_process [options] <run_config>
+  l1a_cal_process -h | --help
+  l1b_rad_process -v | --version
+
+This runs the L1B Rad process.
+
+Options:
+  -h --help         
+       Print this message
+
+  -v --version      
+       Print program version
+'''
+
+args = docopt_simple(usage, version=version)
+
+# Can use this to wait a short time so we can attach strace to this
+# process, useful to find all the files that we are accessing.
+if(False):
+    print "Waiting a short time"
+    import time
+    time.sleep(20)
+
+# Explicitly list input file
+config = RunConfig(args.run_config)
+
+l1a_pix = os.path.abspath(config["InputFileGroup", "L1A_PIX"])
+dirname = config["ProductPathGroup", "ProductPath"]
+
+makedirs_p(dirname)
+os.chdir(dirname)
+
+ofile = os.path.splitext(os.path.basename(l1a_pix))[0] + ".h5"
+ofile = re.sub(r'L1A_PIX', 'L1B_RAD', ofile)
+
+# Generate output
+l1brad = L1bRadGenerate(l1a_pix, ofile)
+l1brad.run()
+

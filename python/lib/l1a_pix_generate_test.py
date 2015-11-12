@@ -10,8 +10,8 @@ l1a_bb = test_data + "ECOSTRESS_L1A_BB_800001_00001_20151024020211_0100_01.h5"
 l1a_raw = test_data + "ECOSTRESS_L1A_RAW_800001_00001_20151024020211_0100_01.h5"
 
 def test_l1a_pix_generate():
-    l1bpix = L1aPixGenerate(l1a_bb, l1a_raw, "l1a_pix.h5")
-    l1bpix.run()
+    l1apix = L1aPixGenerate(l1a_bb, l1a_raw, "l1a_pix.h5")
+    l1apix.run()
 
 
 

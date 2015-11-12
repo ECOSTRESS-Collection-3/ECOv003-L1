@@ -6,7 +6,7 @@ class L1aPixGenerate(object):
     '''This generates a L1A pix file from the given L1A_BB and L1A_RAW
     files.'''
     def __init__(self, l1a_bb, l1a_raw, output_name):
-        '''Create a L1aPixgenerate with the given inut files
+        '''Create a L1aPixGenerate with the given input files
         and output file name. To actually generate, execute the 'run'
         command.'''
         self.l1a_bb = l1a_bb

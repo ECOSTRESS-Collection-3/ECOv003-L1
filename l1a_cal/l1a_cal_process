@@ -13,7 +13,7 @@ usage='''Usage:
   l1a_cal_process -h | --help
   l1a_cal_process -v | --version
 
-This runs the L1B Geo process.
+This runs the L1A Cal process.
 
 Options:
   -h --help         

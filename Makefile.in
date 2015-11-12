@@ -582,15 +582,19 @@ dist_installecostress_SCRIPTS = @l1a_cal_src@/l1a_cal_pge \
 # We may want to add some kind of check of the results, but right now
 # we just make sure we can run end to end.
 end_to_end_test_data = @testdatadir@
+l1a_cal_run_config = $(end_to_end_test_data)/ECOSTRESS_L1A_CAL_RunConfig_20151024020211.xml
 l1a_pix_product = ECOSTRESS_L1A_PIX_800001_00001_20151024020211_0100_01.h5
 l1a_pix_product_expected = $(end_to_end_test_data)/$(l1a_pix_product).expected
+l1b_rad_run_config = $(end_to_end_test_data)/ECOSTRESS_L1B_RAD_RunConfig_20151024020211.xml
+l1b_rad_product = ECOSTRESS_L1B_RAD_800001_00001_20151024020211_0100_01.h5
+l1b_rad_product_expected = $(end_to_end_test_data)/$(l1b_rad_product).expected
+l1b_geo_run_config = $(end_to_end_test_data)/ECOSTRESS_L1B_GEO_RunConfig_20151024020211.xml
 l1b_geo_product = ECOSTRESS_L1B_GEO_800001_00001_20151024020211_0100_01.h5
 l1b_geo_product_expected = $(end_to_end_test_data)/$(l1b_geo_product).expected
-l1b_geo_run_config = $(end_to_end_test_data)/ECOSTRESS_L1B_GEO_RunConfig_20151024020211.xml
-l1a_cal_run_config = $(end_to_end_test_data)/ECOSTRESS_L1A_CAL_RunConfig_20151024020211.xml
 installecostress_DATA = @srcscript@/setup_ecostress.csh @srcscript@/setup_ecostress.sh
 ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
 	@srcpythonlib@/dummy.py @srcpythonlib@/l1a_pix_generate.py \
+	@srcpythonlib@/l1b_rad_generate.py \
 	@srcpythonlib@/l1b_geo_generate.py \
 	@srcpythonlib@/pickle_method.py @srcpythonlib@/run_config.py \
 	@srcpythonlib@/write_run_config.py
@@ -1428,11 +1432,15 @@ complain_if_afids:
         fi
 
 end-to-end-check: installcheck-am
+	-rm -r ./end_to_end_test_l1a_cal
+	-rm -r ./end_to_end_test_l1b_rad
+	-rm -r ./end_to_end_test_l1b_geo
 	$(prefix)/l1a_cal_pge $(l1a_cal_run_config)
-	$(prefix)/l1b_rad_pge
-#	$(prefix)/l1b_geo_pge $(l1b_geo_run_config)
+	$(prefix)/l1b_rad_pge $(l1b_rad_run_config)
+	$(prefix)/l1b_geo_pge $(l1b_geo_run_config)
 	$(H5DIFF) ./end_to_end_test_l1a_cal/$(l1a_pix_product) $(l1a_pix_product_expected)
-#	$(H5DIFF) ./end_to_end_test_l1b_geo/$(l1b_geo_product) $(l1b_geo_product_expected)
+	$(H5DIFF) ./end_to_end_test_l1b_rad/$(l1b_rad_product) $(l1b_rad_product_expected)
+	$(H5DIFF) ./end_to_end_test_l1b_geo/$(l1b_geo_product) $(l1b_geo_product_expected)
 
 nosetests.sh:
 	echo "# /bin/sh" > $@

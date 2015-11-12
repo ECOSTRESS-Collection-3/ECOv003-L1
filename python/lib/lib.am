@@ -1,5 +1,6 @@
 ecostresspkgpython_PYTHON+= @srcpythonlib@/dummy.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/l1a_pix_generate.py
+ecostresspkgpython_PYTHON+= @srcpythonlib@/l1b_rad_generate.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/l1b_geo_generate.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/pickle_method.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/run_config.py
