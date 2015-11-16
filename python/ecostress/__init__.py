@@ -8,7 +8,7 @@ import imp
 
 __path__.append(os.path.dirname(__file__) + "/../lib")
 
-for i in glob.glob(os.path.dirname(__file__) + "/ecostress/*.py"):
+for i in glob.glob(os.path.dirname(__file__) + "/../lib/*.py"):
     mname = os.path.basename(i).split('.')[0]
     # Don't load ipython, which is ipython magic extensions, or unit tests
     if(not mname == 'ipython' and
