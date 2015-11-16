@@ -39,12 +39,12 @@ if(False):
 config = RunConfig(args.run_config)
 
 datum = config["StaticAncillaryFileGroup", "Datum"]
-srtm_dir = config["StaticAncillaryFileGroup", "StrmDir"]
-spice_data = config["StaticAncillaryFileGroup", "SpiceData"]
+srtm_dir = config["StaticAncillaryFileGroup", "SRTMDir"]
+spice_data = config["StaticAncillaryFileGroup", "SpiceDataDir"]
 cam = read_shelve(config["StaticAncillaryFileGroup", "Camera"])
 ncpu = int(config["Process", "NumberCpu"])
 
-orblist = config["InputFileGroup", "L1A_RAW_ATT"]
+orblist = config["TimeBasedFileGroup", "L1A_RAW_ATT"]
 radlist = config["InputFileGroup", "L1B_RAD"]
 orblist = [os.path.abspath(f) for f in orblist]
 radlist = [os.path.abspath(f) for f in radlist]
