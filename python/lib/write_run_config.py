@@ -32,18 +32,25 @@ class WriteRunConfig(object):
             g.set("name", gname)
             for ename, econtent in gcontent.iteritems():
                 if(isinstance(econtent, list)):
-                    v = ET.Element("vector")
-                    v.set("name", ename)
-                    for t in econtent:
-                        e = ET.Element("element")
-                        e.text = t
-                        v.append(e)
-                    g.append(v)
+                    # A limitation of PCS is that a vector of size 1 is written
+                    # as a scalar. They just don't write a vector of size
+                    # 1.
+                    if(len(econtent) == 1):
+                        d = ET.Element("scalar")
+                        d.set("name", ename)
+                        d.text=(str(econtent[0]))
+                    else:
+                        d = ET.Element("vector")
+                        d.set("name", ename)
+                        for t in econtent:
+                            e = ET.Element("element")
+                            e.text = t
+                            d.append(e)
                 else:
-                    s = ET.Element("scalar")
-                    s.set("name", ename)
-                    s.text=(str(econtent))
-                    g.append(s)
+                    d = ET.Element("scalar")
+                    d.set("name", ename)
+                    d.text=(str(econtent))
+                g.append(d)
             root.append(g)
         # This is a valid string, but all on one line. We can reparse
         # this to generate a pretty xml file, which we want since we may

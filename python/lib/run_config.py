@@ -26,5 +26,13 @@ class RunConfig(object):
         '''Provide a array like interface to gettting data'''
         return self.data[key[0]][key[1]]
 
-
+    def as_list(self, key1, key2):
+        '''PCS writes a vector of a single element as a scalar. Rather than
+        needing to treat this as a special case is the rest of the code, this
+        returns a list in all cases, taking a single element and producing
+        a list of size 1 if needed.'''
+        res = self[key1, key2]
+        if(isinstance(res, list)):
+            return res
+        return [res,]
         

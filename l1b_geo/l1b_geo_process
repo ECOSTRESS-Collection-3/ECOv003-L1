@@ -44,8 +44,8 @@ spice_data = config["StaticAncillaryFileGroup", "SpiceDataDir"]
 cam = read_shelve(config["StaticAncillaryFileGroup", "Camera"])
 ncpu = int(config["Process", "NumberCpu"])
 
-orblist = config["TimeBasedFileGroup", "L1A_RAW_ATT"]
-radlist = config["InputFileGroup", "L1B_RAD"]
+orblist = config.as_list("TimeBasedFileGroup", "L1A_RAW_ATT")
+radlist = config.as_list("InputFileGroup", "L1B_RAD")
 orblist = [os.path.abspath(f) for f in orblist]
 radlist = [os.path.abspath(f) for f in radlist]
 dirname = config["ProductPathGroup", "ProductPath"]

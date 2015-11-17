@@ -23,3 +23,13 @@ def test_parse():
         config2["DynamicAncillaryFileGroup", "RFIParameters"]
     assert config["DynamicAncillaryFileGroup", "SpiceAntennaAzimuth"] == \
         config2["DynamicAncillaryFileGroup", "SpiceAntennaAzimuth"]
+
+def test_handling_vector_len1():
+    '''Test handling of vector of length 1. PCS writes this as a scalar,
+    need to check that this is properly handled.'''
+    config = WriteRunConfig()
+    config["Test1", "Value1"] = ["single_item"]
+    config.write_file("test.xml")
+    config2 = RunConfig("test.xml")
+    assert config2["Test1", "Value1"] == "single_item"
+    assert config2.as_list("Test1", "Value1") == config["Test1", "Value1"]
