@@ -6,6 +6,24 @@ class WriteStandardMetadata(object):
     def __init__(self, hdf_file):
         '''hdf_file should be the h5py.File handler'''
         self.hdf_file = hdf_file
+        # Initialize all the data.
+        self.data = {}
+        for m in self.mlist:
+            self.data[m] = "placeholder"
+        # Replace a few items that aren't strings.
+        self.data["InputPointer"] = ["placeholder", "placeholder",
+                                     "placeholder", "placeholder",
+                                     "placeholder"]
+        self.data["SizeMBECSDataGranule"] = np.float32(1.0)
+        self.data["StartOrbitNumber"] = np.int32(1)
+        self.data["StopOrbitNumber"] = np.int32(1)
+        self.data["InstrumentShortName"] = "ECOSTRESS"
+        self.data["PlatformLongName"] = "International Space Station"
+        self.data["PlatformShortName"] = "ISS"
+        self.data["PlatformType"] = "spacecraft"
+        self.data["ProducerAgency"] = "NASA"
+        self.data["ProducerInstitution"] = "JPL"
+        self.data["ProjectId"] = "ECOSTRESS"
 
     @property
     def mlist(self):
@@ -47,6 +65,14 @@ class WriteStandardMetadata(object):
             if(m in g):
                 del g[m]
         
+    def process_run_config_metadata(self, run_config):
+        '''This takes a RunConfig object is fills in the metadata we can
+        from this file.'''
+        self.data["ShortName"] = run_config["ProductPathGroup", "ShortName"]
+        self.data["ProductionDateTime"] = \
+          run_config["JobIdentification", "ProductionDateTime"]
+        self.data["ProductionLocation"] = \
+          run_config["JobIdentification", "ProductionLocation"]
     def write(self):
         '''Actually write the metadata.'''
         if("Metadata" in self.hdf_file):
@@ -54,33 +80,5 @@ class WriteStandardMetadata(object):
         else:
             g = self.hdf_file.create_group("Metadata")
         self.clear_old(g)
-        g["AncillaryDataDescriptors"] = "placeholder"
-        g["AutomaticQualityFlag"] = "placeholder"
-        g["BuildId"] = "placeholder"
-        g["CollectionLabel"] = "placeholder"
-        g["DataFormatType"] = "placeholder"
-        g["GranuleName"] = "placeholder"
-        g["HDFVersionId"] = "placeholder"
-        g["InputPointer"] = ["placeholder", "placeholder", "placeholder", 
-                             "placeholder", "placeholder"]
-        g["InstrumentShortName"] = "placeholder"
-        g["ProductTypeLongName"] = "placeholder"
-        g["PlatformLongName"] = "placeholder"
-        g["PlatformShortName"] = "placeholder"
-        g["PlatformType"] = "placeholder"
-        g["ProcessingLevel"] = "placeholder"
-        g["ProducerAgency"] = "placeholder"
-        g["ProducerInstitution"] = "placeholder"
-        g["ProductionDateTime"] = "placeholder"
-        g["ProductionLocation"] = "placeholder"
-        g["ProjectId"] = "placeholder"
-        g["RangeBeginningDate"] = "placeholder"
-        g["RangeBeginningTime"] = "placeholder"
-        g["RangeEndingDate"] = "placeholder"
-        g["RangeEndingTime"] = "placeholder"
-        g["ShortName"] = "placeholder"
-        g["SISName"] = "placeholder"
-        g["SISVersion"] = "placeholder"
-        g["SizeMBECSDataGranule"] = np.float32(1.0)
-        g["StartOrbitNumber"] = np.int32(1)
-        g["StopOrbitNumber"] = np.int32(1)
+        for m in self.mlist:
+            g[m] = self.data[m]

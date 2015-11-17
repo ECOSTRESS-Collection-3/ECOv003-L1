@@ -78,7 +78,8 @@ for i in range(len(orblist)):
     igc = IpiImageGroundConnection(ipi, dem, None)
 
     # Generate output
-    l1bgeo = L1bGeoGenerate(igc, ofile, number_line = args.number_line)
+    l1bgeo = L1bGeoGenerate(igc, ofile, number_line = args.number_line,
+                            run_config = config)
     pool = Pool(ncpu)
     l1bgeo.run(pool)
     
@@ -86,4 +87,7 @@ for i in range(len(orblist)):
     shutil.copyfile(orblist[i], ofile2)
     f = h5py.File(ofile2, "r+")
     m = WriteStandardMetadata(f)
+    m.process_run_config_metadata(config)
+    m.data["AutomaticQualityFlag"] = "Pass"
+    m.data["ProcessingLevel"] = "Level 1B"
     m.write()

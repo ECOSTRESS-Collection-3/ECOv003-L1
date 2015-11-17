@@ -10,14 +10,20 @@ class L1bGeoGenerate(object):
     ImageGroundConnection. I imagine we will modify this as time
     goes on, this is really just a placeholder.
     '''
-    def __init__(self, igc, output_name, start_line = 0,
+    def __init__(self, igc, output_name, run_config = None,
+                 start_line = 0,
                  number_line = -1,
                  number_integration_step = 1,
                  raycast_resolution = 100, 
                  max_height=10e3):
         '''Create a L1bGeoGenerate with the given ImageGroundConnection
         and output file name. To actually generate, execute the 'run'
-        command.'''
+        command.
+
+        You can pass the run_config in which is used to fill in some of the 
+        metadata. Without this, we skip that metadata and just have fill data.
+        This is useful for testing, but for production you'll always want to 
+        have the run config available.'''
         self.igc = igc
         self.output_name = output_name
         self.start_line = start_line
@@ -25,6 +31,7 @@ class L1bGeoGenerate(object):
         self.number_integration_step = number_integration_step
         self.raycast_resolution = raycast_resolution
         self.max_height = max_height
+        self.run_config = run_config
 
     def loc_parallel_func(self, it):
         '''Variation of loc that is easier to use with a multiprocessor pool.'''
@@ -84,6 +91,10 @@ class L1bGeoGenerate(object):
         lat, lon, height = self.loc(pool)
         fout = h5py.File(self.output_name, "w")
         m = WriteStandardMetadata(fout)
+        if(self.run_config is not None):
+            m.process_run_config_metadata(self.run_config)
+        m.data["AutomaticQualityFlag"] = "Pass"
+        m.data["ProcessingLevel"] = "Level 1B"
         g = fout.create_group("L1bGeo")
         g.attrs["Projection"] = '''\
 The latitude, longitude, and height are relative to the WGS-84
