@@ -92,6 +92,15 @@ afids_latest rather than the system area:
     CFLAGS="-I/pkg/afids/afids_latest/include" \
     pip install -r ~/GeoCal/requirements.txt
 
+Bliss Setup
+-----------
+Just so we don't have two python installs, can do 
+
+    pip install -r ~/ecostress-bliss/build/requirements.txt
+
+This picks up what bliss needs.
+
+
 GeoCal Setup
 ------------
 
@@ -114,7 +123,15 @@ Then
        SPHINXBUILD=/pkg/afids/afids_pythonenv/bin/sphinx-build
     make -j 12 all && make install && make -j 12 check && make -j 12 installcheck
 
+Setup file
+----------
+Create a setup file /pkg/afids/afids_pythonenv/
 
+    export GDAL_DRIVER_PATH=/pkg/afids/afids_latest/lib/gdalplugins
+    export PATH=/pkg/afids/afids_latest/bin:${PATH}
+    export LD_LIBRARY_PATH=/pkg/afids/afids_latest/lib64:/pkg/afids/afids_latest/lib:${LD_LIBRARY_PATH}
+    VIRTUAL_ENV_DISABLE_PROMPT=t source /pkg/afids/afids_pythonenv/bin/activate
+    source /pkg/afids/geocal_latest/setup_afids_python.sh
 
 
 
