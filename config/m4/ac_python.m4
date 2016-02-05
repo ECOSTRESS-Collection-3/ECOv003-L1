@@ -45,7 +45,7 @@ AC_MSG_CHECKING([Checking for python-config])
 AC_PATH_TOOL([PYTHON_CONFIG], [python-config])
 if test -n "$PYTHON_CONFIG" ; then
     AC_MSG_RESULT([yes])
-    PYTHON_VERSION=$(python -c "import sys;print '.'.join(map(str, sys.version_info@<:@:2@:>@))")
+    PYTHON_VERSION=$(python -c "import sys;print('.'.join(map(str, sys.version_info@<:@:2@:>@)))")
 else
   AC_MSG_RESULT([no])
 fi

@@ -13,4 +13,4 @@ for i in glob.glob(os.path.dirname(__file__) + "/../lib/*.py"):
     # Don't load ipython, which is ipython magic extensions, or unit tests
     if(not mname == 'ipython' and
        not re.search('_test', mname)):
-        exec "import %s" % mname
+        exec("from .%s import *" % mname)

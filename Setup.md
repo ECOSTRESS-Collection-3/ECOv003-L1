@@ -28,11 +28,12 @@ We install in a directory with the date (so we can have multiple versions).
     cd ~
     mkdir -p AfidsBuild/build_afids_install
     cd AfidsBuild/build_afids_install
-    ../../Afids/configure --prefix=/pkg/afids/afids_20151103 \
+    /home/smyth/Afids/configure --prefix=/pkg/afids/afids_20160203 \
         --with-blitz=build --with-gsl=build --with-hdf5=build \
 	--with-hdf4=build --with-gnuplot=build --with-fftw=build \
 	--with-geotiff=build --with-gdal=build --with-geos=build \
 	--with-ogdi=build --with-openjpeg=build --with-afids-xvd=build \
+        --with-python=build --with-tcl=build \
 	--with-afids-test-data=/home/smyth/AfidsData \
 	--with-srtm-l2=/project/ancillary/SRTM/srtm_v3_dem_L2 \
 	--without-afids-python
@@ -48,8 +49,10 @@ so we just manually copy that from pistol. Nothing special about the pistol
 version except it matches the autotools version we use in the Cartlab (which
 is slightly older than the default one on the eco-scf system).
 
-Python Setup
+Python 2 Setup
 ------------
+
+This is old directions for the python 2 setup. See next section for python 3
 
 GeoCal depends on a number of python packages. We set up a virtual environment
 for this.
@@ -92,6 +95,39 @@ afids_latest rather than the system area:
     CFLAGS="-I/pkg/afids/afids_latest/include" \
     pip install -r ~/GeoCal/requirements.txt
 
+Python 3 Setup
+------------
+
+Make sure you are pointing to the afids installed libraries
+
+    export GDAL_DRIVER_PATH=/pkg/afids/afids_latest/lib/gdalplugins
+    export PATH=/pkg/afids/afids_latest/bin:${PATH}
+    export LD_LIBRARY_PATH=/pkg/afids/afids_latest/lib64:/pkg/afids/afids_latest/lib:${LD_LIBRARY_PATH}
+    export PYTHONPATH=/pkg/afids/afids_latest/lib/python3.5/site-packages:/pkg/afids/afids_latest/lib64/python3.5/site-packages:${PYTHONPATH}
+
+Then set up virtual environment
+
+    cd /pkg/afids
+    /pkg/afids/afids_latest/bin/pyvenv afids_python3env
+    source afids_python3env/bin/activate
+
+Need to link in the umfpack headers, or at least I couldn't figure out
+a way to pass this to UMFPACK without linking here:
+
+    mkdir -p afids_python3env/include
+    ln -s /pkg/afids/afids_latest/include/umf* afids_python3env/include
+
+Now install requirements. The various environment variables here are used
+by different packages to know where to find things installed in
+afids_latest rather than the system area:
+
+    HDF5_DIR=/pkg/afids/afids_latest \
+    BLAS=/pkg/afids/afids_latest/lib/libfblas.a \
+    LAPACK=/pkg/afids/afids_latest/lib/libflapack.a \
+    UMFPACK=/pkg/afids/afids_latest/lib/libumfpack.a \
+    CFLAGS="-I/pkg/afids/afids_latest/include" \
+    pip install -r ~/GeoCal/requirements.txt
+
 Bliss Setup
 -----------
 Just so we don't have two python installs, can do 
@@ -100,6 +136,7 @@ Just so we don't have two python installs, can do
 
 This picks up what bliss needs.
 
+(Note this is the same for python 2 and 3, don't need to change anything here.)
 
 GeoCal Setup
 ------------
@@ -109,18 +146,17 @@ Make sure you are pointing to the afids installed libraries
     export GDAL_DRIVER_PATH=/pkg/afids/afids_latest/lib/gdalplugins
     export PATH=/pkg/afids/afids_latest/bin:${PATH}
     export LD_LIBRARY_PATH=/pkg/afids/afids_latest/lib64:/pkg/afids/afids_latest/lib:${LD_LIBRARY_PATH}
+    export PYTHONPATH=/pkg/afids/afids_latest/lib/python3.5/site-packages:/pkg/afids/afids_latest/lib64/python3.5/site-packages:${PYTHONPATH}
+    source /pkg/afids/afids_python3env/bin/activate
 
 Then
 
     cd ~
     mkdir GeoCalBuild/build
     cd GeoCalBuild/build
-    ../../GeoCal/configure --prefix=/home/smyth/GeoCalBuild/install \
+    /home/smyth/GeoCal/configure --prefix=/pkg/afids/geocal_20160203 \
        THIRDPARTY=/pkg/afids/afids_latest --enable-maintainer-mode \
-       --with-afids=/pkg/afids/afids_latest \
-       PYTHON=/pkg/afids/afids_pythonenv/bin/python \
-       NOSETESTS=/pkg/afids/afids_pythonenv/bin/nosetests \
-       SPHINXBUILD=/pkg/afids/afids_pythonenv/bin/sphinx-build
+       --with-afids=/pkg/afids/afids_latest
     make -j 12 all && make install && make -j 12 check && make -j 12 installcheck
 
 Setup file

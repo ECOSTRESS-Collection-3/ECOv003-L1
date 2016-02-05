@@ -9,21 +9,21 @@ class WriteStandardMetadata(object):
         # Initialize all the data.
         self.data = {}
         for m in self.mlist:
-            self.data[m] = "placeholder"
+            self.data[m] = b"placeholder"
         # Replace a few items that aren't strings.
-        self.data["InputPointer"] = ["placeholder", "placeholder",
-                                     "placeholder", "placeholder",
-                                     "placeholder"]
+        self.data["InputPointer"] = [b"placeholder", b"placeholder",
+                                     b"placeholder", b"placeholder",
+                                     b"placeholder"]
         self.data["SizeMBECSDataGranule"] = np.float32(1.0)
         self.data["StartOrbitNumber"] = np.int32(1)
         self.data["StopOrbitNumber"] = np.int32(1)
-        self.data["InstrumentShortName"] = "ECOSTRESS"
-        self.data["PlatformLongName"] = "International Space Station"
-        self.data["PlatformShortName"] = "ISS"
-        self.data["PlatformType"] = "spacecraft"
-        self.data["ProducerAgency"] = "NASA"
-        self.data["ProducerInstitution"] = "JPL"
-        self.data["ProjectId"] = "ECOSTRESS"
+        self.data["InstrumentShortName"] = b"ECOSTRESS"
+        self.data["PlatformLongName"] = b"International Space Station"
+        self.data["PlatformShortName"] = b"ISS"
+        self.data["PlatformType"] = b"spacecraft"
+        self.data["ProducerAgency"] = b"NASA"
+        self.data["ProducerInstitution"] = b"JPL"
+        self.data["ProjectId"] = b"ECOSTRESS"
 
     @property
     def mlist(self):

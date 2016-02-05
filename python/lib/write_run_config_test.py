@@ -16,7 +16,7 @@ def test_parse():
          '/ops/LOM/PREPROCESSOR_OUT/ANTAZ/001/2015/02/28/smap_ar_1502282059_1502282144_v01.bc'
         ]
     if(False):
-        print config
+        print(config)
     config.write_file("test.xml")
     config2 = RunConfig("test.xml")
     assert config["DynamicAncillaryFileGroup", "RFIParameters"] == \
