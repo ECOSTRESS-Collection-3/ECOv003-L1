@@ -1,10 +1,10 @@
 from geocal import *
 import pickle
-import pickle_method
+import ecostress.pickle_method
 import h5py
 import math
 from multiprocessing import Pool
-from write_standard_metadata import WriteStandardMetadata
+from ecostress.write_standard_metadata import WriteStandardMetadata
 
 class L1bGeoGenerate(object):
     '''This generate a L1B geo output file from a given
