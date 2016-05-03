@@ -1,3 +1,4 @@
+ecostresspkgpython_PYTHON+= @srcpythonlib@/l1b_att_generate.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/l1a_pix_generate.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/l1b_rad_generate.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/l1b_geo_generate.py

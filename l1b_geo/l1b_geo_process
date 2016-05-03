@@ -32,7 +32,7 @@ args = docopt_simple(usage, version=version)
 # Can use this to wait a short time so we can attach strace to this
 # process, useful to find all the files that we are accessing.
 if(False):
-    print "Waiting a short time"
+    print("Waiting a short time")
     import time
     time.sleep(20)
 
@@ -61,11 +61,12 @@ if(len(orblist) != len(radlist)):
     raise RuntimeException("The RunConfig file needs to have the same number of L1A_RAW_ATT files and L1B_RAD")
 
 for i in range(len(orblist)):
-    print "Doing scene number %d" %i
+    print("Doing scene number %d" %i)
+    print (orblist[i])
     f = h5py.File(orblist[i], "r")
-    orb = serialize_read_generic_string(f["DummyData/orbit_xml"][()])
+    orb = serialize_read_generic_string(f["DummyData/orbit_xml"][()].decode('utf-8'))
     f = h5py.File(radlist[i], "r")
-    tt = serialize_read_generic_string(f["DummyData/tt_xml"][()])
+    tt = serialize_read_generic_string(f["DummyData/tt_xml"][()].decode('utf-8'))
     ofile = os.path.splitext(os.path.basename(radlist[i]))[0] + ".h5"
     ofile = re.sub(r'L1B_RAD', 'L1B_GEO', ofile)
     ofile2 = re.sub(r'L1B_GEO', 'L1B_ATT', ofile)

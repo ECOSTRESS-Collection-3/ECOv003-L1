@@ -1,7 +1,7 @@
 from geocal import *
 import h5py
 import shutil
-from write_standard_metadata import WriteStandardMetadata
+from ecostress.write_standard_metadata import WriteStandardMetadata
 
 class L1bRadGenerate(object):
     '''This generates a L1B rad file from the given L1A_PIX file.'''

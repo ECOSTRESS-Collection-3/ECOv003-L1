@@ -1,9 +1,10 @@
 from geocal import *
-import cPickle
-import pickle_method
+import pickle
+import ecostress.pickle_method
 import h5py
+import math
 from multiprocessing import Pool
-from write_standard_metadata import WriteStandardMetadata
+from ecostress.write_standard_metadata import WriteStandardMetadata
 
 class L1bGeoGenerate(object):
     '''This generate a L1B geo output file from a given
@@ -51,7 +52,7 @@ class L1bGeoGenerate(object):
         if(start_sample + number_sample == self.igc.number_sample):
             print_status = True
         if(print_status):
-            print "Have %d positions to calculate" % rcast.number_position
+            print("Have %d positions to calculate" % rcast.number_position)
         lat = np.empty((rcast.number_position, rcast.number_sample))
         lon = np.empty((rcast.number_position, rcast.number_sample))
         height = np.empty((rcast.number_position, rcast.number_sample))
@@ -66,7 +67,7 @@ class L1bGeoGenerate(object):
                 height[ln, j] = pt.height_reference_surface
             i += 1
             if(i % 100 ==0 and print_status):
-                print "Done with position %d" % i
+                print("Done with position %d" % i)
             if(rcast.last_position):
                 break
         return lat, lon, height
@@ -76,7 +77,7 @@ class L1bGeoGenerate(object):
         if(pool is None):
             return self.loc_parallel_func([0,self.igc.number_sample])
         nprocess = pool._processes
-        n = self.igc.number_sample / nprocess
+        n = math.floor(self.igc.number_sample / nprocess)
         if(self.igc.number_sample % nprocess > 0):
             n += 1
         it = [[i,n] for i in range(0,self.igc.number_sample, n)]

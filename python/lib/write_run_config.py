@@ -27,10 +27,10 @@ class WriteRunConfig(object):
         root.set("xmlns:xalan","http://xml.apache.org/xslt")
         root.set("xmlns:cas","http://oodt.jpl.nasa.gov/1.0/cas")
         root.set("xsi:noNamespaceSchemaLocation","")
-        for gname,gcontent in self.data.iteritems():
+        for gname,gcontent in self.data.items():
             g = ET.Element("group")
             g.set("name", gname)
-            for ename, econtent in gcontent.iteritems():
+            for ename, econtent in gcontent.items():
                 if(isinstance(econtent, list)):
                     # A limitation of PCS is that a vector of size 1 is written
                     # as a scalar. They just don't write a vector of size
