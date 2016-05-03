@@ -1,0 +1,17 @@
+We produce a SPICE kernel for the ISS orbit.
+
+To do this, we first started by downloading the Two Line Element (TLE) 
+covering 2015 from space-track.org. Note that this contains duplicates,
+not sure why.
+
+This data has been downloaded to the file iss_tle.txt.
+
+We then hand created the file iss_spice.txt. Note that this file has
+hardcoded paths, so if you need to rerun the spice generation you may need
+to edit these file. The paths are for the CartLab computer pistol.
+
+We then create the spice kernel by 
+
+mkspk -setup iss_spice.txt
+
+Where mkspk is a spice program for making a spice kernel.
