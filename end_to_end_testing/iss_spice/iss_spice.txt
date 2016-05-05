@@ -8,7 +8,7 @@
    LEAPSECONDS_FILE  = '/opt/afids/data/cspice/lsk/naif0010.tls'
    INPUT_DATA_FILE   = 'iss_tle.txt'
    IGNORE-FIRST_LINE = 3
-   OUTPUT_SPK_FILE   = 'iss.spk'
+   OUTPUT_SPK_FILE   = 'iss_2015.bsp'
    PCK_FILE          = '/opt/afids/data/cspice/pck/geophysical.ker'
    COMMENT_FILE      = 'iss_spice.comment'
    SEGMENT_ID        = 'segment identifier'
