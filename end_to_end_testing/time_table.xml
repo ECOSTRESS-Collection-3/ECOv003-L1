@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <!DOCTYPE boost_serialization>
-<boost_serialization signature="serialization::archive" version="10">
+<boost_serialization signature="serialization::archive" version="13">
 <geocal_object class_id="0" tracking_level="0" version="1">
 	<px class_id="2" class_name="GeoCal::ConstantSpacingTimeTable" tracking_level="1" version="0" object_id="_0">
 		<min_t class_id="3" tracking_level="1" version="0" object_id="_1">
-			<time_pgs>719805739.5475601</time_pgs>
+			<time_pgs>6.95390406543024063e+08</time_pgs>
 		</min_t>
 		<max_l>5399</max_l>
-		<tspace>0.0098008298755186719</tspace>
+		<tspace>9.80082987551867194e-03</tspace>
 	</px>
 </geocal_object>
 </boost_serialization>

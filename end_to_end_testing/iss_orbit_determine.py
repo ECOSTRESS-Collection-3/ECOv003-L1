@@ -40,20 +40,39 @@ def longitude_diff(toffset, lon):
 # California ASTER data we have, selected by hand.
 
 pts = [(39.5, -122), (38, -121), (36, -118), (34, -116)]
-step_size = 100.0
-threshold = 1.0
-allres = {}
-for pt in pts:
-    res = []
-    for ts in np.arange(0.0, tend - tstart - 100.0, step_size):
-        if(latitude_diff(ts, pt[0]) * latitude_diff(ts + step_size, pt[0]) 
-           <= 0):
-            t = scipy.optimize.brentq(latitude_diff, ts, ts + step_size, 
-                                      args=(pt[0],))
-            if(abs(longitude_diff(t, pt[1])) < threshold):
-                res.append(t)
-    print(pt, ":")
-    print(res)
-    allres[pt] = res
-write_shelve("iss_time.json", allres)
+if(False):
+    step_size = 100.0
+    threshold = 1.0
+    allres = {}
+    for pt in pts:
+        res = []
+        for ts in np.arange(0.0, tend - tstart - 100.0, step_size):
+            if(latitude_diff(ts, pt[0]) * latitude_diff(ts + step_size, pt[0]) 
+               <= 0):
+                t = scipy.optimize.brentq(latitude_diff, ts, ts + step_size, 
+                                          args=(pt[0],))
+                if(abs(longitude_diff(t, pt[1])) < threshold):
+                    res.append(t)
+        print(pt, ":")
+        print(res)
+        allres[str(pt)] = res
+    write_shelve("iss_time.json", allres)
+
+near_time = read_shelve("iss_time.json")
+cam_nadir = SimpleCamera(0,0,0)
+fc_nadir = FrameCoordinate(cam_nadir.number_line(0) / 2.0, 
+                           cam_nadir.number_sample(0) / 2.0)
+
+pindex = 2
+pt = Geodetic(pts[pindex][0], pts[pindex][1])
+for t in near_time[str(pts[pindex])]:
+    spt = orb.reference_surface_intersect_approximate(tstart + t, cam_nadir, 
+                                                      fc_nadir)
+    # This is the format needed by http://www.isstracker.com/historical
+    # which can be used to generate plots
+    s = str(tstart + t)
+    s = re.sub(r'T', ' ', s)
+    s = re.sub(r'\.\d+Z', '+0000', s)
+    print(tstart + t, "   ", s, " : ", distance(pt, spt) / 1e3, " km")
+
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <!DOCTYPE boost_serialization>
-<boost_serialization signature="serialization::archive" version="10">
+<boost_serialization signature="serialization::archive" version="13">
 <geocal_object class_id="0" tracking_level="0" version="1">
 	<px class_id="2" class_name="GeoCal::QuaternionCamera" tracking_level="1" version="0" object_id="_0">
 		<focal_length class_id="3" tracking_level="0" version="0">
-			<val>425</val>
+			<val>4.25000000000000000e+02</val>
 			<grad class_id="4" tracking_level="0" version="0">
 				<size>0</size>
 			</grad>
@@ -13,13 +13,13 @@
 		<number_line>1</number_line>
 		<number_sample>5400</number_sample>
 		<line_pitch>
-			<val>0.072000000000000008</val>
+			<val>7.20000000000000084e-02</val>
 			<grad>
 				<size>0</size>
 			</grad>
 		</line_pitch>
 		<sample_pitch>
-			<val>0.080000000000000002</val>
+			<val>8.00000000000000017e-02</val>
 			<grad>
 				<size>0</size>
 			</grad>
@@ -29,13 +29,13 @@
 			<item_version>0</item_version>
 			<item class_id="6" tracking_level="1" version="0" object_id="_1">
 				<line>
-					<val>0.5</val>
+					<val>5.00000000000000000e-01</val>
 					<grad>
 						<size>0</size>
 					</grad>
 				</line>
 				<sample>
-					<val>2700</val>
+					<val>2.70000000000000000e+03</val>
 					<grad>
 						<size>0</size>
 					</grad>
@@ -44,25 +44,25 @@
 		</principal_point>
 		<frame_to_sc class_id="7" tracking_level="0" version="0">
 			<q1>
-				<val>1</val>
+				<val>1.00000000000000000e+00</val>
 				<grad>
 					<size>0</size>
 				</grad>
 			</q1>
 			<q2>
-				<val>0</val>
+				<val>0.00000000000000000e+00</val>
 				<grad>
 					<size>0</size>
 				</grad>
 			</q2>
 			<q3>
-				<val>0</val>
+				<val>0.00000000000000000e+00</val>
 				<grad>
 					<size>0</size>
 				</grad>
 			</q3>
 			<q4>
-				<val>0</val>
+				<val>0.00000000000000000e+00</val>
 				<grad>
 					<size>0</size>
 				</grad>
