@@ -18,5 +18,6 @@ class L1aPixGenerate(object):
         '''Do the actual generation of data.'''
         shutil.copyfile(self.l1a_raw, self.output_name)
         f = h5py.File(self.output_name, "r+")
-        m = WriteStandardMetadata(f)
+        m = WriteStandardMetadata(f, product_specfic_group = "L1APIXMetadata",
+                                  pge_name="l1a_cal")
         m.write()

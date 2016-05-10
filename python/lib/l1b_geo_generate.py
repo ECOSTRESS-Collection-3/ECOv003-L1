@@ -3,6 +3,7 @@ import pickle
 import ecostress.pickle_method
 import h5py
 import math
+import re
 from multiprocessing import Pool
 from ecostress.write_standard_metadata import WriteStandardMetadata
 
@@ -91,11 +92,22 @@ class L1bGeoGenerate(object):
         '''Do the actual generation of data.'''
         lat, lon, height = self.loc(pool)
         fout = h5py.File(self.output_name, "w")
-        m = WriteStandardMetadata(fout)
+        m = WriteStandardMetadata(fout,
+                                  product_specfic_group = "L1GEOMetadata",
+                                  pge_name="l1b_geo",
+                                  build_id = '0.01', pge_version='0.01')
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)
-        m.data["AutomaticQualityFlag"] = "Pass"
-        m.data["ProcessingLevel"] = "Level 1B"
+        m.set("WestBoundingCoordinate", lon[lon > -998].min())
+        m.set("EastBoundingCoordinate", lon[lon > -998].max())
+        m.set("SouthBoundingCoordinate", lat[lat > -998].min())
+        m.set("NorthBoundingCoordinate", lat[lat > -998].max())
+        mt = re.match(r'(.*)T(.*)Z', str(self.igc.ipi.min_time))
+        m.set("RangeBeginningDate", mt.group(1))
+        m.set("RangeBeginningTime", mt.group(2))
+        mt = re.match(r'(.*)T(.*)Z', str(self.igc.ipi.min_time))
+        m.set("RangeEndingDate", mt.group(1))
+        m.set("RangeEndingTime", mt.group(2))
         g = fout.create_group("L1bGeo")
         g.attrs["Projection"] = '''\
 The latitude, longitude, and height are relative to the WGS-84

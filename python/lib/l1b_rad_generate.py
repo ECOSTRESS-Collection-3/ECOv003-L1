@@ -16,6 +16,7 @@ class L1bRadGenerate(object):
         '''Do the actual generation of data.'''
         shutil.copyfile(self.l1a_pix, self.output_name)
         f = h5py.File(self.output_name, "r+")
-        m = WriteStandardMetadata(f)
+        m = WriteStandardMetadata(f, product_specfic_group = "L1B_RAD",
+                                  pge_name="l1b_rad")
         m.write()
 

@@ -1,17 +1,26 @@
 import h5py
 import numpy as np
+import os
+import re
 
 class WriteStandardMetadata(object):
     '''This writes the standard metadata'''
-    def __init__(self, hdf_file, product_specfic_group = b"L1GEOMetadata",
-                 pge_name = b'L1B_GEO'):
-        '''hdf_file should be the h5py.File handler'''
+    def __init__(self, hdf_file, product_specfic_group = "L1GEOMetadata",
+                 pge_name = 'L1B_GEO', local_granule_id = None,
+                 build_id = '0.01', pge_version='0.01'):
+        '''hdf_file should be the h5py.File handler. You can pass the 
+        local_granule_id, or if None we assume the filename for the hdf_file is
+        the local_granule_id'''
         self.hdf_file = hdf_file
+        self.product_specfic_group = product_specfic_group
+        if(local_granule_id is None):
+            local_granule_id = os.path.basename(hdf_file.filename)
+
         # Initialize all the data.
         self.data = {}
-        for m, typ, ln in self.mlist:
+        for m, typ in self.mlist:
             if(typ == "String"):
-                self.data[m] = self.pad_string(b'dummy', ln)
+                self.data[m] = 'dummy'
             elif(typ == "Float64"):
                 self.data[m] = np.float64(0.0)
             elif(typ == "Int32"):
@@ -22,51 +31,47 @@ class WriteStandardMetadata(object):
                 raise RuntimeError("Unrecognized type '%s'" % typ)
         # Fill in values we can.
         self.set('AncillaryInputPointer', product_specfic_group)
-        self.set('AutomaticQualityFlag', b'PASS')
-        self.set('DataFormatType', b'NCSAHDF5')
+        self.set('AutomaticQualityFlag', 'PASS')
+        self.set('DataFormatType', 'NCSAHDF5')
         # How do we determine these?
-        self.set('HDFVersionId', b'1.8.16')
+        self.set('HDFVersionId', '1.8.16')
         self.set('ImageLines', 5400)
         self.set('ImageLineSpacing', 68.754)
         self.set('ImagePixels', 5400)
         self.set('ImagePixelSpacing', 65.536)
-        self.set('InstrumentShortName', b'ECOSTRESS')
-        self.set('LongName', b'ECOSTRESS')
-        self.set('PGEName', pge_name)
-        self.set('PlatformLongName', b'ISS')
-        self.set('PlatformShortName', b'ISS')
-        self.set('PlatformType', b'Spacecraft')
-        self.set('ProcessingLevelID', b'1')
-        self.set('ProcessingLevelDescription', 
-                 b'Level 1 Geolocation Parameters')
-        self.set('ProducerAgency', b'JPL')
-        self.set('ProducerInstitution', b'Caltech')
-        self.set('CampaignShortName', b'Primary')
-        self.set('DayNightFlag', b'Day')
 
-# Things we can set?
-# BuildID - Have a global variable
-# PGEVersion - Have a global variable
-#
-# EastBoundingCoordinate
-# NorthBoundingCoordinate
-# SouthBoundingCoordinate
-# WestBoundingCoordinate
-#
-# RangeBeginningDate
-# RangeBeginningTime
-# RangeEndingDate
-# RangeEndingTime
-#
-# LocalGranuleID
-# SceneID
-# StartOrbitNumber
-# StopOrbitNumber
+        self.set('InstrumentShortName', 'ECOSTRESS')
+        self.set('LongName', 'ECOSTRESS')
+        self.set('PGEName', pge_name)
+        self.set('PlatformLongName', 'ISS')
+        self.set('PlatformShortName', 'ISS')
+        self.set('PlatformType', 'Spacecraft')
+        self.set('ProcessingLevelDescription', 
+                 'Level 1 Geolocation Parameters')
+        self.set('ProducerAgency', 'JPL')
+        self.set('ProducerInstitution', 'Caltech')
+        self.set('CampaignShortName', 'Primary')
+        self.set('DayNightFlag', 'Day')
+        self.set('BuildId', build_id)
+        self.set('PGEVersion', pge_version)
+        self.set('LocalGranuleID', local_granule_id)
+        # For now parse the local granule id to get some of the metadata.
+        # Might get this from the run config file instead
+        m = re.match(r'ECOSTRESS_(?P<process_level>\w+)_(\w+)_(?P<orbit>\d{5})_(?P<scene_id>\d{3})', local_granule_id)
+        if(not m):
+            raise RuntimeError("Unrecognized local granule id '%s'" % 
+                               local_granule_id)
+        self.set('StartOrbitNumber', m.group('orbit'))
+        self.set('StopOrbitNumber', m.group('orbit'))
+        self.set('SceneID', m.group('scene_id'))
+        self.set('ProcessingLevelID', m.group('process_level'))
+
     def set(self, m, v):
         if(self.data[m] is None):
             raise RuntimeError("Key '%m' is not in standard metadata" % m)
-        if(isinstance(self.data[m], np.string_)):
-            self.data[m] = self.pad_string(v, len(self.data[m]))
+        if(isinstance(self.data[m], bytes) or
+           isinstance(self.data[m], str)):
+            self.data[m] = v
         elif(isinstance(self.data[m], np.float64)):
             self.data[m] = np.float64(v)
         elif(isinstance(self.data[m], np.int32)):
@@ -77,7 +82,8 @@ class WriteStandardMetadata(object):
             raise RuntimeError("Unrecognized type")
 
     def pad_string(self, s, ln):
-        '''Create a fixed length string.'''
+        '''Create a fixed length string. Note not currently used, but we'll 
+        leave the function here in case we end up needing it.'''
         if(len(s) > ln):
             raise RuntimeError("String '%s' is longer than allowed size %d" %(s, ln))
         if(len(s) == ln):
@@ -87,54 +93,54 @@ class WriteStandardMetadata(object):
     @property
     def mlist(self):
         return [
-["AncillaryInputPointer", "String", 255],
-["AutomaticQualityFlag", "String", 8],
-["BuildId", "String", 8],
-["CollectionLabel", "String", 255],
-["DataFormatType", "String", 8],
-["DayNightFlag", "String", 8],
-["EastBoundingCoordinate", "Float64", 8],
-["HDFVersionId", "String", 8],
-["ImageLines", "Int32", 4],
-["ImageLineSpacing", "Float32", 4],
-["ImagePixels", "Int32", 4],
-["ImagePixelSpacing", "Float32", 4],
-["InputPointer", "String", 255],
-["InstrumentShortName", "String", 20],
-["LocalGranuleID", "String", 60],
-["LongName", "String", 80],
-["NorthBoundingCoordinate", "Float64", 8],
-["PGEName", "String", 16],
-["PGEVersion", "String", 8],
-["PlatformLongName", "String", 80],
-["PlatformShortName", "String", 20],
-["PlatformType", "String", 20],
-["ProcessingLevelID", "String", 6],
-["ProcessingLevelDescription", "String", 80],
-["ProcessingQAAttribute", "String", 8],
-["ProcessingQADescription", "String", 8],
-["ProducerAgency", "String", 80],
-["ProducerInstitution", "String", 80],
-["ProductionDateTime", "String", 20],
-["ProductionLocation", "String", 80],
-["CampaignShortName", "String", 20],
-["RangeBeginningDate", "String", 8],
-["RangeBeginningTime", "String", 12],
-["RangeEndingDate", "String", 8],
-["RangeEndingTime", "String", 12],
-["SceneID", "String", 8],
-["ShortName", "String", 20],
-["SISName", "String", 80],
-["SISVersion", "String", 8],
-["SouthBoundingCoordinate", "Float64", 8],
-["StartOrbitNumber", "String", 8],
-["StopOrbitNumber", "String", 8],
-["WestBoundingCoordinate", "Float64", 8],
+["AncillaryInputPointer", "String"],
+["AutomaticQualityFlag", "String"],
+["BuildId", "String"],
+["CollectionLabel", "String"],
+["DataFormatType", "String"],
+["DayNightFlag", "String"],
+["EastBoundingCoordinate", "Float64"],
+["HDFVersionId", "String"],
+["ImageLines", "Int32"],
+["ImageLineSpacing", "Float32"],
+["ImagePixels", "Int32"],
+["ImagePixelSpacing", "Float32"],
+["InputPointer", "String"],
+["InstrumentShortName", "String"],
+["LocalGranuleID", "String"],
+["LongName", "String"],
+["NorthBoundingCoordinate", "Float64"],
+["PGEName", "String"],
+["PGEVersion", "String"],
+["PlatformLongName", "String"],
+["PlatformShortName", "String"],
+["PlatformType", "String"],
+["ProcessingLevelID", "String"],
+["ProcessingLevelDescription", "String"],
+["ProcessingQAAttribute", "String"],
+["ProcessingQADescription", "String"],
+["ProducerAgency", "String"],
+["ProducerInstitution", "String"],
+["ProductionDateTime", "String"],
+["ProductionLocation", "String"],
+["CampaignShortName", "String"],
+["RangeBeginningDate", "String"],
+["RangeBeginningTime", "String"],
+["RangeEndingDate", "String"],
+["RangeEndingTime", "String"],
+["SceneID", "String"],
+["ShortName", "String"],
+["SISName", "String"],
+["SISVersion", "String"],
+["SouthBoundingCoordinate", "Float64"],
+["StartOrbitNumber", "String"],
+["StopOrbitNumber", "String"],
+["WestBoundingCoordinate", "Float64"],
             ]
 
     def clear_old(self, g):
         '''Clear any old metadata fields.'''
-        for m, typ, ln in self.mlist:
+        for m, typ in self.mlist:
             if(m in g):
                 del g[m]
         
@@ -146,6 +152,7 @@ class WriteStandardMetadata(object):
           run_config["JobIdentification", "ProductionDateTime"]
         self.data["ProductionLocation"] = \
           run_config["JobIdentification", "ProductionLocation"]
+
     def write(self):
         '''Actually write the metadata.'''
         if("StandardMetadata" in self.hdf_file):
@@ -153,5 +160,10 @@ class WriteStandardMetadata(object):
         else:
             g = self.hdf_file.create_group("StandardMetadata")
         self.clear_old(g)
-        for m, typ, ln in self.mlist:
+        for m, typ in self.mlist:
             g[m] = self.data[m]
+        if(self.product_specfic_group in self.hdf_file):
+            pg = self.hdf_file[self.product_specfic_group]
+        else:
+            pg = self.hdf_file.create_group(self.product_specfic_group)
+        pg["AncillaryFiles"] = np.int32(0)

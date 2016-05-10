@@ -89,6 +89,4 @@ for i in range(len(orblist)):
     f = h5py.File(ofile2, "r+")
     m = WriteStandardMetadata(f)
     m.process_run_config_metadata(config)
-    m.data["AutomaticQualityFlag"] = "Pass"
-    m.data["ProcessingLevel"] = "Level 1B"
     m.write()

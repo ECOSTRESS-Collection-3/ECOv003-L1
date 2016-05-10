@@ -42,11 +42,10 @@ class L1bAttGenerate(object):
     def run(self):
         '''Do the actual generation of data.'''
         fout = h5py.File(self.output_name, "w")
-        m = WriteStandardMetadata(fout)
+        m = WriteStandardMetadata(fout, "L1GEOMetadata",
+                                  pge_name="l1b_geo")
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)
-        m.data["AutomaticQualityFlag"] = "Pass"
-        m.data["ProcessingLevel"] = "Level 1B"
         g = fout.create_group("L1bAtt")
         tj2000, posd, veld, attd = self.sample_data()
         tm = g.create_dataset("time", data=tj2000, dtype="f8")
