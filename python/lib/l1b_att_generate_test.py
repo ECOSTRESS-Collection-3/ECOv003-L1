@@ -7,9 +7,9 @@ from l1b_att_generate import *
 # of this defined at some point
 test_data = os.path.dirname(__file__) + "/../../end_to_end_testing/"
 
-orb = read_shelve(test_data + "orbit.xml")
+orb = read_shelve(test_data + "orbit_old.xml")
 cam = read_shelve(test_data + "camera.xml")
-tt = read_shelve(test_data + "time_table.xml")
+tt = read_shelve(test_data + "time_table_old.xml")
 band = 0
 ipi = Ipi(orb, cam, band, tt.min_time, tt.max_time, tt)
 # False here says it ok for SrtmDem to not have tile. This gives support
