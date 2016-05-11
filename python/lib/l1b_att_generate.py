@@ -8,7 +8,8 @@ class L1bAttGenerate(object):
 
     Note that despite the name, this is actually both attitude and ephemeris.
     '''
-    def __init__(self, igc, output_name, run_config = None):
+    def __init__(self, igc, output_name, run_config = None,
+                 local_granule_id = None):
         '''Create a L1bAttGenerate with the given ImageGroundConnection
         and output file name. To actually generate, execute the 'run'
         command.
@@ -20,6 +21,7 @@ class L1bAttGenerate(object):
         self.igc = igc
         self.output_name = output_name
         self.run_config = run_config
+        self.local_granule_id = local_granule_id
 
     def sample_data(self):
         '''Return the sampled data.'''
@@ -43,7 +45,9 @@ class L1bAttGenerate(object):
         '''Do the actual generation of data.'''
         fout = h5py.File(self.output_name, "w")
         m = WriteStandardMetadata(fout, "L1GEOMetadata",
-                                  pge_name="l1b_geo")
+                                  pge_name="l1b_geo",
+                                  build_id = '0.01', pge_version='0.01',
+                                  local_granule_id = self.local_granule_id)
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)
         g = fout.create_group("L1bAtt")

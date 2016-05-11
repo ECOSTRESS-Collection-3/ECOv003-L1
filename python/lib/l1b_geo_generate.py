@@ -17,7 +17,8 @@ class L1bGeoGenerate(object):
                  number_line = -1,
                  number_integration_step = 1,
                  raycast_resolution = 100, 
-                 max_height=10e3):
+                 max_height=10e3,
+                 local_granule_id = None):
         '''Create a L1bGeoGenerate with the given ImageGroundConnection
         and output file name. To actually generate, execute the 'run'
         command.
@@ -34,6 +35,7 @@ class L1bGeoGenerate(object):
         self.raycast_resolution = raycast_resolution
         self.max_height = max_height
         self.run_config = run_config
+        self.local_granule_id = local_granule_id
 
     def loc_parallel_func(self, it):
         '''Variation of loc that is easier to use with a multiprocessor pool.'''
@@ -95,7 +97,8 @@ class L1bGeoGenerate(object):
         m = WriteStandardMetadata(fout,
                                   product_specfic_group = "L1GEOMetadata",
                                   pge_name="l1b_geo",
-                                  build_id = '0.01', pge_version='0.01')
+                                  build_id = '0.01', pge_version='0.01',
+                                  local_granule_id = self.local_granule_id)
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)
         m.set("WestBoundingCoordinate", lon[lon > -998].min())
