@@ -29,7 +29,7 @@ def test_l1b_rad_simulate():
     try:
         os.chdir(test_data)
         pool = Pool(20)
-        l1b_sim.create_file("ECOSTRESS_L1B_RAD_800001_00001_20151024020211_0100_01.h5",
+        l1b_sim.create_file("ECOSTRESS_L1B_RAD_80001_001_20150114_1024020211_0100_01.h5",
                             pool=pool)
     finally:
         os.chdir(curdir)
