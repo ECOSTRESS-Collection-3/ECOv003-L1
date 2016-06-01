@@ -627,6 +627,7 @@ installecostress_DATA = @srcscript@/setup_ecostress.csh @srcscript@/setup_ecostr
 ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
 	@srcpythonlib@/l1b_att_generate.py \
 	@srcpythonlib@/l1a_raw_pix_simulate.py \
+	@srcpythonlib@/l1a_raw_att_simulate.py \
 	@srcpythonlib@/l1a_bb_simulate.py \
 	@srcpythonlib@/l1a_eng_simulate.py \
 	@srcpythonlib@/l1a_pix_generate.py \

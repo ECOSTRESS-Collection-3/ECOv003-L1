@@ -1,5 +1,6 @@
 ecostresspkgpython_PYTHON+= @srcpythonlib@/l1b_att_generate.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/l1a_raw_pix_simulate.py
+ecostresspkgpython_PYTHON+= @srcpythonlib@/l1a_raw_att_simulate.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/l1a_bb_simulate.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/l1a_eng_simulate.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/l1a_pix_generate.py

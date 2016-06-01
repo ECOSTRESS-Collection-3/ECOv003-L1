@@ -69,6 +69,8 @@ for s in range(nscene[pass_index]):
             write_shelve("orbit.xml", orb)
             write_shelve("camera.xml", cam)
             write_shelve("time_table.xml", tt)
+    if(s == nscene[pass_index] - 1):
+        end_time = tt.max_time
     l1b_rad_fname = ecostress_file_name("L1B_RAD", orbit_num[pass_index],
                                         s + 1, tt.min_time)
     # Temp false condition, to speed up testing
@@ -91,11 +93,10 @@ for s in range(nscene[pass_index]):
     l1a_raw_pix_sim = L1aRawPixSimulate(l1a_pix_fname)
     l1a_raw_pix_sim.create_file(l1a_raw_pix_fname)
     
-fname = ecostress_file_name("L1A_RAW_ATT", orbit_num[pass_index], None,
-                            start_time)
-fout = h5py.File(fname, "w")
-g = fout.create_group("DummyData")
-t = g.create_dataset("README", data = "This is a placeholder")
+l1a_raw_att_fname = ecostress_file_name("L1A_RAW_ATT", orbit_num[pass_index], None,
+                                        start_time)
+l1a_raw_att_sim = L1aRawAttSimulate(orb, start_time, end_time)
+l1a_raw_att_sim.create_file(l1a_raw_att_fname)
 
 l1a_eng_fname = ecostress_file_name("L1A_ENG", orbit_num[pass_index], None,
                                     start_time)
