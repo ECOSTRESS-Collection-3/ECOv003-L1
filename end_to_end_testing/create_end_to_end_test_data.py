@@ -86,12 +86,11 @@ for s in range(nscene[pass_index]):
     l1a_bb_sim = L1aBbSimulate(l1a_pix_fname)
     l1a_bb_sim.create_file(l1a_bb_fname)
 
-    fname = ecostress_file_name("L1A_RAW_PIX", orbit_num[pass_index], s + 1,
-                                tt.min_time)
-    fout = h5py.File(fname, "w")
-    g = fout.create_group("DummyData")
-    t = g.create_dataset("README", data = "This is a placeholder")
-
+    l1a_raw_pix_fname = ecostress_file_name("L1A_RAW_PIX", orbit_num[pass_index],
+                                            s + 1, tt.min_time)
+    l1a_raw_pix_sim = L1aRawPixSimulate(l1a_pix_fname)
+    l1a_raw_pix_sim.create_file(l1a_raw_pix_fname)
+    
 fname = ecostress_file_name("L1A_RAW_ATT", orbit_num[pass_index], None,
                             start_time)
 fout = h5py.File(fname, "w")
