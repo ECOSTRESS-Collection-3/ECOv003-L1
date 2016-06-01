@@ -7,7 +7,8 @@ class WriteStandardMetadata(object):
     '''This writes the standard metadata'''
     def __init__(self, hdf_file, product_specfic_group = "L1GEOMetadata",
                  pge_name = 'L1B_GEO', local_granule_id = None,
-                 build_id = '0.01', pge_version='0.01'):
+                 build_id = '0.01', pge_version='0.01',
+                 orbit_based = False):
         '''hdf_file should be the h5py.File handler. You can pass the 
         local_granule_id, or if None we assume the filename for the hdf_file is
         the local_granule_id'''
@@ -52,18 +53,26 @@ class WriteStandardMetadata(object):
         self.set('ProducerInstitution', 'Caltech')
         self.set('CampaignShortName', 'Primary')
         self.set('DayNightFlag', 'Day')
+        self.set('SISName', "Level 1 Product Specification Document (JPL D-94634)")
+        self.set('SISVersion', "Preliminary")
         self.set('BuildID', build_id)
         self.set('PGEVersion', pge_version)
         self.set('LocalGranuleID', local_granule_id)
         # For now parse the local granule id to get some of the metadata.
         # Might get this from the run config file instead
-        m = re.match(r'ECOSTRESS_(?P<process_level>\w+)_(\w+)_(?P<orbit>\d{5})_(?P<scene_id>\d{3})', local_granule_id)
+        if(orbit_based):
+            m = re.match(r'ECOSTRESS_(?P<process_level>\w+)_(\w+)_(?P<orbit>\d{5})', local_granule_id)
+        else:
+            m = re.match(r'ECOSTRESS_(?P<process_level>\w+)_(\w+)_(?P<orbit>\d{5})_(?P<scene_id>\d{3})', local_granule_id)
         if(not m):
             raise RuntimeError("Unrecognized local granule id '%s'" % 
                                local_granule_id)
         self.set('StartOrbitNumber', m.group('orbit'))
         self.set('StopOrbitNumber', m.group('orbit'))
-        self.set('SceneID', m.group('scene_id'))
+        if(orbit_based):
+            self.set('SceneID', "NA")
+        else:
+            self.set('SceneID', m.group('scene_id'))
         self.set('ProcessingLevelID', m.group('process_level'))
 
     def set(self, m, v):

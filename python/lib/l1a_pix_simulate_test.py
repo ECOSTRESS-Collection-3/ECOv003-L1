@@ -1,7 +1,6 @@
 from nose.tools import *
 from nose.plugins.skip import Skip, SkipTest
 from l1a_pix_simulate import *
-from multiprocessing import Pool
 import os
 
 # Right now depend on end to end testing. May want to have a subset

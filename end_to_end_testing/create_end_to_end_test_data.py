@@ -71,8 +71,10 @@ for s in range(nscene[pass_index]):
             write_shelve("time_table.xml", tt)
     l1b_rad_fname = ecostress_file_name("L1B_RAD", orbit_num[pass_index],
                                         s + 1, tt.min_time)
-    t = L1bRadSimulate(orb, tt, cam, sdata, raycast_resolution = 100.0)
-    t.create_file(l1b_rad_fname, pool = pool)
+    # Temp false condition, to speed up testing
+    if(False):
+        l1b_rad_sim = L1bRadSimulate(orb, tt, cam, sdata, raycast_resolution = 100.0)
+        l1b_rad_sim.create_file(l1b_rad_fname, pool = pool)
 
     l1a_pix_fname = ecostress_file_name("L1A_PIX", orbit_num[pass_index],
                                         s + 1, tt.min_time)
@@ -96,11 +98,10 @@ fout = h5py.File(fname, "w")
 g = fout.create_group("DummyData")
 t = g.create_dataset("README", data = "This is a placeholder")
 
-fname = ecostress_file_name("L1A_ENG", orbit_num[pass_index], None,
-                            start_time)
-fout = h5py.File(fname, "w")
-g = fout.create_group("DummyData")
-t = g.create_dataset("README", data = "This is a placeholder")
+l1a_eng_fname = ecostress_file_name("L1A_ENG", orbit_num[pass_index], None,
+                                    start_time)
+l1a_eng_sim = L1aEngSimulate()
+l1a_eng_sim.create_file(l1a_eng_fname)
 
 fname = ecostress_file_name("L0", None, None, start_time)
 fout = h5py.File(fname, "w")

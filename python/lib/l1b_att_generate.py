@@ -45,7 +45,7 @@ class L1bAttGenerate(object):
         '''Do the actual generation of data.'''
         fout = h5py.File(self.output_name, "w")
         m = WriteStandardMetadata(fout, "L1GEOMetadata",
-                                  pge_name="l1b_geo",
+                                  pge_name="L1B_GEO",
                                   build_id = '0.01', pge_version='0.01',
                                   local_granule_id = self.local_granule_id)
         if(self.run_config is not None):
