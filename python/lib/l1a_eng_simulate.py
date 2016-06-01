@@ -1,7 +1,6 @@
 import numpy as np
 import h5py
 from ecostress.write_standard_metadata import WriteStandardMetadata
-from ecostress.misc import ecostress_radiance_scale_factor
 
 class L1aEngSimulate(object):
     '''This is used to generate L1A_ENG simulated data. Right now, this is just

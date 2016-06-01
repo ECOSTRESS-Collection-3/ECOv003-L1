@@ -626,6 +626,7 @@ l1b_att_product_expected = $(end_to_end_test_data)/$(l1b_att_product).expected
 installecostress_DATA = @srcscript@/setup_ecostress.csh @srcscript@/setup_ecostress.sh
 ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
 	@srcpythonlib@/l1b_att_generate.py \
+	@srcpythonlib@/l1a_bb_simulate.py \
 	@srcpythonlib@/l1a_eng_simulate.py \
 	@srcpythonlib@/l1a_pix_generate.py \
 	@srcpythonlib@/l1a_pix_simulate.py \
