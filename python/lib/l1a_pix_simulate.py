@@ -1,7 +1,7 @@
 import numpy as np
 import h5py
 from ecostress.write_standard_metadata import WriteStandardMetadata
-from ecostress.misc import aster_radiance_scale_factor, ecostress_to_aster_band
+from ecostress.misc import ecostress_radiance_scale_factor
 
 class L1aPixSimulate(object):
     '''This is used to generate L1A_PIX simulated data from a L1B_RAD file.
@@ -12,10 +12,9 @@ class L1aPixSimulate(object):
         
     def image(self, band):
         '''Generate a l1a pix image for the given band.'''
-        scale = aster_radiance_scale_factor()[ecostress_to_aster_band()[band]-1]
         l1b_d = self.l1b_rad["/Radiance/radiance_%d" % (band + 1)][:,:]
         d = np.zeros((l1b_d.shape[0] * 2, l1b_d.shape[1]), dtype=np.uint16)
-        d[0::2,:] = l1b_d / scale
+        d[0::2,:] = l1b_d / ecostress_radiance_scale_factor(band)
         d[1::2,:] = d[0::2,:]
         return d
     
@@ -23,7 +22,7 @@ class L1aPixSimulate(object):
         fout = h5py.File(l1a_pix_fname, "w")
         g = fout.create_group("UncalibratedPixels")
         for b in range(6):
-            t = g.create_dataset("pixele_data_%d" % (b + 1),
+            t = g.create_dataset("pixel_data_%d" % (b + 1),
                                  data = self.image(b))
             t.attrs["Units"] = "dimensionless"
         m = WriteStandardMetadata(fout, product_specfic_group = "L1A_PIXMetadata",

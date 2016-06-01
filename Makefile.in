@@ -612,14 +612,6 @@ check_DATA =
 # Build these up as we go
 dist_installecostress_SCRIPTS = @l1a_cal_src@/l1a_cal_pge \
 	@l1b_rad_src@/l1b_rad_pge @l1b_geo_src@/l1b_geo_pge
-
-# End to end test. This should be run after install
-# (so like an installcheck, but we run this separate because
-# it potentially takes a while to run).
-#
-# We may want to add some kind of check of the results, but right now
-# we just make sure we can run end to end.
-end_to_end_test_data = @testdatadir@
 l1a_cal_run_config = $(end_to_end_test_data)/ECOSTRESS_L1A_CAL_RunConfig_20151024_020211.xml
 l1a_pix_product = ECOSTRESS_L1A_PIX_80001_001_20151024_020211_0100_01.h5
 l1a_pix_product_expected = $(end_to_end_test_data)/$(l1a_pix_product).expected
@@ -1482,6 +1474,15 @@ complain_if_afids:
           echo "sourcing setup_afids_env.sh or setup_afids_env.csh${default}"; \
           exit 1; \
         fi
+
+# End to end test. This should be run after install
+# (so like an installcheck, but we run this separate because
+# it potentially takes a while to run).
+#
+# We may want to add some kind of check of the results, but right now
+# we just make sure we can run end to end.
+
+export end_to_end_test_data = @testdatadir@
 
 end-to-end-check: installcheck-am
 	-rm -r ./end_to_end_test_l1a_cal

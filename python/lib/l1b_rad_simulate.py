@@ -84,6 +84,8 @@ class L1bRadSimulate(object):
             n += 1
         it = [[i,n] for i in range(0,self.igc_ray_cast.number_sample, n)]
         r = pool.map(self.image_parallel_func, it)
-        return np.hstack(r)
+        r = np.hstack(r)
+        r[r < 0] = 0
+        return r
 
         

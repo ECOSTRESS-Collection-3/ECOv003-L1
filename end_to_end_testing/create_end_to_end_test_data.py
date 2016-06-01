@@ -71,8 +71,8 @@ for s in range(nscene[pass_index]):
             write_shelve("time_table.xml", tt)
     l1b_rad_fname = ecostress_file_name("L1B_RAD", orbit_num[pass_index],
                                         s + 1, tt.min_time)
-    #t = L1bRadSimulate(orb, tt, cam, sdata, raycast_resolution = 100.0)
-    #t.create_file(l1b_rad_fname, pool = pool)
+    t = L1bRadSimulate(orb, tt, cam, sdata, raycast_resolution = 100.0)
+    t.create_file(l1b_rad_fname, pool = pool)
 
     l1a_pix_fname = ecostress_file_name("L1A_PIX", orbit_num[pass_index],
                                         s + 1, tt.min_time)

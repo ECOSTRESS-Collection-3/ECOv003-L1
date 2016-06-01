@@ -17,6 +17,15 @@ def ecostress_to_aster_band():
     band numbers are 1 based (matching the ASTER documentation).'''
     return [14, 14, 12, 11, 10, 4]
 
+def ecostress_radiance_scale_factor(band):
+    '''Not sure what we will use here, right now we use the ASTER scale. Probably
+    be something like this, since the dynamic range is somewhat similar. But in
+    any case, for testing this is what we use.
+
+    band is 0 based.
+    '''
+    return aster_radiance_scale_factor()[ecostress_to_aster_band()[band]-1]
+
 def time_to_file_string(acquisition_time):
     '''Return the portion of the ecostress filename based on the data acquisition 
     date and time'''
