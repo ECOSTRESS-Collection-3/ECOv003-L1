@@ -52,7 +52,7 @@ class WriteStandardMetadata(object):
         self.set('ProducerInstitution', 'Caltech')
         self.set('CampaignShortName', 'Primary')
         self.set('DayNightFlag', 'Day')
-        self.set('BuildId', build_id)
+        self.set('BuildID', build_id)
         self.set('PGEVersion', pge_version)
         self.set('LocalGranuleID', local_granule_id)
         # For now parse the local granule id to get some of the metadata.
@@ -95,7 +95,7 @@ class WriteStandardMetadata(object):
         return [
 ["AncillaryInputPointer", "String"],
 ["AutomaticQualityFlag", "String"],
-["BuildId", "String"],
+["BuildID", "String"],
 ["CollectionLabel", "String"],
 ["DataFormatType", "String"],
 ["DayNightFlag", "String"],

@@ -40,13 +40,14 @@ class L1bRadSimulate(object):
         # We hold camera_band to 0 for now. We'll improve this and use actually
         # other bands in the future as we flesh out the simulation.
             t = g.create_dataset("radiance_%d" % (b + 1),
-                                 data = self.image(b, camera_band = 0, pool = pool))
+                                 data = self.image(b, camera_band = 0,
+                                                   pool = pool).astype(np.float32))
             if(b != 5):
                 t.attrs["Units"] = "W/m^2/sr/um"
             else:
                 t.attrs["Units"] = "dimensionless"
         m = WriteStandardMetadata(fout, product_specfic_group = "L1B_RADMetadata",
-                                  pge_name = "L1B_CAL")
+                                  pge_name = "L1B_RAD")
         m.write()
                 
     def image_parallel_func(self, it):

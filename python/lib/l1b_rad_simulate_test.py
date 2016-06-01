@@ -18,7 +18,6 @@ sdata = [VicarLiteRasterImage(fname(aster_band)) for aster_band in [14, 14, 12, 
 
 def test_l1b_rad_simulate():
     raise SkipTest  # Don't normally run this, it takes a while
-    # Only do 100 lines so this runs quickly as a test
     l1b_sim = L1bRadSimulate(orb, tt, cam, sdata, raycast_resolution = 100.0)
     # Limitation of test data is that it expects to be in end_to_end_testing
     # directory because of relative paths.

@@ -23,13 +23,10 @@ pass_index = 4 # The pass we are working with
 # (data is only on pistol
 def fname(band):
     return "/data/smyth/AsterMosiac/calnorm_b%d.img" % band
-# These scale factors comes from https://lpdaac.usgs.gov/dataset_discovery/aster/aster_products_table/ast_l1t
-scale_factor = [1.688, 1.415, 0.862, 0.2174, 0.0696, 0.0625, 0.0597, 0.0417, 0.0318,
-                6.882e-3, 6.780e-3, 6.590e-3, 5.693e-3, 5.225e-3]
 sdata = [ScaleImage(VicarLiteRasterImage(fname(aster_band), 1, VicarLiteFile.READ,
                                          5000, 5000),
-                    scale_factor[aster_band-1])
-         for aster_band in [14, 14, 12, 11, 10, 4]]
+                    aster_radiance_scale_factor()[aster_band-1])
+         for aster_band in ecostress_to_aster_band()]
 
 orb = SpiceOrbit(SpiceOrbit.ISS_ID, "iss_spice/iss_2015.bsp")
 
@@ -64,25 +61,50 @@ for s in range(nscene[pass_index]):
                                   s * tlen, 
                                   pass_time[pass_index] + toff + s * tlen,
                                   tspace)
-    fname = ecostress_file_name("L1B_RAD", orbit_num[pass_index], s + 1, tt.min_time)
-    t = L1bRadSimulate(orb, tt, cam, sdata, raycast_resolution = 100.0)
-    t.create_file(fname, pool = pool)
+    # Save this for use in making the L0 and orbit based file name
+    if(s == 0):
+        start_time = tt.min_time
+        # Probably don't want these long term, but save for now
+        if(False):
+            write_shelve("orbit.xml", orb)
+            write_shelve("camera.xml", cam)
+            write_shelve("time_table.xml", tt)
+    l1b_rad_fname = ecostress_file_name("L1B_RAD", orbit_num[pass_index],
+                                        s + 1, tt.min_time)
+    #t = L1bRadSimulate(orb, tt, cam, sdata, raycast_resolution = 100.0)
+    #t.create_file(l1b_rad_fname, pool = pool)
 
-# Probably don't want these long term, but save for now
-if(False):
-    write_shelve("orbit.xml", orb)
-    write_shelve("camera.xml", cam)
-    write_shelve("time_table.xml", tt)
+    l1a_pix_fname = ecostress_file_name("L1A_PIX", orbit_num[pass_index],
+                                        s + 1, tt.min_time)
+    l1a_pix_sim = L1aPixSimulate(l1b_rad_fname)
+    l1a_pix_sim.create_file(l1a_pix_fname)
+    
+    fname = ecostress_file_name("L1A_BB", orbit_num[pass_index], s + 1, tt.min_time)
+    fout = h5py.File(fname, "w")
+    g = fout.create_group("DummyData")
+    t = g.create_dataset("README", data = "This is a placeholder")
 
-# fout = h5py.File("ECOSTRESS_L1A_RAW_ATT_800001_00001_20151024020211_0100_01.h5", "w")
-# g = fout.create_group("DummyData")
-# t = g.create_dataset("README", data = "This is a placeholder")
-# t = g.create_dataset("orbit_xml", data = serialize_write_string(orb))
-# fout = h5py.File("ECOSTRESS_L1A_BB_800001_00001_20151024020211_0100_01.h5", "w")
-# g = fout.create_group("DummyData")
-# t = g.create_dataset("README", data = "This is a placeholder")
-# fout = h5py.File("ECOSTRESS_L1A_RAW_800001_00001_20151024020211_0100_01.h5", "w")
-# g = fout.create_group("DummyData")
-# t = g.create_dataset("README", data = "This is a placeholder")
-# t = g.create_dataset("tt_xml", data = serialize_write_string(tt))
+    fname = ecostress_file_name("L1A_RAW_PIX", orbit_num[pass_index], s + 1,
+                                tt.min_time)
+    fout = h5py.File(fname, "w")
+    g = fout.create_group("DummyData")
+    t = g.create_dataset("README", data = "This is a placeholder")
+
+fname = ecostress_file_name("L1A_RAW_ATT", orbit_num[pass_index], None,
+                            start_time)
+fout = h5py.File(fname, "w")
+g = fout.create_group("DummyData")
+t = g.create_dataset("README", data = "This is a placeholder")
+
+fname = ecostress_file_name("L1A_ENG", orbit_num[pass_index], None,
+                            start_time)
+fout = h5py.File(fname, "w")
+g = fout.create_group("DummyData")
+t = g.create_dataset("README", data = "This is a placeholder")
+
+fname = ecostress_file_name("L0", None, None, start_time)
+fout = h5py.File(fname, "w")
+g = fout.create_group("DummyData")
+t = g.create_dataset("README", data = "This is a placeholder")
+
 
