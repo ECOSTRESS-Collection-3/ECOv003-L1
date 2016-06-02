@@ -1,7 +1,7 @@
 import numpy as np
 import h5py
 from ecostress.write_standard_metadata import WriteStandardMetadata
-from geocal import *
+from ecostress.misc import time_split
 
 class L1aRawAttSimulate(object):
     '''This is used to generate L1A_RAW_ATT simulated data.'''
@@ -24,8 +24,14 @@ class L1aRawAttSimulate(object):
         m = WriteStandardMetadata(fout, product_specfic_group = "L1A_RAW_ATTMetadata",
                                   pge_name = "L1A_RAW",
                                   orbit_based = True)
+        dt, tm = time_split(self.min_time)
+        m.set("RangeBeginningDate", dt)
+        m.set("RangeBeginningTime", tm)
+        dt, tm = time_split(self.max_time)
+        m.set("RangeEndingDate", dt) 
+        m.set("RangeEndingTime", tm)
         m.write()
-
+        fout.close()
 
 
 

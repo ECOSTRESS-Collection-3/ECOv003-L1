@@ -9,6 +9,9 @@ class L1aBbSimulate(object):
         '''Create a L1APixSimulate to process the given L1A_PIX file.'''
         self.l1a_pix = h5py.File(l1a_pix_fname, "r")
         
+    def copy_metadata(self, field):
+        self.m.set(field, self.l1a_pix["/StandardMetadata/" + field].value)
+
     def create_file(self, l1a_bb_fname):
         fout = h5py.File(l1a_bb_fname, "w")
         g = fout.create_group("BlackBodyPixels")
@@ -19,9 +22,14 @@ class L1aBbSimulate(object):
             t = g.create_dataset("B%d_blackbody_295K" % (b+1),
                                  data = np.array([999,999,999], dtype = np.uint16))
             t.attrs["Units"] = "dimensionless"
-        m = WriteStandardMetadata(fout, product_specfic_group = "L1A_BBMetadata",
+        self.m = WriteStandardMetadata(fout, product_specfic_group = "L1A_BBMetadata",
                                   pge_name = "L1A_RAW")
-        m.write()
+        self.copy_metadata("RangeBeginningDate")
+        self.copy_metadata("RangeBeginningTime")
+        self.copy_metadata("RangeEndingDate")
+        self.copy_metadata("RangeEndingTime")
+        self.m.write()
+        fout.close()
 
 
 

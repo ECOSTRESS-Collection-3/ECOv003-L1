@@ -1,5 +1,6 @@
 # This is various miscellaneous routines that don't fit elsewhere
 from geocal import *
+import re
 
 def aster_radiance_scale_factor():
     '''Return the ASTER scale factors. This is for L1T data, found at
@@ -32,6 +33,12 @@ def time_to_file_string(acquisition_time):
     y,m,d,h,min, sec, *rest = re.split(r'[-T:.]', str(acquisition_time))
     return y + m + d + "_" + h + min + sec
 
+def time_split(t):
+    '''Split a time into date and time, which we need to do for some of the
+    metadata fields. Returns date, time'''
+    mt = re.match(r'(.*)T(.*)Z', str(t))
+    return mt.group(1), mt.group(2)
+    
 def ecostress_file_name(product_type, orbit, scene, acquisition_time,
                         build = "0100", version = "01"):
     '''Create an ecostress file name from the given components.'''

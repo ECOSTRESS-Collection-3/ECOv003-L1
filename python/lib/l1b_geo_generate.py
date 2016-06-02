@@ -3,9 +3,9 @@ import pickle
 import ecostress.pickle_method
 import h5py
 import math
-import re
 from multiprocessing import Pool
 from ecostress.write_standard_metadata import WriteStandardMetadata
+from ecostress.misc import time_split
 
 class L1bGeoGenerate(object):
     '''This generate a L1B geo output file from a given
@@ -105,12 +105,12 @@ class L1bGeoGenerate(object):
         m.set("EastBoundingCoordinate", lon[lon > -998].max())
         m.set("SouthBoundingCoordinate", lat[lat > -998].min())
         m.set("NorthBoundingCoordinate", lat[lat > -998].max())
-        mt = re.match(r'(.*)T(.*)Z', str(self.igc.ipi.min_time))
-        m.set("RangeBeginningDate", mt.group(1))
-        m.set("RangeBeginningTime", mt.group(2))
-        mt = re.match(r'(.*)T(.*)Z', str(self.igc.ipi.min_time))
-        m.set("RangeEndingDate", mt.group(1))
-        m.set("RangeEndingTime", mt.group(2))
+        dt, tm = time_split(self.igc.ipi.min_time)
+        m.set("RangeBeginningDate", dt)
+        m.set("RangeBeginningTime", tm)
+        dt, tm = time_split(self.igc.ipi.max_time)
+        m.set("RangeEndingDate", dt)
+        m.set("RangeEndingTime", tm)
         g = fout.create_group("L1bGeo")
         g.attrs["Projection"] = '''\
 The latitude, longitude, and height are relative to the WGS-84

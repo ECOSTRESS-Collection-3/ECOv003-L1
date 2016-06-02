@@ -17,7 +17,10 @@ class L1aPixSimulate(object):
         d[0::2,:] = l1b_d / ecostress_radiance_scale_factor(band)
         d[1::2,:] = d[0::2,:]
         return d
-    
+
+    def copy_metadata(self, field):
+        self.m.set(field, self.l1b_rad["/StandardMetadata/" + field].value)
+        
     def create_file(self, l1a_pix_fname):
         fout = h5py.File(l1a_pix_fname, "w")
         g = fout.create_group("UncalibratedPixels")
@@ -25,9 +28,14 @@ class L1aPixSimulate(object):
             t = g.create_dataset("pixel_data_%d" % (b + 1),
                                  data = self.image(b))
             t.attrs["Units"] = "dimensionless"
-        m = WriteStandardMetadata(fout, product_specfic_group = "L1A_PIXMetadata",
+        self.m = WriteStandardMetadata(fout, product_specfic_group = "L1A_PIXMetadata",
                                   pge_name = "L1A_CAL")
-        m.write()
+        self.copy_metadata("RangeBeginningDate")
+        self.copy_metadata("RangeBeginningTime")
+        self.copy_metadata("RangeEndingDate")
+        self.copy_metadata("RangeEndingTime")
+        self.m.write()
+        fout.close()
 
 
 

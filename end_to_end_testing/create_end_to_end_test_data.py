@@ -52,6 +52,7 @@ cam = QuaternionCamera(frame_to_sc, 1, 5400, 40e-3 * 1.8, 40e-3 * 2,
 tspace = 1.181 / 241 * 2
 toff = 5400 * tspace / 2
 tlen = 5400 * tspace
+scene_files = {}
 # Bug that we seem to need to do this to force spice to be loaded before
 # we create the pool. Would like to figure out why this happens and fix this
 SpiceHelper.spice_setup()
@@ -92,6 +93,7 @@ for s in range(nscene[pass_index]):
                                             s + 1, tt.min_time)
     l1a_raw_pix_sim = L1aRawPixSimulate(l1a_pix_fname)
     l1a_raw_pix_sim.create_file(l1a_raw_pix_fname)
+    scene_files[str(s+1)] = [l1a_raw_pix_fname, l1a_bb_fname]
     
 l1a_raw_att_fname = ecostress_file_name("L1A_RAW_ATT", orbit_num[pass_index], None,
                                         start_time)
@@ -103,9 +105,8 @@ l1a_eng_fname = ecostress_file_name("L1A_ENG", orbit_num[pass_index], None,
 l1a_eng_sim = L1aEngSimulate()
 l1a_eng_sim.create_file(l1a_eng_fname)
 
-fname = ecostress_file_name("L0", None, None, start_time)
-fout = h5py.File(fname, "w")
-g = fout.create_group("DummyData")
-t = g.create_dataset("README", data = "This is a placeholder")
+l0_fname = ecostress_file_name("L0", None, None, start_time)
+l0_sim = L0Simulate(l1a_raw_att_fname, l1a_eng_fname, scene_files)
+l0_sim.create_file(l0_fname)
 
 

@@ -22,7 +22,7 @@ class L1aEngSimulate(object):
                                   pge_name = "L1A_RAW",
                                   orbit_based = True)
         m.write()
-
+        fout.close()
 
 
 

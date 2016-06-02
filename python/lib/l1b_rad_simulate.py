@@ -4,6 +4,7 @@ import ecostress.pickle_method
 from multiprocessing import Pool
 import h5py
 from ecostress.write_standard_metadata import WriteStandardMetadata
+from ecostress.misc import time_split
 
 class L1bRadSimulate(object):
     '''This is used to generate simulated input data for the L1bGeoGenerate 
@@ -48,7 +49,14 @@ class L1bRadSimulate(object):
                 t.attrs["Units"] = "dimensionless"
         m = WriteStandardMetadata(fout, product_specfic_group = "L1B_RADMetadata",
                                   pge_name = "L1B_RAD")
+        dt, tm = time_split(self.time_table.min_time)
+        m.set("RangeBeginningDate", dt)
+        m.set("RangeBeginningTime", tm)
+        dt, tm = time_split(self.time_table.max_time)
+        m.set("RangeEndingDate", dt) 
+        m.set("RangeEndingTime", tm)
         m.write()
+        fout.close()
                 
     def image_parallel_func(self, it):
         '''Calculate image for a subset of the data, suitable for use with a
