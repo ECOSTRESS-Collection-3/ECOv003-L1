@@ -2,6 +2,7 @@ from nose.tools import *
 from nose.plugins.skip import Skip, SkipTest
 from l1a_raw_att_simulate import *
 import os
+from geocal import *
 
 # Right now depend on end to end testing. May want to have a subset
 # of this defined at some point
