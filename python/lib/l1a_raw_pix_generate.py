@@ -2,22 +2,78 @@ from geocal import *
 import h5py
 import shutil
 from ecostress.write_standard_metadata import WriteStandardMetadata
+from ecostress.misc import ecostress_file_name
 
 class L1aRawPixGenerate(object):
     '''This generates a L1A_RAW_PIX, L1A_BB, L1A_ENG and L1A_RAW_ATT
     files from a L0 input.'''
-    def __init__(self, l0):
+    def __init__(self, l0, run_config = None):
         '''Create a L1aRawPixGenerate to process the given L0 file. 
         To actually generate, execute the 'run' command.'''
         self.l0 = l0
+        self.run_config = run_config
 
+    def hdf_copy(self, fname, group, group_in = None, scene = None):
+        '''Copy the given group from out input to the given file.
+        Default it to give the input the same group name, but can change this. If
+        scene is passed in, we nest the output by "Scene_<num>"'''
+        if(group_in is None):
+            if(scene is not None):
+                group_in = "/Data/Scene_%d%s" % (scene, group)
+            else:
+                group_in = "/Data" + group
+        subprocess.run(["h5copy", "-i", self.l0, "-o", fname, "-p",
+                        "-s", group_in,
+                        "-d", group], check=True)
+
+    def create_file(self, prod_type, orbit, scene):
+        '''Create the file, generate the standard metadata, and return
+        the file name.'''
+        if(scene is None):
+            basegroup = "/Data"
+        else:
+            basegroup = "/Data/Scene_%d" % scene
+            
+        bdate = self.fin[basegroup + "/StandardMetadata/RangeBeginningDate"].value
+        btime = self.fin[basegroup + "/StandardMetadata/RangeBeginningTime"].value
+        edate = self.fin[basegroup + "/StandardMetadata/RangeEndingDate"].value
+        etime = self.fin[basegroup + "/StandardMetadata/RangeEndingTime"].value
+        bdtime = Time.parse_time("%sT%sZ" % (bdate, btime))
+        fname = ecostress_file_name(prod_type, orbit, scene, bdtime)
+        fout = h5py.File(fname, "w")
+        m = WriteStandardMetadata(fout,
+                                 product_specfic_group = prod_type + "Metadata",
+                                 pge_name="L1A_RAW_PIX",
+                                 build_id = '0.01', pge_version='0.01',
+                                 orbit_based = (scene is None))
+        if(self.run_config is not None):
+            m.process_run_config_metadata(self.run_config)
+        m.set("RangeBeginningDate", bdate)
+        m.set("RangeBeginningTime", btime)
+        m.set("RangeEndingDate", edate)
+        m.set("RangeEndingTime", etime)
+        m.write()
+        fout.close()
+        return fname
+        
     def run(self):
         '''Do the actual generation of data.'''
-        return
-        shutil.copyfile(self.l1a_raw, self.output_name)
-        f = h5py.File(self.output_name, "r+")
-        m = WriteStandardMetadata(f, product_specfic_group = "L1APIXMetadata",
-                                  pge_name="L1A_CAL",
-                                  build_id = '0.01', pge_version='0.01',
-                                  local_granule_id = self.local_granule_id)
-        m.write()
+        self.fin = h5py.File(self.l0,"r")
+        onum = int(self.fin["/Data/StandardMetadata/StartOrbitNumber"].value)
+
+        feng = self.create_file("L1A_ENG", onum, None)
+        fatt = self.create_file("L1A_RAW_ATT", onum, None)
+        self.hdf_copy(feng, "/rtdBlackbodyGradients")
+        self.hdf_copy(fatt, "/Attitude")
+        self.hdf_copy(fatt, "/Ephemeris")
+
+        # This cryptic expression gets a list of all the scenes by looking
+        # for groups with the name "/Data/Scene_<number>"
+        slist = [int(k.split('_')[1]) for k in self.fin["Data"].keys()
+                 if re.match(r'Scene_\d+', k)]
+        for scene in slist:
+            fbb = self.create_file("L1A_BB", onum, scene)
+            fpix = self.create_file("L1A_RAW_PIX", onum, scene)
+            self.hdf_copy(fbb, "/BlackBodyPixels", scene=scene)
+            self.hdf_copy(fpix, "/UncalibratedPixels", scene=scene)
+

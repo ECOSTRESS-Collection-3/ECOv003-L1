@@ -12,7 +12,7 @@ else:
 l0 = test_data + "ECOSTRESS_L0_20150124_144252_0100_01.h5"
 
 def test_l1a_raw_pix_generate():
-    raise SkipTest              # Don't normally run this, it generates a lot
+    #raise SkipTest              # Don't normally run this, it generates a lot
                                 # of ouput
     l1arawpix = L1aRawPixGenerate(l0)
     l1arawpix.run()
