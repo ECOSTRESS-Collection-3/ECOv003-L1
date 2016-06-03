@@ -1,0 +1,2 @@
+dist_installecostress_SCRIPTS += @l1a_raw_src@/l1a_raw_pge
+dist_bin_SCRIPTS += @l1a_raw_src@/l1a_raw_process

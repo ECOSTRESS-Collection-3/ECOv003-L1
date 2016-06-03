@@ -643,6 +643,7 @@ srcscript
 l1b_geo_src
 l1b_rad_src
 l1a_cal_src
+l1a_raw_src
 BUILD_PYTHON_FALSE
 BUILD_PYTHON_TRUE
 build_python
@@ -12889,6 +12890,8 @@ LD_LIBRARY_PATH="${original_ld_library_path}"
 
 #=================================================================
 # Location of all the source code directories
+
+l1a_raw_src=l1a_raw
 
 l1a_cal_src=l1a_cal
 

@@ -1,0 +1,46 @@
+#! /usr/bin/env python
+#
+# This runs the L1A Raw process.
+
+from geocal import *
+from ecostress import *
+import os
+import re
+
+version = "1.0"
+usage='''Usage:
+  l1a_raw_process [options] <run_config>
+  l1a_raw_process -h | --help
+  l1a_raw_process -v | --version
+
+This runs the L1A Raw process.
+
+Options:
+  -h --help         
+       Print this message
+
+  -v --version      
+       Print program version
+'''
+
+args = docopt_simple(usage, version=version)
+
+# Can use this to wait a short time so we can attach strace to this
+# process, useful to find all the files that we are accessing.
+if(False):
+    print("Waiting a short time")
+    import time
+    time.sleep(20)
+
+# Explicitly list input file
+config = RunConfig(args.run_config)
+
+l0 = config["InputFileGroup", "L0"]
+dirname = config["ProductPathGroup", "ProductPath"]
+
+makedirs_p(dirname)
+os.chdir(dirname)
+
+l1arawpix = L1aRawPixGenerate(l0)
+l1arawpix.run()
+
