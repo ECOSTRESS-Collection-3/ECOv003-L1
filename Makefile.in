@@ -618,17 +618,12 @@ dist_installecostress_SCRIPTS = @l1a_raw_src@/l1a_raw_pge \
 	@l1b_geo_src@/l1b_geo_pge
 l0_file = $(end_to_end_test_data)/ECOSTRESS_L0_20150124_144252_0100_01.h5
 l1a_raw_run_config = $(end_to_end_test_data)/ECOSTRESS_L1A_RAW_RunConfig_20150124_144252.xml
-l1a_cal_run_config = $(end_to_end_test_data)/ECOSTRESS_L1A_CAL_RunConfig_20151024_020211.xml
-l1a_pix_product = ECOSTRESS_L1A_PIX_80001_001_20151024_020211_0100_01.h5
-l1a_pix_product_expected = $(end_to_end_test_data)/$(l1a_pix_product).expected
-l1b_rad_run_config = $(end_to_end_test_data)/ECOSTRESS_L1B_RAD_RunConfig_20151024_020211.xml
-l1b_rad_product = ECOSTRESS_L1B_RAD_80001_001_20151024_020211_0100_01.h5
-l1b_rad_product_expected = $(end_to_end_test_data)/$(l1b_rad_product).expected
-l1b_geo_run_config = $(end_to_end_test_data)/ECOSTRESS_L1B_GEO_RunConfig_20151024_020211.xml
-l1b_geo_product = ECOSTRESS_L1B_GEO_80001_001_20151024_020211_0100_01.h5
-l1b_geo_product_expected = $(end_to_end_test_data)/$(l1b_geo_product).expected
-l1b_att_product = ECOSTRESS_L1B_ATT_80001_001_20151024_020211_0100_01.h5
-l1b_att_product_expected = $(end_to_end_test_data)/$(l1b_att_product).expected
+l1a_cal_run1_config = $(end_to_end_test_data)/ECOSTRESS_L1A_CAL_RunConfig_80005_001.xml
+l1a_cal_run2_config = $(end_to_end_test_data)/ECOSTRESS_L1A_CAL_RunConfig_80005_002.xml
+l1a_cal_run3_config = $(end_to_end_test_data)/ECOSTRESS_L1A_CAL_RunConfig_80005_003.xml
+l1b_rad_run1_config = $(end_to_end_test_data)/ECOSTRESS_L1B_RAD_RunConfig_80005_001.xml
+l1b_rad_run2_config = $(end_to_end_test_data)/ECOSTRESS_L1B_RAD_RunConfig_80005_002.xml
+l1b_rad_run3_config = $(end_to_end_test_data)/ECOSTRESS_L1B_RAD_RunConfig_80005_003.xml
 installecostress_DATA = @srcscript@/setup_ecostress.csh @srcscript@/setup_ecostress.sh
 ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
 	@srcpythonlib@/l1b_att_generate.py \
@@ -1492,10 +1487,13 @@ complain_if_afids:
 # it potentially takes a while to run).
 #
 # We may want to add some kind of check of the results, but right now
-# we just make sure we can run end to end.
+# we just make sure we can run end to end and get the same results as
+# we did last time.
 
 export end_to_end_test_data = @testdatadir@
 
+# Note, if you need to update the expected a results a "trick" is to
+# replace H5DIFF with "cp" on the make line (so make end-to-end-check H5DIFF=cp)
 end-to-end-check: installcheck-am
 	-rm -r ./end_to_end_test_l0_input
 	-rm -r ./end_to_end_test_l1a_raw
@@ -1505,13 +1503,24 @@ end-to-end-check: installcheck-am
 	$(MKDIR_P) ./end_to_end_test_l0_input
 	$(LN_S) $(l0_file) ./end_to_end_test_l0_input
 	$(prefix)/l1a_raw_pge $(l1a_raw_run_config)
-#	$(prefix)/l1a_cal_pge $(l1a_cal_run_config)
-#	$(prefix)/l1b_rad_pge $(l1b_rad_run_config)
+	for i in ./end_to_end_test_l1a_raw/*.h5; do \
+            $(H5DIFF) $$i $(end_to_end_test_data)/`basename $$i`.expected; \
+        done
+	$(prefix)/l1a_cal_pge $(l1a_cal_run1_config)
+	$(prefix)/l1a_cal_pge $(l1a_cal_run2_config)
+	$(prefix)/l1a_cal_pge $(l1a_cal_run3_config)
+	for i in ./end_to_end_test_l1a_cal/*.h5; do \
+            $(H5DIFF) $$i $(end_to_end_test_data)/`basename $$i`.expected; \
+        done
+	$(prefix)/l1b_rad_pge $(l1b_rad_run1_config)
+	$(prefix)/l1b_rad_pge $(l1b_rad_run2_config)
+	$(prefix)/l1b_rad_pge $(l1b_rad_run3_config)
+	for i in ./end_to_end_test_l1b_rad/*.h5; do \
+            $(H5DIFF) $$i $(end_to_end_test_data)/`basename $$i`.expected; \
+        done
+# Not working yet, we need to add the fan in and get the time table and
+# orbit in the input files
 #	$(prefix)/l1b_geo_pge $(l1b_geo_run_config)
-#	$(H5DIFF) ./end_to_end_test_l1a_cal/$(l1a_pix_product) $(l1a_pix_product_expected)
-#	$(H5DIFF) ./end_to_end_test_l1b_rad/$(l1b_rad_product) $(l1b_rad_product_expected)
-#	$(H5DIFF) ./end_to_end_test_l1b_geo/$(l1b_geo_product) $(l1b_geo_product_expected)
-#	$(H5DIFF) ./end_to_end_test_l1b_geo/$(l1b_att_product) $(l1b_att_product_expected)
 
 nosetests.sh:
 	echo "# /bin/sh" > $@

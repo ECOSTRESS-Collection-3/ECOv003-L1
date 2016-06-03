@@ -35,17 +35,17 @@ if(False):
 # Explicitly list input file
 config = RunConfig(args.run_config)
 
-l1a_bb = config["InputFileGroup", "L1A_BB"]
-l1a_raw = config["InputFileGroup", "L1A_RAW"]
+l1a_bb = os.path.abspath(config["InputFileGroup", "L1A_BB"])
+l1a_raw_pix = os.path.abspath(config["InputFileGroup", "L1A_RAW_PIX"])
 dirname = config["ProductPathGroup", "ProductPath"]
 
 makedirs_p(dirname)
 os.chdir(dirname)
 
-ofile = os.path.splitext(os.path.basename(l1a_raw))[0] + ".h5"
-ofile = re.sub(r'L1A_RAW', 'L1A_PIX', ofile)
+ofile = os.path.splitext(os.path.basename(l1a_raw_pix))[0] + ".h5"
+ofile = re.sub(r'L1A_RAW_PIX', 'L1A_PIX', ofile)
 
 # Generate output
-l1apix = L1aPixGenerate(l1a_bb, l1a_raw, ofile)
+l1apix = L1aPixGenerate(l1a_bb, l1a_raw_pix, ofile)
 l1apix.run()
 
