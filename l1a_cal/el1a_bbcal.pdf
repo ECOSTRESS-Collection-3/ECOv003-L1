@@ -1,0 +1,279 @@
+!ECOSTRESS L1A CAL PGE Program: el1a_bbcal.pdf
+!L1A Blackbody Radiometric Calibration
+!16JUN2016 Version: Beta. T.L.Logan
+!For each image/scene, Create Blackbody FPA calibration files
+!  from Pre-Flight and In-Flight pt-RTD temperature gradient files (Kelvin).
+!Convert BB FPA Kelvin files to Radiance for each band.
+!Choose between two Kelvin-to-radiance Planck algorithms.
+!  Option 1: Center Wavelength Planck Function
+!            Source: http://ncc.nesdis.noaa.gov/data/planck.html
+!  Option 2: Integrate Between Bandwidth
+!            Source: Gouillioud,R., 2015. "ECOSTRESS_Error_Budget_2015-04-08.xlsm"
+!Output is 10 Radiance FPA files (325 and 295 BB cal files for 5 TIR bands).
+!VICAR Note: program f2 handles 32bit float (real) not 64bit doub.
+
+procedure
+!User Parameters Needed in this Proc (bbcal)
+parm   pre325  string   def=""  !Pre-Flight 325BB temperature map
+parm   pre295  string   def=""  !Pre-Flight 295BB temperature map
+parm   rtd325  string   def=""  !In-Flight 325BB gradient points
+parm   rtd295  string   def=""  !In-Flight 295BB gradient points
+parm   outkel  string   def="BlackBodyTemp"     !Output dir for fpa kelvin.
+parm   outrad  string   def="BlackBodyRadiance" !Output dir for fpa radiance.
+parm   palg    integer  def=1 valid=(1:2) !Planck algorithm; 1=CW; 2=Iteration
+parm   twopt   integer  def=1 valid=(0:1) !Perform 2pt DN->Rad; 0=No; 1=Yes
+parm   debug   integer  def=1 valid=(0:1) !Verbose Messages; 0=No; 1=Yes
+!User Parameters Passed to 2pt Proc (optional)
+parm   inpdir  string   def="/project/ancillary/ASTER/EndToEndTest/latest"
+parm   inph5i  string   def="ECOSTRESS_L1A_RAW_PIX_80005_001_20150124_144252_0100_01.h5.expected" 
+parm   inph5b  string   def="ECOSTRESS_L1A_BB_80005_001_20150124_144252_0100_01.h5.expected"
+parm   outimg  string   def="UncalibratedDN"    !Output dir for image DN
+parm   outbdn  string   def="BlackBodyDN"       !Output dir for fpa DN
+parm   outwat  string   def="ImgRadiance"       !Output dir for image radiance
+parm   outtmp  string   def="ImgKelvinTemp"     !Output dir for image temp
+!Local Parameters
+local  bandn   integer  !Thermal Bands 1-5
+local  cw      real     !Center WaveLength is provided from table below
+local  lw      real     !Low end of Square Wavelength
+local  hw      real     !High end of Square Wavelength
+local  bw      real     !Square Band Width
+local  c1      real     init=1.191042E08 !First planck constant
+local  c2      real     init=14387.752   !Second planck constant
+local  a1      real     init=8.73068E-13 !Watts conversion factor
+local  tol     real     init=0.00000001  !Tolerance wave iteration (or 0.0000001)
+local  N       integer
+local  rn      real
+local  min     real
+local  max     real
+local  orbit   string   !Orbit number
+local  scene   string   !Scene number
+local  date    string   !YYYYMMDD
+local  time    string   !HHMMSS
+local  build   string   !Build BBbb
+local  ver     string   !Version
+local  hdf     string   init=".h5"
+local  found   integer  !0=no file; 1=file found
+local  id      string
+body
+let      _onfail="goto error1"
+
+datetime
+!***Proc Startup*******************************************************
+!1)Parameter and File Verification; Proc Startup
+!Verify Input Parameters
+!Verify Output FPA Kelvin Directory (if not found)
+file2tcl  inp=&outkel val=found
+if       (found=0) ush mkdir &outkel
+if       (found=0) write "MSG: &outkel directory Not Found --- Was Created"
+!Verify Output FPA Radiance Directory (if not found)
+file2tcl  inp=&outrad val=found
+if       (found=0) ush mkdir &outrad
+if       (found=0) write "MSG: &outrad directory Not Found --- Was Created"
+
+!Calculate 9-digit Random Number as a unique temporary variable name
+tcl2tcl       script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
+             "expr round(1e9*rand())") strvar=id
+write        "Random Suffix = &id "
+
+!***Create Kelvin FPAs*************************************************
+!2) Obtain Cold and Hot Blackbody FPA temperature images (Kelvin).
+!This is the best calculation of the true blackbody temperature
+!for each pixel in the Focal Plane Array. Derived from Pre- and 
+!In-Flight sensors attached to the on-board blackbody emitters.
+!***Temporary***Simulation***
+!Use gausnois to simulate Kelvin temperatures (until RTDs are available).
+gausnois  xkel325_&id nl=256 ns=1 mean=325.0 sigma=0.0 seed=1 format=real
+copy      xkel325_&id &"outkel"/bb325kelvin.rel
+if       (debug=1) hist xkel325_&id
+gausnois  xkel295_&id nl=256 ns=1 mean=295.0 sigma=0.0 seed=2 format=real
+if       (debug=1) hist xkel295_&id
+copy      xkel295_&id &"outkel"/bb295kelvin.rel
+
+!***Convert Kelvin FPA to Radiance*************************************
+!3) For each thermal band fpa, convert FPA Kelvin temperature to Spectral
+!Radiance.
+!Loop through the 5 TIR bands
+let       bandn = 0
+
+loop
+
+let       bandn = (bandn + 1)
+if       (bandn = 6) break  !B6 is SWIR; Do not process
+write    ""
+write    "Processing Band &bandn "
+write    ""
+
+!Assign Wavelength characteristics to each thermal band
+!New band ordering is long->short wavelengths
+!cw=center wavelength
+!bw=band width
+!lw=beginning (low end) of band wavelength
+!hw=end (high end) of band wavelength
+if       (bandn = 5) let cw=8.280
+if       (bandn = 5) let bw=0.340
+if       (bandn = 5) let lw=8.110
+if       (bandn = 5) let hw=8.450
+if       (bandn = 4) let cw=8.630
+if       (bandn = 4) let bw=0.350
+if       (bandn = 4) let lw=8.455
+if       (bandn = 4) let hw=8.810
+if       (bandn = 3) let cw=9.070
+if       (bandn = 3) let bw=0.360
+if       (bandn = 3) let lw=8.890
+if       (bandn = 3) let hw=9.250
+if       (bandn = 2) let cw=11.33
+if       (bandn = 2) let bw=0.540
+if       (bandn = 2) let lw=11.060
+if       (bandn = 2) let hw=11.600
+if       (bandn = 1) let cw=12.05
+if       (bandn = 1) let bw=0.520
+if       (bandn = 1) let lw=11.790
+if       (bandn = 1) let hw=12.310
+
+!Algorithm 1 uses the Center Wavelength Planck Function from: 
+!http://ncc.nesdis.noaa.gov/data/planck.html
+if       (palg = 1)
+!325 Blackbody
+f2        xkel325_&id xrad325_b&"bandn"_&id +
+          func="(&c1)/((&cw**5)*(2.718281828459045**(&c2/(&cw*in1))-1))"       
+if       (debug=1) hist xrad325_b&"bandn"_&id
+copy      xrad325_b&"bandn"_&id &"outrad"/bb325rad_b&"bandn".rel
+!295 Blackbody
+f2        xkel295_&id xrad295_b&"bandn"_&id +
+          func="(&c1)/((&cw**5)*(2.718281828459045**(&c2/(&cw*in1))-1))"
+if       (debug=1) hist xrad295_b&"bandn"_&id
+copy      xrad295_b&"bandn"_&id &"outrad"/bb295rad_b&"bandn".rel
+else
+
+!Algorithm 2 Integrates between the lower and upper bounds of the band
+!wavelength to calculate the Planck Function. Source:
+!Gouillioud,R., 2015. "ECOSTRESS_Error_Budget_2015-04-08.xlsm" NASA/JPL.
+!325 Blackbody
+!325 Lower boundary
+f2        xkel325_&id xsum1_&id func="in1*0.0"
+f2        xkel325_&id xsum2_&id func="in1*0.0"
+let       N = 0
+f2        xkel325_&id xxa_&id func="&c2/&lw/in1"
+if       (debug=1) hist xxa_&id
+loop
+  let     N = (N + 1)
+  if     (N > 100) break
+  let     rn = $float(N)
+write    "rn = &rn"
+  f2      xxa_&id xxc_&id func="&rn*in1"
+  f2      xxc_&id xxb_&id +
+func="(2.718281828459045**(-in1))/(&rn**4)*(6.0+in1*(6.0+in1*(3.0+in1)))"
+  f2     (xsum1_&id,xxb_&id) xs1_&id func="in1+in2"
+  f2      xs1_&id xsum1_&id func="in1*1" !copy file
+  f2     (xxb_&id,xsum1_&id) xtest_&id func="(in1/in2)<&tol" format=byte
+  maxmin  xtest_&id minival=min maxival=max
+  if     (min > 0) break
+end-loop
+if       (debug=1) hist xsum1_&id
+
+!325 Upper boundary
+let       N = 0
+f2        xkel325_&id xxa_&id func="&c2/&hw/in1"
+loop
+  let     N = (N + 1)
+  if     (N > 100) break
+  let     rn = $float(N)
+write    "rn = &rn"
+  f2      xxa_&id xxc_&id func="&rn*in1"
+  f2      xxc_&id xxb_&id +
+func="(2.718281828459045**(-in1))/(&rn**4)*(6.0+in1*(6.0+in1*(3.0+in1)))"
+  f2     (xsum2_&id,xxb_&id) xs2_&id func="in1+in2"
+  f2      xs2_&id xsum2_&id func="in1*1" !copy file
+  f2     (xxb_&id,xsum2_&id) xtest_&id func="(in1/in2)<&tol" format=byte
+  maxmin  xtest_&id minival=min maxival=max
+  if     (min > 0) break
+end-loop
+if       (debug=1) hist xsum2_&id
+
+f2       (xkel325_&id,xsum2_&id,xsum1_&id) xrad325_b&"bandn"_&id +
+          func="((&a1)*(in1**4)*(in2-in3))*10000/&bw/3.14"
+if       (debug=1) hist xrad325_b&"bandn"_&id
+copy      xrad325_b&"bandn"_&id &"outrad"/bb325rad_b&"bandn".rel
+
+!295 Blackbody
+!295 Lower boundary
+f2        xkel295_&id xsum1_&id func="in1*0.0"
+f2        xkel295_&id xsum2_&id func="in1*0.0"
+let       N = 0
+f2        xkel295_&id xxa_&id func="&c2/&lw/in1"
+loop
+  let     N = (N + 1)
+  if     (N > 100) break
+  let     rn = $float(N)
+write    "rn = &rn"
+  f2      xxa_&id xxc_&id func="&rn*in1"
+  f2      xxc_&id xxb_&id +
+func="(2.718281828459045**(-in1))/(&rn**4)*(6.0+in1*(6.0+in1*(3.0+in1)))"
+  f2     (xsum1_&id,xxb_&id) xs1_&id func="in1+in2"
+  f2      xs1_&id xsum1_&id func="in1*1" !copy file
+  f2     (xxb_&id,xsum1_&id) xtest_&id func="(in1/in2)<&tol" format=byte
+  maxmin  xtest_&id minival=min maxival=max
+  if     (min > 0) break
+end-loop
+if       (debug=1) hist xsum1_&id
+
+!295 Upper boundary
+let       N = 0
+f2        xkel295_&id xxa_&id func="&c2/&hw/in1"
+loop
+  let     N = (N + 1)
+  if     (N > 100) break
+  let     rn = $float(N)
+write    "rn = &rn"
+  f2      xxa_&id xxc_&id func="&rn*in1"
+  f2      xxc_&id xxb_&id +
+func="(2.718281828459045**(-in1))/(&rn**4)*(6.0+in1*(6.0+in1*(3.0+in1)))"
+  f2     (xsum2_&id,xxb_&id) xs2_&id func="in1+in2"
+  f2      xs2_&id xsum2_&id func="in1*1" !copy file
+  f2     (xxb_&id,xsum2_&id) xtest_&id func="(in1/in2)<&tol" format=byte
+  maxmin  xtest_&id minival=min maxival=max
+  if     (min > 0) break
+end-loop
+if       (debug=1) hist xsum2_&id
+
+f2       (xkel295_&id,xsum2_&id,xsum1_&id) xrad295_b&"bandn"_&id +
+          func="((&a1)*(in1**4)*(in2-in3))*10000/&bw/3.14"
+if       (debug=1) hist xrad295_b&"bandn"_&id
+copy      xrad295_b&"bandn"_&id &"outrad"/bb295rad_b&"bandn".rel
+end-if
+end-loop
+datetime
+
+!***Call 2pt Proc******************************************************
+!4)Optionally run the 2point DN-to-Radiance proc, or call it externally.
+if       (twopt=0) goto skip
+!2pt DN to Radiance Conversion, 5 TIR bands
+!B6 SWIR is Dark Current subtracted
+let       bandn = 0
+loop
+let       bandn = (bandn + 1)
+if       (bandn = 7) break 
+
+el1a_2pt  band=&bandn rad2k=1 +
+          inpdir=&inpdir +
+          inph5i=&inph5i +
+          inph5b=&inph5b +
+          inprad=&outrad +
+          outimg=&outimg +
+          outbdn=&outbdn +
+          outwat=&outwat +
+          outtmp=&outtmp
+end-loop
+
+skip>
+!***Successful Completion**********************************************
+write    "MSG: L1A_BBCAL job Successful"
+goto      theend
+
+error1>
+!***Error and Cleanup**************************************************
+write    "MSG: L1A_BBCAL job Failed"
+theend>
+datetime
+ush rm    *_&id
+end-proc

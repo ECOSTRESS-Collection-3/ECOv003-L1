@@ -1,0 +1,204 @@
+!ECOSTRESS L1A CAL PGE Program: el1a_2pt.pdf (called by el1a_bbcal.pdf)
+!L1A 2point conversion of BB calibration and TIR image DN to Radiance.
+!16JUN2016 Version: Beta. T.L.Logan
+!TIR Bands 1-5; SWIR image (B6) is Dark Current subtracted.
+!This proc is called separately for each Band (supports parallel processing).
+procedure
+parm   inpdir string   def="/project/ancillary/ASTER/EndToEndTest/latest"
+parm   inph5i string   def="ECOSTRESS_L1A_RAW_PIX_80005_001_20150124_144252_0100_01.h5.expected" 
+parm   inph5b string   def="ECOSTRESS_L1A_BB_80005_001_20150124_144252_0100_01.h5.expected"
+parm   inprad string   def="BlackBodyRadiance" !Directory for fpa radiance
+parm   outimg string   def="UncalibratedDN"    !Directory for image DN
+parm   outbdn string   def="BlackBodyDN"       !Directory for fpa DN
+parm   outwat string   def="ImgRadiance"       !Output dir for image radiance
+parm   outtmp string   def="ImgKelvinTemp"     !Output dir for image temp
+parm   band   integer  def=1 valid=(1:6)       !TIR Bands 1-5 & SWIR B6
+parm   rad2k  integer  def=1 valid=(0:1) !Convert radiance to Kelvin. 0=No; 1=Yes
+parm   debug  integer  def=1 valid=(0:1) !Verbose Messages; 0=No; 1=Yes
+local  nl     integer
+local  ns     integer
+local  format keyword
+local  orbit  string   !Orbit number
+local  scene  string   !Scene number
+local  date   string   !YYYYMMDD
+local  time   string   !HHMMSS
+local  build  string   !Build BBbb
+local  ver    string   !Version
+local  hdf    string   init=".h5"
+local  cw     real     !Center WaveLength (provided below)
+local  c1     real     init=1.191042E08 !First planck constant
+local  c2     real     init=14387.752   !Second planck constant
+local  found  integer  !0=no file; 1=file found
+local  id     string
+body
+let      _onfail="goto error1"
+
+datetime
+!***Proc Startup*******************************************************
+!1)Verify Input Parameters
+file2tcl  inp=&"inpdir"/&"inph5i" val=found
+if       (found=0) write "MSG: ERROR - FILE &inph5i NOT FOUND"
+if       (found=0) goto error1
+file2tcl  inp=&"inpdir"/&"inph5b" val=found  
+if       (found=0) write "MSG: ERROR - FILE &inph5b NOT FOUND"
+if       (found=0) goto error1
+file2tcl  inp=&inprad val=found
+if       (found=0) write "MSG: ERROR - DIRECTORY &inprad NOT FOUND"
+if       (found=0) goto error1
+file2tcl  inp=&outimg val=found
+if       (found=0) ush mkdir &outimg
+if       (found=0) write "MSG: &outimg Directory Not Found --- Was Created"
+file2tcl  inp=&outbdn val=found
+if       (found=0) ush mkdir &outbdn
+if       (found=0) write "MSG: &outbdn Directory Not Found --- Was Created"
+file2tcl  inp=&outwat val=found
+if       (found=0) ush mkdir &outwat
+if       (found=0) write "MSG: &outwat Directory Not Found --- Was Created"
+if       (rad2k=0) goto skip1  !Directory Not Required
+file2tcl  inp=&outtmp val=found
+if       (found=0) ush mkdir &outtmp
+if       (found=0) write "MSG: &outtmp Directory Not Found --- Was Created"
+skip1>
+
+!Calculate 9-digit Random as a unique temporary variable name
+tcl2tcl       script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
+             "expr round(1e9*rand())") strvar=id
+write        "Random Suffix = &id "
+
+!Parse the input image/scene name (Future Use)
+tcl2tcl   script="string range &inph5i 22 26" strvar=orbit
+write "orbit = &orbit "
+tcl2tcl   script="string range &inph5i 28 30" strvar=scene
+write "scene = &scene "
+tcl2tcl   script="string range &inph5i 32 39" strvar=date
+write "date = &date "
+tcl2tcl   script="string range &inph5i 41 46" strvar=time
+write "time = &time "
+tcl2tcl   script="string range &inph5i 48 51" strvar=build
+write "build = &build "
+tcl2tcl   script="string range &inph5i 53 54" strvar=ver
+write "version = &ver "
+
+!***Read L1A_RAW_PIX Images********************************************
+!2)Extract Raw DNs from L1A_RAW_PIX, 1 band, each 10800x5400 16bit integers.
+!Log hdf5 to vicar using gdal libraries.
+ush          gdalinfo &"inpdir"/&inph5i
+ush          gdal_translate -of VICAR 'HDF5:"&inpdir/&inph5i"://UncalibratedPixels/pixel_data_&band' &"outimg"/img_dn_b&"band".hlf
+!Verify image size, if not 11264x5400, adjust it.
+form         &"outimg"/img_dn_b&"band".hlf format nl ns
+write       "Input Image Size is: &nl Lines x &ns Samples "
+if          ((nl<>11264)or(ns<>5400))
+ write      "MSG: ERROR img_dn_b&"band" has Incorrect Image Size "
+ write      "MSG: Correcting Image Size"
+ gen         xxa_&id nl=11264 ns=5400 ival=0. linc=0. sinc=0. 'half
+ insect     (xxa_&id,&"outimg"/img_dn_b&"band".hlf) xxb_&id +
+             size=(1,1,11264,5400) insect=(1,1,&nl,&ns,1,1)
+ copy        xxb_&id &"outimg"/img_dn_b&"band".hlf
+else
+end-if
+
+!***Read L1A_BB FPA DNs************************************************
+!3)Extract Raw FPA DNs from L1A_BB, 1 band, both 325 and 295 BB files
+!Log hdf5 to vicar using gdal libraries.
+ush          gdalinfo &"inpdir"/&inph5b
+!ush          gdal_translate -of VICAR 'HDF5:"&inpdir/&inph5b"://BlackBodyPixels_B&"band"_blackbody_325K' &"outbdn"/dn325b&"band".hlf
+!ush          gdal_translate -of VICAR 'HDF5:"&inpdir/&inph5b"://BlackBodyPixels_B&"band"_blackbody_295K' &"outbdn"/dn295b&"band".hlf
+!***Temporary BB FPA DNs input from vicar***
+copy          l1a_bb_001_data/b&"band"_bb_325.hlf &"outbdn"/dn325b&"band".hlf
+copy          l1a_bb_001_data/b&"band"_bb_295.hlf &"outbdn"/dn295b&"band".hlf
+
+!***Calulate Gain/Offset***********************************************
+!4)Convert image DN to spectral radiance using gain & offset
+if          (band=6) goto jump1  !B6=SWIR (No Radiance)
+!Calculate Offset (a)
+f2          (&"inprad"/bb325rad_b&"band".rel,&"inprad"/bb295rad_b&"band".rel,+
+             &"outbdn"/dn325b&"band".hlf,&"outbdn"/dn295b&"band".hlf) xxoffs_&id +
+             func="((in1*in4)-(in2*in3))/(in4-in3)" format=real
+!Calculate Gain (b)
+f2          (&"inprad"/bb325rad_b&"band".rel,&"inprad"/bb295rad_b&"band".rel,+
+             &"outbdn"/dn325b&"band".hlf,&"outbdn"/dn295b&"band".hlf) xxgain_&id +
+             func="(in2-in1)/(in4-in3)" format=real
+!Focal Plane gain/offset images are 256x1, duplicate them to the size of input image.
+!Output size is 11264 lines by 5400 samples.
+!offset scaling
+size         xxoffs_&id xxa_&id size=(1,1,256,5400) 'noin
+append      (xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,+
+             xxa_&id,xxa_&id,xxa_&id) xx1_&id
+copy         xx1_&id xx2_&id
+copy         xx1_&id xx3_&id
+copy         xx1_&id xx4_&id
+copy         xx1_&id xx5_&id size=(1,1,1024,5400)
+append      (xx1_&id,xx2_&id,xx3_&id,xx4_&id,xx5_&id) xxoff2_&id
+!gain scaling
+size         xxgain_&id xxa_&id size=(1,1,256,5400) 'noin
+append      (xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,+
+             xxa_&id,xxa_&id,xxa_&id) xx1_&id
+copy         xx1_&id xx2_&id
+copy         xx1_&id xx3_&id
+copy         xx1_&id xx4_&id
+copy         xx1_&id xx5_&id size=(1,1,1024,5400)
+append      (xx1_&id,xx2_&id,xx3_&id,xx4_&id,xx5_&id) xxgain2_&id
+
+!***2-Point Conversion*************************************************
+!5)DN to Radiance two-point conversion: R=a+(b*DN)
+!2point Calibration
+f2          (xxoff2_&id,xxgain2_&id,&"outimg"/img_dn_b&"band".hlf) &"outwat"/img_rad_b&"band".rel +
+             func="in1+(in2*in3)" format=real
+if          (debug=1) hist &"outwat"/img_rad_b&"band".rel
+
+!***Convert Radiance-to-Temperature************************************
+!6)Convert Radiance Product to Temperature Kelvin for TESTING Purposes
+!Source: http://ncc.nesdis.noaa.gov/data/planck.html
+if          (rad2k = 0) goto skip2
+if          (band = 5) let cw=8.280
+if          (band = 4) let cw=8.630
+if          (band = 3) let cw=9.070
+if          (band = 2) let cw=11.33
+if          (band = 1) let cw=12.05
+f2          &"outwat"/img_rad_b&"band".rel &"outtmp"/img_kel_b&"band".hlf +
+             func="&c2/(&cw*(alog(&c1/(&cw**5*in1)+1)))" 'half
+if          (debug=1) hist &"outtmp"/img_kel_b&"band".hlf
+goto         skip2
+
+jump1>
+!***SWIR B6 Dark Current***********************************************
+!7)SWIR B6 Dark Current Subtraction
+!Duplicate FPA to match image size
+!325K BB Dark Current FPA
+size         &"outbdn"/dn325b&"band".hlf xxa_&id size=(1,1,256,5400) 'noin
+append      (xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,+
+             xxa_&id,xxa_&id,xxa_&id) xx1_&id
+copy         xx1_&id xx2_&id
+copy         xx1_&id xx3_&id
+copy         xx1_&id xx4_&id
+copy         xx1_&id xx5_&id size=(1,1,1024,5400)
+append      (xx1_&id,xx2_&id,xx3_&id,xx4_&id,xx5_&id) xxdc325_&id
+!295K BB Dark Current FPA
+size         &"outbdn"/dn295b&"band".hlf xxa_&id size=(1,1,256,5400) 'noin
+append      (xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,+
+             xxa_&id,xxa_&id,xxa_&id) xx1_&id
+copy         xx1_&id xx2_&id
+copy         xx1_&id xx3_&id
+copy         xx1_&id xx4_&id
+copy         xx1_&id xx5_&id size=(1,1,1024,5400)
+append      (xx1_&id,xx2_&id,xx3_&id,xx4_&id,xx5_&id) xxdc295_&id
+!Average Dark Current FPA images
+f2          (xxdc325_&id,xxdc295_&id) xxa_&id func="(in1+in2)/2"
+!Subtract Dark Current from SWIR Image (No Negative values)
+f2          (&"outimg"/img_dn_b6.hlf,xxa_&id) &"outimg"/img_dcc_b6.hlf +
+             func="(in1-in2)*((in1-in2)>=0)"
+if          (debug=1) hist &"outimg"/img_dcc_b6.hlf
+ush rm       &"outimg"/img_dn_b6.hlf  !Delete Raw B6
+
+skip2>
+!***Successful Completion**********************************************
+write       "MSG: L1A_2PTCAL Band&band Successful"
+goto         theend
+
+error1>
+!***Error and Cleanup**************************************************
+write       "MSG: L1A_2PTCAL Failed"
+theend>
+datetime
+ush rm       *_&id *.aux.xml &"outimg"/*.aux.xml
+end-proc
