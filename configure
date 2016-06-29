@@ -12652,6 +12652,11 @@ fi
      if test "required" == "required"; then
 
 
+if test "x$THIRDPARTY" = x ; then
+   python_search_path=$PATH
+else
+   python_search_path=$THIRDPARTY/bin:$PATH
+fi
 # Extract the first word of "python[$PYTHON_VERSION]", so it can be a program name with args.
 set dummy python$PYTHON_VERSION; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -12665,8 +12670,7 @@ else
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-as_dummy="$THIRDPARTY/bin:$PATH"
-for as_dir in $as_dummy
+for as_dir in $python_search_path
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
@@ -12784,8 +12788,7 @@ else
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-as_dummy="$THIRDPARTY/bin:$PATH"
-for as_dir in $as_dummy
+for as_dir in $python_search_path
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
@@ -12828,8 +12831,7 @@ else
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-as_dummy="$THIRDPARTY/bin:$PATH"
-for as_dir in $as_dummy
+for as_dir in $python_search_path
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
@@ -13099,8 +13101,7 @@ else
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-as_dummy="$THIRDPARTY/bin:$PATH"
-for as_dir in $as_dummy
+for as_dir in $python_search_path
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
@@ -13162,8 +13163,7 @@ else
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-as_dummy="$THIRDPARTY/bin:$PATH"
-for as_dir in $as_dummy
+for as_dir in $python_search_path
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
@@ -13218,6 +13218,11 @@ fi
     else
 
 
+if test "x$THIRDPARTY" = x ; then
+   python_search_path=$PATH
+else
+   python_search_path=$THIRDPARTY/bin:$PATH
+fi
 # Extract the first word of "python[$PYTHON_VERSION]", so it can be a program name with args.
 set dummy python$PYTHON_VERSION; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -13231,8 +13236,7 @@ else
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-as_dummy="$THIRDPARTY/bin:$PATH"
-for as_dir in $as_dummy
+for as_dir in $python_search_path
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
@@ -13350,8 +13354,7 @@ else
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-as_dummy="$THIRDPARTY/bin:$PATH"
-for as_dir in $as_dummy
+for as_dir in $python_search_path
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
@@ -13394,8 +13397,7 @@ else
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-as_dummy="$THIRDPARTY/bin:$PATH"
-for as_dir in $as_dummy
+for as_dir in $python_search_path
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.

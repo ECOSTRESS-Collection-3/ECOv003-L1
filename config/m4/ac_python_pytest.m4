@@ -21,7 +21,7 @@ AC_DEFUN([AC_PROG_PYTEST],[
         if test "$PYTEST" == ""; then
            PYTEST=py.test
         fi
-        AC_PATH_PROG([PYTEST],[$PYTEST], [], [$THIRDPARTY/bin:$PATH])
+        AC_PATH_PROG([PYTEST],[$PYTEST], [], [$python_search_path])
         if test -z "$PYTEST" ; then
            AC_MSG_WARN([cannot find 'py.test' program.])
            PYTEST='echo "Error: pytest is not installed. " ; false'

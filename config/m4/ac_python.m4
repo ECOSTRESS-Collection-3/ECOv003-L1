@@ -15,7 +15,12 @@ AC_DEFUN([AC_PYTHON_DEVEL],
 		will be appended to the Python interpreter
 		canonical name.])
 
-AC_PATH_PROG([PYTHON],[python[$PYTHON_VERSION]], [], [$THIRDPARTY/bin:$PATH])
+if test "x$THIRDPARTY" = x ; then
+   python_search_path=$PATH
+else
+   python_search_path=$THIRDPARTY/bin:$PATH
+fi
+AC_PATH_PROG([PYTHON],[python[$PYTHON_VERSION]], [], [$python_search_path])
 PYTHON_ABS=`eval echo ${PYTHON}`
 PYTHON_PREFIX=`AS_DIRNAME(["$PYTHON_ABS"])`
 PYTHON_PREFIX=`AS_DIRNAME(["$PYTHON_PREFIX"])`
@@ -45,7 +50,7 @@ variable to configure. See ``configure --help'' for reference.
 fi
 
 AC_MSG_CHECKING([Checking for python-config])
-AC_PATH_TOOL([PYTHON_CONFIG], [python-config], [], [$THIRDPARTY/bin:$PATH])
+AC_PATH_TOOL([PYTHON_CONFIG], [python-config], [], [$python_search_path])
 if test -n "$PYTHON_CONFIG" ; then
     AC_MSG_RESULT([yes])
 else
