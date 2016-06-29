@@ -67,6 +67,9 @@ clean-local: $(CLEAN_HOOK)
 INSTALLCHECK_HOOK=
 installcheck-local: $(INSTALLCHECK_HOOK)
 
+CHECK_HOOK=
+check-local: $(CHECK_HOOK)
+
 TESTS=
 check_PROGRAM=
 check_DATA=

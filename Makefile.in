@@ -113,13 +113,14 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS =
+TESTS =
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/config/m4/ac_check_found.m4 \
 	$(top_srcdir)/config/m4/ac_handle_with_arg.m4 \
 	$(top_srcdir)/config/m4/ac_python.m4 \
 	$(top_srcdir)/config/m4/ac_python_module_with_version.m4 \
-	$(top_srcdir)/config/m4/ac_python_nosetests.m4 \
+	$(top_srcdir)/config/m4/ac_python_pytest.m4 \
 	$(top_srcdir)/config/m4/ac_python_sphinx.m4 \
 	$(top_srcdir)/config/m4/afids_location.m4 \
 	$(top_srcdir)/config/m4/afids_python.m4 \
@@ -365,8 +366,12 @@ RECHECK_LOGS = $(TEST_LOGS)
 AM_RECURSIVE_TARGETS = check recheck
 TEST_SUITE_LOG = test-suite.log
 TEST_EXTENSIONS = @EXEEXT@ .test
-LOG_DRIVER = $(SHELL) $(top_srcdir)/config/test-driver
-LOG_COMPILE = $(LOG_COMPILER) $(AM_LOG_FLAGS) $(LOG_FLAGS)
+am__test_logs1 = $(TESTS:=.log)
+am__test_logs2 = $(am__test_logs1:@EXEEXT@.log=.log)
+TEST_LOGS = $(am__test_logs2:.test.log=.log)
+TEST_LOG_DRIVER = $(SHELL) $(top_srcdir)/config/test-driver
+TEST_LOG_COMPILE = $(TEST_LOG_COMPILER) $(AM_TEST_LOG_FLAGS) \
+	$(TEST_LOG_FLAGS)
 am__set_b = \
   case '$@' in \
     */*) \
@@ -377,12 +382,6 @@ am__set_b = \
     *) \
       b='$*';; \
   esac
-am__test_logs1 = $(TESTS:=.log)
-am__test_logs2 = $(am__test_logs1:@EXEEXT@.log=.log)
-TEST_LOGS = $(am__test_logs2:.test.log=.log)
-TEST_LOG_DRIVER = $(SHELL) $(top_srcdir)/config/test-driver
-TEST_LOG_COMPILE = $(TEST_LOG_COMPILER) $(AM_TEST_LOG_FLAGS) \
-	$(TEST_LOG_FLAGS)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/common.am \
 	$(srcdir)/ecostress.am $(srcdir)/include.am \
 	$(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1a_raw/l1a_raw.am \
@@ -457,13 +456,13 @@ LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
+LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 NM = @NM@
 NMEDIT = @NMEDIT@
-NOSETESTS = @NOSETESTS@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 OTOOL = @OTOOL@
@@ -479,6 +478,7 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
 PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+PYTEST = @PYTEST@
 PYTHON = @PYTHON@
 PYTHON_CONFIG = @PYTHON_CONFIG@
 PYTHON_CPPFLAGS = @PYTHON_CPPFLAGS@
@@ -608,7 +608,7 @@ INSTALL_DATA_HOOK =
 UNINSTALL_HOOK = 
 CLEAN_HOOK = 
 INSTALLCHECK_HOOK = 
-TESTS = nosetests.sh
+CHECK_HOOK = python_check
 check_PROGRAM = 
 check_DATA = 
 
@@ -641,6 +641,12 @@ ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
 	@srcpythonlib@/pickle_method.py @srcpythonlib@/run_config.py \
 	@srcpythonlib@/write_run_config.py \
 	@srcpythonlib@/write_standard_metadata.py
+
+# Number of jobs to run at once. Default is to automatically determine this,
+# but you can specify a different number.
+PYTEST_NJOB = 10
+PYTEST_EXTRAFLAGS = 
+PYTEST_FLAGS = -q -n $(PYTEST_NJOB)
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -1117,13 +1123,6 @@ recheck: all $(check_DATA)
 	        am__force_recheck=am--force-recheck \
 	        TEST_LOGS="$$log_list"; \
 	exit $$?
-nosetests.sh.log: nosetests.sh
-	@p='nosetests.sh'; \
-	b='nosetests.sh'; \
-	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
-	--log-file $$b.log --trs-file $$b.trs \
-	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
-	"$$tst" $(AM_TESTS_FD_REDIRECT)
 .test.log:
 	@p='$<'; \
 	$(am__set_b); \
@@ -1304,7 +1303,7 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) $(check_DATA)
-	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
+	$(MAKE) $(AM_MAKEFLAGS) check-TESTS check-local
 check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(SCRIPTS) $(DATA) \
@@ -1433,8 +1432,8 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 .MAKE: all check check-am install install-am install-data-am \
 	install-strip uninstall-am
 
-.PHONY: all all-am am--refresh check check-TESTS check-am clean \
-	clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
+.PHONY: all all-am am--refresh check check-TESTS check-am check-local \
+	clean clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
 	clean-libtool clean-local clean-noinstLTLIBRARIES \
 	cscopelist-am ctags-am dist dist-all dist-bzip2 dist-gzip \
 	dist-lzip dist-shar dist-tarZ dist-xz dist-zip distcheck \
@@ -1465,6 +1464,7 @@ install-data-hook: $(INSTALL_DATA_HOOK)
 uninstall-hook: $(UNINSTALL_HOOK)
 clean-local: $(CLEAN_HOOK)
 installcheck-local: $(INSTALLCHECK_HOOK)
+check-local: $(CHECK_HOOK)
 
 # ========================================================================
 # An error we run into every once in a while is somebody trying to build
@@ -1522,15 +1522,10 @@ end-to-end-check: installcheck-am
 # orbit in the input files
 #	$(prefix)/l1b_geo_pge $(l1b_geo_run_config)
 
-nosetests.sh:
-	echo "# /bin/sh" > $@
-	echo "source $(abs_builddir)/script/setup_ecostress.sh" >> $@
-	echo "$(NOSETESTS) $(abs_srcdir)/@srcpython@/*/ $(abs_srcdir)/@srcpython@/*_test.py" >> $@
-	chmod +x $@
-
 # Shortcut for just running nosetests.
-python_check: nosetests.sh
-	./nosetests.sh
+python_check: script/setup_ecostress.sh
+	source $< && \
+        $(PYTEST) $(PYTEST_FLAGS) $(PYTEST_EXTRAFLAGS) $(srcdir)/@srcpython@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

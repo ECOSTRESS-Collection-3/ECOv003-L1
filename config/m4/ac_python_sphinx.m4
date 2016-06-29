@@ -21,7 +21,7 @@ AC_DEFUN([AC_PROG_SPHINX],[
         if test "$SPHINXBUILD" == ""; then
            SPHINXBUILD=sphinx-build
         fi
-        AC_PATH_PROG([SPHINXBUILD],[$SPHINXBUILD])
+        AC_PATH_PROG([SPHINXBUILD],[$SPHINXBUILD], [], [$THIRDPARTY/bin:$PATH])
         if test -z "$SPHINXBUILD" ; then
            AC_MSG_WARN([cannot find 'sphinx-build' program.])
            SPHINXBUILD='echo "Error: sphinx-build is not installed. " ; false'

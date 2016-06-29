@@ -21,7 +21,7 @@ AC_DEFUN([AC_PROG_NOSETESTS],[
         if test "$NOSETESTS" == ""; then
            NOSETESTS=nosetests
         fi
-        AC_PATH_PROG([NOSETESTS],[$NOSETESTS])
+        AC_PATH_PROG([NOSETESTS],[$NOSETESTS], [], [$THIRDPARTY/bin:$PATH])
         if test -z "$NOSETESTS" ; then
            AC_MSG_WARN([cannot find 'nosetests' program.])
            NOSETESTS='echo "Error: nosetests is not installed. " ; false'
