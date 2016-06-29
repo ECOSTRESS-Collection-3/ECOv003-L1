@@ -33,7 +33,7 @@ fi
 #
 if test -n "$1"; then
    AC_MSG_CHECKING([for a version of Python $1])
-   ac_supports_python_ver=`LD_LIBRARY_PATH=$PYTHON_PREFIX/lib:$PYTHON_PREFIX/lib64 $PYTHON -c "import sys; \
+   ac_supports_python_ver=`LD_LIBRARY_PATH=$PYTHON_PREFIX/lib:$PYTHON_PREFIX/lib64:$LD_LIBRARY_PATH $PYTHON -c "import sys; \
 	ver = sys.version.split ()[[0]]; \
 	print (ver $1)"`
    if test "$ac_supports_python_ver" = "True"; then
