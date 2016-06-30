@@ -28,11 +28,12 @@ We install in a directory with the date (so we can have multiple versions).
     cd ~
     mkdir -p AfidsBuild/build_afids_install
     cd AfidsBuild/build_afids_install
-    /home/smyth/Afids/configure --prefix=/pkg/afids/afids_20160203 \
+    /home/smyth/Afids/configure --prefix=/pkg/afids/afids_20160701 \
         --with-blitz=build --with-gsl=build --with-hdf5=build \
 	--with-hdf4=build --with-gnuplot=build --with-fftw=build \
 	--with-geotiff=build --with-gdal=build --with-geos=build \
-	--with-ogdi=build --with-openjpeg=build --with-afids-xvd=build \
+	--with-ogdi=build --with-openjpeg=build --with-hdfeos=build \
+        --with-hdfeos5=build -with-afids-xvd=build \
         --with-python=build --with-tcl=build \
 	--with-afids-test-data=/home/smyth/AfidsData \
 	--with-srtm-l2=/project/ancillary/SRTM/srtm_v3_dem_L2 \
