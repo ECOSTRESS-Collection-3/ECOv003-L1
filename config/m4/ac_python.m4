@@ -15,7 +15,15 @@ AC_DEFUN([AC_PYTHON_DEVEL],
 		will be appended to the Python interpreter
 		canonical name.])
 
-AC_PATH_PROG([PYTHON],[python[$PYTHON_VERSION]])
+if test "x$THIRDPARTY" = x ; then
+   python_search_path=$PATH
+else
+   python_search_path=$THIRDPARTY/bin:$PATH
+fi
+AC_PATH_PROG([PYTHON],[python[$PYTHON_VERSION]], [], [$python_search_path])
+PYTHON_ABS=`eval echo ${PYTHON}`
+PYTHON_PREFIX=`AS_DIRNAME(["$PYTHON_ABS"])`
+PYTHON_PREFIX=`AS_DIRNAME(["$PYTHON_PREFIX"])`
 if test -z "$PYTHON"; then
    AC_MSG_ERROR([Cannot find python$PYTHON_VERSION in your system path])
    PYTHON_VERSION=""
@@ -25,7 +33,7 @@ fi
 #
 if test -n "$1"; then
    AC_MSG_CHECKING([for a version of Python $1])
-   ac_supports_python_ver=`$PYTHON -c "import sys; \
+   ac_supports_python_ver=`LD_LIBRARY_PATH=$PYTHON_PREFIX/lib:$PYTHON_PREFIX/lib64:$LD_LIBRARY_PATH $PYTHON -c "import sys; \
 	ver = sys.version.split ()[[0]]; \
 	print (ver $1)"`
    if test "$ac_supports_python_ver" = "True"; then
@@ -42,10 +50,9 @@ variable to configure. See ``configure --help'' for reference.
 fi
 
 AC_MSG_CHECKING([Checking for python-config])
-AC_PATH_TOOL([PYTHON_CONFIG], [python-config])
+AC_PATH_TOOL([PYTHON_CONFIG], [python-config], [], [$python_search_path])
 if test -n "$PYTHON_CONFIG" ; then
     AC_MSG_RESULT([yes])
-    PYTHON_VERSION=$(python -c "import sys;print('.'.join(map(str, sys.version_info@<:@:2@:>@)))")
 else
   AC_MSG_RESULT([no])
 fi
@@ -80,4 +87,5 @@ AC_SUBST([PYTHON_CPPFLAGS])
 AC_SUBST([PYTHON_LDFLAGS])
 
 ])
+
 

@@ -106,10 +106,17 @@ Make sure you are pointing to the afids installed libraries
     export LD_LIBRARY_PATH=/pkg/afids/afids_latest/lib64:/pkg/afids/afids_latest/lib:${LD_LIBRARY_PATH}
     export PYTHONPATH=/pkg/afids/afids_latest/lib/python3.5/site-packages:/pkg/afids/afids_latest/lib64/python3.5/site-packages:${PYTHONPATH}
 
-Then set up virtual environment
+Then set up virtual environment. This comes as part of the python
+install (since 3.4 I think). *However* it turns out that the version
+of virtual environment does not have the python-config script used by
+Geocal for building. This got added fairly recently, see
+https://github.com/pypa/virtualenv/issues/169. So for now, we need to
+download an updated copy of virtualenv and use that instead. This will
+likely go away with a future version of python:
 
+    pip3 install virtualenv
     cd /pkg/afids
-    /pkg/afids/afids_latest/bin/pyvenv afids_python3env
+    /pkg/afids/afids_latest/bin/virtualenv afids_python3env
     source afids_python3env/bin/activate
 
 Need to link in the umfpack headers, or at least I couldn't figure out

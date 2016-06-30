@@ -12,12 +12,14 @@ orb = read_shelve(test_data + "orbit.xml")
 cam = read_shelve(test_data + "camera.xml")
 tt = read_shelve(test_data + "time_table.xml")
 band = 0
+
 def fname(band):
-        return "/data/smyth/AsterMosiac/calnorm_b%d.img" % band
-sdata = [VicarLiteRasterImage(fname(aster_band)) for aster_band in [14, 14, 12, 11, 10, 4]]
+    return "/data/smyth/AsterMosiac/calnorm_b%d.img" % band
 
 def test_l1b_rad_simulate():
-    raise SkipTest  # Don't normally run this, it takes a while
+    raise SkipTest  # Don't normally run this, it takes a while and we only
+                    # have the test data on pistol
+    sdata = [VicarLiteRasterImage(fname(aster_band)) for aster_band in [14, 14, 12, 11, 10, 4]]
     l1b_sim = L1bRadSimulate(orb, tt, cam, sdata, raycast_resolution = 100.0)
     # Limitation of test data is that it expects to be in end_to_end_testing
     # directory because of relative paths.

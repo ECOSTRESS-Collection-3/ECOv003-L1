@@ -1,7 +1,7 @@
 # SYNOPSIS
 #
 #   AC_HANDLE_WIITH_ARG([variable name], ["with" name"], [Description name], 
-#                       [can_build], [default_build])
+#                       [can_build], [default_build], [do_not_use])
 #
 # DESCRIPTION
 #
@@ -9,7 +9,7 @@
 # sets up the help message, and determines the logic for if we 
 # want, and are going to build a particular item. For a variable name
 # "blah_blah", this would set up the variables want_blah_blah, 
-# build_blah_blah, and ac_blah_blah_path.
+# build_blah_blah, build_needed_blah_blah and ac_blah_blah_path.
 #
 # Note that the "variable name" and "with name" are generally pretty similar.
 # The difference is that "with" names typically contain "-" in the (e.g.,
@@ -29,7 +29,10 @@
 AC_DEFUN([AC_HANDLE_WITH_ARG],[
 [have_][$1]="no"
 [build_][$1]="no"
-AC_ARG_WITH([$2],
+[build_needed][$1]="no"
+[want_][$1]="no"
+if test "$6" != "do_not_use"; then
+  AC_ARG_WITH([$2],
         AS_HELP_STRING([--with-][$2][@<:@=DIR@:>@], [use ][$3][ (default is yes if found) - it is possible to specify the root directory for ][$3][ (optional).]m4_bmatch([$4],[can_build], [ You can also specify "build" if you want to build your own local copy. See also THIRDPARTY variable described below.])),
         [
     if test "$withval" = "no"; then
@@ -56,7 +59,11 @@ AC_ARG_WITH([$2],
         [want_][$1]="yes"
         [build_][$1]="yes"
         [ac_][$1][_path]="\${prefix}"
+      elif test "$THIRDPARTY" = "build_needed"; then
+        [want_][$1]="yes"
+        [build_needed_][$1]="yes"
       fi
     fi
     ])
+fi
 ])

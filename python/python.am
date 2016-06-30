@@ -1,16 +1,18 @@
 ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py
 
-nosetests.sh:
-	echo "# /bin/sh" > $@
-	echo "source $(abs_builddir)/script/setup_ecostress.sh" >> $@
-	echo "$(NOSETESTS) $(abs_srcdir)/@srcpython@/*/ $(abs_srcdir)/@srcpython@/*_test.py" >> $@
-	chmod +x $@
+# Number of jobs to run at once. Default is to automatically determine this,
+# but you can specify a different number.
+PYTEST_NJOB=10
+
+PYTEST_EXTRAFLAGS=
+PYTEST_FLAGS= -q -n $(PYTEST_NJOB)
 
 # Shortcut for just running nosetests.
-python_check: nosetests.sh
-	./nosetests.sh
+python_check: script/setup_ecostress.sh
+	source $< && \
+        $(PYTEST) $(PYTEST_FLAGS) $(PYTEST_EXTRAFLAGS) $(srcdir)/@srcpython@
 
-TESTS += nosetests.sh
+CHECK_HOOK+= python_check
 
 include python/lib/lib.am
 
