@@ -39,11 +39,7 @@ We install in a directory with the date (so we can have multiple versions).
 	--with-srtm-l2=/project/ancillary/SRTM/srtm_v3_dem_L2 \
 	--without-afids-python
     make -j 12 all && make install && make autotools_install
-    make -j 12 blas lapack umfpack swig
     scp pistol:/opt/afids_support/share/aclocal/pkg.m4 /pkg/afids/afids_latest/share/aclocal
-
-The blas etc. make line is stuff needed by the virtualenv described next,
-but not needed by AFIDS when we build without afids_python.
 
 We depend on pkg.m4 which isn't installed since we aren't building pkg,
 so we just manually copy that from pistol. Nothing special about the pistol
@@ -116,7 +112,8 @@ likely go away with a future version of python:
 
     pip3 install virtualenv
     cd /pkg/afids
-    /pkg/afids/afids_latest/bin/virtualenv afids_python3env
+    /pkg/afids/afids_latest/bin/virtualenv afids_python3env_20160701
+    ln -s afids_python3env_20160701 afids_python3env
     source afids_python3env/bin/activate
 
 Need to link in the umfpack headers, or at least I couldn't figure out
