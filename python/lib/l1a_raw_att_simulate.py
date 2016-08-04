@@ -1,7 +1,7 @@
 import numpy as np
 import h5py
-from ecostress.write_standard_metadata import WriteStandardMetadata
-from ecostress.misc import time_split
+from .write_standard_metadata import WriteStandardMetadata
+from .misc import time_split
 
 class L1aRawAttSimulate(object):
     '''This is used to generate L1A_RAW_ATT simulated data.'''

@@ -5,7 +5,7 @@ ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py
 PYTEST_NJOB=10
 
 PYTEST_EXTRAFLAGS=
-PYTEST_FLAGS= -q -n $(PYTEST_NJOB)
+PYTEST_FLAGS= -q -n $(PYTEST_NJOB) --basetemp=./pytest_tmp
 
 # Shortcut for just running nosetests.
 python_check: script/setup_ecostress.sh

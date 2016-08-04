@@ -1,6 +1,6 @@
 from geocal import *
 import h5py
-from ecostress.write_standard_metadata import WriteStandardMetadata
+from .write_standard_metadata import WriteStandardMetadata
 
 class L1bAttGenerate(object):
     '''This generates the L1B att output file from the given 

@@ -1,13 +1,10 @@
-from nose.tools import *
-from nose.plugins.skip import Skip, SkipTest
-from run_config import *
+from .run_config import *
+from test_support import *
 import os
 
-test_data = os.path.dirname(__file__) + "/../../unit_test_data/"
-
-def test_parse():
+def test_parse(unit_test_data):
     '''Test parsing a sample run config file.'''
-    config = RunConfig(test_data + 
+    config = RunConfig(unit_test_data + 
                        "SMAP_L1B_TB_SPS_RunConfig_20150228T224642376.xml")
     assert config["DynamicAncillaryFileGroup", "RFIParameters"] == "/ops/LOM/ANCILLARY/RFIParameters/RFIParameters_130901_v008.h5"
     assert config.as_list("DynamicAncillaryFileGroup", "RFIParameters") == ["/ops/LOM/ANCILLARY/RFIParameters/RFIParameters_130901_v008.h5", ]

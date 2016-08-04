@@ -1,14 +1,13 @@
 # Just import any files we find in this directory, rather than listing
 # everything
 
+from __future__ import absolute_import
 import os
-import glob
 import re
-import imp
+import glob
+from geocal import *
 
-__path__ = [os.path.dirname(__file__) + "/../lib"]
-
-for i in glob.glob(os.path.dirname(__file__) + "/../lib/*.py"):
+for i in glob.glob(os.path.dirname(__file__) + "/*.py"):
     mname = os.path.basename(i).split('.')[0]
     # Don't load ipython, which is ipython magic extensions, or unit tests
     if(not mname == 'ipython' and

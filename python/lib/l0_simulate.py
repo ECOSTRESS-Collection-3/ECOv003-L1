@@ -1,7 +1,7 @@
 import numpy as np
 import h5py
 import subprocess
-from ecostress.misc import time_split
+from .misc import time_split
 import os
 
 class L0Simulate(object):

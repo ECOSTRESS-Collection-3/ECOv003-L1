@@ -1,12 +1,9 @@
-from nose.tools import *
-from nose.plugins.skip import Skip, SkipTest
-from write_run_config import *
-from run_config import *
+from .write_run_config import *
+from .run_config import *
+from test_support import *
 import os
 
-test_data = os.path.dirname(__file__) + "/../../unit_test_data/"
-
-def test_parse():
+def test_parse(isolated_dir):
     '''Test creating a run config file.'''
     config = WriteRunConfig()
     config["DynamicAncillaryFileGroup", "RFIParameters"] = "/ops/LOM/ANCILLARY/RFIParameters/RFIParameters_130901_v008.h5"
@@ -24,7 +21,7 @@ def test_parse():
     assert config["DynamicAncillaryFileGroup", "SpiceAntennaAzimuth"] == \
         config2["DynamicAncillaryFileGroup", "SpiceAntennaAzimuth"]
 
-def test_handling_vector_len1():
+def test_handling_vector_len1(isolated_dir):
     '''Test handling of vector of length 1. PCS writes this as a scalar,
     need to check that this is properly handled.'''
     config = WriteRunConfig()

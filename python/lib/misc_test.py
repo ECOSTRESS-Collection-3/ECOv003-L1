@@ -1,7 +1,6 @@
-from nose.tools import *
-from nose.plugins.skip import Skip, SkipTest
-from geocal import *
-from misc import *
+from .misc import *
+from test_support import *
+from geocal import Time
 
 def test_time_to_file_string():
     '''Test conversion of acquisition time to data and time.'''

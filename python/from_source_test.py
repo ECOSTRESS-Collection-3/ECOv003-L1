@@ -1,7 +1,5 @@
 # Run the way Ben likes, where we can import from the source tree
 
-from nose.tools import *
-from nose.plugins.skip import Skip, SkipTest
 import os
 import ecostress
 

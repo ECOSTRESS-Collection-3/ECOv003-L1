@@ -1,6 +1,6 @@
 import numpy as np
 import h5py
-from ecostress.write_standard_metadata import WriteStandardMetadata
+from .write_standard_metadata import WriteStandardMetadata
 
 class L1aBbSimulate(object):
     '''This is used to generate L1A_BB simulated data. Right now, this is just

@@ -1,7 +1,7 @@
 from geocal import *
 import h5py
 import shutil
-from ecostress.write_standard_metadata import WriteStandardMetadata
+from .write_standard_metadata import WriteStandardMetadata
 
 class L1aPixGenerate(object):
     '''This generates a L1A pix file from the given L1A_BB and L1A_RAW

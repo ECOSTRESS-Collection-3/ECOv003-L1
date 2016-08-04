@@ -1,10 +1,10 @@
 from geocal import *
 import pickle
-import ecostress.pickle_method
+from .pickle_method import *
 from multiprocessing import Pool
 import h5py
-from ecostress.write_standard_metadata import WriteStandardMetadata
-from ecostress.misc import time_split
+from .write_standard_metadata import WriteStandardMetadata
+from .misc import time_split
 
 class L1bRadSimulate(object):
     '''This is used to generate simulated input data for the L1bGeoGenerate 

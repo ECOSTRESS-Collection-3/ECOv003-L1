@@ -1,8 +1,8 @@
 from geocal import *
 import h5py
 import shutil
-from ecostress.write_standard_metadata import WriteStandardMetadata
-from ecostress.misc import ecostress_radiance_scale_factor
+from .write_standard_metadata import WriteStandardMetadata
+from .misc import ecostress_radiance_scale_factor
 
 class L1bRadGenerate(object):
     '''This generates a L1B rad file from the given L1A_PIX file.'''
