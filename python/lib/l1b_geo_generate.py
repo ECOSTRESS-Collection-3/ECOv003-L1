@@ -143,16 +143,20 @@ GEOGCS["WGS 84",
         t.attrs["Units"] = "degrees"
         t = g.create_dataset("longitude", data=lon, dtype='f8')
         t.attrs["Units"] = "degrees"
-        t = g.create_dataset("height", data=height/1e3, dtype='f4')
-        t.attrs["Units"] = "km"
+        t = g.create_dataset("height", data=height, dtype='f4')
+        t.attrs["Units"] = "m"
+        lf = np.empty(height.shape)
+        lf[:,:] = 100.0
+        t = g.create_dataset("land_fraction", data=lf, dtype='f4')
+        t.attrs["Units"] = "percentage"
         dummy = np.empty(height.shape)
         dummy[:,:] = -9999.0
-        t = g.create_dataset("view zenith", data=dummy, dtype='f4')
+        t = g.create_dataset("view_zenith", data=dummy, dtype='f4')
         t.attrs["Units"] = "degrees"
-        t = g.create_dataset("view azimuth", data=dummy, dtype='f4')
+        t = g.create_dataset("view_azimuth", data=dummy, dtype='f4')
         t.attrs["Units"] = "degrees"
-        t = g.create_dataset("solar zenith", data=dummy, dtype='f4')
+        t = g.create_dataset("solar_zenith", data=dummy, dtype='f4')
         t.attrs["Units"] = "degrees"
-        t = g.create_dataset("solar azimuth", data=dummy, dtype='f4')
+        t = g.create_dataset("solar_azimuth", data=dummy, dtype='f4')
         t.attrs["Units"] = "degrees"
         m.write()

@@ -16,6 +16,7 @@ l0_file = $(end_to_end_test_data)/ECOSTRESS_L0_20150124_144252_0100_01.h5
 l1a_raw_run_config = $(end_to_end_test_data)/ECOSTRESS_L1A_RAW_RunConfig_20150124_144252.xml
 l1a_cal_run_config = $(foreach n,001 002 003, $(end_to_end_test_data)/ECOSTRESS_L1A_CAL_RunConfig_80005_$n.xml)
 l1b_cal_run_config = $(foreach n,001 002 003, $(end_to_end_test_data)/ECOSTRESS_L1B_RAD_RunConfig_80005_$n.xml)
+l1b_geo_run_config = $(end_to_end_test_data)/ECOSTRESS_L1B_GEO_RunConfig_20150124_144252.xml
 
 # Note, if you need to update the expected a results a "trick" is to
 # replace H5DIFF with "cp" on the make line (so make end-to-end-check H5DIFF=cp)
@@ -25,6 +26,7 @@ end-to-end-check: installcheck-am
 	-rm -r ./end_to_end_test_l1a_cal
 	-rm -r ./end_to_end_test_l1b_rad
 	-rm -r ./end_to_end_test_l1b_geo
+	-rm ./l1_osp_dir
 	$(MKDIR_P) ./end_to_end_test_l0_input
 	$(LN_S) $(l0_file) ./end_to_end_test_l0_input
 	$(prefix)/l1a_raw_pge $(l1a_raw_run_config)
@@ -43,6 +45,8 @@ end-to-end-check: installcheck-am
 	for i in ./end_to_end_test_l1b_rad/*.h5; do \
             $(H5DIFF) $$i $(end_to_end_test_data)/`basename $$i`.expected; \
         done
-# Not working yet, we need to add the fan in and get the time table and
-# orbit in the input files
-#	$(prefix)/l1b_geo_pge $(l1b_geo_run_config)
+	$(LN_S) $(end_to_end_test_data)/l1_osp_dir l1_osp_dir
+	ECOSTRESS_USE_AFIDS_ENV=t $(prefix)/l1b_geo_pge $(l1b_geo_run_config)
+	for i in ./end_to_end_test_l1b_geo/*.h5; do \
+            $(H5DIFF) $$i $(end_to_end_test_data)/`basename $$i`.expected; \
+        done

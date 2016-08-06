@@ -1,6 +1,7 @@
 from geocal import *
 import h5py
 from .write_standard_metadata import WriteStandardMetadata
+from .misc import time_split
 
 class L1bAttGenerate(object):
     '''This generates the L1B att output file from the given 
@@ -48,6 +49,13 @@ class L1bAttGenerate(object):
                                   pge_name="L1B_GEO",
                                   build_id = '0.01', pge_version='0.01',
                                   local_granule_id = self.local_granule_id)
+        
+        dt, tm = time_split(self.igc.ipi.min_time)
+        m.set("RangeBeginningDate", dt)
+        m.set("RangeBeginningTime", tm)
+        dt, tm = time_split(self.igc.ipi.max_time)
+        m.set("RangeEndingDate", dt)
+        m.set("RangeEndingTime", tm)
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)
         g = fout.create_group("L1bAtt")

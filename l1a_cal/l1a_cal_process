@@ -46,6 +46,7 @@ ofile = os.path.splitext(os.path.basename(l1a_raw_pix))[0] + ".h5"
 ofile = re.sub(r'L1A_RAW_PIX', 'L1A_PIX', ofile)
 
 # Generate output
-l1apix = L1aPixGenerate(l1a_bb, l1a_raw_pix, ofile)
+l1apix = L1aPixGenerate(l1a_bb, l1a_raw_pix, ofile,
+                        run_config = config)
 l1apix.run()
 

@@ -126,8 +126,6 @@ class WriteStandardMetadata(object):
 ["PlatformType", "String"],
 ["ProcessingLevelID", "String"],
 ["ProcessingLevelDescription", "String"],
-["ProcessingQAAttribute", "String"],
-["ProcessingQADescription", "String"],
 ["ProducerAgency", "String"],
 ["ProducerInstitution", "String"],
 ["ProductionDateTime", "String"],
