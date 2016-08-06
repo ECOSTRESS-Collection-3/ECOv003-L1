@@ -1519,7 +1519,7 @@ end-to-end-check: installcheck-am
 	$(LN_S) $(end_to_end_test_data)/l1_osp_dir l1_osp_dir
 	ECOSTRESS_USE_AFIDS_ENV=t $(prefix)/l1b_geo_pge $(l1b_geo_run_config)
 	for i in ./end_to_end_test_l1b_geo/*.h5; do \
-            $(H5DIFF) $$i $(end_to_end_test_data)/`basename $$i`.expected; \
+            $(H5DIFF) -d 1e-2 $$i $(end_to_end_test_data)/`basename $$i`.expected; \
         done
 
 # Shortcut for just running nosetests.
