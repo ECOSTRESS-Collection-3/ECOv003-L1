@@ -2,7 +2,7 @@
 import pytest
 import os
 from geocal import makedirs_p, read_shelve, Ipi, SrtmDem, \
-    IpiImageGroundConnection
+    IpiImageGroundConnection, SrtmLwmData
 
 @pytest.yield_fixture(scope="function")
 def isolated_dir(tmpdir):
@@ -48,6 +48,17 @@ def igc(old_test_data):
     # for data that is over the ocean.
     dem = SrtmDem("",False)
     yield IpiImageGroundConnection(ipi, dem, None)
+
+@pytest.yield_fixture(scope="function")
+def lwm():
+    '''Determine location of SRTM LWM and initialize object for that.'''
+    if(os.path.exists("/raid25/SRTM_2014_update/srtm_v3_lwm")):
+        srtm_lwm_dir = "/raid25/SRTM_2014_update/srtm_v3_lwm"
+    elif(os.path.exists("/project/ancillary/SRTM/srtm_v3_lwm")):
+        srtm_lwm_dir = "/project/ancillary/SRTM/srtm_v3_lwm"
+    else:
+        raise RuntimeError("Couldn't find SRTM LWM")
+    yield SrtmLwmData(srtm_lwm_dir,False)
     
 @pytest.yield_fixture(scope="function")
 def test_data():

@@ -12,7 +12,7 @@ class L1bGeoGenerate(object):
     ImageGroundConnection. I imagine we will modify this as time
     goes on, this is really just a placeholder.
     '''
-    def __init__(self, igc, output_name, run_config = None,
+    def __init__(self, igc, lwm, output_name, run_config = None,
                  start_line = 0,
                  number_line = -1,
                  number_integration_step = 1,
@@ -28,6 +28,7 @@ class L1bGeoGenerate(object):
         This is useful for testing, but for production you'll always want to 
         have the run config available.'''
         self.igc = igc
+        self.lwm = lwm
         self.output_name = output_name
         self.start_line = start_line
         self.number_line = number_line
@@ -59,21 +60,41 @@ class L1bGeoGenerate(object):
         lat = np.empty((rcast.number_position, rcast.number_sample))
         lon = np.empty((rcast.number_position, rcast.number_sample))
         height = np.empty((rcast.number_position, rcast.number_sample))
+        vzenith = np.empty((rcast.number_position, rcast.number_sample))
+        vazimuth = np.empty((rcast.number_position, rcast.number_sample))
+        szenith = np.empty((rcast.number_position, rcast.number_sample))
+        sazimuth = np.empty((rcast.number_position, rcast.number_sample))
+        lfrac = np.empty((rcast.number_position, rcast.number_sample))
         i = 0
         while True:
             r = rcast.next_position()
             ln = rcast.current_position - rcast.start_position
+            # Take advantage of the fact that all samples have the same
+            # orbit position. Not sure this is true for the real ecostress
+            # camera, but for now take advantage of this. We'll probably move
+            # this to C++ for performance anyways. Same thing for solar position
+            ic = ImageCoordinate(rcast.current_position, 0)
+            opos = self.igc.cf_look_vector_pos(ic)
+            t = self.igc.pixel_time(ic)
+            sollv_cf = CartesianFixedLookVector.solar_look_vector(t)
             for j in range(r.shape[1]):
                 pt = Ecr(*r[0,j,0,0,0,:])
                 lat[ln, j] = pt.latitude
                 lon[ln, j] = pt.longitude
                 height[ln, j] = pt.height_reference_surface
+                vln = LnLookVector(CartesianFixedLookVector(pt, opos), pt)
+                vzenith[ln,j] = vln.view_zenith
+                vazimuth[ln,j] = vln.view_azimuth
+                sln = LnLookVector(sollv_cf, pt)
+                szenith[ln, j] = sln.view_zenith
+                sazimuth[ln, j] = sln.view_azimuth
+                lfrac[ln, j]= self.lwm.interpolate(self.lwm.coordinate(pt)) * 100.0
             i += 1
             if(i % 100 ==0 and print_status):
                 print("Done with position %d" % i)
             if(rcast.last_position):
                 break
-        return lat, lon, height
+        return lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac
 
     def loc(self, pool = None):
         '''Determine locations'''
@@ -88,11 +109,17 @@ class L1bGeoGenerate(object):
         lat = np.hstack([rv[0] for rv in r])
         lon = np.hstack([rv[1] for rv in r])
         height = np.hstack([rv[2] for rv in r])
-        return lat,lon,height
+        vzenith = np.hstack([rv[3] for rv in r])
+        vazimuth = np.hstack([rv[4] for rv in r])
+        szenith = np.hstack([rv[5] for rv in r])
+        sazimuth = np.hstack([rv[6] for rv in r])
+        lfrac = np.hstack([rv[7] for rv in r])
+        return lat,lon,height,vzenith, vazimuth, szenith,sazimuth, lfrac
 
     def run(self, pool = None):
         '''Do the actual generation of data.'''
-        lat, lon, height = self.loc(pool)
+        lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac = \
+           self.loc(pool)
         fout = h5py.File(self.output_name, "w")
         m = WriteStandardMetadata(fout,
                                   product_specfic_group = "L1GEOMetadata",
@@ -145,18 +172,14 @@ GEOGCS["WGS 84",
         t.attrs["Units"] = "degrees"
         t = g.create_dataset("height", data=height, dtype='f4')
         t.attrs["Units"] = "m"
-        lf = np.empty(height.shape)
-        lf[:,:] = 100.0
-        t = g.create_dataset("land_fraction", data=lf, dtype='f4')
+        t = g.create_dataset("land_fraction", data=lfrac, dtype='f4')
         t.attrs["Units"] = "percentage"
-        dummy = np.empty(height.shape)
-        dummy[:,:] = -9999.0
-        t = g.create_dataset("view_zenith", data=dummy, dtype='f4')
+        t = g.create_dataset("view_zenith", data=vzenith, dtype='f4')
         t.attrs["Units"] = "degrees"
-        t = g.create_dataset("view_azimuth", data=dummy, dtype='f4')
+        t = g.create_dataset("view_azimuth", data=vazimuth, dtype='f4')
         t.attrs["Units"] = "degrees"
-        t = g.create_dataset("solar_zenith", data=dummy, dtype='f4')
+        t = g.create_dataset("solar_zenith", data=szenith, dtype='f4')
         t.attrs["Units"] = "degrees"
-        t = g.create_dataset("solar_azimuth", data=dummy, dtype='f4')
+        t = g.create_dataset("solar_azimuth", data=sazimuth, dtype='f4')
         t.attrs["Units"] = "degrees"
         m.write()

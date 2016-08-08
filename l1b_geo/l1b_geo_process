@@ -40,6 +40,7 @@ config = RunConfig(args.run_config)
 
 datum = os.path.abspath(config["StaticAncillaryFileGroup", "Datum"])
 srtm_dir = os.path.abspath(config["StaticAncillaryFileGroup", "SRTMDir"])
+srtm_lwm_dir = os.path.abspath(config["StaticAncillaryFileGroup", "SRTMLWMDir"])
 spice_data = os.path.abspath(config["StaticAncillaryFileGroup", "SpiceDataDir"])
 l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
 ortho_base_dir = os.path.abspath(config["StaticAncillaryFileGroup",
@@ -67,19 +68,23 @@ if("ECOSTRESS_USE_AFIDS_ENV" in os.environ):
     # Location on pistol, use if found, otherwise use setting in run config file
     if(os.path.exists("/raid22/band62_VICAR")):
         ortho_base_dir = "/raid22/band62_VICAR"
+    if(os.path.exists("/raid25/SRTM_2014_update/srtm_v3_lwm")):
+        srtm_lwm_dir = "/raid25/SRTM_2014_update/srtm_v3_lwm"
 else:
     # Otherwise use data from run config without change
     # Spice directory passed down as an environment variable
     os.environ["SPICEDATA"] = spice_data
 dem = SrtmDem(srtm_dir,False, DatumGeoid96(datum))
+lwm = SrtmLwmData(srtm_lwm_dir, False)
 
 # Bug that we seem to need to do this to force spice to be loaded before
 # we create the pool. Would like to figure out why this happens and fix this
 SpiceHelper.spice_setup()
-pool = Pool(ncpu)
-
 # This this a temporary work around
 orb = SpiceOrbit(SpiceOrbit.ISS_ID, l1_osp_dir + "/iss_spice/iss_2015.bsp")
+
+pool = Pool(ncpu)
+
 for i in range(len(radlist)):
     print("Doing scene number %d" %i)
     f = h5py.File(radlist[i], "r")
@@ -103,9 +108,12 @@ for i in range(len(radlist)):
     # Create DEM. False here says it ok for SrtmDem to not have tile. This 
     # gives support for data that is over the ocean.
     igc = IpiImageGroundConnection(ipi, dem, None)
+    # For debugging
+    write_shelve("igc_%d.xml" % i, igc)
 
     # Generate output
-    l1bgeo = L1bGeoGenerate(igc, ofile, number_line = args.number_line,
+    l1bgeo = L1bGeoGenerate(igc, lwm, ofile,
+                            number_line = args.number_line,
                             run_config = config)
     l1bgeo.run(pool)
     
