@@ -20,7 +20,7 @@ class L1aRawPixSimulate(object):
             t.attrs["Units"] = "dimensionless"
         self.m = WriteStandardMetadata(fout,
                                        product_specfic_group = "L1A_RAW_PIXMetadata",
-                                       pge_name = "L1A_RAW")
+                                       pge_name = "L1A_RAW_PGE")
         self.copy_metadata("RangeBeginningDate")
         self.copy_metadata("RangeBeginningTime")
         self.copy_metadata("RangeEndingDate")

@@ -19,7 +19,7 @@ class L1aEngSimulate(object):
                              data = np.array([-999,-999,-999], dtype = np.float32))
         t.attrs["Units"] = "K and XY"
         m = WriteStandardMetadata(fout, product_specfic_group = "L1A_ENGMetadata",
-                                  pge_name = "L1A_RAW",
+                                  pge_name = "L1A_RAW_PGE",
                                   orbit_based = True)
         m.write()
         fout.close()

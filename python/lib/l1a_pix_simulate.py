@@ -29,7 +29,7 @@ class L1aPixSimulate(object):
                                  data = self.image(b))
             t.attrs["Units"] = "dimensionless"
         self.m = WriteStandardMetadata(fout, product_specfic_group = "L1A_PIXMetadata",
-                                  pge_name = "L1A_CAL")
+                                  pge_name = "L1A_CAL_PGE")
         self.copy_metadata("RangeBeginningDate")
         self.copy_metadata("RangeBeginningTime")
         self.copy_metadata("RangeEndingDate")

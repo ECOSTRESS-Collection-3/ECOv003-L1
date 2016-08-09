@@ -23,8 +23,8 @@ class L1aPixGenerate(object):
         fin = h5py.File(self.l1a_raw, "r")
         f = h5py.File(self.output_name, "r+")
         m = WriteStandardMetadata(f, product_specfic_group = "L1APIXMetadata",
-                                  pge_name="L1A_CAL",
-                                  build_id = '0.01', pge_version='0.01',
+                                  pge_name="L1A_CAL_PGE",
+                                  build_id = '0.10', pge_version='0.10',
                                   local_granule_id = self.local_granule_id)
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)

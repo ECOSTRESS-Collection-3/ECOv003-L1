@@ -44,7 +44,7 @@ class L1aRawPixGenerate(object):
         m = WriteStandardMetadata(fout,
                                  product_specfic_group = prod_type + "Metadata",
                                  pge_name="L1A_RAW_PIX",
-                                 build_id = '0.01', pge_version='0.01',
+                                 build_id = '0.10', pge_version='0.10',
                                  orbit_based = (scene is None))
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)

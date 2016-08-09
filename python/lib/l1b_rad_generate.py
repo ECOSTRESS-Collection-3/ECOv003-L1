@@ -45,8 +45,8 @@ class L1bRadGenerate(object):
                              data = self.image(b).astype(np.uint16))
         t.attrs["Units"] = "dimensionless"
         m = WriteStandardMetadata(fout, product_specfic_group = "L1B_RADMetadata",
-                                  pge_name = "L1B_RAD",
-                                  build_id = '0.01', pge_version='0.01',
+                                  pge_name = "L1B_RAD_PGE",
+                                  build_id = '0.10', pge_version='0.10',
                                   local_granule_id = self.local_granule_id)
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)

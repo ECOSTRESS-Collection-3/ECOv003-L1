@@ -124,7 +124,7 @@ class L1bGeoGenerate(object):
         m = WriteStandardMetadata(fout,
                                   product_specfic_group = "L1GEOMetadata",
                                   pge_name="L1B_GEO",
-                                  build_id = '0.01', pge_version='0.01',
+                                  build_id = '0.10', pge_version='0.10',
                                   local_granule_id = self.local_granule_id)
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)

@@ -1,2 +1,2 @@
-dist_installecostress_SCRIPTS += @l1b_geo_src@/l1b_geo_pge
+dist_installecostress_SCRIPTS += @l1b_geo_src@/L1B_GEO_PGE
 dist_bin_SCRIPTS += @l1b_geo_src@/l1b_geo_process

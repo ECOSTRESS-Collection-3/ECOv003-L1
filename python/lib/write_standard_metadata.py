@@ -35,7 +35,7 @@ class WriteStandardMetadata(object):
         self.set('AutomaticQualityFlag', 'PASS')
         self.set('DataFormatType', 'NCSAHDF5')
         # How do we determine these?
-        self.set('HDFVersionId', '1.8.16')
+        self.set('HDFVersionID', '1.8.16')
         self.set('ImageLines', 5400)
         self.set('ImageLineSpacing', 68.754)
         self.set('ImagePixels', 5400)
@@ -109,7 +109,7 @@ class WriteStandardMetadata(object):
 ["DataFormatType", "String"],
 ["DayNightFlag", "String"],
 ["EastBoundingCoordinate", "Float64"],
-["HDFVersionId", "String"],
+["HDFVersionID", "String"],
 ["ImageLines", "Int32"],
 ["ImageLineSpacing", "Float32"],
 ["ImagePixels", "Int32"],
@@ -135,6 +135,7 @@ class WriteStandardMetadata(object):
 ["RangeBeginningTime", "String"],
 ["RangeEndingDate", "String"],
 ["RangeEndingTime", "String"],
+["RegionID", "String"],
 ["SceneID", "String"],
 ["ShortName", "String"],
 ["SISName", "String"],

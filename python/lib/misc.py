@@ -31,7 +31,7 @@ def time_to_file_string(acquisition_time):
     '''Return the portion of the ecostress filename based on the data acquisition 
     date and time'''
     y,m,d,h,min, sec, *rest = re.split(r'[-T:.]', str(acquisition_time))
-    return y + m + d + "_" + h + min + sec
+    return y + m + d + "T" + h + min + sec
 
 def time_split(t):
     '''Split a time into date and time, which we need to do for some of the

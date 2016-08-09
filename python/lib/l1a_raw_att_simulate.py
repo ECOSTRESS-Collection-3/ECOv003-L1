@@ -22,7 +22,7 @@ class L1aRawAttSimulate(object):
                              data = np.array([-999,-999,-999], dtype = np.float64))
         t.attrs["Units"] = "Seconds"
         m = WriteStandardMetadata(fout, product_specfic_group = "L1A_RAW_ATTMetadata",
-                                  pge_name = "L1A_RAW",
+                                  pge_name = "L1A_RAW_PGE",
                                   orbit_based = True)
         dt, tm = time_split(self.min_time)
         m.set("RangeBeginningDate", dt)

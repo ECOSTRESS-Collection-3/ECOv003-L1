@@ -22,6 +22,7 @@ else
 fi
 AC_PATH_PROG([PYTHON],[python[$PYTHON_VERSION]], [], [$python_search_path])
 PYTHON_ABS=`eval echo ${PYTHON}`
+pythonpath=`AS_DIRNAME(["$PYTHON_ABS"])`
 PYTHON_PREFIX=`AS_DIRNAME(["$PYTHON_ABS"])`
 PYTHON_PREFIX=`AS_DIRNAME(["$PYTHON_PREFIX"])`
 if test -z "$PYTHON"; then

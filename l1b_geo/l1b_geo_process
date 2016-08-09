@@ -77,13 +77,10 @@ else:
 dem = SrtmDem(srtm_dir,False, DatumGeoid96(datum))
 lwm = SrtmLwmData(srtm_lwm_dir, False)
 
-# Bug that we seem to need to do this to force spice to be loaded before
-# we create the pool. Would like to figure out why this happens and fix this
-SpiceHelper.spice_setup()
+pool = Pool(ncpu)
+
 # This this a temporary work around
 orb = SpiceOrbit(SpiceOrbit.ISS_ID, l1_osp_dir + "/iss_spice/iss_2015.bsp")
-
-pool = Pool(ncpu)
 
 for i in range(len(radlist)):
     print("Doing scene number %d" %i)

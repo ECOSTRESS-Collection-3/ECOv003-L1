@@ -1,2 +1,2 @@
-dist_installecostress_SCRIPTS += @l1a_cal_src@/l1a_cal_pge
+dist_installecostress_SCRIPTS += @l1a_cal_src@/L1A_CAL_PGE
 dist_bin_SCRIPTS += @l1a_cal_src@/l1a_cal_process

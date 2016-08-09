@@ -48,7 +48,7 @@ class L1bRadSimulate(object):
             else:
                 t.attrs["Units"] = "dimensionless"
         m = WriteStandardMetadata(fout, product_specfic_group = "L1B_RADMetadata",
-                                  pge_name = "L1B_RAD")
+                                  pge_name = "L1B_RAD_PGE")
         dt, tm = time_split(self.time_table.min_time)
         m.set("RangeBeginningDate", dt)
         m.set("RangeBeginningTime", tm)
