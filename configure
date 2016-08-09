@@ -650,6 +650,7 @@ build_python
 PYTEST
 SPHINXBUILD
 PYTHON_LDFLAGS
+pythonpath
 PYTHON_CONFIG
 HAVE_PYTEST_FALSE
 HAVE_PYTEST_TRUE
@@ -12959,6 +12960,7 @@ LIBS="$ac_save_LIBS"
 
 
 
+
 	old_ld_library_path="$LD_LIBRARY_PATH"
 	export LD_LIBRARY_PATH=$PYTHON_PREFIX/lib:$PYTHON_PREFIX/lib64:$LD_LIBRARY_PATH
 
@@ -13542,6 +13544,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 CPPFLAGS="$ac_save_CPPFLAGS"
 LIBS="$ac_save_LIBS"
+
 
 
 

@@ -18,7 +18,7 @@ class L1bGeoGenerate(object):
                  number_integration_step = 1,
                  raycast_resolution = 100, 
                  max_height=10e3,
-                 local_granule_id = None):
+                 local_granule_id = None, log_fname = None):
         '''Create a L1bGeoGenerate with the given ImageGroundConnection
         and output file name. To actually generate, execute the 'run'
         command.
@@ -37,6 +37,7 @@ class L1bGeoGenerate(object):
         self.max_height = max_height
         self.run_config = run_config
         self.local_granule_id = local_granule_id
+        self.log_fname = log_fname
 
     def loc_parallel_func(self, it):
         '''Variation of loc that is easier to use with a multiprocessor pool.'''
@@ -57,6 +58,11 @@ class L1bGeoGenerate(object):
             print_status = True
         if(print_status):
             print("Have %d positions to calculate" % rcast.number_position)
+            if(self.log_fname is not None):
+                self.log = open(self.log_fname, "w")
+                print("Have %d positions to calculate" % rcast.number_position,
+                      file=self.log)
+                self.log.flush()
         lat = np.empty((rcast.number_position, rcast.number_sample))
         lon = np.empty((rcast.number_position, rcast.number_sample))
         height = np.empty((rcast.number_position, rcast.number_sample))
@@ -92,6 +98,9 @@ class L1bGeoGenerate(object):
             i += 1
             if(i % 100 ==0 and print_status):
                 print("Done with position %d" % i)
+                if(self.log is not None):
+                    print("Done with position %d" % i, file = self.log)
+                    self.log.flush()
             if(rcast.last_position):
                 break
         return lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac

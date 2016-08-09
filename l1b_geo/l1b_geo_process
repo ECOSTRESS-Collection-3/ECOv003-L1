@@ -96,6 +96,8 @@ for i in range(len(radlist)):
     # min an max time
     tt = ConstantSpacingTimeTable(tmin, tmax, tspace)
     ofile = os.path.splitext(os.path.basename(radlist[i]))[0] + ".h5"
+    if(i == 0):
+        log_fname = os.path.splitext(ofile)[0] + ".log"
     ofile = re.sub(r'L1B_RAD', 'L1B_GEO', ofile)
     ofile2 = re.sub(r'L1B_GEO', 'L1B_ATT', ofile)
 
@@ -106,12 +108,13 @@ for i in range(len(radlist)):
     # gives support for data that is over the ocean.
     igc = IpiImageGroundConnection(ipi, dem, None)
     # For debugging
-    write_shelve("igc_%d.xml" % i, igc)
+    if(False):
+        write_shelve("igc_%d.xml" % i, igc)
 
     # Generate output
     l1bgeo = L1bGeoGenerate(igc, lwm, ofile,
                             number_line = args.number_line,
-                            run_config = config)
+                            run_config = config, log_fname = log_fname)
     l1bgeo.run(pool)
     
     # Temp

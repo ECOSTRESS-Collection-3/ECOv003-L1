@@ -7,7 +7,7 @@ from .misc import ecostress_radiance_scale_factor
 class L1bRadGenerate(object):
     '''This generates a L1B rad file from the given L1A_PIX file.'''
     def __init__(self, l1a_pix, output_name, local_granule_id = None,
-                 run_config = None):
+                 run_config = None, log = None):
         '''Create a L1bRadGenerate with the given input files
         and output file name. To actually generate, execute the 'run'
         command.'''
@@ -15,6 +15,7 @@ class L1bRadGenerate(object):
         self.output_name = output_name
         self.local_granule_id = local_granule_id
         self.run_config = run_config
+        self.log = log
 
     def image(self, band):
         '''Generate L1B_RAD image.
