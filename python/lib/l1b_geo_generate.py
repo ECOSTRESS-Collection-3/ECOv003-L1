@@ -98,7 +98,7 @@ class L1bGeoGenerate(object):
             i += 1
             if(i % 100 ==0 and print_status):
                 print("Done with position %d" % i)
-                if(self.log is not None):
+                if(self.log_fname is not None):
                     print("Done with position %d" % i, file = self.log)
                     self.log.flush()
             if(rcast.last_position):
