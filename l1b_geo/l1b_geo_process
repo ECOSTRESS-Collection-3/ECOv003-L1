@@ -68,8 +68,8 @@ if("ECOSTRESS_USE_AFIDS_ENV" in os.environ):
     # Location on pistol, use if found, otherwise use setting in run config file
     if(os.path.exists("/raid22/band62_VICAR")):
         ortho_base_dir = "/raid22/band62_VICAR"
-    if(os.path.exists("/raid25/SRTM_2014_update/srtm_v3_lwm")):
-        srtm_lwm_dir = "/raid25/SRTM_2014_update/srtm_v3_lwm"
+    if(os.path.exists("/raid27/tllogan/all_lwm_links")):
+        srtm_lwm_dir = "/raid27/tllogan/all_lwm_links"
 else:
     # Otherwise use data from run config without change
     # Spice directory passed down as an environment variable
