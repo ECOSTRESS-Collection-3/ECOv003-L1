@@ -147,7 +147,7 @@ class L1bGeoGenerate(object):
         dt, tm = time_split(self.igc.ipi.max_time)
         m.set("RangeEndingDate", dt)
         m.set("RangeEndingTime", tm)
-        g = fout.create_group("L1bGeo")
+        g = fout.create_group("Geolocation")
         g.attrs["Projection"] = '''\
 The latitude, longitude, and height are relative to the WGS-84
 ellipsoid. Specifically the projection used is described by
