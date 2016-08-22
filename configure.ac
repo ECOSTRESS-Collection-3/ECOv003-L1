@@ -33,6 +33,16 @@ LD_LIBRARY_PATH="${original_ld_library_path}"
 # Location of all the source code directories
 ECOSTRESS_SOURCE_DIRECTORY
 
+#=================================================================
+# Use cython
+AC_PROG_CYTHON()
+
+if test "$have_cython" = "yes" -a "$USE_MAINTAINER_MODE" != "no"; then
+  generate_cython="yes"
+else
+  generate_cython="no" 
+fi
+
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
 
@@ -44,4 +54,8 @@ LOC_MSG()
 LOC_MSG([ECOSTRESS Level 1 is now configured])
 LOC_MSG()
 LOC_MSG([  Installation directory:        ${prefix}])
+LOC_MSG([  Build debug version:           ${enable_debug}])
+LOC_MSG([  CXX compiler:                  ${CXX} ${CXXFLAGS}])
+LOC_MSG()
+LOC_MSG([  Generate cython wrappers:      ${generate_cython}])
 

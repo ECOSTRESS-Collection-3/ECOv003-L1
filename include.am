@@ -7,6 +7,4 @@ include l1b_rad/l1b_rad.am
 include l1b_geo/l1b_geo.am
 include script/script.am
 include python/python.am
-
-
-
+include bindings/python/python.am

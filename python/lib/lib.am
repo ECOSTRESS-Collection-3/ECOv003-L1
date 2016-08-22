@@ -16,3 +16,11 @@ ecostresspkgpython_PYTHON+= @srcpythonlib@/run_config.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/write_run_config.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/write_standard_metadata.py
 
+# Cython code to generate
+CYTHON_SRC+= @srccython@/cython_sample.cc
+EXTRA_DIST+= @srcpythonlib@/cython_sample.pyx
+CYTHON_SRC+= @srccython@/cython_sample2.cc
+EXTRA_DIST+= @srcpythonlib@/cython_sample2.pyx
+
+# Allow searchs for .pyx files in this directory
+vpath %.pyx $(srcdir)/@srcpythonlib@

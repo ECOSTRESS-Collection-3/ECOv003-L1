@@ -1580,6 +1580,8 @@ AC_SUBST([am__untar])
 ]) # _AM_PROG_TAR
 
 m4_include([config/m4/ac_check_found.m4])
+m4_include([config/m4/ac_cython.m4])
+m4_include([config/m4/ac_enable_debug.m4])
 m4_include([config/m4/ac_handle_with_arg.m4])
 m4_include([config/m4/ac_python.m4])
 m4_include([config/m4/ac_python_module_with_version.m4])

@@ -35,7 +35,8 @@ dist_bin_SCRIPTS =
 AM_LDFLAGS =
 BUILT_SOURCES = 
 include_HEADERS = 
-EXTRA_DIST = 
+EXTRA_DIST =
+CYTHON_SRC =
 pkgconfig_DATA =
 
 AM_CPPFLAGS=

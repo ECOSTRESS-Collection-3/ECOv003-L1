@@ -9,3 +9,10 @@ for i in glob.glob(os.path.dirname(__file__) + "/*.py"):
     # Don't load ipython, which is ipython magic extensions
     if(not mname == 'ipython'):
         exec("from .%s import *" % mname)
+
+# Load cython stuff
+import ecostress._ecostress_level1
+for mname in [f for f in dir(ecostress._ecostress_level1) if f[0] == "_" and not f[1] == "_"]:
+    exec("from %s import *" % mname)
+    
+
