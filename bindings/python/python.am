@@ -26,6 +26,8 @@ $(srcdir)/$(srccython)/cython_init.cc: $(pythonsrccython)/cython_init.tmpl $(pyt
 # Only generate these files in maintainer mode, otherwise consider them
 # as input.
 if MAINTAINER_MODE
+if HAVE_CYTHON
 BUILT_SOURCES+= $(addprefix $(srcdir)/, $(CYTHON_SRC))
+endif HAVE_CYTHON
 endif MAINTAINER_MODE
 

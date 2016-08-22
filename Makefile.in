@@ -117,7 +117,7 @@ TESTS =
 
 # Only generate these files in maintainer mode, otherwise consider them
 # as input.
-@MAINTAINER_MODE_TRUE@am__append_1 = $(addprefix $(srcdir)/, $(CYTHON_SRC))
+@HAVE_CYTHON_TRUE@@MAINTAINER_MODE_TRUE@am__append_1 = $(addprefix $(srcdir)/, $(CYTHON_SRC))
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/config/m4/ac_check_found.m4 \
