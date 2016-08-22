@@ -114,9 +114,6 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS =
 TESTS =
-
-# Only generate these files in maintainer mode, otherwise consider them
-# as input.
 @HAVE_CYTHON_TRUE@@MAINTAINER_MODE_TRUE@am__append_1 = $(addprefix $(srcdir)/, $(CYTHON_SRC))
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -1804,11 +1801,14 @@ python_check: script/setup_ecostress.sh
 # Allow searchs for .pyx files in this directory
 vpath %.pyx $(srcdir)/@srcpythonlib@
 
-$(srcdir)/$(srccython)/%.cc: %.pyx
-	$(CYTHON) $(CYTHON_FLAGS) $(AM_CPPFLAGS) -o $@ $<
+# Only generate these files in maintainer mode, otherwise consider them
+# as input.
 
-$(srcdir)/$(srccython)/cython_init.cc: $(pythonsrccython)/cython_init.tmpl $(pythonsrccython)/create_cython_init.py Makefile
-	$(PYTHON) $(srcdir)/$(pythonsrccython)/create_cython_init.py $@ $(patsubst %.cc,%,$(notdir $(CYTHON_SRC)))
+@HAVE_CYTHON_TRUE@@MAINTAINER_MODE_TRUE@$(srcdir)/$(srccython)/cython_init.cc: $(pythonsrccython)/cython_init.tmpl $(pythonsrccython)/create_cython_init.py Makefile
+@HAVE_CYTHON_TRUE@@MAINTAINER_MODE_TRUE@	$(PYTHON) $(srcdir)/$(pythonsrccython)/create_cython_init.py $@ $(patsubst %.cc,%,$(notdir $(CYTHON_SRC)))
+
+@HAVE_CYTHON_TRUE@@MAINTAINER_MODE_TRUE@$(srcdir)/$(srccython)/%.cc: %.pyx
+@HAVE_CYTHON_TRUE@@MAINTAINER_MODE_TRUE@	$(CYTHON) $(CYTHON_FLAGS) $(AM_CPPFLAGS) -o $@ $<
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

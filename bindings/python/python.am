@@ -3,9 +3,6 @@ CYTHON_FLAGS=--cplus -3
 
 EXTRA_DIST += $(CYTHON_SRC)
 
-$(srcdir)/$(srccython)/%.cc: %.pyx
-	$(CYTHON) $(CYTHON_FLAGS) $(AM_CPPFLAGS) -o $@ $<
-
 # Noe that this is a little more complicated than maybe we need. Cython
 # will by default create a library file per module. However, we inheritted
 # all this from swig development where we combine everything into one library.
@@ -20,13 +17,17 @@ _ecostress_level1_la_LDFLAGS = -module -avoid-version
 _ecostress_level1_la_SOURCES = $(CYTHON_SRC)
 _ecostress_level1_la_SOURCES+= @srccython@/cython_init.cc
 
-$(srcdir)/$(srccython)/cython_init.cc: $(pythonsrccython)/cython_init.tmpl $(pythonsrccython)/create_cython_init.py Makefile
-	$(PYTHON) $(srcdir)/$(pythonsrccython)/create_cython_init.py $@ $(patsubst %.cc,%,$(notdir $(CYTHON_SRC)))
-
 # Only generate these files in maintainer mode, otherwise consider them
 # as input.
 if MAINTAINER_MODE
 if HAVE_CYTHON
+
+$(srcdir)/$(srccython)/cython_init.cc: $(pythonsrccython)/cython_init.tmpl $(pythonsrccython)/create_cython_init.py Makefile
+	$(PYTHON) $(srcdir)/$(pythonsrccython)/create_cython_init.py $@ $(patsubst %.cc,%,$(notdir $(CYTHON_SRC)))
+
+$(srcdir)/$(srccython)/%.cc: %.pyx
+	$(CYTHON) $(CYTHON_FLAGS) $(AM_CPPFLAGS) -o $@ $<
+
 BUILT_SOURCES+= $(addprefix $(srcdir)/, $(CYTHON_SRC))
 endif HAVE_CYTHON
 endif MAINTAINER_MODE
