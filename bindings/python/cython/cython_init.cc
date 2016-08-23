@@ -1,16 +1,6 @@
 #include <Python.h>
 #include <iostream>
 
-// Python 2 and 3 do strings differently, so we have a simple macro to 
-// keep from having lots of ifdefs spread around. See 
-// https://wiki.python.org/moin/PortingExtensionModulesToPy3k for details on
-// this.
-#if PY_MAJOR_VERSION > 2
-#define Text_FromUTF8(str) PyUnicode_FromString(str)
-#else
-#define Text_FromUTF8(str) PyString_FromString(str)
-#endif
-
 // Python 2 and 3 have different name for their cython init functions
 #if PY_MAJOR_VERSION > 2
 #define CYTHON_INIT_FUNC(S) PyInit_ ## S
@@ -34,87 +24,33 @@ extern "C" {
 
 #if PY_MAJOR_VERSION > 2
 // Version for python 3
-static void init_extension_module3(PyObject* package, const char *modulename,
+static void init_extension_module3(PyObject* cython_list,
+				   const char *modulename,
 				  PyObject * (*initfunction)(void)) {
   PyObject *module = initfunction();
   PyObject *module_dic = PyImport_GetModuleDict();
-  PyDict_SetItem(module_dic, Text_FromUTF8(modulename), module);
-  if(PyModule_AddObject(package, (char *)modulename, module)) {
-    std::cerr << "Initialisation in PyImport_AddObject failed for module "
-	      << modulename << "\n";
-    return;
-  }
-  Py_INCREF(module);
+  PyDict_SetItem(module_dic, PyUnicode_FromString(modulename), module);
+  PyList_Append(cython_list, PyUnicode_FromString(modulename));
 }
-#else 
-// Version for python 2
-static void init_extension_module2(PyObject* package, const char *modulename,
-				  void (*initfunction)(void)) {
-  PyObject *module = PyImport_AddModule((char *)modulename);
-  if(!module) {
-    std::cerr << "Initialisation in PyImport_AddModule failed for module "
-	      << modulename << "\n";
-    return;
-  }
-  if(PyModule_AddObject(package, (char *)modulename, module)) {
-    std::cerr << "Initialisation in PyImport_AddObject failed for module "
-	      << modulename << "\n";
-    return;
-  }
-  Py_INCREF(module);
-  initfunction();
-}
-#endif
-
-
-// This next blob of code comes from 
-// https://wiki.python.org/moin/PortingExtensionModulesToPy3k
-
-struct module_state {
-    PyObject *error;
-};
-
-#if PY_MAJOR_VERSION >= 3
-#define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
 #else
-#define GETSTATE(m) (&_state)
-static struct module_state _state;
+#error "We haven't bothered to implement python 2 version of this, since we are using python 3.5 or later"
 #endif
 
-static PyObject *
-error_out(PyObject *m) {
-    struct module_state *st = GETSTATE(m);
-    PyErr_SetString(st->error, "something bad happened");
-    return NULL;
-}
 
+#if PY_MAJOR_VERSION > 2
 static PyMethodDef ecostress_level1_methods[] = {
-    {"error_out", (PyCFunction)error_out, METH_NOARGS, NULL},
     {NULL, NULL}
 };
-
-#if PY_MAJOR_VERSION >= 3
-
-static int ecostress_level1_traverse(PyObject *m, visitproc visit, void *arg) {
-    Py_VISIT(GETSTATE(m)->error);
-    return 0;
-}
-
-static int ecostress_level1_clear(PyObject *m) {
-    Py_CLEAR(GETSTATE(m)->error);
-    return 0;
-}
-
 
 static struct PyModuleDef moduledef = {
         PyModuleDef_HEAD_INIT,
         "_ecostress_level1",
-        NULL,
-        sizeof(struct module_state),
+        "Dummy module",
+        -1,
         ecostress_level1_methods,
         NULL,
-        ecostress_level1_traverse,
-        ecostress_level1_clear,
+        NULL,
+        NULL,
         NULL
 };
 
@@ -130,6 +66,9 @@ void
 init_ecostress_level1(void)
 #endif
 {
+// We return a dummy module that isn't actually used for anything,
+// but as a side effect register all the other real cython module
+// through the init_extension stuff
 #if PY_MAJOR_VERSION >= 3
     PyObject *module = PyModule_Create(&moduledef);
 #else
@@ -140,17 +79,12 @@ init_ecostress_level1(void)
         std::cerr << "Initialization failed\n";
         INITERROR;
     }
-    struct module_state *st = GETSTATE(module);
+    PyObject *cython_list = PyList_New(0);
+  CYTHON_INIT_MODULE(cython_list, "ecostress.cython_sample", CYTHON_INIT_FUNC(cython_sample));
+  CYTHON_INIT_MODULE(cython_list, "ecostress.cython_sample2", CYTHON_INIT_FUNC(cython_sample2));
 
-    st->error = PyErr_NewException("ecostress_level1.Error", NULL, NULL);
-    if (st->error == NULL) {
-        Py_DECREF(module);
-        INITERROR;
-    }
-
-  CYTHON_INIT_MODULE(module, "_cython_sample", CYTHON_INIT_FUNC(cython_sample));
-  CYTHON_INIT_MODULE(module, "_cython_sample2", CYTHON_INIT_FUNC(cython_sample2));
-
+    PyObject *parent_module = PyImport_AddModule((char *)"ecostress");
+    PyObject_SetAttrString(parent_module, "_cython_module_list", cython_list);
 #if PY_MAJOR_VERSION >= 3
     return module;
 #endif

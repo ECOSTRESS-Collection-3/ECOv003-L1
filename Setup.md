@@ -132,7 +132,8 @@ afids_latest rather than the system area:
     UMFPACK=/pkg/afids/afids_latest/lib/libumfpack.a \
     CFLAGS="-I/pkg/afids/afids_latest/include" \
     pip install -r ~/GeoCal/requirements.txt
-
+    pip install -r ~/ecostress-level1/requirements.txt
+    
 Bliss Setup
 -----------
 Just so we don't have two python installs, can do 

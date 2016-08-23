@@ -25,7 +25,7 @@ for i in sys.argv[2:]:
     # Handle everything else
     else:
         prototypes.append("  CYTHON_INIT_TYPE CYTHON_INIT_FUNC(%s)(void);" % i)
-        initcmd .append("  CYTHON_INIT_MODULE(module, \"_%s\", CYTHON_INIT_FUNC(%s));" % (i, i))
+        initcmd .append("  CYTHON_INIT_MODULE(cython_list, \"ecostress.%s\", CYTHON_INIT_FUNC(%s));" % (i, i))
 # Make sure we close all the conditions
 for c in range(end_count):
     prototypes.append("#endif")

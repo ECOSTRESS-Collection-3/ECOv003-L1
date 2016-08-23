@@ -12,7 +12,7 @@ for i in glob.glob(os.path.dirname(__file__) + "/*.py"):
 
 # Load cython stuff
 import ecostress._ecostress_level1
-for mname in [f for f in dir(ecostress._ecostress_level1) if f[0] == "_" and not f[1] == "_"]:
+for mname in ecostress._cython_module_list:
     exec("from %s import *" % mname)
     
 
