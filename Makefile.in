@@ -662,8 +662,6 @@ BUILT_SOURCES = complain_if_afids $(am__append_1)
 include_HEADERS = 
 EXTRA_DIST = @srcpythonlib@/cython_sample.pyx \
 	@srcpythonlib@/cython_sample2.pyx $(CYTHON_SRC)
-
-# Cython code to generate
 CYTHON_SRC = @srccython@/cython_sample.cc \
 	@srccython@/cython_sample2.cc
 pkgconfig_DATA = 
@@ -702,6 +700,8 @@ l1b_cal_run_config = $(foreach n,001 002 003, $(end_to_end_test_data)/ECOSTRESS_
 l1b_geo_run_config = $(end_to_end_test_data)/ECOSTRESS_L1B_GEO_RunConfig_20150124_144252.xml
 H5DIFF_FLAG = -d 1e-2
 installecostress_DATA = @srcscript@/setup_ecostress.csh @srcscript@/setup_ecostress.sh
+
+# Cython code to generate
 ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
 	@srcpythonlib@/l1b_att_generate.py \
 	@srcpythonlib@/l0_simulate.py \
@@ -717,7 +717,8 @@ ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
 	@srcpythonlib@/l1b_geo_generate.py @srcpythonlib@/misc.py \
 	@srcpythonlib@/pickle_method.py @srcpythonlib@/run_config.py \
 	@srcpythonlib@/write_run_config.py \
-	@srcpythonlib@/write_standard_metadata.py
+	@srcpythonlib@/write_standard_metadata.py \
+	@srcpythonlib@/cython_try.py
 
 # Number of jobs to run at once. Default is to automatically determine this,
 # but you can specify a different number.
