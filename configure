@@ -640,10 +640,12 @@ HAVE_CYTHON_FALSE
 HAVE_CYTHON_TRUE
 CYTHON
 ecostresspkgpythondir
+vicarpdfdir
 installecostressdir
 pythonsrccython
 srccython
 srcpythonlib
+srcpdf
 srcpython
 srcscript
 l1b_geo_src
@@ -18635,6 +18637,8 @@ srcscript=script
 
 srcpython=python
 
+srcpdf=vicar_pdf
+
 srcpythonlib=${srcpython}/lib
 
 srccython=bindings/python/cython
@@ -18642,6 +18646,8 @@ srccython=bindings/python/cython
 pythonsrccython=bindings/python
 
 installecostressdir=\${prefix}
+
+vicarpdfdir=\${prefix}/vicar_pdf
 
 ecostresspkgpythondir=\${prefix}/${pythondir}/ecostress
 

@@ -11,8 +11,8 @@ class L1aRawPixSimulate(object):
     def copy_metadata(self, field):
         self.m.set(field, self.l1a_pix["/StandardMetadata/" + field].value)
         
-    def create_file(self, l1a_bb_fname):
-        fout = h5py.File(l1a_bb_fname, "w")
+    def create_file(self, l1a_raw_pix_fname):
+        fout = h5py.File(l1a_raw_pix_fname, "w")
         g = fout.create_group("UncalibratedPixels")
         for b in range(6):
             t = g.create_dataset("pixel_data_%d" % (b+1),

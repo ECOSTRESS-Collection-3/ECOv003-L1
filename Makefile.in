@@ -142,7 +142,7 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
 	$(am__configure_deps) $(dist_bin_SCRIPTS) \
 	$(dist_installecostress_SCRIPTS) $(ecostresspkgpython_PYTHON) \
-	$(include_HEADERS) $(am__DIST_COMMON)
+	$(dist_vicarpdf_DATA) $(include_HEADERS) $(am__DIST_COMMON)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
@@ -180,8 +180,8 @@ am__installdirs = "$(DESTDIR)$(ecostresspkgpythondir)" \
 	"$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(bindir)" "$(DESTDIR)$(installecostressdir)" \
 	"$(DESTDIR)$(ecostresspkgpythondir)" \
-	"$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(pkgconfigdir)" \
-	"$(DESTDIR)$(includedir)"
+	"$(DESTDIR)$(vicarpdfdir)" "$(DESTDIR)$(installecostressdir)" \
+	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(includedir)"
 LTLIBRARIES = $(ecostresspkgpython_LTLIBRARIES) $(lib_LTLIBRARIES) \
 	$(noinst_LTLIBRARIES)
 _ecostress_level1_la_LIBADD =
@@ -246,7 +246,8 @@ am__py_compile = PYTHON=$(PYTHON) $(SHELL) $(py_compile)
 am__pep3147_tweak = \
   sed -e 's|\.py$$||' -e 's|[^/]*$$|__pycache__/&.*.py|'
 py_compile = $(top_srcdir)/config/py-compile
-DATA = $(installecostress_DATA) $(pkgconfig_DATA)
+DATA = $(dist_vicarpdf_DATA) $(installecostress_DATA) \
+	$(pkgconfig_DATA)
 HEADERS = $(include_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
@@ -449,8 +450,8 @@ am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1a_raw/l1a_raw.am \
 	$(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/l1b_rad/l1b_rad.am \
 	$(srcdir)/python/lib/lib.am $(srcdir)/python/python.am \
-	$(srcdir)/script/script.am $(top_srcdir)/config/compile \
-	$(top_srcdir)/config/config.guess \
+	$(srcdir)/script/script.am $(srcdir)/vicar_pdf/vicar_pdf.am \
+	$(top_srcdir)/config/compile $(top_srcdir)/config/config.guess \
 	$(top_srcdir)/config/config.sub $(top_srcdir)/config/depcomp \
 	$(top_srcdir)/config/install-sh $(top_srcdir)/config/ltmain.sh \
 	$(top_srcdir)/config/missing $(top_srcdir)/config/py-compile \
@@ -631,6 +632,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srccython = @srccython@
 srcdir = @srcdir@
+srcpdf = @srcpdf@
 srcpython = @srcpython@
 srcpythonlib = @srcpythonlib@
 srcscript = @srcscript@
@@ -640,6 +642,7 @@ testdatadir = @testdatadir@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+vicarpdfdir = @vicarpdfdir@
 
 # Don't worry about Makefile portability warnings. We can assume that we 
 # are using GNU make. Pretty much any modern system will have GNU make on it.
@@ -699,6 +702,8 @@ l1a_cal_run_config = $(foreach n,001 002 003, $(end_to_end_test_data)/ECOSTRESS_
 l1b_cal_run_config = $(foreach n,001 002 003, $(end_to_end_test_data)/ECOSTRESS_L1B_RAD_RunConfig_80005_$n.xml)
 l1b_geo_run_config = $(end_to_end_test_data)/ECOSTRESS_L1B_GEO_RunConfig_20150124_144252.xml
 H5DIFF_FLAG = -d 1e-2
+dist_vicarpdf_DATA = @srcpdf@/el1a_2pt.pdf @srcpdf@/el1a_bbcal.pdf \
+	@srcpdf@/sim_l1a_bb.pdf
 installecostress_DATA = @srcscript@/setup_ecostress.csh @srcscript@/setup_ecostress.sh
 
 # Cython code to generate
@@ -748,7 +753,7 @@ all: $(BUILT_SOURCES)
 .SUFFIXES: .cc .lo .log .o .obj .test .test$(EXEEXT) .trs
 am--refresh: Makefile
 	@:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/python/lib/lib.am $(srcdir)/bindings/python/python.am $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/python/lib/lib.am $(srcdir)/bindings/python/python.am $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -770,7 +775,7 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe);; \
 	esac;
-$(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/python/lib/lib.am $(srcdir)/bindings/python/python.am $(am__empty):
+$(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/python/lib/lib.am $(srcdir)/bindings/python/python.am $(am__empty):
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
@@ -1117,6 +1122,27 @@ uninstall-ecostresspkgpythonPYTHON:
 	  $(am__uninstall_files_from_dir) || st=$$?; \
 	done; \
 	exit $$st
+install-dist_vicarpdfDATA: $(dist_vicarpdf_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_vicarpdf_DATA)'; test -n "$(vicarpdfdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(vicarpdfdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(vicarpdfdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(vicarpdfdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(vicarpdfdir)" || exit $$?; \
+	done
+
+uninstall-dist_vicarpdfDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_vicarpdf_DATA)'; test -n "$(vicarpdfdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(vicarpdfdir)'; $(am__uninstall_files_from_dir)
 install-installecostressDATA: $(installecostress_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(installecostress_DATA)'; test -n "$(installecostressdir)" || list=; \
@@ -1569,7 +1595,7 @@ all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(SCRIPTS) $(DATA) \
 install-binPROGRAMS: install-libLTLIBRARIES
 
 installdirs:
-	for dir in "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(includedir)"; do \
+	for dir in "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(vicarpdfdir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -1635,6 +1661,7 @@ info: info-am
 info-am:
 
 install-data-am: install-dist_installecostressSCRIPTS \
+	install-dist_vicarpdfDATA \
 	install-ecostresspkgpythonLTLIBRARIES \
 	install-ecostresspkgpythonPYTHON install-includeHEADERS \
 	install-installecostressDATA install-pkgconfigDATA
@@ -1689,6 +1716,7 @@ ps-am:
 
 uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	uninstall-dist_installecostressSCRIPTS \
+	uninstall-dist_vicarpdfDATA \
 	uninstall-ecostresspkgpythonLTLIBRARIES \
 	uninstall-ecostresspkgpythonPYTHON uninstall-includeHEADERS \
 	uninstall-installecostressDATA uninstall-libLTLIBRARIES \
@@ -1710,8 +1738,9 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	dvi-am html html-am info info-am install install-am \
 	install-binPROGRAMS install-data install-data-am \
 	install-data-hook install-dist_binSCRIPTS \
-	install-dist_installecostressSCRIPTS install-dvi \
-	install-dvi-am install-ecostresspkgpythonLTLIBRARIES \
+	install-dist_installecostressSCRIPTS install-dist_vicarpdfDATA \
+	install-dvi install-dvi-am \
+	install-ecostresspkgpythonLTLIBRARIES \
 	install-ecostresspkgpythonPYTHON install-exec install-exec-am \
 	install-html install-html-am install-includeHEADERS \
 	install-info install-info-am install-installecostressDATA \
@@ -1723,6 +1752,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	pdf pdf-am ps ps-am recheck tags tags-am uninstall \
 	uninstall-am uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	uninstall-dist_installecostressSCRIPTS \
+	uninstall-dist_vicarpdfDATA \
 	uninstall-ecostresspkgpythonLTLIBRARIES \
 	uninstall-ecostresspkgpythonPYTHON uninstall-hook \
 	uninstall-includeHEADERS uninstall-installecostressDATA \

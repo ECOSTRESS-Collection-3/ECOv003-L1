@@ -1,0 +1,4 @@
+dist_vicarpdf_DATA = 
+dist_vicarpdf_DATA+= @srcpdf@/el1a_2pt.pdf
+dist_vicarpdf_DATA+= @srcpdf@/el1a_bbcal.pdf
+dist_vicarpdf_DATA+= @srcpdf@/sim_l1a_bb.pdf
