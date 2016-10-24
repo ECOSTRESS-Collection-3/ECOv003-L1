@@ -47,11 +47,11 @@ cam = QuaternionCamera(frame_to_sc, 1, 5400, 40e-3 * 1.8, 40e-3 * 2,
 # pushbroom, we can divide this up evenly as an approximation. But
 # then there is an averaging step (which I don't know the details of) 
 # that combines 2 pixels. So we have the factor of 2 given. Scene has 
-# 5400 pixels, which is where time calcuation comes from.
+# 5632 lines, which is where time calcuation comes from.
 
 tspace = 1.181 / 241 * 2
-toff = 5400 * tspace / 2
-tlen = 5400 * tspace
+toff = 5632 * tspace / 2
+tlen = 5632 * tspace
 scene_files = {}
 # Bug that we seem to need to do this to force spice to be loaded before
 # we create the pool. Would like to figure out why this happens and fix this
@@ -105,7 +105,7 @@ l1a_eng_fname = ecostress_file_name("L1A_ENG", orbit_num[pass_index], None,
 l1a_eng_sim = L1aEngSimulate()
 l1a_eng_sim.create_file(l1a_eng_fname)
 
-l0_fname = ecostress_file_name("L0", None, None, start_time)
+l0_fname = ecostress_file_name("L0", None, None, start_time, extension=".raw")
 l0_sim = L0Simulate(l1a_raw_att_fname, l1a_eng_fname, scene_files)
 l0_sim.create_file(l0_fname)
 

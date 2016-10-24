@@ -8,22 +8,46 @@ class L1aBbSimulate(object):
     def __init__(self, l1a_pix_fname):
         '''Create a L1APixSimulate to process the given L1A_PIX file.'''
         self.l1a_pix = h5py.File(l1a_pix_fname, "r")
+        # I don't really understand how Tom calculated this.
+        self.bb_325_mean = [2845, 2845, 2603, 2532, 2456, 6]
+        self.bb_325_sigma = [0, 0, 0, 0, 0, 1]
+        self.bb_295_mean = [1238, 1238, 996, 925, 849, 4]
+        self.bb_295_sigma = [0, 0, 0, 0, 0, 1]
         
     def copy_metadata(self, field):
         self.m.set(field, self.l1a_pix["/StandardMetadata/" + field].value)
+
+    def gaussian_data(self, mean, sigma):
+        '''Return random data of the right length for the given mean and sigma.
+        Tom uses the vicar function gausnois. We could use that, but since
+        numpy already has this function and we don't need to then generate 
+        and read a separate file, it is cleaner just to do this in python.
+
+        Can revisit this if it ends up mattering.
+        '''
+        # Special handling for 0
+        len = 256
+        if(sigma <= 0):
+            r = np.empty((len,1), dtype=np.uint16)
+            r[:] = mean
+            return r
+        return np.round(np.random.normal(mean, sigma, (len,1)).astype(np.uint16))
 
     def create_file(self, l1a_bb_fname):
         fout = h5py.File(l1a_bb_fname, "w")
         g = fout.create_group("BlackBodyPixels")
         for b in range(6):
             t = g.create_dataset("B%d_blackbody_325K" % (b+1),
-                                 data = np.array([999,999,999], dtype = np.uint16))
+                   data = self.gaussian_data(self.bb_325_mean[b],
+                                             self.bb_325_sigma[b]))
             t.attrs["Units"] = "dimensionless"
             t = g.create_dataset("B%d_blackbody_295K" % (b+1),
-                                 data = np.array([999,999,999], dtype = np.uint16))
+                   data = self.gaussian_data(self.bb_295_mean[b],
+                                             self.bb_295_sigma[b]))
             t.attrs["Units"] = "dimensionless"
-        self.m = WriteStandardMetadata(fout, product_specfic_group = "L1A_BBMetadata",
-                                  pge_name = "L1A_RAW_PGE")
+        self.m = WriteStandardMetadata(fout,
+                                       product_specfic_group = "L1A_BBMetadata",
+                                       pge_name = "L1A_RAW_PGE")
         self.copy_metadata("RangeBeginningDate")
         self.copy_metadata("RangeBeginningTime")
         self.copy_metadata("RangeEndingDate")

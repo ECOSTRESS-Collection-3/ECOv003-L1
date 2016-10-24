@@ -12,7 +12,10 @@ class L1aPixSimulate(object):
         
     def image(self, band):
         '''Generate a l1a pix image for the given band.'''
-        l1b_d = self.l1b_rad["/Radiance/radiance_%d" % (band + 1)][:,:]
+        if(band == 5):
+            l1b_d = self.l1b_rad["/SWIR/swir_dn"][:,:]
+        else:
+            l1b_d = self.l1b_rad["/Radiance/radiance_%d" % (band + 1)][:,:]
         d = np.zeros((l1b_d.shape[0] * 2, l1b_d.shape[1]), dtype=np.uint16)
         d[0::2,:] = l1b_d / ecostress_radiance_scale_factor(band)
         d[1::2,:] = d[0::2,:]

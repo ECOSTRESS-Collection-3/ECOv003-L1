@@ -37,15 +37,19 @@ class L1bRadSimulate(object):
     def create_file(self, l1b_rad_fname, pool = None):
         fout = h5py.File(l1b_rad_fname, "w")
         g = fout.create_group("Radiance")
+        g2 = fout.create_group("SWIR")
         for b in range(6):
         # We hold camera_band to 0 for now. We'll improve this and use actually
         # other bands in the future as we flesh out the simulation.
-            t = g.create_dataset("radiance_%d" % (b + 1),
-                                 data = self.image(b, camera_band = 0,
-                                                   pool = pool).astype(np.float32))
             if(b != 5):
+                t = g.create_dataset("radiance_%d" % (b + 1),
+                                     data = self.image(b, camera_band = 0,
+                                           pool = pool).astype(np.float32))
                 t.attrs["Units"] = "W/m^2/sr/um"
             else:
+                t = g2.create_dataset("swir_dn",
+                                      data = self.image(b, camera_band = 0,
+                                           pool = pool).astype(np.float32))
                 t.attrs["Units"] = "dimensionless"
         m = WriteStandardMetadata(fout, product_specfic_group = "L1B_RADMetadata",
                                   pge_name = "L1B_RAD_PGE")

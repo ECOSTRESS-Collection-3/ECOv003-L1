@@ -52,15 +52,13 @@ write    "MSG: ***2pt Random Number = &id "
 !Input L1A_RAW_PIX Module**********************************************
 !Extract Raw DNs from L1A_RAW_PIX, 1 band, each 11264x5400 16bit integers.
 !Convert hdf5 to vicar using gdal libraries.
-!ush       gdalinfo &inph5i
-!ush       gdal_translate -of VICAR 'HDF5:"&inph5i"://UncalibratedPixels/pixel_data_&band' &"outimg"/b&"band"_image.hlf
-!***Temporary Read input from vicar***
-ush       cp /project/sandbox/tllogan/l1a_test/l1a_raw_001_data/b&"band"_img_raw.hlf &"outimg"/b&"band"_image.hlf
+ush       gdalinfo &inph5i
+ush       gdal_translate -of VICAR 'HDF5:"&inph5i"://UncalibratedPixels/pixel_data_&band' &"outimg"/b&"band"_image.hlf
 !Verify image size, if not 11264x5400, adjust it.
 form     &"outimg"/b&"band"_image.hlf format nl ns
 write    "MSG: ***Input Image Size is: &nl Lines x &ns Samples "
 if          ((nl<>11264)or(ns<>5400))
- write   "MSG: ***ERROR b&"band"_image" has Incorrect Image Size "
+ write   "MSG: ***ERROR "&"outimg"/b&"band"_image.hlf" has Incorrect Image Size "
  write   "MSG: ***Correcting Image Size"
  tush     echo "Correcting Image Size" >> L1Ajob_&"suffix".log
  gen      xxa_&id nl=11264 ns=5400 ival=0. linc=0. sinc=0. 'half
@@ -75,12 +73,9 @@ tush      echo "Finished Reading L1A_RAW_PIX Band &band" >> L1Ajob_&"suffix".log
 !Input L1A_BB DN Module************************************************
 !Extract Raw FPA DNs from L1A_BB, 1 band, both 325 and 295 BB files
 !Log hdf5 to vicar using gdal libraries.
-!ush       gdalinfo &inph5b
-!ush       gdal_translate -of VICAR 'HDF5:"&inph5b"://BlackBodyPixels_B&"band"_blackbody_325K' &"outbdn"/dn325b&"band".hlf
-!ush       gdal_translate -of VICAR 'HDF5:"&inph5b"://BlackBodyPixels_B&"band"_blackbody_295K' &"outbdn"/dn295b&"band".hlf
-!***Temporary BB FPA DNs input from vicar***
-copy      l1a_bb_001_data/b&"band"_bb_325.hlf &"outbdn"/dn325b&"band".hlf
-copy      l1a_bb_001_data/b&"band"_bb_295.hlf &"outbdn"/dn295b&"band".hlf
+ush       gdalinfo &inph5b
+ush       gdal_translate -of VICAR 'HDF5:"&inph5b"://BlackBodyPixels/B&"band"_blackbody_325K' &"outbdn"/dn325b&"band".hlf
+ush       gdal_translate -of VICAR 'HDF5:"&inph5b"://BlackBodyPixels/B&"band"_blackbody_295K' &"outbdn"/dn295b&"band".hlf
 write    "MSG: ***Finished Reading L1A_BB Band &band"
 tush      echo "Finished Reading L1A_BB Band &band" >> L1Ajob_&"suffix".log
 
@@ -201,5 +196,5 @@ ush       echo L1A_CAL PGE: ERROR-1-[Job Failed] >> L1Ajob_&"suffix".log
 let       $SFI=-1
 
 theend>
-if          ((debug=0)or(debug=2))ush rm *_&id *.aux.xml &"outimg"/*.aux.xml
+if          ((debug=0)or(debug=2))ush rm -f *_&id *.aux.xml &"outimg"/*.aux.xml
 end-proc
