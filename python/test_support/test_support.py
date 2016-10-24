@@ -26,6 +26,14 @@ def isolated_dir(tmpdir):
         os.chdir(curdir)
 
 @pytest.yield_fixture(scope="function")
+def vicar_path():
+    '''Add vicar_pdf to TAE_PATH'''
+    original_tae_path = os.environ["TAE_PATH"]
+    os.environ["TAE_PATH"] = os.path.abspath(os.path.dirname(__file__) + "/../../vicar_pdf") + ":" + original_tae_path
+    yield
+    os.environ["TAE_PATH"] = original_tae_path
+    
+@pytest.yield_fixture(scope="function")
 def unit_test_data():
     '''Return the unit test directory'''
     yield os.path.abspath(os.path.dirname(__file__) + "/../../unit_test_data") + "/"
