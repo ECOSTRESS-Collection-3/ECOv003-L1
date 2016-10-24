@@ -6,7 +6,7 @@ fi
 
 export AFIDSPYTHONTOP=@geocaldir@
 source @afidsdir@/setup_afids_env.sh
-export TAEPATH=${ECOSTRESSTOP}/vicar_pdf:${TAEPATH}
+export TAE_PATH=${ECOSTRESSTOP}/vicar_pdf:${TAE_PATH}
 
 if [ -n "$PYTHONPATH" ]; then
   export PYTHONPATH=${ECOSTRESSTOP}/@pythondir@:${ECOSTRESSTOP}/@platpythondir@:${PYTHONPATH}

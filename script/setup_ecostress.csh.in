@@ -6,7 +6,7 @@ endif
 
 setenv AFIDSPYTHONTOP @geocaldir@
 source @afidsdir@/setup_afids_env.csh
-setenv TAEPATH ${ECOSTRESSTOP}/vicar_pdf:${TAEPATH}
+setenv TAE_PATH ${ECOSTRESSTOP}/vicar_pdf:${TAE_PATH}
 
 if($?PYTHONPATH) then
   setenv PYTHONPATH ${ECOSTRESSTOP}/@pythondir@:${ECOSTRESSTOP}/@platpythondir@:${PYTHONPATH}
