@@ -49,7 +49,7 @@ class L1bRadSimulate(object):
             else:
                 t = g2.create_dataset("swir_dn",
                                       data = self.image(b, camera_band = 0,
-                                           pool = pool).astype(np.float32))
+                                           pool = pool).astype(np.uint16))
                 t.attrs["Units"] = "dimensionless"
         m = WriteStandardMetadata(fout, product_specfic_group = "L1B_RADMetadata",
                                   pge_name = "L1B_RAD_PGE")
