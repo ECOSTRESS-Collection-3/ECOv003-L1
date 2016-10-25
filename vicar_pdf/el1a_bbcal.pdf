@@ -38,6 +38,7 @@ parm   pcount  type=(string,2) def="18"
 !Program Parameters:
 parm   palg    integer  def=1 valid=(1:2) !Planck algorithm; 1=CW; 2=Iteration
 parm   rad2k   integer  def=1 valid=(0:1) !Convert radiance to Kelvin. 0=No; 1=Yes
+parm   radout   integer  def=1 valid=(0:1) !Output radiance image. 0=No; 1=Yes
 parm   debug   integer  def=2 valid=(0:2) !Verbose Messages; 0=No;1=Yes;2=Yes+Del-x
 parm   pre325  real     def=325.0  !Pre-Flight 325BB temperature Kelvins
 parm   pre295  real     def=295.0  !Pre-Flight 295BB temperature Kelvins
@@ -236,6 +237,9 @@ write    "MSG: ***PLANCK_ALGORITHM= &palg "
 tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
          "fileVar2DecVal &inpupf KELVIN_IMAGES=") intvar=rad2k
 write    "MSG: ***KELVIN_IMAGES= &rad2k "
+tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
+         "fileVar2DecVal &inpupf RADIANCE_IMAGES=") intvar=radout
+write    "MSG: ***RADIANCE_IMAGES= &radout "
 tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
          "fileVar2Val &inpupf FIRST_CONSTANT_C1=") realvar=c1
 write    "MSG: ***FIRST_CONSTANT_C1= &c1 "
@@ -553,7 +557,7 @@ let       bandn = (bandn + 1)
 if       (bandn = 7) break 
 if       (bandn <> 6) let cw = cw&bandn
 
-el1a_2pt  band=&bandn rad2k=&rad2k debug=&debug +
+el1a_2pt  band=&bandn rad2k=&rad2k radout=&radout debug=&debug +
           inph5i=&inph5i +
           inph5b=&inph5b +
           inprad=&outrad +
@@ -571,25 +575,25 @@ datetime
 !Program Ending Maintenance Module*************************************
 !Successful Completion:
 write    "MSG: ***L1A_BBCAL Job Successful"
-write    "L1A_CAL PGE: ERROR-0-[Job Successful]"
+write    "VICAR_RESULT-0-[Job Successful]"
 tush      echo ***L1A_BBCAL Job Successful >> L1Ajob_&"suffix".log
-ush       echo L1A_CAL PGE: ERROR-0-[Job Successful] >> L1Ajob_&"suffix".log
+ush       echo VICAR_RESULT-0-[Job Successful] >> L1Ajob_&"suffix".log
 goto      theend
 
 error1>
 !File Not Found:
 write    "MSG: ***File or Directory Not Found"
 write    "MSG: ***L1A_BBCAL Job Failed"
-write    "L1A_CAL PGE: ERROR-1-""Job Failed"""
+write    "VICAR_RESULT-1-""Job Failed"""
 file2tcl  L1AjobStatus.log val=found
 if       (found=1) 
   tush    echo ***File or Directory Not Found >> L1AjobStatus.log
   tush    echo ***L1A_BBCAL Job Failed >> L1AjobStatus.log
-  ush     echo L1A_CAL PGE: ERROR-1-[Job Failed] >> L1AjobStatus.log
+  ush     echo VICAR_RESULT-1-[Job Failed] >> L1AjobStatus.log
 else
   tush    echo ***File or Directory Not Found >> L1Ajob_&"suffix".log
   tush    echo ***L1A_BBCAL Job Failed >> L1Ajob_&"suffix".log
-  ush     echo L1A_CAL PGE: ERROR-1-[Job Failed] >> L1Ajob_&"suffix".log
+  ush     echo VICAR_RESULT-1-[Job Failed] >> L1Ajob_&"suffix".log
 end-if
 let      $SFI=-1
 goto      theend
@@ -598,10 +602,10 @@ error2>
 !Miscellaneous Error:
 write    "MSG: ***Unknown Error --- Aborting"
 write    "MSG: ***L1A_BBCAL Job Failed"
-write    "L1A_CAL PGE: ERROR-1-""Job Failed"""
+write    "VICAR_RESULT-1-""Job Failed"""
 tush      echo ***Unknown Error --- Aborting >> L1Ajob_&"suffix".log
 tush      echo ***L1A_BBCAL Job Failed >> L1Ajob_&"suffix".log
-ush       echo L1A_CAL PGE: ERROR-1-[Job Failed] >> L1Ajob_&"suffix".log
+ush       echo VICAR_RESULT-1-[Job Failed] >> L1Ajob_&"suffix".log
 let      $SFI=-1
 
 theend>

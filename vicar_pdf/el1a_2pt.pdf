@@ -22,6 +22,7 @@ parm   outwat string   def="" !ImgRadiance       !Transfer dir for L1A_RAD
 parm   outp1  string   def="" !                  !Output dir for L1A-PIX HD5
 parm   band   integer  def=1 valid=(1:6) !TIR Bands 1-5 & SWIR B6
 parm   rad2k  integer  def=1 valid=(0:1) !Convert radiance to Kelvin. 0=No; 1=Yes
+parm   radout   integer  def=1 valid=(0:1) !Output radiance image. 0=No; 1=Yes
 parm   debug  integer  def=1 valid=(0:2) !Verbose Messages; 0=No;1=Yes;2=Yes+del-x
 parm   cw     real     !Center WaveLength
 parm   c1     real     !First Planck Constant (1.191042E08)
@@ -102,7 +103,7 @@ copy      xx1_&id xx2_&id
 copy      xx1_&id xx3_&id
 copy      xx1_&id xx4_&id
 copy      xx1_&id xx5_&id size=(1,1,1024,5400)
-append   (xx1_&id,xx2_&id,xx3_&id,xx4_&id,xx5_&id) xxoff2_&id
+append   (xx1_&id,xx2_&id,xx3_&id,xx4_&id,xx5_&id) &"outwat"/b&"band"_offset.rel
 !gain scaling
 size      xxgain_&id xxa_&id size=(1,1,256,5400) 'noin
 append   (xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,+
@@ -111,14 +112,16 @@ copy      xx1_&id xx2_&id
 copy      xx1_&id xx3_&id
 copy      xx1_&id xx4_&id
 copy      xx1_&id xx5_&id size=(1,1,1024,5400)
-append   (xx1_&id,xx2_&id,xx3_&id,xx4_&id,xx5_&id) xxgain2_&id
+append   (xx1_&id,xx2_&id,xx3_&id,xx4_&id,xx5_&id) &"outwat"/b&"band"_gain.rel
 write    "MSG: ***Finished Creating Gain/Offsets for Band &band"
 tush      echo "Finished Creating Gain/Offsets for Band &band" >> L1Ajob_&"suffix".log
 
 !2-Point Conversion Module*********************************************
 !DN to Radiance two-point conversion: R=a+(b*DN)
 !2point Calibration
-f2       (xxoff2_&id,xxgain2_&id,&"outimg"/b&"band"_image.hlf) +
+! Optionally output radiance data
+if       (radout = 0) goto skip2
+f2       (&"outwat"/b&"band"_offset.rel,&"outwat"/b&"band"_gain.rel,&"outimg"/b&"band"_image.hlf) +
           &"outwat"/L1A_RAD_B&"band"_&"suffix".rel +
           func="in1+(in2*in3)" format=real
 write    "MSG: ***Finished 2pt DN-to-Rad Conversion for Band &band"
@@ -128,10 +131,13 @@ if       (debug>0)
  tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1Ajob_&"suffix".log
 end-if
 
+skip2>
+
 !Radiance-to-Temperature Conversion Module*****************************
 !Convert Radiance Product to Temperature Kelvin for TESTING Purposes
 !Source: http://ncc.nesdis.noaa.gov/data/planck.html
-if       (rad2k = 0) goto skip2
+if       (radout = 0) goto skip3
+if       (rad2k = 0) goto skip3
 write    "cw = &cw"
 write    "c1 = &c1"
 write    "c2 = &c2"
@@ -144,7 +150,7 @@ if       (debug>0)
  tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1Ajob_&"suffix".log
 end-if
 
-goto      skip2   !Bands 1-5 skip over SWIR processing
+goto      skip3   !Bands 1-5 skip over SWIR processing
 
 jump1>
 !SWIR B6 Dark Current Module*******************************************
@@ -181,7 +187,7 @@ if       (debug>0)
  tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1Ajob_&"suffix".log
 end-if
 
-skip2>
+skip3>
 !Program Ending Maintenance Module*************************************
 !Successful Completion:
 goto      theend
@@ -192,7 +198,7 @@ write    "MSG: ***Unknown Error --- Aborting"
 write    "MSG: ***L1A_2PT job Failed"
 tush      echo ***Unknown Error --- Aborting >> L1Ajob_&"suffix".log
 tush      echo ***L1A_2PT Job Failed >> L1Ajob_&"suffix".log
-ush       echo L1A_CAL PGE: ERROR-1-[Job Failed] >> L1Ajob_&"suffix".log
+ush       echo VICAR_RESULT-1-[Job Failed] >> L1Ajob_&"suffix".log
 let       $SFI=-1
 
 theend>
