@@ -723,7 +723,7 @@ ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
 	@srcpythonlib@/pickle_method.py @srcpythonlib@/run_config.py \
 	@srcpythonlib@/write_run_config.py \
 	@srcpythonlib@/write_standard_metadata.py \
-	@srcpythonlib@/cython_try.py
+	@srcpythonlib@/exception.py @srcpythonlib@/cython_try.py
 
 # Number of jobs to run at once. Default is to automatically determine this,
 # but you can specify a different number.

@@ -1,6 +1,7 @@
 # This is various miscellaneous routines that don't fit elsewhere
 from geocal import *
 import re
+import subprocess
 
 def aster_radiance_scale_factor():
     '''Return the ASTER scale factors. This is for L1T data, found at
@@ -57,3 +58,33 @@ def ecostress_file_name(product_type, orbit, scene, acquisition_time,
             (product_type, orbit, scene, time_to_file_string(acquisition_time), build,
              version, extension)
                                                    
+
+def process_run(exec_cmd, out_fh = None, quiet = False):
+    '''This is like subprocess.run, but allowing a unix like 'tee' where
+    we write the output to a log file and/or stdout.
+
+    The command (which should be a standard array) is run, and the output
+    is always returned. In addition, the output is written to the given
+    out_fh is supplied, and to stdout if "quiet" is not True.
+    '''
+    process = subprocess.Popen(exec_cmd, stdout=subprocess.PIPE,
+                               stderr=subprocess.STDOUT)
+    stdout = b''
+    while(True):
+        output = process.stdout.readline()
+        if output == b'' and process.poll() is not None:
+            break
+        if output:
+            stdout = stdout + output
+            if(not quiet):
+                print(output.strip().decode('utf-8'))
+                sys.stdout.flush()
+            if(out_fh):
+                print(output.strip().decode('utf-8'), file=out_fh)
+                out_fh.flush()
+    if(process.poll() != 0):
+        raise subprocess.CalledProcessError(process.poll(), exec_cmd,
+                                            output=stdout)
+    return stdout
+
+    

@@ -36,21 +36,35 @@ if(False):
 config = RunConfig(args.run_config)
 
 l1a_bb = os.path.abspath(config["InputFileGroup", "L1A_BB"])
+l1a_eng = os.path.abspath(config["InputFileGroup", "L1A_ENG"])
 l1a_raw_pix = os.path.abspath(config["InputFileGroup", "L1A_RAW_PIX"])
+l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
 dirname = config["ProductPathGroup", "ProductPath"]
 
 makedirs_p(dirname)
 os.chdir(dirname)
 
 ofile = os.path.splitext(os.path.basename(l1a_raw_pix))[0] + ".h5"
+ofile_gain = str(ofile)
 ofile = re.sub(r'L1A_RAW_PIX', 'L1A_PIX', ofile)
+ofile_gain = re.sub(r'L1A_RAW_PIX', 'L1A_TEMPORARY_GAIN', ofile_gain)
 log_fname = os.path.splitext(ofile)[0] + ".log"
 log = open(log_fname, "w")
+try:
 # Generate output
-l1apix = L1aPixGenerate(l1a_bb, l1a_raw_pix, ofile, log=log,
-                        run_config = config)
-l1apix.run()
-# Write out a dummy log file
-print("This is a dummy log file", file = log)
-log.flush()
+    l1apix = L1aPixGenerate(l1a_bb, l1a_raw_pix, l1a_eng, l1_osp_dir,
+                            ofile, ofile_gain,
+                            log=log, quiet=True,
+                            run_config = config)
+    l1apix.run()
+    # Write out a dummy log file
+    print("L1A_CAL_PGE:ERROR-0-[Job Successful]", file=log)
+    log.flush()
+except VicarException as e:
+    print("L1A_CAL_PGE:ERROR-1-[%s]" % e.message, file=log)
+except:
+    print("L1A_CAL_PGE:ERROR-2-[Unexpected Error]", file=log)
+    log.flush()
+    raise
+
 

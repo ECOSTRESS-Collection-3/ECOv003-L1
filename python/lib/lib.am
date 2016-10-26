@@ -15,6 +15,7 @@ ecostresspkgpython_PYTHON+= @srcpythonlib@/pickle_method.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/run_config.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/write_run_config.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/write_standard_metadata.py
+ecostresspkgpython_PYTHON+= @srcpythonlib@/exception.py
 
 # Cython code to generate
 ecostresspkgpython_PYTHON+= @srcpythonlib@/cython_try.py
