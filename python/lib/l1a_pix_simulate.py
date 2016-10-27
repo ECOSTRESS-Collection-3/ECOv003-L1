@@ -26,11 +26,20 @@ class L1aPixSimulate(object):
         
     def create_file(self, l1a_pix_fname):
         fout = h5py.File(l1a_pix_fname, "w")
-        g = fout.create_group("UncalibratedPixels")
+        g = fout.create_group("UncalibratedDN")
         for b in range(6):
-            t = g.create_dataset("pixel_data_%d" % (b + 1),
+            t = g.create_dataset("b%d_image" % (b + 1),
                                  data = self.image(b))
             t.attrs["Units"] = "dimensionless"
+        g = fout.create_group("Time")
+        l1b_d = self.l1b_rad["Time/line_start_time_j2000"][:]
+        d = np.zeros((l1b_d.shape[0] * 2, ), dtype='f8')
+        d[0::2] = l1b_d
+        d[1::2] = l1b_d
+        t = g.create_dataset("line_start_time_j2000",
+                             data = d, dtype="f8")
+        t.attrs["Description"] = "J2000 time of first pixel in line"
+        t.attrs["Units"] = "second"
         self.m = WriteStandardMetadata(fout, product_specfic_group = "L1A_PIXMetadata",
                                   pge_name = "L1A_CAL_PGE")
         self.copy_metadata("RangeBeginningDate")

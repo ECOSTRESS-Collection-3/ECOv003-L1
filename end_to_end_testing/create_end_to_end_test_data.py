@@ -15,6 +15,14 @@ pass_time = [Time.parse_time("2015-01-14T12:00:24.995464Z"),
 orbit_num = [80001, 80002, 80003, 80004, 80005]
 nscene = [1,1,1,1,3]
 
+# By bad luck, we picked orbit times in some case that are an night.
+# Allow and offset to the reported time so we can "pretend" that the data
+# is really during the day. This really only affects the solar angles, and
+# allows us to generate solar angles that are somewhat reasonable for passing
+# to Level 2.
+
+time_shift = [0, 0, 0, 0, 6 * 60 * 60]
+
 pass_index = 4 # The pass we are working with
 
 # Get the ASTER mosaic we are working with for all the bands. The
@@ -28,7 +36,8 @@ sdata = [ScaleImage(VicarLiteRasterImage(fname(aster_band), 1, VicarLiteFile.REA
                     aster_radiance_scale_factor()[aster_band-1])
          for aster_band in ecostress_to_aster_band()]
 
-orb = SpiceOrbit(SpiceOrbit.ISS_ID, "iss_spice/iss_2015.bsp")
+orb = OrbitTimeShift(SpiceOrbit(SpiceOrbit.ISS_ID, "iss_spice/iss_2015.bsp"),
+                     time_shift[pass_index])
 
 # Focal length and ccd pixel size comes from Eugene's SDS data
 # bible. The scaling of the CCD size is empirical to give the right
@@ -59,8 +68,9 @@ SpiceHelper.spice_setup()
 pool = Pool(20)
 for s in range(nscene[pass_index]):
     tt = ConstantSpacingTimeTable(pass_time[pass_index] - toff + tspace +
-                                  s * tlen, 
-                                  pass_time[pass_index] + toff + s * tlen,
+                                  s * tlen + time_shift[pass_index], 
+                                  pass_time[pass_index] + toff + s * tlen +
+                                  time_shift[pass_index],
                                   tspace)
     # Save this for use in making the L0 and orbit based file name
     if(s == 0):

@@ -81,6 +81,7 @@ class L1aRawPixGenerate(object):
             fpix = self.create_file("L1A_RAW_PIX", onum, scene)
             self.hdf_copy(fbb, "/BlackBodyPixels", scene=scene)
             self.hdf_copy(fpix, "/UncalibratedPixels", scene=scene)
+            self.hdf_copy(fpix, "/Time", scene=scene)
         # Write out a dummy log file
         print("This is a dummy log file", file = self.log)
         self.log.flush()

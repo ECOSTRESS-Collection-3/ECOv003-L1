@@ -2,18 +2,31 @@
 <!DOCTYPE boost_serialization>
 <boost_serialization signature="serialization::archive" version="13">
 <geocal_object class_id="0" tracking_level="0" version="1">
-	<px class_id="2" class_name="GeoCal::SpiceOrbit" tracking_level="1" version="0" object_id="_0">
+	<px class_id="2" class_name="GeoCal::OrbitTimeShift" tracking_level="1" version="0" object_id="_0">
 		<Orbit class_id="3" tracking_level="0" version="0">
 			<min_tm class_id="4" tracking_level="1" version="0" object_id="_1">
-				<time_pgs>-1.00984321800000000e+09</time_pgs>
+				<time_pgs>-1.00982161800000000e+09</time_pgs>
 			</min_tm>
 			<max_tm object_id="_2">
 				<time_pgs>2.52676368006000000e+11</time_pgs>
 			</max_tm>
 		</Orbit>
-		<body_id>399</body_id>
-		<satellite_id>25544</satellite_id>
-		<kernel_name>iss_spice/iss_2015.bsp</kernel_name>
+		<orbit_original class_id="5" tracking_level="0" version="1">
+			<px class_id="6" class_name="GeoCal::SpiceOrbit" tracking_level="1" version="0" object_id="_3">
+				<Orbit>
+					<min_tm object_id="_4">
+						<time_pgs>-1.00984321800000000e+09</time_pgs>
+					</min_tm>
+					<max_tm object_id="_5">
+						<time_pgs>2.52676368006000000e+11</time_pgs>
+					</max_tm>
+				</Orbit>
+				<body_id>399</body_id>
+				<satellite_id>25544</satellite_id>
+				<kernel_name>iss_spice/iss_2015.bsp</kernel_name>
+			</px>
+		</orbit_original>
+		<time_shift>2.16000000000000000e+04</time_shift>
 	</px>
 </geocal_object>
 </boost_serialization>

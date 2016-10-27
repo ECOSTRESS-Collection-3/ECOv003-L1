@@ -71,6 +71,7 @@ class L1bGeoGenerate(object):
         szenith = np.empty((rcast.number_position, rcast.number_sample))
         sazimuth = np.empty((rcast.number_position, rcast.number_sample))
         lfrac = np.empty((rcast.number_position, rcast.number_sample))
+        tlinestart = np.empty((rcast.number_position, ))
         i = 0
         while True:
             r = rcast.next_position()
@@ -82,6 +83,7 @@ class L1bGeoGenerate(object):
             ic = ImageCoordinate(rcast.current_position, 0)
             opos = self.igc.cf_look_vector_pos(ic)
             t = self.igc.pixel_time(ic)
+            tlinestart[ln] = t.j2000
             sollv_cf = CartesianFixedLookVector.solar_look_vector(t)
             for j in range(r.shape[1]):
                 pt = Ecr(*r[0,j,0,0,0,:])
@@ -103,7 +105,7 @@ class L1bGeoGenerate(object):
                     self.log.flush()
             if(rcast.last_position):
                 break
-        return lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac
+        return lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac, tlinestart
 
     def loc(self, pool = None):
         '''Determine locations'''
@@ -123,12 +125,15 @@ class L1bGeoGenerate(object):
         szenith = np.hstack([rv[5] for rv in r])
         sazimuth = np.hstack([rv[6] for rv in r])
         lfrac = np.hstack([rv[7] for rv in r])
-        return lat,lon,height,vzenith, vazimuth, szenith,sazimuth, lfrac
+        # This is 1d, so we only need to report one column of this
+        tlinestart = r[0][8]
+        return lat,lon,height,vzenith, vazimuth, szenith,sazimuth, lfrac, \
+            tlinestart
 
     def run(self, pool = None):
         '''Do the actual generation of data.'''
-        lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac = \
-           self.loc(pool)
+        lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac, \
+            tlinestart = self.loc(pool)
         fout = h5py.File(self.output_name, "w")
         m = WriteStandardMetadata(fout,
                                   product_specfic_group = "L1GEOMetadata",
@@ -191,4 +196,8 @@ GEOGCS["WGS 84",
         t.attrs["Units"] = "degrees"
         t = g.create_dataset("solar_azimuth", data=sazimuth, dtype='f4')
         t.attrs["Units"] = "degrees"
+        t = g.create_dataset("line_start_time_j2000", data=tlinestart,
+                             dtype='f8')
+        t.attrs["Description"] = "J2000 time of first pixel in line"
+        t.attrs["Units"] = "second"
         m.write()

@@ -3,7 +3,7 @@ import h5py
 import shutil
 from .write_standard_metadata import WriteStandardMetadata
 from .misc import process_run
-from .exception import VicarException
+from .exception import VicarRunException
 import re
 
 class L1aPixGenerate(object):
@@ -45,7 +45,7 @@ class L1aPixGenerate(object):
                                "inpupf=%s/L1A_PCF_UPF.txt" % self.l1_osp_dir],
                               out_fh = self.log, quiet = self.quiet)
         except subprocess.CalledProcessError:
-            raise VicarException("VICAR call failed")
+            raise VicarRunException("VICAR call failed")
         finally:
             os.chdir(curdir)
         # Search through log output for success message, or throw an
@@ -54,9 +54,9 @@ class L1aPixGenerate(object):
                          re.MULTILINE)
         if(mtch):
             if(mtch.group(1) != "0"):
-               raise VicarException(mtch.group(2))
+               raise VicarRunException(mtch.group(2))
         else:
-            raise VicarException("Success result not seen in log")
+            raise VicarRunException("Success result not seen in log")
         fout = h5py.File(self.output_name, "w")
         fout_gain = h5py.File(self.output_gain_name, "w")
         # Copy output from vicar into output file.
@@ -88,13 +88,24 @@ class L1aPixGenerate(object):
             t.attrs["Units"] = "W/m^2/sr/um"
         # Copy over metadata
         fin = h5py.File(self.l1a_raw, "r")
+        g = fout.create_group("Time")
+        t = g.create_dataset("line_start_time_j2000",
+                             data = fin["Time/line_start_time_j2000"])
+        t.attrs["Description"] = "J2000 time of first pixel in line"
+        t.attrs["Units"] = "second"
         m = WriteStandardMetadata(fout,
+                                  product_specfic_group = "L1APIXMetadata",
+                                  pge_name="L1A_CAL_PGE",
+                                  build_id = '0.10', pge_version='0.10',
+                                  local_granule_id = self.local_granule_id)
+        m2 = WriteStandardMetadata(fout_gain,
                                   product_specfic_group = "L1APIXMetadata",
                                   pge_name="L1A_CAL_PGE",
                                   build_id = '0.10', pge_version='0.10',
                                   local_granule_id = self.local_granule_id)
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)
+            m2.process_run_config_metadata(self.run_config)
         m.set("RangeBeginningDate",
               fin["/StandardMetadata/RangeBeginningDate"][()])
         m.set("RangeBeginningTime",
@@ -103,4 +114,13 @@ class L1aPixGenerate(object):
               fin["/StandardMetadata/RangeEndingDate"][()])
         m.set("RangeEndingTime",
               fin["/StandardMetadata/RangeEndingTime"][()])
+        m2.set("RangeBeginningDate",
+              fin["/StandardMetadata/RangeBeginningDate"][()])
+        m2.set("RangeBeginningTime",
+              fin["/StandardMetadata/RangeBeginningTime"][()])
+        m2.set("RangeEndingDate",
+              fin["/StandardMetadata/RangeEndingDate"][()])
+        m2.set("RangeEndingTime",
+              fin["/StandardMetadata/RangeEndingTime"][()])
         m.write()
+        m2.write()

@@ -56,6 +56,7 @@ class L0Simulate(object):
         for scene, v in self.scene_files.items():
             l1a_raw_pix_fname, l1a_bb_fname = v
             self.hdf_copy(l1a_raw_pix_fname, "/UncalibratedPixels", scene=int(scene))
+            self.hdf_copy(l1a_raw_pix_fname, "/Time", scene=int(scene))
             self.hdf_copy(l1a_raw_pix_fname, "/StandardMetadata/RangeBeginningTime",
                           scene=int(scene))
             self.hdf_copy(l1a_raw_pix_fname, "/StandardMetadata/RangeBeginningDate",

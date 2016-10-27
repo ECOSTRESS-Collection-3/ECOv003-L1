@@ -51,6 +51,13 @@ class L1bRadSimulate(object):
                                       data = self.image(b, camera_band = 0,
                                            pool = pool).astype(np.uint16))
                 t.attrs["Units"] = "dimensionless"
+        g = fout.create_group("Time")
+        t = g.create_dataset("line_start_time_j2000",
+         data=np.array([self.time_table.time(ImageCoordinate(i, 0))[0].j2000
+                        for i in range(self.time_table.max_line + 1)]),
+                             dtype='f8')
+        t.attrs["Description"] = "J2000 time of first pixel in line"
+        t.attrs["Units"] = "second"
         m = WriteStandardMetadata(fout, product_specfic_group = "L1B_RADMetadata",
                                   pge_name = "L1B_RAD_PGE")
         dt, tm = time_split(self.time_table.min_time)

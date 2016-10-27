@@ -27,8 +27,8 @@ class L1bRadGenerate(object):
         This doesn't do anything right now for band to band registration, we just
         punt on this and assume the bands are already registered (true of our test
         data).'''
-        l1a_d = self.l1a_pix["/UncalibratedPixels/pixel_data_%d" % (band + 1)][:,:]
-        d = np.zeros((l1a_d.shape[0] / 2, l1a_d.shape[1]))
+        l1a_d = self.l1a_pix["/UncalibratedDN/b%d_image" % (band + 1)][:,:]
+        d = np.zeros((int(l1a_d.shape[0] / 2), l1a_d.shape[1]))
         d = (l1a_d[0::2, :] + l1a_d[1::2, :]) / 2.0 * \
             ecostress_radiance_scale_factor(band)
         return d
@@ -45,6 +45,11 @@ class L1bRadGenerate(object):
         t = g.create_dataset("swir_dn",
                              data = self.image(b).astype(np.uint16))
         t.attrs["Units"] = "dimensionless"
+        g = fout.create_group("Time")
+        t = g.create_dataset("line_start_time_j2000",
+                             data = self.l1a_pix["Time/line_start_time_j2000"][0::2])
+        t.attrs["Description"] = "J2000 time of first pixel in line"
+        t.attrs["Units"] = "second"
         m = WriteStandardMetadata(fout, product_specfic_group = "L1B_RADMetadata",
                                   pge_name = "L1B_RAD_PGE",
                                   build_id = '0.10', pge_version='0.10',
