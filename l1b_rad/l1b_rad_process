@@ -36,6 +36,7 @@ if(False):
 config = RunConfig(args.run_config)
 
 l1a_pix = os.path.abspath(config["InputFileGroup", "L1A_PIX"])
+l1a_gain = os.path.abspath(config["InputFileGroup", "L1A_TEMPORARY_GAIN"])
 dirname = config["ProductPathGroup", "ProductPath"]
 
 makedirs_p(dirname)
@@ -48,7 +49,8 @@ log_fname = os.path.splitext(ofile)[0] + ".log"
 log = open(log_fname, "w")
 
 # Generate output
-l1brad = L1bRadGenerate(l1a_pix, ofile, run_config = config, log = log)
+l1brad = L1bRadGenerate(l1a_pix, l1a_gain, ofile, run_config = config,
+                        log = log)
 l1brad.run()
 # Write out a dummy log file
 print("This is a dummy log file", file = log)

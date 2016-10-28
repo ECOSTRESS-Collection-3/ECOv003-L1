@@ -17,6 +17,9 @@ class L1aPixSimulate(object):
         else:
             l1b_d = self.l1b_rad["/Radiance/radiance_%d" % (band + 1)][:,:]
         d = np.zeros((l1b_d.shape[0] * 2, l1b_d.shape[1]), dtype=np.uint16)
+        # Note we can change this to work with the gain and offset from
+        # l1a if we want a fully reversible code. But for now, just use
+        # this scale factor
         d[0::2,:] = l1b_d / ecostress_radiance_scale_factor(band)
         d[1::2,:] = d[0::2,:]
         return d

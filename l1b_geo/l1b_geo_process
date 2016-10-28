@@ -49,6 +49,14 @@ cam = read_shelve(l1_osp_dir + "/camera.xml")
 ncpu = int(config["Process", "NumberCpu"])
 
 orbfname = os.path.abspath(config["TimeBasedFileGroup", "L1A_RAW_ATT"])
+# Create orbit. We give all the names of the fields, since we don't use the
+# default names HdfOrbit expects. I'm not sure if Eci and J2000 is what we
+# will end up using, but this is what is used by the test data now.
+orb = HdfOrbit_Eci_TimeJ2000(orbfname, "", "Ephemeris/time_j2000",
+                             "Ephemeris/eci_position",
+                             "Ephemeris/eci_velocity",
+                             "Attitude/time_j2000",
+                             "Attitude/quaternion")
 radlist = config.as_list("InputFileGroup", "L1B_RAD")
 radlist = [os.path.abspath(f) for f in radlist]
 dirname = config["ProductPathGroup", "ProductPath"]
@@ -79,22 +87,13 @@ lwm = SrtmLwmData(srtm_lwm_dir, False)
 
 pool = Pool(ncpu)
 
-# This this a temporary work around
-orb = SpiceOrbit(SpiceOrbit.ISS_ID, l1_osp_dir + "/iss_spice/iss_2015.bsp")
-
 for i in range(len(radlist)):
     print("Doing scene number %d" %i)
     f = h5py.File(radlist[i], "r")
-    tmin = f["/StandardMetadata/RangeBeginningDate"][()] + "T" + \
-           f["/StandardMetadata/RangeBeginningTime"][()] + "Z"
-    tmin = Time.parse_time(tmin)
-    tmax = f["/StandardMetadata/RangeEndingDate"][()] + "T" + \
-           f["/StandardMetadata/RangeEndingTime"][()] + "Z"
-    tmax = Time.parse_time(tmax)
-    tspace = 1.181 / 241 * 2
-    # Temporary, assume time table is a constant space time table between
-    # min an max time
-    tt = ConstantSpacingTimeTable(tmin, tmax, tspace)
+    tmlist = f["/Time/line_start_time_j2000"][:]
+    # Temporary, treat all pixels in a line as having the same time.
+    # This isn't  true for ECOSTRESS, but is for our current test data. 
+    tt = MeasuredTimeTable([Time.time_j2000(t) for t in tmlist])
     ofile = os.path.splitext(os.path.basename(radlist[i]))[0] + ".h5"
     if(i == 0):
         log_fname = os.path.splitext(ofile)[0] + ".log"
@@ -117,7 +116,7 @@ for i in range(len(radlist)):
                             run_config = config, log_fname = log_fname)
     l1bgeo.run(pool)
     
-    # Temp
+    # Temp, don't correct anything in attitude file
     shutil.copyfile(orbfname, ofile2)
     f = h5py.File(ofile2, "r+")
     m = WriteStandardMetadata(f)

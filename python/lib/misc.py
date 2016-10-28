@@ -8,7 +8,7 @@ def aster_radiance_scale_factor():
     https://lpdaac.usgs.gov/dataset_discovery/aster/aster_products_table/ast_l1t
     Our mosiac actually had adjustments made to make a clean mosaic, but this
     should be a reasonable approximation for going from the pixel integer data
-    to radaince data in W/m^2/sr/um.'''
+    to radiance data in W/m^2/sr/um.'''
     return [1.688, 1.415, 0.862, 0.2174, 0.0696, 0.0625, 0.0597, 0.0417, 0.0318,
             6.882e-3, 6.780e-3, 6.590e-3, 5.693e-3, 5.225e-3]
 

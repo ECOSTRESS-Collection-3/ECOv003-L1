@@ -96,12 +96,12 @@ class L1aPixGenerate(object):
         m = WriteStandardMetadata(fout,
                                   product_specfic_group = "L1APIXMetadata",
                                   pge_name="L1A_CAL_PGE",
-                                  build_id = '0.10', pge_version='0.10',
+                                  build_id = '0.20', pge_version='0.20',
                                   local_granule_id = self.local_granule_id)
         m2 = WriteStandardMetadata(fout_gain,
                                   product_specfic_group = "L1APIXMetadata",
                                   pge_name="L1A_CAL_PGE",
-                                  build_id = '0.10', pge_version='0.10',
+                                  build_id = '0.20', pge_version='0.20',
                                   local_granule_id = self.local_granule_id)
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)

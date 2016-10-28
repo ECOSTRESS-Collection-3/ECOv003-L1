@@ -20,12 +20,12 @@ class L1bGeoGenerate(object):
                  max_height=10e3,
                  local_granule_id = None, log_fname = None):
         '''Create a L1bGeoGenerate with the given ImageGroundConnection
-        and output file name. To actually generate, execute the 'run'
+        and output file name. To actually generate, execute the "run"
         command.
 
         You can pass the run_config in which is used to fill in some of the 
         metadata. Without this, we skip that metadata and just have fill data.
-        This is useful for testing, but for production you'll always want to 
+        This is useful for testing, but for production you will always want to 
         have the run config available.'''
         self.igc = igc
         self.lwm = lwm
@@ -138,7 +138,7 @@ class L1bGeoGenerate(object):
         m = WriteStandardMetadata(fout,
                                   product_specfic_group = "L1GEOMetadata",
                                   pge_name="L1B_GEO",
-                                  build_id = '0.10', pge_version='0.10',
+                                  build_id = '0.20', pge_version='0.20',
                                   local_granule_id = self.local_granule_id)
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)

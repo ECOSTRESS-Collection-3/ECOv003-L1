@@ -6,12 +6,13 @@ from .misc import ecostress_radiance_scale_factor
 
 class L1bRadGenerate(object):
     '''This generates a L1B rad file from the given L1A_PIX file.'''
-    def __init__(self, l1a_pix, output_name, local_granule_id = None,
+    def __init__(self, l1a_pix, l1a_gain, output_name, local_granule_id = None,
                  run_config = None, log = None):
         '''Create a L1bRadGenerate with the given input files
         and output file name. To actually generate, execute the 'run'
         command.'''
         self.l1a_pix = h5py.File(l1a_pix, "r")
+        self.l1a_gain = h5py.File(l1a_gain, "r")
         self.output_name = output_name
         self.local_granule_id = local_granule_id
         self.run_config = run_config
@@ -20,18 +21,22 @@ class L1bRadGenerate(object):
     def image(self, band):
         '''Generate L1B_RAD image.
         
-        Right now, we just average and scale pixels. We currently use one fixed
-        scaling factor to go to radiance, this will be replaced with the scaling
-        from the black body data.
+        Right now, we just average and scale pixels. We currently use
+        one fixed scaling factor to go to radiance, this will be
+        replaced with the scaling from the black body data.
         
-        This doesn't do anything right now for band to band registration, we just
-        punt on this and assume the bands are already registered (true of our test
-        data).'''
+        This does not do anything right now for band to band
+        registration, we just punt on this and assume the bands are
+        already registered (true of our test data).'''
+
         l1a_d = self.l1a_pix["/UncalibratedDN/b%d_image" % (band + 1)][:,:]
-        d = np.zeros((int(l1a_d.shape[0] / 2), l1a_d.shape[1]))
-        d = (l1a_d[0::2, :] + l1a_d[1::2, :]) / 2.0 * \
-            ecostress_radiance_scale_factor(band)
-        return d
+        if(band != 5):                  # SWIR band doesn't get scaled
+            g = self.l1a_gain["Gain/b%d_gain" % (band + 1)][:,:]
+            off = self.l1a_gain["Offset/b%d_offset" % (band + 1)][:,:]
+            d = l1a_d * g + off
+        else:
+            d = l1a_d
+        return (d[0::2, :] + d[1::2, :]) / 2.0
         
     def run(self):
         '''Do the actual generation of data.'''
@@ -43,7 +48,7 @@ class L1bRadGenerate(object):
             t.attrs["Units"] = "W/m^2/sr/um"
         g = fout.create_group("SWIR")
         t = g.create_dataset("swir_dn",
-                             data = self.image(b).astype(np.uint16))
+                             data = self.image(5).astype(np.uint16))
         t.attrs["Units"] = "dimensionless"
         g = fout.create_group("Time")
         t = g.create_dataset("line_start_time_j2000",
@@ -52,7 +57,7 @@ class L1bRadGenerate(object):
         t.attrs["Units"] = "second"
         m = WriteStandardMetadata(fout, product_specfic_group = "L1B_RADMetadata",
                                   pge_name = "L1B_RAD_PGE",
-                                  build_id = '0.10', pge_version='0.10',
+                                  build_id = '0.20', pge_version='0.20',
                                   local_granule_id = self.local_granule_id)
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)
