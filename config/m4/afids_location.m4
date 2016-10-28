@@ -12,7 +12,7 @@ AS_HELP_STRING([--with-geocal=DIR], [give directory where geocal can be found (o
 AC_SUBST([geocaldir], ["$ac_geocal_dir"])
 
 AC_ARG_WITH([test-data],
-AS_HELP_STRING([--with-test-data=DIR], [give directory where end to end test data can be found (optional, default is /project/ancillary/ASTER/EndToEndTest/latest)]), [ ac_test_data_dir="$withval" ], [ ac_test_data_dir="/project/ancillary/ASTER/EndToEndTest/latest" ])
+AS_HELP_STRING([--with-test-data=DIR], [give directory where end to end test data can be found (optional, default is /project/test/ASTER/EndToEndTest/latest)]), [ ac_test_data_dir="$withval" ], [ ac_test_data_dir="/project/test/ASTER/EndToEndTest/latest" ])
 AC_SUBST([testdatadir], ["$ac_test_data_dir"])
 
 ])

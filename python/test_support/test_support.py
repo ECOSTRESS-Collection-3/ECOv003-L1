@@ -75,7 +75,7 @@ def test_data():
         tdata = os.environ["end_to_end_test_data"] + "/"
     else:
         # Location on eco-scf
-        tdata = "/project/ancillary/ASTER/EndToEndTest/latest/"
+        tdata = "/project/test/ASTER/EndToEndTest/latest/"
         if(not os.path.exists(tdata)):
             # Location on pistol
             tdata="/data/smyth/ecostress-test-data/latest/"

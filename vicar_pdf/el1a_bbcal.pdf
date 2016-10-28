@@ -28,9 +28,9 @@ procedure
 ! outp1:  L1A_PIX      /path for Output L1A_PIX file
 ! outp2:  transfer     /path for Output Intermediate Radiance & Temperature files
 ! pcount: File Version (vv) provided by PCS (Product Counter) 
-parm   inph5e  string   def="/project/ancillary/ASTER/EndToEndTest/latest/ECOSTRESS_L1A_ENG_80005_20150124T144252_0100_01.h5.expected"
-parm   inph5i  string   def="/project/ancillary/ASTER/EndToEndTest/latest/ECOSTRESS_L1A_RAW_PIX_80005_001_20150124T144252_0100_01.h5.expected" 
-parm   inph5b  string   def="/project/ancillary/ASTER/EndToEndTest/latest/ECOSTRESS_L1A_BB_80005_001_20150124T144252_0100_01.h5.expected"
+parm   inph5e  string   def="/project/test/ASTER/EndToEndTest/latest/ECOSTRESS_L1A_ENG_80005_20150124T144252_0100_01.h5.expected"
+parm   inph5i  string   def="/project/test/ASTER/EndToEndTest/latest/ECOSTRESS_L1A_RAW_PIX_80005_001_20150124T144252_0100_01.h5.expected" 
+parm   inph5b  string   def="/project/test/ASTER/EndToEndTest/latest/ECOSTRESS_L1A_BB_80005_001_20150124T144252_0100_01.h5.expected"
 parm   inpupf  string   def="/project/sandbox/tllogan/l1a_test/L1A_PCF_UPF.txt"
 parm   outp1   string   def="./"
 parm   outp2   string   def="./"

@@ -8,7 +8,7 @@
 procedure
 parm  hdfimg  string def="ECOSTRESS_L1A_RAW_PIX_80005_001_20150124_144252_0100_01.h5.expected"
 parm  outdir  string def="l1a_bb_001_data"
-parm  inpdir  string def="/project/ancillary/ASTER/EndToEndTest/latest"
+parm  inpdir  string def="/project/test/ASTER/EndToEndTest/latest"
 body
 
 !L1A_BB Simulation
