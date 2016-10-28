@@ -1,5 +1,5 @@
 from .l1a_pix_generate import *
-from .exception import VicarException
+from .exception import VicarRunException
 from test_support import *
 import os
 
@@ -31,7 +31,7 @@ def test_l1a_pix_generate_failed(isolated_dir, test_data, vicar_path):
                             "ECOSTRESS_L1A_PIX_" + fvar,
                             "ECOSTRESS_L1A_TEMP_GAIN_" + fvar,
                             quiet=True, log = log)
-    with pytest.raises(VicarException):
+    with pytest.raises(VicarRunException):
         l1apix.run()
     
 
