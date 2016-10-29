@@ -18,7 +18,7 @@ l1a_cal_run_config = $(foreach n,001 002 003, $(end_to_end_test_data)/ECOSTRESS_
 l1b_cal_run_config = $(foreach n,001 002 003, $(end_to_end_test_data)/ECOSTRESS_L1B_RAD_RunConfig_80005_$n.xml)
 l1b_geo_run_config = $(end_to_end_test_data)/ECOSTRESS_L1B_GEO_RunConfig_20150124T204251.xml
 
-H5DIFF_FLAG=-d 1e-2
+H5DIFF_FLAG=-d 1.1e-2
 # Note, if you need to update the expected a results a "trick" is to
 # replace H5DIFF with "cp" on the make line (so make end-to-end-check H5DIFF=cp H5DIFF_FLAG= )
 end-to-end-check: installcheck-am
