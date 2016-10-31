@@ -5,6 +5,7 @@ from .write_standard_metadata import WriteStandardMetadata
 from .misc import process_run
 from .exception import VicarRunException
 import re
+import os
 
 class L1aPixGenerate(object):
     '''This generates a L1A pix file from the given L1A_BB and L1A_RAW
@@ -28,6 +29,15 @@ class L1aPixGenerate(object):
         self.log = log
         self.quiet = quiet
 
+    def _create_dir(self):
+        i = 1
+        dirname = "./el1a_run_%03d" % i
+        while(os.path.exists(dirname)):
+            i += 1
+            dirname = "./el1a_run_%03d" % i
+        makedirs_p(dirname)
+        return dirname
+    
     def run(self):
         '''Do the actual generation of data.'''
         # Run Tom's vicar code. Note we assume we are already in the directory
@@ -35,8 +45,7 @@ class L1aPixGenerate(object):
         # the way we run with the top level script
         curdir = os.getcwd()
         try:
-            dirname = "./el1a_run"
-            makedirs_p(dirname)
+            dirname = self._create_dir()
             os.chdir(dirname)
             res = process_run(["vicarb", "el1a_bbcal",
                                "inph5e=%s" % self.l1a_eng,
@@ -63,28 +72,31 @@ class L1aPixGenerate(object):
         g = fout.create_group("UncalibratedDN")
         for b in range(1, 7):
             t = g.create_dataset("b%d_image" % b,
-                  data=mmap_file("el1a_run/UncalibratedDN/b%d_image.hlf" % b))
+                  data=mmap_file("%s/UncalibratedDN/b%d_image.hlf" %
+                                 (dirname, b)))
             t.attrs["Units"] = "dimensionless"
         g = fout.create_group("BlackbodyTemp")
         for temp in (325, 295):
             t = g.create_dataset("fpa_%d" % temp,
-                  data=mmap_file("el1a_run/BlackbodyTemp/fpa_%d.rel" % temp))
+                  data=mmap_file("%s/BlackbodyTemp/fpa_%d.rel" %
+                                 (dirname, temp)))
             t.attrs["Units"] = "K"
         g = fout.create_group("BlackbodyRadiance")
         for b in range(1, 7):
             for temp in (325, 295):
                 t = g.create_dataset("b%d_%d" % (b, temp),
-                  data=mmap_file("el1a_run/BlackbodyRadiance/b%d_%d.rel" %
-                                 (b, temp)))
+                  data=mmap_file("%s/BlackbodyRadiance/b%d_%d.rel" %
+                                 (dirname, b, temp)))
                 t.attrs["Units"] = "W/m^2/sr/um"
         g = fout_gain.create_group("Gain")
         g2 = fout_gain.create_group("Offset")
         for b in range(1, 6):
             t = g.create_dataset("b%d_gain" % b,
-                  data=mmap_file("el1a_run/ImgRadiance/b%d_gain.rel"%b))
+                  data=mmap_file("%s/ImgRadiance/b%d_gain.rel" % (dirname, b)))
             t.attrs["Units"] = "W/m^2/sr/um"
             t = g2.create_dataset("b%d_offset" % b,
-                  data=mmap_file("el1a_run/ImgRadiance/b%d_offset.rel"%b))
+                  data=mmap_file("%s/ImgRadiance/b%d_offset.rel" %
+                                 (dirname,b)))
             t.attrs["Units"] = "W/m^2/sr/um"
         # Copy over metadata
         fin = h5py.File(self.l1a_raw, "r")
