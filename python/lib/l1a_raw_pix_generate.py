@@ -62,26 +62,33 @@ class L1aRawPixGenerate(object):
     def run(self):
         '''Do the actual generation of data.'''
         self.log = None
-        
-        self.fin = h5py.File(self.l0,"r")
-        onum = int(self.fin["/Data/StandardMetadata/StartOrbitNumber"].value)
+        try:
+            self.fin = h5py.File(self.l0,"r")
+            onum = int(self.fin["/Data/StandardMetadata/StartOrbitNumber"].value)
 
-        feng = self.create_file("L1A_ENG", onum, None, primary_file = True)
-        fatt = self.create_file("L1A_RAW_ATT", onum, None)
-        self.hdf_copy(feng, "/rtdBlackbodyGradients")
-        self.hdf_copy(fatt, "/Attitude")
-        self.hdf_copy(fatt, "/Ephemeris")
+            feng = self.create_file("L1A_ENG", onum, None, primary_file = True)
+            fatt = self.create_file("L1A_RAW_ATT", onum, None)
+            self.hdf_copy(feng, "/rtdBlackbodyGradients")
+            self.hdf_copy(fatt, "/Attitude")
+            self.hdf_copy(fatt, "/Ephemeris")
 
-        # This cryptic expression gets a list of all the scenes by looking
-        # for groups with the name "/Data/Scene_<number>"
-        slist = [int(k.split('_')[1]) for k in self.fin["Data"].keys()
-                 if re.match(r'Scene_\d+', k)]
-        for scene in slist:
-            fbb = self.create_file("L1A_BB", onum, scene)
-            fpix = self.create_file("L1A_RAW_PIX", onum, scene)
-            self.hdf_copy(fbb, "/BlackBodyPixels", scene=scene)
-            self.hdf_copy(fpix, "/UncalibratedPixels", scene=scene)
-            self.hdf_copy(fpix, "/Time", scene=scene)
-        # Write out a dummy log file
-        print("This is a dummy log file", file = self.log)
-        self.log.flush()
+            # This cryptic expression gets a list of all the scenes by looking
+            # for groups with the name "/Data/Scene_<number>"
+            slist = [int(k.split('_')[1]) for k in self.fin["Data"].keys()
+                     if re.match(r'Scene_\d+', k)]
+            for scene in slist:
+                fbb = self.create_file("L1A_BB", onum, scene)
+                fpix = self.create_file("L1A_RAW_PIX", onum, scene)
+                self.hdf_copy(fbb, "/BlackBodyPixels", scene=scene)
+                self.hdf_copy(fpix, "/UncalibratedPixels", scene=scene)
+                self.hdf_copy(fpix, "/Time", scene=scene)
+            # Write out a dummy log file
+            print("This is a dummy log file", file = self.log)
+            print("L1A_RAW_PGE:ERROR-0-[Job Successful]", file=self.log)
+            self.log.flush()
+        except:
+            if(self.log):
+                print("L1A_RAW_PGE:ERROR-2-[Unexpected Error]", file=log)
+                log.flush()
+                raise
+                

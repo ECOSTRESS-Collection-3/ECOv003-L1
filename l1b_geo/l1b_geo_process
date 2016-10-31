@@ -85,40 +85,50 @@ else:
 dem = SrtmDem(srtm_dir,False, DatumGeoid96(datum))
 lwm = SrtmLwmData(srtm_lwm_dir, False)
 
-pool = Pool(ncpu)
+log_fname = None
+try:
+    pool = Pool(ncpu)
+    for i in range(len(radlist)):
+        print("Doing scene number %d" %i)
+        f = h5py.File(radlist[i], "r")
+        tmlist = f["/Time/line_start_time_j2000"][:]
+        # Temporary, treat all pixels in a line as having the same time.
+        # This isn't  true for ECOSTRESS, but is for our current test data. 
+        tt = MeasuredTimeTable([Time.time_j2000(t) for t in tmlist])
+        ofile = os.path.splitext(os.path.basename(radlist[i]))[0] + ".h5"
+        ofile = re.sub(r'L1B_RAD', 'L1B_GEO', ofile)
+        ofile2 = re.sub(r'L1B_GEO', 'L1B_ATT', ofile)
+        if(i == 0):
+            log_fname = os.path.splitext(ofile)[0] + ".log"
 
-for i in range(len(radlist)):
-    print("Doing scene number %d" %i)
-    f = h5py.File(radlist[i], "r")
-    tmlist = f["/Time/line_start_time_j2000"][:]
-    # Temporary, treat all pixels in a line as having the same time.
-    # This isn't  true for ECOSTRESS, but is for our current test data. 
-    tt = MeasuredTimeTable([Time.time_j2000(t) for t in tmlist])
-    ofile = os.path.splitext(os.path.basename(radlist[i]))[0] + ".h5"
-    if(i == 0):
-        log_fname = os.path.splitext(ofile)[0] + ".log"
-    ofile = re.sub(r'L1B_RAD', 'L1B_GEO', ofile)
-    ofile2 = re.sub(r'L1B_GEO', 'L1B_ATT', ofile)
+        # Create IGC
+        band = 0
+        ipi = Ipi(orb, cam, band, tt.min_time, tt.max_time, tt)
+        # Create DEM. False here says it ok for SrtmDem to not have tile. This 
+        # gives support for data that is over the ocean.
+        igc = IpiImageGroundConnection(ipi, dem, None)
+        # For debugging
+        if(False):
+            write_shelve("igc_%d.xml" % i, igc)
 
-    # Create IGC
-    band = 0
-    ipi = Ipi(orb, cam, band, tt.min_time, tt.max_time, tt)
-    # Create DEM. False here says it ok for SrtmDem to not have tile. This 
-    # gives support for data that is over the ocean.
-    igc = IpiImageGroundConnection(ipi, dem, None)
-    # For debugging
-    if(False):
-        write_shelve("igc_%d.xml" % i, igc)
-
-    # Generate output
-    l1bgeo = L1bGeoGenerate(igc, lwm, ofile,
-                            number_line = args.number_line,
-                            run_config = config, log_fname = log_fname)
-    l1bgeo.run(pool)
+        # Generate output
+        l1bgeo = L1bGeoGenerate(igc, lwm, ofile,
+                                number_line = args.number_line,
+                                run_config = config, log_fname = log_fname)
+        l1bgeo.run(pool)
     
-    # Temp, don't correct anything in attitude file
-    shutil.copyfile(orbfname, ofile2)
-    f = h5py.File(ofile2, "r+")
-    m = WriteStandardMetadata(f)
-    m.process_run_config_metadata(config)
-    m.write()
+        # Temp, don't correct anything in attitude file
+        shutil.copyfile(orbfname, ofile2)
+        f = h5py.File(ofile2, "r+")
+        m = WriteStandardMetadata(f)
+        m.process_run_config_metadata(config)
+        m.write()
+
+    log = open(log_fname, "a")
+    print("L1A_GEO_PGE:ERROR-0-[Job Successful]", file=log)
+    log.flush()
+except:
+    print("L1A_GEO_PGE:ERROR-2-[Unexpected Error]", file=log)
+    log.flush()
+    raise
+
