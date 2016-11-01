@@ -35,22 +35,30 @@ if(False):
 # Explicitly list input file
 config = RunConfig(args.run_config)
 
+# Not sure where this will from eventually, but for now just hardcode
+build_id = "0.20"
+pge_version = "0.20"
+build_version = "0100"
+
 l1a_pix = os.path.abspath(config["InputFileGroup", "L1A_PIX"])
 l1a_gain = os.path.abspath(config["InputFileGroup", "L1A_TEMPORARY_GAIN"])
 dirname = config["ProductPathGroup", "ProductPath"]
+file_version = config["ProductPathGroup", "ProductCounter"]
 
 makedirs_p(dirname)
 os.chdir(dirname)
 
-ofile = os.path.splitext(os.path.basename(l1a_pix))[0] + ".h5"
-ofile = re.sub(r'L1A_PIX', 'L1B_RAD', ofile)
+orbit, scene, acquisition_time = orbit_from_metadata(l1a_pix)
+ofile = ecostress_file_name("L1B_RAD", orbit, scene, acquisition_time,
+                            build = build_version, version = file_version)
 
 log_fname = os.path.splitext(ofile)[0] + ".log"
 log = open(log_fname, "w")
 try:
     # Generate output
     l1brad = L1bRadGenerate(l1a_pix, l1a_gain, ofile, run_config = config,
-                            log = log)
+                            log = log,
+                            build_id=build_id, pge_version=pge_version)
     l1brad.run()
     # Write out a dummy log file
     print("This is a dummy log file", file = log)

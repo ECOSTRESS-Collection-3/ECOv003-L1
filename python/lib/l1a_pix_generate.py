@@ -14,7 +14,9 @@ class L1aPixGenerate(object):
                  output_gain_name,
                  local_granule_id = None,
                  run_config = None, log = None,
-                 quiet = False):
+                 quiet = False, build_id = "0.20",
+                 pge_version = "0.20",
+                 file_version = "01"):
         '''Create a L1aPixGenerate with the given input files
         and output file name. To actually generate, execute the 'run'
         command.'''
@@ -28,6 +30,9 @@ class L1aPixGenerate(object):
         self.run_config = run_config
         self.log = log
         self.quiet = quiet
+        self.build_id = build_id
+        self.pge_version = pge_version
+        self.file_version = file_version
 
     def _create_dir(self):
         i = 1
@@ -51,7 +56,8 @@ class L1aPixGenerate(object):
                                "inph5e=%s" % self.l1a_eng,
                                "inph5i=%s" % self.l1a_raw,
                                "inph5b=%s" % self.l1a_bb,
-                               "inpupf=%s/L1A_PCF_UPF.txt" % self.l1_osp_dir],
+                               "inpupf=%s/L1A_PCF_UPF.txt" % self.l1_osp_dir,
+                               "pcount=%s" % self.file_version],
                               out_fh = self.log, quiet = self.quiet)
         except subprocess.CalledProcessError:
             raise VicarRunException("VICAR call failed")
@@ -108,12 +114,14 @@ class L1aPixGenerate(object):
         m = WriteStandardMetadata(fout,
                                   product_specfic_group = "L1APIXMetadata",
                                   pge_name="L1A_CAL_PGE",
-                                  build_id = '0.20', pge_version='0.20',
+                                  build_id = self.build_id,
+                                  pge_version= self.pge_version,
                                   local_granule_id = self.local_granule_id)
         m2 = WriteStandardMetadata(fout_gain,
                                   product_specfic_group = "L1APIXMetadata",
                                   pge_name="L1A_CAL_PGE",
-                                  build_id = '0.20', pge_version='0.20',
+                                  build_id = self.build_id,
+                                  pge_version= self.pge_version,
                                   local_granule_id = self.local_granule_id)
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)

@@ -35,12 +35,21 @@ if(False):
 # Explicitly list input file
 config = RunConfig(args.run_config)
 
+# Not sure where this will from eventually, but for now just hardcode
+build_id = "0.20"
+pge_version = "0.20"
+build_version = "0100"
+
 l0 = os.path.abspath(config["InputFileGroup", "L0"])
 dirname = config["ProductPathGroup", "ProductPath"]
+file_version = config["ProductPathGroup", "ProductCounter"]
 
 makedirs_p(dirname)
 os.chdir(dirname)
 
-l1arawpix = L1aRawPixGenerate(l0)
+l1arawpix = L1aRawPixGenerate(l0, run_config=config,
+                              build_id=build_id, pge_version=pge_version,
+                              build_version=build_version,
+                              file_version=file_version)
 l1arawpix.run()
 

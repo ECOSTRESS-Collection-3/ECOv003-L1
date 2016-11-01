@@ -2,6 +2,7 @@
 from geocal import *
 import re
 import subprocess
+import h5py
 
 def aster_radiance_scale_factor():
     '''Return the ASTER scale factors. This is for L1T data, found at
@@ -87,4 +88,14 @@ def process_run(exec_cmd, out_fh = None, quiet = False):
                                             output=stdout)
     return stdout
 
+def orbit_from_metadata(fname):
+    '''Read the standard metadata from the given file to return the orbit,
+    scene, and acquisition_time for the given file.'''
+    fin = h5py.File(fname, "r")
+    onum = fin["/StandardMetadata/StartOrbitNumber"].value
+    sid = fin["/StandardMetadata/SceneID"].value
+    bdate = fin["/StandardMetadata/RangeBeginningDate"].value
+    btime = fin["/StandardMetadata/RangeBeginningTime"].value
+    acquisition_time = Time.parse_time("%sT%sZ" % (bdate, btime))
+    return int(onum), int(sid), acquisition_time
     

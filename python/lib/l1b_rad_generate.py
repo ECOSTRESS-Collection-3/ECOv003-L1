@@ -7,7 +7,8 @@ from .misc import ecostress_radiance_scale_factor
 class L1bRadGenerate(object):
     '''This generates a L1B rad file from the given L1A_PIX file.'''
     def __init__(self, l1a_pix, l1a_gain, output_name, local_granule_id = None,
-                 run_config = None, log = None):
+                 run_config = None, log = None, build_id = "0.20",
+                 pge_version = "0.20"):
         '''Create a L1bRadGenerate with the given input files
         and output file name. To actually generate, execute the 'run'
         command.'''
@@ -17,6 +18,8 @@ class L1bRadGenerate(object):
         self.local_granule_id = local_granule_id
         self.run_config = run_config
         self.log = log
+        self.build_id = build_id
+        self.pge_version = pge_version
 
     def image(self, band):
         '''Generate L1B_RAD image.
@@ -57,7 +60,8 @@ class L1bRadGenerate(object):
         t.attrs["Units"] = "second"
         m = WriteStandardMetadata(fout, product_specfic_group = "L1B_RADMetadata",
                                   pge_name = "L1B_RAD_PGE",
-                                  build_id = '0.20', pge_version='0.20',
+                                  build_id = self.build_id,
+                                  pge_version= self.pge_version,
                                   local_granule_id = self.local_granule_id)
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)

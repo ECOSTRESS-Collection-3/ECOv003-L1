@@ -38,6 +38,11 @@ if(False):
 
 config = RunConfig(args.run_config)
 
+# Not sure where this will from eventually, but for now just hardcode
+build_id = "0.20"
+pge_version = "0.20"
+build_version = "0100"
+
 datum = os.path.abspath(config["StaticAncillaryFileGroup", "Datum"])
 srtm_dir = os.path.abspath(config["StaticAncillaryFileGroup", "SRTMDir"])
 srtm_lwm_dir = os.path.abspath(config["StaticAncillaryFileGroup", "SRTMLWMDir"])
@@ -60,6 +65,7 @@ orb = HdfOrbit_Eci_TimeJ2000(orbfname, "", "Ephemeris/time_j2000",
 radlist = config.as_list("InputFileGroup", "L1B_RAD")
 radlist = [os.path.abspath(f) for f in radlist]
 dirname = config["ProductPathGroup", "ProductPath"]
+file_version = config["ProductPathGroup", "ProductCounter"]
 
 makedirs_p(dirname)
 os.chdir(dirname)
@@ -95,9 +101,13 @@ try:
         # Temporary, treat all pixels in a line as having the same time.
         # This isn't  true for ECOSTRESS, but is for our current test data. 
         tt = MeasuredTimeTable([Time.time_j2000(t) for t in tmlist])
-        ofile = os.path.splitext(os.path.basename(radlist[i]))[0] + ".h5"
-        ofile = re.sub(r'L1B_RAD', 'L1B_GEO', ofile)
-        ofile2 = re.sub(r'L1B_GEO', 'L1B_ATT', ofile)
+        orbit, scene, acquisition_time = orbit_from_metadata(radlist[i])
+        ofile = ecostress_file_name("L1B_GEO", orbit, scene, acquisition_time,
+                                    build = build_version,
+                                    version = file_version)
+        ofile2 = ecostress_file_name("L1B_ATT", orbit, scene, acquisition_time,
+                                    build = build_version,
+                                    version = file_version)
         if(i == 0):
             log_fname = os.path.splitext(ofile)[0] + ".log"
 
@@ -114,7 +124,8 @@ try:
         # Generate output
         l1bgeo = L1bGeoGenerate(igc, lwm, ofile,
                                 number_line = args.number_line,
-                                run_config = config, log_fname = log_fname)
+                                run_config = config, log_fname = log_fname,
+                                build_id=build_id, pge_version=pge_version)
         l1bgeo.run(pool)
     
         # Temp, don't correct anything in attitude file

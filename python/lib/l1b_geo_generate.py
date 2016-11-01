@@ -18,7 +18,9 @@ class L1bGeoGenerate(object):
                  number_integration_step = 1,
                  raycast_resolution = 100, 
                  max_height=10e3,
-                 local_granule_id = None, log_fname = None):
+                 local_granule_id = None, log_fname = None,
+                 build_id = "0.20",
+                 pge_version = "0.20"):
         '''Create a L1bGeoGenerate with the given ImageGroundConnection
         and output file name. To actually generate, execute the "run"
         command.
@@ -38,6 +40,8 @@ class L1bGeoGenerate(object):
         self.run_config = run_config
         self.local_granule_id = local_granule_id
         self.log_fname = log_fname
+        self.build_id = build_id
+        self.pge_version = pge_version
 
     def loc_parallel_func(self, it):
         '''Variation of loc that is easier to use with a multiprocessor pool.'''
@@ -138,7 +142,8 @@ class L1bGeoGenerate(object):
         m = WriteStandardMetadata(fout,
                                   product_specfic_group = "L1GEOMetadata",
                                   pge_name="L1B_GEO",
-                                  build_id = '0.20', pge_version='0.20',
+                                  build_id = self.build_id,
+                                  pge_version= self.pge_version,
                                   local_granule_id = self.local_granule_id)
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)
