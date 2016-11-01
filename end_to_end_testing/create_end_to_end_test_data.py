@@ -99,14 +99,16 @@ for s in range(nscene[pass_index]):
     l1a_bb_sim = L1aBbSimulate(l1a_pix_fname)
     l1a_bb_sim.create_file(l1a_bb_fname)
 
-    l1a_raw_pix_fname = ecostress_file_name("L1A_RAW_PIX", orbit_num[pass_index],
-                                            s + 1, tt.min_time)
+    l1a_raw_pix_fname = \
+     ecostress_file_name("L1A_RAW_PIX", orbit_num[pass_index], s + 1,
+                         tt.min_time, intermediate=True)
     l1a_raw_pix_sim = L1aRawPixSimulate(l1a_pix_fname)
     l1a_raw_pix_sim.create_file(l1a_raw_pix_fname)
     scene_files[str(s+1)] = [l1a_raw_pix_fname, l1a_bb_fname]
     
-l1a_raw_att_fname = ecostress_file_name("L1A_RAW_ATT", orbit_num[pass_index], None,
-                                        start_time)
+l1a_raw_att_fname = \
+   ecostress_file_name("L1A_RAW_ATT", orbit_num[pass_index], None, start_time,
+                       intermediate=True)
 l1a_raw_att_sim = L1aRawAttSimulate(orb, start_time, end_time)
 l1a_raw_att_sim.create_file(l1a_raw_att_fname)
 

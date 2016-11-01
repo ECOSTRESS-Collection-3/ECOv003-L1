@@ -71,7 +71,7 @@ try:
                             file_version=file_version)
     l1apix.run()
     # Write out a dummy log file
-    print("L1A_CAL_PGE:ERROR-0-[Job Successful]", file=log)
+    print("L1A_CAL_PGE:INFO-0-[Job Successful]", file=log)
     log.flush()
 except VicarRunException as e:
     print("L1A_CAL_PGE:ERROR-1-[%s]" % e.message, file=log)

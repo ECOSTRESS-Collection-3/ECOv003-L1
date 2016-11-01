@@ -136,7 +136,7 @@ try:
         m.write()
 
     log = open(log_fname, "a")
-    print("L1A_GEO_PGE:ERROR-0-[Job Successful]", file=log)
+    print("L1A_GEO_PGE:INFO-0-[Job Successful]", file=log)
     log.flush()
 except:
     print("L1A_GEO_PGE:ERROR-2-[Unexpected Error]", file=log)

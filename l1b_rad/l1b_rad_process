@@ -62,7 +62,7 @@ try:
     l1brad.run()
     # Write out a dummy log file
     print("This is a dummy log file", file = log)
-    print("L1B_RAD_PGE:ERROR-0-[Job Successful]", file=log)
+    print("L1B_RAD_PGE:INFO-0-[Job Successful]", file=log)
     log.flush()
 except:
     print("L1B_RAD_PGE:ERROR-2-[Unexpected Error]", file=log)

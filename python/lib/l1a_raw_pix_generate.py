@@ -32,7 +32,8 @@ class L1aRawPixGenerate(object):
                         "-s", group_in,
                         "-d", group], check=True)
 
-    def create_file(self, prod_type, orbit, scene, primary_file = False):
+    def create_file(self, prod_type, orbit, scene, primary_file = False,
+                    intermediate=False):
         '''Create the file, generate the standard metadata, and return
         the file name.'''
         if(scene is None):
@@ -47,7 +48,8 @@ class L1aRawPixGenerate(object):
         bdtime = Time.parse_time("%sT%sZ" % (bdate, btime))
         fname = ecostress_file_name(prod_type, orbit, scene, bdtime,
                                     build=self.build_version,
-                                    version=self.file_version)
+                                    version=self.file_version,
+                                    intermediate=intermediate)
         if(primary_file):
             self.log_fname =  os.path.splitext(fname)[0] + ".log"
             self.log = open(self.log_fname, "w")
@@ -76,7 +78,8 @@ class L1aRawPixGenerate(object):
             onum = int(self.fin["/Data/StandardMetadata/StartOrbitNumber"].value)
 
             feng = self.create_file("L1A_ENG", onum, None, primary_file = True)
-            fatt = self.create_file("L1A_RAW_ATT", onum, None)
+            fatt = self.create_file("L1A_RAW_ATT", onum, None,
+                                    intermediate=True)
             self.hdf_copy(feng, "/rtdBlackbodyGradients")
             self.hdf_copy(fatt, "/Attitude")
             self.hdf_copy(fatt, "/Ephemeris")
@@ -87,13 +90,14 @@ class L1aRawPixGenerate(object):
                      if re.match(r'Scene_\d+', k)]
             for scene in slist:
                 fbb = self.create_file("L1A_BB", onum, scene)
-                fpix = self.create_file("L1A_RAW_PIX", onum, scene)
+                fpix = self.create_file("L1A_RAW_PIX", onum, scene,
+                                        intermediate=True)
                 self.hdf_copy(fbb, "/BlackBodyPixels", scene=scene)
                 self.hdf_copy(fpix, "/UncalibratedPixels", scene=scene)
                 self.hdf_copy(fpix, "/Time", scene=scene)
             # Write out a dummy log file
             print("This is a dummy log file", file = self.log)
-            print("L1A_RAW_PGE:ERROR-0-[Job Successful]", file=self.log)
+            print("L1A_RAW_PGE:INFO-0-[Job Successful]", file=self.log)
             self.log.flush()
         except:
             if(self.log):
