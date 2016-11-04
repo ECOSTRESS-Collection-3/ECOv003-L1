@@ -3,7 +3,7 @@
 !   An L1A_CAL PGE Program supporting the ECOSTRESS Project
 !   Written for VICAR with TAE scripting.
 !***Date/Version:
-!   17OCT2016 Version: 0.5 T.L.Logan
+!   02NOV2016 Version: 0.7 T.L.Logan
 !***Function:
 !   ECOSTRESS L1A 2point conversion of Blackbody calibration and TIR
 !     image DN to Radiance (watts/m2/sr/um).
@@ -22,7 +22,7 @@ parm   outwat string   def="" !ImgRadiance       !Transfer dir for L1A_RAD
 parm   outp1  string   def="" !                  !Output dir for L1A-PIX HD5
 parm   band   integer  def=1 valid=(1:6) !TIR Bands 1-5 & SWIR B6
 parm   rad2k  integer  def=1 valid=(0:1) !Convert radiance to Kelvin. 0=No; 1=Yes
-parm   radout   integer  def=1 valid=(0:1) !Output radiance image. 0=No; 1=Yes
+parm   radout integer  def=1 valid=(0:1) !Output radiance image. 0=No; 1=Yes
 parm   debug  integer  def=1 valid=(0:2) !Verbose Messages; 0=No;1=Yes;2=Yes+del-x
 parm   cw     real     !Center WaveLength
 parm   c1     real     !First Planck Constant (1.191042E08)
@@ -53,7 +53,9 @@ write    "MSG: ***2pt Random Number = &id "
 !Input L1A_RAW_PIX Module**********************************************
 !Extract Raw DNs from L1A_RAW_PIX, 1 band, each 11264x5400 16bit integers.
 !Convert hdf5 to vicar using gdal libraries.
+write    "Beginning ush gdalinfo"
 ush       gdalinfo &inph5i
+write    "Beginning ush gdal_translate"
 ush       gdal_translate -of VICAR 'HDF5:"&inph5i"://UncalibratedPixels/pixel_data_&band' &"outimg"/b&"band"_image.hlf
 !Verify image size, if not 11264x5400, adjust it.
 form     &"outimg"/b&"band"_image.hlf format nl ns
@@ -74,7 +76,9 @@ tush      echo "Finished Reading L1A_RAW_PIX Band &band" >> L1Ajob_&"suffix".log
 !Input L1A_BB DN Module************************************************
 !Extract Raw FPA DNs from L1A_BB, 1 band, both 325 and 295 BB files
 !Log hdf5 to vicar using gdal libraries.
+write    "Beginning ush gdalinfo"
 ush       gdalinfo &inph5b
+write    "Beginning ush gda_translate"
 ush       gdal_translate -of VICAR 'HDF5:"&inph5b"://BlackBodyPixels/B&"band"_blackbody_325K' &"outbdn"/dn325b&"band".hlf
 ush       gdal_translate -of VICAR 'HDF5:"&inph5b"://BlackBodyPixels/B&"band"_blackbody_295K' &"outbdn"/dn295b&"band".hlf
 write    "MSG: ***Finished Reading L1A_BB Band &band"
@@ -120,7 +124,7 @@ tush      echo "Finished Creating Gain/Offsets for Band &band" >> L1Ajob_&"suffi
 !DN to Radiance two-point conversion: R=a+(b*DN)
 !2point Calibration
 ! Optionally output radiance data
-if       (radout = 0) goto skip2
+if       (radout=0) goto skip2
 f2       (&"outwat"/b&"band"_offset.rel,&"outwat"/b&"band"_gain.rel,&"outimg"/b&"band"_image.hlf) +
           &"outwat"/L1A_RAD_B&"band"_&"suffix".rel +
           func="in1+(in2*in3)" format=real
@@ -136,7 +140,7 @@ skip2>
 !Radiance-to-Temperature Conversion Module*****************************
 !Convert Radiance Product to Temperature Kelvin for TESTING Purposes
 !Source: http://ncc.nesdis.noaa.gov/data/planck.html
-if       (radout = 0) goto skip3
+if       (radout= 0) goto skip3
 if       (rad2k = 0) goto skip3
 write    "cw = &cw"
 write    "c1 = &c1"
