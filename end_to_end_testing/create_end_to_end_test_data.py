@@ -31,9 +31,10 @@ pass_index = 4 # The pass we are working with
 # (data is only on pistol
 def fname(band):
     return "/data/smyth/AsterMosiac/calnorm_b%d.img" % band
-sdata = [ScaleImage(VicarLiteRasterImage(fname(aster_band), 1, VicarLiteFile.READ,
-                                         5000, 5000),
-                    aster_radiance_scale_factor()[aster_band-1])
+# Don't scale, we'll pick this up when we go back through. Just do
+# this in terms of DN's
+sdata = [VicarLiteRasterImage(fname(aster_band), 1, VicarLiteFile.READ,
+                              5000, 5000)
          for aster_band in ecostress_to_aster_band()]
 
 orb = OrbitTimeShift(SpiceOrbit(SpiceOrbit.ISS_ID, "iss_spice/iss_2015.bsp"),
@@ -76,7 +77,7 @@ for s in range(nscene[pass_index]):
     if(s == 0):
         start_time = tt.min_time
         # Probably don't want these long term, but save for now
-        if(False):
+        if(True):
             write_shelve("orbit.xml", orb)
             write_shelve("camera.xml", cam)
             write_shelve("time_table.xml", tt)
@@ -85,7 +86,7 @@ for s in range(nscene[pass_index]):
     l1b_rad_fname = ecostress_file_name("L1B_RAD", orbit_num[pass_index],
                                         s + 1, tt.min_time)
     # Temp false condition, to speed up testing
-    if(False):
+    if(True):
         l1b_rad_sim = L1bRadSimulate(orb, tt, cam, sdata, raycast_resolution = 100.0)
         l1b_rad_sim.create_file(l1b_rad_fname, pool = pool)
 
