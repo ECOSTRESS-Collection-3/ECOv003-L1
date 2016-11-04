@@ -41,7 +41,7 @@ pge_version = "0.20"
 build_version = "0100"
 
 l1a_pix = os.path.abspath(config["InputFileGroup", "L1A_PIX"])
-l1a_gain = os.path.abspath(config["InputFileGroup", "L1A_TEMPORARY_GAIN"])
+l1a_gain = os.path.abspath(config["InputFileGroup", "L1A_GAIN"])
 dirname = config["ProductPathGroup", "ProductPath"]
 file_version = config["ProductPathGroup", "ProductCounter"]
 
