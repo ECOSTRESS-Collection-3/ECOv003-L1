@@ -9,3 +9,5 @@ include vicar_pdf/vicar_pdf.am
 include script/script.am
 include python/python.am
 include bindings/python/python.am
+include lib/lib.am
+

@@ -1,0 +1,38 @@
+# Set up for the library
+lib_LTLIBRARIES += libecostress.la
+ecostressincdir = @includedir@/ecostress
+
+libecostress_la_SOURCES =
+ecostressinc_HEADERS =
+ecostress_test_all_SOURCES = 
+libecostress_la_CPPFLAGS = $(AM_CPPFLAGS) $(GEOCAL_CFLAGS)
+libecostress_la_LDFLAGS = $(GEOCAL_LIBS)
+
+#=================================================================
+# Unit test
+
+check_PROGRAMS = ecostress_test_all
+ecostress_test_all_SOURCES += @srclib@/test_all.cc
+ecostress_test_all_LDADD = libecostress.la 
+ecostress_test_all_LDFLAGS = -no-install 
+ecostress_test_all_CPPFLAGS = $(AM_CPPFLAGS)
+TESTS+= @srclib@/test_all.sh
+EXTRA_DIST+= @srclib@/test_all.sh
+
+#=================================================================
+# List of source files
+ecostressinc_HEADERS+= @srclib@/ecostress_camera.h
+libecostress_la_SOURCES+= @srclib@/ecostress_camera.cc
+
+# Files that contain SWIG wrapper information.
+#SWIG_SRC += @swigsrc@/ecostress_camera_wrap.cc
+
+# Test files
+ecostress_test_all_SOURCES+= @srclib@/ecostress_camera_test.cc
+
+AM_CPPFLAGS+= -I$(srcdir)/@srclib@
+
+# Allow searchs for .i, .h. and .cc files in this directory
+vpath %.cc $(srcdir)/@srclib@
+vpath %.h $(srcdir)/@srclib@
+vpath %.i $(srcdir)/@srclib@

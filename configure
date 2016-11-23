@@ -645,6 +645,7 @@ installecostressdir
 pythonsrccython
 srccython
 srcpythonlib
+srclib
 srcpdf
 srcpython
 srcscript
@@ -678,6 +679,10 @@ PYTHON_VERSION
 PYTHON
 H5DIFF
 testdatadir
+GEOCAL_LIBS
+GEOCAL_CFLAGS
+GeoCal_LIBS
+GeoCal_CFLAGS
 geocaldir
 afidsdir
 pkgconfigdir
@@ -850,6 +855,8 @@ DEBUG_FLAGS
 PKG_CONFIG
 PKG_CONFIG_PATH
 PKG_CONFIG_LIBDIR
+GeoCal_CFLAGS
+GeoCal_LIBS
 PYTHON
 PYTHON_VERSION
 SPHINXBUILD
@@ -1531,6 +1538,9 @@ Some influential environment variables:
               directories to add to pkg-config's search path
   PKG_CONFIG_LIBDIR
               path overriding pkg-config's built-in search path
+  GeoCal_CFLAGS
+              C compiler flags for GeoCal, overriding pkg-config
+  GeoCal_LIBS linker flags for GeoCal, overriding pkg-config
   PYTHON      the Python interpreter
   PYTHON_VERSION
               The installed Python version to use, for example '2.3'. This
@@ -17072,6 +17082,100 @@ fi
 
 geocaldir="$ac_geocal_dir"
 
+PKG_CONFIG_PATH=$ac_geocal_dir/lib/pkgconfig:$PKG_CONFIG_PATH
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GeoCal" >&5
+$as_echo_n "checking for GeoCal... " >&6; }
+
+if test -n "$GeoCal_CFLAGS"; then
+    pkg_cv_GeoCal_CFLAGS="$GeoCal_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"geocal\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "geocal") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GeoCal_CFLAGS=`$PKG_CONFIG --cflags "geocal" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$GeoCal_LIBS"; then
+    pkg_cv_GeoCal_LIBS="$GeoCal_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"geocal\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "geocal") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GeoCal_LIBS=`$PKG_CONFIG --libs "geocal" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        GeoCal_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "geocal" 2>&1`
+        else
+	        GeoCal_PKG_ERRORS=`$PKG_CONFIG --print-errors "geocal" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$GeoCal_PKG_ERRORS" >&5
+
+	as_fn_error $? "Package requirements (geocal) were not met:
+
+$GeoCal_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables GeoCal_CFLAGS
+and GeoCal_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details." "$LINENO" 5
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables GeoCal_CFLAGS
+and GeoCal_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details" "$LINENO" 5; }
+else
+	GeoCal_CFLAGS=$pkg_cv_GeoCal_CFLAGS
+	GeoCal_LIBS=$pkg_cv_GeoCal_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+fi
+GEOCAL_CFLAGS="`$PKG_CONFIG --cflags geocal 2>/dev/null`"
+
+GEOCAL_LIBS="`$PKG_CONFIG --libs geocal 2>/dev/null`"
+
 
 
 # Check whether --with-test-data was given.
@@ -18638,6 +18742,8 @@ srcscript=script
 srcpython=python
 
 srcpdf=vicar_pdf
+
+srclib=lib
 
 srcpythonlib=${srcpython}/lib
 

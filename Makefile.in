@@ -113,8 +113,8 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS =
-TESTS =
 @HAVE_CYTHON_TRUE@@MAINTAINER_MODE_TRUE@am__append_1 = $(addprefix $(srcdir)/, $(CYTHON_SRC))
+check_PROGRAMS = ecostress_test_all$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/config/m4/ac_check_found.m4 \
@@ -142,7 +142,8 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
 	$(am__configure_deps) $(dist_bin_SCRIPTS) \
 	$(dist_installecostress_SCRIPTS) $(ecostresspkgpython_PYTHON) \
-	$(dist_vicarpdf_DATA) $(include_HEADERS) $(am__DIST_COMMON)
+	$(dist_vicarpdf_DATA) $(ecostressinc_HEADERS) \
+	$(include_HEADERS) $(am__DIST_COMMON)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
@@ -181,7 +182,8 @@ am__installdirs = "$(DESTDIR)$(ecostresspkgpythondir)" \
 	"$(DESTDIR)$(bindir)" "$(DESTDIR)$(installecostressdir)" \
 	"$(DESTDIR)$(ecostresspkgpythondir)" \
 	"$(DESTDIR)$(vicarpdfdir)" "$(DESTDIR)$(installecostressdir)" \
-	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(includedir)"
+	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(ecostressincdir)" \
+	"$(DESTDIR)$(includedir)"
 LTLIBRARIES = $(ecostresspkgpython_LTLIBRARIES) $(lib_LTLIBRARIES) \
 	$(noinst_LTLIBRARIES)
 _ecostress_level1_la_LIBADD =
@@ -199,7 +201,24 @@ _ecostress_level1_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(_ecostress_level1_la_CXXFLAGS) $(CXXFLAGS) \
 	$(_ecostress_level1_la_LDFLAGS) $(LDFLAGS) -o $@
+libecostress_la_LIBADD =
+am_libecostress_la_OBJECTS =  \
+	@srclib@/libecostress_la-ecostress_camera.lo
+libecostress_la_OBJECTS = $(am_libecostress_la_OBJECTS)
+libecostress_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+	$(AM_CXXFLAGS) $(CXXFLAGS) $(libecostress_la_LDFLAGS) \
+	$(LDFLAGS) -o $@
 PROGRAMS = $(bin_PROGRAMS)
+am_ecostress_test_all_OBJECTS =  \
+	@srclib@/ecostress_test_all-test_all.$(OBJEXT) \
+	@srclib@/ecostress_test_all-ecostress_camera_test.$(OBJEXT)
+ecostress_test_all_OBJECTS = $(am_ecostress_test_all_OBJECTS)
+ecostress_test_all_DEPENDENCIES = libecostress.la
+ecostress_test_all_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+	$(AM_CXXFLAGS) $(CXXFLAGS) $(ecostress_test_all_LDFLAGS) \
+	$(LDFLAGS) -o $@
 SCRIPTS = $(dist_bin_SCRIPTS) $(dist_installecostress_SCRIPTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -235,8 +254,10 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(_ecostress_level1_la_SOURCES)
-DIST_SOURCES = $(_ecostress_level1_la_SOURCES)
+SOURCES = $(_ecostress_level1_la_SOURCES) $(libecostress_la_SOURCES) \
+	$(ecostress_test_all_SOURCES)
+DIST_SOURCES = $(_ecostress_level1_la_SOURCES) \
+	$(libecostress_la_SOURCES) $(ecostress_test_all_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -248,7 +269,7 @@ am__pep3147_tweak = \
 py_compile = $(top_srcdir)/config/py-compile
 DATA = $(dist_vicarpdf_DATA) $(installecostress_DATA) \
 	$(pkgconfig_DATA)
-HEADERS = $(include_HEADERS)
+HEADERS = $(ecostressinc_HEADERS) $(include_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -428,12 +449,8 @@ am__set_TESTS_bases = \
 RECHECK_LOGS = $(TEST_LOGS)
 TEST_SUITE_LOG = test-suite.log
 TEST_EXTENSIONS = @EXEEXT@ .test
-am__test_logs1 = $(TESTS:=.log)
-am__test_logs2 = $(am__test_logs1:@EXEEXT@.log=.log)
-TEST_LOGS = $(am__test_logs2:.test.log=.log)
-TEST_LOG_DRIVER = $(SHELL) $(top_srcdir)/config/test-driver
-TEST_LOG_COMPILE = $(TEST_LOG_COMPILER) $(AM_TEST_LOG_FLAGS) \
-	$(TEST_LOG_FLAGS)
+LOG_DRIVER = $(SHELL) $(top_srcdir)/config/test-driver
+LOG_COMPILE = $(LOG_COMPILER) $(AM_LOG_FLAGS) $(LOG_FLAGS)
 am__set_b = \
   case '$@' in \
     */*) \
@@ -444,14 +461,21 @@ am__set_b = \
     *) \
       b='$*';; \
   esac
+am__test_logs1 = $(TESTS:=.log)
+am__test_logs2 = $(am__test_logs1:@EXEEXT@.log=.log)
+TEST_LOGS = $(am__test_logs2:.test.log=.log)
+TEST_LOG_DRIVER = $(SHELL) $(top_srcdir)/config/test-driver
+TEST_LOG_COMPILE = $(TEST_LOG_COMPILER) $(AM_TEST_LOG_FLAGS) \
+	$(TEST_LOG_FLAGS)
 am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(srcdir)/bindings/python/python.am $(srcdir)/common.am \
 	$(srcdir)/ecostress.am $(srcdir)/include.am \
 	$(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1a_raw/l1a_raw.am \
 	$(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/l1b_rad/l1b_rad.am \
-	$(srcdir)/python/lib/lib.am $(srcdir)/python/python.am \
-	$(srcdir)/script/script.am $(srcdir)/vicar_pdf/vicar_pdf.am \
-	$(top_srcdir)/config/compile $(top_srcdir)/config/config.guess \
+	$(srcdir)/lib/lib.am $(srcdir)/python/lib/lib.am \
+	$(srcdir)/python/python.am $(srcdir)/script/script.am \
+	$(srcdir)/vicar_pdf/vicar_pdf.am $(top_srcdir)/config/compile \
+	$(top_srcdir)/config/config.guess \
 	$(top_srcdir)/config/config.sub $(top_srcdir)/config/depcomp \
 	$(top_srcdir)/config/install-sh $(top_srcdir)/config/ltmain.sh \
 	$(top_srcdir)/config/missing $(top_srcdir)/config/py-compile \
@@ -510,7 +534,11 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
+GEOCAL_CFLAGS = @GEOCAL_CFLAGS@
+GEOCAL_LIBS = @GEOCAL_LIBS@
 GREP = @GREP@
+GeoCal_CFLAGS = @GeoCal_CFLAGS@
+GeoCal_LIBS = @GeoCal_LIBS@
 H5DIFF = @H5DIFF@
 HAVE_CSH = @HAVE_CSH@
 HAVE_CXX = @HAVE_CXX@
@@ -632,6 +660,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srccython = @srccython@
 srcdir = @srcdir@
+srclib = @srclib@
 srcpdf = @srcpdf@
 srcpython = @srcpython@
 srcpythonlib = @srcpythonlib@
@@ -655,7 +684,9 @@ ACLOCAL_AMFLAGS = -I config/m4
 noop = 
 
 # Build these up as we go
-lib_LTLIBRARIES = 
+
+# Set up for the library
+lib_LTLIBRARIES = libecostress.la
 noinst_LTLIBRARIES = 
 dist_bin_SCRIPTS = @l1a_raw_src@/l1a_raw_process \
 	@l1a_cal_src@/l1a_cal_process @l1b_rad_src@/l1b_rad_process \
@@ -664,11 +695,12 @@ AM_LDFLAGS =
 BUILT_SOURCES = complain_if_afids $(am__append_1)
 include_HEADERS = 
 EXTRA_DIST = @srcpythonlib@/cython_sample.pyx \
-	@srcpythonlib@/cython_sample2.pyx $(CYTHON_SRC)
+	@srcpythonlib@/cython_sample2.pyx $(CYTHON_SRC) \
+	@srclib@/test_all.sh
 CYTHON_SRC = @srccython@/cython_sample.cc \
 	@srccython@/cython_sample2.cc
 pkgconfig_DATA = 
-AM_CPPFLAGS = 
+AM_CPPFLAGS = -I$(srcdir)/@srclib@
 
 #=================================================================
 # Some flags needed for GCC compilers.
@@ -689,6 +721,7 @@ UNINSTALL_HOOK =
 CLEAN_HOOK = 
 INSTALLCHECK_HOOK = 
 CHECK_HOOK = python_check
+TESTS = @srclib@/test_all.sh
 check_PROGRAM = 
 check_DATA = 
 
@@ -746,6 +779,24 @@ _ecostress_level1_la_CXXFLAGS = $(AM_CXXFLAGS)
 _ecostress_level1_la_LDFLAGS = -module -avoid-version
 _ecostress_level1_la_SOURCES = $(CYTHON_SRC) \
 	@srccython@/cython_init.cc
+ecostressincdir = @includedir@/ecostress
+libecostress_la_SOURCES = @srclib@/ecostress_camera.cc
+
+#=================================================================
+# List of source files
+ecostressinc_HEADERS = @srclib@/ecostress_camera.h
+
+# Files that contain SWIG wrapper information.
+#SWIG_SRC += @swigsrc@/ecostress_camera_wrap.cc
+
+# Test files
+ecostress_test_all_SOURCES = @srclib@/test_all.cc \
+	@srclib@/ecostress_camera_test.cc
+libecostress_la_CPPFLAGS = $(AM_CPPFLAGS) $(GEOCAL_CFLAGS)
+libecostress_la_LDFLAGS = $(GEOCAL_LIBS)
+ecostress_test_all_LDADD = libecostress.la 
+ecostress_test_all_LDFLAGS = -no-install 
+ecostress_test_all_CPPFLAGS = $(AM_CPPFLAGS)
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -753,7 +804,7 @@ all: $(BUILT_SOURCES)
 .SUFFIXES: .cc .lo .log .o .obj .test .test$(EXEEXT) .trs
 am--refresh: Makefile
 	@:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/python/lib/lib.am $(srcdir)/bindings/python/python.am $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/python/lib/lib.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -775,7 +826,7 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe);; \
 	esac;
-$(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/python/lib/lib.am $(srcdir)/bindings/python/python.am $(am__empty):
+$(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/python/lib/lib.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(am__empty):
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
@@ -888,6 +939,17 @@ clean-noinstLTLIBRARIES:
 
 _ecostress_level1.la: $(_ecostress_level1_la_OBJECTS) $(_ecostress_level1_la_DEPENDENCIES) $(EXTRA__ecostress_level1_la_DEPENDENCIES) 
 	$(AM_V_CXXLD)$(_ecostress_level1_la_LINK) -rpath $(ecostresspkgpythondir) $(_ecostress_level1_la_OBJECTS) $(_ecostress_level1_la_LIBADD) $(LIBS)
+@srclib@/$(am__dirstamp):
+	@$(MKDIR_P) @srclib@
+	@: > @srclib@/$(am__dirstamp)
+@srclib@/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) @srclib@/$(DEPDIR)
+	@: > @srclib@/$(DEPDIR)/$(am__dirstamp)
+@srclib@/libecostress_la-ecostress_camera.lo:  \
+	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
+
+libecostress.la: $(libecostress_la_OBJECTS) $(libecostress_la_DEPENDENCIES) $(EXTRA_libecostress_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(libecostress_la_LINK) -rpath $(libdir) $(libecostress_la_OBJECTS) $(libecostress_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
@@ -937,6 +999,23 @@ clean-binPROGRAMS:
 	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
 	echo " rm -f" $$list; \
 	rm -f $$list
+
+clean-checkPROGRAMS:
+	@list='$(check_PROGRAMS)'; test -n "$$list" || exit 0; \
+	echo " rm -f" $$list; \
+	rm -f $$list || exit $$?; \
+	test -n "$(EXEEXT)" || exit 0; \
+	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
+	echo " rm -f" $$list; \
+	rm -f $$list
+@srclib@/ecostress_test_all-test_all.$(OBJEXT):  \
+	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
+@srclib@/ecostress_test_all-ecostress_camera_test.$(OBJEXT):  \
+	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
+
+ecostress_test_all$(EXEEXT): $(ecostress_test_all_OBJECTS) $(ecostress_test_all_DEPENDENCIES) $(EXTRA_ecostress_test_all_DEPENDENCIES) 
+	@rm -f ecostress_test_all$(EXEEXT)
+	$(AM_V_CXXLD)$(ecostress_test_all_LINK) $(ecostress_test_all_OBJECTS) $(ecostress_test_all_LDADD) $(LIBS)
 install-dist_binSCRIPTS: $(dist_bin_SCRIPTS)
 	@$(NORMAL_INSTALL)
 	@list='$(dist_bin_SCRIPTS)'; test -n "$(bindir)" || list=; \
@@ -1012,6 +1091,8 @@ mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 	-rm -f @srccython@/*.$(OBJEXT)
 	-rm -f @srccython@/*.lo
+	-rm -f @srclib@/*.$(OBJEXT)
+	-rm -f @srclib@/*.lo
 
 distclean-compile:
 	-rm -f *.tab.c
@@ -1019,6 +1100,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@@srccython@/$(DEPDIR)/_ecostress_level1_la-cython_init.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srccython@/$(DEPDIR)/_ecostress_level1_la-cython_sample.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srccython@/$(DEPDIR)/_ecostress_level1_la-cython_sample2.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-test_all.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_camera.Plo@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -1065,12 +1149,48 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_ecostress_level1_la_CPPFLAGS) $(CPPFLAGS) $(_ecostress_level1_la_CXXFLAGS) $(CXXFLAGS) -c -o @srccython@/_ecostress_level1_la-cython_init.lo `test -f '@srccython@/cython_init.cc' || echo '$(srcdir)/'`@srccython@/cython_init.cc
 
+@srclib@/libecostress_la-ecostress_camera.lo: @srclib@/ecostress_camera.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/libecostress_la-ecostress_camera.lo -MD -MP -MF @srclib@/$(DEPDIR)/libecostress_la-ecostress_camera.Tpo -c -o @srclib@/libecostress_la-ecostress_camera.lo `test -f '@srclib@/ecostress_camera.cc' || echo '$(srcdir)/'`@srclib@/ecostress_camera.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/libecostress_la-ecostress_camera.Tpo @srclib@/$(DEPDIR)/libecostress_la-ecostress_camera.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/ecostress_camera.cc' object='@srclib@/libecostress_la-ecostress_camera.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/libecostress_la-ecostress_camera.lo `test -f '@srclib@/ecostress_camera.cc' || echo '$(srcdir)/'`@srclib@/ecostress_camera.cc
+
+@srclib@/ecostress_test_all-test_all.o: @srclib@/test_all.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-test_all.o -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-test_all.Tpo -c -o @srclib@/ecostress_test_all-test_all.o `test -f '@srclib@/test_all.cc' || echo '$(srcdir)/'`@srclib@/test_all.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/ecostress_test_all-test_all.Tpo @srclib@/$(DEPDIR)/ecostress_test_all-test_all.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/test_all.cc' object='@srclib@/ecostress_test_all-test_all.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-test_all.o `test -f '@srclib@/test_all.cc' || echo '$(srcdir)/'`@srclib@/test_all.cc
+
+@srclib@/ecostress_test_all-test_all.obj: @srclib@/test_all.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-test_all.obj -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-test_all.Tpo -c -o @srclib@/ecostress_test_all-test_all.obj `if test -f '@srclib@/test_all.cc'; then $(CYGPATH_W) '@srclib@/test_all.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/test_all.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/ecostress_test_all-test_all.Tpo @srclib@/$(DEPDIR)/ecostress_test_all-test_all.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/test_all.cc' object='@srclib@/ecostress_test_all-test_all.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-test_all.obj `if test -f '@srclib@/test_all.cc'; then $(CYGPATH_W) '@srclib@/test_all.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/test_all.cc'; fi`
+
+@srclib@/ecostress_test_all-ecostress_camera_test.o: @srclib@/ecostress_camera_test.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-ecostress_camera_test.o -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_test.Tpo -c -o @srclib@/ecostress_test_all-ecostress_camera_test.o `test -f '@srclib@/ecostress_camera_test.cc' || echo '$(srcdir)/'`@srclib@/ecostress_camera_test.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_test.Tpo @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/ecostress_camera_test.cc' object='@srclib@/ecostress_test_all-ecostress_camera_test.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-ecostress_camera_test.o `test -f '@srclib@/ecostress_camera_test.cc' || echo '$(srcdir)/'`@srclib@/ecostress_camera_test.cc
+
+@srclib@/ecostress_test_all-ecostress_camera_test.obj: @srclib@/ecostress_camera_test.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-ecostress_camera_test.obj -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_test.Tpo -c -o @srclib@/ecostress_test_all-ecostress_camera_test.obj `if test -f '@srclib@/ecostress_camera_test.cc'; then $(CYGPATH_W) '@srclib@/ecostress_camera_test.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/ecostress_camera_test.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_test.Tpo @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/ecostress_camera_test.cc' object='@srclib@/ecostress_test_all-ecostress_camera_test.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-ecostress_camera_test.obj `if test -f '@srclib@/ecostress_camera_test.cc'; then $(CYGPATH_W) '@srclib@/ecostress_camera_test.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/ecostress_camera_test.cc'; fi`
+
 mostlyclean-libtool:
 	-rm -f *.lo
 
 clean-libtool:
 	-rm -rf .libs _libs
 	-rm -rf @srccython@/.libs @srccython@/_libs
+	-rm -rf @srclib@/.libs @srclib@/_libs
 
 distclean-libtool:
 	-rm -f libtool config.lt
@@ -1185,6 +1305,27 @@ uninstall-pkgconfigDATA:
 	@list='$(pkgconfig_DATA)'; test -n "$(pkgconfigdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(pkgconfigdir)'; $(am__uninstall_files_from_dir)
+install-ecostressincHEADERS: $(ecostressinc_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(ecostressinc_HEADERS)'; test -n "$(ecostressincdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(ecostressincdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(ecostressincdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(ecostressincdir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(ecostressincdir)" || exit $$?; \
+	done
+
+uninstall-ecostressincHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(ecostressinc_HEADERS)'; test -n "$(ecostressincdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(ecostressincdir)'; $(am__uninstall_files_from_dir)
 install-includeHEADERS: $(include_HEADERS)
 	@$(NORMAL_INSTALL)
 	@list='$(include_HEADERS)'; test -n "$(includedir)" || list=; \
@@ -1396,7 +1537,7 @@ check-TESTS:
 	log_list=`echo $$log_list`; trs_list=`echo $$trs_list`; \
 	$(MAKE) $(AM_MAKEFLAGS) $(TEST_SUITE_LOG) TEST_LOGS="$$log_list"; \
 	exit $$?;
-recheck: all $(check_DATA)
+recheck: all $(check_PROGRAMS) $(check_DATA)
 	@test -z "$(TEST_SUITE_LOG)" || rm -f $(TEST_SUITE_LOG)
 	@set +e; $(am__set_TESTS_bases); \
 	bases=`for i in $$bases; do echo $$i; done \
@@ -1407,6 +1548,13 @@ recheck: all $(check_DATA)
 	        am__force_recheck=am--force-recheck \
 	        TEST_LOGS="$$log_list"; \
 	exit $$?
+@srclib@/test_all.sh.log: @srclib@/test_all.sh
+	@p='@srclib@/test_all.sh'; \
+	b='@srclib@/test_all.sh'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 .test.log:
 	@p='$<'; \
 	$(am__set_b); \
@@ -1586,7 +1734,7 @@ distcleancheck: distclean
 	       $(distcleancheck_listfiles) ; \
 	       exit 1; } >&2
 check-am: all-am
-	$(MAKE) $(AM_MAKEFLAGS) $(check_DATA)
+	$(MAKE) $(AM_MAKEFLAGS) $(check_PROGRAMS) $(check_DATA)
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS check-local
 check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
@@ -1595,7 +1743,7 @@ all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(SCRIPTS) $(DATA) \
 install-binPROGRAMS: install-libLTLIBRARIES
 
 installdirs:
-	for dir in "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(vicarpdfdir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(includedir)"; do \
+	for dir in "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(vicarpdfdir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(ecostressincdir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -1630,6 +1778,8 @@ distclean-generic:
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
 	-rm -f @srccython@/$(DEPDIR)/$(am__dirstamp)
 	-rm -f @srccython@/$(am__dirstamp)
+	-rm -f @srclib@/$(DEPDIR)/$(am__dirstamp)
+	-rm -f @srclib@/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -1637,13 +1787,14 @@ maintainer-clean-generic:
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
-clean-am: clean-binPROGRAMS clean-ecostresspkgpythonLTLIBRARIES \
-	clean-generic clean-libLTLIBRARIES clean-libtool clean-local \
+clean-am: clean-binPROGRAMS clean-checkPROGRAMS \
+	clean-ecostresspkgpythonLTLIBRARIES clean-generic \
+	clean-libLTLIBRARIES clean-libtool clean-local \
 	clean-noinstLTLIBRARIES mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf @srccython@/$(DEPDIR)
+	-rm -rf @srccython@/$(DEPDIR) @srclib@/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-libtool distclean-tags
@@ -1661,7 +1812,7 @@ info: info-am
 info-am:
 
 install-data-am: install-dist_installecostressSCRIPTS \
-	install-dist_vicarpdfDATA \
+	install-dist_vicarpdfDATA install-ecostressincHEADERS \
 	install-ecostresspkgpythonLTLIBRARIES \
 	install-ecostresspkgpythonPYTHON install-includeHEADERS \
 	install-installecostressDATA install-pkgconfigDATA
@@ -1697,7 +1848,7 @@ installcheck-am: installcheck-local
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf @srccython@/$(DEPDIR)
+	-rm -rf @srccython@/$(DEPDIR) @srclib@/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -1716,7 +1867,7 @@ ps-am:
 
 uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	uninstall-dist_installecostressSCRIPTS \
-	uninstall-dist_vicarpdfDATA \
+	uninstall-dist_vicarpdfDATA uninstall-ecostressincHEADERS \
 	uninstall-ecostresspkgpythonLTLIBRARIES \
 	uninstall-ecostresspkgpythonPYTHON uninstall-includeHEADERS \
 	uninstall-installecostressDATA uninstall-libLTLIBRARIES \
@@ -1727,7 +1878,8 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	install-strip uninstall-am
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--refresh check check-TESTS \
-	check-am check-local clean clean-binPROGRAMS clean-cscope \
+	check-am check-local clean clean-binPROGRAMS \
+	clean-checkPROGRAMS clean-cscope \
 	clean-ecostresspkgpythonLTLIBRARIES clean-generic \
 	clean-libLTLIBRARIES clean-libtool clean-local \
 	clean-noinstLTLIBRARIES cscope cscopelist-am ctags ctags-am \
@@ -1739,7 +1891,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	install-binPROGRAMS install-data install-data-am \
 	install-data-hook install-dist_binSCRIPTS \
 	install-dist_installecostressSCRIPTS install-dist_vicarpdfDATA \
-	install-dvi install-dvi-am \
+	install-dvi install-dvi-am install-ecostressincHEADERS \
 	install-ecostresspkgpythonLTLIBRARIES \
 	install-ecostresspkgpythonPYTHON install-exec install-exec-am \
 	install-html install-html-am install-includeHEADERS \
@@ -1752,7 +1904,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	pdf pdf-am ps ps-am recheck tags tags-am uninstall \
 	uninstall-am uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	uninstall-dist_installecostressSCRIPTS \
-	uninstall-dist_vicarpdfDATA \
+	uninstall-dist_vicarpdfDATA uninstall-ecostressincHEADERS \
 	uninstall-ecostresspkgpythonLTLIBRARIES \
 	uninstall-ecostresspkgpythonPYTHON uninstall-hook \
 	uninstall-includeHEADERS uninstall-installecostressDATA \
@@ -1840,6 +1992,11 @@ vpath %.pyx $(srcdir)/@srcpythonlib@
 
 @HAVE_CYTHON_TRUE@@MAINTAINER_MODE_TRUE@$(srcdir)/$(srccython)/%.cc: %.pyx
 @HAVE_CYTHON_TRUE@@MAINTAINER_MODE_TRUE@	$(CYTHON) $(CYTHON_FLAGS) $(AM_CPPFLAGS) -o $@ $<
+
+# Allow searchs for .i, .h. and .cc files in this directory
+vpath %.cc $(srcdir)/@srclib@
+vpath %.h $(srcdir)/@srclib@
+vpath %.i $(srcdir)/@srclib@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
