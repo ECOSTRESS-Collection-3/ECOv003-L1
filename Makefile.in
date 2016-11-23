@@ -796,7 +796,7 @@ libecostress_la_CPPFLAGS = $(AM_CPPFLAGS) $(GEOCAL_CFLAGS)
 libecostress_la_LDFLAGS = $(GEOCAL_LIBS)
 ecostress_test_all_LDADD = libecostress.la 
 ecostress_test_all_LDFLAGS = -no-install 
-ecostress_test_all_CPPFLAGS = $(AM_CPPFLAGS)
+ecostress_test_all_CPPFLAGS = $(AM_CPPFLAGS) $(GEOCAL_CFLAGS)
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -1992,6 +1992,26 @@ vpath %.pyx $(srcdir)/@srcpythonlib@
 
 @HAVE_CYTHON_TRUE@@MAINTAINER_MODE_TRUE@$(srcdir)/$(srccython)/%.cc: %.pyx
 @HAVE_CYTHON_TRUE@@MAINTAINER_MODE_TRUE@	$(CYTHON) $(CYTHON_FLAGS) $(AM_CPPFLAGS) -o $@ $<
+
+# Variables used in testing
+export abs_top_srcdir 
+export run_test = *
+
+#=================================================================
+# Normally check builds all the libraries, and tests all the pyton. This
+# version builds just what is needed for C++ unit tests, which is faster
+# to do during development.
+
+ecostress_check: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) ecostress_check-am
+
+ecostress_check-am: ecostress_test_all
+	@echo "====================================================="
+	@echo "This just builds and runs the ecostress C++ unit tests"
+	@echo "(useful during development). It does run the python "
+	@echo "tests, use check for that"
+	@echo "====================================================="
+	$(srcdir)/$(srclib)/test_all.sh
 
 # Allow searchs for .i, .h. and .cc files in this directory
 vpath %.cc $(srcdir)/@srclib@
