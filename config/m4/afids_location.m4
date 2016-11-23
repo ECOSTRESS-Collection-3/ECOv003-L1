@@ -11,9 +11,7 @@ AC_ARG_WITH([geocal],
 AS_HELP_STRING([--with-geocal=DIR], [give directory where geocal can be found (optional, default is /pkg/afids/geocal_latest)]), [ ac_geocal_dir="$withval" ], [ ac_geocal_dir="/pkg/afids/geocal_latest" ])
 AC_SUBST([geocaldir], ["$ac_geocal_dir"])
 PKG_CONFIG_PATH=$ac_geocal_dir/lib/pkgconfig:$PKG_CONFIG_PATH
-PKG_CHECK_MODULES([GeoCal], [geocal])
-AC_SUBST([GEOCAL_CFLAGS], ["`$PKG_CONFIG --cflags geocal 2>/dev/null`"])
-AC_SUBST([GEOCAL_LIBS], ["`$PKG_CONFIG --libs geocal 2>/dev/null`"])
+PKG_CHECK_MODULES([GEOCAL], [geocal])
 
 AC_ARG_WITH([test-data],
 AS_HELP_STRING([--with-test-data=DIR], [give directory where end to end test data can be found (optional, default is /project/test/ASTER/EndToEndTest/latest)]), [ ac_test_data_dir="$withval" ], [ ac_test_data_dir="/project/test/ASTER/EndToEndTest/latest" ])
