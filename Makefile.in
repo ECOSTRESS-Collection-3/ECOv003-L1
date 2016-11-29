@@ -1993,6 +1993,7 @@ vpath %.pyx $(srcdir)/@srcpythonlib@
 
 # Variables used in testing
 export abs_top_srcdir 
+export abs_top_builddir 
 export run_test = *
 
 #=================================================================

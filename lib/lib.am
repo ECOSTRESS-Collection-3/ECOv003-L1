@@ -32,6 +32,7 @@ ecostress_test_all_SOURCES+= @srclib@/ecostress_camera_test.cc
 
 # Variables used in testing
 export abs_top_srcdir 
+export abs_top_builddir 
 export run_test = *
 
 AM_CPPFLAGS+= -I$(srcdir)/@srclib@

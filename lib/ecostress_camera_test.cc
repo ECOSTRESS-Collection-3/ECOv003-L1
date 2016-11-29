@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(basic_test)
   GeoCal::HdfOrbit<GeoCal::Eci, GeoCal::TimeJ2000Creator> orb
     (orb_fname, "", "Ephemeris/time_j2000", "Ephemeris/eci_position",
      "Ephemeris/eci_velocity", "Attitude/time_j2000", "Attitude/quaternion");
-  GeoCal::Time t = GeoCal::Time::parse_time("2015-01-24T20:42:51.230216Z");
+  GeoCal::Time t = GeoCal::Time::parse_time("2015-01-24T20:42:52Z");
   boost::shared_ptr<GeoCal::OrbitData> od = orb.orbit_data(t);
   GeoCal::SimpleDem dem;
   boost::shared_ptr<GeoCal::CartesianFixed> gp1 =

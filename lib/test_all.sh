@@ -23,7 +23,7 @@ else
     tool_command=""
 fi
 
-source ../script/setup_ecostress.sh
+source ${abs_top_builddir}/script/setup_ecostress.sh
 
 if [ ${log_test} ] ; then
     ${tool_command} ./ecostress_test_all --log_level=test_suite --run_test=${run_test}
