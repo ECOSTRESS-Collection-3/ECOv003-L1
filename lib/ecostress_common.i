@@ -12,7 +12,7 @@
 %include "geocal_common.i"
 
 // Short cut for ingesting a base class
-%define %base_import(NAME)
+%define %ecostress_base_import(NAME)
 %import(module="ecostress_swig.NAME") "NAME.i"
 %enddef
 

@@ -34,6 +34,9 @@
 
 # Stuff specific to ecostress
 
+# Cython part
+# ================================================
+
 
 
 
@@ -114,13 +117,19 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS =
 @HAVE_CYTHON_TRUE@@MAINTAINER_MODE_TRUE@am__append_1 = $(addprefix $(srcdir)/, $(CYTHON_SRC))
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@am__append_2 = $(addprefix \
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(srcdir)/, \
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(INCLUDE_SWIG_SRC)) \
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(srcdir)/$(swigsrc)/swig_wrap.cc
 check_PROGRAMS = ecostress_test_all$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/config/m4/ac_check_found.m4 \
 	$(top_srcdir)/config/m4/ac_cython.m4 \
+	$(top_srcdir)/config/m4/ac_doxygen.m4 \
 	$(top_srcdir)/config/m4/ac_enable_debug.m4 \
 	$(top_srcdir)/config/m4/ac_handle_with_arg.m4 \
+	$(top_srcdir)/config/m4/ac_pkg_swig.m4 \
 	$(top_srcdir)/config/m4/ac_python.m4 \
 	$(top_srcdir)/config/m4/ac_python_module_with_version.m4 \
 	$(top_srcdir)/config/m4/ac_python_pytest.m4 \
@@ -136,15 +145,17 @@ am__aclocal_m4_deps = $(top_srcdir)/config/m4/ac_check_found.m4 \
 	$(top_srcdir)/config/m4/ltsugar.m4 \
 	$(top_srcdir)/config/m4/ltversion.m4 \
 	$(top_srcdir)/config/m4/lt~obsolete.m4 \
+	$(top_srcdir)/config/m4/swig_enable_cxx.m4 \
+	$(top_srcdir)/config/m4/swig_python.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
 	$(am__configure_deps) $(dist_bin_SCRIPTS) \
 	$(dist_installecostress_SCRIPTS) $(ecostresspkgpython_PYTHON) \
-	$(dist_vicarpdf_DATA) $(ecostressinc_HEADERS) \
-	$(ecostressswiginc_HEADERS) $(include_HEADERS) \
-	$(am__DIST_COMMON)
+	$(pkgpythonswig_PYTHON) $(dist_vicarpdf_DATA) \
+	$(ecostressinc_HEADERS) $(ecostressswiginc_HEADERS) \
+	$(include_HEADERS) $(am__DIST_COMMON)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
@@ -179,14 +190,16 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 am__installdirs = "$(DESTDIR)$(ecostresspkgpythondir)" \
-	"$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
-	"$(DESTDIR)$(bindir)" "$(DESTDIR)$(installecostressdir)" \
+	"$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgpythonswigdir)" \
+	"$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" \
+	"$(DESTDIR)$(installecostressdir)" \
 	"$(DESTDIR)$(ecostresspkgpythondir)" \
-	"$(DESTDIR)$(vicarpdfdir)" "$(DESTDIR)$(installecostressdir)" \
-	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(ecostressincdir)" \
+	"$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(vicarpdfdir)" \
+	"$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(pkgconfigdir)" \
+	"$(DESTDIR)$(ecostressincdir)" \
 	"$(DESTDIR)$(ecostressswigincdir)" "$(DESTDIR)$(includedir)"
 LTLIBRARIES = $(ecostresspkgpython_LTLIBRARIES) $(lib_LTLIBRARIES) \
-	$(noinst_LTLIBRARIES)
+	$(noinst_LTLIBRARIES) $(pkgpythonswig_LTLIBRARIES)
 _ecostress_level1_la_LIBADD =
 am__dirstamp = $(am__leading_dot)dirstamp
 am__objects_1 = @srccython@/_ecostress_level1_la-cython_sample.lo \
@@ -202,6 +215,16 @@ _ecostress_level1_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(_ecostress_level1_la_CXXFLAGS) $(CXXFLAGS) \
 	$(_ecostress_level1_la_LDFLAGS) $(LDFLAGS) -o $@
+_swig_wrap_la_DEPENDENCIES = libecostress_level1.la
+am__objects_2 = @swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo
+am__objects_3 = $(am__objects_2)
+am__swig_wrap_la_OBJECTS = $(am__objects_3) \
+	@swigsrc@/_swig_wrap_la-swig_wrap.lo
+_swig_wrap_la_OBJECTS = $(am__swig_wrap_la_OBJECTS)
+_swig_wrap_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+	$(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) $(_swig_wrap_la_LDFLAGS) \
+	$(LDFLAGS) -o $@
 libecostress_la_LIBADD =
 am_libecostress_la_OBJECTS =  \
 	@srclib@/libecostress_la-ecostress_camera.lo
@@ -255,10 +278,11 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(_ecostress_level1_la_SOURCES) $(libecostress_la_SOURCES) \
-	$(ecostress_test_all_SOURCES)
-DIST_SOURCES = $(_ecostress_level1_la_SOURCES) \
+SOURCES = $(_ecostress_level1_la_SOURCES) $(_swig_wrap_la_SOURCES) \
 	$(libecostress_la_SOURCES) $(ecostress_test_all_SOURCES)
+DIST_SOURCES = $(_ecostress_level1_la_SOURCES) \
+	$(_swig_wrap_la_SOURCES) $(libecostress_la_SOURCES) \
+	$(ecostress_test_all_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -528,6 +552,7 @@ DEBUG_FLAGS = @DEBUG_FLAGS@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
+DOXYGEN = @DOXYGEN@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
@@ -538,6 +563,7 @@ EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 GEOCAL_CFLAGS = @GEOCAL_CFLAGS@
 GEOCAL_LIBS = @GEOCAL_LIBS@
+GEOCAL_SWIG_CFLAGS = @GEOCAL_SWIG_CFLAGS@
 GREP = @GREP@
 H5DIFF = @H5DIFF@
 HAVE_CSH = @HAVE_CSH@
@@ -593,6 +619,10 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SPHINXBUILD = @SPHINXBUILD@
 STRIP = @STRIP@
+SWIG = @SWIG@
+SWIG_LIB = @SWIG_LIB@
+SWIG_PYTHON_CPPFLAGS = @SWIG_PYTHON_CPPFLAGS@
+SWIG_PYTHON_OPT = @SWIG_PYTHON_OPT@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
@@ -656,6 +686,7 @@ pyexecdir = @pyexecdir@
 pythondir = @pythondir@
 pythonpath = @pythonpath@
 pythonsrccython = @pythonsrccython@
+pythonswigsrc = @pythonswigsrc@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srccython = @srccython@
@@ -665,6 +696,7 @@ srcpdf = @srcpdf@
 srcpython = @srcpython@
 srcpythonlib = @srcpythonlib@
 srcscript = @srcscript@
+swigsrc = @swigsrc@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 testdatadir = @testdatadir@
@@ -692,11 +724,12 @@ dist_bin_SCRIPTS = @l1a_raw_src@/l1a_raw_process \
 	@l1a_cal_src@/l1a_cal_process @l1b_rad_src@/l1b_rad_process \
 	@l1b_geo_src@/l1b_geo_process
 AM_LDFLAGS = 
-BUILT_SOURCES = complain_if_afids $(am__append_1)
+BUILT_SOURCES = complain_if_afids $(am__append_1) $(am__append_2)
 include_HEADERS = 
 EXTRA_DIST = @srcpythonlib@/cython_sample.pyx \
-	@srcpythonlib@/cython_sample2.pyx $(CYTHON_SRC) \
-	@srclib@/test_all.sh
+	@srcpythonlib@/cython_sample2.pyx $(CYTHON_SRC) $(patsubst \
+	%_wrap.cc, %.py, $(FULL_SWIG_SRC)) $(FULL_SWIG_SRC) \
+	$(srcdir)/$(swigsrc)/*_wrap.h @srclib@/test_all.sh
 CYTHON_SRC = @srccython@/cython_sample.cc \
 	@srccython@/cython_sample2.cc
 pkgconfig_DATA = 
@@ -729,6 +762,10 @@ check_DATA =
 dist_installecostress_SCRIPTS = @l1a_raw_src@/L1A_RAW_PGE \
 	@l1a_cal_src@/L1A_CAL_PGE @l1b_rad_src@/L1B_RAD_PGE \
 	@l1b_geo_src@/L1B_GEO_PGE
+
+# SWIG part
+# ================================================
+SWIG_FLAG = -O
 l0_file = $(end_to_end_test_data)/ECOSTRESS_L0_20150124T204251_0100_01.raw
 l1a_raw_run_config = $(end_to_end_test_data)/ECOSTRESS_L1A_RAW_RunConfig_20150124T204251.xml
 l1a_cal_run_config = $(foreach n,001 002 003, $(end_to_end_test_data)/ECOSTRESS_L1A_CAL_RunConfig_80005_$n.xml)
@@ -779,6 +816,22 @@ _ecostress_level1_la_CXXFLAGS = $(AM_CXXFLAGS)
 _ecostress_level1_la_LDFLAGS = -module -avoid-version
 _ecostress_level1_la_SOURCES = $(CYTHON_SRC) \
 	@srccython@/cython_init.cc
+pkgpythonswigdir = $(prefix)/@pythondir@/ecostress_level1_swig
+pkgpythonswig_PYTHON = @pythonswigsrc@/__init__.py $(patsubst \
+	%_wrap.cc, %.py, $(INCLUDE_SWIG_SRC))
+INCLUDE_SWIG_SRC = $(SWIG_SRC)
+# This is a duplicate of INCLUDE_SWIG_SRC right now, but in principle we could
+# have conditional swig source. We want to make sure all the SWIG src gets
+# included in EXTRA_DIST
+FULL_SWIG_SRC = $(SWIG_SRC)
+pkgpythonswig_LTLIBRARIES = _swig_wrap.la
+_swig_wrap_la_CPPFLAGS = $(PYTHON_CPPFLAGS) $(PYTHON_NUMPY_CPPFLAGS) \
+	$(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) $(AM_CPPFLAGS) \
+	-DSWIG_TYPE_TABLE=ecostress_level1
+_swig_wrap_la_CXXFLAGS = $(AM_CXXFLAGS)
+_swig_wrap_la_LDFLAGS = -module -avoid-version
+_swig_wrap_la_LIBADD = libecostress_level1.la
+_swig_wrap_la_SOURCES = $(INCLUDE_SWIG_SRC) @swigsrc@/swig_wrap.cc
 ecostressincdir = @includedir@/ecostress
 ecostressswigincdir = @prefix@/share/ecostress/swig
 libecostress_la_SOURCES = @srclib@/ecostress_camera.cc
@@ -923,6 +976,41 @@ clean-noinstLTLIBRARIES:
 	  echo rm -f $${locs}; \
 	  rm -f $${locs}; \
 	}
+
+install-pkgpythonswigLTLIBRARIES: $(pkgpythonswig_LTLIBRARIES)
+	@$(NORMAL_INSTALL)
+	@list='$(pkgpythonswig_LTLIBRARIES)'; test -n "$(pkgpythonswigdir)" || list=; \
+	list2=; for p in $$list; do \
+	  if test -f $$p; then \
+	    list2="$$list2 $$p"; \
+	  else :; fi; \
+	done; \
+	test -z "$$list2" || { \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(pkgpythonswigdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(pkgpythonswigdir)" || exit 1; \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 '$(DESTDIR)$(pkgpythonswigdir)'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 "$(DESTDIR)$(pkgpythonswigdir)"; \
+	}
+
+uninstall-pkgpythonswigLTLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	@list='$(pkgpythonswig_LTLIBRARIES)'; test -n "$(pkgpythonswigdir)" || list=; \
+	for p in $$list; do \
+	  $(am__strip_dir) \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f '$(DESTDIR)$(pkgpythonswigdir)/$$f'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f "$(DESTDIR)$(pkgpythonswigdir)/$$f"; \
+	done
+
+clean-pkgpythonswigLTLIBRARIES:
+	-test -z "$(pkgpythonswig_LTLIBRARIES)" || rm -f $(pkgpythonswig_LTLIBRARIES)
+	@list='$(pkgpythonswig_LTLIBRARIES)'; \
+	locs=`for p in $$list; do echo $$p; done | \
+	      sed 's|^[^/]*$$|.|; s|/[^/]*$$||; s|$$|/so_locations|' | \
+	      sort -u`; \
+	test -z "$$locs" || { \
+	  echo rm -f $${locs}; \
+	  rm -f $${locs}; \
+	}
 @srccython@/$(am__dirstamp):
 	@$(MKDIR_P) @srccython@
 	@: > @srccython@/$(am__dirstamp)
@@ -941,6 +1029,19 @@ clean-noinstLTLIBRARIES:
 
 _ecostress_level1.la: $(_ecostress_level1_la_OBJECTS) $(_ecostress_level1_la_DEPENDENCIES) $(EXTRA__ecostress_level1_la_DEPENDENCIES) 
 	$(AM_V_CXXLD)$(_ecostress_level1_la_LINK) -rpath $(ecostresspkgpythondir) $(_ecostress_level1_la_OBJECTS) $(_ecostress_level1_la_LIBADD) $(LIBS)
+@swigsrc@/$(am__dirstamp):
+	@$(MKDIR_P) @swigsrc@
+	@: > @swigsrc@/$(am__dirstamp)
+@swigsrc@/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) @swigsrc@/$(DEPDIR)
+	@: > @swigsrc@/$(DEPDIR)/$(am__dirstamp)
+@swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo:  \
+	@swigsrc@/$(am__dirstamp) @swigsrc@/$(DEPDIR)/$(am__dirstamp)
+@swigsrc@/_swig_wrap_la-swig_wrap.lo: @swigsrc@/$(am__dirstamp) \
+	@swigsrc@/$(DEPDIR)/$(am__dirstamp)
+
+_swig_wrap.la: $(_swig_wrap_la_OBJECTS) $(_swig_wrap_la_DEPENDENCIES) $(EXTRA__swig_wrap_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(_swig_wrap_la_LINK) -rpath $(pkgpythonswigdir) $(_swig_wrap_la_OBJECTS) $(_swig_wrap_la_LIBADD) $(LIBS)
 @srclib@/$(am__dirstamp):
 	@$(MKDIR_P) @srclib@
 	@: > @srclib@/$(am__dirstamp)
@@ -1095,6 +1196,8 @@ mostlyclean-compile:
 	-rm -f @srccython@/*.lo
 	-rm -f @srclib@/*.$(OBJEXT)
 	-rm -f @srclib@/*.lo
+	-rm -f @swigsrc@/*.$(OBJEXT)
+	-rm -f @swigsrc@/*.lo
 
 distclean-compile:
 	-rm -f *.tab.c
@@ -1105,6 +1208,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-test_all.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_camera.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_camera_wrap.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Plo@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -1151,6 +1256,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_ecostress_level1_la_CPPFLAGS) $(CPPFLAGS) $(_ecostress_level1_la_CXXFLAGS) $(CXXFLAGS) -c -o @srccython@/_ecostress_level1_la-cython_init.lo `test -f '@srccython@/cython_init.cc' || echo '$(srcdir)/'`@srccython@/cython_init.cc
 
+@swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo: @swigsrc@/ecostress_camera_wrap.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -MT @swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo -MD -MP -MF @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_camera_wrap.Tpo -c -o @swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo `test -f '@swigsrc@/ecostress_camera_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/ecostress_camera_wrap.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_camera_wrap.Tpo @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_camera_wrap.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@swigsrc@/ecostress_camera_wrap.cc' object='@swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -c -o @swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo `test -f '@swigsrc@/ecostress_camera_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/ecostress_camera_wrap.cc
+
+@swigsrc@/_swig_wrap_la-swig_wrap.lo: @swigsrc@/swig_wrap.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -MT @swigsrc@/_swig_wrap_la-swig_wrap.lo -MD -MP -MF @swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Tpo -c -o @swigsrc@/_swig_wrap_la-swig_wrap.lo `test -f '@swigsrc@/swig_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/swig_wrap.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Tpo @swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@swigsrc@/swig_wrap.cc' object='@swigsrc@/_swig_wrap_la-swig_wrap.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -c -o @swigsrc@/_swig_wrap_la-swig_wrap.lo `test -f '@swigsrc@/swig_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/swig_wrap.cc
+
 @srclib@/libecostress_la-ecostress_camera.lo: @srclib@/ecostress_camera.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/libecostress_la-ecostress_camera.lo -MD -MP -MF @srclib@/$(DEPDIR)/libecostress_la-ecostress_camera.Tpo -c -o @srclib@/libecostress_la-ecostress_camera.lo `test -f '@srclib@/ecostress_camera.cc' || echo '$(srcdir)/'`@srclib@/ecostress_camera.cc
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/libecostress_la-ecostress_camera.Tpo @srclib@/$(DEPDIR)/libecostress_la-ecostress_camera.Plo
@@ -1193,6 +1312,7 @@ clean-libtool:
 	-rm -rf .libs _libs
 	-rm -rf @srccython@/.libs @srccython@/_libs
 	-rm -rf @srclib@/.libs @srclib@/_libs
+	-rm -rf @swigsrc@/.libs @swigsrc@/_libs
 
 distclean-libtool:
 	-rm -f libtool config.lt
@@ -1227,6 +1347,54 @@ uninstall-ecostresspkgpythonPYTHON:
 	py_files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	test -n "$$py_files" || exit 0; \
 	dir='$(DESTDIR)$(ecostresspkgpythondir)'; \
+	pyc_files=`echo "$$py_files" | sed 's|$$|c|'`; \
+	pyo_files=`echo "$$py_files" | sed 's|$$|o|'`; \
+	py_files_pep3147=`echo "$$py_files" | $(am__pep3147_tweak)`; \
+	echo "$$py_files_pep3147";\
+	pyc_files_pep3147=`echo "$$py_files_pep3147" | sed 's|$$|c|'`; \
+	pyo_files_pep3147=`echo "$$py_files_pep3147" | sed 's|$$|o|'`; \
+	st=0; \
+	for files in \
+	  "$$py_files" \
+	  "$$pyc_files" \
+	  "$$pyo_files" \
+	  "$$pyc_files_pep3147" \
+	  "$$pyo_files_pep3147" \
+	; do \
+	  $(am__uninstall_files_from_dir) || st=$$?; \
+	done; \
+	exit $$st
+install-pkgpythonswigPYTHON: $(pkgpythonswig_PYTHON)
+	@$(NORMAL_INSTALL)
+	@list='$(pkgpythonswig_PYTHON)'; dlist=; list2=; test -n "$(pkgpythonswigdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(pkgpythonswigdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(pkgpythonswigdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then b=; else b="$(srcdir)/"; fi; \
+	  if test -f $$b$$p; then \
+	    $(am__strip_dir) \
+	    dlist="$$dlist $$f"; \
+	    list2="$$list2 $$b$$p"; \
+	  else :; fi; \
+	done; \
+	for file in $$list2; do echo $$file; done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(pkgpythonswigdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(pkgpythonswigdir)" || exit $$?; \
+	done || exit $$?; \
+	if test -n "$$dlist"; then \
+	  $(am__py_compile) --destdir "$(DESTDIR)" \
+	                    --basedir "$(pkgpythonswigdir)" $$dlist; \
+	else :; fi
+
+uninstall-pkgpythonswigPYTHON:
+	@$(NORMAL_UNINSTALL)
+	@list='$(pkgpythonswig_PYTHON)'; test -n "$(pkgpythonswigdir)" || list=; \
+	py_files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	test -n "$$py_files" || exit 0; \
+	dir='$(DESTDIR)$(pkgpythonswigdir)'; \
 	pyc_files=`echo "$$py_files" | sed 's|$$|c|'`; \
 	pyo_files=`echo "$$py_files" | sed 's|$$|o|'`; \
 	py_files_pep3147=`echo "$$py_files" | $(am__pep3147_tweak)`; \
@@ -1766,7 +1934,7 @@ all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(SCRIPTS) $(DATA) \
 install-binPROGRAMS: install-libLTLIBRARIES
 
 installdirs:
-	for dir in "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(vicarpdfdir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(ecostressincdir)" "$(DESTDIR)$(ecostressswigincdir)" "$(DESTDIR)$(includedir)"; do \
+	for dir in "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(vicarpdfdir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(ecostressincdir)" "$(DESTDIR)$(ecostressswigincdir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -1803,6 +1971,8 @@ distclean-generic:
 	-rm -f @srccython@/$(am__dirstamp)
 	-rm -f @srclib@/$(DEPDIR)/$(am__dirstamp)
 	-rm -f @srclib@/$(am__dirstamp)
+	-rm -f @swigsrc@/$(DEPDIR)/$(am__dirstamp)
+	-rm -f @swigsrc@/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -1813,11 +1983,12 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-checkPROGRAMS \
 	clean-ecostresspkgpythonLTLIBRARIES clean-generic \
 	clean-libLTLIBRARIES clean-libtool clean-local \
-	clean-noinstLTLIBRARIES mostlyclean-am
+	clean-noinstLTLIBRARIES clean-pkgpythonswigLTLIBRARIES \
+	mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf @srccython@/$(DEPDIR) @srclib@/$(DEPDIR)
+	-rm -rf @srccython@/$(DEPDIR) @srclib@/$(DEPDIR) @swigsrc@/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-libtool distclean-tags
@@ -1839,7 +2010,8 @@ install-data-am: install-dist_installecostressSCRIPTS \
 	install-ecostresspkgpythonLTLIBRARIES \
 	install-ecostresspkgpythonPYTHON \
 	install-ecostressswigincHEADERS install-includeHEADERS \
-	install-installecostressDATA install-pkgconfigDATA
+	install-installecostressDATA install-pkgconfigDATA \
+	install-pkgpythonswigLTLIBRARIES install-pkgpythonswigPYTHON
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
 install-dvi: install-dvi-am
@@ -1872,7 +2044,7 @@ installcheck-am: installcheck-local
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf @srccython@/$(DEPDIR) @srclib@/$(DEPDIR)
+	-rm -rf @srccython@/$(DEPDIR) @srclib@/$(DEPDIR) @swigsrc@/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -1896,7 +2068,8 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	uninstall-ecostresspkgpythonPYTHON \
 	uninstall-ecostressswigincHEADERS uninstall-includeHEADERS \
 	uninstall-installecostressDATA uninstall-libLTLIBRARIES \
-	uninstall-pkgconfigDATA
+	uninstall-pkgconfigDATA uninstall-pkgpythonswigLTLIBRARIES \
+	uninstall-pkgpythonswigPYTHON
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
 .MAKE: all check check-am install install-am install-data-am \
@@ -1907,14 +2080,14 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	clean-checkPROGRAMS clean-cscope \
 	clean-ecostresspkgpythonLTLIBRARIES clean-generic \
 	clean-libLTLIBRARIES clean-libtool clean-local \
-	clean-noinstLTLIBRARIES cscope cscopelist-am ctags ctags-am \
-	dist dist-all dist-bzip2 dist-gzip dist-lzip dist-shar \
-	dist-tarZ dist-xz dist-zip distcheck distclean \
-	distclean-compile distclean-generic distclean-libtool \
-	distclean-tags distcleancheck distdir distuninstallcheck dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-binPROGRAMS install-data install-data-am \
-	install-data-hook install-dist_binSCRIPTS \
+	clean-noinstLTLIBRARIES clean-pkgpythonswigLTLIBRARIES cscope \
+	cscopelist-am ctags ctags-am dist dist-all dist-bzip2 \
+	dist-gzip dist-lzip dist-shar dist-tarZ dist-xz dist-zip \
+	distcheck distclean distclean-compile distclean-generic \
+	distclean-libtool distclean-tags distcleancheck distdir \
+	distuninstallcheck dvi dvi-am html html-am info info-am \
+	install install-am install-binPROGRAMS install-data \
+	install-data-am install-data-hook install-dist_binSCRIPTS \
 	install-dist_installecostressSCRIPTS install-dist_vicarpdfDATA \
 	install-dvi install-dvi-am install-ecostressincHEADERS \
 	install-ecostresspkgpythonLTLIBRARIES \
@@ -1923,19 +2096,23 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	install-html install-html-am install-includeHEADERS \
 	install-info install-info-am install-installecostressDATA \
 	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
-	install-pkgconfigDATA install-ps install-ps-am install-strip \
-	installcheck installcheck-am installcheck-local installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	pdf pdf-am ps ps-am recheck tags tags-am uninstall \
-	uninstall-am uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
+	install-pkgconfigDATA install-pkgpythonswigLTLIBRARIES \
+	install-pkgpythonswigPYTHON install-ps install-ps-am \
+	install-strip installcheck installcheck-am installcheck-local \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am recheck tags tags-am \
+	uninstall uninstall-am uninstall-binPROGRAMS \
+	uninstall-dist_binSCRIPTS \
 	uninstall-dist_installecostressSCRIPTS \
 	uninstall-dist_vicarpdfDATA uninstall-ecostressincHEADERS \
 	uninstall-ecostresspkgpythonLTLIBRARIES \
 	uninstall-ecostresspkgpythonPYTHON \
 	uninstall-ecostressswigincHEADERS uninstall-hook \
 	uninstall-includeHEADERS uninstall-installecostressDATA \
-	uninstall-libLTLIBRARIES uninstall-pkgconfigDATA
+	uninstall-libLTLIBRARIES uninstall-pkgconfigDATA \
+	uninstall-pkgpythonswigLTLIBRARIES \
+	uninstall-pkgpythonswigPYTHON
 
 .PRECIOUS: Makefile
 
@@ -2019,6 +2196,62 @@ vpath %.pyx $(srcdir)/@srcpythonlib@
 
 @HAVE_CYTHON_TRUE@@MAINTAINER_MODE_TRUE@$(srcdir)/$(srccython)/%.cc: %.pyx
 @HAVE_CYTHON_TRUE@@MAINTAINER_MODE_TRUE@	$(CYTHON) $(CYTHON_FLAGS) $(AM_CPPFLAGS) -o $@ $<
+
+install-python-2: install-libLTLIBRARIES install-python-ecostress install-pkgpythonswigLTLIBRARIES install-pkgpythonswigPYTHON
+	$(noop)
+
+install-python: all
+	$(MAKE) -j 1 install-python-2 
+
+# Only generate these files in maintainer mode, otherwise consider them
+# as input.
+
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@$(swigsrc)/%_wrap.Pcc : %.i %.cc %.h $(SWIG_TARGET)
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -MM -MF $(builddir)/$@.tmp -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	sed 's,\($*_wrap\)\.cc[ :]*,\1.cc $@ : ,g' < $@.tmp > $@
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	rm $@.tmp
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	echo "$(swigsrc)/$*_wrap.cc: $(<D)/$*.cc" >> $@
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	echo "$(swigsrc)/$*_wrap.cc: $(<D)/$*.h" >> $@
+
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@$(swigsrc)/%_wrap.Pcc : %.i %.h $(SWIG_TARGET)
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -MM -MF $(builddir)/$@.tmp -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	sed 's,\($*_wrap\)\.cc[ :]*,\1.cc $@ : ,g' < $@.tmp > $@
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	rm $@.tmp
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	echo "$(swigsrc)/$*_wrap.cc: $(<D)/$*.h" >> $@
+
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@$(swigsrc)/%_wrap.Pcc : %.i $(SWIG_TARGET)
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -MM -MF $(builddir)/$@.tmp -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	sed 's,\($*_wrap\)\.cc[ :]*,\1.cc $@ : ,g' < $@.tmp > $@
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	rm $@.tmp
+
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@$(srcdir)/$(swigsrc)/swig_wrap.cc: $(pythonswigsrc)/swig_wrap.tmpl $(pythonswigsrc)/create_swig_wrap.py Makefile $(PYTHON_TARGET)
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	export LD_LIBRARY_PATH="${PYTHON_LDPATH}${LD_LIBRARY_PATH}" && \
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@        $(PYTHON) $(srcdir)/$(pythonswigsrc)/create_swig_wrap.py $@ $(patsubst %_wrap.cc,%,$(notdir $(SWIG_SRC)))
+
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@$(srcdir)/$(swigsrc)/%_wrap.cc: %.i %.h %.cc $(DOXYGEN_TARGET) $(SWIG_TARGET)
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	mkdir -p $*_doc
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	OUTDIR=$*_doc INPUT="$(<D)/$*.h $(<D)/$*.cc" $(DOXYGEN) $(srcdir)/config/doxygen_single.cfg
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	export LD_LIBRARY_PATH="${PYTHON_LDPATH}${LD_LIBRARY_PATH}" && \
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@        $(PYTHON) $(srcdir)/config/doxy2swig.py $*_doc/xml/index.xml $*_doc.i
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	rm -r $*_doc
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	echo "%include \"$*.i\"" >> $*_doc.i
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $*_doc.i 
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	rm $*_doc.i
+
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@$(srcdir)/$(swigsrc)/%_wrap.cc: %.i %.h $(DOXYGEN_TARGET) $(SWIG_TARGET)
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	mkdir -p $*_doc
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	OUTDIR=$*_doc INPUT="$(<D)/$*.h" $(DOXYGEN) $(srcdir)/config/doxygen_single.cfg
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	export LD_LIBRARY_PATH="${PYTHON_LDPATH}${LD_LIBRARY_PATH}" && \
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@        $(PYTHON) $(srcdir)/config/doxy2swig.py $*_doc/xml/index.xml $*_doc.i
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	rm -r $*_doc
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	echo "%include \"$*.i\"" >> $*_doc.i
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $*_doc.i 
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	rm $*_doc.i
+
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@$(srcdir)/$(swigsrc)/%_wrap.cc: %.i $(SWIG_TARGET)
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
+
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@-include $(patsubst %.cc, %.Pcc, $(INCLUDE_SWIG_SRC))
 
 # Variables used in testing
 export abs_top_srcdir 

@@ -12,6 +12,7 @@ AS_HELP_STRING([--with-geocal=DIR], [give directory where geocal can be found (o
 AC_SUBST([geocaldir], ["$ac_geocal_dir"])
 PKG_CONFIG_PATH=$ac_geocal_dir/lib/pkgconfig:$PKG_CONFIG_PATH
 PKG_CHECK_MODULES([GEOCAL], [geocal])
+AC_SUBST([GEOCAL_SWIG_CFLAGS], ["-I$ac_geocal_dir/share/geocal/swig"])
 
 AC_ARG_WITH([test-data],
 AS_HELP_STRING([--with-test-data=DIR], [give directory where end to end test data can be found (optional, default is /project/test/ASTER/EndToEndTest/latest)]), [ ac_test_data_dir="$withval" ], [ ac_test_data_dir="/project/test/ASTER/EndToEndTest/latest" ])
