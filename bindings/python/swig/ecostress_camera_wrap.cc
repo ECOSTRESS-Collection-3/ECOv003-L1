@@ -5299,6 +5299,7 @@ namespace swig {
 }
 
 
+#include "geocal_time.h"
 #include "ecostress_camera.h"
 
 
@@ -7645,10 +7646,6 @@ SWIG_init(void) {
 #endif
   
   SWIG_InstallConstants(d,swig_const_table);
-  
-  
-  GeoCal::swig_type_map[GeoCal::type_index(typeid(Ecostress::EcostressCamera))] =
-  boost::shared_ptr<GeoCal::SwigTypeMapperBase>(new GeoCal::SwigTypeMapper< Ecostress::EcostressCamera >("boost::shared_ptr< Ecostress::EcostressCamera > *"));
   
 #if PY_VERSION_HEX >= 0x03000000
   return m;

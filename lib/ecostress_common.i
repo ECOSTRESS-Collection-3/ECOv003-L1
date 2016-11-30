@@ -20,6 +20,8 @@
 %import(module="geocal_swig.NAME") "NAME.i"
 %enddef
 
+// We may move thsi to the geocal_shared_ptr where we use
+// swig_to_python. But for now, just have this a normal shared_ptr
 %define %ecostress_shared_ptr(TYPE...)
-%geocal_shared_ptr(TYPE)
+%shared_ptr(TYPE)
 %enddef

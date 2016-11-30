@@ -1,6 +1,6 @@
 #ifndef ECOSTRESS_CAMERA_H
 #define ECOSTRESS_CAMERA_H
-#include "geocal/quaternion_camera.h"
+#include "quaternion_camera.h"
 
 namespace Ecostress {
 /****************************************************************//**

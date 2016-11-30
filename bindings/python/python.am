@@ -38,7 +38,7 @@ endif MAINTAINER_MODE
 # SWIG part
 # ================================================
 SWIG_FLAG += -O
-pkgpythonswigdir = $(prefix)/@pythondir@/ecostress_level1_swig
+pkgpythonswigdir = $(prefix)/@pythondir@/ecostress_swig
 pkgpythonswig_PYTHON = @pythonswigsrc@/__init__.py
 INCLUDE_SWIG_SRC = $(SWIG_SRC)
 # This is a duplicate of INCLUDE_SWIG_SRC right now, but in principle we could
@@ -52,10 +52,12 @@ pkgpythonswig_LTLIBRARIES = _swig_wrap.la
 _swig_wrap_la_CPPFLAGS = $(PYTHON_CPPFLAGS) $(PYTHON_NUMPY_CPPFLAGS) 
 _swig_wrap_la_CPPFLAGS+= $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS)
 _swig_wrap_la_CPPFLAGS+= $(AM_CPPFLAGS)
-_swig_wrap_la_CPPFLAGS+= -DSWIG_TYPE_TABLE=ecostress_level1
+# Need to share the geocal type table, so python knows how to convert our
+# types to geocal types (e.g., EcostressCamera to GeoCal::Camera)
+_swig_wrap_la_CPPFLAGS+= -DSWIG_TYPE_TABLE=geocal
 _swig_wrap_la_CXXFLAGS = $(AM_CXXFLAGS)
 _swig_wrap_la_LDFLAGS = -module -avoid-version
-_swig_wrap_la_LIBADD = libecostress_level1.la
+_swig_wrap_la_LIBADD = libecostress.la
 _swig_wrap_la_SOURCES = $(INCLUDE_SWIG_SRC)
 _swig_wrap_la_SOURCES+= @swigsrc@/swig_wrap.cc
 

@@ -22,10 +22,11 @@
 #define SWIG_INIT_TYPE void
 #define SWIG_INIT_MODULE init_extension_module2
 #endif
-using namespace Ecostress;
+// Think this will go away and be moved into python init.
+//using namespace GeoCal;
 // Map used between type_index and object to map this to python.
-extern std::map<type_index, boost::shared_ptr<SwigTypeMapperBase> > 
-  GeoCal::swig_type_map;
+//extern std::map<type_index, boost::shared_ptr<SwigTypeMapperBase> > 
+//  GeoCal::swig_type_map;
 
 extern "C" {{
 #if PY_MAJOR_VERSION > 2

@@ -215,7 +215,7 @@ _ecostress_level1_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(_ecostress_level1_la_CXXFLAGS) $(CXXFLAGS) \
 	$(_ecostress_level1_la_LDFLAGS) $(LDFLAGS) -o $@
-_swig_wrap_la_DEPENDENCIES = libecostress_level1.la
+_swig_wrap_la_DEPENDENCIES = libecostress.la
 am__objects_2 = @swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo
 am__objects_3 = $(am__objects_2)
 am__swig_wrap_la_OBJECTS = $(am__objects_3) \
@@ -816,7 +816,7 @@ _ecostress_level1_la_CXXFLAGS = $(AM_CXXFLAGS)
 _ecostress_level1_la_LDFLAGS = -module -avoid-version
 _ecostress_level1_la_SOURCES = $(CYTHON_SRC) \
 	@srccython@/cython_init.cc
-pkgpythonswigdir = $(prefix)/@pythondir@/ecostress_level1_swig
+pkgpythonswigdir = $(prefix)/@pythondir@/ecostress_swig
 pkgpythonswig_PYTHON = @pythonswigsrc@/__init__.py $(patsubst \
 	%_wrap.cc, %.py, $(INCLUDE_SWIG_SRC))
 INCLUDE_SWIG_SRC = $(SWIG_SRC)
@@ -825,12 +825,14 @@ INCLUDE_SWIG_SRC = $(SWIG_SRC)
 # included in EXTRA_DIST
 FULL_SWIG_SRC = $(SWIG_SRC)
 pkgpythonswig_LTLIBRARIES = _swig_wrap.la
+# Need to share the geocal type table, so python knows how to convert our
+# types to geocal types (e.g., EcostressCamera to GeoCal::Camera)
 _swig_wrap_la_CPPFLAGS = $(PYTHON_CPPFLAGS) $(PYTHON_NUMPY_CPPFLAGS) \
 	$(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) $(AM_CPPFLAGS) \
-	-DSWIG_TYPE_TABLE=ecostress_level1
+	-DSWIG_TYPE_TABLE=geocal
 _swig_wrap_la_CXXFLAGS = $(AM_CXXFLAGS)
 _swig_wrap_la_LDFLAGS = -module -avoid-version
-_swig_wrap_la_LIBADD = libecostress_level1.la
+_swig_wrap_la_LIBADD = libecostress.la
 _swig_wrap_la_SOURCES = $(INCLUDE_SWIG_SRC) @swigsrc@/swig_wrap.cc
 ecostressincdir = @includedir@/ecostress
 ecostressswigincdir = @prefix@/share/ecostress/swig

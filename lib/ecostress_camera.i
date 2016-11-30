@@ -4,6 +4,7 @@
 %include "ecostress_common.i"
 
 %{
+#include "geocal_time.h"
 #include "ecostress_camera.h"
 %}
 
