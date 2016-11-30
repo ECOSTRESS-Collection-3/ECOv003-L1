@@ -34,6 +34,11 @@ BOOST_AUTO_TEST_CASE(basic_test)
   GeoCal::SimpleDem dem;
   boost::shared_ptr<GeoCal::CartesianFixed> gp1 =
     od->surface_intersect(cam, GeoCal::FrameCoordinate(0,0), dem);
-  std::cerr << *gp1 << "\n";
+  boost::shared_ptr<GeoCal::CartesianFixed> gp2 =
+    od->surface_intersect(cam, GeoCal::FrameCoordinate(1,0), dem);
+  boost::shared_ptr<GeoCal::CartesianFixed> gp3 =
+    od->surface_intersect(cam, GeoCal::FrameCoordinate(0,1), dem);
+  std::cerr << distance(*gp1, *gp2) << "\n";
+  std::cerr << distance(*gp1, *gp3) << "\n";
 }
 BOOST_AUTO_TEST_SUITE_END()

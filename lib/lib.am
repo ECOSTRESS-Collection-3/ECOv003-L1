@@ -1,10 +1,13 @@
 # Set up for the library
 lib_LTLIBRARIES += libecostress.la
 ecostressincdir = @includedir@/ecostress
+ecostressswigincdir = @prefix@/share/ecostress/swig
 
 libecostress_la_SOURCES =
 ecostressinc_HEADERS =
-ecostress_test_all_SOURCES = 
+ecostressswiginc_HEADERS =
+ecostress_test_all_SOURCES =
+SWIG_SRC = 
 libecostress_la_CPPFLAGS = $(AM_CPPFLAGS) $(GEOCAL_CFLAGS)
 libecostress_la_LDFLAGS = $(GEOCAL_LIBS)
 
@@ -25,7 +28,8 @@ ecostressinc_HEADERS+= @srclib@/ecostress_camera.h
 libecostress_la_SOURCES+= @srclib@/ecostress_camera.cc
 
 # Files that contain SWIG wrapper information.
-#SWIG_SRC += @swigsrc@/ecostress_camera_wrap.cc
+SWIG_SRC += @swigsrc@/ecostress_camera_wrap.cc
+ecostressswiginc_HEADERS+= @srclib@/ecostress_camera.i
 
 # Test files
 ecostress_test_all_SOURCES+= @srclib@/ecostress_camera_test.cc
