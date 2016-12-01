@@ -14,7 +14,7 @@ EXTRA_DIST += $(CYTHON_SRC)
 ecostresspkgpython_LTLIBRARIES = _ecostress_level1.la
 
 _ecostress_level1_la_CPPFLAGS = $(PYTHON_CPPFLAGS) $(PYTHON_NUMPY_CPPFLAGS) 
-_ecostress_level1_la_CPPFLAGS+= $(AM_CPPFLAGS)
+_ecostress_level1_la_CPPFLAGS+= $(GEOCAL_CFLAGS) $(AM_CPPFLAGS)
 _ecostress_level1_la_CXXFLAGS = $(AM_CXXFLAGS)
 _ecostress_level1_la_LDFLAGS = -module -avoid-version
 _ecostress_level1_la_SOURCES = $(CYTHON_SRC)
@@ -25,8 +25,9 @@ _ecostress_level1_la_SOURCES+= @srccython@/cython_init.cc
 if MAINTAINER_MODE
 if HAVE_CYTHON
 
-$(srcdir)/$(srccython)/cython_init.cc: $(pythonsrccython)/cython_init.tmpl $(pythonsrccython)/create_cython_init.py Makefile
-	$(PYTHON) $(srcdir)/$(pythonsrccython)/create_cython_init.py $@ $(patsubst %.cc,%,$(notdir $(CYTHON_SRC)))
+$(srcdir)/$(srccython)/cython_init.cc: $(pythonsrccython)/cython_init.tmpl config/create_python_init.py Makefile
+	export LD_LIBRARY_PATH="${PYTHON_LDPATH}${LD_LIBRARY_PATH}" && \
+        $(PYTHON) $(srcdir)/config/create_python_init.py $< $@ cython ecostress $(patsubst %.cc,%,$(notdir $(CYTHON_SRC)))
 
 $(srcdir)/$(srccython)/%.cc: %.pyx
 	$(CYTHON) $(CYTHON_FLAGS) $(AM_CPPFLAGS) -o $@ $<
@@ -93,9 +94,9 @@ $(swigsrc)/%_wrap.Pcc : %.i $(SWIG_TARGET)
 	sed 's,\($*_wrap\)\.cc[ :]*,\1.cc $@ : ,g' < $@.tmp > $@
 	rm $@.tmp
 
-$(srcdir)/$(swigsrc)/swig_wrap.cc: $(pythonswigsrc)/swig_wrap.tmpl $(pythonswigsrc)/create_swig_wrap.py Makefile $(PYTHON_TARGET)
+$(srcdir)/$(swigsrc)/swig_wrap.cc: $(pythonswigsrc)/swig_wrap.tmpl config/create_python_init.py Makefile $(PYTHON_TARGET)
 	export LD_LIBRARY_PATH="${PYTHON_LDPATH}${LD_LIBRARY_PATH}" && \
-        $(PYTHON) $(srcdir)/$(pythonswigsrc)/create_swig_wrap.py $@ $(patsubst %_wrap.cc,%,$(notdir $(SWIG_SRC)))
+        $(PYTHON) $(srcdir)/config/create_python_init.py $< $@ swig ecostress $(patsubst %_wrap.cc,%,$(notdir $(SWIG_SRC)))
 
 $(srcdir)/$(swigsrc)/%_wrap.cc: %.i %.h %.cc $(DOXYGEN_TARGET) $(SWIG_TARGET)
 	mkdir -p $*_doc

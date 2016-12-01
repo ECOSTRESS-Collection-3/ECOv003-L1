@@ -1,91 +1,17 @@
-#include <Python.h>
-#include <iostream>
-
-// Python 2 and 3 have different name for their cython init functions
-#if PY_MAJOR_VERSION > 2
-#define CYTHON_INIT_FUNC(S) PyInit_ ## S
-#define CYTHON_INIT_TYPE PyObject *
-#define CYTHON_INIT_MODULE init_extension_module3
-#else
-#define CYTHON_INIT_FUNC(S) init_ ## S
-#define CYTHON_INIT_TYPE void
-#define CYTHON_INIT_MODULE init_extension_module2
-#endif
+#define PYTHON_MODULE_NAME _ecostress_level1
+#define DO_CYTHON 1
+#include "geocal/python_lib_init.h"
 
 extern "C" {
-#if PY_MAJOR_VERSION > 2
-  PyObject * PyInit__ecostress_level1(void);
-#else
-  void init_ecostress_level1(void);
-#endif
-  CYTHON_INIT_TYPE CYTHON_INIT_FUNC(cython_sample)(void);
-  CYTHON_INIT_TYPE CYTHON_INIT_FUNC(cython_sample2)(void);
+  INIT_TYPE INIT_FUNC(cython_sample)(void);
+  INIT_TYPE INIT_FUNC(cython_sample2)(void);
 }
 
-#if PY_MAJOR_VERSION > 2
-// Version for python 3
-static void init_extension_module3(PyObject* cython_list,
-				   const char *modulename,
-				  PyObject * (*initfunction)(void)) {
-  PyObject *module = initfunction();
-  PyObject *module_dic = PyImport_GetModuleDict();
-  PyDict_SetItem(module_dic, PyUnicode_FromString(modulename), module);
-  PyList_Append(cython_list, PyUnicode_FromString(modulename));
-}
-#else
-#error "We haven't bothered to implement python 2 version of this, since we are using python 3.5 or later"
-#endif
-
-
-#if PY_MAJOR_VERSION > 2
-static PyMethodDef ecostress_level1_methods[] = {
-    {NULL, NULL}
-};
-
-static struct PyModuleDef moduledef = {
-        PyModuleDef_HEAD_INIT,
-        "_ecostress_level1",
-        "Dummy module",
-        -1,
-        ecostress_level1_methods,
-        NULL,
-        NULL,
-        NULL,
-        NULL
-};
-
-#define INITERROR return NULL
-
-PyObject *
-PyInit__ecostress_level1(void)
-
-#else
-#define INITERROR return
-
-void
-init_ecostress_level1(void)
-#endif
+static void module_init(PyObject* module)
 {
-// We return a dummy module that isn't actually used for anything,
-// but as a side effect register all the other real cython module
-// through the init_extension stuff
-#if PY_MAJOR_VERSION >= 3
-    PyObject *module = PyModule_Create(&moduledef);
-#else
-    PyObject *module = Py_InitModule("_ecostress_level1", ecostress_level1_methods);
-#endif
-
-    if (module == NULL) {
-        std::cerr << "Initialization failed\n";
-        INITERROR;
-    }
     PyObject *cython_list = PyList_New(0);
-  CYTHON_INIT_MODULE(cython_list, "ecostress.cython_sample", CYTHON_INIT_FUNC(cython_sample));
-  CYTHON_INIT_MODULE(cython_list, "ecostress.cython_sample2", CYTHON_INIT_FUNC(cython_sample2));
-
+  INIT_MODULE(cython_list, "ecostress.cython_sample", INIT_FUNC(cython_sample));
+  INIT_MODULE(cython_list, "ecostress.cython_sample2", INIT_FUNC(cython_sample2));
     PyObject *parent_module = PyImport_AddModule((char *)"ecostress");
     PyObject_SetAttrString(parent_module, "_cython_module_list", cython_list);
-#if PY_MAJOR_VERSION >= 3
-    return module;
-#endif
-};
+}
