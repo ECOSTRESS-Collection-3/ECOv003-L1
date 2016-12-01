@@ -65,11 +65,11 @@ _swig_wrap_la_SOURCES+= @swigsrc@/swig_wrap.cc
 EXTRA_DIST+= $(FULL_SWIG_SRC)
 EXTRA_DIST+= $(srcdir)/$(swigsrc)/*_wrap.h
 
-install-python-2: install-libLTLIBRARIES install-python-ecostress install-pkgpythonswigLTLIBRARIES install-pkgpythonswigPYTHON
+install-swig-python-2: install-libLTLIBRARIES install-pkgpythonswigLTLIBRARIES install-pkgpythonswigPYTHON
 	$(noop)
 
-install-python: all
-	$(MAKE) -j 1 install-python-2 
+install-swig-python: all
+	$(MAKE) -j 1 install-swig-python-2 
 
 # Only generate these files in maintainer mode, otherwise consider them
 # as input.
