@@ -874,6 +874,7 @@ PKG_CONFIG_PATH
 PKG_CONFIG_LIBDIR
 GEOCAL_CFLAGS
 GEOCAL_LIBS
+GEOCAL_SWIG_CFLAGS
 PYTHON
 PYTHON_VERSION
 SPHINXBUILD
@@ -1569,6 +1570,8 @@ Some influential environment variables:
   GEOCAL_CFLAGS
               C compiler flags for GEOCAL, overriding pkg-config
   GEOCAL_LIBS linker flags for GEOCAL, overriding pkg-config
+  GEOCAL_SWIG_CFLAGS
+              value of swig_cflags for geocal, overriding pkg-config
   PYTHON      the Python interpreter
   PYTHON_VERSION
               The installed Python version to use, for example '2.3'. This
@@ -16954,6 +16957,7 @@ fi
 
 
 
+
 if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
 	if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}pkg-config", so it can be a program name with args.
@@ -17126,6 +17130,7 @@ if test -n "$GEOCAL_CFLAGS"; then
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
   pkg_cv_GEOCAL_CFLAGS=`$PKG_CONFIG --cflags "geocal" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
 fi
@@ -17142,6 +17147,7 @@ if test -n "$GEOCAL_LIBS"; then
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
   pkg_cv_GEOCAL_LIBS=`$PKG_CONFIG --libs "geocal" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
 fi
@@ -17161,9 +17167,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        GEOCAL_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "geocal" 2>&1`
+	        GEOCAL_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "geocal" 2>&1`
         else
-	        GEOCAL_PKG_ERRORS=`$PKG_CONFIG --print-errors "geocal" 2>&1`
+	        GEOCAL_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "geocal" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$GEOCAL_PKG_ERRORS" >&5
@@ -17200,8 +17206,29 @@ else
 $as_echo "yes" >&6; }
 
 fi
-GEOCAL_SWIG_CFLAGS="-I$ac_geocal_dir/share/geocal/swig"
 
+if test -n "$GEOCAL_SWIG_CFLAGS"; then
+    pkg_cv_GEOCAL_SWIG_CFLAGS="$GEOCAL_SWIG_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"geocal\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "geocal") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GEOCAL_SWIG_CFLAGS=`$PKG_CONFIG --variable="swig_cflags" "geocal" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+GEOCAL_SWIG_CFLAGS=$pkg_cv_GEOCAL_SWIG_CFLAGS
+
+if test "x$GEOCAL_SWIG_CFLAGS" = x""; then :
+
+fi
 
 
 # Check whether --with-test-data was given.
