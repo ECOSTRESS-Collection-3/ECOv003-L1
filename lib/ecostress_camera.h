@@ -15,7 +15,12 @@ public:
   EcostressCamera();
   virtual ~EcostressCamera() {}
   virtual void print(std::ostream& Os) const;
+private:
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive & ar, const unsigned int version);
 };
 }
 
+BOOST_CLASS_EXPORT_KEY(Ecostress::EcostressCamera);
 #endif

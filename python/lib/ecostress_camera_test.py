@@ -10,7 +10,7 @@ def test_basic():
     cam = EcostressCamera()
     print(cam)
 
-def test_camera_use_test(igc):
+def test_camera_use(igc):
     '''Basic test of have camera used by geocal.'''
     ic = ImageCoordinate(0,0)
     t, fc = igc.ipi.time_table.time(ic)
@@ -25,3 +25,11 @@ def test_camera_use_test(igc):
     gp3 = od.surface_intersect(cam, fc, dem)
     print(distance(gp1, gp2))
     print(distance(gp1, gp3))    
+
+def test_serialize(isolated_dir):
+    cam = EcostressCamera()
+    write_shelve("cam.xml", cam)
+    cam2 = read_shelve("cam.xml")
+    print(cam2)
+    
+    

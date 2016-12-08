@@ -32,11 +32,16 @@ SWIG_SRC += @swigsrc@/ecostress_camera_wrap.cc
 ecostressswiginc_HEADERS+= @srclib@/ecostress_camera.i
 
 # Test files
+EXTRA_DIST+= @srclib@/unit_test_support.h
+EXTRA_DIST+= @srclib@/global_fixture.h
+ecostress_test_all_SOURCES+= @srclib@/global_fixture.cc
+ecostress_test_all_SOURCES+= @srclib@/global_fixture_default.cc
 ecostress_test_all_SOURCES+= @srclib@/ecostress_camera_test.cc
 
 # Variables used in testing
 export abs_top_srcdir 
-export abs_top_builddir 
+export abs_top_builddir
+export testdatadir
 export run_test = *
 
 AM_CPPFLAGS+= -I$(srcdir)/@srclib@

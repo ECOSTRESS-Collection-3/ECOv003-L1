@@ -213,6 +213,10 @@ class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
         configuration file in the future. 
         """
         _ecostress_camera.EcostressCamera_swiginit(self, _ecostress_camera.new_EcostressCamera())
+
+    def __reduce__(self):
+      return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
+
     __swig_destroy__ = _ecostress_camera.delete_EcostressCamera
 EcostressCamera_swigregister = _ecostress_camera.EcostressCamera_swigregister
 EcostressCamera_swigregister(EcostressCamera)

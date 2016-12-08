@@ -1,0 +1,39 @@
+#include "global_fixture.h"
+#include <boost/test/unit_test.hpp>
+#include <cstdlib>
+
+using namespace Ecostress;
+//-----------------------------------------------------------------------
+/// Directory where test data is. This already includes the trailing
+/// slash, so you can just do test_data_data() + "foo.txt" in your 
+/// unit tests.
+//-----------------------------------------------------------------------
+
+std::string GlobalFixture::test_data_dir() const
+{
+  char* testdatadir = getenv("testdatadir");
+  // This should get set in set_default_value, but just in case
+  // something odd happens print an error message.
+  if(!testdatadir)
+    BOOST_FAIL("To run this test, you must set the 'testdatadir' environment\n"
+               "variable to the top of the source tree. This is automatically\n"
+               "done if you are running 'make check', but you need to\n"
+
+               "running in a debugger");
+  return std::string(testdatadir) + "/";
+}
+
+//-----------------------------------------------------------------------
+/// Default locations for data, if environment variables not
+/// set. These are normally set by the Makefile before running, but it
+/// is useful to have default values set if we are running in debug
+/// mode or something like that.
+//-----------------------------------------------------------------------
+
+void GlobalFixture::set_default_value() 
+{
+  // Note that we set the "overwrite" flag to 0 so that we do *not*
+  // overwrite existing variable. This means we don't need to bother
+  // checking if this is set before we assign a value to it.
+  setenv("testdatadir", "@testdatadir@", 0);
+}

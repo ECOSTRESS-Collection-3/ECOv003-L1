@@ -4,6 +4,7 @@ AC_INIT(ecostress-level1, 0.20)
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([config/m4])
 AC_CONFIG_FILES([script/setup_ecostress.csh script/setup_ecostress.sh])
+AC_CONFIG_FILES([lib/global_fixture_default.cc])
 
 ECOSTRESS_COMMON
 

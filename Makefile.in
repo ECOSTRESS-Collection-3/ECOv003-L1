@@ -160,7 +160,7 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES = script/setup_ecostress.csh \
-	script/setup_ecostress.sh
+	script/setup_ecostress.sh lib/global_fixture_default.cc
 CONFIG_CLEAN_VPATH_FILES =
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
@@ -236,6 +236,8 @@ libecostress_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 PROGRAMS = $(bin_PROGRAMS)
 am_ecostress_test_all_OBJECTS =  \
 	@srclib@/ecostress_test_all-test_all.$(OBJEXT) \
+	@srclib@/ecostress_test_all-global_fixture.$(OBJEXT) \
+	@srclib@/ecostress_test_all-global_fixture_default.$(OBJEXT) \
 	@srclib@/ecostress_test_all-ecostress_camera_test.$(OBJEXT)
 ecostress_test_all_OBJECTS = $(am_ecostress_test_all_OBJECTS)
 ecostress_test_all_DEPENDENCIES = libecostress.la
@@ -506,6 +508,7 @@ am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(top_srcdir)/config/install-sh $(top_srcdir)/config/ltmain.sh \
 	$(top_srcdir)/config/missing $(top_srcdir)/config/py-compile \
 	$(top_srcdir)/config/test-driver \
+	$(top_srcdir)/lib/global_fixture_default.cc.in \
 	$(top_srcdir)/script/setup_ecostress.csh.in \
 	$(top_srcdir)/script/setup_ecostress.sh.in AUTHORS COPYING \
 	ChangeLog INSTALL NEWS README config/compile \
@@ -726,10 +729,13 @@ dist_bin_SCRIPTS = @l1a_raw_src@/l1a_raw_process \
 AM_LDFLAGS = 
 BUILT_SOURCES = complain_if_afids $(am__append_1) $(am__append_2)
 include_HEADERS = 
+
+# Test files
 EXTRA_DIST = @srcpythonlib@/cython_sample.pyx \
 	@srcpythonlib@/cython_sample2.pyx $(CYTHON_SRC) $(patsubst \
 	%_wrap.cc, %.py, $(FULL_SWIG_SRC)) $(FULL_SWIG_SRC) \
-	$(srcdir)/$(swigsrc)/*_wrap.h @srclib@/test_all.sh
+	$(srcdir)/$(swigsrc)/*_wrap.h @srclib@/test_all.sh \
+	@srclib@/unit_test_support.h @srclib@/global_fixture.h
 CYTHON_SRC = @srccython@/cython_sample.cc \
 	@srccython@/cython_sample2.cc
 pkgconfig_DATA = 
@@ -842,9 +848,8 @@ libecostress_la_SOURCES = @srclib@/ecostress_camera.cc
 # List of source files
 ecostressinc_HEADERS = @srclib@/ecostress_camera.h
 ecostressswiginc_HEADERS = @srclib@/ecostress_camera.i
-
-# Test files
 ecostress_test_all_SOURCES = @srclib@/test_all.cc \
+	@srclib@/global_fixture.cc @srclib@/global_fixture_default.cc \
 	@srclib@/ecostress_camera_test.cc
 
 # Files that contain SWIG wrapper information.
@@ -896,6 +901,8 @@ $(am__aclocal_m4_deps):
 script/setup_ecostress.csh: $(top_builddir)/config.status $(top_srcdir)/script/setup_ecostress.csh.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 script/setup_ecostress.sh: $(top_builddir)/config.status $(top_srcdir)/script/setup_ecostress.sh.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+lib/global_fixture_default.cc: $(top_builddir)/config.status $(top_srcdir)/lib/global_fixture_default.cc.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 
 install-ecostresspkgpythonLTLIBRARIES: $(ecostresspkgpython_LTLIBRARIES)
@@ -1115,6 +1122,10 @@ clean-checkPROGRAMS:
 	rm -f $$list
 @srclib@/ecostress_test_all-test_all.$(OBJEXT):  \
 	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
+@srclib@/ecostress_test_all-global_fixture.$(OBJEXT):  \
+	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
+@srclib@/ecostress_test_all-global_fixture_default.$(OBJEXT):  \
+	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
 @srclib@/ecostress_test_all-ecostress_camera_test.$(OBJEXT):  \
 	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
 
@@ -1208,6 +1219,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@@srccython@/$(DEPDIR)/_ecostress_level1_la-cython_sample.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srccython@/$(DEPDIR)/_ecostress_level1_la-cython_sample2.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-global_fixture.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-global_fixture_default.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-test_all.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_camera.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_camera_wrap.Plo@am__quote@
@@ -1292,6 +1305,34 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/test_all.cc' object='@srclib@/ecostress_test_all-test_all.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-test_all.obj `if test -f '@srclib@/test_all.cc'; then $(CYGPATH_W) '@srclib@/test_all.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/test_all.cc'; fi`
+
+@srclib@/ecostress_test_all-global_fixture.o: @srclib@/global_fixture.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-global_fixture.o -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-global_fixture.Tpo -c -o @srclib@/ecostress_test_all-global_fixture.o `test -f '@srclib@/global_fixture.cc' || echo '$(srcdir)/'`@srclib@/global_fixture.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/ecostress_test_all-global_fixture.Tpo @srclib@/$(DEPDIR)/ecostress_test_all-global_fixture.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/global_fixture.cc' object='@srclib@/ecostress_test_all-global_fixture.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-global_fixture.o `test -f '@srclib@/global_fixture.cc' || echo '$(srcdir)/'`@srclib@/global_fixture.cc
+
+@srclib@/ecostress_test_all-global_fixture.obj: @srclib@/global_fixture.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-global_fixture.obj -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-global_fixture.Tpo -c -o @srclib@/ecostress_test_all-global_fixture.obj `if test -f '@srclib@/global_fixture.cc'; then $(CYGPATH_W) '@srclib@/global_fixture.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/global_fixture.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/ecostress_test_all-global_fixture.Tpo @srclib@/$(DEPDIR)/ecostress_test_all-global_fixture.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/global_fixture.cc' object='@srclib@/ecostress_test_all-global_fixture.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-global_fixture.obj `if test -f '@srclib@/global_fixture.cc'; then $(CYGPATH_W) '@srclib@/global_fixture.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/global_fixture.cc'; fi`
+
+@srclib@/ecostress_test_all-global_fixture_default.o: @srclib@/global_fixture_default.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-global_fixture_default.o -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-global_fixture_default.Tpo -c -o @srclib@/ecostress_test_all-global_fixture_default.o `test -f '@srclib@/global_fixture_default.cc' || echo '$(srcdir)/'`@srclib@/global_fixture_default.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/ecostress_test_all-global_fixture_default.Tpo @srclib@/$(DEPDIR)/ecostress_test_all-global_fixture_default.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/global_fixture_default.cc' object='@srclib@/ecostress_test_all-global_fixture_default.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-global_fixture_default.o `test -f '@srclib@/global_fixture_default.cc' || echo '$(srcdir)/'`@srclib@/global_fixture_default.cc
+
+@srclib@/ecostress_test_all-global_fixture_default.obj: @srclib@/global_fixture_default.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-global_fixture_default.obj -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-global_fixture_default.Tpo -c -o @srclib@/ecostress_test_all-global_fixture_default.obj `if test -f '@srclib@/global_fixture_default.cc'; then $(CYGPATH_W) '@srclib@/global_fixture_default.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/global_fixture_default.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/ecostress_test_all-global_fixture_default.Tpo @srclib@/$(DEPDIR)/ecostress_test_all-global_fixture_default.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/global_fixture_default.cc' object='@srclib@/ecostress_test_all-global_fixture_default.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-global_fixture_default.obj `if test -f '@srclib@/global_fixture_default.cc'; then $(CYGPATH_W) '@srclib@/global_fixture_default.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/global_fixture_default.cc'; fi`
 
 @srclib@/ecostress_test_all-ecostress_camera_test.o: @srclib@/ecostress_camera_test.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-ecostress_camera_test.o -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_test.Tpo -c -o @srclib@/ecostress_test_all-ecostress_camera_test.o `test -f '@srclib@/ecostress_camera_test.cc' || echo '$(srcdir)/'`@srclib@/ecostress_camera_test.cc
@@ -2258,7 +2299,8 @@ install-swig-python: all
 
 # Variables used in testing
 export abs_top_srcdir 
-export abs_top_builddir 
+export abs_top_builddir
+export testdatadir
 export run_test = *
 
 #=================================================================

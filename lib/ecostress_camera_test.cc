@@ -1,21 +1,7 @@
-// #include "geocal/unit_test_support.h"
-#include <boost/test/unit_test.hpp>
-#include <boost/test/floating_point_comparison.hpp>
+#include "unit_test_support.h"
 #include "geocal/hdf_orbit.h"
 #include "geocal/simple_dem.h"
 #include "ecostress_camera.h"
-
-// We'll move this, but for now place here
-namespace Ecostress {
-/****************************************************************//**
-  This is a global fixture that is available to all unit tests.
-*******************************************************************/
-class GlobalFixture {
-public:
-  GlobalFixture() {}
-  virtual ~GlobalFixture() { /* Nothing to do now */ }
-};
-}
 
 using namespace Ecostress;
 
@@ -25,7 +11,8 @@ BOOST_AUTO_TEST_CASE(basic_test)
 {
   EcostressCamera cam;
   // We'll need to create fixture with this stuff
-  std::string orb_fname = "/data/smyth/ecostress-test-data/latest/L1A_RAW_ATT_80005_20150124T204251_0100_01.h5.expected";
+  std::string orb_fname = test_data_dir() +
+    "L1A_RAW_ATT_80005_20150124T204251_0100_01.h5.expected";
   GeoCal::HdfOrbit<GeoCal::Eci, GeoCal::TimeJ2000Creator> orb
     (orb_fname, "", "Ephemeris/time_j2000", "Ephemeris/eci_position",
      "Ephemeris/eci_velocity", "Attitude/time_j2000", "Attitude/quaternion");
@@ -41,4 +28,16 @@ BOOST_AUTO_TEST_CASE(basic_test)
   std::cerr << distance(*gp1, *gp2) << "\n";
   std::cerr << distance(*gp1, *gp3) << "\n";
 }
+
+BOOST_AUTO_TEST_CASE(serialization)
+{
+  boost::shared_ptr<GeoCal::Camera> cam(new EcostressCamera());
+  std::string d = GeoCal::serialize_write_string(cam);
+  if(false)
+    std::cerr << d;
+  boost::shared_ptr<GeoCal::Camera> camr =
+    GeoCal::serialize_read_string<GeoCal::Camera>(d);
+  BOOST_CHECK_EQUAL(cam->number_band(), camr->number_band());
+}
+
 BOOST_AUTO_TEST_SUITE_END()

@@ -1,7 +1,16 @@
 #include "ecostress_camera.h"
-//#include "geocal/geocal_serialize_support.h"
+#include "geocal/geocal_serialize_support.h"
 
 using namespace Ecostress;
+
+template<class Archive>
+void EcostressCamera::serialize(Archive & ar, const unsigned int version)
+{
+  //  ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(GeoCal::QuaternionCamera);
+  ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(QuaternionCamera);
+}
+
+BOOST_CLASS_EXPORT_IMPLEMENT(Ecostress::EcostressCamera);
 
 //-----------------------------------------------------------------------
 /// Constructor. Right now we have everything hardcoded, we'll change

@@ -2430,6 +2430,8 @@ ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
 ac_config_files="$ac_config_files script/setup_ecostress.csh script/setup_ecostress.sh"
 
+ac_config_files="$ac_config_files lib/global_fixture_default.cc"
+
 
 # Expand $ac_aux_dir to an absolute path.
 am_aux_dir=`cd "$ac_aux_dir" && pwd`
@@ -20423,6 +20425,7 @@ do
   case $ac_config_target in
     "script/setup_ecostress.csh") CONFIG_FILES="$CONFIG_FILES script/setup_ecostress.csh" ;;
     "script/setup_ecostress.sh") CONFIG_FILES="$CONFIG_FILES script/setup_ecostress.sh" ;;
+    "lib/global_fixture_default.cc") CONFIG_FILES="$CONFIG_FILES lib/global_fixture_default.cc" ;;
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;

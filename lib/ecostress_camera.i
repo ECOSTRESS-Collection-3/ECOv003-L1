@@ -15,8 +15,7 @@ namespace Ecostress {
 class EcostressCamera : public GeoCal::QuaternionCamera {
 public:
   EcostressCamera();
-  // Not ready for this yet
-  //  %pickle_serialization();
+  %pickle_serialization();
 };
 }
 
