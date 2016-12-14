@@ -3,6 +3,8 @@
 
 import os
 import glob
+from geocal import *
+from ecostress_swig import *
 
 # Load cython stuff
 import ecostress._ecostress_level1

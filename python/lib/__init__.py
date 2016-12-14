@@ -13,6 +13,7 @@ import os
 import re
 import glob
 from geocal import *
+from ecostress_swig import *
 
 for i in glob.glob(os.path.dirname(__file__) + "/*.py"):
     mname = os.path.basename(i).split('.')[0]

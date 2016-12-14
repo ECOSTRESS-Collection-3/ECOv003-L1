@@ -25,27 +25,24 @@ The setup of AFIDS is as follows:
 
 We install in a directory with the date (so we can have multiple versions).
 
+Before building, make sure to remove the old afids_latest, so we don't think
+we already have thirdparty stuff available.
+
     cd ~
     mkdir -p AfidsBuild/build_afids_install
     cd AfidsBuild/build_afids_install
-    /home/smyth/Afids/configure --prefix=/pkg/afids/afids_20160701 \
-        --with-blitz=build --with-gsl=build --with-hdf5=build \
-	--with-hdf4=build --with-gnuplot=build --with-fftw=build \
-	--with-geotiff=build --with-gdal=build --with-geos=build \
-	--with-ogdi=build --with-openjpeg=build --with-hdfeos=build \
-        --with-hdfeos5=build -with-afids-xvd=build \
-        --with-python=build --with-tcl=build \
-	--with-afids-test-data=/home/smyth/AfidsData \
-	--with-srtm-l2=/project/ancillary/SRTM/srtm_v3_dem_L2 \
-	--without-afids-python
+    /home/smyth/Afids/configure --prefix=/pkg/afids/afids_20161207 \
+       THIRDPARTY=build_needed --with-afids-python=no --with-python=build \
+       --with-afids-test-data=/home/smyth/AfidsData \
+       --with-srtm-l2=/project/ancillary/SRTM/srtm_v3_dem_L2 --with-tcl=build
     make -j 12 all && make install && make autotools_install
-    scp pistol:/opt/afids_support/share/aclocal/pkg.m4 /pkg/afids/afids_latest/share/aclocal
+    make -j 12 check
 
-We depend on pkg.m4 which isn't installed since we aren't building pkg,
-so we just manually copy that from pistol. Nothing special about the pistol
-version except it matches the autotools version we use in the Cartlab (which
-is slightly older than the default one on the eco-scf system).
+Update the afids_latest link to point to the new version
 
+    rm /pkg/afids/afids_latest
+    ln -s ./afids_20161207 /pkg/afids/afids_latest
+    
 Python 2 Setup
 ------------
 

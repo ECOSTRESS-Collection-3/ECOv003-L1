@@ -25,8 +25,41 @@ BOOST_AUTO_TEST_CASE(basic_test)
     od->surface_intersect(cam, GeoCal::FrameCoordinate(1,0), dem);
   boost::shared_ptr<GeoCal::CartesianFixed> gp3 =
     od->surface_intersect(cam, GeoCal::FrameCoordinate(0,1), dem);
-  std::cerr << distance(*gp1, *gp2) << "\n";
-  std::cerr << distance(*gp1, *gp3) << "\n";
+  BOOST_CHECK_CLOSE(distance(*gp1, *gp2), 38.89, 1e-2);
+  BOOST_CHECK_CLOSE(distance(*gp1, *gp3), 38.89, 1e-2);
+}
+
+BOOST_AUTO_TEST_CASE(compare_spreadsheet)
+{
+  /// \TODO We are assuming center of pixel. Is that correct?
+  // We get our current camera model from
+  // https://bravo-lib.jpl.nasa.gov/docushare/dsweb/Get/Document-1882647/FPA%20distortion20140522.xlsx.
+  // To test things, directly compare what we calculate with what
+  // values we have from the spreadsheet.
+  //
+  // We have:
+  //   Pixel line 0 has X of 5.12 mm, 256 is 5.12 mm (Note 256 is
+  //   actually one past the max pixel)
+  // For y, we have:
+  //     Y values  pixel    Band  Index (1 based)
+  //     3.20mm  -80 pixel  1.62  6  1.4  2
+  //     1.92mm  -48        12.05 1  0.5  3
+  //     0.64mm  -16        8.28  5  0.1  4
+  //    -0.64mm   16        8.64  4  0.1  5
+  //    -1.92mm   48        11.35 2  0.6  6
+  //    -3.20mm   80        9.07  3  1.6  7
+  EcostressCamera cam;
+  blitz::Array<double, 1> yp_expect(6);
+  yp_expect = 1.92, -1.92, -3.20, -0.64, 0.64, 3.20;
+  for(int b = 0; b < yp_expect.rows(); ++b) {
+    double xp, yp;
+    cam.fc_to_focal_plane(GeoCal::FrameCoordinate(0,0), b, xp, yp);
+    BOOST_CHECK_CLOSE(xp, 5.12, 1e-4);
+    BOOST_CHECK_CLOSE(yp, yp_expect(b), 1e-4);
+    cam.fc_to_focal_plane(GeoCal::FrameCoordinate(256,0), b, xp, yp);
+    BOOST_CHECK_CLOSE(xp, -5.12, 1e-4);
+    BOOST_CHECK_CLOSE(yp, yp_expect(b), 1e-4);
+  }
 }
 
 BOOST_AUTO_TEST_CASE(serialization)
