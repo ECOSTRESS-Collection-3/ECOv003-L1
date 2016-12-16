@@ -26,10 +26,16 @@ EXTRA_DIST+= @srclib@/test_all.sh
 # List of source files
 ecostressinc_HEADERS+= @srclib@/ecostress_camera.h
 libecostress_la_SOURCES+= @srclib@/ecostress_camera.cc
+ecostressinc_HEADERS+= @srclib@/ecostress_paraxial_transform.h
+libecostress_la_SOURCES+= @srclib@/ecostress_paraxial_transform.cc
 
 # Files that contain SWIG wrapper information.
+SWIG_SRC += @swigsrc@/ecostress_swig_array_wrap.cc
+ecostressswiginc_HEADERS+= @srclib@/ecostress_swig_array.i
 SWIG_SRC += @swigsrc@/ecostress_camera_wrap.cc
 ecostressswiginc_HEADERS+= @srclib@/ecostress_camera.i
+SWIG_SRC += @swigsrc@/ecostress_paraxial_transform_wrap.cc
+ecostressswiginc_HEADERS+= @srclib@/ecostress_paraxial_transform.i
 
 # Test files
 EXTRA_DIST+= @srclib@/unit_test_support.h
@@ -37,6 +43,7 @@ EXTRA_DIST+= @srclib@/global_fixture.h
 ecostress_test_all_SOURCES+= @srclib@/global_fixture.cc
 ecostress_test_all_SOURCES+= @srclib@/global_fixture_default.cc
 ecostress_test_all_SOURCES+= @srclib@/ecostress_camera_test.cc
+ecostress_test_all_SOURCES+= @srclib@/ecostress_paraxial_transform_test.cc
 
 # Variables used in testing
 export abs_top_srcdir 

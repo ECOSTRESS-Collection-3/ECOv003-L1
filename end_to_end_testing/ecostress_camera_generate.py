@@ -1,0 +1,51 @@
+# This is a short python script that ingests the distortion data. This is really
+# just a placeholder to give something kind of right, we'll replace this with
+# a real camera model from bill Johnson
+
+import pandas as pd
+import numpy as np
+from multipolyfit import multipolyfit
+from ecostress import *
+
+df = pd.read_excel("FPA distortion20140522.xlsx", "Data", header = 0,
+                   skiprows = [1,])
+real = np.empty((df['Predicted X'].shape[0], 2))
+pred = np.empty((df['Predicted X'].shape[0], 2))
+pred[:,0] = df['Predicted X']
+pred[:,1] = df['Predicted Y']
+real[:,0] = df['Real X']
+real[:,1] = df['Real Y']
+
+# Determine the largest error in using a 3rd order polynomial
+pixel_size = 0.04 # In mm
+deg = 3
+mo = multipolyfit(real, pred[:,0], deg, model_out=True)
+print("Real to predict x max error (pixel) ", 
+    abs(np.array([(mo(*real[i,:]) - pred[i,0]) / pixel_size for i in range(real.shape[0])])).max())
+mo = multipolyfit(real, pred[:,1], deg, model_out=True)
+print("Real to predict y max error (pixel) ", 
+    abs(np.array([(mo(*real[i,:]) - pred[i,1]) / pixel_size for i in range(real.shape[0])])).max())
+
+mo = multipolyfit(pred, real[:,0], deg, model_out=True)
+print("Predict to real x max error (pixel) ", 
+    abs(np.array([(mo(*pred[i,:]) - real[i,0]) / pixel_size for i in range(real.shape[0])])).max())
+mo = multipolyfit(pred, real[:,1], deg, model_out=True)
+print("Predict to real y max error (pixel) ", 
+    abs(np.array([(mo(*pred[i,:]) - real[i,1]) / pixel_size for i in range(real.shape[0])])).max())
+
+# Print out powers so we know how to interpret the polynomial coefficients. 
+t, powers = multipolyfit(pred, real[:,1], deg, powers_out=True)
+print(powers)
+
+# Create a EcostressParaxialTransform that fits this data.
+tran = EcostressParaxialTransform()
+tran.real_to_paraxial[0,:] = multipolyfit(real, pred[:,0], deg)
+tran.real_to_paraxial[1,:] = multipolyfit(real, pred[:,1], deg)
+tran.paraxial_to_real[0,:] = multipolyfit(pred, real[:,0], deg)
+tran.paraxial_to_real[1,:] = multipolyfit(pred, real[:,1], deg)
+write_shelve("cam_paraxial.xml", tran)
+
+
+
+
+

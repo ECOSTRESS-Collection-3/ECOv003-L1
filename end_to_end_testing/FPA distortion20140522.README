@@ -1,0 +1,5 @@
+This comes from https://bravo-lib.jpl.nasa.gov/docushare/dsweb/Get/Document-1882647/FPA%20distortion20140522.xlsx
+
+Note that this is just a sample distortion, which we use to generate a
+reasonable camera model. This will get replaced with a real model from Bill
+Johnson.

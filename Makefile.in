@@ -216,7 +216,9 @@ _ecostress_level1_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(_ecostress_level1_la_CXXFLAGS) $(CXXFLAGS) \
 	$(_ecostress_level1_la_LDFLAGS) $(LDFLAGS) -o $@
 _swig_wrap_la_DEPENDENCIES = libecostress.la
-am__objects_2 = @swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo
+am__objects_2 = @swigsrc@/_swig_wrap_la-ecostress_swig_array_wrap.lo \
+	@swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo \
+	@swigsrc@/_swig_wrap_la-ecostress_paraxial_transform_wrap.lo
 am__objects_3 = $(am__objects_2)
 am__swig_wrap_la_OBJECTS = $(am__objects_3) \
 	@swigsrc@/_swig_wrap_la-swig_wrap.lo
@@ -227,7 +229,8 @@ _swig_wrap_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(LDFLAGS) -o $@
 libecostress_la_LIBADD =
 am_libecostress_la_OBJECTS =  \
-	@srclib@/libecostress_la-ecostress_camera.lo
+	@srclib@/libecostress_la-ecostress_camera.lo \
+	@srclib@/libecostress_la-ecostress_paraxial_transform.lo
 libecostress_la_OBJECTS = $(am_libecostress_la_OBJECTS)
 libecostress_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
@@ -238,7 +241,8 @@ am_ecostress_test_all_OBJECTS =  \
 	@srclib@/ecostress_test_all-test_all.$(OBJEXT) \
 	@srclib@/ecostress_test_all-global_fixture.$(OBJEXT) \
 	@srclib@/ecostress_test_all-global_fixture_default.$(OBJEXT) \
-	@srclib@/ecostress_test_all-ecostress_camera_test.$(OBJEXT)
+	@srclib@/ecostress_test_all-ecostress_camera_test.$(OBJEXT) \
+	@srclib@/ecostress_test_all-ecostress_paraxial_transform_test.$(OBJEXT)
 ecostress_test_all_OBJECTS = $(am_ecostress_test_all_OBJECTS)
 ecostress_test_all_DEPENDENCIES = libecostress.la
 ecostress_test_all_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
@@ -842,18 +846,25 @@ _swig_wrap_la_LIBADD = libecostress.la
 _swig_wrap_la_SOURCES = $(INCLUDE_SWIG_SRC) @swigsrc@/swig_wrap.cc
 ecostressincdir = @includedir@/ecostress
 ecostressswigincdir = @prefix@/share/ecostress/swig
-libecostress_la_SOURCES = @srclib@/ecostress_camera.cc
+libecostress_la_SOURCES = @srclib@/ecostress_camera.cc \
+	@srclib@/ecostress_paraxial_transform.cc
 
 #=================================================================
 # List of source files
-ecostressinc_HEADERS = @srclib@/ecostress_camera.h
-ecostressswiginc_HEADERS = @srclib@/ecostress_camera.i
+ecostressinc_HEADERS = @srclib@/ecostress_camera.h \
+	@srclib@/ecostress_paraxial_transform.h
+ecostressswiginc_HEADERS = @srclib@/ecostress_swig_array.i \
+	@srclib@/ecostress_camera.i \
+	@srclib@/ecostress_paraxial_transform.i
 ecostress_test_all_SOURCES = @srclib@/test_all.cc \
 	@srclib@/global_fixture.cc @srclib@/global_fixture_default.cc \
-	@srclib@/ecostress_camera_test.cc
+	@srclib@/ecostress_camera_test.cc \
+	@srclib@/ecostress_paraxial_transform_test.cc
 
 # Files that contain SWIG wrapper information.
-SWIG_SRC = @swigsrc@/ecostress_camera_wrap.cc
+SWIG_SRC = @swigsrc@/ecostress_swig_array_wrap.cc \
+	@swigsrc@/ecostress_camera_wrap.cc \
+	@swigsrc@/ecostress_paraxial_transform_wrap.cc
 libecostress_la_CPPFLAGS = $(AM_CPPFLAGS) $(GEOCAL_CFLAGS)
 libecostress_la_LDFLAGS = $(GEOCAL_LIBS)
 ecostress_test_all_LDADD = libecostress.la 
@@ -1044,7 +1055,11 @@ _ecostress_level1.la: $(_ecostress_level1_la_OBJECTS) $(_ecostress_level1_la_DEP
 @swigsrc@/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) @swigsrc@/$(DEPDIR)
 	@: > @swigsrc@/$(DEPDIR)/$(am__dirstamp)
+@swigsrc@/_swig_wrap_la-ecostress_swig_array_wrap.lo:  \
+	@swigsrc@/$(am__dirstamp) @swigsrc@/$(DEPDIR)/$(am__dirstamp)
 @swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo:  \
+	@swigsrc@/$(am__dirstamp) @swigsrc@/$(DEPDIR)/$(am__dirstamp)
+@swigsrc@/_swig_wrap_la-ecostress_paraxial_transform_wrap.lo:  \
 	@swigsrc@/$(am__dirstamp) @swigsrc@/$(DEPDIR)/$(am__dirstamp)
 @swigsrc@/_swig_wrap_la-swig_wrap.lo: @swigsrc@/$(am__dirstamp) \
 	@swigsrc@/$(DEPDIR)/$(am__dirstamp)
@@ -1058,6 +1073,8 @@ _swig_wrap.la: $(_swig_wrap_la_OBJECTS) $(_swig_wrap_la_DEPENDENCIES) $(EXTRA__s
 	@$(MKDIR_P) @srclib@/$(DEPDIR)
 	@: > @srclib@/$(DEPDIR)/$(am__dirstamp)
 @srclib@/libecostress_la-ecostress_camera.lo:  \
+	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
+@srclib@/libecostress_la-ecostress_paraxial_transform.lo:  \
 	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
 
 libecostress.la: $(libecostress_la_OBJECTS) $(libecostress_la_DEPENDENCIES) $(EXTRA_libecostress_la_DEPENDENCIES) 
@@ -1127,6 +1144,8 @@ clean-checkPROGRAMS:
 @srclib@/ecostress_test_all-global_fixture_default.$(OBJEXT):  \
 	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
 @srclib@/ecostress_test_all-ecostress_camera_test.$(OBJEXT):  \
+	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
+@srclib@/ecostress_test_all-ecostress_paraxial_transform_test.$(OBJEXT):  \
 	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
 
 ecostress_test_all$(EXEEXT): $(ecostress_test_all_OBJECTS) $(ecostress_test_all_DEPENDENCIES) $(EXTRA_ecostress_test_all_DEPENDENCIES) 
@@ -1219,11 +1238,15 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@@srccython@/$(DEPDIR)/_ecostress_level1_la-cython_sample.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srccython@/$(DEPDIR)/_ecostress_level1_la-cython_sample2.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_paraxial_transform_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-global_fixture.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-global_fixture_default.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-test_all.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_camera.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_paraxial_transform.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_camera_wrap.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_paraxial_transform_wrap.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_swig_array_wrap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Plo@am__quote@
 
 .cc.o:
@@ -1271,12 +1294,26 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_ecostress_level1_la_CPPFLAGS) $(CPPFLAGS) $(_ecostress_level1_la_CXXFLAGS) $(CXXFLAGS) -c -o @srccython@/_ecostress_level1_la-cython_init.lo `test -f '@srccython@/cython_init.cc' || echo '$(srcdir)/'`@srccython@/cython_init.cc
 
+@swigsrc@/_swig_wrap_la-ecostress_swig_array_wrap.lo: @swigsrc@/ecostress_swig_array_wrap.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -MT @swigsrc@/_swig_wrap_la-ecostress_swig_array_wrap.lo -MD -MP -MF @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_swig_array_wrap.Tpo -c -o @swigsrc@/_swig_wrap_la-ecostress_swig_array_wrap.lo `test -f '@swigsrc@/ecostress_swig_array_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/ecostress_swig_array_wrap.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_swig_array_wrap.Tpo @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_swig_array_wrap.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@swigsrc@/ecostress_swig_array_wrap.cc' object='@swigsrc@/_swig_wrap_la-ecostress_swig_array_wrap.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -c -o @swigsrc@/_swig_wrap_la-ecostress_swig_array_wrap.lo `test -f '@swigsrc@/ecostress_swig_array_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/ecostress_swig_array_wrap.cc
+
 @swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo: @swigsrc@/ecostress_camera_wrap.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -MT @swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo -MD -MP -MF @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_camera_wrap.Tpo -c -o @swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo `test -f '@swigsrc@/ecostress_camera_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/ecostress_camera_wrap.cc
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_camera_wrap.Tpo @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_camera_wrap.Plo
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@swigsrc@/ecostress_camera_wrap.cc' object='@swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -c -o @swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo `test -f '@swigsrc@/ecostress_camera_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/ecostress_camera_wrap.cc
+
+@swigsrc@/_swig_wrap_la-ecostress_paraxial_transform_wrap.lo: @swigsrc@/ecostress_paraxial_transform_wrap.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -MT @swigsrc@/_swig_wrap_la-ecostress_paraxial_transform_wrap.lo -MD -MP -MF @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_paraxial_transform_wrap.Tpo -c -o @swigsrc@/_swig_wrap_la-ecostress_paraxial_transform_wrap.lo `test -f '@swigsrc@/ecostress_paraxial_transform_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/ecostress_paraxial_transform_wrap.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_paraxial_transform_wrap.Tpo @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_paraxial_transform_wrap.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@swigsrc@/ecostress_paraxial_transform_wrap.cc' object='@swigsrc@/_swig_wrap_la-ecostress_paraxial_transform_wrap.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -c -o @swigsrc@/_swig_wrap_la-ecostress_paraxial_transform_wrap.lo `test -f '@swigsrc@/ecostress_paraxial_transform_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/ecostress_paraxial_transform_wrap.cc
 
 @swigsrc@/_swig_wrap_la-swig_wrap.lo: @swigsrc@/swig_wrap.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -MT @swigsrc@/_swig_wrap_la-swig_wrap.lo -MD -MP -MF @swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Tpo -c -o @swigsrc@/_swig_wrap_la-swig_wrap.lo `test -f '@swigsrc@/swig_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/swig_wrap.cc
@@ -1291,6 +1328,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/ecostress_camera.cc' object='@srclib@/libecostress_la-ecostress_camera.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/libecostress_la-ecostress_camera.lo `test -f '@srclib@/ecostress_camera.cc' || echo '$(srcdir)/'`@srclib@/ecostress_camera.cc
+
+@srclib@/libecostress_la-ecostress_paraxial_transform.lo: @srclib@/ecostress_paraxial_transform.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/libecostress_la-ecostress_paraxial_transform.lo -MD -MP -MF @srclib@/$(DEPDIR)/libecostress_la-ecostress_paraxial_transform.Tpo -c -o @srclib@/libecostress_la-ecostress_paraxial_transform.lo `test -f '@srclib@/ecostress_paraxial_transform.cc' || echo '$(srcdir)/'`@srclib@/ecostress_paraxial_transform.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/libecostress_la-ecostress_paraxial_transform.Tpo @srclib@/$(DEPDIR)/libecostress_la-ecostress_paraxial_transform.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/ecostress_paraxial_transform.cc' object='@srclib@/libecostress_la-ecostress_paraxial_transform.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/libecostress_la-ecostress_paraxial_transform.lo `test -f '@srclib@/ecostress_paraxial_transform.cc' || echo '$(srcdir)/'`@srclib@/ecostress_paraxial_transform.cc
 
 @srclib@/ecostress_test_all-test_all.o: @srclib@/test_all.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-test_all.o -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-test_all.Tpo -c -o @srclib@/ecostress_test_all-test_all.o `test -f '@srclib@/test_all.cc' || echo '$(srcdir)/'`@srclib@/test_all.cc
@@ -1347,6 +1391,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/ecostress_camera_test.cc' object='@srclib@/ecostress_test_all-ecostress_camera_test.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-ecostress_camera_test.obj `if test -f '@srclib@/ecostress_camera_test.cc'; then $(CYGPATH_W) '@srclib@/ecostress_camera_test.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/ecostress_camera_test.cc'; fi`
+
+@srclib@/ecostress_test_all-ecostress_paraxial_transform_test.o: @srclib@/ecostress_paraxial_transform_test.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-ecostress_paraxial_transform_test.o -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_paraxial_transform_test.Tpo -c -o @srclib@/ecostress_test_all-ecostress_paraxial_transform_test.o `test -f '@srclib@/ecostress_paraxial_transform_test.cc' || echo '$(srcdir)/'`@srclib@/ecostress_paraxial_transform_test.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_paraxial_transform_test.Tpo @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_paraxial_transform_test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/ecostress_paraxial_transform_test.cc' object='@srclib@/ecostress_test_all-ecostress_paraxial_transform_test.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-ecostress_paraxial_transform_test.o `test -f '@srclib@/ecostress_paraxial_transform_test.cc' || echo '$(srcdir)/'`@srclib@/ecostress_paraxial_transform_test.cc
+
+@srclib@/ecostress_test_all-ecostress_paraxial_transform_test.obj: @srclib@/ecostress_paraxial_transform_test.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-ecostress_paraxial_transform_test.obj -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_paraxial_transform_test.Tpo -c -o @srclib@/ecostress_test_all-ecostress_paraxial_transform_test.obj `if test -f '@srclib@/ecostress_paraxial_transform_test.cc'; then $(CYGPATH_W) '@srclib@/ecostress_paraxial_transform_test.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/ecostress_paraxial_transform_test.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_paraxial_transform_test.Tpo @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_paraxial_transform_test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/ecostress_paraxial_transform_test.cc' object='@srclib@/ecostress_test_all-ecostress_paraxial_transform_test.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-ecostress_paraxial_transform_test.obj `if test -f '@srclib@/ecostress_paraxial_transform_test.cc'; then $(CYGPATH_W) '@srclib@/ecostress_paraxial_transform_test.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/ecostress_paraxial_transform_test.cc'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

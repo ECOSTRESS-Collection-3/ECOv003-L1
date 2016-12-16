@@ -1,3 +1,4 @@
 # We require all the packages geocal requires (see requirements.txt for that
 # package), plus stuff listed in this file.
 cython
+xlrd
