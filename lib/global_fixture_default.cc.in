@@ -24,6 +24,26 @@ std::string GlobalFixture::test_data_dir() const
 }
 
 //-----------------------------------------------------------------------
+/// Directory where unit test data is. This already includes the trailing
+/// slash, so you can just do unit_test_data_data() + "foo.txt" in your 
+/// unit tests.
+//-----------------------------------------------------------------------
+
+std::string GlobalFixture::unit_test_data_dir() const
+{
+  char* srcdir = getenv("abs_top_srcdir");
+  // This should get set in set_default_value, but just in case
+  // something odd happens print an error message.
+  if(!srcdir)
+    BOOST_FAIL("To run this test, you must set the 'abs_top_srcdir' environment\n"
+               "variable to the top of the source tree. This is automatically\n"
+               "done if you are running 'make check', but you need to\n"
+
+               "running in a debugger");
+  return std::string(srcdir) + "/@unittestdata@/";
+}
+
+//-----------------------------------------------------------------------
 /// Default locations for data, if environment variables not
 /// set. These are normally set by the Makefile before running, but it
 /// is useful to have default values set if we are running in debug
@@ -36,4 +56,5 @@ void GlobalFixture::set_default_value()
   // overwrite existing variable. This means we don't need to bother
   // checking if this is set before we assign a value to it.
   setenv("testdatadir", "@testdatadir@", 0);
+  setenv("abs_top_srcdir", "@abs_top_srcdir@", 0);
 }

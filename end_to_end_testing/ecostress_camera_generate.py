@@ -39,11 +39,22 @@ print(powers)
 
 # Create a EcostressParaxialTransform that fits this data.
 tran = EcostressParaxialTransform()
-tran.real_to_paraxial[0,:] = multipolyfit(real, pred[:,0], deg)
-tran.real_to_paraxial[1,:] = multipolyfit(real, pred[:,1], deg)
-tran.paraxial_to_real[0,:] = multipolyfit(pred, real[:,0], deg)
-tran.paraxial_to_real[1,:] = multipolyfit(pred, real[:,1], deg)
+tran.real_to_par[0,:] = multipolyfit(real, pred[:,0], deg)
+tran.real_to_par[1,:] = multipolyfit(real, pred[:,1], deg)
+tran.par_to_real[0,:] = multipolyfit(pred, real[:,0], deg)
+tran.par_to_real[1,:] = multipolyfit(pred, real[:,1], deg)
 write_shelve("cam_paraxial.xml", tran)
+
+# Check that we calculate the right values
+print("Predict real x max error (pixel) ", 
+      abs(np.array([(tran.real_to_paraxial(*real[i,:])[0] - pred[i,0]) / pixel_size for i in range(real.shape[0])])).max())
+print("Predict real y max error (pixel) ", 
+      abs(np.array([(tran.real_to_paraxial(*real[i,:])[1] - pred[i,1]) / pixel_size for i in range(real.shape[0])])).max())
+print("Real to predict x max error (pixel) ", 
+      abs(np.array([(tran.paraxial_to_real(*pred[i,:])[0] - real[i,0]) / pixel_size for i in range(real.shape[0])])).max())
+print("Real to predict y max error (pixel) ", 
+      abs(np.array([(tran.paraxial_to_real(*pred[i,:])[1] - real[i,1]) / pixel_size for i in range(real.shape[0])])).max())
+
 
 
 

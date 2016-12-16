@@ -647,6 +647,7 @@ HAVE_SWIG_FALSE
 HAVE_SWIG_TRUE
 SWIG_LIB
 SWIG
+unittestdata
 ecostresspkgpythondir
 vicarpdfdir
 installecostressdir
@@ -18972,6 +18973,8 @@ installecostressdir=\${prefix}
 vicarpdfdir=\${prefix}/vicar_pdf
 
 ecostresspkgpythondir=\${prefix}/${pythondir}/ecostress
+
+unittestdata=unit_test_data
 
 
 

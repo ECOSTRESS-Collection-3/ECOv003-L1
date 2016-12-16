@@ -222,41 +222,66 @@ class EcostressParaxialTransform(geocal_swig.generic_object.GenericObject):
         """
         _ecostress_paraxial_transform.EcostressParaxialTransform_swiginit(self, _ecostress_paraxial_transform.new_EcostressParaxialTransform())
 
-    def _v_real_to_paraxial(self):
+    def paraxial_to_real(self, *args):
         """
 
-        blitz::Array<double, 2>& Ecostress::EcostressParaxialTransform::real_to_paraxial()
+        void Ecostress::EcostressParaxialTransform::paraxial_to_real(const GeoCal::AutoDerivative< double > &Paraxial_x, const
+        GeoCal::AutoDerivative< double > &Paraxial_y, GeoCal::AutoDerivative<
+        double > &Real_x, GeoCal::AutoDerivative< double > &Real_y) const
 
         """
-        return _ecostress_paraxial_transform.EcostressParaxialTransform__v_real_to_paraxial(self)
+        return _ecostress_paraxial_transform.EcostressParaxialTransform_paraxial_to_real(self, *args)
+
+
+    def real_to_paraxial(self, *args):
+        """
+
+        void Ecostress::EcostressParaxialTransform::real_to_paraxial(const GeoCal::AutoDerivative< double > &Real_x, const
+        GeoCal::AutoDerivative< double > &Real_y, GeoCal::AutoDerivative<
+        double > &Paraxial_x, GeoCal::AutoDerivative< double > &Paraxial_y)
+        const
+
+        """
+        return _ecostress_paraxial_transform.EcostressParaxialTransform_real_to_paraxial(self, *args)
+
+
+    def _v_real_to_par(self):
+        """
+
+        blitz::Array<double, 2>& Ecostress::EcostressParaxialTransform::real_to_par()
+
+        """
+        return _ecostress_paraxial_transform.EcostressParaxialTransform__v_real_to_par(self)
 
 
     @property
-    def real_to_paraxial(self):
-        return self._v_real_to_paraxial()
+    def real_to_par(self):
+        return self._v_real_to_par()
 
 
-    def _v_paraxial_to_real(self):
+    def _v_par_to_real(self):
         """
 
-        blitz::Array<double, 2>& Ecostress::EcostressParaxialTransform::paraxial_to_real()
+        blitz::Array<double, 2>& Ecostress::EcostressParaxialTransform::par_to_real()
 
         """
-        return _ecostress_paraxial_transform.EcostressParaxialTransform__v_paraxial_to_real(self)
+        return _ecostress_paraxial_transform.EcostressParaxialTransform__v_par_to_real(self)
 
 
     @property
-    def paraxial_to_real(self):
-        return self._v_paraxial_to_real()
+    def par_to_real(self):
+        return self._v_par_to_real()
 
 
     def __reduce__(self):
       return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
 
     __swig_destroy__ = _ecostress_paraxial_transform.delete_EcostressParaxialTransform
+EcostressParaxialTransform.paraxial_to_real = new_instancemethod(_ecostress_paraxial_transform.EcostressParaxialTransform_paraxial_to_real, None, EcostressParaxialTransform)
+EcostressParaxialTransform.real_to_paraxial = new_instancemethod(_ecostress_paraxial_transform.EcostressParaxialTransform_real_to_paraxial, None, EcostressParaxialTransform)
 EcostressParaxialTransform.__str__ = new_instancemethod(_ecostress_paraxial_transform.EcostressParaxialTransform___str__, None, EcostressParaxialTransform)
-EcostressParaxialTransform._v_real_to_paraxial = new_instancemethod(_ecostress_paraxial_transform.EcostressParaxialTransform__v_real_to_paraxial, None, EcostressParaxialTransform)
-EcostressParaxialTransform._v_paraxial_to_real = new_instancemethod(_ecostress_paraxial_transform.EcostressParaxialTransform__v_paraxial_to_real, None, EcostressParaxialTransform)
+EcostressParaxialTransform._v_real_to_par = new_instancemethod(_ecostress_paraxial_transform.EcostressParaxialTransform__v_real_to_par, None, EcostressParaxialTransform)
+EcostressParaxialTransform._v_par_to_real = new_instancemethod(_ecostress_paraxial_transform.EcostressParaxialTransform__v_par_to_real, None, EcostressParaxialTransform)
 EcostressParaxialTransform_swigregister = _ecostress_paraxial_transform.EcostressParaxialTransform_swigregister
 EcostressParaxialTransform_swigregister(EcostressParaxialTransform)
 

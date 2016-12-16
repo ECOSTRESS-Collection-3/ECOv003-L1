@@ -29,30 +29,46 @@ public:
 /// (calculated in ecostress_camera_generate.py).
 //-----------------------------------------------------------------------
   EcostressParaxialTransform()
-    : paraxial_to_real_(2, 10),
-      real_to_paraxial_(2, 10)
+    : par_to_real_(2, 10),
+      real_to_par_(2, 10)
   {}
   virtual ~EcostressParaxialTransform() {}
   virtual void print(std::ostream& Os) const
   { Os << "EcostressParaxialTransform"; }
 
+  void paraxial_to_real(double Paraxial_x,
+			double Paraxial_y, double& Real_x, 
+			double& Real_y) const;
+  void paraxial_to_real(const GeoCal::AutoDerivative<double>& Paraxial_x,
+			const GeoCal::AutoDerivative<double>& Paraxial_y,
+			GeoCal::AutoDerivative<double>& Real_x, 
+			GeoCal::AutoDerivative<double>& Real_y) const;
+  void real_to_paraxial(double Real_x,
+			double Real_y, double& Paraxial_x, 
+			double& Paraxial_y) const;
+  void real_to_paraxial(const GeoCal::AutoDerivative<double>& Real_x,
+			const GeoCal::AutoDerivative<double>& Real_y,
+			GeoCal::AutoDerivative<double>& Paraxial_x, 
+			GeoCal::AutoDerivative<double>& Paraxial_y) const;
+
 //-----------------------------------------------------------------------
 /// Polynomial from paraxial to real
 //-----------------------------------------------------------------------
-  const blitz::Array<double, 2>& paraxial_to_real() const
-  { return paraxial_to_real_; }
-  blitz::Array<double, 2>& paraxial_to_real()
-  { return paraxial_to_real_; }
+
+  const blitz::Array<double, 2>& par_to_real() const
+  { return par_to_real_; }
+  blitz::Array<double, 2>& par_to_real()
+  { return par_to_real_; }
 
 //-----------------------------------------------------------------------
 /// Polynomial from real to paraxial
 //-----------------------------------------------------------------------
-  const blitz::Array<double, 2>& real_to_paraxial() const
-  { return real_to_paraxial_; }
-  blitz::Array<double, 2>& real_to_paraxial() 
-  { return real_to_paraxial_; }
+  const blitz::Array<double, 2>& real_to_par() const
+  { return real_to_par_; }
+  blitz::Array<double, 2>& real_to_par() 
+  { return real_to_par_; }
 private:
-  blitz::Array<double, 2>  paraxial_to_real_, real_to_paraxial_;
+  blitz::Array<double, 2>  par_to_real_, real_to_par_;
   friend class boost::serialization::access;
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version);

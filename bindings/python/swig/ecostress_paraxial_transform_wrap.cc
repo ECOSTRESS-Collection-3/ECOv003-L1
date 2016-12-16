@@ -3452,26 +3452,27 @@ namespace Swig {
 #define SWIGTYPE_p_char swig_types[33]
 #define SWIGTYPE_p_char_type swig_types[34]
 #define SWIGTYPE_p_difference_type swig_types[35]
-#define SWIGTYPE_p_fmtflags swig_types[36]
-#define SWIGTYPE_p_int_type swig_types[37]
-#define SWIGTYPE_p_iostate swig_types[38]
-#define SWIGTYPE_p_off_type swig_types[39]
-#define SWIGTYPE_p_openmode swig_types[40]
-#define SWIGTYPE_p_pos_type swig_types[41]
-#define SWIGTYPE_p_seekdir swig_types[42]
-#define SWIGTYPE_p_size_t swig_types[43]
-#define SWIGTYPE_p_size_type swig_types[44]
-#define SWIGTYPE_p_state_type swig_types[45]
-#define SWIGTYPE_p_std__basic_iosT_char_std__char_traitsT_char_t_t swig_types[46]
-#define SWIGTYPE_p_std__basic_iostreamT_char_std__char_traitsT_char_t_t swig_types[47]
-#define SWIGTYPE_p_std__basic_istreamT_char_std__char_traitsT_char_t_t swig_types[48]
-#define SWIGTYPE_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t swig_types[49]
-#define SWIGTYPE_p_std__invalid_argument swig_types[50]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[51]
-#define SWIGTYPE_p_traits_type swig_types[52]
-#define SWIGTYPE_p_value_type swig_types[53]
-static swig_type_info *swig_types[55];
-static swig_module_info swig_module = {swig_types, 54, 0, 0, 0, 0};
+#define SWIGTYPE_p_double swig_types[36]
+#define SWIGTYPE_p_fmtflags swig_types[37]
+#define SWIGTYPE_p_int_type swig_types[38]
+#define SWIGTYPE_p_iostate swig_types[39]
+#define SWIGTYPE_p_off_type swig_types[40]
+#define SWIGTYPE_p_openmode swig_types[41]
+#define SWIGTYPE_p_pos_type swig_types[42]
+#define SWIGTYPE_p_seekdir swig_types[43]
+#define SWIGTYPE_p_size_t swig_types[44]
+#define SWIGTYPE_p_size_type swig_types[45]
+#define SWIGTYPE_p_state_type swig_types[46]
+#define SWIGTYPE_p_std__basic_iosT_char_std__char_traitsT_char_t_t swig_types[47]
+#define SWIGTYPE_p_std__basic_iostreamT_char_std__char_traitsT_char_t_t swig_types[48]
+#define SWIGTYPE_p_std__basic_istreamT_char_std__char_traitsT_char_t_t swig_types[49]
+#define SWIGTYPE_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t swig_types[50]
+#define SWIGTYPE_p_std__invalid_argument swig_types[51]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[52]
+#define SWIGTYPE_p_traits_type swig_types[53]
+#define SWIGTYPE_p_value_type swig_types[54]
+static swig_type_info *swig_types[56];
+static swig_module_info swig_module = {swig_types, 55, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -5268,6 +5269,9 @@ struct SWIG_null_deleter {
 #define SWIG_NO_NULL_DELETER_SWIG_BUILTIN_INIT
 
 
+  #define SWIG_From_double   PyFloat_FromDouble 
+
+
 SWIGINTERN swig_type_info*
 SWIG_pchar_descriptor(void)
 {
@@ -6134,6 +6138,518 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_paraxial_to_real__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressParaxialTransform *arg1 = (Ecostress::EcostressParaxialTransform *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  double *arg4 = 0 ;
+  double *arg5 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressParaxialTransform const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressParaxialTransform const > *smartarg1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double temp4 ;
+  int res4 = SWIG_TMPOBJ ;
+  double temp5 ;
+  int res5 = SWIG_TMPOBJ ;
+  
+  arg4 = &temp4;
+  arg5 = &temp5;
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressParaxialTransform * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressParaxialTransform * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_double(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  {
+    try {
+      ((Ecostress::EcostressParaxialTransform const *)arg1)->paraxial_to_real(arg2,arg3,*arg4,*arg5);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  if (SWIG_IsTmpObj(res4)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_double((*arg4)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags));
+  }
+  if (SWIG_IsTmpObj(res5)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_double((*arg5)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_paraxial_to_real__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressParaxialTransform *arg1 = (Ecostress::EcostressParaxialTransform *) 0 ;
+  GeoCal::AutoDerivative< double > *arg2 = 0 ;
+  GeoCal::AutoDerivative< double > *arg3 = 0 ;
+  GeoCal::AutoDerivative< double > *arg4 = 0 ;
+  GeoCal::AutoDerivative< double > *arg5 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressParaxialTransform const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressParaxialTransform const > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  boost::shared_ptr< GeoCal::AutoDerivative< double > const > tempshared2 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  boost::shared_ptr< GeoCal::AutoDerivative< double > const > tempshared3 ;
+  void *argp4 = 0 ;
+  int res4 = 0 ;
+  boost::shared_ptr< GeoCal::AutoDerivative< double > > tempshared4 ;
+  void *argp5 = 0 ;
+  int res5 = 0 ;
+  boost::shared_ptr< GeoCal::AutoDerivative< double > > tempshared5 ;
+  
+  if ((nobjs < 5) || (nobjs > 5)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressParaxialTransform * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressParaxialTransform * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::AutoDerivative<double> *ptr;
+    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], (void**)(&ptr), SWIGTYPE_p_GeoCal__AutoDerivativeT_double_t,  0 , &newmem);
+    if (SWIG_IsOK(res2)) {
+      arg2 = ptr;
+    } else {
+      res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,  0 , &newmem);
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "2"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
+      }
+      if (!argp2) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "2"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared2 = *reinterpret_cast< boost::shared_ptr< const GeoCal::AutoDerivative<double> > * >(argp2);
+        delete reinterpret_cast< boost::shared_ptr< const GeoCal::AutoDerivative<double> > * >(argp2);
+        arg2 = const_cast< GeoCal::AutoDerivative< double > * >(tempshared2.get());
+      } else {
+        arg2 = const_cast< GeoCal::AutoDerivative< double > * >(reinterpret_cast< boost::shared_ptr< const GeoCal::AutoDerivative<double> > * >(argp2)->get());
+      }
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::AutoDerivative<double> *ptr;
+    res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], (void**)(&ptr), SWIGTYPE_p_GeoCal__AutoDerivativeT_double_t,  0 , &newmem);
+    if (SWIG_IsOK(res3)) {
+      arg3 = ptr;
+    } else {
+      res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,  0 , &newmem);
+      if (!SWIG_IsOK(res3)) {
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "3"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
+      }
+      if (!argp3) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "3"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared3 = *reinterpret_cast< boost::shared_ptr< const GeoCal::AutoDerivative<double> > * >(argp3);
+        delete reinterpret_cast< boost::shared_ptr< const GeoCal::AutoDerivative<double> > * >(argp3);
+        arg3 = const_cast< GeoCal::AutoDerivative< double > * >(tempshared3.get());
+      } else {
+        arg3 = const_cast< GeoCal::AutoDerivative< double > * >(reinterpret_cast< boost::shared_ptr< const GeoCal::AutoDerivative<double> > * >(argp3)->get());
+      }
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::AutoDerivative<double> *ptr;
+    res4 = SWIG_ConvertPtrAndOwn(swig_obj[3], (void**)(&ptr), SWIGTYPE_p_GeoCal__AutoDerivativeT_double_t,  0 , &newmem);
+    if (SWIG_IsOK(res4)) {
+      arg4 = ptr;
+    } else {
+      res4 = SWIG_ConvertPtrAndOwn(swig_obj[3], &argp4, SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,  0 , &newmem);
+      if (!SWIG_IsOK(res4)) {
+        SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "4"" of type '" "GeoCal::AutoDerivative< double > &""'"); 
+      }
+      if (!argp4) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "4"" of type '" "GeoCal::AutoDerivative< double > &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared4 = *reinterpret_cast< boost::shared_ptr<  GeoCal::AutoDerivative<double> > * >(argp4);
+        delete reinterpret_cast< boost::shared_ptr<  GeoCal::AutoDerivative<double> > * >(argp4);
+        arg4 = const_cast< GeoCal::AutoDerivative< double > * >(tempshared4.get());
+      } else {
+        arg4 = const_cast< GeoCal::AutoDerivative< double > * >(reinterpret_cast< boost::shared_ptr<  GeoCal::AutoDerivative<double> > * >(argp4)->get());
+      }
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::AutoDerivative<double> *ptr;
+    res5 = SWIG_ConvertPtrAndOwn(swig_obj[4], (void**)(&ptr), SWIGTYPE_p_GeoCal__AutoDerivativeT_double_t,  0 , &newmem);
+    if (SWIG_IsOK(res5)) {
+      arg5 = ptr;
+    } else {
+      res5 = SWIG_ConvertPtrAndOwn(swig_obj[4], &argp5, SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,  0 , &newmem);
+      if (!SWIG_IsOK(res5)) {
+        SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "5"" of type '" "GeoCal::AutoDerivative< double > &""'"); 
+      }
+      if (!argp5) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "5"" of type '" "GeoCal::AutoDerivative< double > &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared5 = *reinterpret_cast< boost::shared_ptr<  GeoCal::AutoDerivative<double> > * >(argp5);
+        delete reinterpret_cast< boost::shared_ptr<  GeoCal::AutoDerivative<double> > * >(argp5);
+        arg5 = const_cast< GeoCal::AutoDerivative< double > * >(tempshared5.get());
+      } else {
+        arg5 = const_cast< GeoCal::AutoDerivative< double > * >(reinterpret_cast< boost::shared_ptr<  GeoCal::AutoDerivative<double> > * >(argp5)->get());
+      }
+    }
+  }
+  {
+    try {
+      ((Ecostress::EcostressParaxialTransform const *)arg1)->paraxial_to_real((GeoCal::AutoDerivative< double > const &)*arg2,(GeoCal::AutoDerivative< double > const &)*arg3,*arg4,*arg5);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_paraxial_to_real(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[6] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"EcostressParaxialTransform_paraxial_to_real",0,5,argv))) SWIG_fail;
+  --argc;
+  if (argc == 3) {
+    return _wrap_EcostressParaxialTransform_paraxial_to_real__SWIG_0(self, argc, argv);
+  }
+  if (argc == 5) {
+    return _wrap_EcostressParaxialTransform_paraxial_to_real__SWIG_1(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'EcostressParaxialTransform_paraxial_to_real'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressParaxialTransform::paraxial_to_real(double,double,double &,double &) const\n"
+    "    Ecostress::EcostressParaxialTransform::paraxial_to_real(GeoCal::AutoDerivative< double > const &,GeoCal::AutoDerivative< double > const &,GeoCal::AutoDerivative< double > &,GeoCal::AutoDerivative< double > &) const\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_real_to_paraxial__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressParaxialTransform *arg1 = (Ecostress::EcostressParaxialTransform *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  double *arg4 = 0 ;
+  double *arg5 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressParaxialTransform const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressParaxialTransform const > *smartarg1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double temp4 ;
+  int res4 = SWIG_TMPOBJ ;
+  double temp5 ;
+  int res5 = SWIG_TMPOBJ ;
+  
+  arg4 = &temp4;
+  arg5 = &temp5;
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressParaxialTransform * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressParaxialTransform * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_double(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  {
+    try {
+      ((Ecostress::EcostressParaxialTransform const *)arg1)->real_to_paraxial(arg2,arg3,*arg4,*arg5);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  if (SWIG_IsTmpObj(res4)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_double((*arg4)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags));
+  }
+  if (SWIG_IsTmpObj(res5)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_double((*arg5)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_real_to_paraxial__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressParaxialTransform *arg1 = (Ecostress::EcostressParaxialTransform *) 0 ;
+  GeoCal::AutoDerivative< double > *arg2 = 0 ;
+  GeoCal::AutoDerivative< double > *arg3 = 0 ;
+  GeoCal::AutoDerivative< double > *arg4 = 0 ;
+  GeoCal::AutoDerivative< double > *arg5 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressParaxialTransform const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressParaxialTransform const > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  boost::shared_ptr< GeoCal::AutoDerivative< double > const > tempshared2 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  boost::shared_ptr< GeoCal::AutoDerivative< double > const > tempshared3 ;
+  void *argp4 = 0 ;
+  int res4 = 0 ;
+  boost::shared_ptr< GeoCal::AutoDerivative< double > > tempshared4 ;
+  void *argp5 = 0 ;
+  int res5 = 0 ;
+  boost::shared_ptr< GeoCal::AutoDerivative< double > > tempshared5 ;
+  
+  if ((nobjs < 5) || (nobjs > 5)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressParaxialTransform * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressParaxialTransform * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::AutoDerivative<double> *ptr;
+    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], (void**)(&ptr), SWIGTYPE_p_GeoCal__AutoDerivativeT_double_t,  0 , &newmem);
+    if (SWIG_IsOK(res2)) {
+      arg2 = ptr;
+    } else {
+      res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,  0 , &newmem);
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "2"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
+      }
+      if (!argp2) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "2"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared2 = *reinterpret_cast< boost::shared_ptr< const GeoCal::AutoDerivative<double> > * >(argp2);
+        delete reinterpret_cast< boost::shared_ptr< const GeoCal::AutoDerivative<double> > * >(argp2);
+        arg2 = const_cast< GeoCal::AutoDerivative< double > * >(tempshared2.get());
+      } else {
+        arg2 = const_cast< GeoCal::AutoDerivative< double > * >(reinterpret_cast< boost::shared_ptr< const GeoCal::AutoDerivative<double> > * >(argp2)->get());
+      }
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::AutoDerivative<double> *ptr;
+    res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], (void**)(&ptr), SWIGTYPE_p_GeoCal__AutoDerivativeT_double_t,  0 , &newmem);
+    if (SWIG_IsOK(res3)) {
+      arg3 = ptr;
+    } else {
+      res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,  0 , &newmem);
+      if (!SWIG_IsOK(res3)) {
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "3"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
+      }
+      if (!argp3) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "3"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared3 = *reinterpret_cast< boost::shared_ptr< const GeoCal::AutoDerivative<double> > * >(argp3);
+        delete reinterpret_cast< boost::shared_ptr< const GeoCal::AutoDerivative<double> > * >(argp3);
+        arg3 = const_cast< GeoCal::AutoDerivative< double > * >(tempshared3.get());
+      } else {
+        arg3 = const_cast< GeoCal::AutoDerivative< double > * >(reinterpret_cast< boost::shared_ptr< const GeoCal::AutoDerivative<double> > * >(argp3)->get());
+      }
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::AutoDerivative<double> *ptr;
+    res4 = SWIG_ConvertPtrAndOwn(swig_obj[3], (void**)(&ptr), SWIGTYPE_p_GeoCal__AutoDerivativeT_double_t,  0 , &newmem);
+    if (SWIG_IsOK(res4)) {
+      arg4 = ptr;
+    } else {
+      res4 = SWIG_ConvertPtrAndOwn(swig_obj[3], &argp4, SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,  0 , &newmem);
+      if (!SWIG_IsOK(res4)) {
+        SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "4"" of type '" "GeoCal::AutoDerivative< double > &""'"); 
+      }
+      if (!argp4) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "4"" of type '" "GeoCal::AutoDerivative< double > &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared4 = *reinterpret_cast< boost::shared_ptr<  GeoCal::AutoDerivative<double> > * >(argp4);
+        delete reinterpret_cast< boost::shared_ptr<  GeoCal::AutoDerivative<double> > * >(argp4);
+        arg4 = const_cast< GeoCal::AutoDerivative< double > * >(tempshared4.get());
+      } else {
+        arg4 = const_cast< GeoCal::AutoDerivative< double > * >(reinterpret_cast< boost::shared_ptr<  GeoCal::AutoDerivative<double> > * >(argp4)->get());
+      }
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::AutoDerivative<double> *ptr;
+    res5 = SWIG_ConvertPtrAndOwn(swig_obj[4], (void**)(&ptr), SWIGTYPE_p_GeoCal__AutoDerivativeT_double_t,  0 , &newmem);
+    if (SWIG_IsOK(res5)) {
+      arg5 = ptr;
+    } else {
+      res5 = SWIG_ConvertPtrAndOwn(swig_obj[4], &argp5, SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,  0 , &newmem);
+      if (!SWIG_IsOK(res5)) {
+        SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "5"" of type '" "GeoCal::AutoDerivative< double > &""'"); 
+      }
+      if (!argp5) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "5"" of type '" "GeoCal::AutoDerivative< double > &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared5 = *reinterpret_cast< boost::shared_ptr<  GeoCal::AutoDerivative<double> > * >(argp5);
+        delete reinterpret_cast< boost::shared_ptr<  GeoCal::AutoDerivative<double> > * >(argp5);
+        arg5 = const_cast< GeoCal::AutoDerivative< double > * >(tempshared5.get());
+      } else {
+        arg5 = const_cast< GeoCal::AutoDerivative< double > * >(reinterpret_cast< boost::shared_ptr<  GeoCal::AutoDerivative<double> > * >(argp5)->get());
+      }
+    }
+  }
+  {
+    try {
+      ((Ecostress::EcostressParaxialTransform const *)arg1)->real_to_paraxial((GeoCal::AutoDerivative< double > const &)*arg2,(GeoCal::AutoDerivative< double > const &)*arg3,*arg4,*arg5);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_real_to_paraxial(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[6] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"EcostressParaxialTransform_real_to_paraxial",0,5,argv))) SWIG_fail;
+  --argc;
+  if (argc == 3) {
+    return _wrap_EcostressParaxialTransform_real_to_paraxial__SWIG_0(self, argc, argv);
+  }
+  if (argc == 5) {
+    return _wrap_EcostressParaxialTransform_real_to_paraxial__SWIG_1(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'EcostressParaxialTransform_real_to_paraxial'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressParaxialTransform::real_to_paraxial(double,double,double &,double &) const\n"
+    "    Ecostress::EcostressParaxialTransform::real_to_paraxial(GeoCal::AutoDerivative< double > const &,GeoCal::AutoDerivative< double > const &,GeoCal::AutoDerivative< double > &,GeoCal::AutoDerivative< double > &) const\n");
+  return 0;
+}
+
+
 SWIGINTERN PyObject *_wrap_EcostressParaxialTransform___str__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressParaxialTransform *arg1 = (Ecostress::EcostressParaxialTransform *) 0 ;
@@ -6177,7 +6693,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_EcostressParaxialTransform__v_real_to_paraxial(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_EcostressParaxialTransform__v_real_to_par(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressParaxialTransform *arg1 = (Ecostress::EcostressParaxialTransform *) 0 ;
   void *argp1 = 0 ;
@@ -6193,7 +6709,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform__v_real_to_paraxial(PyObje
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform__v_real_to_paraxial" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform__v_real_to_par" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'"); 
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
@@ -6206,7 +6722,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform__v_real_to_paraxial(PyObje
   }
   {
     try {
-      result = (blitz::Array< double,2 > *) &((Ecostress::EcostressParaxialTransform const *)arg1)->real_to_paraxial();
+      result = (blitz::Array< double,2 > *) &((Ecostress::EcostressParaxialTransform const *)arg1)->real_to_par();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
     } catch (const std::exception& e) {
@@ -6235,7 +6751,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_EcostressParaxialTransform__v_paraxial_to_real(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_EcostressParaxialTransform__v_par_to_real(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressParaxialTransform *arg1 = (Ecostress::EcostressParaxialTransform *) 0 ;
   void *argp1 = 0 ;
@@ -6251,7 +6767,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform__v_paraxial_to_real(PyObje
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform__v_paraxial_to_real" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform__v_par_to_real" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'"); 
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
@@ -6264,7 +6780,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform__v_paraxial_to_real(PyObje
   }
   {
     try {
-      result = (blitz::Array< double,2 > *) &((Ecostress::EcostressParaxialTransform const *)arg1)->paraxial_to_real();
+      result = (blitz::Array< double,2 > *) &((Ecostress::EcostressParaxialTransform const *)arg1)->par_to_real();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
     } catch (const std::exception& e) {
@@ -6376,15 +6892,30 @@ static PyMethodDef SwigMethods[] = {
 		"A 3rd order polynomial has 10 coefficients (calculated in\n"
 		"ecostress_camera_generate.py). \n"
 		""},
-	 { (char *)"EcostressParaxialTransform___str__", (PyCFunction)_wrap_EcostressParaxialTransform___str__, METH_O, NULL},
-	 { (char *)"EcostressParaxialTransform__v_real_to_paraxial", (PyCFunction)_wrap_EcostressParaxialTransform__v_real_to_paraxial, METH_O, (char *)"\n"
+	 { (char *)"EcostressParaxialTransform_paraxial_to_real", _wrap_EcostressParaxialTransform_paraxial_to_real, METH_VARARGS, (char *)"\n"
 		"\n"
-		"blitz::Array<double, 2>& Ecostress::EcostressParaxialTransform::real_to_paraxial()\n"
+		"void Ecostress::EcostressParaxialTransform::paraxial_to_real(const GeoCal::AutoDerivative< double > &Paraxial_x, const\n"
+		"GeoCal::AutoDerivative< double > &Paraxial_y, GeoCal::AutoDerivative<\n"
+		"double > &Real_x, GeoCal::AutoDerivative< double > &Real_y) const\n"
 		"\n"
 		""},
-	 { (char *)"EcostressParaxialTransform__v_paraxial_to_real", (PyCFunction)_wrap_EcostressParaxialTransform__v_paraxial_to_real, METH_O, (char *)"\n"
+	 { (char *)"EcostressParaxialTransform_real_to_paraxial", _wrap_EcostressParaxialTransform_real_to_paraxial, METH_VARARGS, (char *)"\n"
 		"\n"
-		"blitz::Array<double, 2>& Ecostress::EcostressParaxialTransform::paraxial_to_real()\n"
+		"void Ecostress::EcostressParaxialTransform::real_to_paraxial(const GeoCal::AutoDerivative< double > &Real_x, const\n"
+		"GeoCal::AutoDerivative< double > &Real_y, GeoCal::AutoDerivative<\n"
+		"double > &Paraxial_x, GeoCal::AutoDerivative< double > &Paraxial_y)\n"
+		"const\n"
+		"\n"
+		""},
+	 { (char *)"EcostressParaxialTransform___str__", (PyCFunction)_wrap_EcostressParaxialTransform___str__, METH_O, NULL},
+	 { (char *)"EcostressParaxialTransform__v_real_to_par", (PyCFunction)_wrap_EcostressParaxialTransform__v_real_to_par, METH_O, (char *)"\n"
+		"\n"
+		"blitz::Array<double, 2>& Ecostress::EcostressParaxialTransform::real_to_par()\n"
+		"\n"
+		""},
+	 { (char *)"EcostressParaxialTransform__v_par_to_real", (PyCFunction)_wrap_EcostressParaxialTransform__v_par_to_real, METH_O, (char *)"\n"
+		"\n"
+		"blitz::Array<double, 2>& Ecostress::EcostressParaxialTransform::par_to_real()\n"
 		"\n"
 		""},
 	 { (char *)"delete_EcostressParaxialTransform", (PyCFunction)_wrap_delete_EcostressParaxialTransform, METH_O, (char *)"\n"
@@ -6472,6 +7003,7 @@ static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__GenericObject_t = {"_
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char_type = {"_p_char_type", "char_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_difference_type = {"_p_difference_type", "difference_type *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_fmtflags = {"_p_fmtflags", "fmtflags *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_int_type = {"_p_int_type", "int_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_iostate = {"_p_iostate", "iostate *", 0, 0, (void*)0, 0};
@@ -6528,6 +7060,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char,
   &_swigt__p_char_type,
   &_swigt__p_difference_type,
+  &_swigt__p_double,
   &_swigt__p_fmtflags,
   &_swigt__p_int_type,
   &_swigt__p_iostate,
@@ -6584,6 +7117,7 @@ static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__GenericObject_t[] = {
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char_type[] = {  {&_swigt__p_char_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_difference_type[] = {  {&_swigt__p_difference_type, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_fmtflags[] = {  {&_swigt__p_fmtflags, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int_type[] = {  {&_swigt__p_int_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_iostate[] = {  {&_swigt__p_iostate, 0, 0, 0},{0, 0, 0, 0}};
@@ -6640,6 +7174,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char,
   _swigc__p_char_type,
   _swigc__p_difference_type,
+  _swigc__p_double,
   _swigc__p_fmtflags,
   _swigc__p_int_type,
   _swigc__p_iostate,

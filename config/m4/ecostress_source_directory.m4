@@ -17,5 +17,6 @@ AC_SUBST([swigsrc], [bindings/python/swig])
 AC_SUBST([installecostressdir], [\${prefix}])
 AC_SUBST([vicarpdfdir], [\${prefix}/vicar_pdf])
 AC_SUBST([ecostresspkgpythondir],[\${prefix}/${pythondir}/ecostress])
+AC_SUBST([unittestdata], [unit_test_data])
 ])
 
