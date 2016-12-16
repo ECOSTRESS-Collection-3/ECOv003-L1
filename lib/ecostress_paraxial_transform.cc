@@ -1,5 +1,5 @@
 #include "ecostress_paraxial_transform.h"
-#include "geocal/geocal_serialize_support.h"
+#include "ecostress_serialize_support.h"
 
 using namespace Ecostress;
 using namespace GeoCal;
@@ -13,7 +13,7 @@ void EcostressParaxialTransform::serialize(Archive & ar, const unsigned int vers
     & GEOCAL_NVP_(real_to_par);
 }
 
-BOOST_CLASS_EXPORT_IMPLEMENT(Ecostress::EcostressParaxialTransform);
+ECOSTRESS_IMPLEMENT(EcostressParaxialTransform);
 
 //-----------------------------------------------------------------------
 /// Convert pariaxial to real coordinates.

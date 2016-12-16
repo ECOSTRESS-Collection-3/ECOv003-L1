@@ -24,6 +24,7 @@ EXTRA_DIST+= @srclib@/test_all.sh
 
 #=================================================================
 # List of source files
+ecostressinc_HEADERS+= @srclib@/ecostress_serialize_support.h
 ecostressinc_HEADERS+= @srclib@/ecostress_camera.h
 libecostress_la_SOURCES+= @srclib@/ecostress_camera.cc
 ecostressinc_HEADERS+= @srclib@/ecostress_paraxial_transform.h

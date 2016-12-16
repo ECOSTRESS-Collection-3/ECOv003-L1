@@ -9,12 +9,14 @@
 %}
 
 %geocal_base_import(quaternion_camera)
+%include "ecostress_paraxial_transform.i"
 
 %ecostress_shared_ptr(Ecostress::EcostressCamera);
 namespace Ecostress {
 class EcostressCamera : public GeoCal::QuaternionCamera {
 public:
   EcostressCamera();
+  %python_attribute_with_set(paraxial_transform, boost::shared_ptr<EcostressParaxialTransform>);
   %pickle_serialization();
 };
 }

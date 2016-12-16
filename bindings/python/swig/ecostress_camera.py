@@ -190,6 +190,35 @@ import geocal_swig.generic_object
 import geocal_swig.observer
 import geocal_swig.camera
 import geocal_swig.with_parameter
+class EcostressParaxialTransform(geocal_swig.generic_object.GenericObject):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self):
+        _ecostress_camera.EcostressParaxialTransform_swiginit(self, _ecostress_camera.new_EcostressParaxialTransform())
+
+    @property
+    def real_to_par(self):
+        return self._v_real_to_par()
+
+
+    @property
+    def par_to_real(self):
+        return self._v_par_to_real()
+
+
+    def __reduce__(self):
+      return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
+
+    __swig_destroy__ = _ecostress_camera.delete_EcostressParaxialTransform
+EcostressParaxialTransform.paraxial_to_real = new_instancemethod(_ecostress_camera.EcostressParaxialTransform_paraxial_to_real, None, EcostressParaxialTransform)
+EcostressParaxialTransform.real_to_paraxial = new_instancemethod(_ecostress_camera.EcostressParaxialTransform_real_to_paraxial, None, EcostressParaxialTransform)
+EcostressParaxialTransform.__str__ = new_instancemethod(_ecostress_camera.EcostressParaxialTransform___str__, None, EcostressParaxialTransform)
+EcostressParaxialTransform._v_real_to_par = new_instancemethod(_ecostress_camera.EcostressParaxialTransform__v_real_to_par, None, EcostressParaxialTransform)
+EcostressParaxialTransform._v_par_to_real = new_instancemethod(_ecostress_camera.EcostressParaxialTransform__v_par_to_real, None, EcostressParaxialTransform)
+EcostressParaxialTransform_swigregister = _ecostress_camera.EcostressParaxialTransform_swigregister
+EcostressParaxialTransform_swigregister(EcostressParaxialTransform)
+
 class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
     """
 
@@ -214,10 +243,29 @@ class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
         """
         _ecostress_camera.EcostressCamera_swiginit(self, _ecostress_camera.new_EcostressCamera())
 
+    def _v_paraxial_transform(self, *args):
+        """
+
+        void Ecostress::EcostressCamera::paraxial_transform(const boost::shared_ptr< EcostressParaxialTransform > &v)
+
+        """
+        return _ecostress_camera.EcostressCamera__v_paraxial_transform(self, *args)
+
+
+    @property
+    def paraxial_transform(self):
+        return self._v_paraxial_transform()
+
+    @paraxial_transform.setter
+    def paraxial_transform(self, value):
+      self._v_paraxial_transform(value)
+
+
     def __reduce__(self):
       return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
 
     __swig_destroy__ = _ecostress_camera.delete_EcostressCamera
+EcostressCamera._v_paraxial_transform = new_instancemethod(_ecostress_camera.EcostressCamera__v_paraxial_transform, None, EcostressCamera)
 EcostressCamera_swigregister = _ecostress_camera.EcostressCamera_swigregister
 EcostressCamera_swigregister(EcostressCamera)
 

@@ -44,6 +44,9 @@ tran.real_to_par[1,:] = multipolyfit(real, pred[:,1], deg)
 tran.par_to_real[0,:] = multipolyfit(pred, real[:,0], deg)
 tran.par_to_real[1,:] = multipolyfit(pred, real[:,1], deg)
 write_shelve("cam_paraxial.xml", tran)
+cam = EcostressCamera()
+cam.paraxial_transform = tran
+write_shelve("camera.xml", cam)
 
 # Check that we calculate the right values
 print("Predict real x max error (pixel) ", 

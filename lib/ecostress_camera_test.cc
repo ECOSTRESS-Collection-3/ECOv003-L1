@@ -9,7 +9,8 @@ BOOST_FIXTURE_TEST_SUITE(ecostress_camera, GlobalFixture)
 
 BOOST_AUTO_TEST_CASE(basic_test)
 {
-  EcostressCamera cam;
+  boost::shared_ptr<EcostressCamera> cam =
+    GeoCal::serialize_read<EcostressCamera>(unit_test_data_dir() + "camera.xml");
   // We'll need to create fixture with this stuff
   std::string orb_fname = test_data_dir() +
     "L1A_RAW_ATT_80005_20150124T204251_0100_01.h5.expected";
@@ -20,13 +21,13 @@ BOOST_AUTO_TEST_CASE(basic_test)
   boost::shared_ptr<GeoCal::OrbitData> od = orb.orbit_data(t);
   GeoCal::SimpleDem dem;
   boost::shared_ptr<GeoCal::CartesianFixed> gp1 =
-    od->surface_intersect(cam, GeoCal::FrameCoordinate(0,0), dem);
+    od->surface_intersect(*cam, GeoCal::FrameCoordinate(0,0), dem);
   boost::shared_ptr<GeoCal::CartesianFixed> gp2 =
-    od->surface_intersect(cam, GeoCal::FrameCoordinate(1,0), dem);
+    od->surface_intersect(*cam, GeoCal::FrameCoordinate(1,0), dem);
   boost::shared_ptr<GeoCal::CartesianFixed> gp3 =
-    od->surface_intersect(cam, GeoCal::FrameCoordinate(0,1), dem);
-  BOOST_CHECK_CLOSE(distance(*gp1, *gp2), 38.89, 1e-2);
-  BOOST_CHECK_CLOSE(distance(*gp1, *gp3), 38.89, 1e-2);
+    od->surface_intersect(*cam, GeoCal::FrameCoordinate(0,1), dem);
+  BOOST_CHECK_CLOSE(distance(*gp1, *gp2), 38.8745, 1e-2);
+  BOOST_CHECK_CLOSE(distance(*gp1, *gp3), 39.6724, 1e-2);
 }
 
 BOOST_AUTO_TEST_CASE(compare_spreadsheet)
@@ -64,7 +65,12 @@ BOOST_AUTO_TEST_CASE(compare_spreadsheet)
 
 BOOST_AUTO_TEST_CASE(serialization)
 {
-  boost::shared_ptr<GeoCal::Camera> cam(new EcostressCamera());
+  boost::shared_ptr<EcostressCamera> cam(new EcostressCamera());
+  for(int i = 0; i < cam->paraxial_transform()->par_to_real().rows(); ++i)
+    for(int j = 0; j < cam->paraxial_transform()->par_to_real().cols(); ++j) {
+      cam->paraxial_transform()->par_to_real()(i,j) = i + j;
+      cam->paraxial_transform()->real_to_par()(i,j) = i + j;
+    }
   std::string d = GeoCal::serialize_write_string(cam);
   if(false)
     std::cerr << d;

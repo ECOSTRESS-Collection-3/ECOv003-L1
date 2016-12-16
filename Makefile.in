@@ -855,7 +855,8 @@ libecostress_la_SOURCES = @srclib@/ecostress_camera.cc \
 
 #=================================================================
 # List of source files
-ecostressinc_HEADERS = @srclib@/ecostress_camera.h \
+ecostressinc_HEADERS = @srclib@/ecostress_serialize_support.h \
+	@srclib@/ecostress_camera.h \
 	@srclib@/ecostress_paraxial_transform.h
 ecostressswiginc_HEADERS = @srclib@/ecostress_swig_array.i \
 	@srclib@/ecostress_camera.i \
