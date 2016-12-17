@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE boost_serialization>
+<boost_serialization signature="serialization::archive" version="13">
+<geocal_object class_id="0" tracking_level="0" version="1">
+	<px class_id="2" class_name="GeoCal::QuaternionCamera" tracking_level="1" version="0" object_id="_0">
+		<focal_length class_id="3" tracking_level="0" version="0">
+			<val>4.25000000000000000e+02</val>
+			<grad class_id="4" tracking_level="0" version="0">
+				<size>0</size>
+			</grad>
+		</focal_length>
+		<number_band>1</number_band>
+		<number_line>1</number_line>
+		<number_sample>5400</number_sample>
+		<line_pitch>
+			<val>7.20000000000000084e-02</val>
+			<grad>
+				<size>0</size>
+			</grad>
+		</line_pitch>
+		<sample_pitch>
+			<val>8.00000000000000017e-02</val>
+			<grad>
+				<size>0</size>
+			</grad>
+		</sample_pitch>
+		<principal_point class_id="5" tracking_level="0" version="0">
+			<count>1</count>
+			<item_version>0</item_version>
+			<item class_id="6" tracking_level="1" version="0" object_id="_1">
+				<line>
+					<val>5.00000000000000000e-01</val>
+					<grad>
+						<size>0</size>
+					</grad>
+				</line>
+				<sample>
+					<val>2.70000000000000000e+03</val>
+					<grad>
+						<size>0</size>
+					</grad>
+				</sample>
+			</item>
+		</principal_point>
+		<frame_to_sc class_id="7" tracking_level="0" version="0">
+			<q1>
+				<val>1.00000000000000000e+00</val>
+				<grad>
+					<size>0</size>
+				</grad>
+			</q1>
+			<q2>
+				<val>0.00000000000000000e+00</val>
+				<grad>
+					<size>0</size>
+				</grad>
+			</q2>
+			<q3>
+				<val>0.00000000000000000e+00</val>
+				<grad>
+					<size>0</size>
+				</grad>
+			</q3>
+			<q4>
+				<val>0.00000000000000000e+00</val>
+				<grad>
+					<size>0</size>
+				</grad>
+			</q4>
+		</frame_to_sc>
+		<frame_convention>0</frame_convention>
+		<line_direction>0</line_direction>
+		<sample_direction>0</sample_direction>
+		<parameter_mask class_id="8" tracking_level="0" version="0">
+			<size>8</size>
+			<data>
+				<item>1</item>
+				<item>1</item>
+				<item>1</item>
+				<item>1</item>
+				<item>1</item>
+				<item>1</item>
+				<item>1</item>
+				<item>1</item>
+			</data>
+		</parameter_mask>
+	</px>
+</geocal_object>
+</boost_serialization>
+

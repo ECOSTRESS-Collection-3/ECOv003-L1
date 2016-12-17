@@ -48,7 +48,7 @@ def old_test_data():
 def igc(old_test_data):
     '''This gives a ImageGroundConnection we can use for testing with.'''
     orb = read_shelve(old_test_data + "orbit_old.xml")
-    cam = read_shelve(old_test_data + "camera.xml")
+    cam = read_shelve(old_test_data + "camera_old.xml")
     tt = read_shelve(old_test_data + "time_table_old.xml")
     band = 0
     ipi = Ipi(orb, cam, band, tt.min_time, tt.max_time, tt)
