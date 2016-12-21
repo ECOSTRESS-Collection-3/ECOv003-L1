@@ -7,8 +7,10 @@ namespace Ecostress {
 /****************************************************************//**
   This is the ecostress camera model.
 
-  Right now we don't model the optical nonlinearity. We'll add that in
-  later.
+  Right now we model the optical nonlinearity with 
+  EcostressParaxialTransform. This is likely just a place holder that
+  will get replaced with something different when we have the real
+  camera model.
 *******************************************************************/
 
 class EcostressCamera : public GeoCal::QuaternionCamera {

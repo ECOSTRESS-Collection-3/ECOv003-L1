@@ -224,8 +224,10 @@ class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
 
     This is the ecostress camera model.
 
-    Right now we don't model the optical nonlinearity. We'll add that in
-    later.
+    Right now we model the optical nonlinearity with
+    EcostressParaxialTransform. This is likely just a place holder that
+    will get replaced with something different when we have the real
+    camera model.
 
     C++ includes: ecostress_camera.h 
     """

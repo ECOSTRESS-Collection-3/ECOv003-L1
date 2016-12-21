@@ -70,8 +70,8 @@ void EcostressCamera::dcs_to_focal_plane(int Band,
 // Go to paraxial focal plane. Units are millimeters.
 //---------------------------------------------------------
 
-  double yf = (focal_length() / Dcs.R_component_4()) * (-Dcs.R_component_2());
-  double xf = (focal_length() / Dcs.R_component_4()) * Dcs.R_component_3();
+  double xf = (focal_length() / Dcs.R_component_4()) * Dcs.R_component_2();
+  double yf = (focal_length() / Dcs.R_component_4()) * Dcs.R_component_3();
 
 //-------------------------------------------------------------------------
 // Transform paraxial focal plane coordinate to real focal plane coordinate.
@@ -90,9 +90,9 @@ void EcostressCamera::dcs_to_focal_plane
 // Go to paraxial focal plane. Units are millimeters.
 //---------------------------------------------------------
 
-  GeoCal::AutoDerivative<double> yf = 
-    (focal_length() / Dcs.R_component_4()) * (-Dcs.R_component_2());
   GeoCal::AutoDerivative<double> xf = 
+    (focal_length() / Dcs.R_component_4()) * Dcs.R_component_2();
+  GeoCal::AutoDerivative<double> yf = 
     (focal_length() / Dcs.R_component_4()) * Dcs.R_component_3();
 
 //-------------------------------------------------------------------------
@@ -118,7 +118,7 @@ EcostressCamera::focal_plane_to_dcs(int Band, double Xfp, double Yfp) const
 /// Then to detector coordinates look vector.
 //-------------------------------------------------------------------------
 
-  return boost::math::quaternion<double>(0, -yf, xf, focal_length());
+  return boost::math::quaternion<double>(0, xf, yf, focal_length());
 }
 
 boost::math::quaternion<GeoCal::AutoDerivative<double> >
@@ -137,7 +137,7 @@ EcostressCamera::focal_plane_to_dcs
 /// Then to detector coordinates look vector.
 //-------------------------------------------------------------------------
 
-  return boost::math::quaternion<GeoCal::AutoDerivative<double> >(0, -yf, xf, focal_length());
+  return boost::math::quaternion<GeoCal::AutoDerivative<double> >(0, xf, yf, focal_length());
 }
 
 
