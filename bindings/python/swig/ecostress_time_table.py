@@ -231,13 +231,31 @@ class EcostressTimeTable(geocal_swig.time_table.TimeTable):
         return self._v_averaging_done()
 
 
+    def _v_number_line_scan(self):
+        """
+
+        int Ecostress::EcostressTimeTable::number_line_scan() const
+
+        """
+        return _ecostress_time_table.EcostressTimeTable__v_number_line_scan(self)
+
+
+    @property
+    def number_line_scan(self):
+        return self._v_number_line_scan()
+
+
     def __reduce__(self):
       return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
 
     __swig_destroy__ = _ecostress_time_table.delete_EcostressTimeTable
 EcostressTimeTable._v_averaging_done = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_averaging_done, None, EcostressTimeTable)
+EcostressTimeTable._v_number_line_scan = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_number_line_scan, None, EcostressTimeTable)
 EcostressTimeTable_swigregister = _ecostress_time_table.EcostressTimeTable_swigregister
 EcostressTimeTable_swigregister(EcostressTimeTable)
+cvar = _ecostress_time_table.cvar
+EcostressTimeTable.nominal_scan_spacing = _ecostress_time_table.cvar.EcostressTimeTable_nominal_scan_spacing
+EcostressTimeTable.frame_time = _ecostress_time_table.cvar.EcostressTimeTable_frame_time
 
 
 

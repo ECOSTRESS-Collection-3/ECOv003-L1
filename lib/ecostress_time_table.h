@@ -48,8 +48,8 @@ public:
   virtual GeoCal::Time max_time() const
   { return *tstart_scan_.rbegin() + nominal_scan_spacing; }
   virtual void print(std::ostream& Os) const;
-  const static double nominal_scan_spacing;
-  const static double frame_time;
+  static const double nominal_scan_spacing;
+  static const double frame_time;
   int number_line_scan() const { return (averaging_done_ ? 128 : 256); }
 private:
   bool averaging_done_;

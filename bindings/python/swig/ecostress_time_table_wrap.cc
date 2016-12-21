@@ -5456,6 +5456,9 @@ namespace swig {
       }
     
 
+  #define SWIG_From_double   PyFloat_FromDouble 
+
+
 
 /* ---------------------------------------------------
  * C++ director class methods
@@ -6525,6 +6528,34 @@ fail:
 }
 
 
+SWIGINTERN int Swig_var_EcostressTimeTable_nominal_scan_spacing_set(PyObject *) {
+  SWIG_Error(SWIG_AttributeError,"Variable EcostressTimeTable_nominal_scan_spacing is read-only.");
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_EcostressTimeTable_nominal_scan_spacing_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_From_double(static_cast< double >(Ecostress::EcostressTimeTable::nominal_scan_spacing));
+  return pyobj;
+}
+
+
+SWIGINTERN int Swig_var_EcostressTimeTable_frame_time_set(PyObject *) {
+  SWIG_Error(SWIG_AttributeError,"Variable EcostressTimeTable_frame_time is read-only.");
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_EcostressTimeTable_frame_time_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_From_double(static_cast< double >(Ecostress::EcostressTimeTable::frame_time));
+  return pyobj;
+}
+
+
 SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_averaging_done(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressTimeTable *arg1 = (Ecostress::EcostressTimeTable *) 0 ;
@@ -6562,6 +6593,49 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_averaging_done(PyObject *SWIGUN
     }
   }
   resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_number_line_scan(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressTimeTable *arg1 = (Ecostress::EcostressTimeTable *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressTimeTable const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressTimeTable const > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  int result;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressTimeTable_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressTimeTable__v_number_line_scan" "', argument " "1"" of type '" "Ecostress::EcostressTimeTable const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressTimeTable * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressTimeTable * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = (int)((Ecostress::EcostressTimeTable const *)arg1)->number_line_scan();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
   return resultobj;
 fail:
   return NULL;
@@ -6654,6 +6728,11 @@ static PyMethodDef SwigMethods[] = {
 		"If true, then we have already done the 2 line averaging.\n"
 		"\n"
 		"Each scan is 256 lines if this is false, 128 if it is true. \n"
+		""},
+	 { (char *)"EcostressTimeTable__v_number_line_scan", (PyCFunction)_wrap_EcostressTimeTable__v_number_line_scan, METH_O, (char *)"\n"
+		"\n"
+		"int Ecostress::EcostressTimeTable::number_line_scan() const\n"
+		"\n"
 		""},
 	 { (char *)"delete_EcostressTimeTable", (PyCFunction)_wrap_delete_EcostressTimeTable, METH_O, (char *)"\n"
 		"\n"
@@ -7882,6 +7961,9 @@ SWIG_init(void) {
   
   GeoCal::SwigTypeMapperBase::add(typeid(Ecostress::EcostressTimeTable), boost::make_shared<GeoCal::SwigTypeMapper< Ecostress::EcostressTimeTable > > ("boost::shared_ptr< Ecostress::EcostressTimeTable > *"));
   
+  PyDict_SetItemString(md,(char*)"cvar", SWIG_globals());
+  SWIG_addvarlink(SWIG_globals(),(char*)"EcostressTimeTable_nominal_scan_spacing",Swig_var_EcostressTimeTable_nominal_scan_spacing_get, Swig_var_EcostressTimeTable_nominal_scan_spacing_set);
+  SWIG_addvarlink(SWIG_globals(),(char*)"EcostressTimeTable_frame_time",Swig_var_EcostressTimeTable_frame_time_get, Swig_var_EcostressTimeTable_frame_time_set);
 #if PY_VERSION_HEX >= 0x03000000
   return m;
 #else

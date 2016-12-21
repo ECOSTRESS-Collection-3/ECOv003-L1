@@ -19,7 +19,10 @@ public:
 		     bool Averaging_done = True);
   virtual GeoCal::ImageCoordinate image_coordinate
     (GeoCal::Time T, const GeoCal::FrameCoordinate& F) const;
+  static const double nominal_scan_spacing;
+  static const double frame_time;
   %python_attribute(averaging_done, bool);
+  %python_attribute(number_line_scan, int);
   %pickle_serialization();
 };
 }
