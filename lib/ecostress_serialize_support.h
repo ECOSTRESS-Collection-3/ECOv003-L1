@@ -14,4 +14,4 @@ template void NAME::load(boost::archive::polymorphic_iarchive& ar, \
 				    const unsigned int version);
 
 #define ECOSTRESS_BASE(NAME,BASE) boost::serialization::void_cast_register<Ecostress::NAME, Ecostress::BASE>();
-#define ECOSTRESS_GENERIC_BASE(NAME) ECOSTRESS_BASE(NAME, GenericObject);
+#define ECOSTRESS_GENERIC_BASE(NAME) boost::serialization::void_cast_register<Ecostress::NAME, GeoCal::GenericObject>();

@@ -31,6 +31,8 @@ ecostressinc_HEADERS+= @srclib@/ecostress_paraxial_transform.h
 libecostress_la_SOURCES+= @srclib@/ecostress_paraxial_transform.cc
 ecostressinc_HEADERS+= @srclib@/ecostress_time_table.h
 libecostress_la_SOURCES+= @srclib@/ecostress_time_table.cc
+ecostressinc_HEADERS+= @srclib@/ecostress_scan_mirror.h
+libecostress_la_SOURCES+= @srclib@/ecostress_scan_mirror.cc
 
 # Files that contain SWIG wrapper information.
 SWIG_SRC += @swigsrc@/ecostress_swig_array_wrap.cc
@@ -41,6 +43,8 @@ SWIG_SRC += @swigsrc@/ecostress_paraxial_transform_wrap.cc
 ecostressswiginc_HEADERS+= @srclib@/ecostress_paraxial_transform.i
 SWIG_SRC += @swigsrc@/ecostress_time_table_wrap.cc
 ecostressswiginc_HEADERS+= @srclib@/ecostress_time_table.i
+SWIG_SRC += @swigsrc@/ecostress_scan_mirror_wrap.cc
+ecostressswiginc_HEADERS+= @srclib@/ecostress_scan_mirror.i
 
 # Test files
 EXTRA_DIST+= @srclib@/unit_test_support.h
@@ -50,6 +54,7 @@ ecostress_test_all_SOURCES+= @srclib@/global_fixture_default.cc
 ecostress_test_all_SOURCES+= @srclib@/ecostress_camera_test.cc
 ecostress_test_all_SOURCES+= @srclib@/ecostress_paraxial_transform_test.cc
 ecostress_test_all_SOURCES+= @srclib@/ecostress_time_table_test.cc
+ecostress_test_all_SOURCES+= @srclib@/ecostress_scan_mirror_test.cc
 
 # Variables used in testing
 export abs_top_srcdir 
