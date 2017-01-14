@@ -128,7 +128,6 @@ class L0BSimulate(object):
       m.set("RangeEndingDate", b[0])
       m.set("RangeEndingTime", b[1])
       m.write()
-      l0b_fd.flush()
 
     # Write ancillary dataset
     # Build part of ANC records from limited RTD data in ENG file
@@ -173,8 +172,6 @@ class L0BSimulate(object):
       for j in range(epr):
         anc_dat[i] = anc_dat[i] + ' %16.10e' % ev[i,j]
       anc_dat[i] = anc_dat[i] + anc_buf
-    att_fd.close()
-    l0b_fd.flush()
 
     # create FLEX packet
     flex_g = l0b_fd.create_group("/flex")
@@ -343,10 +340,6 @@ class L0BSimulate(object):
         l += PPFP
         # end copying current pix_buf to packets
 
-      # close current raw pix and bb files
-      pix_fd.close()
-      bb_fd.close()
-      l0b_fd.flush()
       # end writing packets for current scene file
     # *** take care of runt packet of last scene ***
     print("End all scenes, TOT_LINES=%d runt PIX_PTR=%d" % (tot_lines, pix_ptr) )
@@ -365,8 +358,5 @@ class L0BSimulate(object):
     for v in range(len( self.scene_files )):
       l0b_ifl[v*2] = self.scene_files[v][1]
       l0b_ifl[v*2+1] = self.scene_files[v][2]
-    l0b_fd.flush()
 
-    # done...close L0B file
-    l0b_fd.close()
     print(datetime.now())
