@@ -108,24 +108,27 @@ class L0BSimulate(object):
     print("ANG0=%f ANG1=%f ANG2=%f PIX_ANG=%f" % (ANG0, ANG1, ANG2, PIX_ANG ))
     print(datetime.now())
     self.l0b_fname = l0b_fname + ".h5"
-    l0b_fd = h5py.File(self.l0b_fname, "w", driver='core')
+    l0b_fd = h5py.File(self.l0b_fname, "w")
 
     # Write Standarad Metadata
-    fname = 'ECOSTRESS_'+os.path.basename(l0b_fname)
-    m = WriteStandardMetadata(l0b_fd, product_specfic_group ="L0BMetadata",
-        pge_name="L0B", local_granule_id=fname,
-        build_id="0.0", pge_version="0.0", orbit_based=True )
-    fname = os.path.basename(l0b_fname)
-    m.set("LocalGranuleID", fname)
-    a = self.l0b_fname.split('_')
-    b = a[2].split('T')
-    m.set("RangeBeginningDate", b[0])
-    m.set("RangeBeginningTime", b[1])
-    b = a[3].split('T')
-    m.set("RangeEndingDate", b[0])
-    m.set("RangeEndingTime", b[1])
-    m.write()
-    l0b_fd.flush()
+    # Metadata doesn't work yet with this filenaming convention, so skip this
+    # for now. Will need to come back to this.
+    if(False):
+      fname = 'ECOSTRESS_'+os.path.basename(l0b_fname)
+      m = WriteStandardMetadata(l0b_fd, product_specfic_group ="L0BMetadata",
+                                pge_name="L0B", local_granule_id=fname,
+                                build_id="0.0", pge_version="0.0", orbit_based=True )
+      fname = os.path.basename(l0b_fname)
+      m.set("LocalGranuleID", fname)
+      a = self.l0b_fname.split('_')
+      b = a[2].split('T')
+      m.set("RangeBeginningDate", b[0])
+      m.set("RangeBeginningTime", b[1])
+      b = a[3].split('T')
+      m.set("RangeEndingDate", b[0])
+      m.set("RangeEndingTime", b[1])
+      m.write()
+      l0b_fd.flush()
 
     # Write ancillary dataset
     # Build part of ANC records from limited RTD data in ENG file
@@ -135,10 +138,9 @@ class L0BSimulate(object):
     for t in (295, 325):
       rtd = l1e["/rtdBlackbodyGradients/RTD_%dK" % t]
       l, = rtd.shape
-      anc_buf = anc_buf + " RTD"'%d' % t + "K:"
+      anc_buf += " RTD"'%d' % t + "K:"
       for i in range(l):
-        anc_buf =  anc_buf + '%16.10e' % rtd[i]
-    l1e.close()
+        anc_buf +=  '%16.10e' % rtd[i]
 
     # copy data from raw attitude/ephemeris file
     att_fd = h5py.File(self.l1a_raw_att_fname, "r") 
@@ -205,14 +207,14 @@ class L0BSimulate(object):
     total_scenes = len(self.scene_files)
     for v in range( total_scenes ):
       scene = self.scene_files[v][0]
-      l1a_raw_pix_fname = self.scene_files[v][1]
-      l1a_bb_fname = self.scene_files[v][2]
+      l1a_raw_pix_fname = self.scene_files[v][0]
+      l1a_bb_fname = self.scene_files[v][1]
 
       # open raw pixel data file
-      pix_fd = h5py.File(l1a_raw_pix_fname, "r", driver='core')
+      pix_fd = h5py.File(l1a_raw_pix_fname, "r")
 
       # Also get simulated black body data
-      bb_fd = h5py.File(l1a_bb_fname, "r", driver='core')
+      bb_fd = h5py.File(l1a_bb_fname, "r")
 
       # link to pixel and bb datsasets
       for b in range( BANDS ):
