@@ -51,7 +51,8 @@ BOOST_AUTO_TEST_CASE(basic_test)
 BOOST_AUTO_TEST_CASE(serialization)
 {
   GeoCal::Time tstart = GeoCal::Time::parse_time("2015-01-24T20:42:52Z");
-  boost::shared_ptr<GeoCal::TimeTable> tt(new EcostressTimeTable(tstart));
+  boost::shared_ptr<GeoCal::TimeTable> tt =
+    boost::make_shared<EcostressTimeTable>(tstart);
   std::string d = GeoCal::serialize_write_string(tt);
   if(false)
     std::cerr << d;

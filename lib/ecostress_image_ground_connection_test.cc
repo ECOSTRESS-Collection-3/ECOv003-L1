@@ -5,6 +5,7 @@
 #include "ecostress_camera.h"
 #include "ecostress_scan_mirror.h"
 #include "ecostress_time_table.h"
+#include <boost/make_shared.hpp>
 
 using namespace Ecostress;
 
@@ -17,14 +18,16 @@ BOOST_AUTO_TEST_CASE(basic_test)
   // We'll need to create fixture with this stuff
   std::string orb_fname = test_data_dir() +
     "L1A_RAW_ATT_80005_20150124T204251_0100_01.h5.expected";
-  boost::shared_ptr<GeoCal::Orbit> orb
-    (new GeoCal::HdfOrbit<GeoCal::Eci, GeoCal::TimeJ2000Creator>
-     (orb_fname, "", "Ephemeris/time_j2000", "Ephemeris/eci_position",
-      "Ephemeris/eci_velocity", "Attitude/time_j2000", "Attitude/quaternion"));
+  boost::shared_ptr<GeoCal::Orbit> orb =
+    boost::make_shared<GeoCal::HdfOrbit<GeoCal::Eci, GeoCal::TimeJ2000Creator> >
+    (orb_fname, "", "Ephemeris/time_j2000", "Ephemeris/eci_position",
+     "Ephemeris/eci_velocity", "Attitude/time_j2000", "Attitude/quaternion");
   GeoCal::Time tstart = GeoCal::Time::parse_time("2015-01-24T20:42:52Z");
-  boost::shared_ptr<GeoCal::TimeTable> tt(new EcostressTimeTable(tstart));
-  boost::shared_ptr<GeoCal::Dem> dem(new GeoCal::SimpleDem);
-  boost::shared_ptr<EcostressScanMirror> sm(new EcostressScanMirror);
+  boost::shared_ptr<GeoCal::TimeTable> tt =
+    boost::make_shared<EcostressTimeTable>(tstart);
+  boost::shared_ptr<GeoCal::Dem> dem = boost::make_shared<GeoCal::SimpleDem>();
+  boost::shared_ptr<EcostressScanMirror> sm =
+    boost::make_shared<EcostressScanMirror>();
   boost::shared_ptr<GeoCal::RasterImage> no_img;
   EcostressImageGroundConnection igc(orb, tt, cam, sm, dem, no_img,
 				     "Test title");

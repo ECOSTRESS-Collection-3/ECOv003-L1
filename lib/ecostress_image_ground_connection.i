@@ -27,13 +27,17 @@ public:
    const boost::shared_ptr<GeoCal::Dem>& D,
    const boost::shared_ptr<GeoCal::RasterImage>& Img,
    const std::string& Title = "",
-   int Band= REF_BAND);
-  virtual boost::shared_ptr<GroundCoordinate> 
-  ground_coordinate_dem(const ImageCoordinate& Ic,
-			const Dem& D) const;
-  virtual ImageCoordinate image_coordinate(const GroundCoordinate& Gc) 
-    const;
-  %python_attribute_with_set(band, int)
+   double Resolution=30, int Band= REF_BAND, double Max_height=9000);
+  virtual boost::shared_ptr<GeoCal::GroundCoordinate> 
+  ground_coordinate_dem(const GeoCal::ImageCoordinate& Ic,
+			const GeoCal::Dem& D) const;
+  virtual GeoCal::ImageCoordinate image_coordinate
+  (const GeoCal::GroundCoordinate& Gc) const;
+  boost::shared_ptr<GeoCal::QuaternionOrbitData> orbit_data
+    (const GeoCal::Time& T, double Ic_sample) const;
+  %python_attribute_with_set(band, int);
+  %python_attribute_with_set(resolution, double);
+  %python_attribute_with_set(max_height, double);
   %python_attribute_with_set(orbit, boost::shared_ptr<GeoCal::Orbit>);
   %python_attribute_with_set(time_table,boost::shared_ptr<GeoCal::TimeTable>);
   %python_attribute_with_set(camera,boost::shared_ptr<GeoCal::Camera>);

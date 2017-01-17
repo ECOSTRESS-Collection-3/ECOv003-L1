@@ -23,7 +23,7 @@ public:
    const boost::shared_ptr<GeoCal::Dem>& D,
    const boost::shared_ptr<GeoCal::RasterImage>& Img,
    const std::string& Title = "",
-   int Band= REF_BAND);
+   double Resolution=30, int Band= REF_BAND, double Max_height=9000);
   virtual ~EcostressImageGroundConnection() {}
   virtual blitz::Array<double, 7> 
   cf_look_vector_arr(int ln_start, int smp_start, int nline, int nsamp,
@@ -38,8 +38,10 @@ public:
   { throw GeoCal::Exception("Need to implement this.\n"); }
   virtual boost::shared_ptr<GeoCal::GroundCoordinate> 
   ground_coordinate_dem(const GeoCal::ImageCoordinate& Ic,
-			const GeoCal::Dem& D) const
-  { throw GeoCal::Exception("Need to implement this.\n"); }
+			const GeoCal::Dem& D) const;
+  virtual boost::shared_ptr<GeoCal::GroundCoordinate> 
+  ground_coordinate_approx_height(const GeoCal::ImageCoordinate& Ic, 
+				  double H) const;
   virtual GeoCal::ImageCoordinate image_coordinate
   (const GeoCal::GroundCoordinate& Gc) const 
   { throw GeoCal::Exception("Need to implement this.\n"); }
@@ -51,7 +53,9 @@ public:
   virtual int number_line() const { return tt->max_line(); }
   virtual int number_sample() const { return sm->number_sample(); }
   virtual int number_band() const { return cam->number_band(); }
-
+  boost::shared_ptr<GeoCal::QuaternionOrbitData> orbit_data
+  (const GeoCal::Time& T, double Ic_sample) const;
+    
 //-----------------------------------------------------------------------
 /// Camera band we are using.
 //-----------------------------------------------------------------------
@@ -115,8 +119,38 @@ public:
   
   void scan_mirror(const boost::shared_ptr<EcostressScanMirror>& Sm)
   { sm = Sm; }
+
+//-----------------------------------------------------------------------
+/// Resolution in meters that we examine Dem out. This affects how
+/// long ground_coordinate takes to figure out. It should be about the
+/// resolution of the Dem
+//-----------------------------------------------------------------------
+
+  double resolution() const { return res; }
+
+//-----------------------------------------------------------------------
+/// Set resolution in meters that we examine Dem out. This affects how
+/// long ground_coordinate takes to figure out. It should be about the
+/// resolution of the Dem
+//-----------------------------------------------------------------------
+
+  void resolution(double R) { res = R; }
+
+//-----------------------------------------------------------------------
+/// Maximum height that we expect to see in the Dem.
+//-----------------------------------------------------------------------
+
+  double max_height() const {return max_h;}
+
+//-----------------------------------------------------------------------
+/// Set Maximum height that we expect to see in the Dem.
+//-----------------------------------------------------------------------
+
+  void max_height(double Max_h) { max_h = Max_h;}
+
 private:
   int b;
+  double res, max_h;
   boost::shared_ptr<GeoCal::Orbit> orb;
   boost::shared_ptr<GeoCal::TimeTable> tt;
   boost::shared_ptr<GeoCal::Camera> cam;

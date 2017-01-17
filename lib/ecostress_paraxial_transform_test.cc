@@ -25,7 +25,8 @@ BOOST_AUTO_TEST_CASE(basic_test)
 
 BOOST_AUTO_TEST_CASE(serialization)
 {
-  boost::shared_ptr<EcostressParaxialTransform> tran(new EcostressParaxialTransform());
+  boost::shared_ptr<EcostressParaxialTransform> tran =
+    boost::make_shared<EcostressParaxialTransform>();
   for(int i = 0; i < tran->par_to_real().rows(); ++i)
     for(int j = 0; j < tran->par_to_real().cols(); ++j) {
       tran->par_to_real()(i,j) = i + j;

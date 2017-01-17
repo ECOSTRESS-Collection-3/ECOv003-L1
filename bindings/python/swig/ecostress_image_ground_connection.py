@@ -198,28 +198,31 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
     C++ includes: ecostress_image_ground_connection.h 
     """
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined - class is abstract")
     __repr__ = _swig_repr
     REF_BAND = _ecostress_image_ground_connection.EcostressImageGroundConnection_REF_BAND
 
-    def ground_coordinate_dem(self, Ic, D):
+    def __init__(self, *args):
         """
 
-        virtual boost::shared_ptr<GeoCal::GroundCoordinate> Ecostress::EcostressImageGroundConnection::ground_coordinate_dem(const GeoCal::ImageCoordinate &Ic, const GeoCal::Dem &D) const
-
+        EcostressImageGroundConnection::EcostressImageGroundConnection(const boost::shared_ptr< GeoCal::Orbit > &Orb, const
+        boost::shared_ptr< GeoCal::TimeTable > &Tt, const boost::shared_ptr<
+        GeoCal::Camera > &Cam, const boost::shared_ptr< EcostressScanMirror >
+        &Scan_mirror, const boost::shared_ptr< GeoCal::Dem > &D, const
+        boost::shared_ptr< GeoCal::RasterImage > &Img, const std::string
+        &Title="", double Resolution=30, int Band=REF_BAND, double
+        Max_height=9000)
+        Constructor. 
         """
-        return _ecostress_image_ground_connection.EcostressImageGroundConnection_ground_coordinate_dem(self, Ic, D)
+        _ecostress_image_ground_connection.EcostressImageGroundConnection_swiginit(self, _ecostress_image_ground_connection.new_EcostressImageGroundConnection(*args))
 
-
-    def image_coordinate(self, Gc):
+    def orbit_data(self, T, Ic_sample):
         """
 
-        virtual GeoCal::ImageCoordinate Ecostress::EcostressImageGroundConnection::image_coordinate(const GeoCal::GroundCoordinate &Gc) const
-
+        boost::shared_ptr< GeoCal::QuaternionOrbitData > EcostressImageGroundConnection::orbit_data(const GeoCal::Time &T, double Ic_sample) const
+        Return orbit data for the given time, which has the scan mirror angle
+        applied to it. 
         """
-        return _ecostress_image_ground_connection.EcostressImageGroundConnection_image_coordinate(self, Gc)
+        return _ecostress_image_ground_connection.EcostressImageGroundConnection_orbit_data(self, T, Ic_sample)
 
 
     def _v_band(self, *args):
@@ -238,6 +241,45 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
     @band.setter
     def band(self, value):
       self._v_band(value)
+
+
+    def _v_resolution(self, *args):
+        """
+
+        void Ecostress::EcostressImageGroundConnection::resolution(double R)
+        Set resolution in meters that we examine Dem out.
+
+        This affects how long ground_coordinate takes to figure out. It should
+        be about the resolution of the Dem 
+        """
+        return _ecostress_image_ground_connection.EcostressImageGroundConnection__v_resolution(self, *args)
+
+
+    @property
+    def resolution(self):
+        return self._v_resolution()
+
+    @resolution.setter
+    def resolution(self, value):
+      self._v_resolution(value)
+
+
+    def _v_max_height(self, *args):
+        """
+
+        void Ecostress::EcostressImageGroundConnection::max_height(double Max_h)
+        Set Maximum height that we expect to see in the Dem. 
+        """
+        return _ecostress_image_ground_connection.EcostressImageGroundConnection__v_max_height(self, *args)
+
+
+    @property
+    def max_height(self):
+        return self._v_max_height()
+
+    @max_height.setter
+    def max_height(self, value):
+      self._v_max_height(value)
 
 
     def _v_orbit(self, *args):
@@ -316,9 +358,10 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
       return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
 
     __swig_destroy__ = _ecostress_image_ground_connection.delete_EcostressImageGroundConnection
-EcostressImageGroundConnection.ground_coordinate_dem = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection_ground_coordinate_dem, None, EcostressImageGroundConnection)
-EcostressImageGroundConnection.image_coordinate = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection_image_coordinate, None, EcostressImageGroundConnection)
+EcostressImageGroundConnection.orbit_data = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection_orbit_data, None, EcostressImageGroundConnection)
 EcostressImageGroundConnection._v_band = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_band, None, EcostressImageGroundConnection)
+EcostressImageGroundConnection._v_resolution = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_resolution, None, EcostressImageGroundConnection)
+EcostressImageGroundConnection._v_max_height = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_max_height, None, EcostressImageGroundConnection)
 EcostressImageGroundConnection._v_orbit = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_orbit, None, EcostressImageGroundConnection)
 EcostressImageGroundConnection._v_time_table = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_time_table, None, EcostressImageGroundConnection)
 EcostressImageGroundConnection._v_camera = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_camera, None, EcostressImageGroundConnection)

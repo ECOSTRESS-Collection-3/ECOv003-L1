@@ -4,6 +4,7 @@
 #include "geocal/geocal_serialize_function.h"
 #include <boost/test/unit_test.hpp>
 #include <boost/test/floating_point_comparison.hpp>
+#include <boost/make_shared.hpp>
 
 //-----------------------------------------------------------------------
 /// Check for two matrixes being equal

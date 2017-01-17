@@ -6325,14 +6325,13 @@ fail:
 SWIGINTERN PyObject *_wrap_EcostressScanMirror_scan_mirror_angle(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressScanMirror *arg1 = (Ecostress::EcostressScanMirror *) 0 ;
-  GeoCal::ImageCoordinate *arg2 = 0 ;
+  double arg2 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   boost::shared_ptr< Ecostress::EcostressScanMirror const > tempshared1 ;
   boost::shared_ptr< Ecostress::EcostressScanMirror const > *smartarg1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  boost::shared_ptr< GeoCal::ImageCoordinate const > tempshared2 ;
+  double val2 ;
+  int ecode2 = 0 ;
   PyObject *swig_obj[2] ;
   double result;
   
@@ -6352,34 +6351,14 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror_scan_mirror_angle(PyObject *SWIGU
       arg1 = const_cast< Ecostress::EcostressScanMirror * >((smartarg1 ? smartarg1->get() : 0));
     }
   }
-  {
-    int newmem = 0;
-    // Added mms
-    // First check to see if all ready pointer type
-    GeoCal::ImageCoordinate *ptr;
-    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], (void**)(&ptr), SWIGTYPE_p_GeoCal__ImageCoordinate,  0 , &newmem);
-    if (SWIG_IsOK(res2)) {
-      arg2 = ptr;
-    } else {
-      res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageCoordinate_t,  0 , &newmem);
-      if (!SWIG_IsOK(res2)) {
-        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "EcostressScanMirror_scan_mirror_angle" "', argument " "2"" of type '" "GeoCal::ImageCoordinate const &""'"); 
-      }
-      if (!argp2) {
-        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressScanMirror_scan_mirror_angle" "', argument " "2"" of type '" "GeoCal::ImageCoordinate const &""'"); 
-      }
-      if (newmem & SWIG_CAST_NEW_MEMORY) {
-        tempshared2 = *reinterpret_cast< boost::shared_ptr< const GeoCal::ImageCoordinate > * >(argp2);
-        delete reinterpret_cast< boost::shared_ptr< const GeoCal::ImageCoordinate > * >(argp2);
-        arg2 = const_cast< GeoCal::ImageCoordinate * >(tempshared2.get());
-      } else {
-        arg2 = const_cast< GeoCal::ImageCoordinate * >(reinterpret_cast< boost::shared_ptr< const GeoCal::ImageCoordinate > * >(argp2)->get());
-      }
-    }
-  }
+  ecode2 = SWIG_AsVal_double(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "EcostressScanMirror_scan_mirror_angle" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
   {
     try {
-      result = (double)((Ecostress::EcostressScanMirror const *)arg1)->scan_mirror_angle((GeoCal::ImageCoordinate const &)*arg2);
+      result = (double)((Ecostress::EcostressScanMirror const *)arg1)->scan_mirror_angle(arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
     } catch (const std::exception& e) {
@@ -6396,14 +6375,13 @@ fail:
 SWIGINTERN PyObject *_wrap_EcostressScanMirror_rotation_quaterion(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressScanMirror *arg1 = (Ecostress::EcostressScanMirror *) 0 ;
-  GeoCal::ImageCoordinate *arg2 = 0 ;
+  double arg2 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   boost::shared_ptr< Ecostress::EcostressScanMirror const > tempshared1 ;
   boost::shared_ptr< Ecostress::EcostressScanMirror const > *smartarg1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  boost::shared_ptr< GeoCal::ImageCoordinate const > tempshared2 ;
+  double val2 ;
+  int ecode2 = 0 ;
   PyObject *swig_obj[2] ;
   SwigValueWrapper< boost::math::quaternion< double > > result;
   
@@ -6423,34 +6401,14 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror_rotation_quaterion(PyObject *SWIG
       arg1 = const_cast< Ecostress::EcostressScanMirror * >((smartarg1 ? smartarg1->get() : 0));
     }
   }
-  {
-    int newmem = 0;
-    // Added mms
-    // First check to see if all ready pointer type
-    GeoCal::ImageCoordinate *ptr;
-    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], (void**)(&ptr), SWIGTYPE_p_GeoCal__ImageCoordinate,  0 , &newmem);
-    if (SWIG_IsOK(res2)) {
-      arg2 = ptr;
-    } else {
-      res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageCoordinate_t,  0 , &newmem);
-      if (!SWIG_IsOK(res2)) {
-        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "EcostressScanMirror_rotation_quaterion" "', argument " "2"" of type '" "GeoCal::ImageCoordinate const &""'"); 
-      }
-      if (!argp2) {
-        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressScanMirror_rotation_quaterion" "', argument " "2"" of type '" "GeoCal::ImageCoordinate const &""'"); 
-      }
-      if (newmem & SWIG_CAST_NEW_MEMORY) {
-        tempshared2 = *reinterpret_cast< boost::shared_ptr< const GeoCal::ImageCoordinate > * >(argp2);
-        delete reinterpret_cast< boost::shared_ptr< const GeoCal::ImageCoordinate > * >(argp2);
-        arg2 = const_cast< GeoCal::ImageCoordinate * >(tempshared2.get());
-      } else {
-        arg2 = const_cast< GeoCal::ImageCoordinate * >(reinterpret_cast< boost::shared_ptr< const GeoCal::ImageCoordinate > * >(argp2)->get());
-      }
-    }
-  }
+  ecode2 = SWIG_AsVal_double(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "EcostressScanMirror_rotation_quaterion" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
   {
     try {
-      result = ((Ecostress::EcostressScanMirror const *)arg1)->rotation_quaterion((GeoCal::ImageCoordinate const &)*arg2);
+      result = ((Ecostress::EcostressScanMirror const *)arg1)->rotation_quaterion(arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
     } catch (const std::exception& e) {
@@ -6721,12 +6679,12 @@ static PyMethodDef SwigMethods[] = {
 		""},
 	 { (char *)"EcostressScanMirror_scan_mirror_angle", _wrap_EcostressScanMirror_scan_mirror_angle, METH_VARARGS, (char *)"\n"
 		"\n"
-		"double Ecostress::EcostressScanMirror::scan_mirror_angle(const GeoCal::ImageCoordinate &Ic) const\n"
+		"double Ecostress::EcostressScanMirror::scan_mirror_angle(double Ic_sample) const\n"
 		"Scan mirror angle, in degrees. \n"
 		""},
 	 { (char *)"EcostressScanMirror_rotation_quaterion", _wrap_EcostressScanMirror_rotation_quaterion, METH_VARARGS, (char *)"\n"
 		"\n"
-		"boost::math::quaternion<double> Ecostress::EcostressScanMirror::rotation_quaterion(const GeoCal::ImageCoordinate &Ic) const\n"
+		"boost::math::quaternion<double> Ecostress::EcostressScanMirror::rotation_quaterion(double Ic_sample) const\n"
 		"Rotation matrix that take the view vector for the Camera and takes it\n"
 		"to the space craft coordinate system. \n"
 		""},

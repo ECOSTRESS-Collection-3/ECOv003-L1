@@ -65,7 +65,8 @@ BOOST_AUTO_TEST_CASE(compare_spreadsheet)
 
 BOOST_AUTO_TEST_CASE(serialization)
 {
-  boost::shared_ptr<EcostressCamera> cam(new EcostressCamera());
+  boost::shared_ptr<EcostressCamera> cam =
+    boost::make_shared<EcostressCamera>();
   for(int i = 0; i < cam->paraxial_transform()->par_to_real().rows(); ++i)
     for(int j = 0; j < cam->paraxial_transform()->par_to_real().cols(); ++j) {
       cam->paraxial_transform()->par_to_real()(i,j) = i + j;

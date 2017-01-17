@@ -211,23 +211,23 @@ class EcostressScanMirror(geocal_swig.generic_object.GenericObject):
         """
         _ecostress_scan_mirror.EcostressScanMirror_swiginit(self, _ecostress_scan_mirror.new_EcostressScanMirror(Scan_start, Scan_end, Number_sample))
 
-    def scan_mirror_angle(self, Ic):
+    def scan_mirror_angle(self, Ic_sample):
         """
 
-        double Ecostress::EcostressScanMirror::scan_mirror_angle(const GeoCal::ImageCoordinate &Ic) const
+        double Ecostress::EcostressScanMirror::scan_mirror_angle(double Ic_sample) const
         Scan mirror angle, in degrees. 
         """
-        return _ecostress_scan_mirror.EcostressScanMirror_scan_mirror_angle(self, Ic)
+        return _ecostress_scan_mirror.EcostressScanMirror_scan_mirror_angle(self, Ic_sample)
 
 
-    def rotation_quaterion(self, Ic):
+    def rotation_quaterion(self, Ic_sample):
         """
 
-        boost::math::quaternion<double> Ecostress::EcostressScanMirror::rotation_quaterion(const GeoCal::ImageCoordinate &Ic) const
+        boost::math::quaternion<double> Ecostress::EcostressScanMirror::rotation_quaterion(double Ic_sample) const
         Rotation matrix that take the view vector for the Camera and takes it
         to the space craft coordinate system. 
         """
-        return _ecostress_scan_mirror.EcostressScanMirror_rotation_quaterion(self, Ic)
+        return _ecostress_scan_mirror.EcostressScanMirror_rotation_quaterion(self, Ic_sample)
 
 
     def _v_scan_start(self):

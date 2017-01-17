@@ -48,8 +48,8 @@ public:
 /// Scan mirror angle, in degrees.
 //-------------------------------------------------------------------------
 
-  double scan_mirror_angle(const GeoCal::ImageCoordinate& Ic) const
-  { return scan_start_ + Ic.sample * scan_step_; }
+  double scan_mirror_angle(double Ic_sample) const
+  { return scan_start_ + Ic_sample * scan_step_; }
 
 //-------------------------------------------------------------------------
 /// Rotation matrix that take the view vector for the Camera and takes
@@ -57,8 +57,8 @@ public:
 //-------------------------------------------------------------------------
 
   boost::math::quaternion<double>
-  rotation_quaterion(const GeoCal::ImageCoordinate& Ic) const
-  { return GeoCal::quat_rot_x(scan_mirror_angle(Ic) *
+  rotation_quaterion(double Ic_sample) const
+  { return GeoCal::quat_rot_x(scan_mirror_angle(Ic_sample) *
 			      GeoCal::Constant::deg_to_rad); }
   virtual void print(std::ostream& Os) const;
 private:
