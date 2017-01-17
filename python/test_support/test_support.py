@@ -45,7 +45,7 @@ def old_test_data():
     yield os.path.abspath(os.path.dirname(__file__) + "/../../end_to_end_testing") + "/"
 
 @pytest.yield_fixture(scope="function")
-def igc(old_test_data):
+def igc_old(old_test_data):
     '''This gives a ImageGroundConnection we can use for testing with.'''
     orb = read_shelve(old_test_data + "orbit_old.xml")
     cam = read_shelve(old_test_data + "camera_old.xml")

@@ -10,12 +10,12 @@ def test_basic():
     cam = EcostressCamera()
     print(cam)
 
-def test_camera_use(igc, unit_test_data):
+def test_camera_use(igc_old, unit_test_data):
     '''Basic test of have camera used by geocal.'''
     ic = ImageCoordinate(0,0)
-    t, fc = igc.ipi.time_table.time(ic)
-    od = igc.ipi.orbit.orbit_data(t)
-    dem = igc.dem
+    t, fc = igc_old.ipi.time_table.time(ic)
+    od = igc_old.ipi.orbit.orbit_data(t)
+    dem = igc_old.dem
     cam = read_shelve(unit_test_data + "camera.xml")
     gp1 = od.surface_intersect(cam, fc, dem)
     fc.line = fc.line + 1

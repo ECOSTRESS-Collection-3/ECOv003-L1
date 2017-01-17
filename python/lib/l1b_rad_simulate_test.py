@@ -7,12 +7,12 @@ def fname(band):
     return "/data/smyth/AsterMosiac/calnorm_b%d.img" % band
 
 @slow
-def test_l1b_rad_simulate(isolated_dir, igc):
+def test_l1b_rad_simulate(isolated_dir, igc_old):
     raise SkipTest  # Don't normally run this, it takes a while and we only
                     # have the test data on pistol
     sdata = [VicarLiteRasterImage(fname(aster_band)) for aster_band in [14, 14, 12, 11, 10, 4]]
-    l1b_sim = L1bRadSimulate(igc.orbit, igc.time_table, igc.camera, sdata,
-                             raycast_resolution = 100.0)
+    l1b_sim = L1bRadSimulate(igc_old.orbit, igc_old.time_table, igc_old.camera,
+                             sdata, raycast_resolution = 100.0)
     # Limitation of test data is that it expects to be in end_to_end_testing
     # directory because of relative paths.
     curdir = os.getcwd()
