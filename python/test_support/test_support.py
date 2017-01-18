@@ -2,8 +2,15 @@
 import pytest
 import os
 from geocal import makedirs_p, read_shelve, Ipi, SrtmDem, \
-    IpiImageGroundConnection, SrtmLwmData
-
+    IpiImageGroundConnection, SrtmLwmData, HdfOrbit_Eci_TimeJ2000, \
+    MeasuredTimeTable, Time, ImageCoordinate
+import h5py
+try:
+    from ecostress_swig import *
+    have_swig = True
+except ImportError:
+    have_swig = False
+    
 @pytest.yield_fixture(scope="function")
 def isolated_dir(tmpdir):
     '''This is a fixture that creates a temporary directory, and uses this
@@ -82,6 +89,36 @@ def test_data():
         if(not os.path.exists(tdata)):
             raise RuntimeError("Can't find location of end to end test data")
     yield tdata
+
+@pytest.yield_fixture(scope="function")
+def igc(unit_test_data, test_data):
+    '''Like igc_old, but a more realistic IGC'''
+    if(not have_swig):
+        raise RuntimeError("You need to install the ecostress swig code first. You can install just this by doing 'make install-swig-python'")
+    cam = read_shelve(unit_test_data + "camera.xml")
+    orb_fname = test_data + "L1A_RAW_ATT_80005_20150124T204251_0100_01.h5.expected"
+    orb = HdfOrbit_Eci_TimeJ2000(orb_fname, "", "Ephemeris/time_j2000",
+                                 "Ephemeris/eci_position",
+                                 "Ephemeris/eci_velocity",
+                                 "Attitude/time_j2000",
+                                 "Attitude/quaternion")
+    rad_fname = test_data + "ECOSTRESS_L1B_RAD_80005_001_20150124T204251_0100_01.h5.expected"
+
+    # Kind of round about way to come up with a time table, we'll likely want
+    # to change this in the future
+    f = h5py.File(rad_fname, "r")
+    tmlist = f["/Time/line_start_time_j2000"][:]
+    tt = MeasuredTimeTable([Time.time_j2000(t) for t in tmlist])
+    t0, fc = tt.time(ImageCoordinate(0,0))
+    tt = EcostressTimeTable(t0, False)
+
+    
+    # False here says it ok for SrtmDem to not have tile. This gives support
+    # for data that is over the ocean.
+    dem = SrtmDem("",False)
+    sm = EcostressScanMirror()
+    igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
+    yield igc
     
 slow = pytest.mark.skipif(
     not pytest.config.getoption("--run-slow"),
