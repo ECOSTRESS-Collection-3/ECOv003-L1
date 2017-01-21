@@ -289,17 +289,14 @@ class L0BSimulate(object):
             ptr = HDR_LEN
             # initialize data checksum using hdr buffer
             hdr[HSUM],hdr[HSUM+1] = 0,0
-            for b in range( BANDS ):
-              # step through FPs per packet
-              for i in range( bts, pe1 ):
-                #write pix data
-                flex_d[pkt_id, ptr:ptr+PPFP] = pix_buf[:,i,b]
-                ptr = ptr + PPFP
-              # generate data checksum
-              for i in range( bts, pe1, 2 ):
-                for j in range( PPFP ):
-                  hdr[HSUM] = hdr[HSUM]^pix_buf[j,i,b]
-                  hdr[HSUM+1] = hdr[HSUM+1]^pix_buf[j,i+1,b]
+            # This the fortran order here is right. Eugene may need to
+            # check this.
+            t = pix_buf[:,bts:pe1,:].flatten('F')
+            flex_d[pkt_id, ptr:(ptr+t.shape[0])] = t
+            ptr += t.shape[0]
+            # generate data checksum
+            hdr[HSUM] ^= np.bitwise_xor.reduce(pix_buf[0:PPFP, bts:pe1:2,:].flatten())
+            hdr[HSUM+1] ^= np.bitwise_xor.reduce(pix_buf[0:PPFP, bts+1:pe1+1:2,:].flatten())
             # write data checksum
             flex_d[pkt_id,DSUM:DSUM+2] = hdr[HSUM:HSUM+2,0]
             # next point in pix_buf
