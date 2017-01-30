@@ -14,7 +14,7 @@
 namespace Ecostress {
 class EcostressScanMirror : public GeoCal::GenericObject {
 public:
-  EcostressScanMirror(double Scan_start = 25.5, double Scan_end = -25.5,
+  EcostressScanMirror(double Scan_start = -25.5, double Scan_end = 25.5,
 		      int Number_sample = 5400);
   double scan_mirror_angle(double Ic_sample) const;
   boost::math::quaternion<double>

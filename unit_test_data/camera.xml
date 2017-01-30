@@ -115,7 +115,7 @@
 			</principal_point>
 			<frame_to_sc class_id="8" tracking_level="0" version="0">
 				<q1>
-					<val>1.00000000000000000e+00</val>
+					<val>0.00000000000000000e+00</val>
 					<grad>
 						<size>0</size>
 					</grad>
@@ -133,7 +133,7 @@
 					</grad>
 				</q3>
 				<q4>
-					<val>0.00000000000000000e+00</val>
+					<val>1.00000000000000000e+00</val>
 					<grad>
 						<size>0</size>
 					</grad>

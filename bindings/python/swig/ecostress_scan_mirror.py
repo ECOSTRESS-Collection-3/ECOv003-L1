@@ -199,10 +199,10 @@ class EcostressScanMirror(geocal_swig.generic_object.GenericObject):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
 
-    def __init__(self, Scan_start=25.5, Scan_end=-25.5, Number_sample=5400):
+    def __init__(self, Scan_start=-25.5, Scan_end=25.5, Number_sample=5400):
         """
 
-        Ecostress::EcostressScanMirror::EcostressScanMirror(double Scan_start=25.5, double Scan_end=-25.5, int
+        Ecostress::EcostressScanMirror::EcostressScanMirror(double Scan_start=-25.5, double Scan_end=25.5, int
         Number_sample=5400)
         Constructor.
 

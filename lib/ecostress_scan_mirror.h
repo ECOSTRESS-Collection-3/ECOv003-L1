@@ -20,7 +20,7 @@ public:
 /// than the normal radians we use for angles).
 //-------------------------------------------------------------------------
 
-  EcostressScanMirror(double Scan_start = 25.5, double Scan_end = -25.5,
+  EcostressScanMirror(double Scan_start = -25.5, double Scan_end = 25.5,
 		      int Number_sample = 5400)
     : scan_start_(Scan_start), scan_end_(Scan_end),
       number_sample_(Number_sample)

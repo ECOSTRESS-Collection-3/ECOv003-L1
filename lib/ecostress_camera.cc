@@ -16,10 +16,12 @@ ECOSTRESS_IMPLEMENT(EcostressCamera);
 //-----------------------------------------------------------------------
 /// Constructor. Right now we have everything hardcoded, we'll change
 /// this to use a configuration file in the future.
+///
+/// \todo Not 100% sure about 180 rotation about z axis here
 //-----------------------------------------------------------------------
 
 EcostressCamera::EcostressCamera()
-  : QuaternionCamera(boost::math::quaternion<double>(1,0,0,0), 256, 1,
+  : QuaternionCamera(boost::math::quaternion<double>(0,0,0,1), 256, 1,
 		     40e-3, 40e-3, 425, GeoCal::FrameCoordinate(128,0.5),
 		     QuaternionCamera::LINE_IS_X,
 		     QuaternionCamera::INCREASE_IS_NEGATIVE,

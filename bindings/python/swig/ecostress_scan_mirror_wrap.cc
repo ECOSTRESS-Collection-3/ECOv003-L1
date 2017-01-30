@@ -6670,7 +6670,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"SHARED_PTR_DISOWN_swigconstant", SHARED_PTR_DISOWN_swigconstant, METH_VARARGS, NULL},
 	 { (char *)"new_EcostressScanMirror", _wrap_new_EcostressScanMirror, METH_VARARGS, (char *)"\n"
 		"\n"
-		"Ecostress::EcostressScanMirror::EcostressScanMirror(double Scan_start=25.5, double Scan_end=-25.5, int\n"
+		"Ecostress::EcostressScanMirror::EcostressScanMirror(double Scan_start=-25.5, double Scan_end=25.5, int\n"
 		"Number_sample=5400)\n"
 		"Constructor.\n"
 		"\n"
