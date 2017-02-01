@@ -1,47 +1,34 @@
 #include "unit_test_support.h"
 #include "ecostress_image_ground_connection.h"
-#include "geocal/hdf_orbit.h"
-#include "geocal/simple_dem.h"
-#include "ecostress_camera.h"
-#include "ecostress_scan_mirror.h"
-#include "ecostress_time_table.h"
-#include <boost/make_shared.hpp>
+#include "ecostress_igc_fixture.h"
 
 using namespace Ecostress;
 
-BOOST_FIXTURE_TEST_SUITE(ecostress_image_ground_connection, GlobalFixture)
+BOOST_FIXTURE_TEST_SUITE(ecostress_image_ground_connection, EcostressIgcFixture)
 
 BOOST_AUTO_TEST_CASE(basic_test)
 {
-  boost::shared_ptr<EcostressCamera> cam =
-    GeoCal::serialize_read<EcostressCamera>(unit_test_data_dir() + "camera.xml");
-  // We'll need to create fixture with this stuff
-  std::string orb_fname = test_data_dir() +
-    "L1A_RAW_ATT_80005_20150124T204251_0100_01.h5.expected";
-  boost::shared_ptr<GeoCal::Orbit> orb =
-    boost::make_shared<GeoCal::HdfOrbit<GeoCal::Eci, GeoCal::TimeJ2000Creator> >
-    (orb_fname, "", "Ephemeris/time_j2000", "Ephemeris/eci_position",
-     "Ephemeris/eci_velocity", "Attitude/time_j2000", "Attitude/quaternion");
-  GeoCal::Time tstart = GeoCal::Time::parse_time("2015-01-24T20:42:52Z");
-  boost::shared_ptr<GeoCal::TimeTable> tt =
-    boost::make_shared<EcostressTimeTable>(tstart);
-  boost::shared_ptr<GeoCal::Dem> dem = boost::make_shared<GeoCal::SimpleDem>();
-  boost::shared_ptr<EcostressScanMirror> sm =
-    boost::make_shared<EcostressScanMirror>();
-  boost::shared_ptr<GeoCal::RasterImage> no_img;
-  EcostressImageGroundConnection igc(orb, tt, cam, sm, dem, no_img,
-				     "Test title");
+  BOOST_CHECK_EQUAL(igc->number_line(), 5632);
+  BOOST_CHECK_EQUAL(igc->number_sample(), 5400);
+  BOOST_CHECK_EQUAL(igc->number_band(), 6);
+  BOOST_CHECK_CLOSE(igc->resolution(), 30.0, 1e-4);
+  BOOST_CHECK_CLOSE(igc->max_height(), 9000.0, 1e-4);
+  BOOST_CHECK_EQUAL(igc->band(),
+		    (int) EcostressImageGroundConnection::REF_BAND);
+  BOOST_CHECK(distance(*igc->ground_coordinate(GeoCal::ImageCoordinate(10,10)),
+		       GeoCal::Geodetic(37.7166702741, -124.572923589)) < 1.0);
 }
 
 
 BOOST_AUTO_TEST_CASE(serialization)
 {
-  // std::string d = GeoCal::serialize_write_string(cam);
-  // if(false)
-  //   std::cerr << d;
-  // boost::shared_ptr<GeoCal::Camera> camr =
-  //   GeoCal::serialize_read_string<GeoCal::Camera>(d);
-  // BOOST_CHECK_EQUAL(cam->number_band(), camr->number_band());
+  std::string d = GeoCal::serialize_write_string(igc);
+  if(false)
+    std::cerr << d;
+  boost::shared_ptr<EcostressImageGroundConnection> igcr =
+    GeoCal::serialize_read_string<EcostressImageGroundConnection>(d);
+  BOOST_CHECK(distance(*igc->ground_coordinate(GeoCal::ImageCoordinate(10,10)),
+		       GeoCal::Geodetic(37.7166702741, -124.572923589)) < 1.0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

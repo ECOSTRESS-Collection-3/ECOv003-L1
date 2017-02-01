@@ -247,7 +247,7 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
         """
 
         void Ecostress::EcostressImageGroundConnection::resolution(double R)
-        Set resolution in meters that we examine Dem out.
+        Set resolution in meters that we examine Dem at.
 
         This affects how long ground_coordinate takes to figure out. It should
         be about the resolution of the Dem 

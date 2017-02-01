@@ -53,6 +53,7 @@ ecostressswiginc_HEADERS+= @srclib@/ecostress_image_ground_connection.i
 # Test files
 EXTRA_DIST+= @srclib@/unit_test_support.h
 EXTRA_DIST+= @srclib@/global_fixture.h
+EXTRA_DIST+= @srclib@/ecostress_igc_fixture.h
 ecostress_test_all_SOURCES+= @srclib@/global_fixture.cc
 ecostress_test_all_SOURCES+= @srclib@/global_fixture_default.cc
 ecostress_test_all_SOURCES+= @srclib@/ecostress_camera_test.cc

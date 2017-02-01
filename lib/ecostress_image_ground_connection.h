@@ -121,7 +121,7 @@ public:
   { sm = Sm; }
 
 //-----------------------------------------------------------------------
-/// Resolution in meters that we examine Dem out. This affects how
+/// Resolution in meters that we examine Dem at. This affects how
 /// long ground_coordinate takes to figure out. It should be about the
 /// resolution of the Dem
 //-----------------------------------------------------------------------
@@ -129,7 +129,7 @@ public:
   double resolution() const { return res; }
 
 //-----------------------------------------------------------------------
-/// Set resolution in meters that we examine Dem out. This affects how
+/// Set resolution in meters that we examine Dem at. This affects how
 /// long ground_coordinate takes to figure out. It should be about the
 /// resolution of the Dem
 //-----------------------------------------------------------------------

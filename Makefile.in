@@ -751,6 +751,7 @@ EXTRA_DIST = @srcpythonlib@/cython_sample.pyx \
 	%_wrap.cc, %.py, $(FULL_SWIG_SRC)) $(FULL_SWIG_SRC) \
 	$(srcdir)/$(swigsrc)/*_wrap.h @srclib@/test_all.sh \
 	@srclib@/unit_test_support.h @srclib@/global_fixture.h \
+	@srclib@/ecostress_igc_fixture.h \
 	@unittestdata@/cam_paraxial.xml \
 	@unittestdata@/SMAP_L1B_TB_SPS_RunConfig_20150228T224642376.xml
 CYTHON_SRC = @srccython@/cython_sample.cc \

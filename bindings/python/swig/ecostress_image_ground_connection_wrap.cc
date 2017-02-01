@@ -8579,7 +8579,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"EcostressImageGroundConnection__v_resolution", _wrap_EcostressImageGroundConnection__v_resolution, METH_VARARGS, (char *)"\n"
 		"\n"
 		"void Ecostress::EcostressImageGroundConnection::resolution(double R)\n"
-		"Set resolution in meters that we examine Dem out.\n"
+		"Set resolution in meters that we examine Dem at.\n"
 		"\n"
 		"This affects how long ground_coordinate takes to figure out. It should\n"
 		"be about the resolution of the Dem \n"
