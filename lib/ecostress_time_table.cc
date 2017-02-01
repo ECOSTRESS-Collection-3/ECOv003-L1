@@ -48,7 +48,7 @@ EcostressTimeTable::EcostressTimeTable
 GeoCal::ImageCoordinate EcostressTimeTable::image_coordinate
 (GeoCal::Time T, const GeoCal::FrameCoordinate& F) const
 {
-  range_check(T, min_time(), max_time());
+  range_check_inclusive(T, min_time(), max_time());
   int tindex = std::lower_bound(tstart_scan_.begin(), tstart_scan_.end(), T) -
     tstart_scan_.begin();
   if(tindex == (int) tstart_scan_.size() || tstart_scan_[tindex] > T)
@@ -65,7 +65,7 @@ EcostressTimeTable::image_coordinate_with_derivative
   (const GeoCal::TimeWithDerivative& T, 
    const GeoCal::FrameCoordinateWithDerivative& F) const
 {
-  range_check(T.value(), min_time(), max_time());
+  range_check_inclusive(T.value(), min_time(), max_time());
   int tindex = std::lower_bound(tstart_scan_.begin(), tstart_scan_.end(),
 				T.value()) - tstart_scan_.begin();
   if(tindex == (int) tstart_scan_.size() || tstart_scan_[tindex] > T.value())
@@ -81,7 +81,7 @@ void EcostressTimeTable::time
 (const GeoCal::ImageCoordinate& Ic,
  GeoCal::Time& T, GeoCal::FrameCoordinate& F) const
 {
-  range_check(Ic.line, 0.0, (double) max_line());
+  range_check(Ic.line, (double) min_line(), (double) max_line() + 1.0);
   int tindex = (int) floor(Ic.line / number_line_scan());
   F.line = Ic.line - (tindex * number_line_scan());
   T = tstart_scan_[tindex] + frame_time * Ic.sample;
@@ -94,7 +94,7 @@ void EcostressTimeTable::time_with_derivative
    GeoCal::TimeWithDerivative& T, 
    GeoCal::FrameCoordinateWithDerivative& F) const
 {
-  range_check(Ic.line.value(), (double) 0, (double) max_line());
+  range_check(Ic.line.value(), (double) min_line(), (double) max_line() + 1.0);
   int tindex = (int) floor(Ic.line.value() / number_line_scan());
   F.line = Ic.line - (tindex * number_line_scan());
   T = GeoCal::TimeWithDerivative(tstart_scan_[tindex]) +
