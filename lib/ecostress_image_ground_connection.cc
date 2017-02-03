@@ -100,7 +100,6 @@ void EcostressImageGroundConnection::print(std::ostream& Os) const
      << "  Orbit: \n";
     opad << *orb;
     opad.strict_sync();
-    opad.strict_sync();
     Os << "  Time table: \n";
     opad << *tt;
     opad.strict_sync();
