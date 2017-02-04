@@ -29,7 +29,10 @@ namespace Ecostress {
   only worrying about the middle of each image pixel.
 *******************************************************************/
 
-class GroundCoordinateArray : public GeoCal::Printable<GroundCoordinateArray> {
+class GroundCoordinateArray : public GeoCal::Printable<GroundCoordinateArray>,
+			      boost::noncopyable {
+// We can't copy this because of the result_cache. We could create a
+// copy constructor if this becomes an issue.
 public:
   GroundCoordinateArray(const boost::shared_ptr<EcostressImageGroundConnection>& Igc)
     : igc_(Igc) { init(); }
@@ -37,9 +40,20 @@ public:
   virtual void print(std::ostream& Os) const;
   const boost::shared_ptr<EcostressImageGroundConnection>&  igc() const
   { return igc_;}
+  blitz::Array<double,3>
+  ground_coor_arr(int Start_line) const;
 private:
   boost::shared_ptr<EcostressImageGroundConnection> igc_;
+  // The ScLookVector is identical for all samples, so we calculate
+  // once and cache
+  std::vector<GeoCal::ScLookVector> camera_slv;
+  // These are redundant with igc_, but we stash these just to make
+  // our code simpler.
+  int b; // band we are working with
+  boost::shared_ptr<GeoCal::Camera> cam;
   void init();
+  void ground_corr_arr_samp(int Start_line, int Sample,
+			    bool initial_samp = false) const;
   GroundCoordinateArray() {}
   friend class boost::serialization::access;
   template<class Archive>
