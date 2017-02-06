@@ -44,15 +44,18 @@ public:
   ground_coor_arr(int Start_line) const;
 private:
   boost::shared_ptr<EcostressImageGroundConnection> igc_;
+  mutable blitz::Array<double, 3> res;
+  mutable blitz::Array<double, 1> dist;
   // The ScLookVector is identical for all samples, so we calculate
   // once and cache
   std::vector<GeoCal::ScLookVector> camera_slv;
   // These are redundant with igc_, but we stash these just to make
   // our code simpler.
-  int b; // band we are working with
+  int b;			// Band we are working with
   boost::shared_ptr<GeoCal::Camera> cam;
+  boost::shared_ptr<GeoCal::TimeTable> tt;
   void init();
-  void ground_corr_arr_samp(int Start_line, int Sample,
+  void ground_coor_arr_samp(int Start_line, int Sample,
 			    bool initial_samp = false) const;
   GroundCoordinateArray() {}
   friend class boost::serialization::access;

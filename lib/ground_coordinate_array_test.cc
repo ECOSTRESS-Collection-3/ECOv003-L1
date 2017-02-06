@@ -9,6 +9,7 @@ BOOST_FIXTURE_TEST_SUITE(ground_coordinate_array, EcostressIgcFixture)
 BOOST_AUTO_TEST_CASE(basic_test)
 {
   GroundCoordinateArray gca(igc);
+  blitz::Array<double, 3> res = gca.ground_coor_arr(0);
 }
 
 
