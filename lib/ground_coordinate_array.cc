@@ -87,9 +87,7 @@ void GroundCoordinateArray::ground_coor_arr_samp(int Start_line, int Sample,
       t = igc_->dem().intersect_start_length(*cf, lv, igc_->resolution(),
 					     start_dist);
     }
-    res(i, Sample, 0) = t->position[0];
-    res(i, Sample, 1) = t->position[1];
-    res(i, Sample, 2) = t->position[2];
+    t->lat_lon_height(res(i, Sample, 0), res(i, Sample, 1), res(i, Sample, 2));
     dist(i) = sqrt(sqr(t->position[0] - cf->position[0]) +
 		   sqr(t->position[1] - cf->position[1]) +
 		   sqr(t->position[2] - cf->position[2]));
