@@ -41,11 +41,14 @@ public:
   const boost::shared_ptr<EcostressImageGroundConnection>&  igc() const
   { return igc_;}
   blitz::Array<double,3>
-  ground_coor_arr(int Start_line) const;
+  ground_coor_arr(int Start_line, int Number_line=-1) const;
 private:
   boost::shared_ptr<EcostressImageGroundConnection> igc_;
-  mutable blitz::Array<double, 3> res;
-  mutable blitz::Array<double, 1> dist;
+  mutable blitz::Array<double, 3> res; // Cache of results for ground_coor_arr
+  mutable blitz::Array<double, 1> dist; // Last distance we went with
+					// ray casting
+  mutable int sl, el;			// Start frame line and end
+					// frame line for processing.
   // The ScLookVector is identical for all samples, so we calculate
   // once and cache
   std::vector<GeoCal::ScLookVector> camera_slv;

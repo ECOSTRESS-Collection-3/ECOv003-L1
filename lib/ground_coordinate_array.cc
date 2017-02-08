@@ -41,9 +41,17 @@ void GroundCoordinateArray::init()
 }
 
 blitz::Array<double,3>
-GroundCoordinateArray::ground_coor_arr(int Start_line) const
+GroundCoordinateArray::ground_coor_arr(int Start_line, int Number_line) const
 {
   int ms = igc_->number_sample() / 2;
+  GeoCal::Time t;
+  GeoCal::FrameCoordinate fc;
+  tt->time(GeoCal::ImageCoordinate(Start_line, ms), t, fc);
+  sl = (int) floor(fc.line + 0.5);
+  if(Number_line < 0)
+    el = (int) camera_slv.size();
+  else
+    el = std::min(sl + Number_line, (int) camera_slv.size());
   ground_coor_arr_samp(Start_line, ms, true);
   blitz::Array<double, 1> dist_middle(dist.copy());
   for(int smp = ms + 1; smp < igc_->number_sample(); ++smp)
@@ -51,7 +59,9 @@ GroundCoordinateArray::ground_coor_arr(int Start_line) const
   dist = dist_middle;
   for(int smp = ms - 1; smp >= 0; --smp)
     ground_coor_arr_samp(Start_line, smp);
-  return res;
+  return blitz::Array<double, 3>(res(blitz::Range(sl, el-1),
+				     blitz::Range::all(),
+				     blitz::Range::all()));
 }
 
 void GroundCoordinateArray::ground_coor_arr_samp(int Start_line, int Sample,
@@ -63,16 +73,16 @@ void GroundCoordinateArray::ground_coor_arr_samp(int Start_line, int Sample,
   boost::shared_ptr<GeoCal::QuaternionOrbitData> od =
     igc_->orbit_data(t, Sample);
   boost::shared_ptr<GeoCal::CartesianFixed> cf = od->position_cf();
-  for(int i = 0; i < (int) camera_slv.size(); ++i) {
+  for(int i = sl; i < el; ++i) {
     GeoCal::CartesianFixedLookVector lv = od->cf_look_vector(camera_slv[i]);
     boost::shared_ptr<GeoCal::CartesianFixed> t;
     if(Initial_samp)
       t = igc_->dem().intersect(*cf, lv, igc_->resolution(), igc_->max_height());
     else {
       double start_dist = dist(i);
-      if(i - 1 >= 0)
+      if(i - 1 >= sl)
 	start_dist = std::min(start_dist, dist(i-1));
-      if(i + 1 < (int) dist.size())
+      if(i + 1 < el)
 	start_dist = std::min(start_dist, dist(i+1));
       t = igc_->dem().intersect_start_length(*cf, lv, igc_->resolution(),
 					     start_dist);
