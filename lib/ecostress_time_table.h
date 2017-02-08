@@ -51,6 +51,24 @@ public:
   static const double nominal_scan_spacing;
   static const double frame_time;
   int number_line_scan() const { return (averaging_done_ ? 128 : 256); }
+
+//-------------------------------------------------------------------------
+/// Number of scans we have.
+//-------------------------------------------------------------------------
+
+  int number_scan() const {return (int) tstart_scan_.size(); }
+
+//-------------------------------------------------------------------------
+/// Image lines that go with a scan. Note this is the normal C
+/// convention of including the start but not the end, so
+/// Lstart <= L < Lend for L in scan Scan_index
+//-------------------------------------------------------------------------
+  
+  void scan_index_to_line(int Scan_index, int& Lstart, int& Lend) const
+  { range_check(Scan_index, 0, number_scan());
+    Lstart = number_line_scan() * Scan_index;
+    Lend = number_line_scan() * (Scan_index+1);
+  }
 private:
   bool averaging_done_;
   std::vector<GeoCal::Time> tstart_scan_;

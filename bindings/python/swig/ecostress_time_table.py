@@ -215,6 +215,18 @@ class EcostressTimeTable(geocal_swig.time_table.TimeTable):
         """
         _ecostress_time_table.EcostressTimeTable_swiginit(self, _ecostress_time_table.new_EcostressTimeTable(*args))
 
+    def scan_index_to_line(self, Scan_index):
+        """
+
+        void Ecostress::EcostressTimeTable::scan_index_to_line(int Scan_index, int &Lstart, int &Lend) const
+        Image lines that go with a scan.
+
+        Note this is the normal C convention of including the start but not
+        the end, so Lstart <= L < Lend for L in scan Scan_index 
+        """
+        return _ecostress_time_table.EcostressTimeTable_scan_index_to_line(self, Scan_index)
+
+
     def _v_averaging_done(self):
         """
 
@@ -245,12 +257,28 @@ class EcostressTimeTable(geocal_swig.time_table.TimeTable):
         return self._v_number_line_scan()
 
 
+    def _v_number_scan(self):
+        """
+
+        int Ecostress::EcostressTimeTable::number_scan() const
+        Number of scans we have. 
+        """
+        return _ecostress_time_table.EcostressTimeTable__v_number_scan(self)
+
+
+    @property
+    def number_scan(self):
+        return self._v_number_scan()
+
+
     def __reduce__(self):
       return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
 
     __swig_destroy__ = _ecostress_time_table.delete_EcostressTimeTable
+EcostressTimeTable.scan_index_to_line = new_instancemethod(_ecostress_time_table.EcostressTimeTable_scan_index_to_line, None, EcostressTimeTable)
 EcostressTimeTable._v_averaging_done = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_averaging_done, None, EcostressTimeTable)
 EcostressTimeTable._v_number_line_scan = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_number_line_scan, None, EcostressTimeTable)
+EcostressTimeTable._v_number_scan = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_number_scan, None, EcostressTimeTable)
 EcostressTimeTable_swigregister = _ecostress_time_table.EcostressTimeTable_swigregister
 EcostressTimeTable_swigregister(EcostressTimeTable)
 cvar = _ecostress_time_table.cvar

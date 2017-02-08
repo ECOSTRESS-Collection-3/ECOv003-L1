@@ -21,8 +21,10 @@ public:
     (GeoCal::Time T, const GeoCal::FrameCoordinate& F) const;
   static const double nominal_scan_spacing;
   static const double frame_time;
+  void scan_index_to_line(int Scan_index, int& OUTPUT, int& OUTPUT) const;
   %python_attribute(averaging_done, bool);
   %python_attribute(number_line_scan, int);
+  %python_attribute(number_scan, int);
   %pickle_serialization();
 };
 }

@@ -3485,25 +3485,26 @@ namespace Swig {
 #define SWIGTYPE_p_char_type swig_types[66]
 #define SWIGTYPE_p_difference_type swig_types[67]
 #define SWIGTYPE_p_fmtflags swig_types[68]
-#define SWIGTYPE_p_int_type swig_types[69]
-#define SWIGTYPE_p_iostate swig_types[70]
-#define SWIGTYPE_p_off_type swig_types[71]
-#define SWIGTYPE_p_openmode swig_types[72]
-#define SWIGTYPE_p_pos_type swig_types[73]
-#define SWIGTYPE_p_seekdir swig_types[74]
-#define SWIGTYPE_p_size_t swig_types[75]
-#define SWIGTYPE_p_size_type swig_types[76]
-#define SWIGTYPE_p_state_type swig_types[77]
-#define SWIGTYPE_p_std__basic_iosT_char_std__char_traitsT_char_t_t swig_types[78]
-#define SWIGTYPE_p_std__basic_iostreamT_char_std__char_traitsT_char_t_t swig_types[79]
-#define SWIGTYPE_p_std__basic_istreamT_char_std__char_traitsT_char_t_t swig_types[80]
-#define SWIGTYPE_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t swig_types[81]
-#define SWIGTYPE_p_std__invalid_argument swig_types[82]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[83]
-#define SWIGTYPE_p_traits_type swig_types[84]
-#define SWIGTYPE_p_value_type swig_types[85]
-static swig_type_info *swig_types[87];
-static swig_module_info swig_module = {swig_types, 86, 0, 0, 0, 0};
+#define SWIGTYPE_p_int swig_types[69]
+#define SWIGTYPE_p_int_type swig_types[70]
+#define SWIGTYPE_p_iostate swig_types[71]
+#define SWIGTYPE_p_off_type swig_types[72]
+#define SWIGTYPE_p_openmode swig_types[73]
+#define SWIGTYPE_p_pos_type swig_types[74]
+#define SWIGTYPE_p_seekdir swig_types[75]
+#define SWIGTYPE_p_size_t swig_types[76]
+#define SWIGTYPE_p_size_type swig_types[77]
+#define SWIGTYPE_p_state_type swig_types[78]
+#define SWIGTYPE_p_std__basic_iosT_char_std__char_traitsT_char_t_t swig_types[79]
+#define SWIGTYPE_p_std__basic_iostreamT_char_std__char_traitsT_char_t_t swig_types[80]
+#define SWIGTYPE_p_std__basic_istreamT_char_std__char_traitsT_char_t_t swig_types[81]
+#define SWIGTYPE_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t swig_types[82]
+#define SWIGTYPE_p_std__invalid_argument swig_types[83]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[84]
+#define SWIGTYPE_p_traits_type swig_types[85]
+#define SWIGTYPE_p_value_type swig_types[86]
+static swig_type_info *swig_types[88];
+static swig_module_info swig_module = {swig_types, 87, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -6556,6 +6557,75 @@ SWIGINTERN PyObject *Swig_var_EcostressTimeTable_frame_time_get(void) {
 }
 
 
+SWIGINTERN PyObject *_wrap_EcostressTimeTable_scan_index_to_line(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressTimeTable *arg1 = (Ecostress::EcostressTimeTable *) 0 ;
+  int arg2 ;
+  int *arg3 = 0 ;
+  int *arg4 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressTimeTable const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressTimeTable const > *smartarg1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int temp3 ;
+  int res3 = SWIG_TMPOBJ ;
+  int temp4 ;
+  int res4 = SWIG_TMPOBJ ;
+  PyObject *swig_obj[2] ;
+  
+  arg3 = &temp3;
+  arg4 = &temp4;
+  if (!SWIG_Python_UnpackTuple(args,"EcostressTimeTable_scan_index_to_line",2,2,swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressTimeTable_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressTimeTable_scan_index_to_line" "', argument " "1"" of type '" "Ecostress::EcostressTimeTable const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressTimeTable * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressTimeTable * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "EcostressTimeTable_scan_index_to_line" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      ((Ecostress::EcostressTimeTable const *)arg1)->scan_index_to_line(arg2,*arg3,*arg4);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  if (SWIG_IsTmpObj(res3)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg3)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res3) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_int, new_flags));
+  }
+  if (SWIG_IsTmpObj(res4)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg4)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_int, new_flags));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_averaging_done(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressTimeTable *arg1 = (Ecostress::EcostressTimeTable *) 0 ;
@@ -6629,6 +6699,49 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_number_line_scan(PyObject *SWIG
   {
     try {
       result = (int)((Ecostress::EcostressTimeTable const *)arg1)->number_line_scan();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_number_scan(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressTimeTable *arg1 = (Ecostress::EcostressTimeTable *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressTimeTable const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressTimeTable const > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  int result;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressTimeTable_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressTimeTable__v_number_scan" "', argument " "1"" of type '" "Ecostress::EcostressTimeTable const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressTimeTable * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressTimeTable * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = (int)((Ecostress::EcostressTimeTable const *)arg1)->number_scan();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
     } catch (const std::exception& e) {
@@ -6722,6 +6835,14 @@ static PyMethodDef SwigMethods[] = {
 		"Averaging_done=true)\n"
 		"Create a time table with the given start time of each scan. \n"
 		""},
+	 { (char *)"EcostressTimeTable_scan_index_to_line", _wrap_EcostressTimeTable_scan_index_to_line, METH_VARARGS, (char *)"\n"
+		"\n"
+		"void Ecostress::EcostressTimeTable::scan_index_to_line(int Scan_index, int &Lstart, int &Lend) const\n"
+		"Image lines that go with a scan.\n"
+		"\n"
+		"Note this is the normal C convention of including the start but not\n"
+		"the end, so Lstart <= L < Lend for L in scan Scan_index \n"
+		""},
 	 { (char *)"EcostressTimeTable__v_averaging_done", (PyCFunction)_wrap_EcostressTimeTable__v_averaging_done, METH_O, (char *)"\n"
 		"\n"
 		"bool Ecostress::EcostressTimeTable::averaging_done() const\n"
@@ -6733,6 +6854,11 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		"int Ecostress::EcostressTimeTable::number_line_scan() const\n"
 		"\n"
+		""},
+	 { (char *)"EcostressTimeTable__v_number_scan", (PyCFunction)_wrap_EcostressTimeTable__v_number_scan, METH_O, (char *)"\n"
+		"\n"
+		"int Ecostress::EcostressTimeTable::number_scan() const\n"
+		"Number of scans we have. \n"
 		""},
 	 { (char *)"delete_EcostressTimeTable", (PyCFunction)_wrap_delete_EcostressTimeTable, METH_O, (char *)"\n"
 		"\n"
@@ -6992,6 +7118,7 @@ static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char_type = {"_p_char_type", "char_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_difference_type = {"_p_difference_type", "difference_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_fmtflags = {"_p_fmtflags", "fmtflags *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "int *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_int_type = {"_p_int_type", "int_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_iostate = {"_p_iostate", "iostate *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_off_type = {"_p_off_type", "off_type *", 0, 0, (void*)0, 0};
@@ -7080,6 +7207,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char_type,
   &_swigt__p_difference_type,
   &_swigt__p_fmtflags,
+  &_swigt__p_int,
   &_swigt__p_int_type,
   &_swigt__p_iostate,
   &_swigt__p_off_type,
@@ -7168,6 +7296,7 @@ static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0,
 static swig_cast_info _swigc__p_char_type[] = {  {&_swigt__p_char_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_difference_type[] = {  {&_swigt__p_difference_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_fmtflags[] = {  {&_swigt__p_fmtflags, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int_type[] = {  {&_swigt__p_int_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_iostate[] = {  {&_swigt__p_iostate, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_off_type[] = {  {&_swigt__p_off_type, 0, 0, 0},{0, 0, 0, 0}};
@@ -7256,6 +7385,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char_type,
   _swigc__p_difference_type,
   _swigc__p_fmtflags,
+  _swigc__p_int,
   _swigc__p_int_type,
   _swigc__p_iostate,
   _swigc__p_off_type,

@@ -46,6 +46,11 @@ BOOST_AUTO_TEST_CASE(basic_test)
       BOOST_CHECK_CLOSE(ic.line, ic2.line, 1e-4);
       BOOST_CHECK(fabs(ic.sample - ic2.sample) < 0.01);
     }
+  BOOST_CHECK_EQUAL(tt.number_scan(), 44);
+  int lstart, lend;
+  tt.scan_index_to_line(3, lstart, lend);
+  BOOST_CHECK_EQUAL(lstart, 128 * 3);
+  BOOST_CHECK_EQUAL(lend, 128 * 4);
 }
 
 BOOST_AUTO_TEST_CASE(serialization)
