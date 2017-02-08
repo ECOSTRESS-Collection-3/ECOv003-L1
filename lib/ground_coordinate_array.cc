@@ -32,7 +32,9 @@ void GroundCoordinateArray::init()
 {
   b = igc_->band();
   cam = igc_->camera();
-  tt = igc_->time_table();
+  tt = boost::dynamic_pointer_cast<EcostressTimeTable>(igc_->time_table());
+  if(!tt)
+    throw GeoCal::Exception("GroundCoordinateArray only works with EcostressTimeTable");
   int nl = cam->number_line(b);
   for(int i = 0; i < nl; ++i)
     camera_slv.push_back(cam->sc_look_vector(GeoCal::FrameCoordinate(i, 0), b));
@@ -40,8 +42,40 @@ void GroundCoordinateArray::init()
   res.resize((int) camera_slv.size(), igc_->number_sample(),3);
 }
 
+//-------------------------------------------------------------------------
+/// This returns the ground coordinates for every pixel in the
+/// ImageGroundConnection as a number_line x number_sample x 3 array,
+/// with the coordinates as latitude, longitude, height. These are the
+/// same values that you would get from just repeatedly calling
+/// igc()->ground_coordinate(ic), but we take advantage of the special
+/// form of the Ecostress scan to speed up this calculation a lot.
+//-------------------------------------------------------------------------
+
+blitz::Array<double,3> GroundCoordinateArray::ground_coor_arr() const
+{
+  blitz::Array<double, 3> r(igc_->number_line(), igc_->number_sample(), 3);
+  for(int i = 0; i < tt->number_scan(); ++i) {
+    int lstart, lend;
+    tt->scan_index_to_line(i, lstart, lend);
+    r(blitz::Range(lstart, lend-1), blitz::Range::all(), blitz::Range::all()) =
+      ground_coor_scan_arr(lstart, lend-lstart);
+  }
+  return res;
+}
+
+//-------------------------------------------------------------------------
+/// This return the ground coordinates as a number_line x
+/// number_sample x 3 array, with the coordinates as latitude,
+/// longitude, and height. You don't normally call this function,
+/// instead you likely want ground_coor_arr. We have this function
+/// exposed to aid with testing - it is quicker to call this for a
+/// single scan rather than doing all the scans like ground_coor_arr.
+/// Also, in python if we are doing parallel processing we can do each
+/// ground_coor_arr separately if desired.
+//-------------------------------------------------------------------------
+
 blitz::Array<double,3>
-GroundCoordinateArray::ground_coor_arr(int Start_line, int Number_line) const
+GroundCoordinateArray::ground_coor_scan_arr(int Start_line, int Number_line) const
 {
   int ms = igc_->number_sample() / 2;
   GeoCal::Time t;

@@ -11,7 +11,7 @@ BOOST_FIXTURE_TEST_SUITE(ground_coordinate_array, EcostressIgcFixture)
 BOOST_AUTO_TEST_CASE(basic_test)
 {
   GroundCoordinateArray gca(igc);
-  blitz::Array<double, 3> res = gca.ground_coor_arr(4, 20);
+  blitz::Array<double, 3> res = gca.ground_coor_scan_arr(4, 20);
   BOOST_CHECK_EQUAL(res.rows(), 20);
   BOOST_CHECK_EQUAL(res.cols(), 5400);
   BOOST_CHECK_EQUAL(res.depth(), 3);
@@ -19,6 +19,14 @@ BOOST_AUTO_TEST_CASE(basic_test)
   BOOST_CHECK(distance(pt, *igc->ground_coordinate(GeoCal::ImageCoordinate(10, 20))) < 1.0);
 }
 
+BOOST_AUTO_TEST_CASE(full_test)
+{
+  // Don't normally run this, it takes a bit of time for a unit test
+  // (about 35 seconds on pistol)
+  return;
+  GroundCoordinateArray gca(igc);
+  blitz::Array<double, 3> res = gca.ground_coor_arr();
+}
 
 BOOST_AUTO_TEST_CASE(serialization)
 {

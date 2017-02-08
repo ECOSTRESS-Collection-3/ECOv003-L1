@@ -5398,6 +5398,32 @@ struct SWIG_null_deleter {
 #define SWIG_NO_NULL_DELETER_SWIG_BUILTIN_INIT
 
 
+#include <limits.h>
+#if !defined(SWIG_NO_LLONG_MAX)
+# if !defined(LLONG_MAX) && defined(__GNUC__) && defined (__LONG_LONG_MAX__)
+#   define LLONG_MAX __LONG_LONG_MAX__
+#   define LLONG_MIN (-LLONG_MAX - 1LL)
+#   define ULLONG_MAX (LLONG_MAX * 2ULL + 1ULL)
+# endif
+#endif
+
+
+SWIGINTERN int
+SWIG_AsVal_int (PyObject * obj, int *val)
+{
+  long v;
+  int res = SWIG_AsVal_long (obj, &v);
+  if (SWIG_IsOK(res)) {
+    if ((v < INT_MIN || v > INT_MAX)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = static_cast< int >(v);
+    }
+  }  
+  return res;
+}
+
+
 SWIGINTERN swig_type_info*
 SWIG_pchar_descriptor(void)
 {
@@ -6341,6 +6367,221 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_GroundCoordinateArray_ground_coor_arr(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::GroundCoordinateArray *arg1 = (Ecostress::GroundCoordinateArray *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::GroundCoordinateArray const > tempshared1 ;
+  boost::shared_ptr< Ecostress::GroundCoordinateArray const > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  SwigValueWrapper< blitz::Array< double,3 > > result;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__GroundCoordinateArray_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GroundCoordinateArray_ground_coor_arr" "', argument " "1"" of type '" "Ecostress::GroundCoordinateArray const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      arg1 = const_cast< Ecostress::GroundCoordinateArray * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      arg1 = const_cast< Ecostress::GroundCoordinateArray * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = ((Ecostress::GroundCoordinateArray const *)arg1)->ground_coor_arr();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    npy_intp dims[3], stride[3];
+    for(int i = 0; i < 3; ++i) {
+      dims[i] = (&result)->extent(i);
+      // Note numpy stride is in terms of bytes, while blitz in in terms
+      // of type T.
+      stride[i] = (&result)->stride(i) * sizeof(double);
+    }
+    resultobj = PyArray_New(&PyArray_Type, 3, dims, type_to_npy<double >(), 
+      stride, (&result)->data(), 0, 0, 0);
+    blitz::Array<double, 3>* t = new blitz::Array<double, 3>(result);
+    PyArray_SetBaseObject((PyArrayObject*)resultobj, 
+      SWIG_NewPointerObj(SWIG_as_voidptr(t), 
+        SWIGTYPE_p_blitz__ArrayT_double_3_t, 					   SWIG_POINTER_NEW | 0 ));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_GroundCoordinateArray_ground_coor_scan_arr__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::GroundCoordinateArray *arg1 = (Ecostress::GroundCoordinateArray *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::GroundCoordinateArray const > tempshared1 ;
+  boost::shared_ptr< Ecostress::GroundCoordinateArray const > *smartarg1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  SwigValueWrapper< blitz::Array< double,3 > > result;
+  
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__GroundCoordinateArray_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GroundCoordinateArray_ground_coor_scan_arr" "', argument " "1"" of type '" "Ecostress::GroundCoordinateArray const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      arg1 = const_cast< Ecostress::GroundCoordinateArray * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      arg1 = const_cast< Ecostress::GroundCoordinateArray * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "GroundCoordinateArray_ground_coor_scan_arr" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "GroundCoordinateArray_ground_coor_scan_arr" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  {
+    try {
+      result = ((Ecostress::GroundCoordinateArray const *)arg1)->ground_coor_scan_arr(arg2,arg3);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    npy_intp dims[3], stride[3];
+    for(int i = 0; i < 3; ++i) {
+      dims[i] = (&result)->extent(i);
+      // Note numpy stride is in terms of bytes, while blitz in in terms
+      // of type T.
+      stride[i] = (&result)->stride(i) * sizeof(double);
+    }
+    resultobj = PyArray_New(&PyArray_Type, 3, dims, type_to_npy<double >(), 
+      stride, (&result)->data(), 0, 0, 0);
+    blitz::Array<double, 3>* t = new blitz::Array<double, 3>(result);
+    PyArray_SetBaseObject((PyArrayObject*)resultobj, 
+      SWIG_NewPointerObj(SWIG_as_voidptr(t), 
+        SWIGTYPE_p_blitz__ArrayT_double_3_t, 					   SWIG_POINTER_NEW | 0 ));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_GroundCoordinateArray_ground_coor_scan_arr__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::GroundCoordinateArray *arg1 = (Ecostress::GroundCoordinateArray *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::GroundCoordinateArray const > tempshared1 ;
+  boost::shared_ptr< Ecostress::GroundCoordinateArray const > *smartarg1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  SwigValueWrapper< blitz::Array< double,3 > > result;
+  
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__GroundCoordinateArray_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GroundCoordinateArray_ground_coor_scan_arr" "', argument " "1"" of type '" "Ecostress::GroundCoordinateArray const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      arg1 = const_cast< Ecostress::GroundCoordinateArray * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      arg1 = const_cast< Ecostress::GroundCoordinateArray * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "GroundCoordinateArray_ground_coor_scan_arr" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = ((Ecostress::GroundCoordinateArray const *)arg1)->ground_coor_scan_arr(arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    npy_intp dims[3], stride[3];
+    for(int i = 0; i < 3; ++i) {
+      dims[i] = (&result)->extent(i);
+      // Note numpy stride is in terms of bytes, while blitz in in terms
+      // of type T.
+      stride[i] = (&result)->stride(i) * sizeof(double);
+    }
+    resultobj = PyArray_New(&PyArray_Type, 3, dims, type_to_npy<double >(), 
+      stride, (&result)->data(), 0, 0, 0);
+    blitz::Array<double, 3>* t = new blitz::Array<double, 3>(result);
+    PyArray_SetBaseObject((PyArrayObject*)resultobj, 
+      SWIG_NewPointerObj(SWIG_as_voidptr(t), 
+        SWIGTYPE_p_blitz__ArrayT_double_3_t, 					   SWIG_POINTER_NEW | 0 ));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_GroundCoordinateArray_ground_coor_scan_arr(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[4] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"GroundCoordinateArray_ground_coor_scan_arr",0,3,argv))) SWIG_fail;
+  --argc;
+  if (argc == 2) {
+    return _wrap_GroundCoordinateArray_ground_coor_scan_arr__SWIG_1(self, argc, argv);
+  }
+  if (argc == 3) {
+    return _wrap_GroundCoordinateArray_ground_coor_scan_arr__SWIG_0(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'GroundCoordinateArray_ground_coor_scan_arr'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::GroundCoordinateArray::ground_coor_scan_arr(int,int) const\n"
+    "    Ecostress::GroundCoordinateArray::ground_coor_scan_arr(int) const\n");
+  return 0;
+}
+
+
 SWIGINTERN PyObject *_wrap_GroundCoordinateArray___str__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::GroundCoordinateArray *arg1 = (Ecostress::GroundCoordinateArray *) 0 ;
@@ -6461,12 +6702,36 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"new_GroundCoordinateArray", (PyCFunction)_wrap_new_GroundCoordinateArray, METH_O, (char *)"\n"
 		"\n"
 		"Ecostress::GroundCoordinateArray::GroundCoordinateArray(const boost::shared_ptr< EcostressImageGroundConnection > &Igc)\n"
-		"\n"
+		"Constructor. \n"
 		""},
 	 { (char *)"GroundCoordinateArray__v_igc", (PyCFunction)_wrap_GroundCoordinateArray__v_igc, METH_O, (char *)"\n"
 		"\n"
 		"const boost::shared_ptr<EcostressImageGroundConnection>& Ecostress::GroundCoordinateArray::igc() const\n"
+		"The ImageGroundConnection we are working with. \n"
+		""},
+	 { (char *)"GroundCoordinateArray_ground_coor_arr", (PyCFunction)_wrap_GroundCoordinateArray_ground_coor_arr, METH_O, (char *)"\n"
 		"\n"
+		"blitz::Array< double, 3 > GroundCoordinateArray::ground_coor_arr() const\n"
+		"This returns the ground coordinates for every pixel in the\n"
+		"ImageGroundConnection as a number_line x number_sample x 3 array, with\n"
+		"the coordinates as latitude, longitude, height.\n"
+		"\n"
+		"These are the same values that you would get from just repeatedly\n"
+		"calling igc()->ground_coordinate(ic), but we take advantage of the\n"
+		"special form of the Ecostress scan to speed up this calculation a lot.\n"
+		"\n"
+		""},
+	 { (char *)"GroundCoordinateArray_ground_coor_scan_arr", _wrap_GroundCoordinateArray_ground_coor_scan_arr, METH_VARARGS, (char *)"\n"
+		"\n"
+		"blitz::Array< double, 3 > GroundCoordinateArray::ground_coor_scan_arr(int Start_line, int Number_line=-1) const\n"
+		"This return the ground coordinates as a number_line x number_sample x\n"
+		"3 array, with the coordinates as latitude, longitude, and height.\n"
+		"\n"
+		"You don't normally call this function, instead you likely want\n"
+		"ground_coor_arr. We have this function exposed to aid with testing -\n"
+		"it is quicker to call this for a single scan rather than doing all the\n"
+		"scans like ground_coor_arr. Also, in python if we are doing parallel\n"
+		"processing we can do each ground_coor_arr separately if desired. \n"
 		""},
 	 { (char *)"GroundCoordinateArray___str__", (PyCFunction)_wrap_GroundCoordinateArray___str__, METH_O, NULL},
 	 { (char *)"delete_GroundCoordinateArray", (PyCFunction)_wrap_delete_GroundCoordinateArray, METH_O, (char *)"\n"

@@ -16,6 +16,9 @@ class GroundCoordinateArray : public GeoCal::GenericObject {
 public:
   GroundCoordinateArray(const boost::shared_ptr<EcostressImageGroundConnection>& Igc);
   %python_attribute(igc, boost::shared_ptr<EcostressImageGroundConnection>);
+  blitz::Array<double,3> ground_coor_arr() const;
+  blitz::Array<double,3>
+  ground_coor_scan_arr(int Start_line, int Number_line=-1) const;
   std::string print_to_string() const;
   %pickle_serialization();
 };

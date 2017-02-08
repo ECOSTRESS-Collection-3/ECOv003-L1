@@ -1,6 +1,7 @@
 #ifndef GROUND_COORDINATE_ARRAY_H
 #define GROUND_COORDINATE_ARRAY_H
 #include "ecostress_image_ground_connection.h"
+#include "ecostress_time_table.h"
 
 namespace Ecostress {
 /****************************************************************//**
@@ -34,14 +35,24 @@ class GroundCoordinateArray : public GeoCal::Printable<GroundCoordinateArray>,
 // We can't copy this because of the result_cache. We could create a
 // copy constructor if this becomes an issue.
 public:
+//-------------------------------------------------------------------------
+/// Constructor.
+//-------------------------------------------------------------------------
+
   GroundCoordinateArray(const boost::shared_ptr<EcostressImageGroundConnection>& Igc)
     : igc_(Igc) { init(); }
   virtual ~GroundCoordinateArray() {}
   virtual void print(std::ostream& Os) const;
+
+//-------------------------------------------------------------------------
+/// The ImageGroundConnection we are working with.
+//-------------------------------------------------------------------------
+  
   const boost::shared_ptr<EcostressImageGroundConnection>&  igc() const
   { return igc_;}
+  blitz::Array<double,3> ground_coor_arr() const;
   blitz::Array<double,3>
-  ground_coor_arr(int Start_line, int Number_line=-1) const;
+  ground_coor_scan_arr(int Start_line, int Number_line=-1) const;
 private:
   boost::shared_ptr<EcostressImageGroundConnection> igc_;
   mutable blitz::Array<double, 3> res; // Cache of results for ground_coor_arr
@@ -56,7 +67,7 @@ private:
   // our code simpler.
   int b;			// Band we are working with
   boost::shared_ptr<GeoCal::Camera> cam;
-  boost::shared_ptr<GeoCal::TimeTable> tt;
+  boost::shared_ptr<EcostressTimeTable> tt;
   void init();
   void ground_coor_arr_samp(int Start_line, int Sample,
 			    bool initial_samp = false) const;
