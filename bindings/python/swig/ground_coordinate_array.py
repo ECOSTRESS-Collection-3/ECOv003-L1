@@ -234,7 +234,7 @@ class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
         """
 
         const boost::shared_ptr<EcostressImageGroundConnection>& Ecostress::GroundCoordinateArray::igc() const
-        The ImageGroundConnection we are working with. 
+        The ImageGroundConnection we are working with.w. 
         """
         return _ground_coordinate_array.GroundCoordinateArray__v_igc(self)
 

@@ -37,6 +37,8 @@ ecostressinc_HEADERS+= @srclib@/ecostress_image_ground_connection.h
 libecostress_la_SOURCES+= @srclib@/ecostress_image_ground_connection.cc
 ecostressinc_HEADERS+= @srclib@/ground_coordinate_array.h
 libecostress_la_SOURCES+= @srclib@/ground_coordinate_array.cc
+ecostressinc_HEADERS+= @srclib@/simulated_radiance.h
+libecostress_la_SOURCES+= @srclib@/simulated_radiance.cc
 
 # Files that contain SWIG wrapper information.
 SWIG_SRC += @swigsrc@/ecostress_swig_array_wrap.cc
@@ -53,6 +55,8 @@ SWIG_SRC += @swigsrc@/ecostress_image_ground_connection_wrap.cc
 ecostressswiginc_HEADERS+= @srclib@/ecostress_image_ground_connection.i
 SWIG_SRC += @swigsrc@/ground_coordinate_array_wrap.cc
 ecostressswiginc_HEADERS+= @srclib@/ground_coordinate_array.i
+SWIG_SRC += @swigsrc@/simulated_radiance_wrap.cc
+ecostressswiginc_HEADERS+= @srclib@/simulated_radiance.i
 
 # Test files
 EXTRA_DIST+= @srclib@/unit_test_support.h
@@ -66,6 +70,7 @@ ecostress_test_all_SOURCES+= @srclib@/ecostress_time_table_test.cc
 ecostress_test_all_SOURCES+= @srclib@/ecostress_scan_mirror_test.cc
 ecostress_test_all_SOURCES+= @srclib@/ecostress_image_ground_connection_test.cc
 ecostress_test_all_SOURCES+= @srclib@/ground_coordinate_array_test.cc
+ecostress_test_all_SOURCES+= @srclib@/simulated_radiance_test.cc
 
 # Variables used in testing
 export abs_top_srcdir 

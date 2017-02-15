@@ -45,7 +45,7 @@ public:
   virtual void print(std::ostream& Os) const;
 
 //-------------------------------------------------------------------------
-/// The ImageGroundConnection we are working with.
+/// The ImageGroundConnection we are working with.w
 //-------------------------------------------------------------------------
   
   const boost::shared_ptr<EcostressImageGroundConnection>&  igc() const

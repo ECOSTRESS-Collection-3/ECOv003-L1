@@ -9,6 +9,7 @@ extern "C" {
   INIT_TYPE INIT_FUNC(_ecostress_scan_mirror)(void);
   INIT_TYPE INIT_FUNC(_ecostress_image_ground_connection)(void);
   INIT_TYPE INIT_FUNC(_ground_coordinate_array)(void);
+  INIT_TYPE INIT_FUNC(_simulated_radiance)(void);
 }
 
 static void module_init(PyObject* module)
@@ -20,4 +21,5 @@ static void module_init(PyObject* module)
   INIT_MODULE(module, "_ecostress_scan_mirror", INIT_FUNC(_ecostress_scan_mirror));
   INIT_MODULE(module, "_ecostress_image_ground_connection", INIT_FUNC(_ecostress_image_ground_connection));
   INIT_MODULE(module, "_ground_coordinate_array", INIT_FUNC(_ground_coordinate_array));
+  INIT_MODULE(module, "_simulated_radiance", INIT_FUNC(_simulated_radiance));
 }

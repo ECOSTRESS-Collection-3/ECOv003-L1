@@ -222,7 +222,8 @@ am__objects_2 = @swigsrc@/_swig_wrap_la-ecostress_swig_array_wrap.lo \
 	@swigsrc@/_swig_wrap_la-ecostress_time_table_wrap.lo \
 	@swigsrc@/_swig_wrap_la-ecostress_scan_mirror_wrap.lo \
 	@swigsrc@/_swig_wrap_la-ecostress_image_ground_connection_wrap.lo \
-	@swigsrc@/_swig_wrap_la-ground_coordinate_array_wrap.lo
+	@swigsrc@/_swig_wrap_la-ground_coordinate_array_wrap.lo \
+	@swigsrc@/_swig_wrap_la-simulated_radiance_wrap.lo
 am__objects_3 = $(am__objects_2)
 am__swig_wrap_la_OBJECTS = $(am__objects_3) \
 	@swigsrc@/_swig_wrap_la-swig_wrap.lo
@@ -238,7 +239,8 @@ am_libecostress_la_OBJECTS =  \
 	@srclib@/libecostress_la-ecostress_time_table.lo \
 	@srclib@/libecostress_la-ecostress_scan_mirror.lo \
 	@srclib@/libecostress_la-ecostress_image_ground_connection.lo \
-	@srclib@/libecostress_la-ground_coordinate_array.lo
+	@srclib@/libecostress_la-ground_coordinate_array.lo \
+	@srclib@/libecostress_la-simulated_radiance.lo
 libecostress_la_OBJECTS = $(am_libecostress_la_OBJECTS)
 libecostress_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
@@ -254,7 +256,8 @@ am_ecostress_test_all_OBJECTS =  \
 	@srclib@/ecostress_test_all-ecostress_time_table_test.$(OBJEXT) \
 	@srclib@/ecostress_test_all-ecostress_scan_mirror_test.$(OBJEXT) \
 	@srclib@/ecostress_test_all-ecostress_image_ground_connection_test.$(OBJEXT) \
-	@srclib@/ecostress_test_all-ground_coordinate_array_test.$(OBJEXT)
+	@srclib@/ecostress_test_all-ground_coordinate_array_test.$(OBJEXT) \
+	@srclib@/ecostress_test_all-simulated_radiance_test.$(OBJEXT)
 ecostress_test_all_OBJECTS = $(am_ecostress_test_all_OBJECTS)
 ecostress_test_all_DEPENDENCIES = libecostress.la
 ecostress_test_all_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
@@ -868,7 +871,8 @@ libecostress_la_SOURCES = @srclib@/ecostress_camera.cc \
 	@srclib@/ecostress_time_table.cc \
 	@srclib@/ecostress_scan_mirror.cc \
 	@srclib@/ecostress_image_ground_connection.cc \
-	@srclib@/ground_coordinate_array.cc
+	@srclib@/ground_coordinate_array.cc \
+	@srclib@/simulated_radiance.cc
 
 #=================================================================
 # List of source files
@@ -878,14 +882,16 @@ ecostressinc_HEADERS = @srclib@/ecostress_serialize_support.h \
 	@srclib@/ecostress_time_table.h \
 	@srclib@/ecostress_scan_mirror.h \
 	@srclib@/ecostress_image_ground_connection.h \
-	@srclib@/ground_coordinate_array.h
+	@srclib@/ground_coordinate_array.h \
+	@srclib@/simulated_radiance.h
 ecostressswiginc_HEADERS = @srclib@/ecostress_swig_array.i \
 	@srclib@/ecostress_camera.i \
 	@srclib@/ecostress_paraxial_transform.i \
 	@srclib@/ecostress_time_table.i \
 	@srclib@/ecostress_scan_mirror.i \
 	@srclib@/ecostress_image_ground_connection.i \
-	@srclib@/ground_coordinate_array.i
+	@srclib@/ground_coordinate_array.i \
+	@srclib@/simulated_radiance.i
 ecostress_test_all_SOURCES = @srclib@/test_all.cc \
 	@srclib@/global_fixture.cc @srclib@/global_fixture_default.cc \
 	@srclib@/ecostress_camera_test.cc \
@@ -893,7 +899,8 @@ ecostress_test_all_SOURCES = @srclib@/test_all.cc \
 	@srclib@/ecostress_time_table_test.cc \
 	@srclib@/ecostress_scan_mirror_test.cc \
 	@srclib@/ecostress_image_ground_connection_test.cc \
-	@srclib@/ground_coordinate_array_test.cc
+	@srclib@/ground_coordinate_array_test.cc \
+	@srclib@/simulated_radiance_test.cc
 
 # Files that contain SWIG wrapper information.
 SWIG_SRC = @swigsrc@/ecostress_swig_array_wrap.cc \
@@ -902,7 +909,8 @@ SWIG_SRC = @swigsrc@/ecostress_swig_array_wrap.cc \
 	@swigsrc@/ecostress_time_table_wrap.cc \
 	@swigsrc@/ecostress_scan_mirror_wrap.cc \
 	@swigsrc@/ecostress_image_ground_connection_wrap.cc \
-	@swigsrc@/ground_coordinate_array_wrap.cc
+	@swigsrc@/ground_coordinate_array_wrap.cc \
+	@swigsrc@/simulated_radiance_wrap.cc
 libecostress_la_CPPFLAGS = $(AM_CPPFLAGS) $(GEOCAL_CFLAGS)
 libecostress_la_LDFLAGS = $(GEOCAL_LIBS)
 ecostress_test_all_LDADD = libecostress.la 
@@ -1107,6 +1115,8 @@ _ecostress_level1.la: $(_ecostress_level1_la_OBJECTS) $(_ecostress_level1_la_DEP
 	@swigsrc@/$(am__dirstamp) @swigsrc@/$(DEPDIR)/$(am__dirstamp)
 @swigsrc@/_swig_wrap_la-ground_coordinate_array_wrap.lo:  \
 	@swigsrc@/$(am__dirstamp) @swigsrc@/$(DEPDIR)/$(am__dirstamp)
+@swigsrc@/_swig_wrap_la-simulated_radiance_wrap.lo:  \
+	@swigsrc@/$(am__dirstamp) @swigsrc@/$(DEPDIR)/$(am__dirstamp)
 @swigsrc@/_swig_wrap_la-swig_wrap.lo: @swigsrc@/$(am__dirstamp) \
 	@swigsrc@/$(DEPDIR)/$(am__dirstamp)
 
@@ -1129,6 +1139,8 @@ _swig_wrap.la: $(_swig_wrap_la_OBJECTS) $(_swig_wrap_la_DEPENDENCIES) $(EXTRA__s
 @srclib@/libecostress_la-ecostress_image_ground_connection.lo:  \
 	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
 @srclib@/libecostress_la-ground_coordinate_array.lo:  \
+	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
+@srclib@/libecostress_la-simulated_radiance.lo:  \
 	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
 
 libecostress.la: $(libecostress_la_OBJECTS) $(libecostress_la_DEPENDENCIES) $(EXTRA_libecostress_la_DEPENDENCIES) 
@@ -1208,6 +1220,8 @@ clean-checkPROGRAMS:
 @srclib@/ecostress_test_all-ecostress_image_ground_connection_test.$(OBJEXT):  \
 	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
 @srclib@/ecostress_test_all-ground_coordinate_array_test.$(OBJEXT):  \
+	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
+@srclib@/ecostress_test_all-simulated_radiance_test.$(OBJEXT):  \
 	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
 
 ecostress_test_all$(EXEEXT): $(ecostress_test_all_OBJECTS) $(ecostress_test_all_DEPENDENCIES) $(EXTRA_ecostress_test_all_DEPENDENCIES) 
@@ -1307,6 +1321,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-global_fixture.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-global_fixture_default.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-ground_coordinate_array_test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-simulated_radiance_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-test_all.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_camera.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_image_ground_connection.Plo@am__quote@
@@ -1314,6 +1329,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_scan_mirror.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_time_table.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ground_coordinate_array.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-simulated_radiance.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_camera_wrap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_image_ground_connection_wrap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_paraxial_transform_wrap.Plo@am__quote@
@@ -1321,6 +1337,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_swig_array_wrap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_time_table_wrap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ground_coordinate_array_wrap.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-simulated_radiance_wrap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Plo@am__quote@
 
 .cc.o:
@@ -1417,6 +1434,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -c -o @swigsrc@/_swig_wrap_la-ground_coordinate_array_wrap.lo `test -f '@swigsrc@/ground_coordinate_array_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/ground_coordinate_array_wrap.cc
 
+@swigsrc@/_swig_wrap_la-simulated_radiance_wrap.lo: @swigsrc@/simulated_radiance_wrap.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -MT @swigsrc@/_swig_wrap_la-simulated_radiance_wrap.lo -MD -MP -MF @swigsrc@/$(DEPDIR)/_swig_wrap_la-simulated_radiance_wrap.Tpo -c -o @swigsrc@/_swig_wrap_la-simulated_radiance_wrap.lo `test -f '@swigsrc@/simulated_radiance_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/simulated_radiance_wrap.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @swigsrc@/$(DEPDIR)/_swig_wrap_la-simulated_radiance_wrap.Tpo @swigsrc@/$(DEPDIR)/_swig_wrap_la-simulated_radiance_wrap.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@swigsrc@/simulated_radiance_wrap.cc' object='@swigsrc@/_swig_wrap_la-simulated_radiance_wrap.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -c -o @swigsrc@/_swig_wrap_la-simulated_radiance_wrap.lo `test -f '@swigsrc@/simulated_radiance_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/simulated_radiance_wrap.cc
+
 @swigsrc@/_swig_wrap_la-swig_wrap.lo: @swigsrc@/swig_wrap.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -MT @swigsrc@/_swig_wrap_la-swig_wrap.lo -MD -MP -MF @swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Tpo -c -o @swigsrc@/_swig_wrap_la-swig_wrap.lo `test -f '@swigsrc@/swig_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/swig_wrap.cc
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Tpo @swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Plo
@@ -1465,6 +1489,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/ground_coordinate_array.cc' object='@srclib@/libecostress_la-ground_coordinate_array.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/libecostress_la-ground_coordinate_array.lo `test -f '@srclib@/ground_coordinate_array.cc' || echo '$(srcdir)/'`@srclib@/ground_coordinate_array.cc
+
+@srclib@/libecostress_la-simulated_radiance.lo: @srclib@/simulated_radiance.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/libecostress_la-simulated_radiance.lo -MD -MP -MF @srclib@/$(DEPDIR)/libecostress_la-simulated_radiance.Tpo -c -o @srclib@/libecostress_la-simulated_radiance.lo `test -f '@srclib@/simulated_radiance.cc' || echo '$(srcdir)/'`@srclib@/simulated_radiance.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/libecostress_la-simulated_radiance.Tpo @srclib@/$(DEPDIR)/libecostress_la-simulated_radiance.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/simulated_radiance.cc' object='@srclib@/libecostress_la-simulated_radiance.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/libecostress_la-simulated_radiance.lo `test -f '@srclib@/simulated_radiance.cc' || echo '$(srcdir)/'`@srclib@/simulated_radiance.cc
 
 @srclib@/ecostress_test_all-test_all.o: @srclib@/test_all.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-test_all.o -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-test_all.Tpo -c -o @srclib@/ecostress_test_all-test_all.o `test -f '@srclib@/test_all.cc' || echo '$(srcdir)/'`@srclib@/test_all.cc
@@ -1591,6 +1622,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/ground_coordinate_array_test.cc' object='@srclib@/ecostress_test_all-ground_coordinate_array_test.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-ground_coordinate_array_test.obj `if test -f '@srclib@/ground_coordinate_array_test.cc'; then $(CYGPATH_W) '@srclib@/ground_coordinate_array_test.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/ground_coordinate_array_test.cc'; fi`
+
+@srclib@/ecostress_test_all-simulated_radiance_test.o: @srclib@/simulated_radiance_test.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-simulated_radiance_test.o -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-simulated_radiance_test.Tpo -c -o @srclib@/ecostress_test_all-simulated_radiance_test.o `test -f '@srclib@/simulated_radiance_test.cc' || echo '$(srcdir)/'`@srclib@/simulated_radiance_test.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/ecostress_test_all-simulated_radiance_test.Tpo @srclib@/$(DEPDIR)/ecostress_test_all-simulated_radiance_test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/simulated_radiance_test.cc' object='@srclib@/ecostress_test_all-simulated_radiance_test.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-simulated_radiance_test.o `test -f '@srclib@/simulated_radiance_test.cc' || echo '$(srcdir)/'`@srclib@/simulated_radiance_test.cc
+
+@srclib@/ecostress_test_all-simulated_radiance_test.obj: @srclib@/simulated_radiance_test.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-simulated_radiance_test.obj -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-simulated_radiance_test.Tpo -c -o @srclib@/ecostress_test_all-simulated_radiance_test.obj `if test -f '@srclib@/simulated_radiance_test.cc'; then $(CYGPATH_W) '@srclib@/simulated_radiance_test.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/simulated_radiance_test.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/ecostress_test_all-simulated_radiance_test.Tpo @srclib@/$(DEPDIR)/ecostress_test_all-simulated_radiance_test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/simulated_radiance_test.cc' object='@srclib@/ecostress_test_all-simulated_radiance_test.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-simulated_radiance_test.obj `if test -f '@srclib@/simulated_radiance_test.cc'; then $(CYGPATH_W) '@srclib@/simulated_radiance_test.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/simulated_radiance_test.cc'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
