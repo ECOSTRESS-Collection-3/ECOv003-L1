@@ -3,6 +3,7 @@
 #include "ecostress_igc_fixture.h"
 #include "geocal/srtm_dem.h"
 #include "geocal/geodetic.h"
+#include "geocal/vicar_lite_file.h"
 
 using namespace Ecostress;
 
@@ -10,7 +11,13 @@ BOOST_FIXTURE_TEST_SUITE(simulated_radiance, EcostressIgcFixture)
 
 BOOST_AUTO_TEST_CASE(basic_test)
 {
-  SimulatedRadiance srad(boost::make_shared<GroundCoordinateArray>(igc));
+  if(aster_mosaic_dir() == "") {
+    BOOST_WARN_MESSAGE(false, "Skipping SimulatedRadiance test because ASTER mosaic data wasn't found");
+    return;
+  }
+  SimulatedRadiance srad(boost::make_shared<GroundCoordinateArray>(igc),
+			 boost::make_shared<GeoCal::VicarLiteRasterImage>(aster_mosaic_dir() + "calnorm_b4.img"));
+  std::cerr << srad;
   // blitz::Array<double, 3> res = gca.ground_coor_scan_arr(4, 20);
   // BOOST_CHECK_EQUAL(res.rows(), 20);
   // BOOST_CHECK_EQUAL(res.cols(), 5400);
@@ -21,9 +28,14 @@ BOOST_AUTO_TEST_CASE(basic_test)
 
 BOOST_AUTO_TEST_CASE(serialization)
 {
+  if(aster_mosaic_dir() == "") {
+    BOOST_WARN_MESSAGE(false, "Skipping SimulatedRadiance test because ASTER mosaic data wasn't found");
+    return;
+  }
   boost::shared_ptr<SimulatedRadiance> srad =
     boost::make_shared<SimulatedRadiance>
-    (boost::make_shared<GroundCoordinateArray>(igc));
+    (boost::make_shared<GroundCoordinateArray>(igc),
+     boost::make_shared<GeoCal::VicarLiteRasterImage>(aster_mosaic_dir() + "calnorm_b4.img"));
   std::string d = GeoCal::serialize_write_string(srad);
   if(false)
     std::cerr << d;

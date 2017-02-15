@@ -206,13 +206,15 @@ class SimulatedRadiance(geocal_swig.generic_object.GenericObject):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
 
-    def __init__(self, Gca):
+    def __init__(self, Gca, Map_projected_image, Avg_fact=-1, Read_into_memory=False, Fill_value=0.0):
         """
 
-        Ecostress::SimulatedRadiance::SimulatedRadiance(const boost::shared_ptr< GroundCoordinateArray > &Gca)
+        Ecostress::SimulatedRadiance::SimulatedRadiance(const boost::shared_ptr< GroundCoordinateArray > &Gca, const
+        boost::shared_ptr< GeoCal::RasterImage > &Map_projected_image, int
+        Avg_fact=-1, bool Read_into_memory=false, double Fill_value=0.0)
 
         """
-        _simulated_radiance.SimulatedRadiance_swiginit(self, _simulated_radiance.new_SimulatedRadiance(Gca))
+        _simulated_radiance.SimulatedRadiance_swiginit(self, _simulated_radiance.new_SimulatedRadiance(Gca, Map_projected_image, Avg_fact, Read_into_memory, Fill_value))
 
     def _v_ground_coordinate_array(self):
         """
@@ -228,11 +230,73 @@ class SimulatedRadiance(geocal_swig.generic_object.GenericObject):
         return self._v_ground_coordinate_array()
 
 
+    def _v_avg_factor(self):
+        """
+
+        int Ecostress::SimulatedRadiance::avg_factor() const
+        Averaging factor to use with map_projected_image(). 
+        """
+        return _simulated_radiance.SimulatedRadiance__v_avg_factor(self)
+
+
+    @property
+    def avg_factor(self):
+        return self._v_avg_factor()
+
+
+    def _v_fill_value(self):
+        """
+
+        double Ecostress::SimulatedRadiance::fill_value() const
+        Fill value to use when we are outside map_projected_image(). 
+        """
+        return _simulated_radiance.SimulatedRadiance__v_fill_value(self)
+
+
+    @property
+    def fill_value(self):
+        return self._v_fill_value()
+
+
+    def _v_read_into_memory(self):
+        """
+
+        bool Ecostress::SimulatedRadiance::read_into_memory() const
+        If true, read Map_projected_image completely into memory.
+
+        Otherwise we read as needed. 
+        """
+        return _simulated_radiance.SimulatedRadiance__v_read_into_memory(self)
+
+
+    @property
+    def read_into_memory(self):
+        return self._v_read_into_memory()
+
+
+    def _v_map_projected_image(self):
+        """
+
+        const boost::shared_ptr<GeoCal::RasterImage>& Ecostress::SimulatedRadiance::map_projected_image() const
+        Underlying radiance data. 
+        """
+        return _simulated_radiance.SimulatedRadiance__v_map_projected_image(self)
+
+
+    @property
+    def map_projected_image(self):
+        return self._v_map_projected_image()
+
+
     def __reduce__(self):
       return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
 
     __swig_destroy__ = _simulated_radiance.delete_SimulatedRadiance
 SimulatedRadiance._v_ground_coordinate_array = new_instancemethod(_simulated_radiance.SimulatedRadiance__v_ground_coordinate_array, None, SimulatedRadiance)
+SimulatedRadiance._v_avg_factor = new_instancemethod(_simulated_radiance.SimulatedRadiance__v_avg_factor, None, SimulatedRadiance)
+SimulatedRadiance._v_fill_value = new_instancemethod(_simulated_radiance.SimulatedRadiance__v_fill_value, None, SimulatedRadiance)
+SimulatedRadiance._v_read_into_memory = new_instancemethod(_simulated_radiance.SimulatedRadiance__v_read_into_memory, None, SimulatedRadiance)
+SimulatedRadiance._v_map_projected_image = new_instancemethod(_simulated_radiance.SimulatedRadiance__v_map_projected_image, None, SimulatedRadiance)
 SimulatedRadiance.__str__ = new_instancemethod(_simulated_radiance.SimulatedRadiance___str__, None, SimulatedRadiance)
 SimulatedRadiance_swigregister = _simulated_radiance.SimulatedRadiance_swigregister
 SimulatedRadiance_swigregister(SimulatedRadiance)

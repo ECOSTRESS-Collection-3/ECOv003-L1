@@ -12,6 +12,7 @@ public:
   virtual ~GlobalFixture() { /* Nothing to do now */ }
   std::string test_data_dir() const;
   std::string unit_test_data_dir() const;
+  std::string aster_mosaic_dir() const;
 private:
   void set_default_value();
 };
