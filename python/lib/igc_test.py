@@ -42,6 +42,6 @@ def test_plot(igc):
     plt.xlabel("Longitude")
     plt.ylabel("Latitude")
     plt.legend()
-    #plt.savefig("igc.png")
-    plt.show()
+    plt.savefig("igc.png")
+    #plt.show()
     
