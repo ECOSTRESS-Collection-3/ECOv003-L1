@@ -1,55 +1,71 @@
 import numpy as np
 import h5py
 from .write_standard_metadata import WriteStandardMetadata
-from .misc import ecostress_radiance_scale_factor
+from .misc import ecostress_radiance_scale_factor, time_split
+from ecostress_swig import *
+from geocal import ImageCoordinate
 
 class L1aPixSimulate(object):
     '''This is used to generate L1A_PIX simulated data from a L1B_RAD file.
     This is the inverse of the l1b_rad_generate process.'''
-    def __init__(self, l1b_rad_file):
-        '''Create a L1APixSimulate to process the given L1B_RAD file.'''
-        self.l1b_rad = h5py.File(l1b_rad_file, "r")
-        
-    def image(self, band):
-        '''Generate a l1a pix image for the given band.'''
-        if(band == 5):
-            l1b_d = self.l1b_rad["/SWIR/swir_dn"][:,:]
-        else:
-            l1b_d = self.l1b_rad["/Radiance/radiance_%d" % (band + 1)][:,:]
-        d = np.zeros((l1b_d.shape[0] * 2, l1b_d.shape[1]), dtype=np.uint16)
-        # Note we can change this to work with the gain and offset from
-        # l1a if we want a fully reversible code. But for now, we do
-        # the simulate in terms of DN, so there is no scaling needed here
-        d[0::2,:] = l1b_d
-        d[1::2,:] = d[0::2,:]
-        return d
+    def __init__(self, igc, surface_image):
+        '''Create a L1APixSimulate to process the given 
+        EcostressImageGroundConnection.  We supply the surface map projected 
+        image as an array, one entry per band in the igc.'''
+        self.igc = igc
+        self.surface_image = surface_image
 
-    def copy_metadata(self, field):
-        self.m.set(field, self.l1b_rad["/StandardMetadata/" + field].value)
+    def image_parallel_func(self, it):
+        '''Calculate image for a subset of data.'''
+        return self.sim_rad.radiance_scan(it[0], it[1])
         
-    def create_file(self, l1a_pix_fname):
+    def image(self, band, pool = None):
+        '''Generate a l1a pix image for the given band.'''
+        print("Doing band %d" % (band + 1))
+        self.igc.band = band
+        # Don't bother averaging data, just use the center pixel. Since we
+        # are simulated, this should be find and is much faster.
+        avg_fact = 1
+        self.sim_rad = SimulatedRadiance(GroundCoordinateArray(self.igc),
+                                         self.surface_image[band], avg_fact)
+        it = [[i,256] for i in range(0, self.igc.number_line, 256)]
+        if(pool):
+            r = pool.map(self.image_parallel_func, it)
+        else:
+            r = map(self.image_parallel_func, it)
+        r = np.vstack(r)
+        # Don't think we have any negative data, but go ahead and zero this out
+        # if there is any
+        r[r<0] = 0
+        # Note we can change this to work with gain and offset if we want
+        # to test this functionality. But for now we use the same DN that
+        # the ASTER data is in, so no scaling is needed.
+        r = r.astype(np.uint16)
+        return r
+
+    def create_file(self, l1a_pix_fname, pool = None):
         fout = h5py.File(l1a_pix_fname, "w")
         g = fout.create_group("UncalibratedDN")
         for b in range(6):
             t = g.create_dataset("b%d_image" % (b + 1),
-                                 data = self.image(b))
+                                 data = self.image(b, pool=pool))
             t.attrs["Units"] = "dimensionless"
         g = fout.create_group("Time")
-        l1b_d = self.l1b_rad["Time/line_start_time_j2000"][:]
-        d = np.zeros((l1b_d.shape[0] * 2, ), dtype='f8')
-        d[0::2] = l1b_d
-        d[1::2] = l1b_d
         t = g.create_dataset("line_start_time_j2000",
-                             data = d, dtype="f8")
+         data=np.array([self.igc.time_table.time(ImageCoordinate(i, 0))[0].j2000
+                        for i in range(self.igc.time_table.max_line + 1)]),
+                             dtype='f8')
         t.attrs["Description"] = "J2000 time of first pixel in line"
         t.attrs["Units"] = "second"
-        self.m = WriteStandardMetadata(fout, product_specfic_group = "L1A_PIXMetadata",
+        m = WriteStandardMetadata(fout, product_specfic_group = "L1A_PIXMetadata",
                                   pge_name = "L1A_CAL_PGE")
-        self.copy_metadata("RangeBeginningDate")
-        self.copy_metadata("RangeBeginningTime")
-        self.copy_metadata("RangeEndingDate")
-        self.copy_metadata("RangeEndingTime")
-        self.m.write()
+        dt, tm = time_split(self.igc.time_table.min_time)
+        m.set("RangeBeginningDate", dt)
+        m.set("RangeBeginningTime", tm)
+        dt, tm = time_split(self.igc.time_table.max_time)
+        m.set("RangeEndingDate", dt) 
+        m.set("RangeEndingTime", tm)
+        m.write()
         fout.close()
 
 

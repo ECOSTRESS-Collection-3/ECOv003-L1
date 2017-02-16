@@ -50,7 +50,7 @@ public:
   { throw GeoCal::Exception("Need to implement this.\n"); }
   virtual void print(std::ostream& Os) const;
 
-  virtual int number_line() const { return tt->max_line(); }
+  virtual int number_line() const { return tt->max_line() + 1; }
   virtual int number_sample() const { return sm->number_sample(); }
   virtual int number_band() const { return cam->number_band(); }
   boost::shared_ptr<GeoCal::QuaternionOrbitData> orbit_data

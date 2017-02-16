@@ -43,7 +43,7 @@ public:
    GeoCal::FrameCoordinateWithDerivative& F) const;
   virtual int min_line() const {return 0;}
   virtual int max_line() const
-  { return (int) tstart_scan_.size() * number_line_scan(); }
+  { return (int) tstart_scan_.size() * number_line_scan() - 1; }
   virtual GeoCal::Time min_time() const { return tstart_scan_[0]; }
   virtual GeoCal::Time max_time() const
   { return *tstart_scan_.rbegin() + nominal_scan_spacing; }

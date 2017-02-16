@@ -14,7 +14,7 @@ BOOST_AUTO_TEST_CASE(basic_test)
   BOOST_CHECK(fabs(tt.max_time() -
    (tstart + 44 * EcostressTimeTable::nominal_scan_spacing)) < 1e-6);
   BOOST_CHECK_EQUAL(tt.min_line(), 0);
-  BOOST_CHECK_EQUAL(tt.max_line(), 44 * tt.number_line_scan());
+  BOOST_CHECK_EQUAL(tt.max_line(), 44 * tt.number_line_scan() - 1);
   GeoCal::Time t;
   GeoCal::FrameCoordinate fc;
   tt.time(GeoCal::ImageCoordinate(0, 0), t, fc);
@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(basic_test)
      (tstart + 1 * EcostressTimeTable::nominal_scan_spacing) < 1e-6));
   BOOST_CHECK_CLOSE(fc.line, 128.6 - 1 * tt.number_line_scan(), 1e-4);
   BOOST_CHECK_CLOSE(fc.sample, 0, 1e-4);
-  for(int i = 0; i < tt.max_line(); i+=10)
+  for(int i = 0; i <= tt.max_line(); i+=10)
     for(double j = 0; j < 5400; j += 10.1) {
       GeoCal::ImageCoordinate ic(i, j);
       tt.time(ic, t, fc);

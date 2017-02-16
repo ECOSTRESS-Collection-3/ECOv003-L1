@@ -4,7 +4,7 @@
 %include "ecostress_common.i"
 
 %{
-#include "simulated_radiance.i"
+#include "simulated_radiance.h"
 %}
 
 %base_import(generic_object)

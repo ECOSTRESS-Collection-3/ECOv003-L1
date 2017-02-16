@@ -5384,7 +5384,7 @@ namespace swig {
 }
 
 
-#include "simulated_radiance.i"
+#include "simulated_radiance.h"
 
 
 #include <limits.h>

@@ -3,7 +3,8 @@ import pytest
 import os
 from geocal import makedirs_p, read_shelve, Ipi, SrtmDem, \
     IpiImageGroundConnection, SrtmLwmData, HdfOrbit_Eci_TimeJ2000, \
-    MeasuredTimeTable, Time, ImageCoordinate
+    MeasuredTimeTable, Time, ImageCoordinate, VicarLiteRasterImage, \
+    VicarLiteFile
 import h5py
 try:
     from ecostress_swig import *
@@ -74,7 +75,24 @@ def lwm():
     else:
         raise RuntimeError("Couldn't find SRTM LWM")
     yield SrtmLwmData(srtm_lwm_dir,False)
-    
+
+@pytest.yield_fixture(scope="function")
+def aster_mosaic_dir():
+    dir = "/project/ancillary/ASTER/CAMosaic/"
+    if(not os.path.exists(dir)):
+        # Location on pistol
+        dir = "/data/smyth/AsterMosaic/"
+    if(not os.path.exists(dir)):
+        raise RuntimeError("Can't find location of aster mosaic")
+    yield dir
+
+@pytest.yield_fixture(scope="function")
+def aster_mosaic_surface_data(aster_mosaic_dir):
+    sdata = [VicarLiteRasterImage(aster_mosaic_dir + "calnorm_b%d.img" % b, 1,
+                                  VicarLiteFile.READ, 1000, 1000)
+             for b in [14,14,12,11,10,4]]
+    yield sdata
+        
 @pytest.yield_fixture(scope="function")
 def test_data():
     '''Determine the directory with the test data.'''
