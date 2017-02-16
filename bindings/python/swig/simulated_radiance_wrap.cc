@@ -6701,6 +6701,164 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_SimulatedRadiance_radiance_scan__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::SimulatedRadiance *arg1 = (Ecostress::SimulatedRadiance *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::SimulatedRadiance const > tempshared1 ;
+  boost::shared_ptr< Ecostress::SimulatedRadiance const > *smartarg1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  SwigValueWrapper< blitz::Array< double,2 > > result;
+  
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__SimulatedRadiance_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SimulatedRadiance_radiance_scan" "', argument " "1"" of type '" "Ecostress::SimulatedRadiance const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::SimulatedRadiance > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::SimulatedRadiance > * >(argp1);
+      arg1 = const_cast< Ecostress::SimulatedRadiance * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::SimulatedRadiance > * >(argp1);
+      arg1 = const_cast< Ecostress::SimulatedRadiance * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SimulatedRadiance_radiance_scan" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "SimulatedRadiance_radiance_scan" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  {
+    try {
+      result = ((Ecostress::SimulatedRadiance const *)arg1)->radiance_scan(arg2,arg3);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    npy_intp dims[2], stride[2];
+    for(int i = 0; i < 2; ++i) {
+      dims[i] = (&result)->extent(i);
+      // Note numpy stride is in terms of bytes, while blitz in in terms
+      // of type T.
+      stride[i] = (&result)->stride(i) * sizeof(double);
+    }
+    resultobj = PyArray_New(&PyArray_Type, 2, dims, type_to_npy<double >(), 
+      stride, (&result)->data(), 0, 0, 0);
+    blitz::Array<double, 2>* t = new blitz::Array<double, 2>(result);
+    PyArray_SetBaseObject((PyArrayObject*)resultobj, 
+      SWIG_NewPointerObj(SWIG_as_voidptr(t), 
+        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | 0 ));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SimulatedRadiance_radiance_scan__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::SimulatedRadiance *arg1 = (Ecostress::SimulatedRadiance *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::SimulatedRadiance const > tempshared1 ;
+  boost::shared_ptr< Ecostress::SimulatedRadiance const > *smartarg1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  SwigValueWrapper< blitz::Array< double,2 > > result;
+  
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__SimulatedRadiance_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SimulatedRadiance_radiance_scan" "', argument " "1"" of type '" "Ecostress::SimulatedRadiance const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::SimulatedRadiance > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::SimulatedRadiance > * >(argp1);
+      arg1 = const_cast< Ecostress::SimulatedRadiance * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::SimulatedRadiance > * >(argp1);
+      arg1 = const_cast< Ecostress::SimulatedRadiance * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SimulatedRadiance_radiance_scan" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = ((Ecostress::SimulatedRadiance const *)arg1)->radiance_scan(arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    npy_intp dims[2], stride[2];
+    for(int i = 0; i < 2; ++i) {
+      dims[i] = (&result)->extent(i);
+      // Note numpy stride is in terms of bytes, while blitz in in terms
+      // of type T.
+      stride[i] = (&result)->stride(i) * sizeof(double);
+    }
+    resultobj = PyArray_New(&PyArray_Type, 2, dims, type_to_npy<double >(), 
+      stride, (&result)->data(), 0, 0, 0);
+    blitz::Array<double, 2>* t = new blitz::Array<double, 2>(result);
+    PyArray_SetBaseObject((PyArrayObject*)resultobj, 
+      SWIG_NewPointerObj(SWIG_as_voidptr(t), 
+        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | 0 ));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SimulatedRadiance_radiance_scan(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[4] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"SimulatedRadiance_radiance_scan",0,3,argv))) SWIG_fail;
+  --argc;
+  if (argc == 2) {
+    return _wrap_SimulatedRadiance_radiance_scan__SWIG_1(self, argc, argv);
+  }
+  if (argc == 3) {
+    return _wrap_SimulatedRadiance_radiance_scan__SWIG_0(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'SimulatedRadiance_radiance_scan'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::SimulatedRadiance::radiance_scan(int,int) const\n"
+    "    Ecostress::SimulatedRadiance::radiance_scan(int) const\n");
+  return 0;
+}
+
+
 SWIGINTERN PyObject *_wrap_SimulatedRadiance__v_ground_coordinate_array(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::SimulatedRadiance *arg1 = (Ecostress::SimulatedRadiance *) 0 ;
@@ -7043,6 +7201,16 @@ static PyMethodDef SwigMethods[] = {
 		"boost::shared_ptr< GeoCal::RasterImage > &Map_projected_image, int\n"
 		"Avg_fact=-1, bool Read_into_memory=false, double Fill_value=0.0)\n"
 		"\n"
+		""},
+	 { (char *)"SimulatedRadiance_radiance_scan", _wrap_SimulatedRadiance_radiance_scan, METH_VARARGS, (char *)"\n"
+		"\n"
+		"blitz::Array< double, 2 > SimulatedRadiance::radiance_scan(int Start_line, int Number_line=-1) const\n"
+		"Call ground_coor_scan_arr, and then use the location to determine the\n"
+		"radiance we would see from the map_projected_image().\n"
+		"\n"
+		"This is for a single scan. We use this interface, because this is a\n"
+		"good unit for python to call while generating this in parallel. See\n"
+		"L1aPixSimulate for the use of this. \n"
 		""},
 	 { (char *)"SimulatedRadiance__v_ground_coordinate_array", (PyCFunction)_wrap_SimulatedRadiance__v_ground_coordinate_array, METH_O, (char *)"\n"
 		"\n"

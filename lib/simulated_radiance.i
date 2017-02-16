@@ -20,6 +20,8 @@ public:
 	    int Avg_fact = -1,
 	    bool Read_into_memory = false,
 	    double Fill_value = 0.0);
+  blitz::Array<double, 2> radiance_scan(int Start_line, int Number_line=-1)
+    const;
   %python_attribute(ground_coordinate_array,
 		    boost::shared_ptr<GroundCoordinateArray>);
   %python_attribute(avg_factor, int);

@@ -44,6 +44,32 @@ void SimulatedRadiance::init()
     img_avg_.reset(new GeoCal::MemoryRasterImage(*img_avg_));
 }
 
+//-------------------------------------------------------------------------
+/// Call ground_coor_scan_arr, and then use the location to determine
+/// the radiance we would see from the map_projected_image(). This is
+/// for a single scan. We use this interface, because this is a good
+/// unit for python to call while generating this in parallel. See
+/// L1aPixSimulate for the use of this.
+//-------------------------------------------------------------------------
+
+blitz::Array<double, 2> SimulatedRadiance::radiance_scan
+(int Start_line, int Number_line) const
+{
+  blitz::Array<double, 3> gcarr = gca_->ground_coor_scan_arr(Start_line, Number_line);
+  blitz::Array<double, 2> res(gcarr.rows(), gcarr.cols());
+  for(int i = 0; i < gcarr.rows(); ++i)
+    for(int j = 0; j < gcarr.cols(); ++j) {
+      GeoCal::Geodetic gc(gcarr(i,j,0),gcarr(i,j,1),gcarr(i,j,2));
+      GeoCal::ImageCoordinate ic = img_avg_->coordinate(gc);
+      if(ic.line < 0 || ic.line > img_avg_->number_line() - 1 ||
+	 ic.sample < 0 || ic.sample > img_avg_->number_sample() - 1)
+	res(i, j) = fill_value_;
+      else
+	res(i, j) = img_avg_->unchecked_interpolate(ic.line, ic.sample);
+    }
+  return res;
+}
+
 void SimulatedRadiance::print(std::ostream& Os) const
 {
   GeoCal::OstreamPad opad(Os, "    ");

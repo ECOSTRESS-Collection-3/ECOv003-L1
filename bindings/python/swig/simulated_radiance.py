@@ -216,6 +216,20 @@ class SimulatedRadiance(geocal_swig.generic_object.GenericObject):
         """
         _simulated_radiance.SimulatedRadiance_swiginit(self, _simulated_radiance.new_SimulatedRadiance(Gca, Map_projected_image, Avg_fact, Read_into_memory, Fill_value))
 
+    def radiance_scan(self, Start_line, Number_line=-1):
+        """
+
+        blitz::Array< double, 2 > SimulatedRadiance::radiance_scan(int Start_line, int Number_line=-1) const
+        Call ground_coor_scan_arr, and then use the location to determine the
+        radiance we would see from the map_projected_image().
+
+        This is for a single scan. We use this interface, because this is a
+        good unit for python to call while generating this in parallel. See
+        L1aPixSimulate for the use of this. 
+        """
+        return _simulated_radiance.SimulatedRadiance_radiance_scan(self, Start_line, Number_line)
+
+
     def _v_ground_coordinate_array(self):
         """
 
@@ -292,6 +306,7 @@ class SimulatedRadiance(geocal_swig.generic_object.GenericObject):
       return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
 
     __swig_destroy__ = _simulated_radiance.delete_SimulatedRadiance
+SimulatedRadiance.radiance_scan = new_instancemethod(_simulated_radiance.SimulatedRadiance_radiance_scan, None, SimulatedRadiance)
 SimulatedRadiance._v_ground_coordinate_array = new_instancemethod(_simulated_radiance.SimulatedRadiance__v_ground_coordinate_array, None, SimulatedRadiance)
 SimulatedRadiance._v_avg_factor = new_instancemethod(_simulated_radiance.SimulatedRadiance__v_avg_factor, None, SimulatedRadiance)
 SimulatedRadiance._v_fill_value = new_instancemethod(_simulated_radiance.SimulatedRadiance__v_fill_value, None, SimulatedRadiance)

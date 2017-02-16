@@ -26,6 +26,9 @@ public:
   { init(); }
   virtual ~SimulatedRadiance() {}
 
+  blitz::Array<double, 2> radiance_scan(int Start_line, int Number_line=-1)
+    const;
+  
 //-------------------------------------------------------------------------
 /// Return underlying GroundCoordinateArray.
 //-------------------------------------------------------------------------

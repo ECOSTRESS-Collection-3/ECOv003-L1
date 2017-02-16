@@ -15,15 +15,16 @@ BOOST_AUTO_TEST_CASE(basic_test)
     BOOST_WARN_MESSAGE(false, "Skipping SimulatedRadiance test because ASTER mosaic data wasn't found");
     return;
   }
+  // Normally we want to average the ASTER data, but to speed up this
+  // unit test skip this step.
+  int avg_fact = 1;
   SimulatedRadiance srad(boost::make_shared<GroundCoordinateArray>(igc),
-			 boost::make_shared<GeoCal::VicarLiteRasterImage>(aster_mosaic_dir() + "calnorm_b4.img"));
-  std::cerr << srad;
-  // blitz::Array<double, 3> res = gca.ground_coor_scan_arr(4, 20);
-  // BOOST_CHECK_EQUAL(res.rows(), 20);
-  // BOOST_CHECK_EQUAL(res.cols(), 5400);
-  // BOOST_CHECK_EQUAL(res.depth(), 3);
-  // GeoCal::Geodetic pt(res(10-4,20,0),res(10-4,20,1),res(10-4,20,2));
-  // BOOST_CHECK(distance(pt, *igc->ground_coordinate(GeoCal::ImageCoordinate(10, 20))) < 1.0);
+			 boost::make_shared<GeoCal::VicarLiteRasterImage>(aster_mosaic_dir() + "calnorm_b4.img", 1, GeoCal::VicarLiteFile::READ, 1000, 1000),
+			 avg_fact);
+  blitz::Array<double, 2> res = srad.radiance_scan(4, 20);
+  BOOST_CHECK_EQUAL(res.rows(), 20);
+  BOOST_CHECK_EQUAL(res.cols(), 5400);
+  BOOST_CHECK_CLOSE(res(0,5000), 85.4540, 1e-2);
 }
 
 BOOST_AUTO_TEST_CASE(serialization)
