@@ -25,31 +25,29 @@ time_shift = [0, 0, 0, 0, 6 * 60 * 60]
 
 pass_index = 4 # The pass we are working with
 
+aster_mosaic_dir = "/project/ancillary/ASTER/CAMosaic/"
+if(not os.path.exists(aster_mosaic_dir)):
+    # Location on pistol
+    aster_mosaic_dir = "/data/smyth/AsterMosaic/"
+if(not os.path.exists(aster_mosaic_dir)):
+    raise RuntimeError("Can't find location of aster mosaic")
+
 # Get the ASTER mosaic we are working with for all the bands. The
 # bands comes from the wiki. Data originally comes from /raid11/astermos,
 # but is compressed there.
-# (data is only on pistol
-def fname(band):
-    return "/data/smyth/AsterMosiac/calnorm_b%d.img" % band
-# Don't scale, we'll pick this up when we go back through. Just do
-# this in terms of DN's
-sdata = [VicarLiteRasterImage(fname(aster_band), 1, VicarLiteFile.READ,
-                              5000, 5000)
-         for aster_band in ecostress_to_aster_band()]
+sdata = [VicarLiteRasterImage(aster_mosaic_dir + "calnorm_b%d.img" % b, 1,
+                              VicarLiteFile.READ, 1000, 1000)
+         for b in [14,14,12,11,10,4]]
 
 orb = OrbitTimeShift(SpiceOrbit(SpiceOrbit.ISS_ID, "iss_spice/iss_2015.bsp"),
                      time_shift[pass_index])
+# False here says it ok for SrtmDem to not have tile. This gives support
+# for data that is over the ocean.
+dem = SrtmDem("",False)
+sm = EcostressScanMirror()
 
-# Focal length and ccd pixel size comes from Eugene's SDS data
-# bible. The scaling of the CCD size is empirical to give the right
-# resolution on the surface. These are pretty hoaky, we really just
-# want something vaguely right since our camera model is pretty
-# different from a pushbroom. But this gives a place to start.
-
-frame_to_sc = quat_rot("ZYX", 0, 0, 0)
-cam = QuaternionCamera(frame_to_sc, 1, 5400, 40e-3 * 1.8, 40e-3 * 2, 
-                       425, FrameCoordinate(1.0 / 2, 5400.0 / 2))
-
+# Camera comes from the separate ecostress_camera_generate.py script
+cam = read_shelve("camera.xml")
 # The time table data comes from Eugene's SDS data bible file 
 # (ECOSTRESS_SDS_Data_Bible.xls in ecostress-sds git repository). The
 # real camera is a bit complicated, but we collect about 241 samples
@@ -68,11 +66,10 @@ scene_files = {}
 SpiceHelper.spice_setup()
 pool = Pool(20)
 for s in range(nscene[pass_index]):
-    tt = ConstantSpacingTimeTable(pass_time[pass_index] - toff + tspace +
-                                  s * tlen + time_shift[pass_index], 
-                                  pass_time[pass_index] + toff + s * tlen +
-                                  time_shift[pass_index],
-                                  tspace)
+    tstart = pass_time[pass_index] - toff + tspace + \
+             s * tlen + time_shift[pass_index]
+    tt = EcostressTimeTable(tstart, False)
+    igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
     # Save this for use in making the L0 and orbit based file name
     if(s == 0):
         start_time = tt.min_time
@@ -83,17 +80,10 @@ for s in range(nscene[pass_index]):
             write_shelve("time_table.xml", tt)
     if(s == nscene[pass_index] - 1):
         end_time = tt.max_time
-    l1b_rad_fname = ecostress_file_name("L1B_RAD", orbit_num[pass_index],
-                                        s + 1, tt.min_time)
-    # Temp false condition, to speed up testing
-    if(True):
-        l1b_rad_sim = L1bRadSimulate(orb, tt, cam, sdata, raycast_resolution = 100.0)
-        l1b_rad_sim.create_file(l1b_rad_fname, pool = pool)
-
     l1a_pix_fname = ecostress_file_name("L1A_PIX", orbit_num[pass_index],
                                         s + 1, tt.min_time)
-    l1a_pix_sim = L1aPixSimulate(l1b_rad_fname)
-    l1a_pix_sim.create_file(l1a_pix_fname)
+    l1a_pix_sim = L1aPixSimulate(igc, sdata)
+    l1a_pix_sim.create_file(l1a_pix_fname, pool=pool)
     
     l1a_bb_fname = ecostress_file_name("L1A_BB", orbit_num[pass_index],
                                        s + 1, tt.min_time)

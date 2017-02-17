@@ -2,12 +2,145 @@
 <!DOCTYPE boost_serialization>
 <boost_serialization signature="serialization::archive" version="13">
 <geocal_object class_id="0" tracking_level="0" version="1">
-	<px class_id="2" class_name="GeoCal::ConstantSpacingTimeTable" tracking_level="1" version="0" object_id="_0">
-		<min_t class_id="3" tracking_level="1" version="0" object_id="_1">
-			<time_pgs>6.96285779230216861e+08</time_pgs>
-		</min_t>
-		<max_l>5631</max_l>
-		<tspace>9.80082987551867194e-03</tspace>
+	<px class_id="2" class_name="Ecostress::EcostressTimeTable" tracking_level="1" version="0" object_id="_0">
+		<TimeTable class_id="3" tracking_level="0" version="0"></TimeTable>
+		<averaging_done>0</averaging_done>
+		<tstart_scan class_id="4" tracking_level="0" version="0">
+			<count>44</count>
+			<item_version>0</item_version>
+			<item class_id="5" tracking_level="1" version="0" object_id="_1">
+				<time_pgs>6.96285779230216861e+08</time_pgs>
+			</item>
+			<item object_id="_2">
+				<time_pgs>6.96285780411216855e+08</time_pgs>
+			</item>
+			<item object_id="_3">
+				<time_pgs>6.96285781592216849e+08</time_pgs>
+			</item>
+			<item object_id="_4">
+				<time_pgs>6.96285782773216844e+08</time_pgs>
+			</item>
+			<item object_id="_5">
+				<time_pgs>6.96285783954216838e+08</time_pgs>
+			</item>
+			<item object_id="_6">
+				<time_pgs>6.96285785135216832e+08</time_pgs>
+			</item>
+			<item object_id="_7">
+				<time_pgs>6.96285786316216826e+08</time_pgs>
+			</item>
+			<item object_id="_8">
+				<time_pgs>6.96285787497216821e+08</time_pgs>
+			</item>
+			<item object_id="_9">
+				<time_pgs>6.96285788678216815e+08</time_pgs>
+			</item>
+			<item object_id="_10">
+				<time_pgs>6.96285789859216809e+08</time_pgs>
+			</item>
+			<item object_id="_11">
+				<time_pgs>6.96285791040216804e+08</time_pgs>
+			</item>
+			<item object_id="_12">
+				<time_pgs>6.96285792221216917e+08</time_pgs>
+			</item>
+			<item object_id="_13">
+				<time_pgs>6.96285793402216911e+08</time_pgs>
+			</item>
+			<item object_id="_14">
+				<time_pgs>6.96285794583216906e+08</time_pgs>
+			</item>
+			<item object_id="_15">
+				<time_pgs>6.96285795764216900e+08</time_pgs>
+			</item>
+			<item object_id="_16">
+				<time_pgs>6.96285796945216894e+08</time_pgs>
+			</item>
+			<item object_id="_17">
+				<time_pgs>6.96285798126216888e+08</time_pgs>
+			</item>
+			<item object_id="_18">
+				<time_pgs>6.96285799307216883e+08</time_pgs>
+			</item>
+			<item object_id="_19">
+				<time_pgs>6.96285800488216877e+08</time_pgs>
+			</item>
+			<item object_id="_20">
+				<time_pgs>6.96285801669216871e+08</time_pgs>
+			</item>
+			<item object_id="_21">
+				<time_pgs>6.96285802850216866e+08</time_pgs>
+			</item>
+			<item object_id="_22">
+				<time_pgs>6.96285804031216860e+08</time_pgs>
+			</item>
+			<item object_id="_23">
+				<time_pgs>6.96285805212216854e+08</time_pgs>
+			</item>
+			<item object_id="_24">
+				<time_pgs>6.96285806393216848e+08</time_pgs>
+			</item>
+			<item object_id="_25">
+				<time_pgs>6.96285807574216843e+08</time_pgs>
+			</item>
+			<item object_id="_26">
+				<time_pgs>6.96285808755216837e+08</time_pgs>
+			</item>
+			<item object_id="_27">
+				<time_pgs>6.96285809936216831e+08</time_pgs>
+			</item>
+			<item object_id="_28">
+				<time_pgs>6.96285811117216825e+08</time_pgs>
+			</item>
+			<item object_id="_29">
+				<time_pgs>6.96285812298216820e+08</time_pgs>
+			</item>
+			<item object_id="_30">
+				<time_pgs>6.96285813479216814e+08</time_pgs>
+			</item>
+			<item object_id="_31">
+				<time_pgs>6.96285814660216808e+08</time_pgs>
+			</item>
+			<item object_id="_32">
+				<time_pgs>6.96285815841216803e+08</time_pgs>
+			</item>
+			<item object_id="_33">
+				<time_pgs>6.96285817022216916e+08</time_pgs>
+			</item>
+			<item object_id="_34">
+				<time_pgs>6.96285818203216910e+08</time_pgs>
+			</item>
+			<item object_id="_35">
+				<time_pgs>6.96285819384216905e+08</time_pgs>
+			</item>
+			<item object_id="_36">
+				<time_pgs>6.96285820565216899e+08</time_pgs>
+			</item>
+			<item object_id="_37">
+				<time_pgs>6.96285821746216893e+08</time_pgs>
+			</item>
+			<item object_id="_38">
+				<time_pgs>6.96285822927216887e+08</time_pgs>
+			</item>
+			<item object_id="_39">
+				<time_pgs>6.96285824108216882e+08</time_pgs>
+			</item>
+			<item object_id="_40">
+				<time_pgs>6.96285825289216876e+08</time_pgs>
+			</item>
+			<item object_id="_41">
+				<time_pgs>6.96285826470216870e+08</time_pgs>
+			</item>
+			<item object_id="_42">
+				<time_pgs>6.96285827651216865e+08</time_pgs>
+			</item>
+			<item object_id="_43">
+				<time_pgs>6.96285828832216859e+08</time_pgs>
+			</item>
+			<item object_id="_44">
+				<time_pgs>6.96285830013216853e+08</time_pgs>
+			</item>
+		</tstart_scan>
 	</px>
 </geocal_object>
 </boost_serialization>
