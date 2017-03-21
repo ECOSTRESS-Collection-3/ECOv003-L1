@@ -5,9 +5,8 @@ import re
 import numpy as np
 from .write_standard_metadata import WriteStandardMetadata
 from .misc import ecostress_file_name
-import time, calendar
-from datetime import datetime
 from geocal import Time
+from datetime import datetime
 
 '''
 ydt = "2016-12-16T10:02:12.34567890"
@@ -185,12 +184,12 @@ class L1aRawPixGenerate(object):
       if o_start_time == None: o_start_time = sc_start_time
       o_end_time = sc_end_time
       ' Get scene start and end times (UTC) from scene file entry '
-      dt=datetime.strptime(sc_start_time[0:26],TPAT)
-      ss = time.mktime(dt.timetuple()) + float(dt.microsecond)/1000000.0
-      dt=datetime.strptime(sc_end_time[0:26],TPAT)
-      se = time.mktime(dt.timetuple()) + float(dt.microsecond)/1000000.0
+      dt = sc_start_time[0:26].replace( 'T', ' ' ) + ' UTC'
+      ss = Time.parse_time( dt )
+      dt = sc_start_time[0:26].replace( 'T', ' ' ) + ' UTC'
+      se = Time.parse_time( dt )
       print("====  ", datetime.now(), "  ====")
-      print("SCENE=%s START=%s END=%s SS=%f SE=%f" % ( scene_id, sc_start_time, sc_end_time, ss, se ) )
+      print("SCENE=%s START=%s END=%s SS=%f SE=%f" % ( scene_id, sc_start_time, sc_end_time, ss.j2000, se.j2000 ) )
 
       good_pkt = 0
       good_bb = 0
@@ -201,7 +200,7 @@ class L1aRawPixGenerate(object):
       ' *** Account for actual time of camera switch-on *** '
       ' *** FSW time is GPS time in seconds; need msec precision *** '
       ' *** Assume for now FSW time is GPS time in microseconds from sim *** '
-      pktp0t = 0.0  # Time of first FP in packet
+      pktp0t = Time.time_gps(0.0)  # Time of first FP in packet
       while pktp0t < ss and pkt_idx<tot_pkts:
         ' skip invalid packets '
         if pkt_stat[ pkt_idx ] == 0:
@@ -214,18 +213,18 @@ class L1aRawPixGenerate(object):
             fswt = fswt << 16 | flex_buf[ 0, FTIME+3-i ]
             fpie_clk = fpie_clk << 16 | flex_buf[ 0, DTIME+3-i ]
             pix_clk = pix_clk << 16 | flex_buf[ 0, DSYNC+3-i ]
+          delta = fpie_clk -pix_clk
           gs = (fswt>>32) & 0xffffffff
           ns = fswt & 0xffffffff
-          gt = float(gs) + ( float(ns)/1000.0 - pix_clk )/1000000.0
-          dt=datetime.strptime(str(Time.time_gps(gt))[0:26],TPAT)
-          pktp0t = time.mktime(dt.timetuple()) + float(dt.microsecond)/1000000.0
-          print("Packet %d, FS=%d, NS=%d, time=%f, SS=%f" % ( pkt_idx, gs, ns, pktp0t, ss ) )
+          gt = float(gs) + ( float(ns)/1000.0 - delta )/1000000.0
+          pktp0t = Time.time_gps(gt)
+          print("Packet %d, FS=%d, NS=%d, time=%f, SS=%f" % ( pkt_idx, gs, ns,  pktp0t.j2000, ss.j2000 ) )
         ' end skip invalid backet '
         pkt_idx += 1
         pkt_cnt += 1
       ' end searching for packet matching scene start time '
       if pkt_idx >= tot_pkts:
-        print("Could not find Scene %s time %s (%fJ2K) in file %s PKT=%d" % ( scene_id, sc_start_time, ss, self.l0b, pkt_idx ) )
+        print("Could not find Scene %s time %s (%fJ2K) in file %s PKT=%d" % ( scene_id, sc_start_time, ss.j2000, self.l0b, pkt_idx ) )
         return -1
 
       ' found scene start time in previous packet '
@@ -234,7 +233,7 @@ class L1aRawPixGenerate(object):
         pkt_idx -= 1
         pkt_cnt -= 1
         good_pkt -= 1
-      print("Found scene %s start time %fUTC in packet %d, FSWT=%d PIX_CLOCK=%d FP0 time=%f" % ( scene_id, ss, pkt_idx, fswt, pix_clk, pktp0t ) )
+      print("Found scene %s start time %fJ2K in packet %d, FSWT=%x PIX_CLOCK=%d FP0 time=%s" % ( scene_id, ss.j2000, pkt_idx, fswt, pix_clk, str(pktp0t) ) )
 
       ' create scene file and image pixel, J2K, and FPIE ENC groups '
       pname = self.create_file( "L1A_RAW_PIX", onum, scene_id, sc_start_time, sc_end_time, prod=False )
@@ -260,7 +259,7 @@ class L1aRawPixGenerate(object):
         b325[b] = l1a_bpg.create_dataset("B%d_blackbody_325K" %(b+1), shape=(LPS, BBLEN), dtype="u2" )
 
       # First focal plane of scene in current packet
-      p0 = int( (pktp0t-ss)/ PIX_DUR + 0.5 )
+      p0 = int( (pktp0t.j2000-ss.j2000)/ PIX_DUR + 0.5 )
       ' loop through scans '
       #  assume BB data start 2 packets before image data for now
       pkt_idx -= 2
@@ -336,14 +335,15 @@ class L1aRawPixGenerate(object):
           return -1
         ' record starting pixel time in j2k for current scan '
         ' *** FSW time, FPIE clock, and PIX clock may be BIGENDIAN *** '
+        delta = fpie_clk - pix_clk
         gs = (fswt>>32) & 0xffffffff
         ns = fswt & 0xffffffff
-        gt = float(gs) + (float(ns)/1000.0 - pix_clk)/1000000.0 + p0*PIX_DUR
+        gt = float(gs) + (float(ns)/1000.0 - delta)/1000000.0 + p0*PIX_DUR
         pix_time[scan] = Time.time_gps( gt ).j2000
         scfp_cnt = 0  #  count of total copied FPs for current scan
         dp = 0  #  output pointer
         fpc = FPPPKT - p0
-        print("SCENE=%s SCAN=%d FSWT=%d GT=%f PIX_CLK=%d p2k=%f PKT=%d P0=%d" %(scene_id, scan, fswt, gt, pix_clk, pix_time[scan], pkt_idx, p0))
+        print("SCENE=%s SCAN=%d FSWT=%x GT=%f PIX_CLK=%d p2k=%f PKT=%d P0=%d" %(scene_id, scan, fswt, gt, pix_clk, pix_time[scan], pkt_idx, p0))
 
         '==== copy image pixels for current scan ===='
         while scfp_cnt < FPPSC:
@@ -382,9 +382,10 @@ class L1aRawPixGenerate(object):
             fswt = fswt << 16 | flex_buf[ 0, FTIME+3-i ]
             fpie_clk = fpie_clk << 16 | flex_buf[ 0, DTIME+3-i ]
             pix_clk = pix_clk << 16 | flex_buf[ 0, DSYNC+3-i ]
+          delta = fpie_clk - pix_clk
           gs = (fswt>>32) & 0xffffffff
           ns = fswt & 0xffffffff
-          gt = float(gs) + (float(ns)/1000.0 - pix_clk)/1000000.0
+          gt = float(gs) + (float(ns)/1000.0 - delta)/1000000.0
           t2k = Time.time_gps(gt).j2000
           utc = str(Time.time_gps(gt))[:26]
           fpie = flex_buf[0,ENCOD] | ( flex_buf[0,ENCOD+1] << 16 )
