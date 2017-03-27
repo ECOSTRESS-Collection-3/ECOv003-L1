@@ -7,3 +7,4 @@ autom4te.cache
 *.o
 *.lo
 .ipynb_checkpoints
+.tramp_history

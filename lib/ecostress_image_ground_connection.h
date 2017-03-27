@@ -43,8 +43,7 @@ public:
   ground_coordinate_approx_height(const GeoCal::ImageCoordinate& Ic, 
 				  double H) const;
   virtual GeoCal::ImageCoordinate image_coordinate
-  (const GeoCal::GroundCoordinate& Gc) const 
-  { throw GeoCal::Exception("Need to implement this.\n"); }
+  (const GeoCal::GroundCoordinate& Gc) const;
   virtual blitz::Array<double, 2> 
   image_coordinate_jac_parm(const GeoCal::GroundCoordinate& Gc) const
   { throw GeoCal::Exception("Need to implement this.\n"); }

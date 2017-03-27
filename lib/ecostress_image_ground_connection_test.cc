@@ -19,6 +19,28 @@ BOOST_AUTO_TEST_CASE(basic_test)
 		       GeoCal::Geodetic(37.7166702741, -124.572923589)) < 1.0);
 }
 
+BOOST_AUTO_TEST_CASE(image_coordinate)
+{
+  GeoCal::ImageCoordinate ic1(10,2000);
+  GeoCal::ImageCoordinate ic2(10,10);
+  GeoCal::ImageCoordinate ic3(250,100);
+  boost::shared_ptr<GeoCal::GroundCoordinate> gp1 =
+    igc->ground_coordinate(ic1);
+  boost::shared_ptr<GeoCal::GroundCoordinate> gp2 =
+    igc->ground_coordinate(ic2);
+  boost::shared_ptr<GeoCal::GroundCoordinate> gp3 =
+    igc->ground_coordinate(ic3);
+  GeoCal::ImageCoordinate ic1_calc = igc->image_coordinate(*gp1);
+  GeoCal::ImageCoordinate ic2_calc = igc->image_coordinate(*gp2);
+  GeoCal::ImageCoordinate ic3_calc = igc->image_coordinate(*gp3);
+  BOOST_CHECK_CLOSE(ic1_calc.line, ic1.line, 1e-1);
+  BOOST_CHECK_CLOSE(ic1_calc.sample, ic1.sample, 1e-1);
+  BOOST_CHECK_CLOSE(ic2_calc.line, ic2.line, 1e-1);
+  BOOST_CHECK_CLOSE(ic2_calc.sample, ic2.sample, 1e-1);
+  BOOST_CHECK_CLOSE(ic3_calc.line, ic3.line, 1e-1);
+  BOOST_CHECK_CLOSE(ic3_calc.sample, ic3.sample, 1e-1);
+}
+
 
 BOOST_AUTO_TEST_CASE(serialization)
 {
