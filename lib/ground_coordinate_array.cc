@@ -20,7 +20,8 @@ template<class Archive>
 void GroundCoordinateArray::serialize(Archive & ar, const unsigned int version)
 {
   ECOSTRESS_GENERIC_BASE(GroundCoordinateArray);
-  ar & GEOCAL_NVP_(igc);
+  ar & GEOCAL_NVP_(igc)
+    & GEOCAL_NVP(include_angle);
   boost::serialization::split_member(ar, *this, version);
 }
 
@@ -39,9 +40,30 @@ void GroundCoordinateArray::init()
   for(int i = 0; i < nl; ++i)
     camera_slv.push_back(cam->sc_look_vector(GeoCal::FrameCoordinate(i, 0), b));
   dist.resize((int) camera_slv.size());
-  res.resize((int) camera_slv.size(), igc_->number_sample(),3);
+  res.resize((int) camera_slv.size(), igc_->number_sample(),
+	     (include_angle ? 7 : 3));
 }
 
+//-------------------------------------------------------------------------
+/// This interpolates the given RasterImage at the given latitude,
+/// longitude locations. This is exactly the same as calling
+/// Data.interpolate(Data.coordinate(Geodetic(Lat,Lon)) repeatedly,
+/// except this runs much faster than doing this operation in python.
+//-------------------------------------------------------------------------
+
+blitz::Array<double, 2> GroundCoordinateArray::interpolate
+(const GeoCal::RasterImage& Data,
+ const blitz::Array<double, 2>& Lat,
+ const blitz::Array<double, 2>& Lon)
+{
+  blitz::Array<double, 2> res(Lat.rows(), Lat.cols());
+  if(Lat.rows() != Lon.rows() || Lat.cols() != Lon.cols())
+    throw GeoCal::Exception("Lat and Lon need to be the same size");
+  for(int i = 0; i < res.rows(); ++i)
+    for(int j = 0; j < res.cols(); ++j)
+      res(i,j) = Data.interpolate(Data.coordinate(GeoCal::Geodetic(Lat(i,j), Lon(i,j))));
+  return res;
+}
 //-------------------------------------------------------------------------
 /// This returns the ground coordinates for every pixel in the
 /// ImageGroundConnection as a number_line x number_sample x 3 array,
@@ -49,6 +71,11 @@ void GroundCoordinateArray::init()
 /// same values that you would get from just repeatedly calling
 /// igc()->ground_coordinate(ic), but we take advantage of the special
 /// form of the Ecostress scan to speed up this calculation a lot.
+///
+/// If include_angle was specified in the construtor, we return a
+/// number_line x number_sample x 7 array with coordinates as
+/// latitude, longitude, height, view_zenith, view_azimuth,
+/// solar_zenith, solar_azimuth.
 //-------------------------------------------------------------------------
 
 blitz::Array<double,3> GroundCoordinateArray::ground_coor_arr() const
@@ -72,10 +99,16 @@ blitz::Array<double,3> GroundCoordinateArray::ground_coor_arr() const
 /// single scan rather than doing all the scans like ground_coor_arr.
 /// Also, in python if we are doing parallel processing we can do each
 /// ground_coor_arr separately if desired.
+///
+/// If include_angle was specified in the construtor, we return a
+/// number_line x number_sample x 7 array with coordinates as
+/// latitude, longitude, height, view_zenith, view_azimuth,
+/// solar_zenith, solar_azimuth.
 //-------------------------------------------------------------------------
 
 blitz::Array<double,3>
-GroundCoordinateArray::ground_coor_scan_arr(int Start_line, int Number_line) const
+GroundCoordinateArray::ground_coor_scan_arr
+(int Start_line, int Number_line) const
 {
   int ms = igc_->number_sample() / 2;
   GeoCal::Time t;
@@ -101,30 +134,42 @@ GroundCoordinateArray::ground_coor_scan_arr(int Start_line, int Number_line) con
 void GroundCoordinateArray::ground_coor_arr_samp(int Start_line, int Sample,
 						 bool Initial_samp) const
 {
-  GeoCal::Time t;
-  GeoCal::FrameCoordinate fc;
-  tt->time(GeoCal::ImageCoordinate(Start_line, Sample), t, fc);
-  boost::shared_ptr<GeoCal::QuaternionOrbitData> od =
+  using namespace GeoCal;
+  Time t;
+  FrameCoordinate fc;
+  tt->time(ImageCoordinate(Start_line, Sample), t, fc);
+  boost::shared_ptr<QuaternionOrbitData> od =
     igc_->orbit_data(t, Sample);
-  boost::shared_ptr<GeoCal::CartesianFixed> cf = od->position_cf();
+  boost::shared_ptr<CartesianFixed> cf = od->position_cf();
+  CartesianFixedLookVector slv;
+  if(include_angle)
+    slv = CartesianFixedLookVector::solar_look_vector(t);
   for(int i = sl; i < el; ++i) {
-    GeoCal::CartesianFixedLookVector lv = od->cf_look_vector(camera_slv[i]);
-    boost::shared_ptr<GeoCal::CartesianFixed> t;
+    CartesianFixedLookVector lv = od->cf_look_vector(camera_slv[i]);
+    boost::shared_ptr<CartesianFixed> pt;
     if(Initial_samp)
-      t = igc_->dem().intersect(*cf, lv, igc_->resolution(), igc_->max_height());
+      pt = igc_->dem().intersect(*cf, lv, igc_->resolution(), igc_->max_height());
     else {
       double start_dist = dist(i);
       if(i - 1 >= sl)
 	start_dist = std::min(start_dist, dist(i-1));
       if(i + 1 < el)
 	start_dist = std::min(start_dist, dist(i+1));
-      t = igc_->dem().intersect_start_length(*cf, lv, igc_->resolution(),
+      pt = igc_->dem().intersect_start_length(*cf, lv, igc_->resolution(),
 					     start_dist);
     }
-    t->lat_lon_height(res(i, Sample, 0), res(i, Sample, 1), res(i, Sample, 2));
-    dist(i) = sqrt(sqr(t->position[0] - cf->position[0]) +
-		   sqr(t->position[1] - cf->position[1]) +
-		   sqr(t->position[2] - cf->position[2]));
+    pt->lat_lon_height(res(i, Sample, 0), res(i, Sample, 1), res(i, Sample, 2));
+    dist(i) = sqrt(sqr(pt->position[0] - cf->position[0]) +
+		   sqr(pt->position[1] - cf->position[1]) +
+		   sqr(pt->position[2] - cf->position[2]));
+    if(include_angle) {
+      LnLookVector vln(CartesianFixedLookVector(*pt,*cf),*pt);
+      res(i,Sample,3) = vln.view_zenith();
+      res(i,Sample, 4) = vln.view_azimuth();
+      LnLookVector sln(slv, *pt);
+      res(i,Sample,5) = sln.view_zenith();
+      res(i,Sample, 6) = sln.view_azimuth();
+    }
   }
 }
 

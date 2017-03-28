@@ -5385,6 +5385,20 @@ namespace swig {
 #include "ground_coordinate_array.h"
 
 
+SWIGINTERN int
+SWIG_AsVal_bool (PyObject *obj, bool *val)
+{
+  int r;
+  if (!PyBool_Check(obj))
+    return SWIG_ERROR;
+  r = PyObject_IsTrue(obj);
+  if (r == -1)
+    return SWIG_ERROR;
+  if (val) *val = r ? true : false;
+  return SWIG_OK;
+}
+
+
 struct SWIG_null_deleter {
   void operator() (void const *) const {
   }
@@ -6266,18 +6280,78 @@ SWIGINTERN PyObject *SHARED_PTR_DISOWN_swigconstant(PyObject *SWIGUNUSEDPARM(sel
 }
 
 
-SWIGINTERN PyObject *_wrap_new_GroundCoordinateArray(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_GroundCoordinateArray__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnection > *arg1 = 0 ;
+  bool arg2 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnection > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnection > temp2shared1 ;
+  bool val2 ;
+  int ecode2 = 0 ;
+  Ecostress::GroundCoordinateArray *result = 0 ;
+  
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnection_t,  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_GroundCoordinateArray" "', argument " "1"" of type '" "boost::shared_ptr< Ecostress::EcostressImageGroundConnection > const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp1) tempshared1 = *reinterpret_cast< boost::shared_ptr< Ecostress::EcostressImageGroundConnection > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< Ecostress::EcostressImageGroundConnection > * >(argp1);
+      arg1 = &tempshared1;
+    } else {
+      arg1 = (argp1) ? reinterpret_cast< boost::shared_ptr< Ecostress::EcostressImageGroundConnection > * >(argp1) : &tempshared1;
+    }
+    // Special handling if this is a director class. In that case, we
+    // don't own the underlying python object. Instead,
+    // we tell python we have a reference to the underlying object, and
+    // when this gets destroyed we decrement the reference to the python
+    // object. 
+    Swig::Director* dp = dynamic_cast<Swig::Director*>(arg1->get());
+    if(dp) {
+      Py_INCREF(dp->swig_get_self());
+      temp2shared1.reset(arg1->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      arg1 = &temp2shared1;
+    }
+  }
+  ecode2 = SWIG_AsVal_bool(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_GroundCoordinateArray" "', argument " "2"" of type '" "bool""'");
+  } 
+  arg2 = static_cast< bool >(val2);
+  {
+    try {
+      result = (Ecostress::GroundCoordinateArray *)new Ecostress::GroundCoordinateArray((boost::shared_ptr< Ecostress::EcostressImageGroundConnection > const &)*arg1,arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::GroundCoordinateArray > *smartresult = result ? new boost::shared_ptr<  Ecostress::GroundCoordinateArray >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__GroundCoordinateArray_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_GroundCoordinateArray__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   boost::shared_ptr< Ecostress::EcostressImageGroundConnection > *arg1 = 0 ;
   void *argp1 ;
   int res1 = 0 ;
   boost::shared_ptr< Ecostress::EcostressImageGroundConnection > tempshared1 ;
   boost::shared_ptr< Ecostress::EcostressImageGroundConnection > temp2shared1 ;
-  PyObject *swig_obj[1] ;
   Ecostress::GroundCoordinateArray *result = 0 ;
   
-  if (!args) SWIG_fail;
-  swig_obj[0] = args;
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
   {
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnection_t,  0 , &newmem);
@@ -6319,6 +6393,30 @@ SWIGINTERN PyObject *_wrap_new_GroundCoordinateArray(PyObject *SWIGUNUSEDPARM(se
   return resultobj;
 fail:
   return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_GroundCoordinateArray(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"new_GroundCoordinateArray",0,2,argv))) SWIG_fail;
+  --argc;
+  if (argc == 1) {
+    return _wrap_new_GroundCoordinateArray__SWIG_1(self, argc, argv);
+  }
+  if (argc == 2) {
+    return _wrap_new_GroundCoordinateArray__SWIG_0(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_GroundCoordinateArray'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::GroundCoordinateArray::GroundCoordinateArray(boost::shared_ptr< Ecostress::EcostressImageGroundConnection > const &,bool)\n"
+    "    Ecostress::GroundCoordinateArray::GroundCoordinateArray(boost::shared_ptr< Ecostress::EcostressImageGroundConnection > const &)\n");
+  return 0;
 }
 
 
@@ -6582,6 +6680,99 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_GroundCoordinateArray_interpolate(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GeoCal::RasterImage *arg1 = 0 ;
+  blitz::Array< double,2 > *arg2 = 0 ;
+  blitz::Array< double,2 > *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< GeoCal::RasterImage const > tempshared1 ;
+  blitz::Array< double,2 > a2 ;
+  PythonObject numpy2 ;
+  blitz::Array< double,2 > a3 ;
+  PythonObject numpy3 ;
+  PyObject *swig_obj[3] ;
+  SwigValueWrapper< blitz::Array< double,2 > > result;
+  
+  if (!SWIG_Python_UnpackTuple(args,"GroundCoordinateArray_interpolate",3,3,swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::RasterImage *ptr;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], (void**)(&ptr), SWIGTYPE_p_GeoCal__RasterImage,  0 , &newmem);
+    if (SWIG_IsOK(res1)) {
+      arg1 = ptr;
+    } else {
+      res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GroundCoordinateArray_interpolate" "', argument " "1"" of type '" "GeoCal::RasterImage const &""'"); 
+      }
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "GroundCoordinateArray_interpolate" "', argument " "1"" of type '" "GeoCal::RasterImage const &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared1 = *reinterpret_cast< boost::shared_ptr< const GeoCal::RasterImage > * >(argp1);
+        delete reinterpret_cast< boost::shared_ptr< const GeoCal::RasterImage > * >(argp1);
+        arg1 = const_cast< GeoCal::RasterImage * >(tempshared1.get());
+      } else {
+        arg1 = const_cast< GeoCal::RasterImage * >(reinterpret_cast< boost::shared_ptr< const GeoCal::RasterImage > * >(argp1)->get());
+      }
+    }
+  }
+  {
+    int res = SWIG_ConvertPtr(swig_obj[1], (void**)(&arg2), SWIGTYPE_p_blitz__ArrayT_double_2_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy2.obj = to_numpy<double >(swig_obj[1]);
+      if(!numpy2.obj)
+      return NULL;
+      a2.reference(to_blitz_array<double, 2>(numpy2));
+      arg2 = &a2;
+    }
+  }
+  {
+    int res = SWIG_ConvertPtr(swig_obj[2], (void**)(&arg3), SWIGTYPE_p_blitz__ArrayT_double_2_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy3.obj = to_numpy<double >(swig_obj[2]);
+      if(!numpy3.obj)
+      return NULL;
+      a3.reference(to_blitz_array<double, 2>(numpy3));
+      arg3 = &a3;
+    }
+  }
+  {
+    try {
+      result = Ecostress::GroundCoordinateArray::interpolate((GeoCal::RasterImage const &)*arg1,(blitz::Array< double,2 > const &)*arg2,(blitz::Array< double,2 > const &)*arg3);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    npy_intp dims[2], stride[2];
+    for(int i = 0; i < 2; ++i) {
+      dims[i] = (&result)->extent(i);
+      // Note numpy stride is in terms of bytes, while blitz in in terms
+      // of type T.
+      stride[i] = (&result)->stride(i) * sizeof(double);
+    }
+    resultobj = PyArray_New(&PyArray_Type, 2, dims, type_to_npy<double >(), 
+      stride, (&result)->data(), 0, 0, 0);
+    blitz::Array<double, 2>* t = new blitz::Array<double, 2>(result);
+    PyArray_SetBaseObject((PyArrayObject*)resultobj, 
+      SWIG_NewPointerObj(SWIG_as_voidptr(t), 
+        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | 0 ));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_GroundCoordinateArray___str__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::GroundCoordinateArray *arg1 = (Ecostress::GroundCoordinateArray *) 0 ;
@@ -6699,15 +6890,20 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
 	 { (char *)"SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_VARARGS, NULL},
 	 { (char *)"SHARED_PTR_DISOWN_swigconstant", SHARED_PTR_DISOWN_swigconstant, METH_VARARGS, NULL},
-	 { (char *)"new_GroundCoordinateArray", (PyCFunction)_wrap_new_GroundCoordinateArray, METH_O, (char *)"\n"
+	 { (char *)"new_GroundCoordinateArray", _wrap_new_GroundCoordinateArray, METH_VARARGS, (char *)"\n"
 		"\n"
-		"Ecostress::GroundCoordinateArray::GroundCoordinateArray(const boost::shared_ptr< EcostressImageGroundConnection > &Igc)\n"
-		"Constructor. \n"
+		"Ecostress::GroundCoordinateArray::GroundCoordinateArray(const boost::shared_ptr< EcostressImageGroundConnection > &Igc, bool\n"
+		"Include_angle=false)\n"
+		"Constructor.\n"
+		"\n"
+		"Because they are closely related, you can optionally set\n"
+		"Include_angle=true and we will include view_zenith, view_azimuth,\n"
+		"solar_zenith and solar_azimuth in our calculation. \n"
 		""},
 	 { (char *)"GroundCoordinateArray__v_igc", (PyCFunction)_wrap_GroundCoordinateArray__v_igc, METH_O, (char *)"\n"
 		"\n"
 		"const boost::shared_ptr<EcostressImageGroundConnection>& Ecostress::GroundCoordinateArray::igc() const\n"
-		"The ImageGroundConnection we are working with.w. \n"
+		"The ImageGroundConnection we are working with. \n"
 		""},
 	 { (char *)"GroundCoordinateArray_ground_coor_arr", (PyCFunction)_wrap_GroundCoordinateArray_ground_coor_arr, METH_O, (char *)"\n"
 		"\n"
@@ -6720,6 +6916,10 @@ static PyMethodDef SwigMethods[] = {
 		"calling igc()->ground_coordinate(ic), but we take advantage of the\n"
 		"special form of the Ecostress scan to speed up this calculation a lot.\n"
 		"\n"
+		"If include_angle was specified in the construtor, we return a\n"
+		"number_line x number_sample x 7 array with coordinates as latitude,\n"
+		"longitude, height, view_zenith, view_azimuth, solar_zenith,\n"
+		"solar_azimuth. \n"
 		""},
 	 { (char *)"GroundCoordinateArray_ground_coor_scan_arr", _wrap_GroundCoordinateArray_ground_coor_scan_arr, METH_VARARGS, (char *)"\n"
 		"\n"
@@ -6731,7 +6931,23 @@ static PyMethodDef SwigMethods[] = {
 		"ground_coor_arr. We have this function exposed to aid with testing -\n"
 		"it is quicker to call this for a single scan rather than doing all the\n"
 		"scans like ground_coor_arr. Also, in python if we are doing parallel\n"
-		"processing we can do each ground_coor_arr separately if desired. \n"
+		"processing we can do each ground_coor_arr separately if desired.\n"
+		"\n"
+		"If include_angle was specified in the construtor, we return a\n"
+		"number_line x number_sample x 7 array with coordinates as latitude,\n"
+		"longitude, height, view_zenith, view_azimuth, solar_zenith,\n"
+		"solar_azimuth. \n"
+		""},
+	 { (char *)"GroundCoordinateArray_interpolate", _wrap_GroundCoordinateArray_interpolate, METH_VARARGS, (char *)"\n"
+		"\n"
+		"blitz::Array< double, 2 > GroundCoordinateArray::interpolate(const GeoCal::RasterImage &Data, const blitz::Array< double, 2 >\n"
+		"&Lat, const blitz::Array< double, 2 > &Lon)\n"
+		"This interpolates the given RasterImage at the given latitude,\n"
+		"longitude locations.\n"
+		"\n"
+		"This is exactly the same as calling\n"
+		"Data.interpolate(Data.coordinate(Geodetic(Lat,Lon)) repeatedly, except\n"
+		"this runs much faster than doing this operation in python. \n"
 		""},
 	 { (char *)"GroundCoordinateArray___str__", (PyCFunction)_wrap_GroundCoordinateArray___str__, METH_O, NULL},
 	 { (char *)"delete_GroundCoordinateArray", (PyCFunction)_wrap_delete_GroundCoordinateArray, METH_O, (char *)"\n"

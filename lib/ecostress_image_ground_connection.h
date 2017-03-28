@@ -54,6 +54,15 @@ public:
   virtual int number_band() const { return cam->number_band(); }
   boost::shared_ptr<GeoCal::QuaternionOrbitData> orbit_data
   (const GeoCal::Time& T, double Ic_sample) const;
+  virtual bool has_time() const { return true; }
+  virtual GeoCal::Time pixel_time(const GeoCal::ImageCoordinate& Ic) const
+  {
+    GeoCal::Time t;
+    GeoCal::FrameCoordinate fc;
+    tt->time(Ic,t,fc);
+    return t;
+  }
+    
     
 //-----------------------------------------------------------------------
 /// Camera band we are using.

@@ -37,15 +37,20 @@ class GroundCoordinateArray : public GeoCal::Printable<GroundCoordinateArray>,
 public:
 //-------------------------------------------------------------------------
 /// Constructor.
+///
+/// Because they are closely related, you can optionally set
+/// Include_angle=true and we will include view_zenith, view_azimuth,
+/// solar_zenith and solar_azimuth in our calculation.
 //-------------------------------------------------------------------------
 
-  GroundCoordinateArray(const boost::shared_ptr<EcostressImageGroundConnection>& Igc)
-    : igc_(Igc) { init(); }
+  GroundCoordinateArray(const boost::shared_ptr<EcostressImageGroundConnection>& Igc,
+			bool Include_angle=false)
+    : igc_(Igc), include_angle(Include_angle) { init(); }
   virtual ~GroundCoordinateArray() {}
   virtual void print(std::ostream& Os) const;
 
 //-------------------------------------------------------------------------
-/// The ImageGroundConnection we are working with.w
+/// The ImageGroundConnection we are working with.
 //-------------------------------------------------------------------------
   
   const boost::shared_ptr<EcostressImageGroundConnection>&  igc() const
@@ -53,8 +58,13 @@ public:
   blitz::Array<double,3> ground_coor_arr() const;
   blitz::Array<double,3>
   ground_coor_scan_arr(int Start_line, int Number_line=-1) const;
+  static blitz::Array<double, 2>
+  interpolate(const GeoCal::RasterImage& Data,
+	      const blitz::Array<double, 2>& Lat,
+	      const blitz::Array<double, 2>& Lon);
 private:
   boost::shared_ptr<EcostressImageGroundConnection> igc_;
+  bool include_angle;
   mutable blitz::Array<double, 3> res; // Cache of results for ground_coor_arr
   mutable blitz::Array<double, 1> dist; // Last distance we went with
 					// ray casting

@@ -222,19 +222,24 @@ class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
 
-    def __init__(self, Igc):
+    def __init__(self, Igc, Include_angle=False):
         """
 
-        Ecostress::GroundCoordinateArray::GroundCoordinateArray(const boost::shared_ptr< EcostressImageGroundConnection > &Igc)
-        Constructor. 
+        Ecostress::GroundCoordinateArray::GroundCoordinateArray(const boost::shared_ptr< EcostressImageGroundConnection > &Igc, bool
+        Include_angle=false)
+        Constructor.
+
+        Because they are closely related, you can optionally set
+        Include_angle=true and we will include view_zenith, view_azimuth,
+        solar_zenith and solar_azimuth in our calculation. 
         """
-        _ground_coordinate_array.GroundCoordinateArray_swiginit(self, _ground_coordinate_array.new_GroundCoordinateArray(Igc))
+        _ground_coordinate_array.GroundCoordinateArray_swiginit(self, _ground_coordinate_array.new_GroundCoordinateArray(Igc, Include_angle))
 
     def _v_igc(self):
         """
 
         const boost::shared_ptr<EcostressImageGroundConnection>& Ecostress::GroundCoordinateArray::igc() const
-        The ImageGroundConnection we are working with.w. 
+        The ImageGroundConnection we are working with. 
         """
         return _ground_coordinate_array.GroundCoordinateArray__v_igc(self)
 
@@ -256,6 +261,10 @@ class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
         calling igc()->ground_coordinate(ic), but we take advantage of the
         special form of the Ecostress scan to speed up this calculation a lot.
 
+        If include_angle was specified in the construtor, we return a
+        number_line x number_sample x 7 array with coordinates as latitude,
+        longitude, height, view_zenith, view_azimuth, solar_zenith,
+        solar_azimuth. 
         """
         return _ground_coordinate_array.GroundCoordinateArray_ground_coor_arr(self)
 
@@ -271,10 +280,31 @@ class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
         ground_coor_arr. We have this function exposed to aid with testing -
         it is quicker to call this for a single scan rather than doing all the
         scans like ground_coor_arr. Also, in python if we are doing parallel
-        processing we can do each ground_coor_arr separately if desired. 
+        processing we can do each ground_coor_arr separately if desired.
+
+        If include_angle was specified in the construtor, we return a
+        number_line x number_sample x 7 array with coordinates as latitude,
+        longitude, height, view_zenith, view_azimuth, solar_zenith,
+        solar_azimuth. 
         """
         return _ground_coordinate_array.GroundCoordinateArray_ground_coor_scan_arr(self, Start_line, Number_line)
 
+
+    def interpolate(Data, Lat, Lon):
+        """
+
+        blitz::Array< double, 2 > GroundCoordinateArray::interpolate(const GeoCal::RasterImage &Data, const blitz::Array< double, 2 >
+        &Lat, const blitz::Array< double, 2 > &Lon)
+        This interpolates the given RasterImage at the given latitude,
+        longitude locations.
+
+        This is exactly the same as calling
+        Data.interpolate(Data.coordinate(Geodetic(Lat,Lon)) repeatedly, except
+        this runs much faster than doing this operation in python. 
+        """
+        return _ground_coordinate_array.GroundCoordinateArray_interpolate(Data, Lat, Lon)
+
+    interpolate = staticmethod(interpolate)
 
     def __reduce__(self):
       return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
@@ -286,6 +316,20 @@ GroundCoordinateArray.ground_coor_scan_arr = new_instancemethod(_ground_coordina
 GroundCoordinateArray.__str__ = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray___str__, None, GroundCoordinateArray)
 GroundCoordinateArray_swigregister = _ground_coordinate_array.GroundCoordinateArray_swigregister
 GroundCoordinateArray_swigregister(GroundCoordinateArray)
+
+def GroundCoordinateArray_interpolate(Data, Lat, Lon):
+    """
+
+    blitz::Array< double, 2 > GroundCoordinateArray::interpolate(const GeoCal::RasterImage &Data, const blitz::Array< double, 2 >
+    &Lat, const blitz::Array< double, 2 > &Lon)
+    This interpolates the given RasterImage at the given latitude,
+    longitude locations.
+
+    This is exactly the same as calling
+    Data.interpolate(Data.coordinate(Geodetic(Lat,Lon)) repeatedly, except
+    this runs much faster than doing this operation in python. 
+    """
+    return _ground_coordinate_array.GroundCoordinateArray_interpolate(Data, Lat, Lon)
 
 
 

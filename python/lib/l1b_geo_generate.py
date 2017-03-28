@@ -1,4 +1,5 @@
 from geocal import *
+from ecostress_swig import *
 import pickle
 from .pickle_method import *
 import h5py
@@ -15,9 +16,6 @@ class L1bGeoGenerate(object):
     def __init__(self, igc, lwm, output_name, run_config = None,
                  start_line = 0,
                  number_line = -1,
-                 number_integration_step = 1,
-                 raycast_resolution = 100, 
-                 max_height=10e3,
                  local_granule_id = None, log_fname = None,
                  build_id = "0.20",
                  pge_version = "0.20"):
@@ -30,13 +28,11 @@ class L1bGeoGenerate(object):
         This is useful for testing, but for production you will always want to 
         have the run config available.'''
         self.igc = igc
+        self.gc_arr = GroundCoordinateArray(self.igc, True)
         self.lwm = lwm
         self.output_name = output_name
         self.start_line = start_line
         self.number_line = number_line
-        self.number_integration_step = number_integration_step
-        self.raycast_resolution = raycast_resolution
-        self.max_height = max_height
         self.run_config = run_config
         self.local_granule_id = local_granule_id
         self.log_fname = log_fname
@@ -47,88 +43,44 @@ class L1bGeoGenerate(object):
         '''Variation of loc that is easier to use with a multiprocessor pool.'''
         # Handle number_sample too large here, so we don't have to
         # have special handling elsewhere
-        start_sample = it[0]
-        nleft = self.igc.number_sample - start_sample
-        number_sample = min(it[1], nleft)
-        rcast = IgcRayCaster(self.igc, self.start_line,
-                             self.number_line, self.number_integration_step,
-                             self.raycast_resolution, self.max_height, 
-                             start_sample,
-                             number_sample)
-        # Only print status if we are the last job started, just so 
-        # we don't get a confusing mishmash of lots of jobs.
-        print_status = False
-        if(start_sample + number_sample == self.igc.number_sample):
-            print_status = True
-        if(print_status):
-            print("Have %d positions to calculate" % rcast.number_position)
-            if(self.log_fname is not None):
-                self.log = open(self.log_fname, "w")
-                print("Have %d positions to calculate" % rcast.number_position,
-                      file=self.log)
-                self.log.flush()
-        lat = np.empty((rcast.number_position, rcast.number_sample))
-        lon = np.empty((rcast.number_position, rcast.number_sample))
-        height = np.empty((rcast.number_position, rcast.number_sample))
-        vzenith = np.empty((rcast.number_position, rcast.number_sample))
-        vazimuth = np.empty((rcast.number_position, rcast.number_sample))
-        szenith = np.empty((rcast.number_position, rcast.number_sample))
-        sazimuth = np.empty((rcast.number_position, rcast.number_sample))
-        lfrac = np.empty((rcast.number_position, rcast.number_sample))
-        tlinestart = np.empty((rcast.number_position, ))
-        i = 0
-        while True:
-            r = rcast.next_position()
-            ln = rcast.current_position - rcast.start_position
-            # Take advantage of the fact that all samples have the same
-            # orbit position. Not sure this is true for the real ecostress
-            # camera, but for now take advantage of this. We'll probably move
-            # this to C++ for performance anyways. Same thing for solar position
-            ic = ImageCoordinate(rcast.current_position, 0)
-            opos = self.igc.cf_look_vector_pos(ic)
-            t = self.igc.pixel_time(ic)
-            tlinestart[ln] = t.j2000
-            sollv_cf = CartesianFixedLookVector.solar_look_vector(t)
-            for j in range(r.shape[1]):
-                pt = Ecr(*r[0,j,0,0,0,:])
-                lat[ln, j] = pt.latitude
-                lon[ln, j] = pt.longitude
-                height[ln, j] = pt.height_reference_surface
-                vln = LnLookVector(CartesianFixedLookVector(pt, opos), pt)
-                vzenith[ln,j] = vln.view_zenith
-                vazimuth[ln,j] = vln.view_azimuth
-                sln = LnLookVector(sollv_cf, pt)
-                szenith[ln, j] = sln.view_zenith
-                sazimuth[ln, j] = sln.view_azimuth
-                lfrac[ln, j]= self.lwm.interpolate(self.lwm.coordinate(pt)) * 100.0
-            i += 1
-            if(i % 100 ==0 and print_status):
-                print("Done with position %d" % i)
-                if(self.log_fname is not None):
-                    print("Done with position %d" % i, file = self.log)
-                    self.log.flush()
-            if(rcast.last_position):
-                break
+        start_line, number_line = it
+        res = self.gc_arr.ground_coor_scan_arr(start_line, number_line)
+        print("Done with [%d, %d]" % (start_line, start_line+res.shape[0]))
+        if(self.log_fname is not None):
+            print("Done with [%d, %d]" % (start_line, start_line+res.shape[0]),
+                  file = self.log)
+            self.log.flush()
+        lat = res[:,:,0]
+        lon = res[:,:,1]
+        height = res[:,:,2]
+        vzenith = res[:,:,3]
+        vazimuth = res[:,:,4]
+        szenith = res[:,:,5]
+        sazimuth = res[:,:,6]
+        lfrac = GroundCoordinateArray.interpolate(self.lwm, lat, lon) * 100.0
+        tlinestart = np.array([self.igc.pixel_time(ImageCoordinate(ln, 0)).j2000 for ln in range(start_line, start_line+res.shape[0])])
         return lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac, tlinestart
 
     def loc(self, pool = None):
         '''Determine locations'''
+        it = []
+        for i in range(self.igc.time_table.number_scan):
+            ls,le = self.igc.time_table.scan_index_to_line(i)
+            le2 = self.start_line + self.number_line
+            if(self.start_line < le and (self.number_line == -1 or le2 >= ls)):
+                it.append((ls,min(le-ls,le2-ls)))
         if(pool is None):
-            return self.loc_parallel_func([0,self.igc.number_sample])
-        nprocess = pool._processes
-        n = math.floor(self.igc.number_sample / nprocess)
-        if(self.igc.number_sample % nprocess > 0):
-            n += 1
-        it = [[i,n] for i in range(0,self.igc.number_sample, n)]
-        r = pool.map(self.loc_parallel_func, it)
-        lat = np.hstack([rv[0] for rv in r])
-        lon = np.hstack([rv[1] for rv in r])
-        height = np.hstack([rv[2] for rv in r])
-        vzenith = np.hstack([rv[3] for rv in r])
-        vazimuth = np.hstack([rv[4] for rv in r])
-        szenith = np.hstack([rv[5] for rv in r])
-        sazimuth = np.hstack([rv[6] for rv in r])
-        lfrac = np.hstack([rv[7] for rv in r])
+            r = list(map(self.loc_parallel_func, it))
+        else:
+            r = pool.map(self.loc_parallel_func, it)
+        lat = np.vstack([rv[0] for rv in r])
+        lon = np.vstack([rv[1] for rv in r])
+        height = np.vstack([rv[2] for rv in r])
+        vzenith = np.vstack([rv[3] for rv in r])
+        vazimuth = np.vstack([rv[4] for rv in r])
+        szenith = np.vstack([rv[5] for rv in r])
+        sazimuth = np.vstack([rv[6] for rv in r])
+        lfrac = np.vstack([rv[7] for rv in r])
         # This is 1d, so we only need to report one column of this
         tlinestart = r[0][8]
         return lat,lon,height,vzenith, vazimuth, szenith,sazimuth, lfrac, \
@@ -151,10 +103,10 @@ class L1bGeoGenerate(object):
         m.set("EastBoundingCoordinate", lon[lon > -998].max())
         m.set("SouthBoundingCoordinate", lat[lat > -998].min())
         m.set("NorthBoundingCoordinate", lat[lat > -998].max())
-        dt, tm = time_split(self.igc.ipi.min_time)
+        dt, tm = time_split(self.igc.time_table.min_time)
         m.set("RangeBeginningDate", dt)
         m.set("RangeBeginningTime", tm)
-        dt, tm = time_split(self.igc.ipi.max_time)
+        dt, tm = time_split(self.igc.time_table.max_time)
         m.set("RangeEndingDate", dt)
         m.set("RangeEndingTime", tm)
         g = fout.create_group("Geolocation")
