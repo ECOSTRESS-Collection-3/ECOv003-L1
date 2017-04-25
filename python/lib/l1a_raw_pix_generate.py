@@ -81,19 +81,6 @@ class L1aRawPixGenerate(object):
     self.scene_file = scene_file
     self.run_config = run_config
 
-  def hdf_copy(self, fname, group, group_in = None, scene = None):
-    '''Copy the given group from out input to the given file.
-    Default it to give the input the same group name, but can change this. If
-    scene is passed in, we nest the output by "Scene_<num>"'''
-    if(group_in is None):
-      if(scene is not None):
-        group_in = "/Data/Scene_%d%s" % (scene, group)
-      else:
-        group_in = "/Data" + group
-    subprocess.run(["h5copy", "-i", self.l0b, "-o", fname, "-p",
-        "-s", group_in,
-        "-d", group], check=True)
-
   def create_file(self, prod_type, orbit, scene, start_time, end_time, primary_file = False, prod=True):
     '''Create the file, generate the standard metadata, and return
     the file name.'''
@@ -138,6 +125,21 @@ class L1aRawPixGenerate(object):
     fout.close()
     return fname
 
+  def get_flex_time( self, flex_buf ):
+
+    fswt = flex_buf[0,FTIME+3]
+    fpie_clk = flex_buf[0,DTIME+3]
+    fsw_clk = flex_buf[0,DSYNC+3]
+    for i in range(1,4):
+      fswt = fswt << 16 | flex_buf[ 0, FTIME+3-i ]
+      fpie_clk = fpie_clk << 16 | flex_buf[ 0, DTIME+3-i ]
+      fsw_clk = fsw_clk << 16 | flex_buf[ 0, DSYNC+3-i ]
+    gs = (fswt>>32) & 0xffffffff
+    ns = fswt & 0xffffffff
+    gt = float(gs) + ( float(ns)/1000.0 + fpie_clk - fsw_clk )/1000000.0
+#    print("GFT: FSWT=%x FC=%d PC=%d GS=%d NS=%d gt=%f" % (fswt, fpie_clk, fsw_clk, gs, ns, gt ) )
+    return gt
+
   def run(self):
 
     ''' Do the actual generation of data.'''
@@ -178,8 +180,7 @@ class L1aRawPixGenerate(object):
     flex_buf = np.zeros( (2,pkt_siz), dtype=np.uint16 )
 
     o_start_time = None
-    ' iterate through scenes from scene start/stop file '
-    for sfl in iter( sf ):
+    for sfl in iter( sf ):  # iterate through scenes from scene start/stop file
       orbit, scene_id, sc_start_time, sc_end_time = sfl.split( "	" )
       if o_start_time == None: o_start_time = sc_start_time
       o_end_time = sc_end_time
@@ -197,28 +198,18 @@ class L1aRawPixGenerate(object):
       bb_cnt = 0
 
       ' search for packet containing scene start time '
-      ' *** Account for actual time of camera switch-on *** '
-      ' *** FSW time is GPS time in seconds; need msec precision *** '
-      ' *** Assume for now FSW time is GPS time in microseconds from sim *** '
-      pktp0t = Time.time_gps(0.0)  # Time of first FP in packet
+      ' *** Account for actual time of camera switch-on from mirror angle *** '
+      ' *** Account for missing packets, assume in time sequence *** '
+      pktp0t = Time.time_gps(0.0)  # Initialize to GPS 9
       while pktp0t < ss and pkt_idx<tot_pkts:
-        ' skip invalid packets '
-        if pkt_stat[ pkt_idx ] == 0:
+        if pkt_stat[ pkt_idx ] == 0:  # skip invalid packets
           good_pkt += 1
           flex_buf[0:] = flex_pkt[ pkt_idx,:]
-          fswt = flex_buf[0,FTIME+3]
-          fpie_clk = flex_buf[0,DTIME+3]
-          pix_clk = flex_buf[0,DSYNC+3]
-          for i in range(1,4):
-            fswt = fswt << 16 | flex_buf[ 0, FTIME+3-i ]
-            fpie_clk = fpie_clk << 16 | flex_buf[ 0, DTIME+3-i ]
-            pix_clk = pix_clk << 16 | flex_buf[ 0, DSYNC+3-i ]
-          delta = fpie_clk -pix_clk
-          gs = (fswt>>32) & 0xffffffff
-          ns = fswt & 0xffffffff
-          gt = float(gs) + ( float(ns)/1000.0 - delta )/1000000.0
+
+          gt = self.get_flex_time( flex_buf )
+
           pktp0t = Time.time_gps(gt)
-          print("Packet %d, FS=%d, NS=%d, time=%f, SS=%f" % ( pkt_idx, gs, ns,  pktp0t.j2000, ss.j2000 ) )
+          print("Packet %d, time=%f, SS=%f" % ( pkt_idx, pktp0t.j2000, ss.j2000 ) )
         ' end skip invalid backet '
         pkt_idx += 1
         pkt_cnt += 1
@@ -233,7 +224,7 @@ class L1aRawPixGenerate(object):
         pkt_idx -= 1
         pkt_cnt -= 1
         good_pkt -= 1
-      print("Found scene %s start time %fJ2K in packet %d, FSWT=%x PIX_CLOCK=%d FP0 time=%s" % ( scene_id, ss.j2000, pkt_idx, fswt, pix_clk, str(pktp0t) ) )
+      print("Found scene %s start time %fJ2K in packet %d FP0 time=%s" % ( scene_id, ss.j2000, pkt_idx, str(pktp0t) ) )
 
       ' create scene file and image pixel, J2K, and FPIE ENC groups '
       pname = self.create_file( "L1A_RAW_PIX", onum, scene_id, sc_start_time, sc_end_time, prod=False )
@@ -275,6 +266,7 @@ class L1aRawPixGenerate(object):
           fpc = FPPPKT - p0  #  focal plane count in current packet
           ' copy partial FPs from packet '
           print("Copy partial FPC=%d PKT=%d P0=%d" % (fpc, pkt_idx, p0) )
+# find starting EV for BB1
           flex_buf[:,:] = flex_pkt[pkt_idx:pkt_idx+2,:]
           if pkt_stat[pkt_idx] == 0:
             good_bb += 1
@@ -298,6 +290,7 @@ class L1aRawPixGenerate(object):
           fpc = FPPPKT
 
         print("Second BB set copy P0=%d FPC=%d idx=%d" % ( p0, fpc, pkt_idx ) )
+# find starting EV for BB2
         flex_buf[:,:] = flex_pkt[pkt_idx:pkt_idx+2,:]
         if pkt_stat[pkt_idx] == 0:
           if p0==0: good_bb += 1
@@ -323,27 +316,19 @@ class L1aRawPixGenerate(object):
         ' extract first FP time from packet '
         flex_buf[0,:] = flex_pkt[pkt_idx,:]
         if pkt_stat[ pkt_idx ] == 0:
-          fswt = flex_buf[0,FTIME+3]
-          fpie_clk = flex_buf[0,DTIME+3]
-          pix_clk = flex_buf[0,DSYNC+3]
-          for i in range(1,4):
-            fswt = fswt << 16 | flex_buf[ 0, FTIME+3-i ]
-            fpie_clk = fpie_clk << 16 | flex_buf[ 0, DTIME+3-i ]
-            pix_clk = pix_clk << 16 | flex_buf[ 0, DSYNC+3-i ]
+
+          gt = self.get_flex_time( flex_buf ) + p0*PIX_DUR
+
         else:
           print("*** Bad packet %d, can not calculate FP time ***" % pkt_idx )
           return -1
         ' record starting pixel time in j2k for current scan '
         ' *** FSW time, FPIE clock, and PIX clock may be BIGENDIAN *** '
-        delta = fpie_clk - pix_clk
-        gs = (fswt>>32) & 0xffffffff
-        ns = fswt & 0xffffffff
-        gt = float(gs) + (float(ns)/1000.0 - delta)/1000000.0 + p0*PIX_DUR
         pix_time[scan] = Time.time_gps( gt ).j2000
         scfp_cnt = 0  #  count of total copied FPs for current scan
         dp = 0  #  output pointer
         fpc = FPPPKT - p0
-        print("SCENE=%s SCAN=%d FSWT=%x GT=%f PIX_CLK=%d p2k=%f PKT=%d P0=%d" %(scene_id, scan, fswt, gt, pix_clk, pix_time[scan], pkt_idx, p0))
+        print("SCENE=%s SCAN=%d GT=%f p2k=%f PKT=%d P0=%d" %(scene_id, scan, gt, pix_time[scan], pkt_idx, p0))
 
         '==== copy image pixels for current scan ===='
         while scfp_cnt < FPPSC:
@@ -354,6 +339,7 @@ class L1aRawPixGenerate(object):
             idx_inc = 0            # stay on same packet
           else:
             idx_inc = 1
+# find starting EV for IMG
           flex_buf[0,:] = flex_pkt[pkt_idx,:]
           for j in range( fpc ):
             ps = j*PPFP*BANDS + p1
@@ -375,28 +361,19 @@ class L1aRawPixGenerate(object):
             fpc = FPPPKT
 ### just for printout of packet header
           pktid = flex_buf[0,PKTID] | ( flex_buf[0,PKTID+1] << 16 )
-          fswt = flex_buf[0,FTIME+3]
-          fpie_clk = flex_buf[0,DTIME+3]
-          pix_clk = flex_buf[0,DSYNC+3]
-          for i in range(1,4):
-            fswt = fswt << 16 | flex_buf[ 0, FTIME+3-i ]
-            fpie_clk = fpie_clk << 16 | flex_buf[ 0, DTIME+3-i ]
-            pix_clk = pix_clk << 16 | flex_buf[ 0, DSYNC+3-i ]
-          delta = fpie_clk - pix_clk
-          gs = (fswt>>32) & 0xffffffff
-          ns = fswt & 0xffffffff
-          gt = float(gs) + (float(ns)/1000.0 - delta)/1000000.0
+
+          gt = self.get_flex_time( flex_buf )
+
           t2k = Time.time_gps(gt).j2000
           utc = str(Time.time_gps(gt))[:26]
           fpie = flex_buf[0,ENCOD] | ( flex_buf[0,ENCOD+1] << 16 )
           angle = float( fpie ) * ANG_INC
-          print("PKT=%d ID=%d FSWT=%x GPS=%f DSYNC=%d T2K=%f UTC=%s FPIE0=%d ANGLE=%f" % (pkt_idx-1,pktid,fswt,gt,pix_clk,t2k,utc,fpie,angle))
+          print("PKT=%d ID=%d GPS=%f T2K=%f UTC=%s FPIE0=%d ANGLE=%f" % (pkt_idx-1,pktid,gt,t2k,utc,fpie,angle))
 ###
         for b in range( BANDS):  # write scan to output file
           pix_dat[b][line:line+PPFP,:] = pix_buf[:,:,b]
 
         ' end copy image pixels for current scan '
-
       ' end scans loop '
       pkt_cnt -= 1
       good_pkt -= 1
