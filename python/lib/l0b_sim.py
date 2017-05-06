@@ -205,7 +205,9 @@ class L0BSimulate(object):
     #  OLD PPFP, lines, BANDS:
     ### pix_buf = np.zeros( ( PPFP, bufsiz, BANDS ), dtype=np.uint16 )
     #  NEW PPFP, BANDS, lines:
-    pix_buf = np.zeros( ( PPFP, BANDS, bufsiz ), dtype=np.uint16 )
+    ### pix_buf = np.zeros( ( PPFP, BANDS, bufsiz ), dtype=np.uint16 )
+    #  Band interleaved by pixels (BANDS*FPPSC, PPFP)
+    pix_buf = np.zeros( ( PPFP, bufsiz, BANDS ), dtype=np.uint16 )
     p0 = 0
     prev = 0
     pix_dat = [b for b in range(BANDS)]
@@ -264,9 +266,13 @@ class L0BSimulate(object):
           ### pix_buf[:,ps2:pe2,b] = b295[b][l:l+PPFP,:]
           ### pix_buf[:,ps3:pe3,b] = b325[b][l:l+PPFP,:]
           # NEW PPFP, BANDS, lines:
-          pix_buf[:,b,ps1:pe1] = pix_dat[b][l:l+PPFP,:]
-          pix_buf[:,b,ps2:pe2] = b295[b][l:l+PPFP,:]
-          pix_buf[:,b,ps3:pe3] = b325[b][l:l+PPFP,:]
+          ### pix_buf[:,b,ps1:pe1] = pix_dat[b][l:l+PPFP,:]
+          ### pix_buf[:,b,ps2:pe2] = b295[b][l:l+PPFP,:]
+          ### pix_buf[:,b,ps3:pe3] = b325[b][l:l+PPFP,:]
+    #  Band interleaved by pixels (BANDS*FPPSC, PPFP)
+          pix_buf[:,ps1:pe1,b] = pix_dat[b][l:l+PPFP,:]
+          pix_buf[:,ps2:pe2,b] = b295[b][l:l+PPFP,:]
+          pix_buf[:,ps3:pe3,b] = b325[b][l:l+PPFP,:]
 
         # step through buffer in packet steps (FPPPKT) starting from 0
         bts = 0
@@ -322,16 +328,21 @@ class L0BSimulate(object):
             # OLD PPFP, lines, BANDS:
             ### t = pix_buf[:,bts:pe1,:].flatten('F')
             # NEW PPFP, BANDS, lines:
-            t = pix_buf[:,:,bts:pe1].flatten('F')
+            ### t = pix_buf[:,:,bts:pe1].flatten('F')
+    #  Band interleaved by pixels (BANDS*FPPSC, PPFP)
+            t = pix_buf[:,bts:pe1,:].flatten('C')
             flex_d[pkt_id, ptr:(ptr+t.shape[0])] = t
-            ptr += t.shape[0]
+            #ptr += t.shape[0]
             # generate data checksum
             # OLD PPFP, lines, BANDS:
             ### flex_d[pkt_id,DSUM] = np.bitwise_xor.reduce(pix_buf[0:PPFP, bts:pe1:2, :].flatten())
             ### flex_d[pkt_id,DSUM+1] = np.bitwise_xor.reduce(pix_buf[0:PPFP, bts+1:pe1+1:2, :].flatten())
             # NEW PPFP, BANDS, lines:
-            flex_d[pkt_id,DSUM] = np.bitwise_xor.reduce(pix_buf[0:PPFP, :, bts:pe1:2].flatten())
-            flex_d[pkt_id,DSUM+1] = np.bitwise_xor.reduce(pix_buf[0:PPFP, :, bts+1:pe1+1:2].flatten())
+            ### flex_d[pkt_id,DSUM] = np.bitwise_xor.reduce(pix_buf[0:PPFP, :, bts:pe1:2].flatten())
+            ### flex_d[pkt_id,DSUM+1] = np.bitwise_xor.reduce(pix_buf[0:PPFP, :, bts+1:pe1+1:2].flatten())
+    #  Band interleaved by pixels (BANDS*FPPSC, PPFP)
+            flex_d[pkt_id,DSUM] = np.bitwise_xor.reduce(pix_buf[0:PPFP, bts:pe1:2, :].flatten())
+            flex_d[pkt_id,DSUM+1] = np.bitwise_xor.reduce(pix_buf[0:PPFP, bts+1:pe1+1:2, :].flatten())
             # next point in pix_buf
             bts = pe1
             # next packet
@@ -354,7 +365,9 @@ class L0BSimulate(object):
             # OLD PPFP, lines, BANDS:
             ### pix_buf[:,:p0,:] = pix_buf[:,bts:bte,:]
             # NEW PPFP, BANDS, lines:
-            pix_buf[:,:,:p0] = pix_buf[:,:,bts:bte]
+            ### pix_buf[:,:,:p0] = pix_buf[:,:,bts:bte]
+    #  Band interleaved by pixels (BANDS*FPPSC, PPFP)
+            pix_buf[:,:p0,:] = pix_buf[:,bts:bte,:]
             # escape bts while loop to go to next scene
             if v+1 < total_scenes or l+PPFP < lines:
               bts = bte
@@ -365,7 +378,9 @@ class L0BSimulate(object):
               # OLD PPFP, lines, BANDS:
               ### pix_buf[ 0:PPFP, p0:FPPPKT, :] = 0
               # NEW PPFP, BANDS, lines:
-              pix_buf[ 0:PPFP, :, p0:FPPPKT] = 0
+              ### pix_buf[ 0:PPFP, :, p0:FPPPKT] = 0
+    #  Band interleaved by pixels (BANDS*FPPSC, PPFP)
+              pix_buf[ 0:PPFP, p0:FPPPKT, :] = 0
           # end writing current packet
 
         # next line in scene

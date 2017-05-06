@@ -74,10 +74,11 @@ ANG0 = 360.0 - ANG1 - PIX_ANG * float( BBLEN*2.0 )
 class L1aRawPixGenerate(object):
   '''This generates a L1A_RAW_PIX, L1A_BB, L1A_ENG and L1A_RAW_ATT
   files from a L0B input.'''
-  def __init__(self, l0b, scene_file, run_config = None):
+  def __init__(self, l0b, osp_dir, scene_file, run_config = None):
     '''Create a L1aRawPixGenerate to process the given L0 file. 
     To actually generate, execute the 'run' command.'''
     self.l0b = l0b
+    self.osp_dir = osp_dir
     self.scene_file = scene_file
     self.run_config = run_config
 
@@ -127,13 +128,13 @@ class L1aRawPixGenerate(object):
 
   def get_flex_time( self, flex_buf ):
 
-    fswt = flex_buf[0,FTIME+3]
-    fpie_clk = flex_buf[0,DTIME+3]
-    fsw_clk = flex_buf[0,DSYNC+3]
+    fswt = flex_buf[ FTIME+3 ]  # fswt[0:31] = NS, fswt[32:63] = SEC
+    fpie_clk = flex_buf[ DTIME+3 ]  #  microsec snapshot
+    fsw_clk = flex_buf[ DSYNC+3 ]  #  microsec snapshot
     for i in range(1,4):
-      fswt = fswt << 16 | flex_buf[ 0, FTIME+3-i ]
-      fpie_clk = fpie_clk << 16 | flex_buf[ 0, DTIME+3-i ]
-      fsw_clk = fsw_clk << 16 | flex_buf[ 0, DSYNC+3-i ]
+      fswt = fswt << 16 | flex_buf[ FTIME+3-i ]
+      fpie_clk = fpie_clk << 16 | flex_buf[ DTIME+3-i ]
+      fsw_clk = fsw_clk << 16 | flex_buf[ DSYNC+3-i ]
     gs = (fswt>>32) & 0xffffffff
     ns = fswt & 0xffffffff
     gt = float(gs) + ( float(ns)/1000.0 + fpie_clk - fsw_clk )/1000000.0
@@ -153,9 +154,23 @@ class L1aRawPixGenerate(object):
       print("Could not find orbit number from L0B file name %s" %self.l0b)
       return -1
 
-    ' open scene start/stop times file '
+#  Get EV start codes for BB and IMG pixels
+    ev_codes = np.zeros( (3,2), dtype=np.int32 )
+    ' open EV codes file '
+    ef = open( self.osp_dir + "ev_codes.txt", "r")
+    i = 0
+    for evl in iter( ef ):
+      e0, e1, e2 = evl.split("	")
+      ev_codes[i,0] = int(e1)
+      ev_codes[i,1] = int(e2)
+      print("EV_CODES[%d](%s) = %d, %d" % (i,e0,ev_codes[i,0],ev_codes[i,1] ))
+      i += 1
+    ef.close()
+
+# open scene start/stop times file
     sf = open( self.scene_file, "r" )
 
+# open L0B file
     self.fin = h5py.File(self.l0b,"r", driver='core')
     flex_pkt = self.fin["/flex/packet"]
     tot_pkts, pkt_siz = flex_pkt.shape
@@ -165,10 +180,6 @@ class L1aRawPixGenerate(object):
     else:
       print("Packet size=%d, SPEC=%d, match in file %s" %( pkt_siz, PKT_LEN, self.l0b ) )
 
-    pkt_stat = self.fin["/L0BMetadata/PacketStatus"]
-    if pkt_stat.shape[0] != tot_pkts:
-      print("**** Number of packet stats not equal to number of packets %d ****" % pkt_stat.shape[0] )
-
     ' initialize some output pointers for different bands '
     pix_dat = [b for b in range(BANDS)]
     b295 = [b for b in range(BANDS)]
@@ -177,7 +188,7 @@ class L1aRawPixGenerate(object):
     pkt_idx = 0
 
     pix_buf = np.zeros( ( PPFP, FPPSC, BANDS ), dtype=np.uint16 )
-    flex_buf = np.zeros( (2,pkt_siz), dtype=np.uint16 )
+    flex_buf = np.zeros( pkt_siz, dtype=np.uint16 )
 
     o_start_time = None
     for sfl in iter( sf ):  # iterate through scenes from scene start/stop file
@@ -202,15 +213,13 @@ class L1aRawPixGenerate(object):
       ' *** Account for missing packets, assume in time sequence *** '
       pktp0t = Time.time_gps(0.0)  # Initialize to GPS 9
       while pktp0t < ss and pkt_idx<tot_pkts:
-        if pkt_stat[ pkt_idx ] == 0:  # skip invalid packets
-          good_pkt += 1
-          flex_buf[0:] = flex_pkt[ pkt_idx,:]
+        good_pkt += 1
+        flex_buf[:] = flex_pkt[ pkt_idx,:]
+        pktid = flex_buf[PKTID] | ( flex_buf[PKTID+1] << 16 )
+        gt = self.get_flex_time( flex_buf )
 
-          gt = self.get_flex_time( flex_buf )
-
-          pktp0t = Time.time_gps(gt)
-          print("Packet %d, time=%f, SS=%f" % ( pkt_idx, pktp0t.j2000, ss.j2000 ) )
-        ' end skip invalid backet '
+        pktp0t = Time.time_gps(gt)
+        print("Packet %d, time=%f, SS=%f" % ( pkt_idx, pktp0t.j2000, ss.j2000 ) )
         pkt_idx += 1
         pkt_cnt += 1
       ' end searching for packet matching scene start time '
@@ -256,56 +265,50 @@ class L1aRawPixGenerate(object):
       pkt_idx -= 2
       for scan in range( SCPS ):
 
+        pix_buf[:,:,:] = 0xffff  # pre-fill with null values
+
         line = scan*PPFP
         '==== copy BB pixels for scan ===='
         dp = 0  # initialize output pointer
         '*** The following BB code assumed BBLEN = FPPPKT '
-#  Current data order is FP[0]*BANDS, FP[1]*BANDS...FPPPKT*BANDS, each FP is PPFP pixels
-        p1 = HDR_LEN + p0 * PPFP * BANDS
+#  Data order is BIP:  FP[0,B0], FP[0,B0]...FP[0,B5], FP[1,B0]...
+        p1 = p0
         if p0 > 0:
           fpc = FPPPKT - p0  #  focal plane count in current packet
           ' copy partial FPs from packet '
           print("Copy partial FPC=%d PKT=%d P0=%d" % (fpc, pkt_idx, p0) )
 # find starting EV for BB1
-          flex_buf[:,:] = flex_pkt[pkt_idx:pkt_idx+2,:]
-          if pkt_stat[pkt_idx] == 0:
-            good_bb += 1
-          else:
-            flex_buf[0,HDR_LEN:] = 0xffff
-          if pkt_stat[pkt_idx+1] == 0:
-            good_bb += 1
-          else:
-            flex_buf[1,HDR_LEN:] = 0xffff
-          for i in range( fpc ):
-            ps = i*PPFP*BANDS + p1
-            for b in range( BANDS ):
-              ptr = b*PPFP + ps
-              b295[b][line:line+PPFP,dp+i] = flex_buf[0,ptr:ptr+PPFP]
-              b325[b][line:line+PPFP,dp+i] = flex_buf[1,ptr:ptr+PPFP]
-          dp = fpc
+  # BIP data order
+          flex_buf[:] = flex_pkt[pkt_idx,:]
+          pktid = flex_buf[PKTID] | ( flex_buf[PKTID+1] << 16 )
+          t0 = flex_buf[HDR_LEN:PKT_LEN-2].reshape(PPFP,FPPPKT,BANDS)
+          for b in range( BANDS ):
+            b295[b][line:line+PPFP,dp:dp+fpc] = t0[:,p1:p1+fpc,b]
+          flex_buf[:] = flex_pkt[pkt_idx+1,:]
+          t0 = flex_buf[HDR_LEN:PKT_LEN-2].reshape(PPFP,FPPPKT,BANDS)
+          good_bb += 2
+          for b in range( BANDS ):
+            b325[b][line:line+PPFP,dp:dp+fpc] = t0[:,p1:p1+fpc,b]
           pkt_idx += 1
-          fpc = p0  # remainder BB FPs in next packets
-          p1 = HDR_LEN
+          dp = fpc  # pointer into next BB packets
+          fpc = p0  # remainder BB FPs in next input FLEX packets
+          p1 = 0
         else:
           fpc = FPPPKT
 
         print("Second BB set copy P0=%d FPC=%d idx=%d" % ( p0, fpc, pkt_idx ) )
 # find starting EV for BB2
-        flex_buf[:,:] = flex_pkt[pkt_idx:pkt_idx+2,:]
-        if pkt_stat[pkt_idx] == 0:
-          if p0==0: good_bb += 1
-        else:
-          flex_buf[0,HDR_LEN:] = 0xffff
-        if pkt_stat[pkt_idx+1] == 0:
-          if p0==0: good_bb += 1
-        else:
-          flex_buf[1,HDR_LEN:] = 0xffff
-        for i in range( fpc ):
-          ps = i*PPFP*BANDS + p1
-          for b in range( BANDS ):
-            ptr = b*PPFP + ps
-            b295[b][line:line+PPFP,dp+i] = flex_buf[0,ptr:ptr+PPFP]
-            b325[b][line:line+PPFP,dp+i] = flex_buf[1,ptr:ptr+PPFP]
+  # BIP data order
+        flex_buf[:] = flex_pkt[pkt_idx,:]
+        pktid = flex_buf[PKTID] | ( flex_buf[PKTID+1] << 16 )
+        t0 = flex_buf[HDR_LEN:PKT_LEN-2].reshape(PPFP,FPPPKT,BANDS)
+        for b in range( BANDS ):
+          b295[b][line:line+PPFP,dp:dp+fpc] = t0[:,p1:p1+fpc,b]
+        flex_buf[:] = flex_pkt[pkt_idx+1,:]
+        t0 = flex_buf[HDR_LEN:PKT_LEN-2].reshape(PPFP,FPPPKT,BANDS)
+        if p0==0: good_bb += 2
+        for b in range( BANDS ):
+          b325[b][line:line+PPFP,dp:dp+fpc] = t0[:,p1:p1+fpc,b]
         if p0 == 0:
           pkt_idx += 2  # reset to first image packet
         else:
@@ -314,14 +317,12 @@ class L1aRawPixGenerate(object):
         ' end copy BB pixels for current scan '
 
         ' extract first FP time from packet '
-        flex_buf[0,:] = flex_pkt[pkt_idx,:]
-        if pkt_stat[ pkt_idx ] == 0:
+        flex_buf[:] = flex_pkt[pkt_idx,:]
+        gt = self.get_flex_time( flex_buf ) + p0*PIX_DUR
 
-          gt = self.get_flex_time( flex_buf ) + p0*PIX_DUR
-
-        else:
-          print("*** Bad packet %d, can not calculate FP time ***" % pkt_idx )
-          return -1
+#        else:
+#          print("*** Bad packet %d, can not calculate FP time ***" % pkt_idx )
+#          return -1
         ' record starting pixel time in j2k for current scan '
         ' *** FSW time, FPIE clock, and PIX clock may be BIGENDIAN *** '
         pix_time[scan] = Time.time_gps( gt ).j2000
@@ -332,7 +333,7 @@ class L1aRawPixGenerate(object):
 
         '==== copy image pixels for current scan ===='
         while scfp_cnt < FPPSC:
-          p1 = HDR_LEN + p0 * PPFP * BANDS  #  word offset first FP in packet
+          p1 = p0  #  word offset first FP in packet
           if scfp_cnt + fpc > FPPSC:  # at end of current scan
             fpc = FPPSC - scfp_cnt    # remaining FPs in packet
             p0 = fpc                # save first FP in packet for next scan
@@ -340,33 +341,27 @@ class L1aRawPixGenerate(object):
           else:
             idx_inc = 1
 # find starting EV for IMG
-          flex_buf[0,:] = flex_pkt[pkt_idx,:]
-          for j in range( fpc ):
-            ps = j*PPFP*BANDS + p1
-            for b in range( BANDS ):
-              ptr = b*PPFP + ps
-              pix_buf[:,dp+j, b] = flex_buf[0,ptr:ptr+PPFP]
-            ' also record FPIE encoder value for each FP '
-            pix_ev[scan, dp+j] = flex_buf[0,ENCOD+j*2] | flex_buf[0,ENCOD+j*2+1]<<16
+          flex_buf[:] = flex_pkt[pkt_idx,:]
+          pktid = flex_buf[PKTID] | ( flex_buf[PKTID+1] << 16 )
+          t0 = flex_buf[HDR_LEN:PKT_LEN-2].reshape(PPFP,FPPPKT,BANDS)
+          for b in range(BANDS):
+            pix_buf[:,dp:dp+fpc,b] = t0[:,p1:p1+fpc,b]
+          for j in range( fpc ):  # record encoder values
+            pix_ev[scan, dp+j] = flex_buf[ENCOD+j*2] | flex_buf[ENCOD+j*2+1]<<16
           scfp_cnt += fpc  #  increment total FPs copied
           dp += fpc        #  increment pointer to output file
           if idx_inc == 1:
-            if pkt_stat[ pkt_idx] == 0:
-              good_pkt += idx_inc
-            else:
-              flex_buf[0,HDR_LEN:] = 0xffff
+            good_pkt += idx_inc
             pkt_idx += idx_inc
             pkt_cnt += idx_inc
             p0 = 0
             fpc = FPPPKT
 ### just for printout of packet header
-          pktid = flex_buf[0,PKTID] | ( flex_buf[0,PKTID+1] << 16 )
 
           gt = self.get_flex_time( flex_buf )
-
           t2k = Time.time_gps(gt).j2000
           utc = str(Time.time_gps(gt))[:26]
-          fpie = flex_buf[0,ENCOD] | ( flex_buf[0,ENCOD+1] << 16 )
+          fpie = flex_buf[ENCOD] | ( flex_buf[ENCOD+1] << 16 )
           angle = float( fpie ) * ANG_INC
           print("PKT=%d ID=%d GPS=%f T2K=%f UTC=%s FPIE0=%d ANGLE=%f" % (pkt_idx-1,pktid,gt,t2k,utc,fpie,angle))
 ###
