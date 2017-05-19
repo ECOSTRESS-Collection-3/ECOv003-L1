@@ -2596,10 +2596,10 @@ export run_test = *
 # version builds just what is needed for C++ unit tests, which is faster
 # to do during development.
 
-ecostress_check: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) ecostress_check-am
+ecostress-check: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) ecostress-check-am
 
-ecostress_check-am: ecostress_test_all
+ecostress-check-am: ecostress_test_all
 	@echo "====================================================="
 	@echo "This just builds and runs the ecostress C++ unit tests"
 	@echo "(useful during development). It does run the python "
