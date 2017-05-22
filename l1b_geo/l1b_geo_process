@@ -39,8 +39,8 @@ if(False):
 config = RunConfig(args.run_config)
 
 # Not sure where this will from eventually, but for now just hardcode
-build_id = "0.20"
-pge_version = "0.20"
+build_id = "0.30"
+pge_version = "0.30"
 build_version = "0100"
 
 datum = os.path.abspath(config["StaticAncillaryFileGroup", "Datum"])
@@ -96,11 +96,6 @@ try:
     pool = Pool(ncpu)
     for i in range(len(radlist)):
         print("Doing scene number %d" %i)
-        f = h5py.File(radlist[i], "r")
-        tmlist = f["/Time/line_start_time_j2000"][:]
-        # Temporary, treat all pixels in a line as having the same time.
-        # This isn't  true for ECOSTRESS, but is for our current test data. 
-        tt = MeasuredTimeTable([Time.time_j2000(t) for t in tmlist])
         orbit, scene, acquisition_time = orbit_from_metadata(radlist[i])
         ofile = ecostress_file_name("L1B_GEO", orbit, scene, acquisition_time,
                                     build = build_version,
@@ -111,12 +106,17 @@ try:
         if(i == 0):
             log_fname = os.path.splitext(ofile)[0] + ".log"
 
-        # Create IGC
-        band = 0
-        ipi = Ipi(orb, cam, band, tt.min_time, tt.max_time, tt)
-        # Create DEM. False here says it ok for SrtmDem to not have tile. This 
-        # gives support for data that is over the ocean.
-        igc = IpiImageGroundConnection(ipi, dem, None)
+        # Create IGC. 
+        f = h5py.File(radlist[i], "r")
+        tmlist = f["/Time/line_start_time_j2000"][::128]
+        vtime = Vector_Time()
+        for t in tmlist:
+            vtime.append(Time.time_j2000(t))
+        tt = EcostressTimeTable(vtime, True)
+        # Currently assume constant scan mirror rate. Later we should read
+        # this from l1a data
+        sm = EcostressScanMirror()
+        igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
         # For debugging
         if(False):
             write_shelve("igc_%d.xml" % i, igc)
@@ -139,6 +139,7 @@ try:
     print("L1A_GEO_PGE:INFO-0-[Job Successful]", file=log)
     log.flush()
 except:
+    log = open(log_fname, "a")
     print("L1A_GEO_PGE:ERROR-2-[Unexpected Error]", file=log)
     log.flush()
     raise

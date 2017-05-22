@@ -17,8 +17,8 @@ class L1bGeoGenerate(object):
                  start_line = 0,
                  number_line = -1,
                  local_granule_id = None, log_fname = None,
-                 build_id = "0.20",
-                 pge_version = "0.20"):
+                 build_id = "0.30",
+                 pge_version = "0.30"):
         '''Create a L1bGeoGenerate with the given ImageGroundConnection
         and output file name. To actually generate, execute the "run"
         command.
@@ -36,6 +36,7 @@ class L1bGeoGenerate(object):
         self.run_config = run_config
         self.local_granule_id = local_granule_id
         self.log_fname = log_fname
+        self.log = None
         self.build_id = build_id
         self.pge_version = pge_version
 
@@ -47,6 +48,7 @@ class L1bGeoGenerate(object):
         res = self.gc_arr.ground_coor_scan_arr(start_line, number_line)
         print("Done with [%d, %d]" % (start_line, start_line+res.shape[0]))
         if(self.log_fname is not None):
+            self.log = open(self.log_fname, "a")
             print("Done with [%d, %d]" % (start_line, start_line+res.shape[0]),
                   file = self.log)
             self.log.flush()
@@ -68,7 +70,10 @@ class L1bGeoGenerate(object):
             ls,le = self.igc.time_table.scan_index_to_line(i)
             le2 = self.start_line + self.number_line
             if(self.start_line < le and (self.number_line == -1 or le2 >= ls)):
-                it.append((ls,min(le-ls,le2-ls)))
+                if(self.number_line == -1):
+                    it.append((ls,le-ls))
+                else:
+                    it.append((ls,min(le-ls,le2-ls)))
         if(pool is None):
             r = list(map(self.loc_parallel_func, it))
         else:

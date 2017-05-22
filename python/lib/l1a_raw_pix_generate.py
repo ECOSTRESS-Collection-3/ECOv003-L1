@@ -7,8 +7,8 @@ from .misc import ecostress_file_name
 class L1aRawPixGenerate(object):
     '''This generates a L1A_RAW_PIX, L1A_BB, L1A_ENG and L1A_RAW_ATT
     files from a L0 input.'''
-    def __init__(self, l0, run_config = None, build_id = "0.20",
-                 pge_version = "0.20", build_version="0100",
+    def __init__(self, l0, run_config = None, build_id = "0.30",
+                 pge_version = "0.30", build_version="0100",
                  file_version = "01"):
         '''Create a L1aRawPixGenerate to process the given L0 file. 
         To actually generate, execute the 'run' command.'''

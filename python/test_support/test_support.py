@@ -4,7 +4,7 @@ import os
 from geocal import makedirs_p, read_shelve, Ipi, SrtmDem, \
     IpiImageGroundConnection, SrtmLwmData, HdfOrbit_Eci_TimeJ2000, \
     MeasuredTimeTable, Time, ImageCoordinate, VicarLiteRasterImage, \
-    VicarLiteFile
+    VicarLiteFile, Vector_Time
 import h5py
 try:
     from ecostress_swig import *
@@ -122,14 +122,14 @@ def igc(unit_test_data, test_data):
                                  "Attitude/quaternion")
     rad_fname = test_data + "ECOSTRESS_L1B_RAD_80005_001_20150124T204251_0100_01.h5.expected"
 
-    # Kind of round about way to come up with a time table, we'll likely want
-    # to change this in the future
     f = h5py.File(rad_fname, "r")
-    tmlist = f["/Time/line_start_time_j2000"][:]
-    tt = MeasuredTimeTable([Time.time_j2000(t) for t in tmlist])
-    t0, fc = tt.time(ImageCoordinate(0,0))
-    tt = EcostressTimeTable(t0, False)
-
+    tmlist = f["/Time/line_start_time_j2000"][::128]
+    # True here means we've already averaged the 256 lines to 128 squarish
+    # lines
+    vtime = Vector_Time()
+    for t in tmlist:
+        vtime.append(Time.time_j2000(t))
+    tt = EcostressTimeTable(vtime, True)
     
     # False here says it ok for SrtmDem to not have tile. This gives support
     # for data that is over the ocean.

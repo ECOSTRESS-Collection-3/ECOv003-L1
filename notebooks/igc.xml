@@ -106,7 +106,7 @@
 						<time_pgs>6.96285779230216861e+08</time_pgs>
 					</min_tm>
 					<max_tm object_id="_12">
-						<time_pgs>6.96285945230216861e+08</time_pgs>
+						<time_pgs>6.96285942230216861e+08</time_pgs>
 					</max_tm>
 				</Orbit>
 				<fname>/data/smyth/ecostress-test-data/latest/L1A_RAW_ATT_80005_20150124T204251_0100_01.h5.expected</fname>
@@ -374,7 +374,7 @@
 					</principal_point>
 					<frame_to_sc class_id="39" tracking_level="0" version="0">
 						<q1>
-							<val>1.00000000000000000e+00</val>
+							<val>0.00000000000000000e+00</val>
 							<grad>
 								<size>0</size>
 							</grad>
@@ -392,7 +392,7 @@
 							</grad>
 						</q3>
 						<q4>
-							<val>0.00000000000000000e+00</val>
+							<val>1.00000000000000000e+00</val>
 							<grad>
 								<size>0</size>
 							</grad>
@@ -485,8 +485,8 @@
 		</cam>
 		<sm class_id="44" tracking_level="0" version="1">
 			<px class_id="45" tracking_level="1" version="0" object_id="_67">
-				<scan_start>2.55000000000000000e+01</scan_start>
-				<scan_end>-2.55000000000000000e+01</scan_end>
+				<scan_start>-2.55000000000000000e+01</scan_start>
+				<scan_end>2.55000000000000000e+01</scan_end>
 				<number_sample>5400</number_sample>
 			</px>
 		</sm>

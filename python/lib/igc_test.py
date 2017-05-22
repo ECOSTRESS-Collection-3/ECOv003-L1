@@ -47,6 +47,13 @@ def test_plot(igc):
     
 def test_igc(igc, unit_test_data):
     '''Test back and forward with igc'''
+    # This doesn't work. We need to figure out why, perhaps a tolerance
+    # issue of something like that. But for now just punt, we'll come back
+    # to this
+    if False:
+        gc = igc.ground_coordinate(ImageCoordinate(0,0))
+        print(igc.image_coordinate(gc))
+    
     gc = igc.ground_coordinate(ImageCoordinate(10,10))
     print(igc.image_coordinate(gc))
     gc = igc.ground_coordinate(ImageCoordinate(128,10))

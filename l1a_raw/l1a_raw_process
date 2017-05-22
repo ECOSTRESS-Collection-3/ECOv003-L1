@@ -36,8 +36,8 @@ if(False):
 config = RunConfig(args.run_config)
 
 # Not sure where this will from eventually, but for now just hardcode
-build_id = "0.20"
-pge_version = "0.20"
+build_id = "0.30"
+pge_version = "0.30"
 build_version = "0100"
 
 l0 = os.path.abspath(config["InputFileGroup", "L0"])

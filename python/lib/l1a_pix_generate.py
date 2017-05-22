@@ -14,8 +14,8 @@ class L1aPixGenerate(object):
                  output_gain_name,
                  local_granule_id = None,
                  run_config = None, log = None,
-                 quiet = False, build_id = "0.20",
-                 pge_version = "0.20",
+                 quiet = False, build_id = "0.30",
+                 pge_version = "0.30",
                  file_version = "01"):
         '''Create a L1aPixGenerate with the given input files
         and output file name. To actually generate, execute the 'run'

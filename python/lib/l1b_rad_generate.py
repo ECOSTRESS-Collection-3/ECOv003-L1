@@ -7,8 +7,8 @@ from .misc import ecostress_radiance_scale_factor
 class L1bRadGenerate(object):
     '''This generates a L1B rad file from the given L1A_PIX file.'''
     def __init__(self, l1a_pix, l1a_gain, output_name, local_granule_id = None,
-                 run_config = None, log = None, build_id = "0.20",
-                 pge_version = "0.20"):
+                 run_config = None, log = None, build_id = "0.30",
+                 pge_version = "0.30"):
         '''Create a L1bRadGenerate with the given input files
         and output file name. To actually generate, execute the 'run'
         command.'''
