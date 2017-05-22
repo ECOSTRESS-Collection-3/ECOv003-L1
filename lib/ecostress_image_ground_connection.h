@@ -8,6 +8,14 @@
 namespace Ecostress {
 /****************************************************************//**
   This is a ImageGroundConnection for ecostress.
+
+  Note that there is a good deal of overlap between one scan and the
+  next. This means the image_coordinate is often multivalued, more
+  than one ImageCoordinate goes to the same GroundCoordinate.
+
+  As a matter of convention, we return the smallest line number that
+  matches the given GroundCoordinate. This is arbitrary, but gives a
+  clear rule.
 *******************************************************************/
 
 class EcostressImageGroundConnection :

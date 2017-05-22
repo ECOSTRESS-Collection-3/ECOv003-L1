@@ -194,18 +194,18 @@ GeoCal::ImageCoordinate EcostressImageGroundConnection::image_coordinate
   if(!ett)
     throw GeoCal::Exception("image_coordinate currently only works with EcostressTimeTable");
   GeoCal::ImageCoordinate ic;
-  double best_line = 1e20;
+  double best_line = -1e20;
   for(int i = 0; i < ett->number_scan(); ++i) {
     SampleFunc f(*this, i, Gp);
     if(f.line_in_range()) {
       double ln = f.fc_at_sol().line;
-      if(ln < best_line) {
+      if(ln > best_line) {
 	best_line = ln;
 	ic = f.image_coordinate();
       }
     }
   }
-  if(best_line > 1e19)
+  if(best_line < -1e19)
     throw GeoCal::ImageGroundConnectionFailed();
   return ic;
 }

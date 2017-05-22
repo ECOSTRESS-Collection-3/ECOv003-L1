@@ -43,5 +43,15 @@ def test_plot(igc):
     plt.ylabel("Latitude")
     plt.legend()
     plt.savefig("igc.png")
-    #plt.show()
+    plt.show()
     
+def test_igc(igc, unit_test_data):
+    '''Test back and forward with igc'''
+    gc = igc.ground_coordinate(ImageCoordinate(10,10))
+    print(igc.image_coordinate(gc))
+    gc = igc.ground_coordinate(ImageCoordinate(128,10))
+    print(igc.image_coordinate(gc))
+    gc = igc.ground_coordinate(ImageCoordinate(255,10))
+    print(igc.image_coordinate(gc))
+    gc = igc.ground_coordinate(ImageCoordinate(256,10))
+    print(igc.image_coordinate(gc))

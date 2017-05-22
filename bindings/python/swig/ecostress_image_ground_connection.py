@@ -195,6 +195,14 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
 
     This is a ImageGroundConnection for ecostress.
 
+    Note that there is a good deal of overlap between one scan and the
+    next. This means the image_coordinate is often multivalued, more than
+    one ImageCoordinate goes to the same GroundCoordinate.
+
+    As a matter of convention, we return the smallest line number that
+    matches the given GroundCoordinate. This is arbitrary, but gives a
+    clear rule.
+
     C++ includes: ecostress_image_ground_connection.h 
     """
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
