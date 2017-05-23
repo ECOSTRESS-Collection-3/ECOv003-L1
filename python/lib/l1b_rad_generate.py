@@ -37,9 +37,14 @@ class L1bRadGenerate(object):
             g = self.l1a_gain["Gain/b%d_gain" % (band + 1)][:,:]
             off = self.l1a_gain["Offset/b%d_offset" % (band + 1)][:,:]
             d = l1a_d * g + off
+            # Set masked values if gain/offset to masked value in output
+            d[np.logical_or(g < -9998, off < -9998)] = -9999
         else:
             d = l1a_d
-        return (d[0::2, :] + d[1::2, :]) / 2.0
+        res = (d[0::2, :] + d[1::2, :]) / 2.0
+        res[d[0::2, :] < -9998] = -9999
+        res[d[1::2, :] < -9998] = -9999
+        return res
         
     def run(self):
         '''Do the actual generation of data.'''

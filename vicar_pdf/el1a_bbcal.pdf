@@ -2,7 +2,7 @@
 !   el1a_bbcal.pdf (Ecostress L1A BlackBody calibration)
 !   An L1A_CAL PGE Program supporting the ECOSTRESS Project
 !***Date/Version:
-!   02NOV2016 Version: 0.7 T.L.Logan
+!   16FEB2017 Version: 0.9 T.L.Logan
 !   Written for VICAR with TAE scripting.
 !***Function:
 !   ECOSTRESS L1A Blackbody Radiometric Calibration.
@@ -28,9 +28,9 @@ procedure
 ! outp1:  L1A_PIX      /path for Output L1A_PIX file
 ! outp2:  transfer     /path for Output Intermediate Radiance, Gain/Offset & Temp files
 ! pcount: File Version (vv) provided by PCS (Product Counter) 
-parm   inph5e  string   def="/project/test/ASTER/EndToEndTest/latest/ECOSTRESS_L1A_ENG_80005_20150124T204251_0100_01.h5.expected"
-parm   inph5i  string   def="/project/test/ASTER/EndToEndTest/latest/L1A_RAW_PIX_80005_001_20150124T204251_0100_01.h5.expected" 
-parm   inph5b  string   def="/project/test/ASTER/EndToEndTest/latest/ECOSTRESS_L1A_BB_80005_001_20150124T204251_0100_01.h5.expected"
+parm   inph5e  string   def="/project/test/eyc/l1a_raw_tests/ref/ECOSTRESS_L1A_ENG_80005_20150124T204251_0100_01.h5"
+parm   inph5i  string   def="/project/test/eyc/l1a_raw_tests/ref/L1A_RAW_PIX_80005_001_20150124T204251_0100_01.h5" 
+parm   inph5b  string   def="/project/test/eyc/l1a_raw_tests/ref/ECOSTRESS_L1A_BB_80005_001_20150124T204251_0100_01.h5"
 parm   inpupf  string   def="/project/sandbox/tllogan/l1a_test/L1A_PCF_UPF.txt"
 parm   outp1   string   def="./"
 parm   outp2   string   def="./"
@@ -445,7 +445,7 @@ else
  let      t325=&temp
 end-if
 write    "***Hot Blackbody Temperature= &t325 Kelvin"
-gen       xxa_&id nl=256 ns=1 ival=&t325 linc=0. sinc=0. 'real
+gen       xxa_&id nl=11264 ns=1 ival=&t325 linc=0. sinc=0. 'real
 f2        xxa_&id xkel325_&id func="((in1*&"bbgain")+&bboffs)"
 hist      xkel325_&id
 copy      xkel325_&id &"outkel"/fpa_325.rel
@@ -538,7 +538,7 @@ else
  let      t295=&temp
 end-if
 write    "***Cold Blackbody Temperature= &t295 Kelvin"
-gen       xxa_&id nl=256 ns=1 ival=&t295 linc=0. sinc=0. 'real
+gen       xxa_&id nl=11264 ns=1 ival=&t295 linc=0. sinc=0. 'real
 f2        xxa_&id xkel295_&id func="((in1*&"bbgain")+&bboffs)"
 hist      xkel295_&id
 copy      xkel295_&id &"outkel"/fpa_295.rel

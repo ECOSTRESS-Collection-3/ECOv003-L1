@@ -83,7 +83,7 @@ for s in range(nscene[pass_index]):
     l1a_pix_fname = ecostress_file_name("L1A_PIX", orbit_num[pass_index],
                                         s + 1, tt.min_time)
     l1a_pix_sim = L1aPixSimulate(igc, sdata)
-    l1a_pix_sim.create_file(l1a_pix_fname, pool=pool)
+    #l1a_pix_sim.create_file(l1a_pix_fname, pool=pool)
     
     l1a_bb_fname = ecostress_file_name("L1A_BB", orbit_num[pass_index],
                                        s + 1, tt.min_time)

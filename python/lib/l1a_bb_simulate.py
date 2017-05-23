@@ -30,8 +30,12 @@ class L1aBbSimulate(object):
         if(sigma <= 0):
             r = np.empty((len,1), dtype=np.uint16)
             r[:] = mean
-            return r
-        return np.round(np.random.normal(mean, sigma, (len,1)).astype(np.uint16))
+        else:
+            r = np.round(np.random.normal(mean, sigma,
+                                          (len,1)).astype(np.uint16))
+        # Repeat the data so it is the full size (64 is number of samples,
+        # 44 is number of scans in a scene
+        return np.repeat(np.repeat(r,64,axis=1), 44,axis=0)
 
     def create_file(self, l1a_bb_fname):
         fout = h5py.File(l1a_bb_fname, "w")

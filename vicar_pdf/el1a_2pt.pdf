@@ -3,12 +3,13 @@
 !   An L1A_CAL PGE Program supporting the ECOSTRESS Project
 !   Written for VICAR with TAE scripting.
 !***Date/Version:
-!   02NOV2016 Version: 0.7 T.L.Logan
+!   31JAN2017 Version: 0.9 T.L.Logan
 !***Function:
 !   ECOSTRESS L1A 2point conversion of Blackbody calibration and TIR
 !     image DN to Radiance (watts/m2/sr/um).
 !   TIR Bands 1-5; SWIR image (B6) is Dark Current subtracted.
 !   This proc is called separately (by el1a_bbcal.pdf) for each Band.
+!***Note: Input missing, fill or bad data are output as code -9999.
 
 procedure
 !Progam Parameters****************************************************
@@ -35,9 +36,9 @@ local  ns     integer
 local  format keyword
 local  hdf    string   init=".h5"
 local  found  integer  !0=no file; 1=file found
-local  sd      real    !Histogram standard deviation
-local  avg     real    !Histogram mean
-local  count   integer !Histogram number of elements
+local  sd     real     !Histogram standard deviation
+local  avg    real     !Histogram mean
+local  count  integer  !Histogram number of elements
 body
 let      _onfail="goto error1"
 
@@ -56,22 +57,19 @@ write    "MSG: ***2pt Random Number = &id "
 write    "Beginning ush gdalinfo"
 ush       gdalinfo &inph5i
 write    "Beginning ush gdal_translate"
-ush       gdal_translate -of VICAR 'HDF5:"&inph5i"://UncalibratedPixels/pixel_data_&band' &"outimg"/b&"band"_image.hlf
-!Verify image size, if not 11264x5400, adjust it.
+ush       gdal_translate -of VICAR -ot Int16 'HDF5:"&inph5i"://UncalibratedPixels/pixel_data_&band' &"outimg"/b&"band"_image.hlf
+!Verify image size, if not 11264x5400, stop processing
 form     &"outimg"/b&"band"_image.hlf format nl ns
 write    "MSG: ***Input Image Size is: &nl Lines x &ns Samples "
-if          ((nl<>11264)or(ns<>5400))
- write   "MSG: ***ERROR "&"outimg"/b&"band"_image.hlf" has Incorrect Image Size "
- write   "MSG: ***Correcting Image Size"
- tush     echo "Correcting Image Size" >> L1Ajob_&"suffix".log
- gen      xxa_&id nl=11264 ns=5400 ival=0. linc=0. sinc=0. 'half
- insect  (xxa_&id,&"outimg"/b&"band"_image.hlf) xxb_&id +
-          size=(1,1,11264,5400) insect=(1,1,&nl,&ns,1,1)
- copy     xxb_&id &"outimg"/b&"band"_image.hlf
-else
-end-if
+if       ((nl<>11264)or(ns<>5400)) write "MSG: ***ERROR "&"outimg"/b&"band"_image.hlf" has Incorrect Image Size "
+if       ((nl<>11264)or(ns<>5400)) goto error1
 write    "MSG: ***Finished Reading L1A_RAW_PIX Band &band"
 tush      echo "Finished Reading L1A_RAW_PIX Band &band" >> L1Ajob_&"suffix".log
+!Create Missing or Corrupted Data Binary 0/1 Mask
+f2       &"outimg"/b&"band"_image.hlf mask_&id +
+          func="((in1>=0).AND.(in1<=16000))" !Good DN=1; Bad DN=0
+hist      mask_&id sigma=sd mean=avg
+tush      echo "Histogram 0/1 Mask Mean=&avg SD=&sd" >> L1Ajob_&"suffix".log
 
 !Input L1A_BB DN Module************************************************
 !Extract Raw FPA DNs from L1A_BB, 1 band, both 325 and 295 BB files
@@ -79,44 +77,50 @@ tush      echo "Finished Reading L1A_RAW_PIX Band &band" >> L1Ajob_&"suffix".log
 write    "Beginning ush gdalinfo"
 ush       gdalinfo &inph5b
 write    "Beginning ush gda_translate"
-ush       gdal_translate -of VICAR 'HDF5:"&inph5b"://BlackBodyPixels/B&"band"_blackbody_325K' &"outbdn"/dn325b&"band".hlf
-ush       gdal_translate -of VICAR 'HDF5:"&inph5b"://BlackBodyPixels/B&"band"_blackbody_295K' &"outbdn"/dn295b&"band".hlf
-write    "MSG: ***Finished Reading L1A_BB Band &band"
-tush      echo "Finished Reading L1A_BB Band &band" >> L1Ajob_&"suffix".log
+ush       gdal_translate -of VICAR -ot Int16 'HDF5:"&inph5b"://BlackBodyPixels/B&"band"_blackbody_325K' xxa_325_&id
+ush       gdal_translate -of VICAR -ot Int16 'HDF5:"&inph5b"://BlackBodyPixels/B&"band"_blackbody_295K' xxa_295_&id
+!Verify 325BB image size, if not 11264x64, stop processing
+form      xxa_325_&id format nl ns
+write    "MSG: ***Input Band&"band" BB325 Image Size is: &nl Lines x &ns Samples "
+if       ((nl<>11264)or(ns<>64)) write "MSG: ***ERROR "BB325" has Incorrect Image Size "
+if       ((nl<>11264)or(ns<>64)) goto error1
+!Verify 295BB image size, if not 11264x64, stop processing
+form      xxa_295_&id format nl ns
+write    "MSG: ***Input Band&"band" BB295 Image Size is: &nl Lines x &ns Samples "
+if       ((nl<>11264)or(ns<>64)) write "MSG: ***ERROR "BB295" has Incorrect Image Size "
+if       ((nl<>11264)or(ns<>64)) goto error1
+write    "MSG: ***Finished Reading L1A_BB Band &band files"
+tush      echo "Finished Reading L1A_BB Band &band files" >> L1Ajob_&"suffix".log
+
+!Average BB FPAs from 11264x64 to 11264x1
+cform     xxa_325_&id xxa_&id oform=real
+lave      xxa_&id xxb_&id 'hori 'quiet
+flot      xxb_&id &"outbdn"/dn325b&"band".rel 'clock
+cform     xxa_295_&id xxa_&id oform=real
+lave      xxa_&id xxb_&id 'hori 'quiet
+flot      xxb_&id &"outbdn"/dn295b&"band".rel 'clock
+if       (band=6) goto jump1  !B6=SWIR (No Radiance)
 
 !Gain/Offset Calculation Module****************************************
 !Convert image DN to spectral radiance using gain & offset
-if       (band=6) goto jump1  !B6=SWIR (No Radiance)
 !Calculate Offset (a)
 f2       (&"inprad"/b&"band"_325.rel, +
           &"inprad"/b&"band"_295.rel,+
-          &"outbdn"/dn325b&"band".hlf,&"outbdn"/dn295b&"band".hlf) xxoffs_&id +
+          &"outbdn"/dn325b&"band".rel,&"outbdn"/dn295b&"band".rel) xxoffs_&id +
           func="((in1*in4)-(in2*in3))/(in4-in3)" format=real
 !Calculate Gain (b)
 f2       (&"inprad"/b&"band"_325.rel, +
           &"inprad"/b&"band"_295.rel, +
-          &"outbdn"/dn325b&"band".hlf,&"outbdn"/dn295b&"band".hlf) xxgain_&id +
+          &"outbdn"/dn325b&"band".rel,&"outbdn"/dn295b&"band".rel) xxgain_&id +
           func="(in2-in1)/(in4-in3)" format=real
-!Focal Plane gain/offset images are 256x1, duplicate them to the size of input image.
-!Output size is 11264 lines by 5400 samples.
-!offset scaling
-size      xxoffs_&id xxa_&id size=(1,1,256,5400) 'noin
-append   (xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,+
-          xxa_&id,xxa_&id,xxa_&id) xx1_&id
-copy      xx1_&id xx2_&id
-copy      xx1_&id xx3_&id
-copy      xx1_&id xx4_&id
-copy      xx1_&id xx5_&id size=(1,1,1024,5400)
-append   (xx1_&id,xx2_&id,xx3_&id,xx4_&id,xx5_&id) &"outwat"/b&"band"_offset.rel
-!gain scaling
-size      xxgain_&id xxa_&id size=(1,1,256,5400) 'noin
-append   (xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,+
-          xxa_&id,xxa_&id,xxa_&id) xx1_&id
-copy      xx1_&id xx2_&id
-copy      xx1_&id xx3_&id
-copy      xx1_&id xx4_&id
-copy      xx1_&id xx5_&id size=(1,1,1024,5400)
-append   (xx1_&id,xx2_&id,xx3_&id,xx4_&id,xx5_&id) &"outwat"/b&"band"_gain.rel
+!Focal Plane gain/offset images are 11264x1, duplicate them to the size of input image.
+!Output size is 11264 lines by 5400 samples; then apply Bad Data Mask 
+size      xxoffs_&id xxd_&id size=(1,1,11264,5400) oform=real 'noin
+f2        inp=(xxd_&id,mask_&id) out=&"outwat"/b&"band"_offset.rel +
+          func="(in1*in2)+((in2<1)*(-9999))" format=real
+size      xxgain_&id xxd_&id size=(1,1,11264,5400) oform=real 'noin
+f2        inp=(xxd_&id,mask_&id) out=&"outwat"/b&"band"_gain.rel +
+          func="(in1*in2)+((in2<1)*(-9999))" format=real
 write    "MSG: ***Finished Creating Gain/Offsets for Band &band"
 tush      echo "Finished Creating Gain/Offsets for Band &band" >> L1Ajob_&"suffix".log
 
@@ -126,17 +130,18 @@ tush      echo "Finished Creating Gain/Offsets for Band &band" >> L1Ajob_&"suffi
 ! Optionally output radiance data
 if       (radout=0) goto skip2
 f2       (&"outwat"/b&"band"_offset.rel,&"outwat"/b&"band"_gain.rel,&"outimg"/b&"band"_image.hlf) +
-          &"outwat"/L1A_RAD_B&"band"_&"suffix".rel +
+          xxe_&id +
           func="in1+(in2*in3)" format=real
+f2        inp=(xxe_&id,mask_&id) out=&"outwat"/b&"band"_rad.rel +
+          func="(in1*in2)+((in2<1)*(-9999))" format=real
 write    "MSG: ***Finished 2pt DN-to-Rad Conversion for Band &band"
 tush      echo "Finished 2pt DN-to-Rad Conversion for Band &band" >> L1Ajob_&"suffix".log
 if       (debug>0)
- hist     &"outwat"/L1A_RAD_B&"band"_&"suffix".rel sigma=sd mean=avg count=count
+ hist     &"outwat"/b&"band"_rad.rel sigma=sd mean=avg count=count
  tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1Ajob_&"suffix".log
 end-if
 
 skip2>
-
 !Radiance-to-Temperature Conversion Module*****************************
 !Convert Radiance Product to Temperature Kelvin for TESTING Purposes
 !Source: http://ncc.nesdis.noaa.gov/data/planck.html
@@ -145,49 +150,36 @@ if       (rad2k = 0) goto skip3
 write    "cw = &cw"
 write    "c1 = &c1"
 write    "c2 = &c2"
-f2        &"outwat"/L1A_RAD_B&"band"_&"suffix".rel &"outwat"/L1A_KEL_B&"band"_&"suffix".hlf +
+f2       (&"outwat"/b&"band"_rad.rel) xxe_&id +
           func="&c2/(&cw*(alog(&c1/(&cw**5*in1)+1)))" 'half
+f2        inp=(xxe_&id,mask_&id) out=&"outwat"/b&"band"_temp.hlf +
+          func="(in1*in2)+((in2<1)*(-9999))" format=half
 write    "MSG: ***Finished Rad-to-Temp Conversion for Band &band"
 tush      echo "Finished Rad-to-Temp Conversion for Band &band" >> L1Ajob_&"suffix".log
 if       (debug>0)
- hist     &"outwat"/L1A_KEL_B&"band"_&"suffix".hlf sigma=sd mean=avg count=count
+ hist     &"outwat"/b&"band"_temp.hlf sigma=sd mean=avg count=count
  tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1Ajob_&"suffix".log
 end-if
-
 goto      skip3   !Bands 1-5 skip over SWIR processing
 
 jump1>
 !SWIR B6 Dark Current Module*******************************************
 !Subtact Dark Current from SWIR Band6
-!Duplicate FPA to match image size
-!325K BB Dark Current FPA
-size      &"outbdn"/dn325b&"band".hlf xxa_&id size=(1,1,256,5400) 'noin
-append   (xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,+
-          xxa_&id,xxa_&id,xxa_&id) xx1_&id
-copy      xx1_&id xx2_&id
-copy      xx1_&id xx3_&id
-copy      xx1_&id xx4_&id
-copy      xx1_&id xx5_&id size=(1,1,1024,5400)
-append   (xx1_&id,xx2_&id,xx3_&id,xx4_&id,xx5_&id) xxdc325_&id
-!295K BB Dark Current FPA
-size      &"outbdn"/dn295b&"band".hlf xxa_&id size=(1,1,256,5400) 'noin
-append   (xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,xxa_&id,+
-          xxa_&id,xxa_&id,xxa_&id) xx1_&id
-copy      xx1_&id xx2_&id
-copy      xx1_&id xx3_&id
-copy      xx1_&id xx4_&id
-copy      xx1_&id xx5_&id size=(1,1,1024,5400)
-append   (xx1_&id,xx2_&id,xx3_&id,xx4_&id,xx5_&id) xxdc295_&id
+!Size Duplicate BB Dark Current FPA to match image size 11264x1 -> 11264x5400
+size      &"outbdn"/dn325b&"band".rel xxdc325_&id size=(1,1,11264,5400) 'noin
+size      &"outbdn"/dn295b&"band".rel xxdc295_&id size=(1,1,11264,5400) 'noin
 !Average Dark Current FPA images
 f2       (xxdc325_&id,xxdc295_&id) xxa_&id func="(in1+in2)/2"
 !Subtract Dark Current from SWIR Image (No Negative values)
-f2       (&"outimg"/b6_image.hlf,xxa_&id) &"outwat"/L1A_DCC_B6_&"suffix".hlf +
-          func="(in1-in2)*((in1-in2)>=0)"
-copy      &"outwat"/L1A_DCC_B6_&"suffix".hlf &"outimg"/b6_image.hlf
+f2       (&"outimg"/b6_image.hlf,xxa_&id) xxe_&id +
+          func="(in1-in2)*((in1-in2)>=0)" format=half
+f2        inp=(xxe_&id,mask_&id) out=&"outwat"/b6_dcc.hlf +
+          func="(in1*in2)+((in2<1)*(-9999))" format=half
+copy      &"outwat"/b6_dcc.hlf &"outimg"/b6_image.hlf
 write    "MSG: ***Finished DC Subtraction for Band &band"
 tush      echo "Finished DC Subtraction for Band &band" >> L1Ajob_&"suffix".log
 if       (debug>0)
- hist     &"outwat"/L1A_DCC_B6_&"suffix".hlf sigma=sd mean=avg count=count
+ hist     &"outwat"/b6_dcc.hlf sigma=sd mean=avg count=count
  tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1Ajob_&"suffix".log
 end-if
 
