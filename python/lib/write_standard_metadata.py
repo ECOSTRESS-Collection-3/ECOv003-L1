@@ -6,6 +6,7 @@ import re
 class WriteStandardMetadata(object):
     '''This writes the standard metadata'''
     def __init__(self, hdf_file, product_specfic_group = "L1GEOMetadata",
+                 proc_lev_desc = 'Level 1 Geolocation Parameters',
                  pge_name = 'L1B_GEO', local_granule_id = None,
                  build_id = '0.01', pge_version='0.01',
                  orbit_based = False):
@@ -47,8 +48,7 @@ class WriteStandardMetadata(object):
         self.set('PlatformLongName', 'ISS')
         self.set('PlatformShortName', 'ISS')
         self.set('PlatformType', 'Spacecraft')
-        self.set('ProcessingLevelDescription', 
-                 'Level 1 Geolocation Parameters')
+        self.set('ProcessingLevelDescription', proc_lev_desc )
         self.set('ProducerAgency', 'JPL')
         self.set('ProducerInstitution', 'Caltech')
         self.set('CampaignShortName', 'Primary')
