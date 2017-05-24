@@ -7,12 +7,12 @@ PYTEST_NJOB=10
 PYTEST_EXTRAFLAGS=
 PYTEST_FLAGS= -q -n $(PYTEST_NJOB) --basetemp=./pytest_tmp
 
-# Shortcut for just running nosetests.
-python_check: script/setup_ecostress.sh
+# Shortcut for just running py.test.
+python-check: script/setup_ecostress.sh
 	source $< && \
         $(PYTEST) $(PYTEST_FLAGS) $(PYTEST_EXTRAFLAGS) $(srcdir)/@srcpython@
 
-CHECK_HOOK+= python_check
+CHECK_HOOK+= python-check
 
 include python/lib/lib.am
 

@@ -40,7 +40,7 @@ build_id = "0.30"
 pge_version = "0.30"
 build_version = "0100"
 
-l0 = os.path.abspath(config["InputFileGroup", "L0"])
+l0b = os.path.abspath(config["InputFileGroup", "L0B"])
 l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
 scene_file = os.path.abspath(config["StaticAncillaryFileGroup", "Scene"])
 dirname = config["ProductPathGroup", "ProductPath"]
@@ -49,7 +49,8 @@ file_version = config["ProductPathGroup", "ProductCounter"]
 makedirs_p(dirname)
 os.chdir(dirname)
 
-l1arawpix = L1aRawPixGenerate(l0, run_config=config,
+l1arawpix = L1aRawPixGenerate(l0b, l1_osp_dir, scene_file,
+                              run_config=config,
                               build_id=build_id, pge_version=pge_version,
                               build_version=build_version,
                               file_version=file_version)
