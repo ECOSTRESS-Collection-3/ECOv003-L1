@@ -50,12 +50,19 @@ def ecostress_file_name(product_type, orbit, scene, acquisition_time,
         front=""
     else:
         front="ECOSTRESS_"
-    if(orbit is None):
-        # Special handling for the L0 data
-        return "%s%s_%s_%s_%s_%s%s" % \
-            (front, product_type, time_to_file_string(acquisition_time),
-             time_to_file_string(end_time),
-             build, version, extension)
+    if(end_time is not None):
+        if(orbit is None):
+            # Handling for the L0 data
+            return "%s%s_%s_%s_%s_%s%s" % \
+                (front, product_type, time_to_file_string(acquisition_time),
+                 time_to_file_string(end_time),
+                 build, version, extension)
+        else:
+            # Handling for scene file name
+            return "%s%s_%05d_%s_%s%s" % \
+                (front, product_type, orbit,
+                 time_to_file_string(acquisition_time), 
+                 time_to_file_string(end_time), extension)
     elif(scene is None):
         # Special handling for the couple of orbit based files
         return "%s%s_%05d_%s_%s_%s%s" % \

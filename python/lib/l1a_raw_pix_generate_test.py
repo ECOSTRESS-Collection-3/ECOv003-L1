@@ -2,10 +2,12 @@ from .l1a_raw_pix_generate import *
 from test_support import *
 import os
 
-
+@slow
 def test_l1a_raw_pix_generate(isolated_dir, test_data):
-    l0 = test_data + "ECOSTRESS_L0_20150124T204251_0100_01.raw"
-    l1arawpix = L1aRawPixGenerate(l0)
+    l0 = test_data + "ECOSTRESS_L0B_20150124T204251_20150124T204533_0100_01.h5"
+    osp_dir = test_data + "l1_osp_dir"
+    scene_file = test_data + "Scene_80005_20150124T204251_20150124T204533.txt"
+    l1arawpix = L1aRawPixGenerate(l0, osp_dir, scene_file)
     l1arawpix.run()
 
 

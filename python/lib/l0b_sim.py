@@ -110,7 +110,7 @@ class L0BSimulate(object):
     subprocess.run(["h5copy", "-i", fname, "-o", self.l0b_fname, "-p",
                     "-s", group, "-d", group_out], check=True)
 
-  def create_file(self, l0b_fname):
+  def create_file(self, l0b_fname, scene_fname):
     print("====  CREATE_FILE L0B_FNAME %s ====" % l0b_fname )
     print("ANG0=%f ANG1=%f PIX_ANG=%14.8e" % (ANG0, ANG1, PIX_ANG ))
     print(datetime.now())
@@ -217,11 +217,10 @@ class L0BSimulate(object):
     # process scenes make sure to do it in order
     total_scenes = len(self.scene_files)
     mangle = ANG0
-    for v in range( total_scenes ):
-      scene = self.scene_files[v][0]
-      l1a_raw_pix_fname = self.scene_files[v][1]
-      l1a_bb_fname = self.scene_files[v][2]
-
+    fh = open(scene_fname,"w")
+    for v, scn in enumerate(self.scene_files):
+      scene, l1a_raw_pix_fname, l1a_bb_fname, onum, tstart, tend = scn
+      print("%d %03d %s %s" % (onum, scene, tstart, tend), file=fh)
       # open raw pixel data file
       pix_fd = h5py.File(l1a_raw_pix_fname, "r", driver='core')
 

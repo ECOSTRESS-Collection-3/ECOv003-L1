@@ -796,7 +796,7 @@ dist_installecostress_SCRIPTS = @l1a_raw_src@/L1A_RAW_PGE \
 # SWIG part
 # ================================================
 SWIG_FLAG = -O
-l0_file = $(end_to_end_test_data)/ECOSTRESS_L0_20150124T204251_0100_01.raw
+l0_file = $(end_to_end_test_data)/ECOSTRESS_L0B_20150124T204251_20150124T204533_0100_01.h5
 l1a_raw_run_config = $(end_to_end_test_data)/ECOSTRESS_L1A_RAW_RunConfig_20150124T204251.xml
 l1a_cal_run_config = $(foreach n,001 002 003, $(end_to_end_test_data)/ECOSTRESS_L1A_CAL_RunConfig_80005_$n.xml)
 l1b_cal_run_config = $(foreach n,001 002 003, $(end_to_end_test_data)/ECOSTRESS_L1B_RAD_RunConfig_80005_$n.xml)

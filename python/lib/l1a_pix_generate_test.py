@@ -3,6 +3,7 @@ from .exception import VicarRunException
 from test_support import *
 import os
 
+@slow
 def test_l1a_pix_generate(isolated_dir, test_data, vicar_path):
     fvar = "80005_001_20150124T204251_0100_01.h5"
     fvar2 = "80005_20150124T204251_0100_01.h5.expected"

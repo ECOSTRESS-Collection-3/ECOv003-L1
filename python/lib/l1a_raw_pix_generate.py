@@ -72,22 +72,22 @@ ANG1 = 25.475 / 2.0
 ANG0 = 360.0 - ANG1 - PIX_ANG * float( BBLEN*2.0 )
 
 class L1aRawPixGenerate(object):
-    '''This generates a L1A_RAW_PIX, L1A_BB, L1A_ENG and L1A_RAW_ATT
-    files from a L0B input.'''
-    def __init__(self, l0b, osp_dir, scene_file, run_config = None,
-                 build_id = "0.30",
-                 pge_version = "0.30", build_version="0100",
-                 file_version = "01"):
-        '''Create a L1aRawPixGenerate to process the given L0 file. 
-        To actually generate, execute the 'run' command.'''
-        self.l0b = l0b
-        self.osp_dir = osp_dir
-        self.scene_file = scene_file
-        self.run_config = run_config
-        self.build_id = build_id
-        self.pge_version = pge_version
-        self.build_version = build_version
-        self.file_version = file_version
+  '''This generates a L1A_RAW_PIX, L1A_BB, L1A_ENG and L1A_RAW_ATT
+  files from a L0B input.'''
+  def __init__(self, l0b, osp_dir, scene_file, run_config = None,
+               build_id = "0.30",
+               pge_version = "0.30", build_version="0100",
+               file_version = "01"):
+      '''Create a L1aRawPixGenerate to process the given L0 file. 
+      To actually generate, execute the 'run' command.'''
+      self.l0b = l0b
+      self.osp_dir = osp_dir
+      self.scene_file = scene_file
+      self.run_config = run_config
+      self.build_id = build_id
+      self.pge_version = pge_version
+      self.build_version = build_version
+      self.file_version = file_version
         
   def create_file(self, prod_type, orbit, scene, start_time, end_time, primary_file = False, prod=True):
     '''Create the file, generate the standard metadata, and return
@@ -103,16 +103,9 @@ class L1aRawPixGenerate(object):
     edate = self.fin[basegroup + "/StandardMetadata/RangeEndingDate"].value
     etime = self.fin[basegroup + "/StandardMetadata/RangeEndingTime"].value
     '''
-    bdtime = start_time[0:4] + start_time[5:7] + start_time[8:13] + start_time[14:16] + start_time[17:19]
-    #fname = ecostress_file_name(prod_type, orbit, scene, start_time)
-    if ( prod ):
-        pre = "ECOSTRESS_" + prod_type + "_"
-    else:
-        pre = prod_type + "_"
-    if ( scene is None ):
-        fname = pre + orbit + "_" + bdtime + "_0100_05.h5"
-    else:
-        fname = pre + orbit + "_" + scene + "_" + bdtime + "_0100_05.h5"
+    fname = ecostress_file_name(prod_type, orbit, scene, start_time,
+                                build=self.build_version,
+                                version=self.file_version)
     if(primary_file):
         self.log_fname =  os.path.splitext(fname)[0] + ".log"
         self.log = open(self.log_fname, "w")
@@ -154,25 +147,16 @@ class L1aRawPixGenerate(object):
     print("====  Start run ", datetime.now(), "  ====")
     self.log = None
 
-    m=re.search('L0B_(.+?)_',self.l0b)
-    if m:
-      onum = m.group(1)
-    else:
-      print("Could not find orbit number from L0B file name %s" %self.l0b)
-      return -1
-
 #  Get EV start codes for BB and IMG pixels
     ev_codes = np.zeros( (3,2), dtype=np.int32 )
     ' open EV codes file '
-    ef = open( self.osp_dir + "ev_codes.txt", "r")
-    i = 0
-    for evl in iter( ef ):
-      e0, e1, e2 = evl.split("	")
-      ev_codes[i,0] = int(e1)
-      ev_codes[i,1] = int(e2)
-      print("EV_CODES[%d](%s) = %d, %d" % (i,e0,ev_codes[i,0],ev_codes[i,1] ))
-      i += 1
-    ef.close()
+    with open( self.osp_dir + "/ev_codes.txt", "r") as ef:
+        for i,evl in enumerate(ef):
+            e0, e1, e2 = re.split(r'\s+', evl.strip())
+            ev_codes[i,0] = int(e1)
+            ev_codes[i,1] = int(e2)
+            print("EV_CODES[%d](%s) = %d, %d" % (i,e0,ev_codes[i,0],
+                                                 ev_codes[i,1] ))
 
 # open scene start/stop times file
     sf = open( self.scene_file, "r" )
@@ -199,7 +183,9 @@ class L1aRawPixGenerate(object):
 
     o_start_time = None
     for sfl in iter( sf ):  # iterate through scenes from scene start/stop file
-      orbit, scene_id, sc_start_time, sc_end_time = sfl.split( "	" )
+      orbit, scene_id, sc_start_time, sc_end_time = re.split(r'\s+', sfl.strip())
+      orbit = int(orbit)
+      scene_id = int(scene_id)
       if o_start_time == None: o_start_time = sc_start_time
       o_end_time = sc_end_time
       ' Get scene start and end times (UTC) from scene file entry '
@@ -243,14 +229,14 @@ class L1aRawPixGenerate(object):
       print("Found scene %s start time %fJ2K in packet %d FP0 time=%s" % ( scene_id, ss.j2000, pkt_idx, str(pktp0t) ) )
 
       ' create scene file and image pixel, J2K, and FPIE ENC groups '
-      pname = self.create_file( "L1A_RAW_PIX", onum, scene_id, sc_start_time, sc_end_time, prod=False )
+      pname = self.create_file( "L1A_RAW_PIX", orbit, scene_id, sc_start_time, sc_end_time, prod=False )
       l1a_fp = h5py.File( pname, "r+", driver='core' )
       l1a_upg = l1a_fp.create_group("/UncalibratedPixels")
       l1a_ptg = l1a_fp.create_group("/Time")
       l1a_peg = l1a_fp.create_group("/FPIEencoder")
 
       ' create BB file and BlackBodyPixels group '
-      bname = self.create_file( "L1A_BB", onum, scene_id, sc_start_time, sc_end_time, prod=True )
+      bname = self.create_file( "L1A_BB", orbit, scene_id, sc_start_time, sc_end_time, prod=True )
       l1a_bp = h5py.File( bname, "r+", driver='core' )
       l1a_bpg = l1a_bp.create_group("/BlackBodyPixels")
 
@@ -406,14 +392,14 @@ class L1aRawPixGenerate(object):
 
     ' create engineering file and datasets '
     print("crerating ENG and ATT files, AQC=%d" % aqc )
-    feng = self.create_file( "L1A_ENG", onum, None, o_start_time, o_end_time, primary_file=True )
+    feng = self.create_file( "L1A_ENG", orbit, None, o_start_time, o_end_time, primary_file=True )
     eng = h5py.File( feng, "r+", driver='core' )
     eng_g = eng.create_group("/rtdBlackbodyGradients")
     rtd295 = eng_g.create_dataset("RTD_295K", shape=(5,), dtype='f4')
     rtd325 = eng_g.create_dataset("RTD_325K", shape=(5,), dtype='f4')
 
     ' create raw attitude/ephemeris file and datasets '
-    fatt = self.create_file("L1A_RAW_ATT", onum, None, o_start_time, o_end_time, prod=False)
+    fatt = self.create_file("L1A_RAW_ATT", orbit, None, o_start_time, o_end_time, prod=False)
     att = h5py.File( fatt, "r+", driver='core' )
     att_g = att.create_group("/Attitude")
     a2k = att_g.create_dataset("time_j2000", shape=(aqc,), dtype='f8' )

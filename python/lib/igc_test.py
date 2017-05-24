@@ -43,7 +43,8 @@ def test_plot(igc):
     plt.ylabel("Latitude")
     plt.legend()
     plt.savefig("igc.png")
-    plt.show()
+    if(False):
+        plt.show()
     
 def test_igc(igc, unit_test_data):
     '''Test back and forward with igc'''

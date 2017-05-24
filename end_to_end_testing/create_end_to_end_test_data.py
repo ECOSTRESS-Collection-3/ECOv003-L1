@@ -16,7 +16,7 @@ orbit_num = [80001, 80002, 80003, 80004, 80005]
 nscene = [1,1,1,1,3]
 
 # By bad luck, we picked orbit times in some case that are an night.
-# Allow and offset to the reported time so we can "pretend" that the data
+# Allow an offset to the reported time so we can "pretend" that the data
 # is really during the day. This really only affects the solar angles, and
 # allows us to generate solar angles that are somewhat reasonable for passing
 # to Level 2.
@@ -48,22 +48,22 @@ sm = EcostressScanMirror()
 
 # Camera comes from the separate ecostress_camera_generate.py script
 cam = read_shelve("camera.xml")
+# ***********************************
+# Need to fix this time calculation
+# ***********************************
 # The time table data comes from Eugene's SDS data bible file 
 # (ECOSTRESS_SDS_Data_Bible.xls in ecostress-sds git repository). The
 # real camera is a bit complicated, but we collect about 241 samples
 # of data (in along track direction) every 1.181 seconds. For a
 # pushbroom, we can divide this up evenly as an approximation. But
-# then there is an averaging step (which I don't know the details of) 
-# that combines 2 pixels. So we have the factor of 2 given. Scene has 
+# then there is an averaging step (which I don't know the details of)
+# that combines 2 pixels. So we have the factor of 2 given. Scene has
 # 5632 lines, which is where time calcuation comes from.
 
 tspace = 1.181 / 241 * 2
 toff = 5632 * tspace / 2
 tlen = 5632 * tspace
 scene_files = []
-# Bug that we seem to need to do this to force spice to be loaded before
-# we create the pool. Would like to figure out why this happens and fix this
-SpiceHelper.spice_setup()
 pool = Pool(20)
 for s in range(nscene[pass_index]):
     tstart = pass_time[pass_index] - toff + tspace + \
@@ -83,33 +83,37 @@ for s in range(nscene[pass_index]):
     l1a_pix_fname = ecostress_file_name("L1A_PIX", orbit_num[pass_index],
                                         s + 1, tt.min_time)
     l1a_pix_sim = L1aPixSimulate(igc, sdata)
-    l1a_pix_sim.create_file(l1a_pix_fname, pool=pool)
+    #l1a_pix_sim.create_file(l1a_pix_fname, pool=pool)
     
     l1a_bb_fname = ecostress_file_name("L1A_BB", orbit_num[pass_index],
                                        s + 1, tt.min_time)
     l1a_bb_sim = L1aBbSimulate(l1a_pix_fname)
-    l1a_bb_sim.create_file(l1a_bb_fname)
+    #l1a_bb_sim.create_file(l1a_bb_fname)
 
     l1a_raw_pix_fname = \
      ecostress_file_name("L1A_RAW_PIX", orbit_num[pass_index], s + 1,
                          tt.min_time, intermediate=True)
     l1a_raw_pix_sim = L1aRawPixSimulate(l1a_pix_fname)
-    l1a_raw_pix_sim.create_file(l1a_raw_pix_fname)
-    scene_files.append([s+1, l1a_raw_pix_fname, l1a_bb_fname])
+    #l1a_raw_pix_sim.create_file(l1a_raw_pix_fname)
+    scene_files.append([s+1, l1a_raw_pix_fname, l1a_bb_fname,
+                        orbit_num[pass_index], tt.min_time, tt.max_time])
     
 l1a_raw_att_fname = \
    ecostress_file_name("L1A_RAW_ATT", orbit_num[pass_index], None, start_time,
                        intermediate=True)
 l1a_raw_att_sim = L1aRawAttSimulate(orb, start_time, end_time)
-l1a_raw_att_sim.create_file(l1a_raw_att_fname)
+#l1a_raw_att_sim.create_file(l1a_raw_att_fname)
 
 l1a_eng_fname = ecostress_file_name("L1A_ENG", orbit_num[pass_index], None,
                                     start_time)
 l1a_eng_sim = L1aEngSimulate()
-l1a_eng_sim.create_file(l1a_eng_fname)
+#l1a_eng_sim.create_file(l1a_eng_fname)
 
 l0_fname = ecostress_file_name("L0B", None, None, start_time, end_time)
+scene_fname = ecostress_file_name("Scene", orbit_num[pass_index], None,
+                                  start_time, end_time, extension=".txt",
+                                  intermediate=True)
 l0_sim = L0BSimulate(l1a_raw_att_fname, l1a_eng_fname, scene_files)
-l0_sim.create_file(l0_fname)
+l0_sim.create_file(l0_fname, scene_fname)
 
 
