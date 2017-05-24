@@ -66,7 +66,11 @@ CNT_DUR = (60/25.4)/float( MAX_FPIE )  # = 1.3504 microsecond
 ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.000205803 deg
 PIX_ANG = 25.475 / float( FPPSC )  # = 0.004717592 deg
 PIX_EV = PIX_ANG / ANG_INC  # = 22.92289 counts/pix
-PIX_DUR = 0.0000321982
+# Short term, change this to match EcostressTimeTable pixel duration.
+# We will want to change this back, but for now change this to match
+# existing test data. See Issue #13 in github.
+#PIX_DUR = 0.0000321982
+PIX_DUR = 32.2e-6
 # Black body pixels are BEFORE image pixels
 ANG1 = 25.475 / 2.0
 ANG0 = 360.0 - ANG1 - PIX_ANG * float( BBLEN*2.0 )
@@ -89,7 +93,8 @@ class L1aRawPixGenerate(object):
       self.build_version = build_version
       self.file_version = file_version
         
-  def create_file(self, prod_type, orbit, scene, start_time, end_time, primary_file = False, prod=True):
+  def create_file(self, prod_type, orbit, scene, start_time, end_time,
+                  primary_file = False, prod=True, intermediate=False):
     '''Create the file, generate the standard metadata, and return
     the file name.'''
     '''
@@ -105,7 +110,8 @@ class L1aRawPixGenerate(object):
     '''
     fname = ecostress_file_name(prod_type, orbit, scene, start_time,
                                 build=self.build_version,
-                                version=self.file_version)
+                                version=self.file_version,
+                                intermediate=intermediate)
     if(primary_file):
         self.log_fname =  os.path.splitext(fname)[0] + ".log"
         self.log = open(self.log_fname, "w")
@@ -229,7 +235,9 @@ class L1aRawPixGenerate(object):
       print("Found scene %s start time %fJ2K in packet %d FP0 time=%s" % ( scene_id, ss.j2000, pkt_idx, str(pktp0t) ) )
 
       ' create scene file and image pixel, J2K, and FPIE ENC groups '
-      pname = self.create_file( "L1A_RAW_PIX", orbit, scene_id, sc_start_time, sc_end_time, prod=False )
+      pname = self.create_file( "L1A_RAW_PIX", orbit, scene_id,
+                                sc_start_time, sc_end_time, prod=False,
+                                intermediate=True)
       l1a_fp = h5py.File( pname, "r+", driver='core' )
       l1a_upg = l1a_fp.create_group("/UncalibratedPixels")
       l1a_ptg = l1a_fp.create_group("/Time")
@@ -242,7 +250,7 @@ class L1aRawPixGenerate(object):
 
       ' create datasets '
       ' Starting time of first focal plane in each scan '
-      pix_time = l1a_ptg.create_dataset("line_start_time_j2000", shape=(SCPS,), dtype="f8" )
+      pix_time = []
       ' FPIE encoder value of each focal plane in scan '
       pix_ev = l1a_peg.create_dataset("EncoderValue", shape=(SCPS,FPPSC), dtype="u4" )
       ' Image and BB pixel dataset for each band '
@@ -318,7 +326,7 @@ class L1aRawPixGenerate(object):
 #          return -1
         ' record starting pixel time in j2k for current scan '
         ' *** FSW time, FPIE clock, and PIX clock may be BIGENDIAN *** '
-        pix_time[scan] = Time.time_gps( gt ).j2000
+        pix_time.append(Time.time_gps( gt ).j2000)
         scfp_cnt = 0  #  count of total copied FPs for current scan
         dp = 0  #  output pointer
         fpc = FPPPKT - p0
@@ -378,6 +386,11 @@ class L1aRawPixGenerate(object):
       print("====  ", datetime.now(), "  ====")
       print("SCENE %s completed, (%f) %d good out of %d IMG packets, (%f) %d good out of %d BB packets" % ( scene_id, pcomp, good_pkt, pkt_cnt, bcomp, good_bb, bb_cnt ))
 
+      pix_time=np.array(pix_time).repeat(256)
+      t = l1a_ptg.create_dataset("line_start_time_j2000", data=pix_time,
+                                 dtype="f8" )
+      t.attrs["Description"] = "J2000 time of first pixel in line"
+      t.attrs["Units"] = "second"
       l1a_fp.close()
       l1a_bp.close()
       good_pkt = 0
@@ -392,18 +405,19 @@ class L1aRawPixGenerate(object):
 
     ' create engineering file and datasets '
     print("crerating ENG and ATT files, AQC=%d" % aqc )
-    feng = self.create_file( "L1A_ENG", orbit, None, o_start_time, o_end_time, primary_file=True )
+    feng = self.create_file( "L1A_ENG", orbit, None, o_start_time,
+                             o_end_time, primary_file=True )
     eng = h5py.File( feng, "r+", driver='core' )
     eng_g = eng.create_group("/rtdBlackbodyGradients")
     rtd295 = eng_g.create_dataset("RTD_295K", shape=(5,), dtype='f4')
     rtd325 = eng_g.create_dataset("RTD_325K", shape=(5,), dtype='f4')
 
     ' create raw attitude/ephemeris file and datasets '
-    fatt = self.create_file("L1A_RAW_ATT", orbit, None, o_start_time, o_end_time, prod=False)
+    fatt = self.create_file("L1A_RAW_ATT", orbit, None, o_start_time,
+                            o_end_time, prod=False, intermediate=True)
     att = h5py.File( fatt, "r+", driver='core' )
     att_g = att.create_group("/Attitude")
     a2k = att_g.create_dataset("time_j2000", shape=(aqc,), dtype='f8' )
-#pix_time = l1a_ptg.create_dataset("line_start_time_j2000", shape=(SCPS,), dtype="f8" )
     q = att_g.create_dataset("quaternion", shape=(aqc,4), dtype='f8' )
     eph_g = att.create_group("/Ephemeris")
     e2k = eph_g.create_dataset("time_j2000", shape=(aqc,), dtype='f8' )

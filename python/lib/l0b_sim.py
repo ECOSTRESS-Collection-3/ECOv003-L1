@@ -80,7 +80,11 @@ CNT_DUR = (60/25.4)/float( MAX_FPIE )  # = 1.3504 microsecond
 ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.000205803 deg
 PIX_ANG = 25.475 / float( FPPSC )  # = 0.004717592 deg
 PIX_EV = PIX_ANG / ANG_INC # = 22.92289 counts/pix
-PIX_DUR = 0.0000321982
+# Short term, change this to match EcostressTimeTable pixel duration.
+# We will want to change this back, but for now change this to match
+# existing test data. See Issue #13 in github.
+#PIX_DUR = 0.0000321982
+PIX_DUR = 32.2e-6
 PKT_DUR = PIX_DUR * float( FPPPKT )
 # Black body pixels are BEFORE image pixels
 ANG1 = 25.475 / 2.0

@@ -4,6 +4,17 @@ from ecostress import *
 import h5py
 from multiprocessing import Pool
 
+# Often during development of test data we want to only regenerate
+# a subset of the files, using the existing test data instead. Here we
+# can just turn each thing on or off. To regenerate everything, this
+# should all be True
+create_l1a_pix = False
+create_l1a_bb = False
+create_l1a_raw_pix = False
+create_l1a_raw_att = False
+create_l1a_eng = False
+create_l0b = True
+
 # Center times for each of the passes. See the wiki at 
 # https://wiki.jpl.nasa.gov/display/ecostress/Test+Data and subpages for details
 
@@ -83,18 +94,21 @@ for s in range(nscene[pass_index]):
     l1a_pix_fname = ecostress_file_name("L1A_PIX", orbit_num[pass_index],
                                         s + 1, tt.min_time)
     l1a_pix_sim = L1aPixSimulate(igc, sdata)
-    #l1a_pix_sim.create_file(l1a_pix_fname, pool=pool)
+    if(create_l1a_pix):
+        l1a_pix_sim.create_file(l1a_pix_fname, pool=pool)
     
     l1a_bb_fname = ecostress_file_name("L1A_BB", orbit_num[pass_index],
                                        s + 1, tt.min_time)
     l1a_bb_sim = L1aBbSimulate(l1a_pix_fname)
-    #l1a_bb_sim.create_file(l1a_bb_fname)
+    if(create_l1a_bb):
+        l1a_bb_sim.create_file(l1a_bb_fname)
 
     l1a_raw_pix_fname = \
      ecostress_file_name("L1A_RAW_PIX", orbit_num[pass_index], s + 1,
                          tt.min_time, intermediate=True)
     l1a_raw_pix_sim = L1aRawPixSimulate(l1a_pix_fname)
-    #l1a_raw_pix_sim.create_file(l1a_raw_pix_fname)
+    if(create_l1a_raw_pix):
+        l1a_raw_pix_sim.create_file(l1a_raw_pix_fname)
     scene_files.append([s+1, l1a_raw_pix_fname, l1a_bb_fname,
                         orbit_num[pass_index], tt.min_time, tt.max_time])
     
@@ -102,18 +116,22 @@ l1a_raw_att_fname = \
    ecostress_file_name("L1A_RAW_ATT", orbit_num[pass_index], None, start_time,
                        intermediate=True)
 l1a_raw_att_sim = L1aRawAttSimulate(orb, start_time, end_time)
-#l1a_raw_att_sim.create_file(l1a_raw_att_fname)
+if(create_l1a_raw_att):
+    l1a_raw_att_sim.create_file(l1a_raw_att_fname)
 
 l1a_eng_fname = ecostress_file_name("L1A_ENG", orbit_num[pass_index], None,
                                     start_time)
 l1a_eng_sim = L1aEngSimulate()
-#l1a_eng_sim.create_file(l1a_eng_fname)
+if(create_l1a_eng):
+    l1a_eng_sim.create_file(l1a_eng_fname)
 
-l0_fname = ecostress_file_name("L0B", None, None, start_time, end_time)
+l0b_fname = ecostress_file_name("L0B", None, None, start_time, end_time)
 scene_fname = ecostress_file_name("Scene", orbit_num[pass_index], None,
                                   start_time, end_time, extension=".txt",
                                   intermediate=True)
-l0_sim = L0BSimulate(l1a_raw_att_fname, l1a_eng_fname, scene_files)
-l0_sim.create_file(l0_fname, scene_fname)
+l0b_sim = L0BSimulate(l1a_raw_att_fname, l1a_eng_fname, scene_files)
+if(create_l0b):
+    l0b_sim.create_file(l0b_fname, scene_fname)
+    
 
 
