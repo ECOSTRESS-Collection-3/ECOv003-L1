@@ -338,9 +338,9 @@ class L1aRawPixGenerate(object):
           # end reading new packet
 
 # find starting EV for BB1, BB2, and IMG pixels
-          print("SCENE=%s SCAN=%d LINE=%d GT=%f p2k=%f IDX=%d SCFPCNT=%d P1=%d DP=%d OP=%d SKIP=%d FPC=%d" %(scene_id, scan, line, gt, pix_time[scan], pkt_idx, scfp_cnt, p1, dp, op, skip, fpc))
+          #print("SCENE=%s SCAN=%d LINE=%d GT=%f p2k=%f IDX=%d SCFPCNT=%d P1=%d DP=%d OP=%d SKIP=%d FPC=%d" %(scene_id, scan, line, gt, pix_time[scan], pkt_idx, scfp_cnt, p1, dp, op, skip, fpc))
           if op < FPB3:
-            print("transposing IDX=%d P1=%d FPC=%d OP=%d" % (pkt_idx, p1, fpc, op) )
+            #print("transposing IDX=%d P1=%d FPC=%d OP=%d" % (pkt_idx, p1, fpc, op) )
             for b in range( BANDS ):  # copy packet data to pixel buffer
               pix_buf[:,op:op+fpc,b] = np.transpose(flex_buf[p1:p1+fpc,:,b])
             ev_buf[op:op+fpc] = lid[pkt_idx,p1:p1+fpc]  #  and current EVs
@@ -378,7 +378,7 @@ class L1aRawPixGenerate(object):
           op = dp - FPB3
           scfp_cnt -= FPB3
         if op > 0:  # save runt at end
-          print("Copying runt PIX and EV DP=%d OP=%d" % (dp, op) )
+          print("Copying runt PIX and EV SCENE=%s SCAN=%d PKT=%d DP=%d OP=%d" % (scene_id, scan, pkt_idx, dp, op) )
           pix_buf[:,0:op,:] = pix_buf[:,FPB3:dp,:]
           ev_buf[0:op] = ev_buf[FPB3:dp]
         pix_buf[:,op:,:] = 0xffff
