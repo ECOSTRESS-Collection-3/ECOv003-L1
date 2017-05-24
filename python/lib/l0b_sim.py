@@ -14,6 +14,44 @@ J2KS=946728000.0   # seconds from UNIX EPOCH to J2000 EPOCH 2000-01-01:12:00:00
 GPSS=315964800.0   # seconds from UNIX EPOCH to GPS EPOCH 1980-01-06:00:00:00
 GP2K = J2KS - GPSS # difference
 
+'''
+New L0B contents
+
+"flex/bip": shape (203, 64, 256, 6), type "<i2">
+"flex/id_line": shape (203, 64), type "<u4">
+"flex/id_packet": shape (203,), type "<u4">
+"flex/state": shape (203,), type "<u4">
+"flex/time_fsw": shape (203,), type "<f8">
+"flex/time_sync_fpie": shape (203,), type "<u8">
+"flex/time_sync_fsw": shape (203,), type "<u8">
+
+By seconds:
+
+"hk/bad/hr/attitude": shape (479, 4), type "<f4">
+"hk/bad/hr/position": shape (479, 3), type "<f4">
+"hk/bad/hr/time": shape (479,), type "<f8">
+"hk/bad/hr/time_fsw": shape (479,), type "<f8">
+"hk/bad/hr/velocity": shape (479, 3), type "<f4">
+
+"hk/status/mode/dpuio": shape (479,), type "<u4">
+"hk/status/mode/op": shape (479,), type "<u4">
+"hk/status/motor/bb1": shape (479,), type "<u4">
+"hk/status/motor/bb2": shape (479,), type "<u4">
+"hk/status/motor/last/register": shape (479,), type "|u1">
+"hk/status/motor/last/value": shape (479,), type "<u4">
+"hk/status/motor/mode": shape (479,), type "<u4">
+"hk/status/motor/position": shape (479, 5), type "<u4">
+"hk/status/motor/pstate": shape (479,), type "|u1">
+"hk/status/motor/rate": shape (479, 5), type "<u4">
+"hk/status/motor/sun_safe": shape (479,), type "<u4">
+"hk/status/motor/time": shape (479, 5), type "<f8">
+"hk/status/motor/wait": shape (479,), type "|u1">
+"hk/status/temperature": shape (479, 2, 5), type "<u2">
+"hk/status/time": shape (479,), type "<f8">
+"hk/status/time_fsw": shape (479,), type "<f8">
+
+'''
+
 # short word offsets into FPIE packet array
 
 # packet primary header
@@ -113,7 +151,7 @@ class L0BSimulate(object):
   def create_file(self, l0b_fname):
     print("====  CREATE_FILE L0B_FNAME %s ====" % l0b_fname )
     print("ANG0=%f ANG1=%f PIX_ANG=%14.8e" % (ANG0, ANG1, PIX_ANG ))
-    print(datetime.now())
+    print("====  Start time  ", datetime.now(), "  ====")
     self.l0b_fname = l0b_fname + ".h5"
     l0b_fd = h5py.File(self.l0b_fname, "w", driver='core')
 
@@ -135,20 +173,7 @@ class L0BSimulate(object):
     m.write()
     l0b_fd.flush()
 
-    # Write ancillary dataset
-    # Build part of ANC records from limited RTD data in ENG file
-    print("Reading ENG file %s" % self.l1a_eng_fname)
-    l1e = h5py.File(self.l1a_eng_fname,"r")
-    anc_buf =''
-    for t in (295, 325):
-      rtd = l1e["/rtdBlackbodyGradients/RTD_%dK" % t]
-      l, = rtd.shape
-      anc_buf = anc_buf + " RTD"'%d' % t + "K:"
-      for i in range(l):
-        anc_buf =  anc_buf + ' %20.16e' % rtd[i]
-    l1e.close()
-
-    # copy data from raw attitude/ephemeris file
+    # copy data from raw attitude/ephemeris file to HK packets
     att_fd = h5py.File(self.l1a_raw_att_fname, "r") 
     aq=att_fd["Attitude/quaternion"]
     aqc, aqr = aq.shape
@@ -158,56 +183,100 @@ class L0BSimulate(object):
     ev=att_fd["Ephemeris/eci_velocity"]
     et=att_fd["Ephemeris/time_j2000"]
 
-    # create ancillary data set with variable strings
+    # create ancillary data sets
     print("Creating HK Group")
     hk_g = l0b_fd.create_group("/hk")
-    st = h5py.special_dtype(vlen=str)
-    anc_dat = hk_g.create_dataset("packet", shape=(aqc,), dtype=st)
-    # create housekeeping dataset template with fixed strings
-    # hk_dat = hk_g.create_dataset("packet", shape=(aqc,1), maxshape=(None,), dtype='S2048', chunks=(PKTPS,) )
+    hb = l0b_fd.create_group("/hk/bad")
 
-    # Copy into HK data set
-    for i in range( aqc ):
-      anc_dat[i]='Quat'+ ' %20.16e' % at[i]
-      # var = 'Quat' + ' %20.16e' % at[i]
-      # anc_dat[i] = anc_dat[i] + var.ENCODe("ascii","ignore")
-      for j in range(aqr):
-        anc_dat[i] = anc_dat[i] + ' %20.16e' % aq[i,j]
-      anc_dat[i] = anc_dat[i] + ' Eph' + ' %20.16e' % et[i]
-      for j in range(epr):
-        anc_dat[i] = anc_dat[i] + ' %20.16e' % ep[i,j]
-      for j in range(epr):
-        anc_dat[i] = anc_dat[i] + ' %20.16e' % ev[i,j]
-      anc_dat[i] = anc_dat[i] + anc_buf
+    hbh = l0b_fd.create_group("/hk/bad/hr")
+    att = hbh.create_dataset("attitude", (aqc,4), dtype=np.float32)
+    pos = hbh.create_dataset("position", (epc,3), dtype=np.float32)
+    att_time = hbh.create_dataset("time", (aqc,), dtype=np.float64)
+    att_fsw = hbh.create_dataset("time_fsw", (epc,), dtype=np.float64)
+    vel = hbh.create_dataset("velocity", (epc,3), dtype=np.float32)
+
+    hs = l0b_fd.create_group("/hk/status")
+    hsmd = l0b_fd.create_group("/hk/status/mode")
+    dp_hsmd = hsmd.create_dataset("dpuio", (aqc,), dtype=np.uint32)
+    op_hsmd = hsmd.create_dataset("op", (aqc,), dtype=np.uint32)
+
+    hsmt = l0b_fd.create_group("/hk/status/motor")
+    bb1_hsmt = hsmt.create_dataset("bb1", (aqc,), dtype=np.uint32)
+    bb2_hsmt = hsmt.create_dataset("bb2", (aqc,), dtype=np.uint32)
+
+    hsmtl = l0b_fd.create_group("/hk/status/motor/last")
+    rg_hsmtl = hsmtl.create_dataset("register", (aqc,), dtype=np.uint8)
+    va_hsmtl = hsmtl.create_dataset("value", (aqc,), dtype=np.uint32)
+
+    md_hsmt = hsmt.create_dataset("mode", (aqc,), dtype=np.uint32)
+    po_hsmt = hsmt.create_dataset("position", (aqc,5), dtype=np.uint32)
+    ps_hsmt = hsmt.create_dataset("pstate", (aqc,), dtype=np.uint8)
+    rt_hsmt = hsmt.create_dataset("rate", (aqc,), dtype=np.uint32)
+    ss_hsmt = hsmt.create_dataset("sun_safe", (aqc,), dtype=np.uint32)
+    ti_hsmt = hsmt.create_dataset("time", (aqc,), dtype=np.float64)
+
+    bbt = hs.create_dataset("temperature", (epc,2,5), dtype=np.uint16)
+    bb_time = hs.create_dataset("time", (epc,), dtype=np.float64)
+    bb_fsw = hs.create_dataset("time_fsw", (epc,), dtype=np.float64)
+
+    # Copy ATT/EPH into HK data set
+    att[:,:] = aq[:,:]
+    pos[:,:] = ep[:,:]
+    vel[:,:] = ev[:,:]
+    for i in range( aqc ): att_time[i] = Time.time_j2000(at[i]).gps
+    for i in range( epc ): att_fsw[i] = Time.time_j2000(et[i]).gps
+
+    #  Copy RTD temps from ENG file
+    l1e = h5py.File(self.l1a_eng_fname,"r")
+    #  ****  convert Kelvin to DN  ****  just copy for now
+    bbt[:,0:] = l1e["rtdBlackbodyGradients/RTD_295K"][:]
+    bbt[:,1:] = l1e["rtdBlackbodyGradients/RTD_325K"][:]
+    '''
+    rtd = [j for j in range(2)]
+    r = np.zeros( 5, dtype=np.float32 )
+    j = 0
+    for t in (295, 325):
+      rtd[j] = l1e["/rtdBlackbodyGradients/RTD_%dK" % t]
+      j += 1
+    dim = len( rtd[0].shape )
+    if dim == 1:  #  set all output BB temps to the same set
+      for j in range(2):
+        r[:] = rtd[j][:]
+        bbt[:,j,:] = (65535/r.max())*r
+    else:  #  assume the same number 
+      for j in range(2):
+        for i in range(rtd[j].shape[1]):
+          r[:] = rtd[j][i,:]
+          bbt[i,j,:] = (65535/r.max())*r
+    '''
+    bb_time[:] = att_time[:epc]  # just copy times from ATT/EPH for now
+    bb_fsw[:] = att_fsw[:epc]
     att_fd.close()
+    l1e.close()
     l0b_fd.flush()
 
     # create FLEX packet
     flex_g = l0b_fd.create_group("/flex")
     # create packet dataset template
-    flex_d = flex_g.create_dataset("packet", shape=(1,PKT_LEN), maxshape=(None, PKT_LEN), dtype='uint16', chunks=(PKTPS,PKT_LEN) )
-
-    # initialize packet header
-    hdr = np.zeros( (HDR_LEN,1), dtype=np.uint16 )
-    # packet header SYNC
-    hdr[HSYNC], hdr[HSYNC+1] = 0xff00, 0x00ff
-    hdr[PLEN], hdr[PLEN+1] = PKT_LEN*2 & 0xffff, (PKT_LEN>>15) & 0xffff
+    bip = flex_g.create_dataset("bip", shape=(1,FPPPKT,PPFP,BANDS), maxshape=(None, FPPPKT,PPFP,BANDS), dtype='uint16' )
+    lid = flex_g.create_dataset("id_line", shape=(1,FPPPKT), maxshape=(None,FPPPKT), dtype='uint32' )
+    pid = flex_g.create_dataset("id_packet", shape=(1,), maxshape=(None,), dtype='uint32' )
+    flex_st = flex_g.create_dataset("state", shape=(1,), maxshape=(None,), dtype='uint32' )
+    fswt = flex_g.create_dataset("time_fsw", shape=(1,), maxshape=(None,), dtype='float64' )
+    fpie_sync = flex_g.create_dataset("time_sync_fpie", shape=(1,), maxshape=(None,), dtype='uint64' )
+    fsw_sync = flex_g.create_dataset("time_sync_fsw", shape=(1,), maxshape=(None,), dtype='uint64' )
 
     # running count of packets
     tot_pkt = 0
     # running count of image lines
     tot_lines = 0
-    # *** packet ID adjust for out of order scenes ***
+    # *** packet ID adjust for missing packets ***
     pkt_id = 0
 
     # working array including PIX and BB, and 1 packet
     bufsiz = FPB3 + FPPPKT
-    #  OLD PPFP, lines, BANDS:
-    ### pix_buf = np.zeros( ( PPFP, bufsiz, BANDS ), dtype=np.uint16 )
-    #  NEW PPFP, BANDS, lines:
-    ### pix_buf = np.zeros( ( PPFP, BANDS, bufsiz ), dtype=np.uint16 )
-    #  Band interleaved by pixels (BANDS*FPPSC, PPFP)
     pix_buf = np.zeros( ( PPFP, bufsiz, BANDS ), dtype=np.uint16 )
+    ev_buf = np.zeros( FPPPKT, dtype=np.uint32 )
     p0 = 0
     prev = 0
     pix_dat = [b for b in range(BANDS)]
@@ -244,16 +313,19 @@ class L0BSimulate(object):
       # pkts for scene
       tot_pkt = int( ( FPB3*tot_lines/PPFP + FPPPKT -1 ) / FPPPKT )
       # extend packet dataset to new total
-      flex_d.resize( tot_pkt, 0 )
+      bip.resize( tot_pkt, 0 )
+      lid.resize( tot_pkt, 0 )
+      pid.resize( tot_pkt, 0 )
+      flex_st.resize( tot_pkt, 0 )
+      fswt.resize( tot_pkt, 0 )
+      fpie_sync.resize( tot_pkt, 0 )
+      fsw_sync.resize( tot_pkt, 0 )
       print("\n ===  CREATE_FILE SCENE=%d TOTAL=%d P0=%d tot_lines=%d tot_pkt=%d" % (v, total_scenes, p0, tot_lines, tot_pkt))
 
       # Iterate through data lines in current scene 256 lines at a time
       while l < lines:
 
         # copy pix and BB data to buffer at pkt offset
-        #ps1 = p0; pe1 = ps1 + FPPSC
-        #ps2 = pe1; pe2 = ps2 + BBLEN
-        #ps3 = pe2; pe3 = ps3 + BBLEN
         # 2017-02-16 - BBs come before pix data
         ps2 = p0; pe2 = ps2 + BBLEN
         ps3 = pe2; pe3 = ps3 + BBLEN
@@ -261,14 +333,6 @@ class L0BSimulate(object):
 
         # assemble pix and bb data into buffer, with offset from previous buffer
         for b in range( BANDS ):
-          # OLD PPFP, lines, BANDS:
-          ### pix_buf[:,ps1:pe1,b] = pix_dat[b][l:l+PPFP,:]
-          ### pix_buf[:,ps2:pe2,b] = b295[b][l:l+PPFP,:]
-          ### pix_buf[:,ps3:pe3,b] = b325[b][l:l+PPFP,:]
-          # NEW PPFP, BANDS, lines:
-          ### pix_buf[:,b,ps1:pe1] = pix_dat[b][l:l+PPFP,:]
-          ### pix_buf[:,b,ps2:pe2] = b295[b][l:l+PPFP,:]
-          ### pix_buf[:,b,ps3:pe3] = b325[b][l:l+PPFP,:]
     #  Band interleaved by pixels (BANDS*FPPSC, PPFP)
           pix_buf[:,ps1:pe1,b] = pix_dat[b][l:l+PPFP,:]
           pix_buf[:,ps2:pe2,b] = b295[b][l:l+PPFP,:]
@@ -277,7 +341,7 @@ class L0BSimulate(object):
         # step through buffer in packet steps (FPPPKT) starting from 0
         bts = 0
         bte = p0 + FPB3
-        t2k = pix_2k[l]-PIX_DUR * (BBLEN*2.0 - p0)  #  offset for BB pixels
+        t2k = pix_2k[l] - PIX_DUR*(BBLEN*2.0-p0)  #  offset for BB pixels
         angnadir = 180.0 - angnadir
         print("====  ", datetime.now(), "  ====")
         print("L=%d PKT=%d T2K=%20.16e ANG=%f NADIR=%3.1f BTE=%d P0=%d PS1=%d PS2=%d PS3=%d PE3=%d" %(l,pkt_id,t2k,mangle,angnadir,bte,p0,ps1,ps2,ps3,pe3))
@@ -289,18 +353,10 @@ class L0BSimulate(object):
           # write a packet if sufficient data
           if pe1 <= bte:
 
-            # write next packet header
-            hdr[PKTID], hdr[PKTID+1] = pkt_id&0xffff, (pkt_id>>16)&0xffff
-            #  time codes is seconds in first 2 words and nanoseconds in next 2
-            gt=Time.time_j2000(t2k).gps
-            gs = int( gt )
-            ns = int( ( gt-gs ) * 1000000000.0 )
-            print("Pkt %d T2k=%f GT=%f GS=%d NS=%d MANGLE=%f PREV=%d" %(pkt_id, t2k, gt, gs, ns, mangle, prev))
-            for i in range( FTIME, FTIME+2 ):
-              hdr[i+2] = gs & 0xffff
-              gs = gs>>16
-              hdr[i] = ns & 0xffff
-              ns = ns >> 16
+            # write next packet ancillary data
+            pid[pkt_id] = pkt_id+1
+            fswt[pkt_id] = Time.time_j2000(t2k).gps
+            #print("Pkt %d T2k=%f GT=%f MANGLE=%f PREV=%d" %(pkt_id, t2k, fswt[pkt_id], mangle, prev))
             # *** generate ENCODer values from -2*BB -12.738 to +12.738
             # *** add FPIE sync clock and FPIE 1st pix to FSWT offset (1MHz)
             for i in range(0,FPPPKT):
@@ -308,41 +364,15 @@ class L0BSimulate(object):
                 angle = mangle + angnadir  # use current NADIR angle
               else:
                 angle = mangle + 180 - angnadir  # use previous NADIR angle
-                print("I=%d ANGLE=%f J=%d(%f) NADIR=%f" % ( i, angle, j, float(j)*ANG_INC, angnadir ))
-              if angle >= 0.0: j = int( ( angle ) / ANG_INC )
-              else: j = int( ( angle+360.0 ) / ANG_INC )
-              #print("PKT=%d I=%d angle=%f, ENCOD=%d" % (i, pkt_id, mangle, j) )
-              hdr[i*2+ENCOD], hdr[i*2+ENCOD+1] = j & 0xffff, (j>>16) & 0xffff
+              if angle >= 0.0: ev_buf[i] = int( ( angle ) / ANG_INC )
+              else: ev_buf[i] = int( ( angle+360.0 ) / ANG_INC )
               mangle = mangle + PIX_ANG
               if mangle >= ANG1: mangle = ANG0
-            # generate header checksum
-            hdr[HSUM] = np.bitwise_xor.reduce(hdr[0:HSUM:2].flatten())
-            hdr[HSUM+1] = np.bitwise_xor.reduce(hdr[1:HSUM+1:2].flatten())
-            # copy to file
-            flex_d[pkt_id, 0:HDR_LEN] =  hdr[:,0]
 
             # write packet data
-            # packet position
-            ptr = HDR_LEN
-            # This the fortran order here is right.
-            # OLD PPFP, lines, BANDS:
-            ### t = pix_buf[:,bts:pe1,:].flatten('F')
-            # NEW PPFP, BANDS, lines:
-            ### t = pix_buf[:,:,bts:pe1].flatten('F')
-    #  Band interleaved by pixels (BANDS*FPPSC, PPFP)
-            t = pix_buf[:,bts:pe1,:].flatten('C')
-            flex_d[pkt_id, ptr:(ptr+t.shape[0])] = t
-            #ptr += t.shape[0]
-            # generate data checksum
-            # OLD PPFP, lines, BANDS:
-            ### flex_d[pkt_id,DSUM] = np.bitwise_xor.reduce(pix_buf[0:PPFP, bts:pe1:2, :].flatten())
-            ### flex_d[pkt_id,DSUM+1] = np.bitwise_xor.reduce(pix_buf[0:PPFP, bts+1:pe1+1:2, :].flatten())
-            # NEW PPFP, BANDS, lines:
-            ### flex_d[pkt_id,DSUM] = np.bitwise_xor.reduce(pix_buf[0:PPFP, :, bts:pe1:2].flatten())
-            ### flex_d[pkt_id,DSUM+1] = np.bitwise_xor.reduce(pix_buf[0:PPFP, :, bts+1:pe1+1:2].flatten())
-    #  Band interleaved by pixels (BANDS*FPPSC, PPFP)
-            flex_d[pkt_id,DSUM] = np.bitwise_xor.reduce(pix_buf[0:PPFP, bts:pe1:2, :].flatten())
-            flex_d[pkt_id,DSUM+1] = np.bitwise_xor.reduce(pix_buf[0:PPFP, bts+1:pe1+1:2, :].flatten())
+            lid[pkt_id,:] = ev_buf[:]
+            for b in range(BANDS):
+              bip[pkt_id,:,:,b] = pix_buf[:,bts:pe1,b].transpose()
             # next point in pix_buf
             bts = pe1
             # next packet
@@ -362,10 +392,6 @@ class L0BSimulate(object):
             p0 = bte - bts
             prev = p0
             # move remainder data to front of pix_buf
-            # OLD PPFP, lines, BANDS:
-            ### pix_buf[:,:p0,:] = pix_buf[:,bts:bte,:]
-            # NEW PPFP, BANDS, lines:
-            ### pix_buf[:,:,:p0] = pix_buf[:,:,bts:bte]
     #  Band interleaved by pixels (BANDS*FPPSC, PPFP)
             pix_buf[:,:p0,:] = pix_buf[:,bts:bte,:]
             # escape bts while loop to go to next scene
@@ -375,11 +401,6 @@ class L0BSimulate(object):
               bts = 0
               bte = FPPPKT
               print("Final runt packet: %d" % p0 )
-              # OLD PPFP, lines, BANDS:
-              ### pix_buf[ 0:PPFP, p0:FPPPKT, :] = 0
-              # NEW PPFP, BANDS, lines:
-              ### pix_buf[ 0:PPFP, :, p0:FPPPKT] = 0
-    #  Band interleaved by pixels (BANDS*FPPSC, PPFP)
               pix_buf[ 0:PPFP, p0:FPPPKT, :] = 0
           # end writing current packet
 
@@ -399,12 +420,12 @@ class L0BSimulate(object):
     # Write L0B metadata
     print("Writing L0BMetadata to L0B file %s" % self.l0b_fname )
     l0b_mg = l0b_fd["L0BMetadata"]
-    l0b_pl = l0b_mg.create_dataset("PacketList", shape=(tot_pkt,), dtype="uint32")
-    l0b_ps = l0b_mg.create_dataset("PacketStatus", shape=(tot_pkt,), dtype="uint16")
-    for i in range( tot_pkt ):
-      l0b_pl[i] = i
-    l0b_ps[:] = 0
-    l0b_ps.attrs["PacketPercentage"] = "1.00000000"
+    #l0b_pl = l0b_mg.create_dataset("PacketList", shape=(tot_pkt,), dtype="uint32")
+    #l0b_ps = l0b_mg.create_dataset("PacketStatus", shape=(tot_pkt,), dtype="uint16")
+    #for i in range( tot_pkt ): l0b_pl[i] = i
+    #l0b_ps[:] = 0
+    #l0b_ps.attrs["PacketPercentage"] = "1.00000000"
+    st = h5py.special_dtype(vlen=str)
     l0b_ifl = l0b_mg.create_dataset("InputFileList", shape=(len(2*self.scene_files),), dtype=st)
     for v in range(len( self.scene_files )):
       l0b_ifl[v*2] = self.scene_files[v][1]
@@ -413,4 +434,4 @@ class L0BSimulate(object):
 
     # done...close L0B file
     l0b_fd.close()
-    print(datetime.now())
+    print("====  End time  ", datetime.now(), "  ====")
