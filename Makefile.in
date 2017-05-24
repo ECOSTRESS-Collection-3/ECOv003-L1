@@ -808,8 +808,7 @@ installecostress_DATA = @srcscript@/setup_ecostress.csh @srcscript@/setup_ecostr
 
 # Cython code to generate
 ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
-	@srcpythonlib@/l1b_att_generate.py \
-	@srcpythonlib@/l0_simulate.py @srcpythonlib@/l0b_sim.py \
+	@srcpythonlib@/l1b_att_generate.py @srcpythonlib@/l0b_sim.py \
 	@srcpythonlib@/l1a_raw_pix_simulate.py \
 	@srcpythonlib@/l1a_raw_pix_generate.py \
 	@srcpythonlib@/l1a_raw_att_simulate.py \

@@ -114,15 +114,14 @@ class L0BSimulate(object):
     print("====  CREATE_FILE L0B_FNAME %s ====" % l0b_fname )
     print("ANG0=%f ANG1=%f PIX_ANG=%14.8e" % (ANG0, ANG1, PIX_ANG ))
     print(datetime.now())
-    self.l0b_fname = l0b_fname + ".h5"
+    self.l0b_fname = l0b_fname
     l0b_fd = h5py.File(self.l0b_fname, "w", driver='core')
 
     # Write Standarad Metadata fake-out WriteStandardMetadata()
-    fname = 'ECOSTRESS_L0B_'+os.path.basename(l0b_fname)
     m = WriteStandardMetadata(l0b_fd, product_specfic_group ="L0BMetadata",
         proc_lev_desc = 'Level 0B Data Parameters',
-        pge_name="L0B", local_granule_id=fname,
-        build_id="0.0", pge_version="0.0", orbit_based=True )
+        pge_name="L0B", 
+        build_id="0.0", pge_version="0.0", level0_file=True )
     fname = os.path.basename(l0b_fname)
     m.set("LocalGranuleID", fname)
     a = self.l0b_fname.split('_')

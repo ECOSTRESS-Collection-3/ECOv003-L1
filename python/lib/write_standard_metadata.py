@@ -9,7 +9,7 @@ class WriteStandardMetadata(object):
                  proc_lev_desc = 'Level 1 Geolocation Parameters',
                  pge_name = 'L1B_GEO', local_granule_id = None,
                  build_id = '0.01', pge_version='0.01',
-                 orbit_based = False):
+                 orbit_based = False, level0_file = False):
         '''hdf_file should be the h5py.File handler. You can pass the 
         local_granule_id, or if None we assume the filename for the hdf_file is
         the local_granule_id'''
@@ -60,7 +60,10 @@ class WriteStandardMetadata(object):
         self.set('LocalGranuleID', local_granule_id)
         # For now parse the local granule id to get some of the metadata.
         # Might get this from the run config file instead
-        if(orbit_based):
+        if(level0_file):
+            # Can't set the next bit, so skip it
+            return
+        elif(orbit_based):
             m = re.match(r'(ECOSTRESS_)?(?P<process_level>\w+)_(\w+)_(?P<orbit>\d{5})_', local_granule_id)
         else:
             m = re.match(r'(ECOSTRESS_)?(?P<process_level>\w+)_(\w+)_(?P<orbit>\d{5})_(?P<scene_id>\d{3})', local_granule_id)

@@ -60,7 +60,7 @@ cam = read_shelve("camera.xml")
 tspace = 1.181 / 241 * 2
 toff = 5632 * tspace / 2
 tlen = 5632 * tspace
-scene_files = {}
+scene_files = []
 # Bug that we seem to need to do this to force spice to be loaded before
 # we create the pool. Would like to figure out why this happens and fix this
 SpiceHelper.spice_setup()
@@ -83,7 +83,7 @@ for s in range(nscene[pass_index]):
     l1a_pix_fname = ecostress_file_name("L1A_PIX", orbit_num[pass_index],
                                         s + 1, tt.min_time)
     l1a_pix_sim = L1aPixSimulate(igc, sdata)
-    #l1a_pix_sim.create_file(l1a_pix_fname, pool=pool)
+    l1a_pix_sim.create_file(l1a_pix_fname, pool=pool)
     
     l1a_bb_fname = ecostress_file_name("L1A_BB", orbit_num[pass_index],
                                        s + 1, tt.min_time)
@@ -95,7 +95,7 @@ for s in range(nscene[pass_index]):
                          tt.min_time, intermediate=True)
     l1a_raw_pix_sim = L1aRawPixSimulate(l1a_pix_fname)
     l1a_raw_pix_sim.create_file(l1a_raw_pix_fname)
-    scene_files[str(s+1)] = [l1a_raw_pix_fname, l1a_bb_fname]
+    scene_files.append([s+1, l1a_raw_pix_fname, l1a_bb_fname])
     
 l1a_raw_att_fname = \
    ecostress_file_name("L1A_RAW_ATT", orbit_num[pass_index], None, start_time,
@@ -108,8 +108,8 @@ l1a_eng_fname = ecostress_file_name("L1A_ENG", orbit_num[pass_index], None,
 l1a_eng_sim = L1aEngSimulate()
 l1a_eng_sim.create_file(l1a_eng_fname)
 
-l0_fname = ecostress_file_name("L0", None, None, start_time, extension=".raw")
-l0_sim = L0Simulate(l1a_raw_att_fname, l1a_eng_fname, scene_files)
+l0_fname = ecostress_file_name("L0B", None, None, start_time, end_time)
+l0_sim = L0BSimulate(l1a_raw_att_fname, l1a_eng_fname, scene_files)
 l0_sim.create_file(l0_fname)
 
 

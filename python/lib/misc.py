@@ -42,6 +42,7 @@ def time_split(t):
     return mt.group(1), mt.group(2)
     
 def ecostress_file_name(product_type, orbit, scene, acquisition_time,
+                        end_time = None,
                         build = "0100", version = "01", extension=".h5",
                         intermediate=False):
     '''Create an ecostress file name from the given components.'''
@@ -51,8 +52,9 @@ def ecostress_file_name(product_type, orbit, scene, acquisition_time,
         front="ECOSTRESS_"
     if(orbit is None):
         # Special handling for the L0 data
-        return "%s%s_%s_%s_%s%s" % \
+        return "%s%s_%s_%s_%s_%s%s" % \
             (front, product_type, time_to_file_string(acquisition_time),
+             time_to_file_string(end_time),
              build, version, extension)
     elif(scene is None):
         # Special handling for the couple of orbit based files
