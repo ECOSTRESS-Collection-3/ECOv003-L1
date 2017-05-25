@@ -256,7 +256,7 @@ class L1aRawPixGenerate(object):
         gt = fswt[pkt_idx] + float(fpie_sync[pkt_idx] - fsw_sync[pkt_idx]) /1000000.0
 
         pktp0t = Time.time_gps(gt)
-        print("Packet %d ID=%d time=%f, SS=%f" % ( pkt_idx, pid[pkt_idx], pktp0t.j2000, ss.j2000 ) )
+        print("Packet %d ID=%d time=%f20, SS=%f20" % ( pkt_idx, pid[pkt_idx], pktp0t.j2000, ss.j2000 ) )
         pkt_idx += 1
         #pkt_cnt += 1
       ' end searching for packet matching scene start time '
@@ -273,7 +273,7 @@ class L1aRawPixGenerate(object):
       pkt_idx -= 2  #  2 black bodies are ahead of image packets
       if pkt_idx == 0: pktid0 = 0
       else: pktid0 = pid[pkt_idx-1]
-      print("Found scene %s start time %fJ2K in packet[%d]=%d (id0=%d) FP0 time=%s" % ( scene_id, ss.j2000, pkt_idx, pid[pkt_idx], pktid0, str(pktp0t) ) )
+      print("Found scene %s start time %f20(J2K) in packet[%d]=%d (id0=%d) FP0 time=%s" % ( scene_id, ss.j2000, pkt_idx, pid[pkt_idx], pktid0, str(pktp0t) ) )
 
       ' create scene file and image pixel, J2K, and FPIE ENC groups '
       pname = self.create_file( "L1A_RAW_PIX", orbit, scene_id,
@@ -308,7 +308,8 @@ class L1aRawPixGenerate(object):
       pix_buf[:,:,:] = 0xffff  # pre-fill with null values
       ev_buf[:] = 0xffffffff
       for scan in range( SCPS ):
-        gt = fswt[pkt_idx] + float(fpie_sync[pkt_idx] - fsw_sync[pkt_idx]) /1000000.0 + dt
+        #gt = fswt[pkt_idx] + float(fpie_sync[pkt_idx] - fsw_sync[pkt_idx]) /1000000.0 + dt
+        gt = fswt[pkt_idx+2] + float(fpie_sync[pkt_idx+2] - fsw_sync[pkt_idx+2]) /1000000.0 + dt  #  account for 2 BB ahead of IMG
         pix_time.append(Time.time_gps( gt ).j2000)
 
         fpc = FPPPKT - p1  # FPs to copy from first packet in scan
@@ -363,7 +364,7 @@ class L1aRawPixGenerate(object):
           op = dp - FPB3
           scfp_cnt -= FPB3
         if op > 0:  # save runt at end
-          print("Copying runt PIX and EV SCENE=%s SCAN=%d PKT=%d DP=%d OP=%d" % (scene_id, scan, pkt_idx, dp, op) )
+          print("Copying runt PIX and EV SCENE=%s SCAN=%d T2K=%f18 PKT=%d DP=%d OP=%d" % (scene_id, scan, pix_time[scan], pkt_idx, dp, op) )
           pix_buf[:,0:op,:] = pix_buf[:,FPB3:dp,:]
           ev_buf[0:op] = ev_buf[FPB3:dp]
         pix_buf[:,op:,:] = 0xffff
@@ -459,7 +460,7 @@ class L1aRawPixGenerate(object):
     evel = eph_g.create_dataset("eci_velocity", shape=(aqc,3), dtype='f8' )
     for i in range(aqc):
       a2k[i] = Time.time_gps( att_time[i] ).j2000
-      e2k[i] = a2k[i]
+      e2k[i] = Time.time_gps( att_fsw[i] ).j2000
       #e2k[i] = Time.time_gps( att_fsw[i] ).j2000
     a2k.attrs['Units']='Seconds'
     e2k.attrs['Units']='Seconds'
