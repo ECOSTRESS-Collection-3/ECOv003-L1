@@ -110,7 +110,8 @@ def test_data():
 
 @pytest.yield_fixture(scope="function")
 def igc(unit_test_data, test_data):
-    '''Like igc_old, but a more realistic IGC'''
+    '''Like igc_old, but a more realistic IGC. This one is already averaged 
+    (so 128 rows per scan)'''
     if(not have_swig):
         raise RuntimeError("You need to install the ecostress swig code first. You can install just this by doing 'make install-swig-python'")
     cam = read_shelve(unit_test_data + "camera.xml")
@@ -130,6 +131,36 @@ def igc(unit_test_data, test_data):
     for t in tmlist:
         vtime.append(Time.time_j2000(t))
     tt = EcostressTimeTable(vtime, True)
+    
+    # False here says it ok for SrtmDem to not have tile. This gives support
+    # for data that is over the ocean.
+    dem = SrtmDem("",False)
+    sm = EcostressScanMirror()
+    igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
+    yield igc
+
+@pytest.yield_fixture(scope="function")
+def igc_hres(unit_test_data, test_data):
+    '''Like igc_old, but a more realistic IGC. This one is not averaged 
+    (so 256 rows per scan)'''
+    if(not have_swig):
+        raise RuntimeError("You need to install the ecostress swig code first. You can install just this by doing 'make install-swig-python'")
+    cam = read_shelve(unit_test_data + "camera.xml")
+    orb_fname = test_data + "L1A_RAW_ATT_80005_20150124T204251_0100_01.h5.expected"
+    orb = HdfOrbit_Eci_TimeJ2000(orb_fname, "", "Ephemeris/time_j2000",
+                                 "Ephemeris/eci_position",
+                                 "Ephemeris/eci_velocity",
+                                 "Attitude/time_j2000",
+                                 "Attitude/quaternion")
+    rad_fname = test_data + "ECOSTRESS_L1B_RAD_80005_001_20150124T204251_0100_01.h5.expected"
+
+    f = h5py.File(rad_fname, "r")
+    tmlist = f["/Time/line_start_time_j2000"][::128]
+    # False here means we've haven't averaged the 256 lines.
+    vtime = Vector_Time()
+    for t in tmlist:
+        vtime.append(Time.time_j2000(t))
+    tt = EcostressTimeTable(vtime, False)
     
     # False here says it ok for SrtmDem to not have tile. This gives support
     # for data that is over the ocean.

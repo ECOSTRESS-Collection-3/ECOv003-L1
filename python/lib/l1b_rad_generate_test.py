@@ -8,7 +8,7 @@ def test_l1b_rad_generate(isolated_dir, test_data):
                             "ECOSTRESS_L1B_RAD_80005_001_20150124T204251_0100_01.h5")
     l1brad.run()
 
-def test_band_diff(igc):
-    write_shelve("igc.xml", igc)
+def test_band_diff(igc_hres):
+    write_shelve("igc.xml", igc_hres)
     
 
