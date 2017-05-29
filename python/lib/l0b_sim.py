@@ -118,11 +118,8 @@ CNT_DUR = (60/25.4)/float( MAX_FPIE )  # = 1.3504 microsecond
 ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.000205803 deg
 PIX_ANG = 25.475 / float( FPPSC )  # = 0.004717592 deg
 PIX_EV = PIX_ANG / ANG_INC # = 22.92289 counts/pix
-# Short term, change this to match EcostressTimeTable pixel duration.
-# We will want to change this back, but for now change this to match
-# existing test data. See Issue #13 in github.
 #PIX_DUR = 0.0000321982
-PIX_DUR = 32.2e-6
+PIX_DUR = 0.0000322
 PKT_DUR = PIX_DUR * float( FPPPKT )
 # Black body pixels are BEFORE image pixels
 ANG1 = 25.475 / 2.0
@@ -152,18 +149,19 @@ class L0BSimulate(object):
     subprocess.run(["h5copy", "-i", fname, "-o", self.l0b_fname, "-p",
                     "-s", group, "-d", group_out], check=True)
 
-  def create_file(self, l0b_fname, scene_fname):
+  def create_file(self, l0b_fname):
     print("====  CREATE_FILE L0B_FNAME %s ====" % l0b_fname )
     print("ANG0=%f ANG1=%f PIX_ANG=%14.8e" % (ANG0, ANG1, PIX_ANG ))
     print("====  Start time  ", datetime.now(), "  ====")
-    self.l0b_fname = l0b_fname
+    self.l0b_fname = l0b_fname + ".h5"
     l0b_fd = h5py.File(self.l0b_fname, "w", driver='core')
 
     # Write Standarad Metadata fake-out WriteStandardMetadata()
+    fname = 'ECOSTRESS_L0B_'+os.path.basename(l0b_fname)
     m = WriteStandardMetadata(l0b_fd, product_specfic_group ="L0BMetadata",
         proc_lev_desc = 'Level 0B Data Parameters',
-        pge_name="L0B", 
-        build_id="0.0", pge_version="0.0", level0_file=True )
+        pge_name="L0B", local_granule_id=fname,
+        build_id="0.0", pge_version="0.0", orbit_based=True )
     fname = os.path.basename(l0b_fname)
     m.set("LocalGranuleID", fname)
     a = self.l0b_fname.split('_')
@@ -252,7 +250,7 @@ class L0BSimulate(object):
           r[:] = rtd[j][i,:]
           bbt[i,j,:] = (65535/r.max())*r
     '''
-    bb_time[:] = att_time[:epc]  # just copy times from ATT/EPH for now
+    bb_time[:] = att_time[:aqc]  # just copy times from ATT/EPH for now
     bb_fsw[:] = att_fsw[:epc]
     att_fd.close()
     l1e.close()
@@ -290,10 +288,11 @@ class L0BSimulate(object):
     # process scenes make sure to do it in order
     total_scenes = len(self.scene_files)
     mangle = ANG0
-    fh = open(scene_fname,"w")
-    for v, scn in enumerate(self.scene_files):
-      scene, l1a_raw_pix_fname, l1a_bb_fname, onum, tstart, tend = scn
-      print("%d %03d %s %s" % (onum, scene, tstart, tend), file=fh)
+    for v in range( total_scenes ):
+      scene = self.scene_files[v][0]
+      l1a_raw_pix_fname = self.scene_files[v][1]
+      l1a_bb_fname = self.scene_files[v][2]
+
       # open raw pixel data file
       pix_fd = h5py.File(l1a_raw_pix_fname, "r", driver='core')
 
@@ -311,7 +310,7 @@ class L0BSimulate(object):
       # lines and pix per scene (assume all BANDS are the same)
       lines, pix = pix_dat[0].shape
       tot_lines = tot_lines + lines
-      l = 0
+      line = 0
       # pkts for scene
       tot_pkt = int( ( FPB3*tot_lines/PPFP + FPPPKT -1 ) / FPPPKT )
       # extend packet dataset to new total
@@ -322,10 +321,10 @@ class L0BSimulate(object):
       fswt.resize( tot_pkt, 0 )
       fpie_sync.resize( tot_pkt, 0 )
       fsw_sync.resize( tot_pkt, 0 )
-      print("\n ===  CREATE_FILE SCENE=%d TOTAL=%d P0=%d tot_lines=%d tot_pkt=%d" % (v, total_scenes, p0, tot_lines, tot_pkt))
+      print("\n===  SCENE=%d %s TOTAL=%d P0=%d tot_lines=%d tot_pkt=%d" % (v, l1a_raw_pix_fname, total_scenes, p0, tot_lines, tot_pkt))
 
       # Iterate through data lines in current scene 256 lines at a time
-      while l < lines:
+      while line < lines:
 
         # copy pix and BB data to buffer at pkt offset
         # 2017-02-16 - BBs come before pix data
@@ -336,17 +335,17 @@ class L0BSimulate(object):
         # assemble pix and bb data into buffer, with offset from previous buffer
         for b in range( BANDS ):
     #  Band interleaved by pixels (BANDS*FPPSC, PPFP)
-          pix_buf[:,ps1:pe1,b] = pix_dat[b][l:l+PPFP,:]
-          pix_buf[:,ps2:pe2,b] = b295[b][l:l+PPFP,:]
-          pix_buf[:,ps3:pe3,b] = b325[b][l:l+PPFP,:]
+          pix_buf[:,ps1:pe1,b] = pix_dat[b][line:line+PPFP,:]
+          pix_buf[:,ps2:pe2,b] = b295[b][line:line+PPFP,:]
+          pix_buf[:,ps3:pe3,b] = b325[b][line:line+PPFP,:]
 
         # step through buffer in packet steps (FPPPKT) starting from 0
         bts = 0
         bte = p0 + FPB3
-        t2k = pix_2k[l] - PIX_DUR*(BBLEN*2.0-p0)  #  offset for BB pixels
+        t2k = pix_2k[line] - PIX_DUR*float(BBLEN*2.0+p0) # offset for BB pixels
         angnadir = 180.0 - angnadir
         print("====  ", datetime.now(), "  ====")
-        print("L=%d PKT=%d T2K=%20.16e ANG=%f NADIR=%3.1f BTE=%d P0=%d PS1=%d PS2=%d PS3=%d PE3=%d" %(l,pkt_id,t2k,mangle,angnadir,bte,p0,ps1,ps2,ps3,pe3))
+        print("L=%d PKT=%d T2K=%f P2K=%f ANG=%f NADIR=%3.1f BTE=%d P0=%d PS1=%d PS2=%d PS3=%d PE3=%d" %(line,pkt_id,t2k,pix_2k[line],mangle,angnadir,bte,p0,ps1,ps2,ps3,pe3))
         while bts < bte:
 
           # see where current buffer pointer is
@@ -358,7 +357,7 @@ class L0BSimulate(object):
             # write next packet ancillary data
             pid[pkt_id] = pkt_id+1
             fswt[pkt_id] = Time.time_j2000(t2k).gps
-            #print("Pkt %d T2k=%f GT=%f MANGLE=%f PREV=%d" %(pkt_id, t2k, fswt[pkt_id], mangle, prev))
+            print("SCENE=%s Pkt %d T2k=%f BTS=%d BTE=%d MANGLE=%f PREV=%d" %(scene, pkt_id, t2k, bts, bte, mangle, prev))
             # *** generate ENCODer values from -2*BB -12.738 to +12.738
             # *** add FPIE sync clock and FPIE 1st pix to FSWT offset (1MHz)
             for i in range(0,FPPPKT):
@@ -397,7 +396,7 @@ class L0BSimulate(object):
     #  Band interleaved by pixels (BANDS*FPPSC, PPFP)
             pix_buf[:,:p0,:] = pix_buf[:,bts:bte,:]
             # escape bts while loop to go to next scene
-            if v+1 < total_scenes or l+PPFP < lines:
+            if v+1 < total_scenes or line+PPFP < lines:
               bts = bte
             else: # last runt packet of last scene< fill remaining with dummy
               bts = 0
@@ -407,7 +406,7 @@ class L0BSimulate(object):
           # end writing current packet
 
         # next line in scene
-        l += PPFP
+        line += PPFP
         # end copying current pix_buf to packets
 
       # close current raw pix and bb files

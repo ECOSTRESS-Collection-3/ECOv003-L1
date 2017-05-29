@@ -118,7 +118,7 @@ class L1aRawPixGenerate(object):
   def __init__(self, l0b, osp_dir, scene_file, run_config = None,
                build_id = "0.30",
                pge_version = "0.30", build_version="0100",
-               file_version = "01"):
+               file_version = "05"):
       '''Create a L1aRawPixGenerate to process the given L0 file. 
       To actually generate, execute the 'run' command.'''
       self.l0b = l0b
@@ -251,12 +251,15 @@ class L1aRawPixGenerate(object):
       ' *** Account for actual time of camera switch-on from mirror angle *** '
       ' *** Account for missing packets, assume in time sequence *** '
       pktp0t = Time.time_gps(0.0)  # Initialize to GPS 0
-      while pktp0t < ss and pkt_idx<tot_pkts:
-        good_pkt += 1
+      dt = float( int( ( pktp0t - ss )*1000.0 ) ) / 1000.0
+      dp = 0
+      while dt < 0.0 and pkt_idx<tot_pkts:
+        #good_pkt += 1
         gt = fswt[pkt_idx] + float(fpie_sync[pkt_idx] - fsw_sync[pkt_idx]) /1000000.0
 
         pktp0t = Time.time_gps(gt)
-        print("Packet %d ID=%d time=%f20, SS=%f20" % ( pkt_idx, pid[pkt_idx], pktp0t.j2000, ss.j2000 ) )
+        dt = float( int( ( pktp0t - ss )*100000.0 ) ) / 100000.0
+        print("Packet %d ID=%d time=%f SS=%f DT=%f" % ( pkt_idx, pid[pkt_idx], pktp0t.j2000, ss.j2000, dt ) )
         pkt_idx += 1
         #pkt_cnt += 1
       ' end searching for packet matching scene start time '
@@ -265,7 +268,8 @@ class L1aRawPixGenerate(object):
         return -1
 
       ' found scene start time in previous packet '
-      if pktp0t >= ss:
+      pkt_idx -= 1
+      if dt > 0.0:
         print("Decrement counts PKT_IDX=%d PKT_CNT=%d" %(pkt_idx, pkt_cnt))
         pkt_idx -= 1
         #pkt_cnt -= 1
@@ -273,7 +277,7 @@ class L1aRawPixGenerate(object):
       pkt_idx -= 2  #  2 black bodies are ahead of image packets
       if pkt_idx == 0: pktid0 = 0
       else: pktid0 = pid[pkt_idx-1]
-      print("Found scene %s start time %f20(J2K) in packet[%d]=%d (id0=%d) FP0 time=%s" % ( scene_id, ss.j2000, pkt_idx, pid[pkt_idx], pktid0, str(pktp0t) ) )
+      print("Found scene %s start time %f in packet[%d]=%d (id0=%d) FP0 time=%f" % ( scene_id, ss.j2000, pkt_idx, pid[pkt_idx], pktid0, pktp0t.j2000 ) )
 
       ' create scene file and image pixel, J2K, and FPIE ENC groups '
       pname = self.create_file( "L1A_RAW_PIX", orbit, scene_id,
@@ -299,54 +303,57 @@ class L1aRawPixGenerate(object):
       dt = pktp0t - ss
       p0 = int( dt/FP_DUR + 0.5 )
       p1 = p0
+      pt = p0
+      pb = 2
       ' loop through scans '
       ###  assume BB data start 2 packets before image data for now
       ### pkt_idx -= 2
       line = 0  # line pointer in output image
-      dp = 0  # initialize output FP pointer
+      op = 0  # initialize output FP pointer
       scfp_cnt = 0  #  count of total copied FPs for current scan
       pix_buf[:,:,:] = 0xffff  # pre-fill with null values
       ev_buf[:] = 0xffffffff
       for scan in range( SCPS ):
-        #gt = fswt[pkt_idx] + float(fpie_sync[pkt_idx] - fsw_sync[pkt_idx]) /1000000.0 + dt
-        gt = fswt[pkt_idx+2] + float(fpie_sync[pkt_idx+2] - fsw_sync[pkt_idx+2]) /1000000.0 + dt  #  account for 2 BB ahead of IMG
+        dt = FP_DUR * float( pt )
+        gt = fswt[pkt_idx+pb] + float(fpie_sync[pkt_idx+pb] - fsw_sync[pkt_idx+pb]) /1000000.0 + dt  #  account for 2 BB ahead of IMG
         pix_time.append(Time.time_gps( gt ).j2000)
 
         fpc = FPPPKT - p1  # FPs to copy from first packet in scan
         idx_inc = 1
         skip = 0
         while scfp_cnt < FPB3:  # build up a full scan of IMG and BB pix
-          if idx_inc == 1:  #  read next packet
+          if idx_inc == 1 and pkt_idx < tot_pkts:  #  read next packet
             flex_buf[:,:,:] = bip[pkt_idx,:,:,:]
             pktid = pid[pkt_idx]
             skip = (pktid - pktid0 - 1) * FPPPKT
-            op = dp + skip
           # end reading new packet
 
 # find starting EV for BB1, BB2, and IMG pixels
-          #print("SCENE=%s SCAN=%d LINE=%d GT=%f p2k=%f IDX=%d SCFPCNT=%d P1=%d DP=%d OP=%d SKIP=%d FPC=%d" %(scene_id, scan, line, gt, pix_time[scan], pkt_idx, scfp_cnt, p1, dp, op, skip, fpc))
-          if op < FPB3:
+          #print("SCENE=%s SCAN=%d LINE=%d DT=%f s2k=%f IDX=%d SCFPCNT=%d P1=%d DP=%d OP=%d SKIP=%d FPC=%d" %(scene_id, scan, line, dt, pix_time[scan], pkt_idx, scfp_cnt, p1, dp, op, skip, fpc))
+          if op + skip < FPB3:
             #print("transposing IDX=%d P1=%d FPC=%d OP=%d" % (pkt_idx, p1, fpc, op) )
+            op += skip  #  skip to next output position to copy to
             for b in range( BANDS ):  # copy packet data to pixel buffer
               pix_buf[:,op:op+fpc,b] = np.transpose(flex_buf[p1:p1+fpc,:,b])
             ev_buf[op:op+fpc] = lid[pkt_idx,p1:p1+fpc]  #  and current EVs
-            scfp_cnt += (fpc + skip)
-            dp += (fpc + skip)  #  next FP pointer in pix_buf
+            #scfp_cnt += (fpc + skip)
+            op += fpc  #  next FP pointer in pix_buf
             p1 = 0  #  copy whole packets after the first (if partial)
             fpc = FPPPKT
             idx_inc = 1  #  normal packet increment
-            pktid0 = pid[pkt_idx]
+            pktid0 = pid[pkt_idx]  #  save current packt ID
             pkt_idx += idx_inc
             pkt_cnt += 1
             good_pkt += 1
           else:  #  need to skip to future line
-            idx_inc = 0  # do not read a new packet
             print("flushing scan %d packet=%d OP=%d" % (scan, pkt_idx, op))
+            idx_inc = 0  # do not read a new packet
+            scfp_cnt = FPB3  # no runt
+            op = op + skip - FPB3
+            pkt_cnt += skip/FPPPKT
             if skip > 0:
               print("PKTID mismatch: Expected %d found %d" % (pktid0+1, pktid))
-              if dp < FPB3: scfp_cnt = FPB3  # no runt
-              dp = op - FPB3 + skip
-              skip = dp
+              skip = 0
           # end copying or skipping pix_buf
         # end filling current pix_buf and ev_buf
 
@@ -358,18 +365,17 @@ class L1aRawPixGenerate(object):
           b325[b].append(pix_buf[:,BBLEN:BBLEN*2,b].copy())
         good_bb += 2
         bb_cnt += 2
-        if skip > 0:
-          op = 0
-        else:
-          op = dp - FPB3
-          scfp_cnt -= FPB3
-        if op > 0:  # save runt at end
-          print("Copying runt PIX and EV SCENE=%s SCAN=%d T2K=%f18 PKT=%d DP=%d OP=%d" % (scene_id, scan, pix_time[scan], pkt_idx, dp, op) )
-          pix_buf[:,0:op,:] = pix_buf[:,FPB3:dp,:]
-          ev_buf[0:op] = ev_buf[FPB3:dp]
-        pix_buf[:,op:,:] = 0xffff
-        ev_buf[op:] = 0xffffffff
-        dp = op
+        if op > FPPPKT: dp = 0
+        else: dp = op
+        scfp_cnt -= FPB3
+        if dp > 0:  # save runt at end
+          print("Copying runt PIX and EV SCENE=%s SCAN=%d T2K=%f PKT=%d DP=%d OP=%d" % (scene_id, scan, pix_time[scan], pkt_idx, dp, op) )
+          pix_buf[:,0:dp,:] = pix_buf[:,FPB3:FPB3+dp,:]
+          ev_buf[0:dp] = ev_buf[FPB3:FPB3+dp]
+        pix_buf[:,dp:,:] = 0xffff
+        ev_buf[dp:] = 0xffffffff
+        pt = FPPPKT-dp
+        pb = 1
         line += PPFP
         ' end copy image and BB pixels and EV for current scan '
       ' end scans loop '
