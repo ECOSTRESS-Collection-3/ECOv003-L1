@@ -21,6 +21,13 @@ if test -z "$H5DIFF"; then
 fi
 
 #=================================================================
+# Find parallel
+AC_PATH_PROG([PARALLEL], [parallel], "", [$PATH$PATH_SEPARATOR${ac_afids_dir}/bin])
+if test -z "$PARALLEL"; then
+   AC_MSG_ERROR([Cannot find parallel])
+fi
+
+#=================================================================
 # Find python. Note that the virtual environment has modules that
 # depend on the afids build, so set LD_LIBRARY_PATH here for AFIDS
 # before checking all the modules.
