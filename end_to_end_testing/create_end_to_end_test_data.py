@@ -11,8 +11,8 @@ from multiprocessing import Pool
 create_l1a_pix = False
 create_l1a_bb = False
 create_l1a_raw_pix = False
-create_l1a_raw_att = False
-create_l1a_eng = False
+create_l1a_raw_att = True
+create_l1a_eng = True
 create_l0b = True
 
 # Center times for each of the passes. See the wiki at 
@@ -131,7 +131,7 @@ scene_fname = ecostress_file_name("Scene", orbit_num[pass_index], None,
                                   intermediate=True)
 l0b_sim = L0BSimulate(l1a_raw_att_fname, l1a_eng_fname, scene_files)
 if(create_l0b):
-    l0b_sim.create_file(l0b_fname, scene_fname)
+    l0b_sim.create_file(l0b_fname)
     
 
 

@@ -118,6 +118,9 @@ CNT_DUR = (60/25.4)/float( MAX_FPIE )  # = 1.3504 microsecond
 ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.000205803 deg
 PIX_ANG = 25.475 / float( FPPSC )  # = 0.004717592 deg
 PIX_EV = PIX_ANG / ANG_INC # = 22.92289 counts/pix
+# Short term, change this to match EcostressTimeTable pixel duration.
+# We will want to change this back, but for now change this to match
+# existing test data. See Issue #13 in github.
 #PIX_DUR = 0.0000321982
 PIX_DUR = 0.0000322
 PKT_DUR = PIX_DUR * float( FPPPKT )
@@ -153,17 +156,14 @@ class L0BSimulate(object):
     print("====  CREATE_FILE L0B_FNAME %s ====" % l0b_fname )
     print("ANG0=%f ANG1=%f PIX_ANG=%14.8e" % (ANG0, ANG1, PIX_ANG ))
     print("====  Start time  ", datetime.now(), "  ====")
-    self.l0b_fname = l0b_fname + ".h5"
+    self.l0b_fname = l0b_fname
     l0b_fd = h5py.File(self.l0b_fname, "w", driver='core')
 
     # Write Standarad Metadata fake-out WriteStandardMetadata()
-    fname = 'ECOSTRESS_L0B_'+os.path.basename(l0b_fname)
     m = WriteStandardMetadata(l0b_fd, product_specfic_group ="L0BMetadata",
         proc_lev_desc = 'Level 0B Data Parameters',
-        pge_name="L0B", local_granule_id=fname,
-        build_id="0.0", pge_version="0.0", orbit_based=True )
-    fname = os.path.basename(l0b_fname)
-    m.set("LocalGranuleID", fname)
+        pge_name="L0B",
+        build_id="0.0", pge_version="0.0", level0_file=True )
     a = self.l0b_fname.split('_')
     b = a[2].split('T')
     m.set("RangeBeginningDate", b[0])
@@ -288,10 +288,8 @@ class L0BSimulate(object):
     # process scenes make sure to do it in order
     total_scenes = len(self.scene_files)
     mangle = ANG0
-    for v in range( total_scenes ):
-      scene = self.scene_files[v][0]
-      l1a_raw_pix_fname = self.scene_files[v][1]
-      l1a_bb_fname = self.scene_files[v][2]
+    for v, scn in enumerate(self.scene_files):
+      scene, l1a_raw_pix_fname, l1a_bb_fname, onum, tstart, tend = scn
 
       # open raw pixel data file
       pix_fd = h5py.File(l1a_raw_pix_fname, "r", driver='core')

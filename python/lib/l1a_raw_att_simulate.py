@@ -17,7 +17,8 @@ class L1aRawAttSimulate(object):
         # For now, we have both ephemeris and attitude with same time spacing.
         # We could change that in the future if needed.
         tspace = 1.0
-        tm = np.arange(self.min_time.j2000, self.max_time.j2000 + tspace,
+        tm = np.arange(self.min_time.j2000 - tspace,
+                       self.max_time.j2000 + tspace,
                        tspace)
         pos = np.zeros((tm.shape[0], 3))
         vel = np.zeros((tm.shape[0], 3))
