@@ -5,7 +5,7 @@ import re
 import os
 import numpy as np
 from .write_standard_metadata import WriteStandardMetadata
-from .misc import ecostress_file_name
+from .misc import ecostress_file_name, time_split
 from geocal import Time
 from datetime import datetime
 
@@ -129,6 +129,25 @@ class L1aRawPixGenerate(object):
       self.pge_version = pge_version
       self.build_version = build_version
       self.file_version = file_version
+
+  def process_scene_file(self):
+    '''Process the scene file, returning the orbit, scene id, start, 
+    and end times'''
+    res = []
+    with open(self.scene_file, "r") as fh:
+      for ln in fh:
+        orbit, scene_id, sc_start_time, sc_end_time = re.split(r'\s+',
+                                                               ln.strip())
+        orbit = int(orbit)
+        scene_id = int(scene_id)
+        # Need to change this
+        dt = sc_start_time[0:26].replace( 'T', ' ' ) + ' UTC'
+        ss = Time.parse_time( dt )
+        dt = sc_end_time[0:26].replace( 'T', ' ' ) + ' UTC'
+        se = Time.parse_time( dt )
+        res.append([orbit, scene_id, ss, se])
+    return res
+      
         
   def create_file(self, prod_type, orbit, scene, start_time, end_time,
                   primary_file = False, prod=True, intermediate=False):
@@ -161,10 +180,12 @@ class L1aRawPixGenerate(object):
         orbit_based = (scene is None))
     if(self.run_config is not None):
         m.process_run_config_metadata(self.run_config)
-    m.set("RangeBeginningDate", start_time[0:10])
-    m.set("RangeBeginningTime", start_time[11:26])
-    m.set("RangeEndingDate", end_time[0:10])
-    m.set("RangeEndingTime", end_time[11:26])
+    dt, tm = time_split(start_time)
+    m.set("RangeBeginningDate", dt)
+    m.set("RangeBeginningTime", tm)
+    dt, tm = time_split(end_time)
+    m.set("RangeEndingDate", dt)
+    m.set("RangeEndingTime", tm)
     m.write()
     fout.close()
     return fname
@@ -185,9 +206,6 @@ class L1aRawPixGenerate(object):
             ev_codes[i,1] = int(e2)
             print("EV_CODES[%d](%s) = %d, %d" % (i,e0,ev_codes[i,0],
                                                  ev_codes[i,1] ))
-
-# open scene start/stop times file
-    sf = open( self.scene_file, "r" )
 
 # open L0B file
     self.fin = h5py.File(self.l0b,"r", driver='core')
@@ -228,19 +246,13 @@ class L1aRawPixGenerate(object):
     flex_buf = np.zeros( (FPPPKT, PPFP, BANDS), dtype=np.uint16 )
 
     o_start_time = None
-    for sfl in iter( sf ):  # iterate through scenes from scene start/stop file
-      orbit, scene_id, sc_start_time, sc_end_time = re.split(r'\s+', sfl.strip())
-      orbit = int(orbit)
-      scene_id = int(scene_id)
-      if o_start_time == None: o_start_time = sc_start_time
-      o_end_time = sc_end_time
-      ' Get scene start and end times (UTC) from scene file entry '
-      dt = sc_start_time[0:26].replace( 'T', ' ' ) + ' UTC'
-      ss = Time.parse_time( dt )
-      dt = sc_start_time[0:26].replace( 'T', ' ' ) + ' UTC'
-      se = Time.parse_time( dt )
+    # iterate through scenes from scene start/stop file
+    for orbit, scene_id, ss, se in self.process_scene_file():
+      if o_start_time is None:
+        o_start_time = ss
+      o_end_time = se
       print("====  ", datetime.now(), "  ====")
-      print("SCENE=%s START=%s END=%s SS=%f SE=%f" % ( scene_id, sc_start_time, sc_end_time, ss.j2000, se.j2000 ) )
+      print("SCENE=%s START=%s END=%s SS=%f SE=%f" % ( scene_id, ss, se, ss.j2000, se.j2000 ) )
 
       good_pkt = 0
       good_bb = 0
@@ -264,7 +276,7 @@ class L1aRawPixGenerate(object):
         #pkt_cnt += 1
       ' end searching for packet matching scene start time '
       if pkt_idx >= tot_pkts:
-        print("Could not find Scene %s time %s (%fJ2K) in file %s PKT=%d" % ( scene_id, sc_start_time, ss.j2000, self.l0b, pkt_idx ) )
+        print("Could not find Scene %s time %s (%fJ2K) in file %s PKT=%d" % ( scene_id, ss, ss.j2000, self.l0b, pkt_idx ) )
         return -1
 
       ' found scene start time in previous packet '
@@ -278,16 +290,6 @@ class L1aRawPixGenerate(object):
       if pkt_idx == 0: pktid0 = 0
       else: pktid0 = pid[pkt_idx-1]
       print("Found scene %s start time %f in packet[%d]=%d (id0=%d) FP0 time=%f" % ( scene_id, ss.j2000, pkt_idx, pid[pkt_idx], pktid0, pktp0t.j2000 ) )
-
-      ' create scene file and image pixel, J2K, and FPIE ENC groups '
-      pname = self.create_file( "L1A_RAW_PIX", orbit, scene_id,
-                                sc_start_time, sc_end_time, prod=False,
-                                intermediate=True)
-      l1a_fp = h5py.File( pname, "r+", driver='core' )
-
-      ' create BB file and BlackBodyPixels group '
-      bname = self.create_file( "L1A_BB", orbit, scene_id, sc_start_time, sc_end_time, prod=True )
-      l1a_bp = h5py.File( bname, "r+", driver='core' )
 
       ' create datasets '
       ' Starting time of first focal plane in each scan '
@@ -382,6 +384,15 @@ class L1aRawPixGenerate(object):
       pkt_cnt -= 1
       good_pkt -= 1
 
+      ' create scene file and image pixel, J2K, and FPIE ENC groups '
+      pname = self.create_file( "L1A_RAW_PIX", orbit, scene_id, ss, se,
+                                prod=False, intermediate=True)
+      l1a_fp = h5py.File( pname, "r+", driver='core' )
+
+      ' create BB file and BlackBodyPixels group '
+      bname = self.create_file( "L1A_BB", orbit, scene_id, ss, se, prod=True )
+      l1a_bp = h5py.File( bname, "r+", driver='core' )
+
       ' record scene completeness '
       pcomp = float( good_pkt ) / float( pkt_cnt )
       sm = l1a_fp['StandardMetadata']
@@ -418,8 +429,6 @@ class L1aRawPixGenerate(object):
                                    data=np.vstack(b325[b]), chunks=(PPFP,BBLEN),
                                                   dtype="u2" )
         t.attrs['Units']='dimensionless'
-      l1a_fp.close()
-      l1a_bp.close()
       good_pkt = 0
       pkt_cnt = 0
       good_bb = 0
