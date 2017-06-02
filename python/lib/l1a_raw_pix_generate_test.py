@@ -38,6 +38,17 @@ def test_process_scene_file2(test_data, unit_test_data):
     scene_file = unit_test_data + "Scene_problem.txt"
     l1arawpix = L1aRawPixGenerate(l0b, l1_osp_dir, scene_file)
     t = l1arawpix.process_scene_file()
-    print(t)
+    assert t[0][0] == 80005
+    assert t[1][0] == 80005
+    assert t[2][0] == 80005
+    assert t[0][1] == 1
+    assert t[1][1] == 2
+    assert t[2][1] == 3
+    assert t[0][2] == Time.parse_time("2015-01-24T20:42:51.000000Z")
+    assert t[1][2] == Time.parse_time("2015-01-24T20:43:52.000000Z")
+    assert t[2][2] == Time.parse_time("2015-01-24T20:44:51.000000Z")
+    assert t[0][3] == Time.parse_time("2015-01-24T20:43:51.000000Z")
+    assert t[1][3] == Time.parse_time("2015-01-24T20:44:51.000000Z")
+    assert t[2][3] == Time.parse_time("2015-01-24T20:45:36.000000Z")
 
 

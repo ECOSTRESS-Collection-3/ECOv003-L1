@@ -140,11 +140,8 @@ class L1aRawPixGenerate(object):
                                                                ln.strip())
         orbit = int(orbit)
         scene_id = int(scene_id)
-        # Need to change this
-        dt = sc_start_time[0:26].replace( 'T', ' ' ) + ' UTC'
-        ss = Time.parse_time( dt )
-        dt = sc_end_time[0:26].replace( 'T', ' ' ) + ' UTC'
-        se = Time.parse_time( dt )
+        ss = Time.parse_time(sc_start_time)
+        se = Time.parse_time(sc_end_time)
         res.append([orbit, scene_id, ss, se])
     return res
       
