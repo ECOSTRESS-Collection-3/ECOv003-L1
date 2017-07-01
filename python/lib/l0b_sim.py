@@ -5,6 +5,7 @@ import ctypes
 #from .misc import time_split, ecostress_file_name
 from .write_standard_metadata import WriteStandardMetadata
 import os
+import re
 from datetime import datetime
 from geocal import Time
 
@@ -50,6 +51,49 @@ By seconds:
 "hk/status/time": shape (479,), type "<f8">
 "hk/status/time_fsw": shape (479,), type "<f8">
 
+Motor control modes (uint8):
+
+0: IDLE
+1: SPINNING
+2: BLACKBODY_1
+3: BLACKBODY_2
+4: SUNSAFE
+5: MANUAL
+
+P6_R(dn): (0.06021953 * dn) - 507.6739 - OR6
+P7_R(dn): (0.05874407 * dn) - 501.7596 - OR7
+P8_R(dn): (0.06097170 * dn) - 500.0066
+P9_R(dn): (0.06017587 * dn) - 501.1489
+
+kc1 = PRT_313_T( P7_R(raw.AnalogsTemp_BB_COLD_1) )
+kc2 = PRT_314_T( P7_R(raw.AnalogsTemp_BB_COLD_2) )
+kc3 = PRT_317_T( P7_R(raw.AnalogsTemp_BB_COLD_3) )
+kc4 = PRT_315_T( P7_R(raw.AnalogsTemp_BB_COLD_4) )
+kc5 = PRT_318_T( P7_R(raw.AnalogsTemp_BB_COLD_5) )
+kh1 = PRT_465_T( P7_R(raw.AnalogsTemp_BB_HOT_1) )
+kh2 = PRT_466_T( P7_R(raw.AnalogsTemp_BB_HOT_2) )
+kh3 = PRT_467_T( P7_R(raw.AnalogsTemp_BB_HOT_3) )
+kh4 = PRT_468_T( P7_R(raw.AnalogsTemp_BB_HOT_4) )
+kh5 = PRT_469_T( P7_R(raw.AnalogsTemp_BB_HOT_5) )
+
+OR7 = 0
+
+PRT_313_T = -251.317967433, 0.239896820, 0.0000112950 
+PRT_314_T = -251.292298761, 0.240556797, 0.0000106890 
+PRT_315_T = -251.586351114, 0.241068843, 0.0000103820 
+PRT_317_T = -251.232620017, 0.240397229, 0.0000107746 
+PRT_318_T = -252.648616198, 0.242199907, 0.0000102870 
+PRT_320_T = -248.318808633, 0.235249359, 0.0000128970 
+PRT_343_T = -249.183019039, 0.236078108, 0.0000129710
+PRT_449_T = -248.291451026, 0.234993147, 0.0000131630 
+PRT_450_T = -248.506534677, 0.235773805, 0.0000127110 
+PRT_452_T = -248.527405294, 0.235959618, 0.0000124980 
+PRT_460_T = -247.917423853, 0.234297755, 0.0000135960 
+PRT_465_T = -248.079410647, 0.234477690, 0.0000135210 
+PRT_466_T = -248.227089752, 0.234806579, 0.0000134300 
+PRT_467_T = -248.223699750, 0.234794972, 0.0000132930 
+PRT_468_T = -248.326045842, 0.234842736, 0.0000134580 
+PRT_469_T = -248.021569284, 0.234107049, 0.0000137990 
 '''
 
 # short word offsets into FPIE packet array
@@ -114,9 +158,9 @@ PKTPS = int( (SCPS*FPB3+FPPPKT-1) / FPPPKT )
 # covered by 25.475 degree of mirror scan.  Mirror
 # is 2-sided, so every other scan is 180 degrees apart
 MAX_FPIE=1749248
-CNT_DUR = (60/25.4)/float( MAX_FPIE )  # = 1.3504 microsecond
-ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.000205803 deg
-PIX_ANG = 25.475 / float( FPPSC )  # = 0.004717592 deg
+CNT_DUR = (60/25.4)/float( MAX_FPIE )  # = 1.3504 microsecond/count
+ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.000205803 deg/count
+PIX_ANG = 25.475 / float( FPPSC )  # = 0.004717592 deg/focal plane
 PIX_EV = PIX_ANG / ANG_INC # = 22.92289 counts/pix
 # Short term, change this to match EcostressTimeTable pixel duration.
 # We will want to change this back, but for now change this to match
@@ -126,7 +170,8 @@ PIX_DUR = 0.0000322
 PKT_DUR = PIX_DUR * float( FPPPKT )
 # Black body pixels are BEFORE image pixels
 ANG1 = 25.475 / 2.0
-ANG0 = 0.0 - PIX_ANG * float( BBLEN*2.0 ) - ANG1
+ANG0 = -ANG1
+ANG2 = ANG1 + PIX_ANG * float( BBLEN*2 )
 
 class L0BSimulate(object):
   # This is used to generate L0 simulated data. We take the output of the
@@ -140,22 +185,60 @@ class L0BSimulate(object):
     self.l1a_raw_att_fname = l1a_raw_att_fname
     self.scene_files = scene_files
 
-  def hdf_copy(self, fname, group, group_out = None, scene = None):
-    # Copy the given group from the give file to our output file.
-    # Default it to give the output the same group name, but can change this.
-    # If scene is passed in, we nest the output by "Scene_<num>"
-    if(group_out is None):
-      if(scene is not None):
-        group_out = "/Data/Scene_%d%s" % (scene, group)
-      else:
-        group_out = "/Data" + group
-    subprocess.run(["h5copy", "-i", fname, "-o", self.l0b_fname, "-p",
-                    "-s", group, "-d", group_out], check=True)
+  def kelvin2DN( self, x, K ):
+    # convert Kelvin temperature to PRT DN values given PRT coefficients
+    # a = array of coefficients
+    # K = kelvin temperature
+    # DN is the "+" solution of quadratic wth the following coefficients
+    a = x[0]*x[3]*x[3]
+    b = 2.0*x[0]*x[3]*x[4] + x[1]*x[3]
+    c = x[0]*x[4]*x[4] + x[1]*x[4] + x[2] - K
+    rdn = (np.sqrt( b*b - 4.0*a*c) - b) / ( 2.0*a )
+    print("kelvin2DN,X=%f %f %f %f %f K=%f RDN=%f" % (x[0],x[1],x[2],x[3],x[4],K,rdn))
+    dn = int( rdn+0.5 )
+    return ( (dn>>8)&0xff ) | ( (dn&0xff)<<8 ) # Big-Endian
 
   def create_file(self, l0b_fname):
     print("====  CREATE_FILE L0B_FNAME %s ====" % l0b_fname )
-    print("ANG0=%f ANG1=%f PIX_ANG=%14.8e" % (ANG0, ANG1, PIX_ANG ))
+    print("ANG0=%f ANG1=%f ANG2=%f PIX_ANG=%14.8e" % (ANG0, ANG1, ANG2, PIX_ANG ))
     print("====  Start time  ", datetime.now(), "  ====")
+
+    #  Read the PRT coefficients
+    PRT = np.zeros( (17,3), dtype=np.float64 )
+    osp_dir = os.path.dirname(self.l1a_eng_fname)
+    with open( osp_dir + "/prt_coef.txt", "r") as pf:
+      for i, pvl in enumerate( pf ):
+        p0, p1, p2, p3 = re.split(r'\s+', pvl.strip())
+        PRT[i,0] = float(p1)
+        PRT[i,1] = float(p2)
+        PRT[i,2] = float(p3)
+        print("PRT[%d](%s) = %20.12f %20.12f %20.12f" % ( i, p0, PRT[i,0], PRT[i,1], PRT[i,2] ) )
+    pf.close()
+    kc = np.zeros( (5,5), dtype=np.float64 )
+    kh = np.zeros( (5,5), dtype=np.float64 )
+    kc[0,] = PRT[1,2], PRT[1,1], PRT[1,0], PRT[0,0], -(PRT[0,1]+PRT[0,2])
+    kc[1,] = PRT[2,2], PRT[2,1], PRT[2,0], PRT[0,0], -(PRT[0,1]+PRT[0,2])
+    kc[2,] = PRT[4,2], PRT[4,1], PRT[4,0], PRT[0,0], -(PRT[0,1]+PRT[0,2])
+    kc[3,] = PRT[3,2], PRT[3,1], PRT[3,0], PRT[0,0], -(PRT[0,1]+PRT[0,2])
+    kc[4,] = PRT[5,2], PRT[5,1], PRT[5,0], PRT[0,0], -(PRT[0,1]+PRT[0,2])
+    kh[0,] = PRT[12,2], PRT[12,1], PRT[12,0], PRT[0,0], -(PRT[0,1]+PRT[0,2])
+    kh[1,] = PRT[13,2], PRT[13,1], PRT[13,0], PRT[0,0], -(PRT[0,1]+PRT[0,2])
+    kh[2,] = PRT[14,2], PRT[14,1], PRT[14,0], PRT[0,0], -(PRT[0,1]+PRT[0,2])
+    kh[3,] = PRT[15,2], PRT[15,1], PRT[15,0], PRT[0,0], -(PRT[0,1]+PRT[0,2])
+    kh[4,] = PRT[16,2], PRT[16,1], PRT[16,0], PRT[0,0], -(PRT[0,1]+PRT[0,2])
+
+#  Get EV start codes for BB and IMG pixels
+    ev_codes = np.zeros( (4,2), dtype=np.float32 )
+    ' open EV codes file '
+    with open( osp_dir + "/ev_codes.txt", "r") as ef:
+      for i,evl in enumerate(ef):
+        e0, e1, e2 = re.split(r'\s+', evl.strip())
+        ev_codes[i,0] = float(e1)
+        ev_codes[i,1] = float(e2)
+        print("EV_CODES[%d](%s) = %f, %f" % (i,e0,ev_codes[i,0],
+                                                 ev_codes[i,1] ))
+    ef.close()
+
     self.l0b_fname = l0b_fname
     l0b_fd = h5py.File(self.l0b_fname, "w", driver='core')
 
@@ -229,27 +312,12 @@ class L0BSimulate(object):
 
     #  Copy RTD temps from ENG file
     l1e = h5py.File(self.l1a_eng_fname,"r")
-    #  ****  convert Kelvin to DN  ****  just copy for now
-    bbt[:,0:] = l1e["rtdBlackbodyGradients/RTD_295K"][:]
-    bbt[:,1:] = l1e["rtdBlackbodyGradients/RTD_325K"][:]
-    '''
-    rtd = [j for j in range(2)]
-    r = np.zeros( 5, dtype=np.float32 )
-    j = 0
-    for t in (295, 325):
-      rtd[j] = l1e["/rtdBlackbodyGradients/RTD_%dK" % t]
-      j += 1
-    dim = len( rtd[0].shape )
-    if dim == 1:  #  set all output BB temps to the same set
-      for j in range(2):
-        r[:] = rtd[j][:]
-        bbt[:,j,:] = (65535/r.max())*r
-    else:  #  assume the same number 
-      for j in range(2):
-        for i in range(rtd[j].shape[1]):
-          r[:] = rtd[j][i,:]
-          bbt[i,j,:] = (65535/r.max())*r
-    '''
+    #  ****  convert Kelvin to DN  ****
+    for j in range(5):
+      bbt[0,0,j] = self.kelvin2DN(kc[j,:], l1e["rtdBlackbodyGradients/RTD_295K"][j])
+      bbt[0,1,j] = self.kelvin2DN(kh[j,:], l1e["rtdBlackbodyGradients/RTD_325K"][j])
+    bbt[1:] = bbt[0]  # copy first set of values to remainder of array
+
     bb_time[:] = att_time[:aqc]  # just copy times from ATT/EPH for now
     bb_fsw[:] = att_fsw[:epc]
     att_fd.close()
@@ -280,6 +348,7 @@ class L0BSimulate(object):
     ev_buf = np.zeros( FPPPKT, dtype=np.uint32 )
     p0 = 0
     prev = 0
+    t0 = 0
     pix_dat = [b for b in range(BANDS)]
     b295 = [b for b in range(BANDS)]
     b325 = [b for b in range(BANDS)]
@@ -319,20 +388,18 @@ class L0BSimulate(object):
       fswt.resize( tot_pkt, 0 )
       fpie_sync.resize( tot_pkt, 0 )
       fsw_sync.resize( tot_pkt, 0 )
-      print("\n===  SCENE=%d %s TOTAL=%d P0=%d tot_lines=%d tot_pkt=%d" % (v, l1a_raw_pix_fname, total_scenes, p0, tot_lines, tot_pkt))
+      print("\n===  Scene=%d %s TOTAL=%d P0=%d tot_lines=%d tot_pkt=%d" % (v, l1a_raw_pix_fname, total_scenes, p0, tot_lines, tot_pkt))
 
       # Iterate through data lines in current scene 256 lines at a time
       while line < lines:
 
         # copy pix and BB data to buffer at pkt offset
-        # 2017-02-16 - BBs come before pix data
-        ps2 = p0; pe2 = ps2 + BBLEN
+        ps1 = p0; pe1 = ps1 + FPPSC
+        ps2 = pe1; pe2 = ps2 + BBLEN
         ps3 = pe2; pe3 = ps3 + BBLEN
-        ps1 = pe3; pe1 = ps1 + FPPSC
 
         # assemble pix and bb data into buffer, with offset from previous buffer
         for b in range( BANDS ):
-    #  Band interleaved by pixels (BANDS*FPPSC, PPFP)
           pix_buf[:,ps1:pe1,b] = pix_dat[b][line:line+PPFP,:]
           pix_buf[:,ps2:pe2,b] = b295[b][line:line+PPFP,:]
           pix_buf[:,ps3:pe3,b] = b325[b][line:line+PPFP,:]
@@ -340,7 +407,8 @@ class L0BSimulate(object):
         # step through buffer in packet steps (FPPPKT) starting from 0
         bts = 0
         bte = p0 + FPB3
-        t2k = pix_2k[line] - PIX_DUR*float(BBLEN*2.0+p0) # offset for BB pixels
+        t2k = pix_2k[line]
+        if p0 > 0: t2k += PIX_DUR * float( FPPPKT - p0 ) # for next packet
         angnadir = 180.0 - angnadir
         print("====  ", datetime.now(), "  ====")
         print("L=%d PKT=%d T2K=%f P2K=%f ANG=%f NADIR=%3.1f BTE=%d P0=%d PS1=%d PS2=%d PS3=%d PE3=%d" %(line,pkt_id,t2k,pix_2k[line],mangle,angnadir,bte,p0,ps1,ps2,ps3,pe3))
@@ -354,20 +422,24 @@ class L0BSimulate(object):
 
             # write next packet ancillary data
             pid[pkt_id] = pkt_id+1
-            fswt[pkt_id] = Time.time_j2000(t2k).gps
-            print("SCENE=%s Pkt %d T2k=%f BTS=%d BTE=%d MANGLE=%f PREV=%d" %(scene, pkt_id, t2k, bts, bte, mangle, prev))
-            # *** generate ENCODer values from -2*BB -12.738 to +12.738
             # *** add FPIE sync clock and FPIE 1st pix to FSWT offset (1MHz)
+            if prev == 0:
+              fswt[pkt_id] = Time.time_j2000(t2k).gps
+              t2k += PKT_DUR
+            else:
+              fswt[pkt_id] = Time.time_j2000(t0).gps
+            print("SCENE=%s Pkt %d T2k=%f T0=%f BTS=%d BTE=%d MANGLE=%f PREV=%d" %(scene, pkt_id, t2k, t0, bts, bte, mangle, prev), end="")
+            # ENCODer values from -12.738 to 12.738 + 2*BBLEN
             for i in range(0,FPPPKT):
               if i >= prev:
                 angle = mangle + angnadir  # use current NADIR angle
               else:
                 angle = mangle + 180 - angnadir  # use previous NADIR angle
-              if angle >= 0.0: ev_buf[i] = int( ( angle ) / ANG_INC )
-              else: ev_buf[i] = int( ( angle+360.0 ) / ANG_INC )
+              if angle >= 0.0: ev_buf[i] = int( (( angle ) / ANG_INC ) + 0.5 )
+              else: ev_buf[i] = int( (( angle+360 ) / ANG_INC ) + 0.5 )
               mangle = mangle + PIX_ANG
-              if mangle >= ANG1: mangle = ANG0
-
+              if mangle >= ANG2: mangle = ANG0
+            print(" EV0=%d" % ev_buf[0] )
             # write packet data
             lid[pkt_id,:] = ev_buf[:]
             for b in range(BANDS):
@@ -376,7 +448,6 @@ class L0BSimulate(object):
             bts = pe1
             # next packet
             pkt_id += 1
-            t2k += PKT_DUR
             prev = 0
 
             if bts == bte: # reached end of valid data in current pix_buf
@@ -390,8 +461,8 @@ class L0BSimulate(object):
             # set offset to next pix_buf
             p0 = bte - bts
             prev = p0
+            t0 = t2k # save FSWT from end of current san for next packet
             # move remainder data to front of pix_buf
-    #  Band interleaved by pixels (BANDS*FPPSC, PPFP)
             pix_buf[:,:p0,:] = pix_buf[:,bts:bte,:]
             # escape bts while loop to go to next scene
             if v+1 < total_scenes or line+PPFP < lines:
