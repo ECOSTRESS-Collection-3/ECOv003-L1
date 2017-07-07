@@ -102,8 +102,9 @@ LPS = PPFP * SCPS
 ' standard packets per scene rounded up '
 PPSC = int( (SCPS*FPB3+FPPPKT-1) / FPPPKT )
 
+RPM = 25.4
 MAX_FPIE=1749248
-CNT_DUR = (60.0/25.4)/float( MAX_FPIE )  # = 1.3504 microsecond/count
+CNT_DUR = (60.0/RPM)/float( MAX_FPIE )  # = 1.3504 microsecond/count
 ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.000205803 deg/count
 PIX_ANG = 25.475 / float( FPPSC )  # = 0.004717592 deg/focal plane
 PIX_EV = ((25.475*MAX_FPIE)/360.0)/FPPSC  # = 22.92289 counts/pix
@@ -112,7 +113,7 @@ PIX_EV = ((25.475*MAX_FPIE)/360.0)/FPPSC  # = 22.92289 counts/pix
 # existing test data. See Issue #13 in github.
 #FP_DUR = 0.0000321982
 FP_DUR = 32.2e-6
-SC_DUR = (60.0/25.4)/2.0  # half-scan duration = 1.1811 sec
+SC_DUR = (60.0/RPM)/2.0  # half-scan duration = 1.1811 sec
 # Black body pixels are BEFORE image pixels
 ANG1 = 25.475 / 2.0
 ANG0 = 360.0 - ANG1 - PIX_ANG * float( BBLEN*2.0 )
@@ -159,7 +160,6 @@ class L1aRawPixGenerate(object):
       while p1 < FPPPKT and ev0 == 2:
         if int( float( lid[idx,p1] - codes[0] )/10.0 + 0.5 ) == 0: ev0 = 0
         elif int( float( lid[idx,p1] - codes[1] )/10.0 + 0.5 ) == 0: ev0 = 1
-        elif lid[idx,p1] == codes[1]: ev0 = 1
         else: p1 += 1
       if ev0 < 2:  # Found it
         print("Found PHASE %d EV=%d at %d in PKT %d" %(ev0,lid[idx,p1],p1,idx))
@@ -322,10 +322,8 @@ class L1aRawPixGenerate(object):
         return -1
 
       ' found scene start time in previous packet '
-      pkt_idx -= 1
-      if dt > 0.0:
-        print("Decrement counts PKT_IDX=%d PKT_CNT=%d" %(pkt_idx, pkt_cnt))
-        pkt_idx -= 1
+      if dt > 0.0: pkt_idx -= 2
+      else: pkt_idx -= 1
       print("Found scene %s start time %f in packet[%d]=%d FP0 time=%f" % ( scene_id, ss.j2000, pkt_idx, pid[pkt_idx], pktp0t.j2000 ) )
 
       ' create datasets '
@@ -350,23 +348,23 @@ class L1aRawPixGenerate(object):
         pix_buf[:,:,:] = 0xffff  # pre-fill with null values
         ev_buf[:] = 0xffffffff
         # find matching encoder value
-        pb,p1,ev0 = self.locate_ev( pkt_idx, tot_pkts, ev_codes[0,:], lid )
+        p0,p1,ev0 = self.locate_ev( pkt_idx, tot_pkts, ev_codes[0,:], lid )
         if ev0 == 2:
-          print("Could not find IMG EV SCENE=%s SCAN=%d IDX=%d P1=%d" % (scene_id, scan,pb,p1))
+          print("Could not find IMG EV SCENE=%s SCAN=%d IDX=%d P1=%d" % (scene_id, scan,p0,p1))
           break
-        pkt_idx = pb
-        if pkt_idx == 0: pktid0 = 0
-        else: pktid0 = pid[pkt_idx-1]
+        pkt_idx = p0
+        if p0 == 0: pktid0 = 0
+        else: pktid0 = pid[p0-1]
         if p1 > 0:  # use time codes of next packet and count backward
-          pb = 1
+          p0 += 1
           dt = FP_DUR * float( p1-FPPPKT )
+          print("LID[%d,%d]%d - LID[%d,0]%d" %(p0,p1,lid[p0,p1],p0,lid[p0,0]))
         else:  #  use time codes in current packet
-          pb = 0
           dt = 0.0
-        gt = fswt[pkt_idx+pb] + float(fpie_sync[pkt_idx+pb] - fsw_sync[pkt_idx+pb]) /1000000.0 + dt
+        gt = fswt[p0] + float(fpie_sync[p0] - fsw_sync[p0])/1000000.0 + dt
         pix_time.append(Time.time_gps( gt ).j2000)
 
-        fpc = FPPPKT - p1  # FPs to copy from first packet in scan
+        fpc = FPPPKT - p1
         idx_inc = 1
         skip = 0
         while op < FPB3:  # build up a full scan of IMG and BB pix
@@ -385,23 +383,23 @@ class L1aRawPixGenerate(object):
           op += skip
           if op < FPB3:
             #print("transposing IDX=%d P1=%d FPC=%d OP=%d" % (pkt_idx, p1, fpc, op) )
-            pb = FPPSC - op
-            if fpc > pb:
-              fpc = pb  # runt at end of scan
-              print("Last chunk: %d" % pb )
+            p0 = FPPSC - op
+            if fpc > p0:
+              fpc = p0  # runt at end of scan
+              print("Last chunk: %d" % p0 )
             for b in range( BANDS ):  # copy packet data to pixel buffer
               pix_buf[:,op:op+fpc,b] = np.transpose(flex_buf[p1:p1+fpc,:,b])
             ev_buf[op:op+fpc] = lid[pkt_idx,p1:p1+fpc]  #  and current EVs
             op += fpc  #  next FP pointer in pix_buf
             if op == FPPSC:  # copy BB pixels
               # find cold BB pixels
-              pb,p1,ev0 = self.locate_ev( pkt_idx, tot_pkts, ev_codes[1,:], lid)
+              p0,p1,ev0 = self.locate_ev( pkt_idx, tot_pkts, ev_codes[1,:], lid)
               if ev0 == 2:
-                print("Could not find CBB EV SCENE=%s SCAN=%d IDX=%d P1=%d"%(scene_id,scan,pb,p1))
+                print("Could not find CBB EV SCENE=%s SCAN=%d IDX=%d P1=%d"%(scene_id,scan,p0,p1))
                 return -1
-              print("Found CBB PKT=%d P1=%d PH=%d SCENE=%s SCAN=%d OP=%d" % (pb,p1,ev0,scene_id,scan,op))
+              print("Found CBB PKT=%d P1=%d PH=%d SCENE=%s SCAN=%d OP=%d" % (p0,p1,ev0,scene_id,scan,op))
               fpc = FPPPKT - p1
-              pkt_idx = pb
+              pkt_idx = p0
               flex_buf[:fpc,:,:] = bip[pkt_idx,p1:,:,:]
               ev_buf[op:op+fpc] = lid[pkt_idx,p1:]
               pktid0 = pid[pkt_idx]
@@ -416,13 +414,13 @@ class L1aRawPixGenerate(object):
               good_bb += 1
               op += BBLEN
               # find hot BB pixels
-              pb,p1,ev0 = self.locate_ev( pkt_idx, tot_pkts, ev_codes[2,:], lid)
+              p0,p1,ev0 = self.locate_ev( pkt_idx, tot_pkts, ev_codes[2,:], lid)
               if ev0 == 2:
-                print("Could not find HBB EV SCENE=%s SCAN=%d IDX=%d P1=%d"%(scene_id,scan,pb,p1))
+                print("Could not find HBB EV SCENE=%s SCAN=%d IDX=%d P1=%d"%(scene_id,scan,p0,p1))
                 return -1
-              print("Found HBB PKT=%d P1=%d PH=%d SCENE=%s SCAN=%d OP=%d" % (pb,p1,ev0,scene_id,scan,op))
+              print("Found HBB PKT=%d P1=%d PH=%d SCENE=%s SCAN=%d OP=%d" % (p0,p1,ev0,scene_id,scan,op))
               fpc = FPPPKT - p1
-              pkt_idx = pb
+              pkt_idx = p0
               flex_buf[:fpc,:,:] = bip[pkt_idx,p1:,:,:]
               ev_buf[op:op+fpc] = lid[pkt_idx,p1:]
               pktid0 = pid[pkt_idx]

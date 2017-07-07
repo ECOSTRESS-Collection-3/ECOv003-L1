@@ -157,8 +157,9 @@ PKTPS = int( (SCPS*FPB3+FPPPKT-1) / FPPPKT )
 # FPIE mirror encoder - 50.95 degree swath width
 # covered by 25.475 degree of mirror scan.  Mirror
 # is 2-sided, so every other scan is 180 degrees apart
+RPM = 25.4
 MAX_FPIE=1749248
-CNT_DUR = (60/25.4)/float( MAX_FPIE )  # = 1.3504 microsecond/count
+CNT_DUR = (60/RPM)/float( MAX_FPIE )  # = 1.3504 microsecond/count
 ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.000205803 deg/count
 PIX_ANG = 25.475 / float( FPPSC )  # = 0.004717592 deg/focal plane
 PIX_EV = PIX_ANG / ANG_INC # = 22.92289 counts/pix
@@ -194,7 +195,7 @@ class L0BSimulate(object):
     b = 2.0*x[0]*x[3]*x[4] + x[1]*x[3]
     c = x[0]*x[4]*x[4] + x[1]*x[4] + x[2] - K
     rdn = (np.sqrt( b*b - 4.0*a*c) - b) / ( 2.0*a )
-    print("kelvin2DN,X=%f %f %f %f %f K=%f RDN=%f" % (x[0],x[1],x[2],x[3],x[4],K,rdn))
+    #print("kelvin2DN,X=%f %f %f %f %f K=%f RDN=%f" % (x[0],x[1],x[2],x[3],x[4],K,rdn))
     dn = int( rdn+0.5 )
     return ( (dn>>8)&0xff ) | ( (dn&0xff)<<8 ) # Big-Endian
 
@@ -257,7 +258,7 @@ class L0BSimulate(object):
     m.write()
     l0b_fd.flush()
 
-    # copy data from raw attitude/ephemeris file to HK packets
+    # copy data from raw attitude/ephemeris and engineering file to HK packets
     att_fd = h5py.File(self.l1a_raw_att_fname, "r") 
     aq=att_fd["Attitude/quaternion"]
     aqc, aqr = aq.shape
@@ -266,6 +267,15 @@ class L0BSimulate(object):
     epc, epr = ep.shape
     ev=att_fd["Ephemeris/eci_velocity"]
     et=att_fd["Ephemeris/time_j2000"]
+
+    l1e = h5py.File(self.l1a_eng_fname,"r")
+    r2k = l1e["rtdBlackbodyGradients/RTD_295K"]
+    r3k = l1e["rtdBlackbodyGradients/RTD_325K"]
+    if len( r2k.shape ) == 2:
+      enc, enr = r2k.shape
+    else:
+      enc = 1
+      enr = 5
 
     # create ancillary data sets
     print("Creating HK Group")
@@ -281,27 +291,27 @@ class L0BSimulate(object):
 
     hs = l0b_fd.create_group("/hk/status")
     hsmd = l0b_fd.create_group("/hk/status/mode")
-    dp_hsmd = hsmd.create_dataset("dpuio", (aqc,), dtype=np.uint32)
-    op_hsmd = hsmd.create_dataset("op", (aqc,), dtype=np.uint32)
+    dp_hsmd = hsmd.create_dataset("dpuio", (enc,), dtype=np.uint32)
+    op_hsmd = hsmd.create_dataset("op", (enc,), dtype=np.uint32)
 
     hsmt = l0b_fd.create_group("/hk/status/motor")
-    bb1_hsmt = hsmt.create_dataset("bb1", (aqc,), dtype=np.uint32)
-    bb2_hsmt = hsmt.create_dataset("bb2", (aqc,), dtype=np.uint32)
+    bb1_hsmt = hsmt.create_dataset("bb1", (enc,), dtype=np.uint32)
+    bb2_hsmt = hsmt.create_dataset("bb2", (enc,), dtype=np.uint32)
 
     hsmtl = l0b_fd.create_group("/hk/status/motor/last")
-    rg_hsmtl = hsmtl.create_dataset("register", (aqc,), dtype=np.uint8)
-    va_hsmtl = hsmtl.create_dataset("value", (aqc,), dtype=np.uint32)
+    rg_hsmtl = hsmtl.create_dataset("register", (enc,), dtype=np.uint8)
+    va_hsmtl = hsmtl.create_dataset("value", (enc,), dtype=np.uint32)
 
-    md_hsmt = hsmt.create_dataset("mode", (aqc,), dtype=np.uint32)
-    po_hsmt = hsmt.create_dataset("position", (aqc,5), dtype=np.uint32)
-    ps_hsmt = hsmt.create_dataset("pstate", (aqc,), dtype=np.uint8)
-    rt_hsmt = hsmt.create_dataset("rate", (aqc,), dtype=np.uint32)
-    ss_hsmt = hsmt.create_dataset("sun_safe", (aqc,), dtype=np.uint32)
-    ti_hsmt = hsmt.create_dataset("time", (aqc,), dtype=np.float64)
+    md_hsmt = hsmt.create_dataset("mode", (enc,), dtype=np.uint32)
+    po_hsmt = hsmt.create_dataset("position", (enc,5), dtype=np.uint32)
+    ps_hsmt = hsmt.create_dataset("pstate", (enc,), dtype=np.uint8)
+    rt_hsmt = hsmt.create_dataset("rate", (enc,), dtype=np.uint32)
+    ss_hsmt = hsmt.create_dataset("sun_safe", (enc,), dtype=np.uint32)
+    ti_hsmt = hsmt.create_dataset("time", (enc,), dtype=np.float64)
 
-    bbt = hs.create_dataset("temperature", (epc,2,5), dtype=np.uint16)
-    bb_time = hs.create_dataset("time", (epc,), dtype=np.float64)
-    bb_fsw = hs.create_dataset("time_fsw", (epc,), dtype=np.float64)
+    bbt = hs.create_dataset("temperature", (enc,2,enr), dtype=np.uint16)
+    bb_time = hs.create_dataset("time", (enc,), dtype=np.float64)
+    bb_fsw = hs.create_dataset("time_fsw", (enc,), dtype=np.float64)
 
     # Copy ATT/EPH into HK data set
     att[:,:] = aq[:,:]
@@ -310,13 +320,11 @@ class L0BSimulate(object):
     for i in range( aqc ): att_time[i] = Time.time_j2000(at[i]).gps
     for i in range( epc ): att_fsw[i] = Time.time_j2000(et[i]).gps
 
-    #  Copy RTD temps from ENG file
-    l1e = h5py.File(self.l1a_eng_fname,"r")
     #  ****  convert Kelvin to DN  ****
-    for j in range(5):
-      bbt[0,0,j] = self.kelvin2DN(kc[j,:], l1e["rtdBlackbodyGradients/RTD_295K"][j])
-      bbt[0,1,j] = self.kelvin2DN(kh[j,:], l1e["rtdBlackbodyGradients/RTD_325K"][j])
-    bbt[1:] = bbt[0]  # copy first set of values to remainder of array
+    for i in range( enc ):
+      for j in range(enr):
+        bbt[i,0,j] = self.kelvin2DN(kc[j,:], r2k[i,j])
+        bbt[i,1,j] = self.kelvin2DN(kh[j,:], r3k[i,j])
 
     bb_time[:] = att_time[:aqc]  # just copy times from ATT/EPH for now
     bb_fsw[:] = att_fsw[:epc]
