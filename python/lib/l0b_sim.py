@@ -154,25 +154,28 @@ SCPS = 44
 # standard packets per scene rounded up
 PKTPS = int( (SCPS*FPB3+FPPPKT-1) / FPPPKT )
 
-# FPIE mirror encoder - 50.95 degree swath width
-# covered by 25.475 degree of mirror scan.  Mirror
-# is 2-sided, so every other scan is 180 degrees apart
-RPM = 25.4
-MAX_FPIE=1749248
-CNT_DUR = (60/RPM)/float( MAX_FPIE )  # = 1.3504 microsecond/count
-ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.000205803 deg/count
-PIX_ANG = 25.475 / float( FPPSC )  # = 0.004717592 deg/focal plane
-PIX_EV = PIX_ANG / ANG_INC # = 22.92289 counts/pix
 # Short term, change this to match EcostressTimeTable pixel duration.
 # We will want to change this back, but for now change this to match
 # existing test data. See Issue #13 in github.
-#PIX_DUR = 0.0000321982
-PIX_DUR = 0.0000322
-PKT_DUR = PIX_DUR * float( FPPPKT )
-# Black body pixels are BEFORE image pixels
-ANG1 = 25.475 / 2.0
+#FP_DUR = 0.0000321982
+#FP_DUR = 0.0000322
+FP_DUR = 0.000030955332  # this is consistent with FOV of 25.475
+PKT_DUR = FP_DUR * float( FPPPKT )
+RPM = 25.4
+MPER = 60.0/RPM # mirror period = 2.3622047 sec / rev
+SC_DUR = MPER/2.0 # half-mirror rotation = 1.1811024 sec
+FP_ANG = FP_DUR*RPM*6.0 # FP angle = .0047175926 deg / FP
+FOV = FP_DUR*RPM*6.0*FPPSC # field of view = 25.475000 deg / scan
+ANG1 = FOV / 2.0
 ANG0 = -ANG1
-ANG2 = ANG1 + PIX_ANG * float( BBLEN*2 )
+ANG2 = float( int( (ANG1 + FP_ANG*float(BBLEN*2))*1000.0 ) )/1000.0
+# FPIE mirror encoder - 50.95 degree swath width
+# covered by 25.475 degree of mirror scan.  Mirror
+# is 2-sided, so every other scan is 180 degrees apart
+MAX_FPIE=1749248
+CNT_DUR = 60.0/RPM/float( MAX_FPIE ) - 1.357079461852133e-10  # = 1.3504 microsecond/count
+ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.00020580272 deg/count
+FP_EV = FP_DUR*RPM*MAX_FPIE / 60.0 # = 22.922887 counts/FP
 
 class L0BSimulate(object):
   # This is used to generate L0 simulated data. We take the output of the
@@ -201,7 +204,6 @@ class L0BSimulate(object):
 
   def create_file(self, l0b_fname):
     print("====  CREATE_FILE L0B_FNAME %s ====" % l0b_fname )
-    print("ANG0=%f ANG1=%f ANG2=%f PIX_ANG=%14.8e" % (ANG0, ANG1, ANG2, PIX_ANG ))
     print("====  Start time  ", datetime.now(), "  ====")
 
     #  Read the PRT coefficients
@@ -229,7 +231,7 @@ class L0BSimulate(object):
     kh[4,] = PRT[16,2], PRT[16,1], PRT[16,0], PRT[0,0], -(PRT[0,1]+PRT[0,2])
 
 #  Get EV start codes for BB and IMG pixels
-    ev_codes = np.zeros( (4,2), dtype=np.float32 )
+    ev_codes = np.zeros( (3,2), dtype=np.float32 )
     ' open EV codes file '
     with open( osp_dir + "/ev_codes.txt", "r") as ef:
       for i,evl in enumerate(ef):
@@ -271,11 +273,7 @@ class L0BSimulate(object):
     l1e = h5py.File(self.l1a_eng_fname,"r")
     r2k = l1e["rtdBlackbodyGradients/RTD_295K"]
     r3k = l1e["rtdBlackbodyGradients/RTD_325K"]
-    if len( r2k.shape ) == 2:
-      enc, enr = r2k.shape
-    else:
-      enc = 1
-      enr = 5
+    enc, enr = r2k.shape
 
     # create ancillary data sets
     print("Creating HK Group")
@@ -353,9 +351,25 @@ class L0BSimulate(object):
     # working array including PIX and BB, and 1 packet
     bufsiz = FPB3 + FPPPKT
     pix_buf = np.zeros( ( PPFP, bufsiz, BANDS ), dtype=np.uint16 )
-    ev_buf = np.zeros( FPPPKT, dtype=np.uint32 )
+    ev_buf = np.zeros( bufsiz, dtype=np.uint32 )
+    ev = np.zeros( (2,FPB3), dtype=np.uint32 )
+
+    for i in range( 2 ):  # generate EVs for both mirror phases
+      for j in range( FPPSC ):  # image pixels
+        p0 = int( ev_codes[0,i] + j * FP_EV + 0.5 )
+        if p0 >= MAX_FPIE: p0 -= MAX_FPIE
+        ev[i,j] = p0
+      for j in range( BBLEN ):  # BB pixels
+        p0 = int( ev_codes[1,i] + j * FP_EV + 0.5 )
+        if p0 >= MAX_FPIE: p0 -= MAX_FPIE
+        ev[i,j+FPPSC] = p0
+        p0 = int( ev_codes[2,i] + j * FP_EV + 0.5 )
+        if p0 >= MAX_FPIE: p0 -= MAX_FPIE
+        ev[i,j+FPPSC+BBLEN] = p0
+
     p0 = 0
     prev = 0
+    evp = 0
     t0 = 0
     pix_dat = [b for b in range(BANDS)]
     b295 = [b for b in range(BANDS)]
@@ -364,7 +378,6 @@ class L0BSimulate(object):
 
     # process scenes make sure to do it in order
     total_scenes = len(self.scene_files)
-    mangle = ANG0
     for v, scn in enumerate(self.scene_files):
       scene, l1a_raw_pix_fname, l1a_bb_fname, onum, tstart, tend = scn
 
@@ -381,6 +394,7 @@ class L0BSimulate(object):
         b325[b] = bb_fd["/BlackBodyPixels/B%d_blackbody_325K" % (b+1)]
 
       pix_2k=pix_fd["/Time/line_start_time_j2000"]
+      env=pix_fd["FPIEencoder/EncoderValue"]
 
       # lines and pix per scene (assume all BANDS are the same)
       lines, pix = pix_dat[0].shape
@@ -399,6 +413,7 @@ class L0BSimulate(object):
       print("\n===  Scene=%d %s TOTAL=%d P0=%d tot_lines=%d tot_pkt=%d" % (v, l1a_raw_pix_fname, total_scenes, p0, tot_lines, tot_pkt))
 
       # Iterate through data lines in current scene 256 lines at a time
+      scan = 0
       while line < lines:
 
         # copy pix and BB data to buffer at pkt offset
@@ -411,20 +426,22 @@ class L0BSimulate(object):
           pix_buf[:,ps1:pe1,b] = pix_dat[b][line:line+PPFP,:]
           pix_buf[:,ps2:pe2,b] = b295[b][line:line+PPFP,:]
           pix_buf[:,ps3:pe3,b] = b325[b][line:line+PPFP,:]
-
+        ev_buf[ps1:ps1+FPPSC] = env[scan,:]
+        scan += 1
+        ev_buf[ps1+FPPSC:pe3] = ev[evp,FPPSC:FPB3]
         # step through buffer in packet steps (FPPPKT) starting from 0
         bts = 0
         bte = p0 + FPB3
         t2k = pix_2k[line]
-        if p0 > 0: t2k += PIX_DUR * float( FPPPKT - p0 ) # for next packet
+        if p0 > 0: t2k += FP_DUR * float( FPPPKT - p0 ) # for next packet
         angnadir = 180.0 - angnadir
         print("====  ", datetime.now(), "  ====")
-        print("L=%d PKT=%d T2K=%f P2K=%f ANG=%f NADIR=%3.1f BTE=%d P0=%d PS1=%d PS2=%d PS3=%d PE3=%d" %(line,pkt_id,t2k,pix_2k[line],mangle,angnadir,bte,p0,ps1,ps2,ps3,pe3))
+        print("L=%d PKT=%d T2K=%f P2K=%f EVP=%d BTE=%d P0=%d PS1=%d PS2=%d PS3=%d PE3=%d" %(line,pkt_id,t2k,pix_2k[line],evp,bte,p0,ps1,ps2,ps3,pe3))
         while bts < bte:
 
           # see where current buffer pointer is
           pe1 = bts + FPPPKT
-          #print("SCENE=%s PKT_ID=%d MANGLE=%f BTS=%d BTE=%d" %(scene, pkt_id, mangle, bts, bte))
+          #print("SCENE=%s PKT_ID=%d BTS=%d BTE=%d" %(scene, pkt_id,  bts, bte))
           # write a packet if sufficient data
           if pe1 <= bte:
 
@@ -436,20 +453,10 @@ class L0BSimulate(object):
               t2k += PKT_DUR
             else:
               fswt[pkt_id] = Time.time_j2000(t0).gps
-            print("SCENE=%s Pkt %d T2k=%f T0=%f BTS=%d BTE=%d MANGLE=%f PREV=%d" %(scene, pkt_id, t2k, t0, bts, bte, mangle, prev), end="")
-            # ENCODer values from -12.738 to 12.738 + 2*BBLEN
-            for i in range(0,FPPPKT):
-              if i >= prev:
-                angle = mangle + angnadir  # use current NADIR angle
-              else:
-                angle = mangle + 180 - angnadir  # use previous NADIR angle
-              if angle >= 0.0: ev_buf[i] = int( (( angle ) / ANG_INC ) + 0.5 )
-              else: ev_buf[i] = int( (( angle+360 ) / ANG_INC ) + 0.5 )
-              mangle = mangle + PIX_ANG
-              if mangle >= ANG2: mangle = ANG0
-            print(" EV0=%d" % ev_buf[0] )
+            print("SCENE=%s Pkt %d T2k=%f T0=%f BTS=%d PE1=%d BTE=%d PREV=%d EV0=%d" %(scene, pkt_id, t2k, t0, bts, pe1, bte, prev,ev_buf[bts]))
+
             # write packet data
-            lid[pkt_id,:] = ev_buf[:]
+            lid[pkt_id,:] = ev_buf[bts:pe1]
             for b in range(BANDS):
               bip[pkt_id,:,:,b] = pix_buf[:,bts:pe1,b].transpose()
             # next point in pix_buf
@@ -461,10 +468,11 @@ class L0BSimulate(object):
             if bts == bte: # reached end of valid data in current pix_buf
               # reset offset into next pix_buf
               p0 = 0
-              print("End PIX_BUF SCENE=%d BTS=%d PKT_ID=%d ANG=%f" %(v,bts,pkt_id,mangle))
+              print("End PIX_BUF SCENE=%d BTS=%d PKT_ID=%d" %(v,bts,pkt_id))
+              evp = 1 - evp  #  swap EV arrays
 
           else: # at the remainder of current pix_buf
-            print("Remainder SCENE=%d BTE=%d BTS=%d PKT_ID=%d ANG=%f" % (v,bte, bts,pkt_id,mangle))
+            print("Remainder SCENE=%d BTE=%d BTS=%d PKT_ID=%d" % (v,bte, bts,pkt_id))
 
             # set offset to next pix_buf
             p0 = bte - bts
@@ -472,6 +480,8 @@ class L0BSimulate(object):
             t0 = t2k # save FSWT from end of current san for next packet
             # move remainder data to front of pix_buf
             pix_buf[:,:p0,:] = pix_buf[:,bts:bte,:]
+            ev_buf[:p0] = ev_buf[bts:bte]
+            evp = 1 - evp  #  swap EV arrays
             # escape bts while loop to go to next scene
             if v+1 < total_scenes or line+PPFP < lines:
               bts = bte

@@ -102,21 +102,28 @@ LPS = PPFP * SCPS
 ' standard packets per scene rounded up '
 PPSC = int( (SCPS*FPB3+FPPPKT-1) / FPPPKT )
 
-RPM = 25.4
-MAX_FPIE=1749248
-CNT_DUR = (60.0/RPM)/float( MAX_FPIE )  # = 1.3504 microsecond/count
-ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.000205803 deg/count
-PIX_ANG = 25.475 / float( FPPSC )  # = 0.004717592 deg/focal plane
-PIX_EV = ((25.475*MAX_FPIE)/360.0)/FPPSC  # = 22.92289 counts/pix
 # Short term, change this to match EcostressTimeTable pixel duration.
 # We will want to change this back, but for now change this to match
 # existing test data. See Issue #13 in github.
 #FP_DUR = 0.0000321982
-FP_DUR = 32.2e-6
-SC_DUR = (60.0/RPM)/2.0  # half-scan duration = 1.1811 sec
-# Black body pixels are BEFORE image pixels
-ANG1 = 25.475 / 2.0
-ANG0 = 360.0 - ANG1 - PIX_ANG * float( BBLEN*2.0 )
+#FP_DUR = 0.0000322
+FP_DUR = 0.000030955332  # this is consistent with FOV of 25.475
+PKT_DUR = FP_DUR * float( FPPPKT )
+RPM = 25.4
+MPER = 60.0/RPM # mirror period = 2.3622047 sec / rev
+SC_DUR = MPER/2.0 # half-mirror rotation = 1.1811024 sec
+FP_ANG = FP_DUR*RPM*6.0 # FP angle = .0047175926 deg / FP
+FOV = FP_DUR*RPM*6.0*FPPSC # field of view = 25.475000 deg / scan
+ANG1 = FOV / 2.0
+ANG0 = -ANG1
+ANG2 = float( int( (ANG1 + FP_ANG*float(BBLEN*2))*1000.0 ) )/1000.0
+# FPIE mirror encoder - 50.95 degree swath width
+# covered by 25.475 degree of mirror scan.  Mirror
+# is 2-sided, so every other scan is 180 degrees apart
+MAX_FPIE=1749248
+CNT_DUR = 60.0/RPM/float( MAX_FPIE ) - 1.357079461852133e-10  # = 1.3504 microsecond/count
+ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.00020580272 deg/count
+FP_EV = FP_DUR*RPM*MAX_FPIE / 60.0 # = 22.922887 counts/FP
 
 class L1aRawPixGenerate(object):
   '''This generates a L1A_RAW_PIX, L1A_BB, L1A_ENG and L1A_RAW_ATT
@@ -243,7 +250,7 @@ class L1aRawPixGenerate(object):
     prh[4] = np.poly1d([ PRT[16,2], PRT[16,1], PRT[16,0] ]) # PRT_469_T
 
 #  Get EV start codes for BB and IMG pixels
-    ev_codes = np.zeros( (4,2), dtype=np.float32 )
+    ev_codes = np.zeros( (3,2), dtype=np.float32 )
     ' open EV codes file '
     with open( self.osp_dir + "/ev_codes.txt", "r") as ef:
         for i,evl in enumerate(ef):
@@ -355,10 +362,13 @@ class L1aRawPixGenerate(object):
         pkt_idx = p0
         if p0 == 0: pktid0 = 0
         else: pktid0 = pid[p0-1]
-        if p1 > 0:  # use time codes of next packet and count backward
-          p0 += 1
-          dt = FP_DUR * float( p1-FPPPKT )
+        if p1 > 0:  # calculate fswt for PKT
+          if lid[p0,p1] < lid[p0,0]: p2 = lid[p0,p1]+MAX_FPIE-lid[p0,0]
+          else: p2 = lid[p0,p1] - lid[p0,0]
+          dt = float( p2 ) * CNT_DUR  # use EV in current PKT
+          #dt = FP_DUR * float( p1-FPPPT )  # count backward from next PKT
           print("LID[%d,%d]%d - LID[%d,0]%d" %(p0,p1,lid[p0,p1],p0,lid[p0,0]))
+          #p0 += 1
         else:  #  use time codes in current packet
           dt = 0.0
         gt = fswt[p0] + float(fpie_sync[p0] - fsw_sync[p0])/1000000.0 + dt
