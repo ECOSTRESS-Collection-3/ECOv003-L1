@@ -14,7 +14,7 @@ def test_l1a_pix_generate(isolated_dir, test_data, vicar_path):
     log = open("test.log", "w")
     l1apix = L1aPixGenerate(l1a_bb, l1a_raw, l1a_eng, l1_osp_dir,
                             "ECOSTRESS_L1A_PIX_" + fvar,
-                            "L1A_GAIN_" + fvar,
+                            "L1A_RAD_GAIN_" + fvar,
                             quiet=True, log = log)
     l1apix.run()
 
@@ -30,7 +30,7 @@ def test_l1a_pix_generate_failed(isolated_dir, test_data, vicar_path):
     # job.
     l1apix = L1aPixGenerate("bad_bb_data", l1a_raw, l1a_eng, l1_osp_dir,
                             "ECOSTRESS_L1A_PIX_" + fvar,
-                            "L1A_GAIN_" + fvar,
+                            "L1A_RAD_GAIN_" + fvar,
                             quiet=True, log = log)
     with pytest.raises(VicarRunException):
         l1apix.run()

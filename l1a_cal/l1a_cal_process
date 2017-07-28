@@ -57,7 +57,7 @@ os.chdir(dirname)
 orbit, scene, acquisition_time = orbit_from_metadata(l1a_raw_pix)
 ofile = ecostress_file_name("L1A_PIX", orbit, scene, acquisition_time,
                             build = build_version, version = file_version)
-ofile_gain = ecostress_file_name("L1A_GAIN", orbit, scene,
+ofile_gain = ecostress_file_name("L1A_RAD_GAIN", orbit, scene,
                                  acquisition_time,
                                  build = build_version, version = file_version,
                                  intermediate = True)
