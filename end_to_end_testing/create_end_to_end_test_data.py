@@ -8,9 +8,9 @@ from multiprocessing import Pool
 # a subset of the files, using the existing test data instead. Here we
 # can just turn each thing on or off. To regenerate everything, this
 # should all be True
-create_l1a_pix = False
-create_l1a_bb = False
-create_l1a_raw_pix = False
+create_l1a_pix = True
+create_l1a_bb = True
+create_l1a_raw_pix = True
 create_l1a_raw_att = True
 create_l1a_eng = True
 create_l0b = True

@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE(basic_test)
   blitz::Array<double, 2> res = srad.radiance_scan(4, 20);
   BOOST_CHECK_EQUAL(res.rows(), 20);
   BOOST_CHECK_EQUAL(res.cols(), 5400);
-  BOOST_CHECK_CLOSE(res(0,5000), 85.4540, 2e-2);
+  BOOST_CHECK_CLOSE(res(0,5000), 85.4747, 2e-2);
 }
 
 BOOST_AUTO_TEST_CASE(serialization)

@@ -17,7 +17,10 @@ ECOSTRESS_IMPLEMENT(EcostressTimeTable);
 // These numbers come for the the ECOSTRESS_SDS_Data_Bible.xls in
 // the Ecostress-sds git repository.
 const double EcostressTimeTable::nominal_scan_spacing = 1.181;
-const double EcostressTimeTable::frame_time = 32.2e-6;
+// We should be getting this from the input data, but for now this
+// is hardcoded. If you change this, make sure to change PIX_DUR
+// in l0b_sim.py
+const double EcostressTimeTable::frame_time = 0.0000321875;
 
 //-------------------------------------------------------------------------
 /// Create a time table with the given number of scans, with the time
