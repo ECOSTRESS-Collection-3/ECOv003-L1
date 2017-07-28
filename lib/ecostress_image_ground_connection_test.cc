@@ -16,7 +16,7 @@ BOOST_AUTO_TEST_CASE(basic_test)
   BOOST_CHECK_EQUAL(igc->band(),
 		    (int) EcostressImageGroundConnection::REF_BAND);
   BOOST_CHECK(distance(*igc->ground_coordinate(GeoCal::ImageCoordinate(10,10)),
-		       GeoCal::Geodetic(37.7166702741, -124.572923589)) < 1.0);
+		       GeoCal::Geodetic(37.71667082, -124.5715165)) < 1.0);
 }
 
 BOOST_AUTO_TEST_CASE(image_coordinate)
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(serialization)
   boost::shared_ptr<EcostressImageGroundConnection> igcr =
     GeoCal::serialize_read_string<EcostressImageGroundConnection>(d);
   BOOST_CHECK(distance(*igc->ground_coordinate(GeoCal::ImageCoordinate(10,10)),
-		       GeoCal::Geodetic(37.7166702741, -124.572923589)) < 1.0);
+		       GeoCal::Geodetic(37.71667082, -124.5715165)) < 1.0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
