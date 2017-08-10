@@ -1,8 +1,6 @@
 #include "ecostress_image_ground_connection.h"
-#include "ecostress_time_table.h"
 #include "ecostress_serialize_support.h"
 #include "geocal/ostream_pad.h"
-#include "geocal_gsl_root.h"
 #include <boost/make_shared.hpp>
 using namespace Ecostress;
 
@@ -125,70 +123,6 @@ void EcostressImageGroundConnection::print(std::ostream& Os) const
 GeoCal::ImageCoordinate EcostressImageGroundConnection::image_coordinate
 (const GeoCal::GroundCoordinate& Gp) const
 {
-  class SampleFunc: public GeoCal::DFunctor {
-  public:
-    SampleFunc(const EcostressImageGroundConnection& Igc, int Scan_index,
-	       const GeoCal::GroundCoordinate& Gp)
-      : igc(Igc), can_solve(false), gp(Gp),
-	tt(boost::dynamic_pointer_cast<EcostressTimeTable>(Igc.time_table()))
-    {
-      // We can worry about generalizing this if it ever becomes an
-      // issue, but for now we assume the time table is an EcostressTimeTable.
-      if(!tt)
-	throw GeoCal::Exception("image_coordinate currently only works with EcostressTimeTable");
-      epoch = tt->min_time();
-      int lstart, lend;
-      tt->scan_index_to_line(Scan_index, lstart, lend);
-      GeoCal::Time tmin, tmax;
-      GeoCal::FrameCoordinate fc;
-      tt->time(GeoCal::ImageCoordinate(lstart, 0), tmin, fc);
-      tt->time(GeoCal::ImageCoordinate(lstart, Igc.number_sample() - 1), tmax,
-	       fc);
-      if((*this)(tmin - epoch) * (*this)(tmax - epoch) > 0)
-	// Ok if we fail to get a solution, we just leave can_solve false
-	return;
-      try {
-	tsol = epoch + gsl_root(*this, tmin - epoch, tmax - epoch);
-	can_solve = true;
-      } catch(const GeoCal::ConvergenceFailure& E) {
-	// Ok if we fail to get a solution, we just leave can_solve false
-      }
-    }
-    virtual ~SampleFunc() {}
-    GeoCal::FrameCoordinate fc_at_sol() const
-    {
-      double sample =
-	tt->image_coordinate(tsol, GeoCal::FrameCoordinate(0,0)).sample;
-      return igc.orbit_data(tsol, sample)->frame_coordinate(gp, *igc.camera(), igc.band());
-    }
-    bool line_in_range() const
-    {
-      if(!can_solve)
-	return false;
-      double ln = fc_at_sol().line;
-      return ln >= 0 && ln <= igc.camera()->number_line(igc.band());
-    }
-    GeoCal::ImageCoordinate image_coordinate() const
-    {
-      if(!can_solve)
-	throw GeoCal::Exception("Can't solve");
-      return tt->image_coordinate(tsol, fc_at_sol());
-    }
-    virtual double operator()(const double& Toffset) const
-    {
-      double sample =
-	tt->image_coordinate(epoch + Toffset,
-			     GeoCal::FrameCoordinate(0,0)).sample;
-      return igc.orbit_data(epoch + Toffset, sample)->frame_coordinate(gp, *igc.camera(), igc.band()).sample;
-    }
-  private:
-    const EcostressImageGroundConnection& igc;
-    bool can_solve;
-    GeoCal::Time epoch, tsol;
-    const GeoCal::GroundCoordinate& gp;
-    boost::shared_ptr<EcostressTimeTable> tt;
-  };
-
   boost::shared_ptr<EcostressTimeTable> ett =
     boost::dynamic_pointer_cast<EcostressTimeTable>(tt);
   if(!ett)
@@ -208,4 +142,40 @@ GeoCal::ImageCoordinate EcostressImageGroundConnection::image_coordinate
   if(best_line < -1e19)
     throw GeoCal::ImageGroundConnectionFailed();
   return ic;
+}
+
+//-----------------------------------------------------------------------
+/// Image coordinate for a particular scan index (useful for example
+/// to do band to band registration).
+///
+/// This indicates success by setting Success to true if we were able
+/// to fill in Ic, false otherwise
+///
+/// Because it is convenient, you can pass in a band to use if
+/// desired, which can be different than the current value of
+/// band(). The default value of -1 means to use the value of band()
+/// and not change this.
+//-----------------------------------------------------------------------
+
+void EcostressImageGroundConnection::image_coordinate_scan_index
+(const GeoCal::GroundCoordinate& Gc,
+ int Scan_index, GeoCal::ImageCoordinate& Ic, bool& Success, int Band) const
+{
+  int start_band = band();
+  if(Band != -1)
+    const_cast<EcostressImageGroundConnection*>(this)->band(Band);
+  try {
+    SampleFunc f(*this, Scan_index, Gc);
+    Success = false;
+    if(f.line_in_range()) {
+      Ic = f.image_coordinate();
+      Success = true;
+    }
+    if(Band != -1)
+      const_cast<EcostressImageGroundConnection*>(this)->band(start_band);
+  } catch(...) {
+    if(Band != -1)
+      const_cast<EcostressImageGroundConnection*>(this)->band(start_band);
+    throw;
+  }
 }

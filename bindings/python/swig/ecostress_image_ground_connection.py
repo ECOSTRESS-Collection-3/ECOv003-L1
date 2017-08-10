@@ -233,6 +233,38 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
         return _ecostress_image_ground_connection.EcostressImageGroundConnection_orbit_data(self, T, Ic_sample)
 
 
+    def image_coordinate_scan_index(self, Gc, Scan_index, Band=-1):
+        """
+
+        void EcostressImageGroundConnection::image_coordinate_scan_index(const GeoCal::GroundCoordinate &Gc, int Scan_index,
+        GeoCal::ImageCoordinate &Ic, bool &Success, int Band=-1) const
+        Image coordinate for a particular scan index (useful for example to do
+        band to band registration).
+
+        This indicates success by setting Success to true if we were able to
+        fill in Ic, false otherwise
+
+        Because it is convenient, you can pass in a band to use if desired,
+        which can be different than the current value of band(). The default
+        value of -1 means to use the value of band() and not change this. 
+        """
+        return _ecostress_image_ground_connection.EcostressImageGroundConnection_image_coordinate_scan_index(self, Gc, Scan_index, Band)
+
+
+    def _v_number_line_scan(self):
+        """
+
+        int Ecostress::EcostressImageGroundConnection::number_line_scan() const
+
+        """
+        return _ecostress_image_ground_connection.EcostressImageGroundConnection__v_number_line_scan(self)
+
+
+    @property
+    def number_line_scan(self):
+        return self._v_number_line_scan()
+
+
     def _v_band(self, *args):
         """
 
@@ -367,6 +399,8 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
 
     __swig_destroy__ = _ecostress_image_ground_connection.delete_EcostressImageGroundConnection
 EcostressImageGroundConnection.orbit_data = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection_orbit_data, None, EcostressImageGroundConnection)
+EcostressImageGroundConnection.image_coordinate_scan_index = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection_image_coordinate_scan_index, None, EcostressImageGroundConnection)
+EcostressImageGroundConnection._v_number_line_scan = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_number_line_scan, None, EcostressImageGroundConnection)
 EcostressImageGroundConnection._v_band = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_band, None, EcostressImageGroundConnection)
 EcostressImageGroundConnection._v_resolution = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_resolution, None, EcostressImageGroundConnection)
 EcostressImageGroundConnection._v_max_height = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_max_height, None, EcostressImageGroundConnection)

@@ -35,6 +35,11 @@ public:
   (const GeoCal::GroundCoordinate& Gc) const;
   boost::shared_ptr<GeoCal::QuaternionOrbitData> orbit_data
     (const GeoCal::Time& T, double Ic_sample) const;
+  void image_coordinate_scan_index
+  (const GeoCal::GroundCoordinate& Gc,
+   int Scan_index, GeoCal::ImageCoordinate& OUTPUT, bool& OUTPUT,
+   int Band=-1) const;
+  %python_attribute(number_line_scan, int);
   %python_attribute_with_set(band, int);
   %python_attribute_with_set(resolution, double);
   %python_attribute_with_set(max_height, double);
