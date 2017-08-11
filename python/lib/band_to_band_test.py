@@ -5,28 +5,40 @@ except ImportError:
 from geocal import *
 from test_support import *
 
-def test_band_to_band(isolated_dir, igc_hres, lwm):
+def test_band_to_band(isolated_dir, igc_hres, lwm, dn_fname, gain_fname):
     '''Test band to band registration'''
     # Check that we have initial misregistration
     igc_hres.band = EcostressImageGroundConnection.REF_BAND
     gp = igc_hres.ground_coordinate(ImageCoordinate(100,100))
-    igc_hres.band = 3
+    igc_hres.band = 2
     ic = igc_hres.image_coordinate(gp)
     assert abs(100 - ic.sample) > 10
     igc_hres.band = EcostressImageGroundConnection.REF_BAND
-    # Create a model
-    tplist = band_to_band_tie_points(igc_hres, 0, 3)
+    # Create a model.
+    tplist = band_to_band_tie_points(igc_hres, 0, 2)
     m = QuadraticGeometricModel()
     m.fit_transformation(tplist)
-    print(m)
-    print(tplist.x)
-    print(tplist.y)
-    print(m.resampled_image_coordinate(ImageCoordinate(100,100)))
-    print(m.original_image_coordinate(ImageCoordinate(100,100)))
-    print(m.resampled_image_coordinate(ImageCoordinate(200,200)))
-    print(m.original_image_coordinate(ImageCoordinate(200,200)))
-    print(m.resampled_image_coordinate(ImageCoordinate(256,5300)))
+    # We'll need to add better handling for other scan index, but for
+    # now just resample the first
+    rrad = EcostressRadApply(dn_fname, gain_fname, 2)
+    rradsub = SubRasterImage(rrad, 0, 0, igc_hres.number_line_scan,
+                             igc_hres.number_sample)
+    GdalRasterImage.save("b3_before.img", "VICAR", rradsub,
+                         GdalRasterImage.Float64)
+    refrad = EcostressRadApply(dn_fname, gain_fname,
+                               EcostressImageGroundConnection.REF_BAND)
+    refradsub = SubRasterImage(refrad, 0, 0, igc_hres.number_line_scan,
+                               igc_hres.number_sample)
+    GdalRasterImage.save("b4.img", "VICAR", refradsub,
+                         GdalRasterImage.Float64)
+    # Set fill to 0, just because xvd doesn't like -999. But we'll
+    #rbreg = GeometricModelImage(rradsub, m, igc_hres.number_line_scan,
+    #                           igc_hres.number_sample, -9999)
+    rbreg = GeometricModelImage(rradsub, m, igc_hres.number_line_scan,
+                                igc_hres.number_sample, 0)
+    GdalRasterImage.save("b3.img", "VICAR", rbreg,
+                         GdalRasterImage.Float64)
     
-          
+        
     
     

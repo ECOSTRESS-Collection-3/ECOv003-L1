@@ -140,6 +140,14 @@ def igc(unit_test_data, test_data):
     yield igc
 
 @pytest.yield_fixture(scope="function")
+def dn_fname(unit_test_data, test_data):
+    yield test_data + "ECOSTRESS_L1A_PIX_80005_001_20150124T204251_0100_02.h5.expected"
+
+@pytest.yield_fixture(scope="function")
+def gain_fname(unit_test_data, test_data):
+    yield test_data + "L1A_RAD_GAIN_80005_001_20150124T204251_0100_02.h5.expected"
+    
+@pytest.yield_fixture(scope="function")
 def igc_hres(unit_test_data, test_data):
     '''Like igc_old, but a more realistic IGC. This one is not averaged 
     (so 256 rows per scan)'''

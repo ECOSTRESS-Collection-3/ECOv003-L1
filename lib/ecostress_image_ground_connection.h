@@ -23,7 +23,8 @@ namespace Ecostress {
 class EcostressImageGroundConnection :
     public virtual GeoCal::ImageGroundConnection {
 public:
-  enum {REF_BAND = 4 }; 	// Not sure about this, we'll need to
+  // This is 0 based, so with 1 based this is band 4.
+  enum {REF_BAND = 3 }; 	// Not sure about this, we'll need to
 				// check on this
   EcostressImageGroundConnection
   (const boost::shared_ptr<GeoCal::Orbit>& Orb,
