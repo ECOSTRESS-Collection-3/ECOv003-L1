@@ -1,4 +1,5 @@
 from geocal import *
+from ecostress_swig import *
 import h5py
 import shutil
 from .write_standard_metadata import WriteStandardMetadata
@@ -12,8 +13,9 @@ class L1bRadGenerate(object):
         '''Create a L1bRadGenerate with the given input files
         and output file name. To actually generate, execute the 'run'
         command.'''
+        self.l1a_pix_fname = l1a_pix
         self.l1a_pix = h5py.File(l1a_pix, "r")
-        self.l1a_gain = h5py.File(l1a_gain, "r")
+        self.l1a_gain_fname = l1a_gain
         self.output_name = output_name
         self.local_granule_id = local_granule_id
         self.run_config = run_config
@@ -32,15 +34,8 @@ class L1bRadGenerate(object):
         registration, we just punt on this and assume the bands are
         already registered (true of our test data).'''
 
-        l1a_d = self.l1a_pix["/UncalibratedDN/b%d_image" % (band + 1)][:,:]
-        if(band != 5):                  # SWIR band doesn't get scaled
-            g = self.l1a_gain["Gain/b%d_gain" % (band + 1)][:,:]
-            off = self.l1a_gain["Offset/b%d_offset" % (band + 1)][:,:]
-            d = l1a_d * g + off
-            # Set masked values if gain/offset to masked value in output
-            d[np.logical_or(g < -9998, off < -9998)] = -9999
-        else:
-            d = l1a_d
+        rad = EcostressRadApply(self.l1a_pix_fname, self.l1a_gain_fname, band)
+        d = rad.read_all_double()
         res = (d[0::2, :] + d[1::2, :]) / 2.0
         res[d[0::2, :] < -9998] = -9999
         res[d[1::2, :] < -9998] = -9999
