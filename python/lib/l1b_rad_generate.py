@@ -7,12 +7,14 @@ from .misc import ecostress_radiance_scale_factor
 
 class L1bRadGenerate(object):
     '''This generates a L1B rad file from the given L1A_PIX file.'''
-    def __init__(self, l1a_pix, l1a_gain, output_name, local_granule_id = None,
+    def __init__(self, igc, l1a_pix, l1a_gain, output_name,
+                 local_granule_id = None,
                  run_config = None, log = None, build_id = "0.30",
                  pge_version = "0.30"):
         '''Create a L1bRadGenerate with the given input files
         and output file name. To actually generate, execute the 'run'
         command.'''
+        self.igc = igc
         self.l1a_pix_fname = l1a_pix
         self.l1a_pix = h5py.File(l1a_pix, "r")
         self.l1a_gain_fname = l1a_gain
@@ -35,10 +37,23 @@ class L1bRadGenerate(object):
         already registered (true of our test data).'''
 
         rad = EcostressRadApply(self.l1a_pix_fname, self.l1a_gain_fname, band)
-        d = rad.read_all_double()
-        res = (d[0::2, :] + d[1::2, :]) / 2.0
-        res[d[0::2, :] < -9998] = -9999
-        res[d[1::2, :] < -9998] = -9999
+        res = np.empty((int(rad.number_line/2), rad.number_sample))
+        nscan = int(rad.number_line / self.igc.number_line_scan)
+        for scan_index in range(nscan):
+            print("Doing scan_index %d for band %d" % (scan_index, band))
+            tplist = band_to_band_tie_points(self.igc, scan_index, band)
+            m = QuadraticGeometricModel()
+            m.fit_transformation(tplist)
+            sline = scan_index * self.igc.number_line_scan
+            nlinescan = self.igc.number_line_scan
+            radsub = SubRasterImage(rad, sline, 0, nlinescan,
+                                    rad.number_sample)
+            fill_value = -9999
+            rbreg = GeometricModelImage(radsub, m, radsub.number_line,
+                                        radsub.number_sample, fill_value,
+                                        GeometricModelImage.NEAREST_NEIGHBOR)
+            rbreg_avg = EcostressRadAverage(rbreg)
+            res[int(sline/2):int((sline+nlinescan)/2),:] = rbreg_avg.read_all_double()
         return res
         
     def run(self):
