@@ -10,7 +10,7 @@
 
 from sys import version_info
 if version_info >= (3, 0, 0):
-    new_instancemethod = lambda func, inst, cls: _ecostress_band_to_band.SWIG_PyInstanceMethod_New(func)
+    new_instancemethod = lambda func, inst, cls: _ecostress_rad_average.SWIG_PyInstanceMethod_New(func)
 else:
     from new import instancemethod as new_instancemethod
 if version_info >= (2, 6, 0):
@@ -19,20 +19,20 @@ if version_info >= (2, 6, 0):
         import imp
         fp = None
         try:
-            fp, pathname, description = imp.find_module('_ecostress_band_to_band', [dirname(__file__)])
+            fp, pathname, description = imp.find_module('_ecostress_rad_average', [dirname(__file__)])
         except ImportError:
-            import _ecostress_band_to_band
-            return _ecostress_band_to_band
+            import _ecostress_rad_average
+            return _ecostress_rad_average
         if fp is not None:
             try:
-                _mod = imp.load_module('_ecostress_band_to_band', fp, pathname, description)
+                _mod = imp.load_module('_ecostress_rad_average', fp, pathname, description)
             finally:
                 fp.close()
             return _mod
-    _ecostress_band_to_band = swig_import_helper()
+    _ecostress_rad_average = swig_import_helper()
     del swig_import_helper
 else:
-    import _ecostress_band_to_band
+    import _ecostress_rad_average
 del version_info
 try:
     _swig_property = property
@@ -116,31 +116,31 @@ class SwigPyIterator(object):
     def __init__(self, *args, **kwargs):
         raise AttributeError("No constructor defined - class is abstract")
     __repr__ = _swig_repr
-    __swig_destroy__ = _ecostress_band_to_band.delete_SwigPyIterator
+    __swig_destroy__ = _ecostress_rad_average.delete_SwigPyIterator
     def __iter__(self):
         return self
-SwigPyIterator.value = new_instancemethod(_ecostress_band_to_band.SwigPyIterator_value, None, SwigPyIterator)
-SwigPyIterator.incr = new_instancemethod(_ecostress_band_to_band.SwigPyIterator_incr, None, SwigPyIterator)
-SwigPyIterator.decr = new_instancemethod(_ecostress_band_to_band.SwigPyIterator_decr, None, SwigPyIterator)
-SwigPyIterator.distance = new_instancemethod(_ecostress_band_to_band.SwigPyIterator_distance, None, SwigPyIterator)
-SwigPyIterator.equal = new_instancemethod(_ecostress_band_to_band.SwigPyIterator_equal, None, SwigPyIterator)
-SwigPyIterator.copy = new_instancemethod(_ecostress_band_to_band.SwigPyIterator_copy, None, SwigPyIterator)
-SwigPyIterator.next = new_instancemethod(_ecostress_band_to_band.SwigPyIterator_next, None, SwigPyIterator)
-SwigPyIterator.__next__ = new_instancemethod(_ecostress_band_to_band.SwigPyIterator___next__, None, SwigPyIterator)
-SwigPyIterator.previous = new_instancemethod(_ecostress_band_to_band.SwigPyIterator_previous, None, SwigPyIterator)
-SwigPyIterator.advance = new_instancemethod(_ecostress_band_to_band.SwigPyIterator_advance, None, SwigPyIterator)
-SwigPyIterator.__eq__ = new_instancemethod(_ecostress_band_to_band.SwigPyIterator___eq__, None, SwigPyIterator)
-SwigPyIterator.__ne__ = new_instancemethod(_ecostress_band_to_band.SwigPyIterator___ne__, None, SwigPyIterator)
-SwigPyIterator.__iadd__ = new_instancemethod(_ecostress_band_to_band.SwigPyIterator___iadd__, None, SwigPyIterator)
-SwigPyIterator.__isub__ = new_instancemethod(_ecostress_band_to_band.SwigPyIterator___isub__, None, SwigPyIterator)
-SwigPyIterator.__add__ = new_instancemethod(_ecostress_band_to_band.SwigPyIterator___add__, None, SwigPyIterator)
-SwigPyIterator.__sub__ = new_instancemethod(_ecostress_band_to_band.SwigPyIterator___sub__, None, SwigPyIterator)
-SwigPyIterator_swigregister = _ecostress_band_to_band.SwigPyIterator_swigregister
+SwigPyIterator.value = new_instancemethod(_ecostress_rad_average.SwigPyIterator_value, None, SwigPyIterator)
+SwigPyIterator.incr = new_instancemethod(_ecostress_rad_average.SwigPyIterator_incr, None, SwigPyIterator)
+SwigPyIterator.decr = new_instancemethod(_ecostress_rad_average.SwigPyIterator_decr, None, SwigPyIterator)
+SwigPyIterator.distance = new_instancemethod(_ecostress_rad_average.SwigPyIterator_distance, None, SwigPyIterator)
+SwigPyIterator.equal = new_instancemethod(_ecostress_rad_average.SwigPyIterator_equal, None, SwigPyIterator)
+SwigPyIterator.copy = new_instancemethod(_ecostress_rad_average.SwigPyIterator_copy, None, SwigPyIterator)
+SwigPyIterator.next = new_instancemethod(_ecostress_rad_average.SwigPyIterator_next, None, SwigPyIterator)
+SwigPyIterator.__next__ = new_instancemethod(_ecostress_rad_average.SwigPyIterator___next__, None, SwigPyIterator)
+SwigPyIterator.previous = new_instancemethod(_ecostress_rad_average.SwigPyIterator_previous, None, SwigPyIterator)
+SwigPyIterator.advance = new_instancemethod(_ecostress_rad_average.SwigPyIterator_advance, None, SwigPyIterator)
+SwigPyIterator.__eq__ = new_instancemethod(_ecostress_rad_average.SwigPyIterator___eq__, None, SwigPyIterator)
+SwigPyIterator.__ne__ = new_instancemethod(_ecostress_rad_average.SwigPyIterator___ne__, None, SwigPyIterator)
+SwigPyIterator.__iadd__ = new_instancemethod(_ecostress_rad_average.SwigPyIterator___iadd__, None, SwigPyIterator)
+SwigPyIterator.__isub__ = new_instancemethod(_ecostress_rad_average.SwigPyIterator___isub__, None, SwigPyIterator)
+SwigPyIterator.__add__ = new_instancemethod(_ecostress_rad_average.SwigPyIterator___add__, None, SwigPyIterator)
+SwigPyIterator.__sub__ = new_instancemethod(_ecostress_rad_average.SwigPyIterator___sub__, None, SwigPyIterator)
+SwigPyIterator_swigregister = _ecostress_rad_average.SwigPyIterator_swigregister
 SwigPyIterator_swigregister(SwigPyIterator)
 
 
-_ecostress_band_to_band.SHARED_PTR_DISOWN_swigconstant(_ecostress_band_to_band)
-SHARED_PTR_DISOWN = _ecostress_band_to_band.SHARED_PTR_DISOWN
+_ecostress_rad_average.SHARED_PTR_DISOWN_swigconstant(_ecostress_rad_average)
+SHARED_PTR_DISOWN = _ecostress_rad_average.SHARED_PTR_DISOWN
 
 import os
 
@@ -185,31 +185,53 @@ def _new_from_set(cls, version, *args):
     inst.set(*args)
     return inst
 
-import geocal_swig.image_ground_connection
+import geocal_swig.calc_raster
+import geocal_swig.raster_image_variable
+import geocal_swig.raster_image
 import geocal_swig.generic_object
-import geocal_swig.with_parameter
-import geocal_swig.geocal_exception
-import geocal_swig.observer
-
-def band_to_band_tie_points(Igc, Scan_index, Band, Nline_pt=10, Nsamp_pt=30):
+class EcostressRadAverage(geocal_swig.calc_raster.CalcRaster):
     """
 
-    GeoCal::GeometricTiePoints Ecostress::band_to_band_tie_points(const EcostressImageGroundConnection &Igc, int Scan_index, int Band,
-    int Nline_pt=10, int Nsamp_pt=30)
-    This creates a set of GeometricTiePoints that maps between the given
-    Band and whatever Igc.band() is (e.g., the REF_BAND).
+    This is GeoCal::RasterAveraged, but with additional logic added for
+    handling bad pixels/missing data (values of -9999).
 
-    We attempt to form a Nline_pt x Nsamp_pt grid.
+    When averaging we leave them out, unless both pixels we are averaging
+    is -9999 in which case we give the results as -9999.
 
-    This code would be easy enough to do in python, but we do it in C++
-    for better performance.
-
-    NOTE The tiepoints returned are relative to the scan, not to the full
-    image (so the line number is between 0 and 255). This is what we want
-    in L1 processing because we subset the data we use in the
-    GeometricModelImage. But this might not be what you would expect from
-    the name of this function. 
+    C++ includes: ecostress_rad_average.h 
     """
-    return _ecostress_band_to_band.band_to_band_tie_points(Igc, Scan_index, Band, Nline_pt, Nsamp_pt)
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, Original_data):
+        """
+
+        EcostressRadAverage::EcostressRadAverage(const boost::shared_ptr< GeoCal::RasterImage > &Original_data)
+
+        """
+        _ecostress_rad_average.EcostressRadAverage_swiginit(self, _ecostress_rad_average.new_EcostressRadAverage(Original_data))
+
+    def _v_raw_data(self):
+        """
+
+        const boost::shared_ptr<GeoCal::RasterImage>& Ecostress::EcostressRadAverage::raw_data() const
+
+        """
+        return _ecostress_rad_average.EcostressRadAverage__v_raw_data(self)
+
+
+    @property
+    def raw_data(self):
+        return self._v_raw_data()
+
+
+    def __reduce__(self):
+      return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
+
+    __swig_destroy__ = _ecostress_rad_average.delete_EcostressRadAverage
+EcostressRadAverage._v_raw_data = new_instancemethod(_ecostress_rad_average.EcostressRadAverage__v_raw_data, None, EcostressRadAverage)
+EcostressRadAverage_swigregister = _ecostress_rad_average.EcostressRadAverage_swigregister
+EcostressRadAverage_swigregister(EcostressRadAverage)
+
 
 

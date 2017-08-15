@@ -83,9 +83,10 @@ EcostressImageGroundConnection::orbit_data
    boost::dynamic_pointer_cast<GeoCal::QuaternionOrbitData>(orb->orbit_data(T));
   if(!od)
     throw GeoCal::Exception("EcostressImageGroundConnection only works with orbits that return a QuaternionOrbitData");
-  return boost::make_shared<GeoCal::QuaternionOrbitData>
-    (od->time(), od->position_ci(), od->velocity_ci(),
-     od->sc_to_ci() * sm->rotation_quaterion(Ic_sample));
+  boost::shared_ptr<GeoCal::QuaternionOrbitData> res =
+    boost::make_shared<GeoCal::QuaternionOrbitData>(*od);
+  res->sc_to_ci(od->sc_to_ci() * sm->rotation_quaterion(Ic_sample));
+  return res;
 }
 
 // See base class for description
