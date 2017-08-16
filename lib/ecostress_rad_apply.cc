@@ -2,6 +2,7 @@
 #include "ecostress_serialize_support.h"
 #include "gdal_raster_image.h"
 #include <boost/lexical_cast.hpp>
+#include <boost/make_shared.hpp>
 
 using namespace Ecostress;
 

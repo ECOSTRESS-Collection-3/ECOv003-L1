@@ -71,6 +71,7 @@ Then
     cd /pkg/afids
     ~/.local/bin/virtualenv -p /usr/bin/python afids_pythonenv
     source afids_pythonenv/bin/activate
+	unset PYTHONPATH
 
 Need to link in the umfpack headers, or at least I couldn't figure out
 a way to pass this to UMFPACK without linking here:
