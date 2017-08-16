@@ -7,6 +7,10 @@ endif
 setenv AFIDSPYTHONTOP @geocaldir@
 source @afidsdir@/setup_afids_env.csh
 setenv TAE_PATH ${ECOSTRESSTOP}/vicar_pdf:${TAE_PATH}
+# Strip off afids site packages, we want to use the packages in the virtual
+# environment instead
+unsetenv PYTHONPATH
+source @geocaldir@/setup_geocal.csh
 
 if($?PYTHONPATH) then
   setenv PYTHONPATH ${ECOSTRESSTOP}/@pythondir@:${ECOSTRESSTOP}/@platpythondir@:${PYTHONPATH}
