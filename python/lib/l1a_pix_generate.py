@@ -36,11 +36,14 @@ class L1aPixGenerate(object):
 
     def _create_dir(self):
         i = 1
-        dirname = "./el1a_run_%03d" % i
-        while(os.path.exists(dirname)):
-            i += 1
-            dirname = "./el1a_run_%03d" % i
-        makedirs_p(dirname)
+        done = False
+        while not done:
+            try:
+                dirname = "./el1a_run_%03d" % i
+                os.makedirs(dirname)
+                done = True
+            except OSError:
+                i += 1
         return dirname
     
     def run(self):

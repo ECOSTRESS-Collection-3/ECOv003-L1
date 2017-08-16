@@ -40,7 +40,8 @@ class L1bRadGenerate(object):
         res = np.empty((int(rad.number_line/2), rad.number_sample))
         nscan = int(rad.number_line / self.igc.number_line_scan)
         for scan_index in range(nscan):
-            print("Doing scan_index %d for band %d" % (scan_index, band))
+            print("Doing scan_index %d for band %d" % (scan_index, band),
+                  file=self.log)
             tplist = band_to_band_tie_points(self.igc, scan_index, band)
             m = QuadraticGeometricModel()
             m.fit_transformation(tplist)

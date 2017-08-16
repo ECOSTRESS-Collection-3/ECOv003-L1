@@ -9,8 +9,8 @@ import re
 
 version = "1.0"
 usage='''Usage:
-  l1a_cal_process [options] <run_config>
-  l1a_cal_process -h | --help
+  l1b_rad_process [options] <run_config>
+  l1b_rad_process -h | --help
   l1b_rad_process -v | --version
 
 This runs the L1B Rad process.
@@ -40,10 +40,53 @@ build_id = "0.30"
 pge_version = "0.30"
 build_version = "0100"
 
+datum = os.path.abspath(config["StaticAncillaryFileGroup", "Datum"])
+srtm_dir = os.path.abspath(config["StaticAncillaryFileGroup", "SRTMDir"])
 l1a_pix = os.path.abspath(config["InputFileGroup", "L1A_PIX"])
 l1a_gain = os.path.abspath(config["InputFileGroup", "L1A_RAD_GAIN"])
+spice_data = os.path.abspath(config["StaticAncillaryFileGroup", "SpiceDataDir"])
+l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
 dirname = config["ProductPathGroup", "ProductPath"]
 file_version = config["ProductPathGroup", "ProductCounter"]
+
+cam = read_shelve(l1_osp_dir + "/camera.xml")
+orbfname = os.path.abspath(config["TimeBasedFileGroup", "L1A_RAW_ATT"])
+# Create orbit. We give all the names of the fields, since we don't use the
+# default names HdfOrbit expects. I'm not sure if Eci and J2000 is what we
+# will end up using, but this is what is used by the test data now.
+orb = HdfOrbit_Eci_TimeJ2000(orbfname, "", "Ephemeris/time_j2000",
+                             "Ephemeris/eci_position",
+                             "Ephemeris/eci_velocity",
+                             "Attitude/time_j2000",
+                             "Attitude/quaternion")
+
+f = h5py.File(l1a_pix, "r")
+tmlist = f["/Time/line_start_time_j2000"][::256]
+# False here means we've haven't averaged the 256 lines.
+vtime = Vector_Time()
+for t in tmlist:
+    vtime.append(Time.time_j2000(t))
+tt = EcostressTimeTable(vtime, False)
+    
+# As a useful backdoor, check for then environment variable
+# ECOSTRESS_USE_AFIDS_ENV. This use the various afids environment
+# variables rather than the contents of the run config file. This is
+# useful for testing, because pistol has all these variable defined
+# in different locations. May come up with a cleaner way of doing this,
+# but for now do this.
+if("ECOSTRESS_USE_AFIDS_ENV" in os.environ):
+    datum = os.environ["AFIDS_VDEV_DATA"] + "/EGM96_20_x100.HLF"
+    srtm_dir = os.environ["ELEV_ROOT"]
+else:
+    # Otherwise use data from run config without change
+    # Spice directory passed down as an environment variable
+    os.environ["SPICEDATA"] = spice_data
+dem = SrtmDem(srtm_dir,False, DatumGeoid96(datum))
+
+# Currently assume constant scan mirror rate. Later we should read
+# this from l1a data
+sm = EcostressScanMirror()
+igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
 
 makedirs_p(dirname)
 os.chdir(dirname)
@@ -56,7 +99,7 @@ log_fname = os.path.splitext(ofile)[0] + ".log"
 log = open(log_fname, "w")
 try:
     # Generate output
-    l1brad = L1bRadGenerate(l1a_pix, l1a_gain, ofile, run_config = config,
+    l1brad = L1bRadGenerate(igc, l1a_pix, l1a_gain, ofile, run_config = config,
                             log = log,
                             build_id=build_id, pge_version=pge_version)
     l1brad.run()
