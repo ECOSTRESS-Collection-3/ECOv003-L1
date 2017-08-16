@@ -3,7 +3,100 @@ from geocal import *
 import re
 import subprocess
 import h5py
+import os
+from ecostress_swig import *
 
+def create_dem(config):
+    '''Create the SRTM DEM based on the configuration. In production, we
+    take the datum and srtm_dir passed in. But for testing if the special
+    variable ECOSTRESS_USE_AFIDS_ENV is defined then we use the value 
+    passed in from the environment.'''
+    datum = os.path.abspath(config["StaticAncillaryFileGroup", "Datum"])
+    srtm_dir = os.path.abspath(config["StaticAncillaryFileGroup", "SRTMDir"])
+    if("ECOSTRESS_USE_AFIDS_ENV" in os.environ):
+        datum = os.environ["AFIDS_VDEV_DATA"] + "/EGM96_20_x100.HLF"
+        srtm_dir = os.environ["ELEV_ROOT"]
+    dem = SrtmDem(srtm_dir,False, DatumGeoid96(datum))
+    return dem
+
+def create_ortho_base(config):
+    '''Create the ortho base. In production, take the directory passed in
+    from the configuration file. But for testing, if ECOSTRESS_USE_AFIDS_ENV
+    is defined then look for the location of this on pistol'''
+    ortho_base_dir = os.path.abspath(config["StaticAncillaryFileGroup",
+                                            "OrthoBase"])
+    if("ECOSTRESS_USE_AFIDS_ENV" in os.environ):
+        # Location on pistol, use if found, otherwise use setting in
+        # run config file
+        if(os.path.exists("/raid22/band62_VICAR")):
+            ortho_base_dir = "/raid22/band62_VICAR"
+    # Not using yet
+    return None
+    
+
+def create_lwm(config):
+    '''Create the land water mask. In production, use the directory passed
+    in by the configuration file. But for testing if the special environment
+    variable ECOSTRESS_USE_AFIDS_ENV is defined then look for the data at 
+    the standard location on pistol.'''
+    srtm_lwm_dir = os.path.abspath(config["StaticAncillaryFileGroup",
+                                          "SRTMLWMDir"])
+    if("ECOSTRESS_USE_AFIDS_ENV" in os.environ):
+        # Location on pistol, use if found, otherwise use setting in
+        # run config file
+        if(os.path.exists("/raid27/tllogan/all_lwm_links")):
+            srtm_lwm_dir = "/raid27/tllogan/all_lwm_links"
+    lwm = SrtmLwmData(srtm_lwm_dir, False)
+    return lwm
+    
+def setup_spice(config):
+    '''Set up SPICE. In production, we use the directory passed in by 
+    configuration file. However, for testing if the special environment 
+    variable ECOSTRESS_USE_AFIDS_ENV is defined then we use the value passed
+    in from the environment.'''
+    spice_data = os.path.abspath(config["StaticAncillaryFileGroup",
+                                        "SpiceDataDir"])
+    if("ECOSTRESS_USE_AFIDS_ENV" not in os.environ):
+        os.environ["SPICEDATA"] = spice_data
+        
+def create_orbit_raw(config):
+    '''Create orbit from L1A_RAW_ATT file'''
+    # Spice is needed to work with the orbit data.
+    setup_spice(config)
+    orbfname = os.path.abspath(config["TimeBasedFileGroup", "L1A_RAW_ATT"])
+    # Create orbit. We give all the names of the fields, since we don't use the
+    # default names HdfOrbit expects. I'm not sure if Eci and J2000 is what we
+    # will end up using, but this is what is used by the test data now.
+    orb = HdfOrbit_Eci_TimeJ2000(orbfname, "", "Ephemeris/time_j2000",
+                                 "Ephemeris/eci_position",
+                                 "Ephemeris/eci_velocity",
+                                 "Attitude/time_j2000",
+                                 "Attitude/quaternion")
+    return orb
+
+def create_time_table(fname, is_averaged=True):
+    '''Create the time table using the data from the given input. Depending
+    on the stage of processing, we are either using the full resolution
+    data (256 lines per scan line), or we have averaged (128 lines per scan
+    line)'''
+    f = h5py.File(fname, "r")
+    if(is_averaged):
+        tmlist = f["/Time/line_start_time_j2000"][::128]
+    else:
+        tmlist = f["/Time/line_start_time_j2000"][::256]
+    vtime = Vector_Time()
+    for t in tmlist:
+        vtime.append(Time.time_j2000(t))
+    tt = EcostressTimeTable(vtime, is_averaged)
+    return tt
+
+def create_scan_mirror():
+    '''Create the scan mirror'''
+    # Currently assume constant scan mirror rate. Later we should read
+    # this from l1a data
+    sm = EcostressScanMirror()
+    return sm
+    
 def aster_radiance_scale_factor():
     '''Return the ASTER scale factors. This is for L1T data, found at
     https://lpdaac.usgs.gov/dataset_discovery/aster/aster_products_table/ast_l1t

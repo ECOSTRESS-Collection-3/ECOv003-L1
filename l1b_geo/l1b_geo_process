@@ -43,94 +43,62 @@ build_id = "0.30"
 pge_version = "0.30"
 build_version = "0100"
 
-datum = os.path.abspath(config["StaticAncillaryFileGroup", "Datum"])
-srtm_dir = os.path.abspath(config["StaticAncillaryFileGroup", "SRTMDir"])
-srtm_lwm_dir = os.path.abspath(config["StaticAncillaryFileGroup", "SRTMLWMDir"])
-spice_data = os.path.abspath(config["StaticAncillaryFileGroup", "SpiceDataDir"])
 l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
-ortho_base_dir = os.path.abspath(config["StaticAncillaryFileGroup",
-                                        "OrthoBase"])
-cam = read_shelve(l1_osp_dir + "/camera.xml")
 ncpu = int(config["Process", "NumberCpu"])
 
-orbfname = os.path.abspath(config["TimeBasedFileGroup", "L1A_RAW_ATT"])
-# Create orbit. We give all the names of the fields, since we don't use the
-# default names HdfOrbit expects. I'm not sure if Eci and J2000 is what we
-# will end up using, but this is what is used by the test data now.
-orb = HdfOrbit_Eci_TimeJ2000(orbfname, "", "Ephemeris/time_j2000",
-                             "Ephemeris/eci_position",
-                             "Ephemeris/eci_velocity",
-                             "Attitude/time_j2000",
-                             "Attitude/quaternion")
+cam = read_shelve(l1_osp_dir + "/camera.xml")
+orb = create_orbit_raw(config)
+dem = create_dem(config)
+lwm = create_lwm(config)
+ortho_base = create_ortho_base(config)
+
 radlist = config.as_list("InputFileGroup", "L1B_RAD")
 radlist = [os.path.abspath(f) for f in radlist]
 dirname = config["ProductPathGroup", "ProductPath"]
 file_version = config["ProductPathGroup", "ProductCounter"]
+orbfname = os.path.abspath(config["TimeBasedFileGroup", "L1A_RAW_ATT"])
 
 makedirs_p(dirname)
 os.chdir(dirname)
 
-# As a useful backdoor, check for then environment variable
-# ECOSTRESS_USE_AFIDS_ENV. This use the various afids environment
-# variables rather than the contents of the run config file. This is
-# useful for testing, because pistol has all these variable defined
-# in different locations. May come up with a cleaner way of doing this,
-# but for now do this.
-if("ECOSTRESS_USE_AFIDS_ENV" in os.environ):
-    datum = os.environ["AFIDS_VDEV_DATA"] + "/EGM96_20_x100.HLF"
-    srtm_dir = os.environ["ELEV_ROOT"]
-    # Location on pistol, use if found, otherwise use setting in run config file
-    if(os.path.exists("/raid22/band62_VICAR")):
-        ortho_base_dir = "/raid22/band62_VICAR"
-    if(os.path.exists("/raid27/tllogan/all_lwm_links")):
-        srtm_lwm_dir = "/raid27/tllogan/all_lwm_links"
-else:
-    # Otherwise use data from run config without change
-    # Spice directory passed down as an environment variable
-    os.environ["SPICEDATA"] = spice_data
-dem = SrtmDem(srtm_dir,False, DatumGeoid96(datum))
-lwm = SrtmLwmData(srtm_lwm_dir, False)
-
 log_fname = None
 try:
     pool = Pool(ncpu)
+    # Determine output file names
+    ofile = []
+    ofile2 = []
     for i in range(len(radlist)):
-        print("Doing scene number %d" %i)
         orbit, scene, acquisition_time = orbit_from_metadata(radlist[i])
-        ofile = ecostress_file_name("L1B_GEO", orbit, scene, acquisition_time,
-                                    build = build_version,
-                                    version = file_version)
-        ofile2 = ecostress_file_name("L1B_ATT", orbit, scene, acquisition_time,
-                                    build = build_version,
-                                    version = file_version)
-        if(i == 0):
-            log_fname = os.path.splitext(ofile)[0] + ".log"
+        ofile.append(ecostress_file_name("L1B_GEO", orbit, scene,
+            acquisition_time, build = build_version, version = file_version))
+        ofile2.append(ecostress_file_name("L1B_ATT", orbit, scene,
+            acquisition_time, build = build_version, version = file_version))
 
-        # Create IGC. 
-        f = h5py.File(radlist[i], "r")
-        tmlist = f["/Time/line_start_time_j2000"][::128]
-        vtime = Vector_Time()
-        for t in tmlist:
-            vtime.append(Time.time_j2000(t))
-        tt = EcostressTimeTable(vtime, True)
-        # Currently assume constant scan mirror rate. Later we should read
-        # this from l1a data
-        sm = EcostressScanMirror()
-        igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
-        # For debugging
-        if(False):
-            write_shelve("igc_%d.xml" % i, igc)
+    log_fname = os.path.splitext(ofile[0])[0] + ".log"
+    
+    # Create igc/tiepoint for all the data
+    igc = []
+    for i in range(len(radlist)):
+        tt = create_time_table(radlist[i], is_averaged=True)
+        sm = create_scan_mirror()
+        # Work with the SWIR channel data
+        ras = GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" % radlist[i])
+        igc.append(EcostressImageGroundConnection(orb, tt, cam, sm, dem, ras))
+        write_shelve("igc_original_%d.xml" % i, igc[i])
 
+    # Generate output data
+    for i in range(len(radlist)):
         # Generate output
-        l1bgeo = L1bGeoGenerate(igc, lwm, ofile,
+        print("Doing scene number %d" %i)
+        l1bgeo = L1bGeoGenerate(igc[i], lwm, ofile[i],
                                 number_line = args.number_line,
                                 run_config = config, log_fname = log_fname,
                                 build_id=build_id, pge_version=pge_version)
         l1bgeo.run(pool)
     
         # Temp, don't correct anything in attitude file
-        shutil.copyfile(orbfname, ofile2)
-        f = h5py.File(ofile2, "r+")
+        shutil.copyfile(orbfname, ofile2[i])
+        f = h5py.File(ofile2[i], "r+")
         m = WriteStandardMetadata(f)
         m.process_run_config_metadata(config)
         m.write()
