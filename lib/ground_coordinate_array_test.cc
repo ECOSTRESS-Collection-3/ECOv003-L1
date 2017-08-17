@@ -33,22 +33,13 @@ BOOST_AUTO_TEST_CASE(projection_test)
   return;
   GroundCoordinateArray gca(igc);
   boost::shared_ptr<GeoCal::MemoryRasterImage> ras = gca.raster_cover();
-  BOOST_CHECK_EQUAL(ras->number_line(), 7586);
-  BOOST_CHECK_EQUAL(ras->number_sample(), 9532);
-  std::cerr << *ras << "\n";
-  std::cerr << ras->coordinate(*igc->ground_coordinate(GeoCal::ImageCoordinate(0,0)))
-	    << "\n"
-	    << ras->coordinate(*igc->ground_coordinate(
-	    GeoCal::ImageCoordinate(0,igc->number_sample() -1))) << "\n"
-	    << ras->coordinate(*igc->ground_coordinate(
-	    GeoCal::ImageCoordinate(igc->number_line() -1 ,igc->number_sample() -1))) << "\n"
-	    << ras->coordinate(*igc->ground_coordinate(
-						      GeoCal::ImageCoordinate(igc->number_line() -1, 0))) << "\n";
+  BOOST_CHECK_EQUAL(ras->number_line(), 7636);
+  BOOST_CHECK_EQUAL(ras->number_sample(), 9606);
   for(int lstart = 0 ; lstart < igc->number_line();
       lstart += igc->number_line_scan())
     gca.project_surface_scan_arr(*ras, lstart);
-  GeoCal::GdalRasterImage::save("proj.tif", "GTIFF", *ras,
-				GeoCal::GdalRasterImage::Int16);
+  GeoCal::GdalRasterImage::save("proj.img", "VICAR", *ras,
+  				GeoCal::GdalRasterImage::Int16);
 }
 
 BOOST_AUTO_TEST_CASE(full_test)

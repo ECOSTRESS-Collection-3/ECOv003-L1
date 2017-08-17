@@ -98,8 +98,6 @@ void GroundCoordinateArray::project_surface_scan_arr
 (GeoCal::RasterImage& Data, int Start_line, int Number_line) const
 {
   blitz::Array<double,3> gp = ground_coor_scan_arr(Start_line, Number_line);
-  std::cerr << "Nrows: " << gp.rows() << "\n"
-	    << "Ncols: " << gp.cols() << "\n";
   for(int i = 0; i < gp.rows(); ++i)
     for(int j = 0; j < gp.cols(); ++j) {
       GeoCal::ImageCoordinate ic = Data.coordinate(GeoCal::Geodetic(gp(i,j,0),
@@ -109,10 +107,6 @@ void GroundCoordinateArray::project_surface_scan_arr
       if(ln >= 0 && ln < Data.number_line() && smp >= 0 &&
 	 smp < Data.number_sample() && Start_line + i < igc_->number_line()) {
 	int val = igc_->image()->read(Start_line + i, j);
-	if((i == 0 && j == 0) ||
-	   (i == gp.rows() - 1 && j == gp.cols() - 1))
-	  std::cerr << "(" << Start_line + i << ", " << j <<"): " << ic << "\n"
-		    << "val: " << val << "\n";
 	if(val > -9998)
 	  Data.write(ln, smp, val);
       }
