@@ -21,6 +21,9 @@ public:
   blitz::Array<double,3> ground_coor_arr() const;
   blitz::Array<double,3>
   ground_coor_scan_arr(int Start_line, int Number_line=-1) const;
+  GeoCal::MapInfo cover(double Resolution=70.0) const;
+  void GroundCoordinateArray::project_surface_scan_arr
+  (GeoCal::RasterImage& Data, int Start_line, int Number_line) const;
   static blitz::Array<double, 2>
   interpolate(const GeoCal::RasterImage& Data,
 	      const blitz::Array<double, 2>& Lat,

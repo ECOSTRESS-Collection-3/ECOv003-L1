@@ -62,6 +62,9 @@ public:
   interpolate(const GeoCal::RasterImage& Data,
 	      const blitz::Array<double, 2>& Lat,
 	      const blitz::Array<double, 2>& Lon);
+  void project_surface_scan_arr(GeoCal::RasterImage& Data,
+				int Start_line, int Number_line=-1) const;
+  GeoCal::MapInfo cover(double Resolution=70.0) const;
 private:
   boost::shared_ptr<EcostressImageGroundConnection> igc_;
   bool include_angle;

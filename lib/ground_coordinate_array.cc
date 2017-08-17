@@ -45,6 +45,51 @@ void GroundCoordinateArray::init()
 }
 
 //-------------------------------------------------------------------------
+/// Calculate the map info to cover the ground projection of the
+/// Igc. This is like what the python program igc_project calculates,
+/// but it is more convenient to have this in C++ here.
+/// The Resolution is in meters.
+//-------------------------------------------------------------------------
+
+GeoCal::MapInfo GroundCoordinateArray::cover(double Resolution) const
+{
+  // Copy of what cib01_mapinfo() does
+  blitz::Array<double, 1> parm(6);
+  parm = -120.00609312061941, 9.2592593000000006e-06, 0,
+    47.011777984629603, 0, -9.2592593000000006e-06;
+  GeoCal::MapInfo cib01(boost::make_shared<GeoCal::GeodeticConverter>(), parm,
+		27109425, 8795732);
+  double resbase = cib01.resolution_meter();
+  GeoCal::MapInfo cib01_scaled = cib01.scale(Resolution / resbase,
+				     Resolution / resbase);
+  return igc_->cover(cib01_scaled);
+}
+
+//-------------------------------------------------------------------------
+/// This projects the Igc to the surface for a single scan array. We
+/// fill in Ras with whatever the last encountered value is, i.e. we
+/// make no attempt to average data. We could implement averaging if
+/// needed, but for right now we just put in the value.
+///
+/// We do nothing with points that we don't see, so if for example you
+/// want a fill value you should make sure to fill in Data before
+/// calling this function.
+//-------------------------------------------------------------------------
+
+void GroundCoordinateArray::project_surface_scan_arr
+(GeoCal::RasterImage& Data, int Start_line, int Number_line) const
+{
+  blitz::Array<double,3> gp = ground_coor_scan_arr(Start_line, Number_line);
+  for(int i = 0; i < gp.rows(); ++i)
+    for(int j = 0; j < gp.cols(); ++j) {
+      GeoCal::ImageCoordinate ic = Data.coordinate(GeoCal::Geodetic(gp(i,j,0),
+								    gp(i,j,1)));
+      Data.write((int) floor(ic.line + 0.5), (int) floor(ic.sample + 0.5),
+		 igc_->image()->read(Start_line + i, j));
+    }
+}
+
+//-------------------------------------------------------------------------
 /// This interpolates the given RasterImage at the given latitude,
 /// longitude locations. This is exactly the same as calling
 /// Data.interpolate(Data.coordinate(Geodetic(Lat,Lon)) repeatedly,

@@ -290,6 +290,36 @@ class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
         return _ground_coordinate_array.GroundCoordinateArray_ground_coor_scan_arr(self, Start_line, Number_line)
 
 
+    def cover(self, Resolution=70.0):
+        """
+
+        GeoCal::MapInfo GroundCoordinateArray::cover(double Resolution=70.0) const
+        Calculate the map info to cover the ground projection of the Igc.
+
+        This is like what the python program igc_project calculates, but it is
+        more convenient to have this in C++ here. The Resolution is in meters.
+
+        """
+        return _ground_coordinate_array.GroundCoordinateArray_cover(self, Resolution)
+
+
+    def project_surface_scan_arr(self, Data, Start_line, Number_line):
+        """
+
+        void GroundCoordinateArray::project_surface_scan_arr(GeoCal::RasterImage &Data, int Start_line, int Number_line=-1) const
+        This projects the Igc to the surface for a single scan array.
+
+        We fill in Ras with whatever the last encountered value is, i.e. we
+        make no attempt to average data. We could implement averaging if
+        needed, but for right now we just put in the value.
+
+        We do nothing with points that we don't see, so if for example you
+        want a fill value you should make sure to fill in Data before calling
+        this function. 
+        """
+        return _ground_coordinate_array.GroundCoordinateArray_project_surface_scan_arr(self, Data, Start_line, Number_line)
+
+
     def interpolate(Data, Lat, Lon):
         """
 
@@ -313,6 +343,8 @@ class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
 GroundCoordinateArray._v_igc = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray__v_igc, None, GroundCoordinateArray)
 GroundCoordinateArray.ground_coor_arr = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray_ground_coor_arr, None, GroundCoordinateArray)
 GroundCoordinateArray.ground_coor_scan_arr = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray_ground_coor_scan_arr, None, GroundCoordinateArray)
+GroundCoordinateArray.cover = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray_cover, None, GroundCoordinateArray)
+GroundCoordinateArray.project_surface_scan_arr = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray_project_surface_scan_arr, None, GroundCoordinateArray)
 GroundCoordinateArray.__str__ = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray___str__, None, GroundCoordinateArray)
 GroundCoordinateArray_swigregister = _ground_coordinate_array.GroundCoordinateArray_swigregister
 GroundCoordinateArray_swigregister(GroundCoordinateArray)

@@ -6682,6 +6682,212 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_GroundCoordinateArray_cover__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::GroundCoordinateArray *arg1 = (Ecostress::GroundCoordinateArray *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::GroundCoordinateArray const > tempshared1 ;
+  boost::shared_ptr< Ecostress::GroundCoordinateArray const > *smartarg1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  GeoCal::MapInfo result;
+  
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__GroundCoordinateArray_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GroundCoordinateArray_cover" "', argument " "1"" of type '" "Ecostress::GroundCoordinateArray const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      arg1 = const_cast< Ecostress::GroundCoordinateArray * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      arg1 = const_cast< Ecostress::GroundCoordinateArray * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_double(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "GroundCoordinateArray_cover" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  {
+    try {
+      result = ((Ecostress::GroundCoordinateArray const *)arg1)->cover(arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  GeoCal::MapInfo > *smartresult = new boost::shared_ptr<  GeoCal::MapInfo >(new GeoCal::MapInfo((GeoCal::MapInfo &)result));
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_GroundCoordinateArray_cover__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::GroundCoordinateArray *arg1 = (Ecostress::GroundCoordinateArray *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::GroundCoordinateArray const > tempshared1 ;
+  boost::shared_ptr< Ecostress::GroundCoordinateArray const > *smartarg1 = 0 ;
+  GeoCal::MapInfo result;
+  
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__GroundCoordinateArray_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GroundCoordinateArray_cover" "', argument " "1"" of type '" "Ecostress::GroundCoordinateArray const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      arg1 = const_cast< Ecostress::GroundCoordinateArray * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      arg1 = const_cast< Ecostress::GroundCoordinateArray * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = ((Ecostress::GroundCoordinateArray const *)arg1)->cover();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  GeoCal::MapInfo > *smartresult = new boost::shared_ptr<  GeoCal::MapInfo >(new GeoCal::MapInfo((GeoCal::MapInfo &)result));
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_GroundCoordinateArray_cover(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"GroundCoordinateArray_cover",0,2,argv))) SWIG_fail;
+  --argc;
+  if (argc == 1) {
+    return _wrap_GroundCoordinateArray_cover__SWIG_1(self, argc, argv);
+  }
+  if (argc == 2) {
+    return _wrap_GroundCoordinateArray_cover__SWIG_0(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'GroundCoordinateArray_cover'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::GroundCoordinateArray::cover(double) const\n"
+    "    Ecostress::GroundCoordinateArray::cover() const\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_GroundCoordinateArray_project_surface_scan_arr(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::GroundCoordinateArray *arg1 = (Ecostress::GroundCoordinateArray *) 0 ;
+  GeoCal::RasterImage *arg2 = 0 ;
+  int arg3 ;
+  int arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::GroundCoordinateArray const > tempshared1 ;
+  boost::shared_ptr< Ecostress::GroundCoordinateArray const > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  boost::shared_ptr< GeoCal::RasterImage > tempshared2 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  PyObject *swig_obj[4] ;
+  
+  if (!SWIG_Python_UnpackTuple(args,"GroundCoordinateArray_project_surface_scan_arr",4,4,swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__GroundCoordinateArray_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GroundCoordinateArray_project_surface_scan_arr" "', argument " "1"" of type '" "Ecostress::GroundCoordinateArray const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      arg1 = const_cast< Ecostress::GroundCoordinateArray * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::GroundCoordinateArray > * >(argp1);
+      arg1 = const_cast< Ecostress::GroundCoordinateArray * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::RasterImage *ptr;
+    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], (void**)(&ptr), SWIGTYPE_p_GeoCal__RasterImage,  0 , &newmem);
+    if (SWIG_IsOK(res2)) {
+      arg2 = ptr;
+    } else {
+      res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "GroundCoordinateArray_project_surface_scan_arr" "', argument " "2"" of type '" "GeoCal::RasterImage &""'"); 
+      }
+      if (!argp2) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "GroundCoordinateArray_project_surface_scan_arr" "', argument " "2"" of type '" "GeoCal::RasterImage &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared2 = *reinterpret_cast< boost::shared_ptr<  GeoCal::RasterImage > * >(argp2);
+        delete reinterpret_cast< boost::shared_ptr<  GeoCal::RasterImage > * >(argp2);
+        arg2 = const_cast< GeoCal::RasterImage * >(tempshared2.get());
+      } else {
+        arg2 = const_cast< GeoCal::RasterImage * >(reinterpret_cast< boost::shared_ptr<  GeoCal::RasterImage > * >(argp2)->get());
+      }
+    }
+  }
+  ecode3 = SWIG_AsVal_int(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "GroundCoordinateArray_project_surface_scan_arr" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  ecode4 = SWIG_AsVal_int(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "GroundCoordinateArray_project_surface_scan_arr" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  {
+    try {
+      ((Ecostress::GroundCoordinateArray const *)arg1)->project_surface_scan_arr(*arg2,arg3,arg4);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_GroundCoordinateArray_interpolate(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   GeoCal::RasterImage *arg1 = 0 ;
@@ -6939,6 +7145,28 @@ static PyMethodDef SwigMethods[] = {
 		"number_line x number_sample x 7 array with coordinates as latitude,\n"
 		"longitude, height, view_zenith, view_azimuth, solar_zenith,\n"
 		"solar_azimuth. \n"
+		""},
+	 { (char *)"GroundCoordinateArray_cover", _wrap_GroundCoordinateArray_cover, METH_VARARGS, (char *)"\n"
+		"\n"
+		"GeoCal::MapInfo GroundCoordinateArray::cover(double Resolution=70.0) const\n"
+		"Calculate the map info to cover the ground projection of the Igc.\n"
+		"\n"
+		"This is like what the python program igc_project calculates, but it is\n"
+		"more convenient to have this in C++ here. The Resolution is in meters.\n"
+		"\n"
+		""},
+	 { (char *)"GroundCoordinateArray_project_surface_scan_arr", _wrap_GroundCoordinateArray_project_surface_scan_arr, METH_VARARGS, (char *)"\n"
+		"\n"
+		"void GroundCoordinateArray::project_surface_scan_arr(GeoCal::RasterImage &Data, int Start_line, int Number_line=-1) const\n"
+		"This projects the Igc to the surface for a single scan array.\n"
+		"\n"
+		"We fill in Ras with whatever the last encountered value is, i.e. we\n"
+		"make no attempt to average data. We could implement averaging if\n"
+		"needed, but for right now we just put in the value.\n"
+		"\n"
+		"We do nothing with points that we don't see, so if for example you\n"
+		"want a fill value you should make sure to fill in Data before calling\n"
+		"this function. \n"
 		""},
 	 { (char *)"GroundCoordinateArray_interpolate", _wrap_GroundCoordinateArray_interpolate, METH_VARARGS, (char *)"\n"
 		"\n"

@@ -19,6 +19,12 @@ BOOST_AUTO_TEST_CASE(basic_test)
   BOOST_CHECK(distance(pt, *igc->ground_coordinate(GeoCal::ImageCoordinate(10, 20))) < 1.0);
 }
 
+BOOST_AUTO_TEST_CASE(projection_test)
+{
+  GroundCoordinateArray gca(igc);
+  std::cerr << gca.cover() << "\n";
+}
+
 BOOST_AUTO_TEST_CASE(full_test)
 {
   // Don't normally run this, it takes a bit of time for a unit test

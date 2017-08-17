@@ -78,13 +78,16 @@ try:
     
     # Create igc/tiepoint for all the data
     igc = []
+    f = SQLiteShelf("data.db")
+    f["_extra_python_init"] = "from ecostress import *"
+    f = None
     for i in range(len(radlist)):
         tt = create_time_table(radlist[i], is_averaged=True)
         sm = create_scan_mirror()
         # Work with the SWIR channel data
         ras = GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" % radlist[i])
         igc.append(EcostressImageGroundConnection(orb, tt, cam, sm, dem, ras))
-        write_shelve("igc_original_%d.xml" % i, igc[i])
+        write_shelve("data.db:igc_original_%d" % i, igc[i])
 
     # Generate output data
     for i in range(len(radlist)):
