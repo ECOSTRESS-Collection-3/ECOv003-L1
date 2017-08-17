@@ -12,6 +12,10 @@ namespace Ecostress {
   The table is different before and after we do the 2 line averaging
   in L1B_CAL, we indicate this by "averaging_done" set to true, which
   means each scan is treated as 128 lines rather than 256.
+
+  Note that only the image coordinates changes from 128/256 per scan
+  index. The FrameCoordinate are in terms of the actual Ecostress
+  camera, so there is always 256 frame coordinate lines in a scan.
 *******************************************************************/
 class EcostressTimeTable: public GeoCal::TimeTable {
 public:

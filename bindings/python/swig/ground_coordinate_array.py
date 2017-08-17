@@ -190,6 +190,7 @@ import geocal_swig.image_ground_connection
 import geocal_swig.with_parameter
 import geocal_swig.geocal_exception
 import geocal_swig.observer
+import geocal_swig.raster_image_variable
 class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
     """
 
@@ -303,6 +304,16 @@ class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
         return _ground_coordinate_array.GroundCoordinateArray_cover(self, Resolution)
 
 
+    def raster_cover(self, Resolution=70.0):
+        """
+
+        boost::shared_ptr< GeoCal::MemoryRasterImage > GroundCoordinateArray::raster_cover(double Resolution=70.0) const
+        Create a MemoryRasterImage that matches cover(), and fill it in with 0
+        fill data. 
+        """
+        return _ground_coordinate_array.GroundCoordinateArray_raster_cover(self, Resolution)
+
+
     def project_surface_scan_arr(self, Data, Start_line, Number_line):
         """
 
@@ -344,6 +355,7 @@ GroundCoordinateArray._v_igc = new_instancemethod(_ground_coordinate_array.Groun
 GroundCoordinateArray.ground_coor_arr = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray_ground_coor_arr, None, GroundCoordinateArray)
 GroundCoordinateArray.ground_coor_scan_arr = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray_ground_coor_scan_arr, None, GroundCoordinateArray)
 GroundCoordinateArray.cover = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray_cover, None, GroundCoordinateArray)
+GroundCoordinateArray.raster_cover = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray_raster_cover, None, GroundCoordinateArray)
 GroundCoordinateArray.project_surface_scan_arr = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray_project_surface_scan_arr, None, GroundCoordinateArray)
 GroundCoordinateArray.__str__ = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray___str__, None, GroundCoordinateArray)
 GroundCoordinateArray_swigregister = _ground_coordinate_array.GroundCoordinateArray_swigregister

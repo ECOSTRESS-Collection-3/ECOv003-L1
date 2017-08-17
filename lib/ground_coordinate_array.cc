@@ -37,11 +37,29 @@ void GroundCoordinateArray::init()
   if(!tt)
     throw GeoCal::Exception("GroundCoordinateArray only works with EcostressTimeTable");
   int nl = cam->number_line(b);
-  for(int i = 0; i < nl; ++i)
-    camera_slv.push_back(cam->sc_look_vector(GeoCal::FrameCoordinate(i, 0), b));
+  if(tt->averaging_done())
+    for(int i = 0; i < nl; ++i)
+      camera_slv.push_back(cam->sc_look_vector(GeoCal::FrameCoordinate(2*i, 0), b));
+  else
+    for(int i = 0; i < nl; ++i)
+      camera_slv.push_back(cam->sc_look_vector(GeoCal::FrameCoordinate(i, 0), b));
   dist.resize((int) camera_slv.size());
   res.resize((int) camera_slv.size(), igc_->number_sample(),
 	     (include_angle ? 7 : 3));
+}
+
+//-------------------------------------------------------------------------
+/// Create a MemoryRasterImage that matches cover(), and fill it in
+/// with 0 fill data.
+//-------------------------------------------------------------------------
+
+boost::shared_ptr<GeoCal::MemoryRasterImage>
+GroundCoordinateArray::raster_cover(double Resolution) const
+{
+  boost::shared_ptr<GeoCal::MemoryRasterImage> res =
+    boost::make_shared<GeoCal::MemoryRasterImage>(cover(Resolution));
+  res->data()(blitz::Range::all(), blitz::Range::all()) = 0;
+  return res;
 }
 
 //-------------------------------------------------------------------------
@@ -80,12 +98,24 @@ void GroundCoordinateArray::project_surface_scan_arr
 (GeoCal::RasterImage& Data, int Start_line, int Number_line) const
 {
   blitz::Array<double,3> gp = ground_coor_scan_arr(Start_line, Number_line);
+  std::cerr << "Nrows: " << gp.rows() << "\n"
+	    << "Ncols: " << gp.cols() << "\n";
   for(int i = 0; i < gp.rows(); ++i)
     for(int j = 0; j < gp.cols(); ++j) {
       GeoCal::ImageCoordinate ic = Data.coordinate(GeoCal::Geodetic(gp(i,j,0),
 								    gp(i,j,1)));
-      Data.write((int) floor(ic.line + 0.5), (int) floor(ic.sample + 0.5),
-		 igc_->image()->read(Start_line + i, j));
+      int ln = (int) floor(ic.line + 0.5);
+      int smp = (int) floor(ic.sample + 0.5);
+      if(ln >= 0 && ln < Data.number_line() && smp >= 0 &&
+	 smp < Data.number_sample() && Start_line + i < igc_->number_line()) {
+	int val = igc_->image()->read(Start_line + i, j);
+	if((i == 0 && j == 0) ||
+	   (i == gp.rows() - 1 && j == gp.cols() - 1))
+	  std::cerr << "(" << Start_line + i << ", " << j <<"): " << ic << "\n"
+		    << "val: " << val << "\n";
+	if(val > -9998)
+	  Data.write(ln, smp, val);
+      }
     }
 }
 
@@ -159,11 +189,14 @@ GroundCoordinateArray::ground_coor_scan_arr
   GeoCal::Time t;
   GeoCal::FrameCoordinate fc;
   tt->time(GeoCal::ImageCoordinate(Start_line, ms), t, fc);
-  sl = (int) floor(fc.line + 0.5);
-  if(Number_line < 0)
-    el = (int) camera_slv.size();
+  if(tt->averaging_done())
+    sl = (int) floor(fc.line / 2 + 0.5);
   else
-    el = std::min(sl + Number_line, (int) camera_slv.size());
+    sl = (int) floor(fc.line + 0.5);
+  if(Number_line < 0)
+    el = (int) tt->number_line_scan();
+  else
+    el = std::min(sl + Number_line, (int) tt->number_line_scan());
   ground_coor_arr_samp(Start_line, ms, true);
   blitz::Array<double, 1> dist_middle(dist.copy());
   for(int smp = ms + 1; smp < igc_->number_sample(); ++smp)

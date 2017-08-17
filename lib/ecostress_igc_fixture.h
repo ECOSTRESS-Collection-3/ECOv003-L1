@@ -31,21 +31,27 @@ public:
       (orb_fname, "", "Ephemeris/time_j2000", "Ephemeris/eci_position",
        "Ephemeris/eci_velocity", "Attitude/time_j2000", "Attitude/quaternion");
     GeoCal::Time tstart = GeoCal::Time::parse_time("2015-01-24T20:42:52Z");
-    time_table = boost::make_shared<EcostressTimeTable>(tstart);
+    time_table = boost::make_shared<EcostressTimeTable>(tstart, true);
+    time_table_hres = boost::make_shared<EcostressTimeTable>(tstart, false);
     dem = boost::make_shared<GeoCal::SimpleDem>();
     scan_mirror = boost::make_shared<EcostressScanMirror>();
     boost::shared_ptr<GeoCal::RasterImage> img =
       boost::make_shared<GeoCal::GdalRasterImage>
       ("HDF5:\""+test_data_dir() + "ECOSTRESS_L1B_RAD_80005_001_20150124T204251_0100_01.h5.expected\"://SWIR/swir_dn");
+    boost::shared_ptr<GeoCal::RasterImage> no_img;
     igc = boost::make_shared<EcostressImageGroundConnection>
       (orbit, time_table, camera, scan_mirror, dem, img, "Test title");
+    igc_hres = boost::make_shared<EcostressImageGroundConnection>
+      (orbit, time_table_hres, camera, scan_mirror, dem, no_img, "Test title");
   }
   boost::shared_ptr<GeoCal::Dem> dem;
   boost::shared_ptr<EcostressCamera> camera;
   boost::shared_ptr<GeoCal::Orbit> orbit;
   boost::shared_ptr<GeoCal::TimeTable> time_table;
+  boost::shared_ptr<GeoCal::TimeTable> time_table_hres;
   boost::shared_ptr<EcostressScanMirror> scan_mirror;
   boost::shared_ptr<EcostressImageGroundConnection> igc;
+  boost::shared_ptr<EcostressImageGroundConnection> igc_hres;
 };
 }
 #endif

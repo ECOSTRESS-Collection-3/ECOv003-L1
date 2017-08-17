@@ -57,7 +57,10 @@ GeoCal::ImageCoordinate EcostressTimeTable::image_coordinate
   if(tindex == (int) tstart_scan_.size() || tstart_scan_[tindex] > T)
     --tindex;
   ImageCoordinate res;
-  res.line = F.line + tindex * number_line_scan();
+  if(averaging_done()) 
+    res.line = F.line / 2.0 + tindex * number_line_scan();
+  else
+    res.line = F.line + tindex * number_line_scan();
   res.sample = (T - tstart_scan_[tindex]) / frame_time + F.sample;
   return res;
 }
@@ -74,7 +77,10 @@ EcostressTimeTable::image_coordinate_with_derivative
   if(tindex == (int) tstart_scan_.size() || tstart_scan_[tindex] > T.value())
     --tindex;
   ImageCoordinateWithDerivative res;
-  res.line = F.line + tindex * number_line_scan();
+  if(averaging_done()) 
+    res.line = F.line / 2.0 + tindex * number_line_scan();
+  else
+    res.line = F.line + tindex * number_line_scan();
   res.sample = (T - tstart_scan_[tindex]) / frame_time + F.sample;
   return res;
 }
@@ -87,6 +93,8 @@ void EcostressTimeTable::time
   range_check(Ic.line, (double) min_line(), (double) max_line() + 1.0);
   int tindex = (int) floor(Ic.line / number_line_scan());
   F.line = Ic.line - (tindex * number_line_scan());
+  if(averaging_done())
+    F.line *= 2.0;
   T = tstart_scan_[tindex] + frame_time * Ic.sample;
   F.sample = 0;
 }
@@ -100,6 +108,8 @@ void EcostressTimeTable::time_with_derivative
   range_check(Ic.line.value(), (double) min_line(), (double) max_line() + 1.0);
   int tindex = (int) floor(Ic.line.value() / number_line_scan());
   F.line = Ic.line - (tindex * number_line_scan());
+  if(averaging_done())
+    F.line *= 2.0;
   T = GeoCal::TimeWithDerivative(tstart_scan_[tindex]) +
     frame_time * Ic.sample;
   F.sample = 0;

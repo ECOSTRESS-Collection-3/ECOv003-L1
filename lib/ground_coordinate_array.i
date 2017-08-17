@@ -9,6 +9,7 @@
 
 %base_import(generic_object)
 %import "ecostress_image_ground_connection.i"
+%import "memory_raster_image.i"
 
 %ecostress_shared_ptr(Ecostress::GroundCoordinateArray);
 namespace Ecostress {
@@ -22,6 +23,8 @@ public:
   blitz::Array<double,3>
   ground_coor_scan_arr(int Start_line, int Number_line=-1) const;
   GeoCal::MapInfo cover(double Resolution=70.0) const;
+  boost::shared_ptr<GeoCal::MemoryRasterImage>
+  raster_cover(double Resolution=70.0) const;
   void GroundCoordinateArray::project_surface_scan_arr
   (GeoCal::RasterImage& Data, int Start_line, int Number_line) const;
   static blitz::Array<double, 2>

@@ -67,7 +67,7 @@ class L1bRadGenerate(object):
             t.attrs["Units"] = "W/m^2/sr/um"
         g = fout.create_group("SWIR")
         t = g.create_dataset("swir_dn",
-                             data = self.image(5).astype(np.uint16))
+                             data = self.image(5).astype(np.int16))
         t.attrs["Units"] = "dimensionless"
         g = fout.create_group("Time")
         t = g.create_dataset("line_start_time_j2000",

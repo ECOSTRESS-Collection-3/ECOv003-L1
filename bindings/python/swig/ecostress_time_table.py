@@ -201,6 +201,10 @@ class EcostressTimeTable(geocal_swig.time_table.TimeTable):
     L1B_CAL, we indicate this by "averaging_done" set to true, which
     means each scan is treated as 128 lines rather than 256.
 
+    Note that only the image coordinates changes from 128/256 per scan
+    index. The FrameCoordinate are in terms of the actual Ecostress
+    camera, so there is always 256 frame coordinate lines in a scan.
+
     C++ includes: ecostress_time_table.h 
     """
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')

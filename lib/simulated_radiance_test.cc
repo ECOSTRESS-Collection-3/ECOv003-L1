@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE(basic_test)
   // Normally we want to average the ASTER data, but to speed up this
   // unit test skip this step.
   int avg_fact = 1;
-  SimulatedRadiance srad(boost::make_shared<GroundCoordinateArray>(igc),
+  SimulatedRadiance srad(boost::make_shared<GroundCoordinateArray>(igc_hres),
 			 boost::make_shared<GeoCal::VicarLiteRasterImage>(aster_mosaic_dir() + "calnorm_b4.img", 1, GeoCal::VicarLiteFile::READ, 1000, 1000),
 			 avg_fact);
   blitz::Array<double, 2> res = srad.radiance_scan(4, 20);

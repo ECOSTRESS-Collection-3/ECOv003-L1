@@ -2,6 +2,7 @@
 #define GROUND_COORDINATE_ARRAY_H
 #include "ecostress_image_ground_connection.h"
 #include "ecostress_time_table.h"
+#include "geocal/memory_raster_image.h"
 
 namespace Ecostress {
 /****************************************************************//**
@@ -65,6 +66,8 @@ public:
   void project_surface_scan_arr(GeoCal::RasterImage& Data,
 				int Start_line, int Number_line=-1) const;
   GeoCal::MapInfo cover(double Resolution=70.0) const;
+  boost::shared_ptr<GeoCal::MemoryRasterImage>
+  raster_cover(double Resolution=70.0) const;
 private:
   boost::shared_ptr<EcostressImageGroundConnection> igc_;
   bool include_angle;
