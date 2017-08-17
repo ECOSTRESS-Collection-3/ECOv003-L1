@@ -113,7 +113,8 @@ likely go away with a future version of python:
     /pkg/afids/afids_latest/bin/virtualenv afids_python3env_20160701
     ln -s afids_python3env_20160701 afids_python3env
     source afids_python3env/bin/activate
-
+	unset PYTHONPATH
+	
 Need to link in the umfpack headers, or at least I couldn't figure out
 a way to pass this to UMFPACK without linking here:
 

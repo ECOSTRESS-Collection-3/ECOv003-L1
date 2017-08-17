@@ -7,6 +7,10 @@ fi
 export AFIDSPYTHONTOP=@geocaldir@
 source @afidsdir@/setup_afids_env.sh
 export TAE_PATH=${ECOSTRESSTOP}/vicar_pdf:${TAE_PATH}
+# Strip off afids site packages, we want to use the packages in the virtual
+# environment instead
+unset PYTHONPATH
+source @geocaldir@/setup_geocal.sh
 
 if [ -n "$PYTHONPATH" ]; then
   export PYTHONPATH=${ECOSTRESSTOP}/@pythondir@:${ECOSTRESSTOP}/@platpythondir@:${PYTHONPATH}
