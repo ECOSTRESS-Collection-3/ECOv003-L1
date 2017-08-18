@@ -74,21 +74,9 @@ def create_orbit_raw(config):
                                  "Attitude/quaternion")
     return orb
 
-def create_time_table(fname, is_averaged=True):
-    '''Create the time table using the data from the given input. Depending
-    on the stage of processing, we are either using the full resolution
-    data (256 lines per scan line), or we have averaged (128 lines per scan
-    line)'''
-    f = h5py.File(fname, "r")
-    if(is_averaged):
-        tmlist = f["/Time/line_start_time_j2000"][::128]
-    else:
-        tmlist = f["/Time/line_start_time_j2000"][::256]
-    vtime = Vector_Time()
-    for t in tmlist:
-        vtime.append(Time.time_j2000(t))
-    tt = EcostressTimeTable(vtime, is_averaged)
-    return tt
+def create_time_table(fname):
+    '''Create the time table using the data from the given input.'''
+    return EcostressTimeTable(fname)
 
 def create_scan_mirror():
     '''Create the scan mirror'''

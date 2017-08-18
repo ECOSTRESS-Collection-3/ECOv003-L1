@@ -3,7 +3,7 @@
 #include "global_fixture.h"
 #include "ecostress_image_ground_connection.h"
 #include "geocal/hdf_orbit.h"
-#include "geocal/simple_dem.h"
+#include "geocal/srtm_dem.h"
 #include "geocal/gdal_raster_image.h"
 #include "ecostress_camera.h"
 #include "ecostress_scan_mirror.h"
@@ -30,10 +30,13 @@ public:
 						GeoCal::TimeJ2000Creator> >
       (orb_fname, "", "Ephemeris/time_j2000", "Ephemeris/eci_position",
        "Ephemeris/eci_velocity", "Attitude/time_j2000", "Attitude/quaternion");
-    GeoCal::Time tstart = GeoCal::Time::parse_time("2015-01-24T20:42:52Z");
-    time_table = boost::make_shared<EcostressTimeTable>(tstart, true);
-    time_table_hres = boost::make_shared<EcostressTimeTable>(tstart, false);
-    dem = boost::make_shared<GeoCal::SimpleDem>();
+    std::string l1a_pix_fname = test_data_dir() +
+      "ECOSTRESS_L1A_PIX_80005_001_20150124T204251_0100_02.h5.expected";
+    // Force this to act like averaging, even though l1a_pix_fname is
+    // high resolution.
+    time_table = boost::make_shared<EcostressTimeTable>(l1a_pix_fname, true);
+    time_table_hres = boost::make_shared<EcostressTimeTable>(l1a_pix_fname);
+    dem = boost::make_shared<GeoCal::SrtmDem>("", false);
     scan_mirror = boost::make_shared<EcostressScanMirror>();
     boost::shared_ptr<GeoCal::RasterImage> img =
       boost::make_shared<GeoCal::GdalRasterImage>

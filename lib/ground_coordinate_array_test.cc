@@ -33,14 +33,28 @@ BOOST_AUTO_TEST_CASE(projection_test)
   return;
   GroundCoordinateArray gca(igc);
   boost::shared_ptr<GeoCal::MemoryRasterImage> ras = gca.raster_cover();
-  BOOST_CHECK_EQUAL(ras->number_line(), 7636);
-  BOOST_CHECK_EQUAL(ras->number_sample(), 9606);
+  BOOST_CHECK_EQUAL(ras->number_line(), 7628);
+  BOOST_CHECK_EQUAL(ras->number_sample(), 9598);
   for(int lstart = 0 ; lstart < igc->number_line();
       lstart += igc->number_line_scan())
     gca.project_surface_scan_arr(*ras, lstart);
   GeoCal::GdalRasterImage::save("proj.img", "VICAR", *ras,
   				GeoCal::GdalRasterImage::Int16);
 }
+
+// BOOST_AUTO_TEST_CASE(projection_before_processing_test)
+// {
+//   boost::shared_ptr<EcostressCamera> camera = GeoCal::serialize_read<EcostressCamera>
+//     (unit_test_data_dir() + "camera.xml");
+//   std::string orb_fname = "/home/smyth/Local/ecostress-level1/end_to_end_testing/L1A_RAW_ATT_80005_20150124T204251_0100_01.h5";
+//   boost::shared_ptr<GeoCal::Orbit> orbit = boost::make_shared<GeoCal::HdfOrbit<GeoCal::Eci,
+// 					      GeoCal::TimeJ2000Creator> >
+//     (orb_fname, "", "Ephemeris/time_j2000", "Ephemeris/eci_position",
+//      "Ephemeris/eci_velocity", "Attitude/time_j2000", "Attitude/quaternion");
+//   boost::shared_ptr<GeoCal::TimeTable> time_table = GeoCal::serialize_read<GeoCal::TimeTable>("/home/smyth/Local/ecostress-level1/end_to_end_testing/time_table.xml")
+    
+
+// }
 
 BOOST_AUTO_TEST_CASE(full_test)
 {

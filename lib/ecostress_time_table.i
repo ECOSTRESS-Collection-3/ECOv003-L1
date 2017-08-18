@@ -17,6 +17,8 @@ public:
 		     int Num_scan = 44);
   EcostressTimeTable(const std::vector<GeoCal::Time> Tstart_scan,
 		     bool Averaging_done = True);
+  EcostressTimeTable(const std::string& Fname);
+  EcostressTimeTable(const std::string& Fname, bool Averaging_done);
   virtual GeoCal::ImageCoordinate image_coordinate
     (GeoCal::Time T, const GeoCal::FrameCoordinate& F) const;
   static const double nominal_scan_spacing;

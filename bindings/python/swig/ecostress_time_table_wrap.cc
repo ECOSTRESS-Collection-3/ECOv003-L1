@@ -5457,6 +5457,126 @@ namespace swig {
       }
     
 
+SWIGINTERN swig_type_info*
+SWIG_pchar_descriptor(void)
+{
+  static int init = 0;
+  static swig_type_info* info = 0;
+  if (!init) {
+    info = SWIG_TypeQuery("_p_char");
+    init = 1;
+  }
+  return info;
+}
+
+
+SWIGINTERN int
+SWIG_AsCharPtrAndSize(PyObject *obj, char** cptr, size_t* psize, int *alloc)
+{
+#if PY_VERSION_HEX>=0x03000000
+  if (PyUnicode_Check(obj))
+#else  
+  if (PyString_Check(obj))
+#endif
+  {
+    char *cstr; Py_ssize_t len;
+#if PY_VERSION_HEX>=0x03000000
+    if (!alloc && cptr) {
+        /* We can't allow converting without allocation, since the internal
+           representation of string in Python 3 is UCS-2/UCS-4 but we require
+           a UTF-8 representation.
+           TODO(bhy) More detailed explanation */
+        return SWIG_RuntimeError;
+    }
+    obj = PyUnicode_AsUTF8String(obj);
+    PyBytes_AsStringAndSize(obj, &cstr, &len);
+    if(alloc) *alloc = SWIG_NEWOBJ;
+#else
+    PyString_AsStringAndSize(obj, &cstr, &len);
+#endif
+    if (cptr) {
+      if (alloc) {
+	/* 
+	   In python the user should not be able to modify the inner
+	   string representation. To warranty that, if you define
+	   SWIG_PYTHON_SAFE_CSTRINGS, a new/copy of the python string
+	   buffer is always returned.
+
+	   The default behavior is just to return the pointer value,
+	   so, be careful.
+	*/ 
+#if defined(SWIG_PYTHON_SAFE_CSTRINGS)
+	if (*alloc != SWIG_OLDOBJ) 
+#else
+	if (*alloc == SWIG_NEWOBJ) 
+#endif
+	  {
+	    *cptr = reinterpret_cast< char* >(memcpy((new char[len + 1]), cstr, sizeof(char)*(len + 1)));
+	    *alloc = SWIG_NEWOBJ;
+	  }
+	else {
+	  *cptr = cstr;
+	  *alloc = SWIG_OLDOBJ;
+	}
+      } else {
+        #if PY_VERSION_HEX>=0x03000000
+        assert(0); /* Should never reach here in Python 3 */
+        #endif
+	*cptr = SWIG_Python_str_AsChar(obj);
+      }
+    }
+    if (psize) *psize = len + 1;
+#if PY_VERSION_HEX>=0x03000000
+    Py_XDECREF(obj);
+#endif
+    return SWIG_OK;
+  } else {
+    swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
+    if (pchar_descriptor) {
+      void* vptr = 0;
+      if (SWIG_ConvertPtr(obj, &vptr, pchar_descriptor, 0) == SWIG_OK) {
+	if (cptr) *cptr = (char *) vptr;
+	if (psize) *psize = vptr ? (strlen((char *)vptr) + 1) : 0;
+	if (alloc) *alloc = SWIG_OLDOBJ;
+	return SWIG_OK;
+      }
+    }
+  }
+  return SWIG_TypeError;
+}
+
+
+SWIGINTERN int
+SWIG_AsPtr_std_string (PyObject * obj, std::string **val) 
+{
+  char* buf = 0 ; size_t size = 0; int alloc = SWIG_OLDOBJ;
+  if (SWIG_IsOK((SWIG_AsCharPtrAndSize(obj, &buf, &size, &alloc)))) {
+    if (buf) {
+      if (val) *val = new std::string(buf, size - 1);
+      if (alloc == SWIG_NEWOBJ) delete[] buf;
+      return SWIG_NEWOBJ;
+    } else {
+      if (val) *val = 0;
+      return SWIG_OLDOBJ;
+    }
+  } else {
+    static int init = 0;
+    static swig_type_info* descriptor = 0;
+    if (!init) {
+      descriptor = SWIG_TypeQuery("std::string" " *");
+      init = 1;
+    }
+    if (descriptor) {
+      std::string *vptr;
+      int res = SWIG_ConvertPtr(obj, (void**)&vptr, descriptor, 0);
+      if (SWIG_IsOK(res) && val) *val = vptr;
+      return res;
+    }
+  }
+  return SWIG_ERROR;
+}
+
+
   #define SWIG_From_double   PyFloat_FromDouble 
 
 
@@ -6477,6 +6597,92 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_5(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  std::string *arg1 = 0 ;
+  int res1 = SWIG_OLDOBJ ;
+  Ecostress::EcostressTimeTable *result = 0 ;
+  
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  {
+    std::string *ptr = (std::string *)0;
+    res1 = SWIG_AsPtr_std_string(swig_obj[0], &ptr);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_EcostressTimeTable" "', argument " "1"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_EcostressTimeTable" "', argument " "1"" of type '" "std::string const &""'"); 
+    }
+    arg1 = ptr;
+  }
+  {
+    try {
+      result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::EcostressTimeTable > *smartresult = result ? new boost::shared_ptr<  Ecostress::EcostressTimeTable >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressTimeTable_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  if (SWIG_IsNewObj(res1)) delete arg1;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res1)) delete arg1;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_6(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  std::string *arg1 = 0 ;
+  bool arg2 ;
+  int res1 = SWIG_OLDOBJ ;
+  bool val2 ;
+  int ecode2 = 0 ;
+  Ecostress::EcostressTimeTable *result = 0 ;
+  
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    std::string *ptr = (std::string *)0;
+    res1 = SWIG_AsPtr_std_string(swig_obj[0], &ptr);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_EcostressTimeTable" "', argument " "1"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_EcostressTimeTable" "', argument " "1"" of type '" "std::string const &""'"); 
+    }
+    arg1 = ptr;
+  }
+  ecode2 = SWIG_AsVal_bool(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_EcostressTimeTable" "', argument " "2"" of type '" "bool""'");
+  } 
+  arg2 = static_cast< bool >(val2);
+  {
+    try {
+      result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1,arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::EcostressTimeTable > *smartresult = result ? new boost::shared_ptr<  Ecostress::EcostressTimeTable >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressTimeTable_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  if (SWIG_IsNewObj(res1)) delete arg1;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res1)) delete arg1;
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_new_EcostressTimeTable(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[4] = {
@@ -6497,6 +6703,17 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable(PyObject *self, PyObject *args
 check_1:
   
   if (argc == 1) {
+    int _v = 0;
+    {
+      int res = SWIG_AsPtr_std_string(argv[0], (std::string**)(0));
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_2;
+    return _wrap_new_EcostressTimeTable__SWIG_5(self, argc, argv);
+  }
+check_2:
+  
+  if (argc == 1) {
     return _wrap_new_EcostressTimeTable__SWIG_4(self, argc, argv);
   }
   if (argc == 2) {
@@ -6505,10 +6722,21 @@ check_1:
       int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t, 0);
       _v = SWIG_CheckState(res);
     }
-    if (!_v) goto check_3;
+    if (!_v) goto check_4;
     return _wrap_new_EcostressTimeTable__SWIG_1(self, argc, argv);
   }
-check_3:
+check_4:
+  
+  if (argc == 2) {
+    int _v = 0;
+    {
+      int res = SWIG_AsPtr_std_string(argv[0], (std::string**)(0));
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_5;
+    return _wrap_new_EcostressTimeTable__SWIG_6(self, argc, argv);
+  }
+check_5:
   
   if (argc == 2) {
     return _wrap_new_EcostressTimeTable__SWIG_3(self, argc, argv);
@@ -6524,7 +6752,9 @@ fail:
     "    Ecostress::EcostressTimeTable::EcostressTimeTable(GeoCal::Time,bool)\n"
     "    Ecostress::EcostressTimeTable::EcostressTimeTable(GeoCal::Time)\n"
     "    Ecostress::EcostressTimeTable::EcostressTimeTable(std::vector< GeoCal::Time,std::allocator< GeoCal::Time > > const,bool)\n"
-    "    Ecostress::EcostressTimeTable::EcostressTimeTable(std::vector< GeoCal::Time,std::allocator< GeoCal::Time > > const)\n");
+    "    Ecostress::EcostressTimeTable::EcostressTimeTable(std::vector< GeoCal::Time,std::allocator< GeoCal::Time > > const)\n"
+    "    Ecostress::EcostressTimeTable::EcostressTimeTable(std::string const &)\n"
+    "    Ecostress::EcostressTimeTable::EcostressTimeTable(std::string const &,bool)\n");
   return 0;
 }
 
@@ -6831,9 +7061,15 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"SHARED_PTR_DISOWN_swigconstant", SHARED_PTR_DISOWN_swigconstant, METH_VARARGS, NULL},
 	 { (char *)"new_EcostressTimeTable", _wrap_new_EcostressTimeTable, METH_VARARGS, (char *)"\n"
 		"\n"
-		"EcostressTimeTable::EcostressTimeTable(const std::vector< GeoCal::Time > Tstart_scan, bool\n"
-		"Averaging_done=true)\n"
-		"Create a time table with the given start time of each scan. \n"
+		"EcostressTimeTable::EcostressTimeTable(const std::string &Fname, bool Averaging_done)\n"
+		"Create a time table by reading the input file.\n"
+		"\n"
+		"The file should be a L1A_PIX or a L1B_RAD file.\n"
+		"\n"
+		"This variation lets you set the Averaging_done explicitly. Normally we\n"
+		"just set Averaging_done for L1B_RAD and have it false for L1A_PIX. But\n"
+		"for testing purposes it can be useful to read one dataset and then\n"
+		"pretend it for a different averaging mode. \n"
 		""},
 	 { (char *)"EcostressTimeTable_scan_index_to_line", _wrap_EcostressTimeTable_scan_index_to_line, METH_VARARGS, (char *)"\n"
 		"\n"

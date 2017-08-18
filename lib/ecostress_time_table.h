@@ -23,6 +23,8 @@ public:
 		     int Num_scan = 44);
   EcostressTimeTable(const std::vector<GeoCal::Time> Tstart_scan,
 		     bool Averaging_done = true);
+  EcostressTimeTable(const std::string& Fname);
+  EcostressTimeTable(const std::string& Fname, bool Averaging_done);
   virtual ~EcostressTimeTable() {}
 
 //-------------------------------------------------------------------------
@@ -80,6 +82,7 @@ private:
   friend class boost::serialization::access;
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version);
+  void read_file(const std::string& Fname);
 };
 }
 

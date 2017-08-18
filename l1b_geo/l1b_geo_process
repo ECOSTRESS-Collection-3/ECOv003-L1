@@ -82,7 +82,7 @@ try:
     f["_extra_python_init"] = "from ecostress import *"
     f = None
     for i in range(len(radlist)):
-        tt = create_time_table(radlist[i], is_averaged=True)
+        tt = create_time_table(radlist[i])
         sm = create_scan_mirror()
         # Work with the SWIR channel data
         ras = GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" % radlist[i])

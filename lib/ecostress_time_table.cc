@@ -1,5 +1,6 @@
 #include "ecostress_time_table.h"
 #include "ecostress_serialize_support.h"
+#include "geocal/hdf_file.h"
 #include <algorithm>
 using namespace Ecostress;
 using namespace GeoCal;
@@ -21,6 +22,47 @@ const double EcostressTimeTable::nominal_scan_spacing = 1.181;
 // is hardcoded. If you change this, make sure to change PIX_DUR
 // in l0b_sim.py
 const double EcostressTimeTable::frame_time = 0.0000321875;
+
+//-------------------------------------------------------------------------
+/// Create a time table by reading the input file. The file should be
+/// a L1A_PIX or a L1B_RAD file
+//-------------------------------------------------------------------------
+
+EcostressTimeTable::EcostressTimeTable(const std::string& Fname)
+{
+  read_file(Fname);
+}
+
+//-------------------------------------------------------------------------
+/// Create a time table by reading the input file. The file should be
+/// a L1A_PIX or a L1B_RAD file.
+///
+/// This variation lets you set the Averaging_done
+/// explicitly. Normally we  just set Averaging_done for L1B_RAD and
+/// have it false for L1A_PIX. But for testing purposes it can be
+/// useful to read one dataset and then pretend it for a different
+/// averaging mode.
+//-------------------------------------------------------------------------
+
+EcostressTimeTable::EcostressTimeTable
+(const std::string& Fname, bool Averaging_done)
+{
+  read_file(Fname);
+  averaging_done_ = Averaging_done;
+}
+
+//-------------------------------------------------------------------------
+/// Read a file to populate the data.
+//-------------------------------------------------------------------------
+
+void EcostressTimeTable::read_file(const std::string& Fname)
+{
+  GeoCal::HdfFile f(Fname);
+  averaging_done_ = f.has_object("/L1B_RADMetadata");
+  blitz::Array<double, 1> t = f.read_field<double, 1>("/Time/line_start_time_j2000");
+  for(int i = 0; i < t.rows(); i += number_line_scan())
+    tstart_scan_.push_back(GeoCal::Time::time_j2000(t(i)));
+}
 
 //-------------------------------------------------------------------------
 /// Create a time table with the given number of scans, with the time
