@@ -67,10 +67,6 @@ kh5 = PRT_469_T( P7_R(raw.AnalogsTemp_BB_HOT_5) )
 
 '''
 
-J2KS=946728000  # calendar.timegm(time.strptime("2000-01-01T12:00:00.000",TPAT))
-GPSS=315964800  # calendar.timegm(time.strptime("1980-01-06T00:00:00.000",TPAT))
-GP2K = J2KS - GPSS  # difference
-
 ' short word offsets into FPIE packet array '
 
 ' packet primary header '
@@ -105,13 +101,18 @@ PPSC = int( (SCPS*FPB3+FPPPKT-1) / FPPPKT )
 # Short term, change this to match EcostressTimeTable pixel duration.
 # We will want to change this back, but for now change this to match
 # existing test data. See Issue #13 in github.
-#FP_DUR = 0.0000321982
+#FP_DUR = 0.0000321982 - 1.2617745535714285714285714285714e-6
+#FP_DUR = 0.0000321875 - 1.2510745535714285714285714285714e-6
+FP_DUR = 0.0000321875
+#FP_DUR = 0.00003180890736809696 # measured from test data 20170808
 #FP_DUR = 0.0000322
-FP_DUR = 0.000030955332  # this is consistent with FOV of 25.475
+#FP_DUR = 3.095533197239234e-5 - 1.9077034883720932e-8  # this is consistent with FOV of 25.475; = 24.475/(5400*6*RPM) - fudge
 PKT_DUR = FP_DUR * float( FPPPKT )
+IMG_DUR = FP_DUR * float( FPPSC )
+PIX_DUR = FP_DUR * float( BBLEN*2 + FPPSC )
 RPM = 25.4
 MPER = 60.0/RPM # mirror period = 2.3622047 sec / rev
-SC_DUR = MPER/2.0 # half-mirror rotation = 1.1811024 sec
+SCAN_DUR = MPER/2.0 # half-mirror rotation = 1.1811024 sec
 FP_ANG = FP_DUR*RPM*6.0 # FP angle = .0047175926 deg / FP
 FOV = FP_DUR*RPM*6.0*FPPSC # field of view = 25.475000 deg / scan
 ANG1 = FOV / 2.0
@@ -121,9 +122,15 @@ ANG2 = float( int( (ANG1 + FP_ANG*float(BBLEN*2))*1000.0 ) )/1000.0
 # covered by 25.475 degree of mirror scan.  Mirror
 # is 2-sided, so every other scan is 180 degrees apart
 MAX_FPIE=1749248
-CNT_DUR = 60.0/RPM/float( MAX_FPIE ) - 1.357079461852133e-10  # = 1.3504 microsecond/count
+EV_DUR = 60.0/RPM/float( MAX_FPIE )  # = 1.3504 microsecond/count
+#EV_DUR = 60.0/RPM/float( MAX_FPIE ) - 1.357079461852133e-10  # = 1.3504 microsecond/count - fudge factor
+#EV_DUR = 1.3505012369820937e-06 # measured from test data 20170803
 ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.00020580272 deg/count
-FP_EV = FP_DUR*RPM*MAX_FPIE / 60.0 # = 22.922887 counts/FP
+FP_EV = FP_DUR*RPM*MAX_FPIE/60.0 + .004260048 # = 23.835326 counts/FP
+PKT_EV = FP_DUR*RPM*MAX_FPIE*FPPPKT/60.0 # = 1525.460873 counts/PKT
+IMG_EV = FP_DUR*RPM*MAX_FPIE*FPPSC/60.0 # = 128710.76112 counts/IMG
+FP_TOL = 3
+SCENE_DUR = SCAN_DUR * SCPS
 
 class L1aRawPixGenerate(object):
   '''This generates a L1A_RAW_PIX, L1A_BB, L1A_ENG and L1A_RAW_ATT
@@ -157,23 +164,6 @@ class L1aRawPixGenerate(object):
         se = Time.parse_time(sc_end_time)
         res.append([orbit, scene_id, ss, se])
     return res
-
-  def locate_ev( self, idx, tot, codes, lid ): # Look for EV code in packets
-    # Return EV0 of 0 or 1 indicates phase of mirror
-    # EV0 = 2 if matching EV not found
-    ev0 = 2
-    while idx < tot:
-      p1 = 0
-      while p1 < FPPPKT and ev0 == 2:
-        if int( float( lid[idx,p1] - codes[0] )/10.0 + 0.5 ) == 0: ev0 = 0
-        elif int( float( lid[idx,p1] - codes[1] )/10.0 + 0.5 ) == 0: ev0 = 1
-        else: p1 += 1
-      if ev0 < 2:  # Found it
-        print("Found PHASE %d EV=%d at %d in PKT %d" %(ev0,lid[idx,p1],p1,idx))
-        return (idx,p1,ev0)
-      else:  #  search next packet
-        idx += 1
-    return (idx,p1,ev0)
 
   def create_file(self, prod_type, orbit, scene, start_time, end_time,
                   primary_file = False, prod=True, intermediate=False):
@@ -226,11 +216,11 @@ class L1aRawPixGenerate(object):
     PRT = np.zeros( (17,3), dtype=np.float64 )
     with open( self.osp_dir+"/prt_coef.txt", "r") as pf:
       for i, pvl in enumerate( pf ):
-        p0, p1, p2, p3 = re.split(r'\s+', pvl.strip())
-        PRT[i,0] = float(p1)
-        PRT[i,1] = float(p2)
-        PRT[i,2] = float(p3)
-        print("PRT[%d](%s) = %20.12f %20.12f %20.12f" % ( i, p0, PRT[i,0], PRT[i,1], PRT[i,2] ) )
+        e0, e1, e2, e3 = re.split(r'\s+', pvl.strip())
+        PRT[i,0] = float(e1)
+        PRT[i,1] = float(e2)
+        PRT[i,2] = float(e3)
+        print("PRT[%d](%s) = %20.12f %20.12f %20.12f" % ( i, e0, PRT[i,0], PRT[i,1], PRT[i,2] ) )
     pf.close()
 
 # PRT DN to Kelvin conversions
@@ -250,15 +240,33 @@ class L1aRawPixGenerate(object):
     prh[4] = np.poly1d([ PRT[16,2], PRT[16,1], PRT[16,0] ]) # PRT_469_T
 
 #  Get EV start codes for BB and IMG pixels
-    ev_codes = np.zeros( (3,2), dtype=np.float32 )
+    ev_codes = np.zeros( (4,6), dtype=np.int32 )
+    ev_names = [ e0 for e0 in range(4) ]
     ' open EV codes file '
     with open( self.osp_dir + "/ev_codes.txt", "r") as ef:
-        for i,evl in enumerate(ef):
-            e0, e1, e2 = re.split(r'\s+', evl.strip())
-            ev_codes[i,0] = float(e1)
-            ev_codes[i,1] = float(e2)
-            print("EV_CODES[%d](%s) = %f, %f" % (i,e0,ev_codes[i,0],
-                                                 ev_codes[i,1] ))
+      for i,evl in enumerate(ef):
+        e0, e1, e2, e3, e4 = re.split(r'\s+', evl.strip())
+        ev_names[i] = e0
+        if int(e2) < int(e1): # compensate for zero-crossing in EV range
+          ev_codes[i,4] = MAX_FPIE - int(e1) # delta to end
+          ev_codes[i,0] = 0 # new start EV to search
+          ev_codes[i,1] = int(e2) + ev_codes[i,4] # new end EV
+        else:
+          ev_codes[i,4] = 0
+          ev_codes[i,0] = int(e1)
+          ev_codes[i,1] = int(e2)
+        if int(e4) < int(e3): # compensate for zero-crossing in EV range
+          ev_codes[i,5] = MAX_FPIE - int(e3) # delta to end
+          ev_codes[i,2] = 0 # new start EV to search
+          ev_codes[i,3] = int(e4) + ev_codes[i,5] # new end EV
+        else:
+          ev_codes[i,5] = 0
+          ev_codes[i,2] = int(e3)
+          ev_codes[i,3] = int(e4)
+        print("P1=%d P2=%d P3=%d P4=%d"%(int(e1),int(e2),int(e3),int(e4)))
+        print("EV_CODES[%d](%s) = (%d,%d) (%d,%d) (%d,%d)" % (i,ev_names[i],
+                                ev_codes[i,0],ev_codes[i,1],ev_codes[i,2],
+                                ev_codes[i,3],ev_codes[i,4],ev_codes[i,5] ))
     ef.close()
 
 # open L0B file
@@ -285,20 +293,42 @@ class L1aRawPixGenerate(object):
     bb_time=self.fin["hk/status/time"]
     bb_fsw=self.fin["hk/status/time_fsw"]
 
+    epc = bb_time.shape[0]
+    bbtime = np.zeros( epc, dtype=np.float64 )
+    bbtime[:] = bb_time[:]
+    bbfsw = np.zeros( epc, dtype=np.float64 )
+    bbfsw[:] = bb_fsw[:]
+
     tot_pkts = bip.shape[0]
     print("Opened L0B file %s, TOT_PKTS=%d" % (self.l0b, tot_pkts ) )
 
-    #' initialize some output pointers for different bands '
-    #pix_dat = [b for b in range(BANDS)]
-    #b295 = [b for b in range(BANDS)]
-    #b325 = [b for b in range(BANDS)]
+    # calculate FSW times of each packet (GPS times)
+    gpt = np.zeros( tot_pkts, dtype=np.float64 )
+    gpt[:] = fswt[:] + ( fpie_sync[:] - fsw_sync[:] ) / 1000000.0
 
-    pkt_idx = 0
+    # extract encoder values
+    i,j = lid.shape
+    lev = np.zeros( (i,j), dtype=np.uint32 )
+    lev[:,:] = lid[:,:]&0x1fffff
 
-    pix_buf = np.zeros( ( PPFP, FPB3, BANDS ), dtype=np.uint16 )
-    ev_buf = np.zeros( FPB3, dtype=np.uint32 )
-    flex_buf = np.zeros( (FPPPKT, PPFP, BANDS), dtype=np.uint16 )
+    # working array
+    flex_buf = np.zeros( (PPFP, FPPPKT, BANDS), dtype=np.uint16 )
+    # output file arrays
+    img = np.zeros( ( SCPS*PPFP, FPPSC, BANDS ), dtype=np.uint16 )
+    hbb = np.zeros( ( SCPS*PPFP, BBLEN, BANDS ), dtype=np.uint16 )
+    cbb = np.zeros( ( SCPS*PPFP, BBLEN, BANDS ), dtype=np.uint16 )
+    pix_time = np.zeros( SCPS*PPFP, dtype=np.float64 )
+    ev_buf = np.zeros( (SCPS, FPPSC), dtype=np.uint32 )
+    buf = [0,1,2]
+    buf[0] = hbb
+    buf[1] = cbb
+    buf[2] = img
 
+    cnt = np.zeros( 3, dtype=np.float32 )
+    good = np.zeros( 3, dtype=np.float32 )
+    st = np.zeros( 3, dtype=np.float64 )
+
+    pkt_idx = 0 # start looking at first packet in file
     o_start_time = None
     # iterate through scenes from scene start/stop file
     for orbit, scene_id, ss, se in self.process_scene_file():
@@ -307,190 +337,176 @@ class L1aRawPixGenerate(object):
       print("====  ", datetime.now(), "  ====")
       print("SCENE=%s START=%s END=%s SS=%f SE=%f" % ( scene_id, ss, se, ss.j2000, se.j2000 ) )
 
-      good_pkt = 0
-      good_bb = 0
-      pkt_cnt = 0
-      bb_cnt = 0
+      good[:] = 0.0
+      cnt[:] = 0.0
+      miss = 0
 
+      #*** Account for missing packets, assume packets in time sequence ***
       ' search for packet containing scene start time '
-      ' *** Account for actual time of camera switch-on from mirror angle *** '
-      ' *** Account for missing packets, assume in time sequence *** '
-      pktp0t = Time.time_gps(0.0)  # Initialize to GPS 0
-      dt = float( int( ( pktp0t - ss )*100000.0 + 0.5 ) )
+      pktp0t = Time.time_gps( gpt[pkt_idx] )
+      dt = float( int( (pktp0t - ss)*100000.0 + 0.5 ) )
       while dt < 0.0 and pkt_idx<tot_pkts:
-        gt = fswt[pkt_idx] + float(fpie_sync[pkt_idx] - fsw_sync[pkt_idx]) /1000000.0
+        gt = gpt[pkt_idx]
         pktp0t = Time.time_gps(gt)
-        dt = float( int( ( pktp0t - ss )*100000.0 + 0.5 ) )
+        dt = float( int( (pktp0t - ss)*100000.0 + 0.5 ) )
         print("Packet %d ID=%d time=%f SS=%f DT=%f" % ( pkt_idx, pid[pkt_idx], pktp0t.j2000, ss.j2000, dt/100000.0 ) )
         pkt_idx += 1
       ' end searching for packet matching scene start time '
       if pkt_idx >= tot_pkts:
-        print("Could not find Scene %s time %s (%fJ2K) in file %s PKT=%d" % ( scene_id, ss, ss.j2000, self.l0b, pkt_idx ) )
+        print("Could not find Scene %s time %s (%fJ2K) in file %s PKT=%d" % ( scene_id, str(ss), ss.j2000, self.l0b, pkt_idx ) )
         return -1
 
       ' found scene start time in previous packet '
-      if dt > 0.0: pkt_idx -= 2
-      else: pkt_idx -= 1
-      print("Found scene %s start time %f in packet[%d]=%d FP0 time=%f" % ( scene_id, ss.j2000, pkt_idx, pid[pkt_idx], pktp0t.j2000 ) )
+      if dt > 0.0: pkt_idx -= 1
+      print("Located scene %s start time %f in PKT[%d] J2K=%f %s" % ( scene_id, ss.j2000, pkt_idx, pktp0t.j2000, str(pktp0t) ) )
 
-      ' create datasets '
-      ' Starting time of first focal plane in each scan '
-      pix_time = []
-      ' FPIE encoder value of each focal plane in scan '
-      pix_ev = []
-      ' Image and BB pixel dataset for each band '
-      pix_dat = [ [ ] for i in range(BANDS)]
-      b295 = [ [ ] for i in range(BANDS)]
-      b325 = [ [ ] for i in range(BANDS)]
+      # initialize buffers to fill values
+      img[ : ] = 0xffff
+      hbb[ : ] = 0xffff
+      cbb[ : ] = 0xffff
+      pix_time[ : ] = 0.0
+      ev_buf[ : ] = 0xffffffff
 
-      # First focal plane frame of scene in current packet
-      dt = pktp0t - ss
-      p0 = int( dt/FP_DUR + 0.5 )
-      ' loop through scans (256 lines/scan) in scene '
       line = 0  # line pointer in output image
       op = 0  # initialize output FP pointer
-      pktp0t += SC_DUR
+      pktp0t += PIX_DUR  # point to end of BB and IMG pixels
+
       scan = 0
+      scans = 0
+      if pkt_idx > 0: pkt_idx -= 1 # compensate for time code error
+      st[0] = gpt[pkt_idx] # initial start time for first scan
       while scan < SCPS and pktp0t < se:
-        pix_buf[:,:,:] = 0xffff  # pre-fill with null values
-        ev_buf[:] = 0xffffffff
-        # find matching encoder value
-        p0,p1,ev0 = self.locate_ev( pkt_idx, tot_pkts, ev_codes[0,:], lid )
-        if ev0 == 2:
-          print("Could not find IMG EV SCENE=%s SCAN=%d IDX=%d P1=%d" % (scene_id, scan,p0,p1))
-          break
-        pkt_idx = p0
-        if p0 == 0: pktid0 = 0
-        else: pktid0 = pid[p0-1]
-        if p1 > 0:  # calculate fswt for PKT
-          if lid[p0,p1] < lid[p0,0]: p2 = lid[p0,p1]+MAX_FPIE-lid[p0,0]
-          else: p2 = lid[p0,p1] - lid[p0,0]
-          dt = float( p2 ) * CNT_DUR  # use EV in current PKT
-          #dt = FP_DUR * float( p1-FPPPT )  # count backward from next PKT
-          print("LID[%d,%d]%d - LID[%d,0]%d" %(p0,p1,lid[p0,p1],p0,lid[p0,0]))
-          #p0 += 1
-        else:  #  use time codes in current packet
-          dt = 0.0
-        gt = fswt[p0] + float(fpie_sync[p0] - fsw_sync[p0])/1000000.0 + dt
-        pix_time.append(Time.time_gps( gt ).j2000)
 
-        fpc = FPPPKT - p1
-        idx_inc = 1
-        skip = 0
-        while op < FPB3:  # build up a full scan of IMG and BB pix
-          if idx_inc == 1 and pkt_idx < tot_pkts:  #  read next packet
-            flex_buf[:,:,:] = bip[pkt_idx,:,:,:]
-            pktid = pid[pkt_idx]
-            if pktid0 == 4294937295: skip = pktid * FPPPKT # 32 bit wrap
-            else: skip = (pktid - pktid0 - 1) * FPPPKT
-          if pkt_idx >= tot_pkts:
-            print("End of file reached before end of scan=%d OP=%d" %(scan,op))
-            flex_buf[:,:,:] = 0xffff
-          # end reading new packet
+        #  Loop through pixel sequences in scan
+        cont = 1
+        s0 = scan
+        line = scan * PPFP
+        st[2] = 0
+        for seq in range( 3 ):
+          op0 = ev_codes[3,seq]
+          op1 = ev_codes[3,seq+1]
+          e0 = pkt_idx
+          e2 = 2
+          while e0 < tot_pkts and e2 == 2:
+            if gpt[e0] > se.gps:
+              print("Past scene end time seeking %s IDX=%d" %(ev_names[seq],e0))
+              scan = SCPS # end current scene
+              pkt_idx = e0
+              cont = 0
+              break # exit seek loop
+            elif gpt[e0]-st[0] > SCAN_DUR and seq > 0:
+              print("Past scan end time seeking %s IDX-%d" %(ev_names[seq],e0))
+              scan = int( (gpt[e0] - ss.gps)/SCAN_DUR + 0.999) # new scan
+              pkt_idx = e0
+              cont = 0
+              break # exit seek loop
+            # find start of sequence and mirror phase
+            e1 = 0
+            while e1 < FPPPKT and e2 == 2:
+              lid0 = ( lev[e0,e1] + ev_codes[seq,4] ) % MAX_FPIE
+              lid1 = ( lev[e0,e1] + ev_codes[seq,5] ) % MAX_FPIE
+              if lid0 >= ev_codes[seq,0] and lid0 <= ev_codes[seq,1]: e2 = 0
+              elif lid1 >= ev_codes[seq,2] and lid1 <= ev_codes[seq,3]: e2 = 1
+              else: e1 += 1 # lookat next EV
+            if e2 == 2:  e0 += 1 # look in next packet
+          pkt_idx = e0
 
-# find starting EV for BB1, BB2, and IMG pixels
-          print("SCENE=%s SCAN=%d LINE=%d DT=%f s2k=%f IDX=%d P1=%d OP=%d SKIP=%d FPC=%d" %(scene_id, scan, line, dt, pix_time[scan], pkt_idx, p1, op, skip, fpc))
-          op += skip
-          if op < FPB3:
-            #print("transposing IDX=%d P1=%d FPC=%d OP=%d" % (pkt_idx, p1, fpc, op) )
-            p0 = FPPSC - op
-            if fpc > p0:
-              fpc = p0  # runt at end of scan
-              print("Last chunk: %d" % p0 )
-            for b in range( BANDS ):  # copy packet data to pixel buffer
-              pix_buf[:,op:op+fpc,b] = np.transpose(flex_buf[p1:p1+fpc,:,b])
-            ev_buf[op:op+fpc] = lid[pkt_idx,p1:p1+fpc]  #  and current EVs
+          if cont==0 or e0>=tot_pkts:
+            if e0>=tot_pkts: # hit EOF
+              print("%s EV not found SCENE=%s IDX=%d P1=%d" %(ev_names[seq],scene_id,e0,e1))
+              e0 = tot_pkts - 1
+              e1 = FPPPKT - 1
+              scan = SCPS
+            else:
+              print("Next scene")
+              op = op1
+            break # exit seq loop
+
+          # calculate fswt for first FP in SEQ
+          if e1 == 0:
+            st[seq] = gpt[e0]
+          else:
+            dt = ( (int(lev[e0,e1]) - int(lev[e0,0]))%MAX_FPIE ) * EV_DUR
+            t0 = gpt[e0-1] + dt + PKT_DUR ### time code error
+            t1 = gpt[e0+1] + (e1 - FPPPKT) * FP_DUR # from next pkt
+            if t1 - t0 > SCAN_DUR: st[seq] = t1
+            else: st[seq] = t0
+          if seq==2:
+            pix_time[line] = Time.time_gps( st[2] ).j2000
+            pix_time[line+1:line+PPFP] = pix_time[line]
+          print("Found %s LID[%d,%d]=%d PH=%d SCENE=%s SCAN=%d OP=%d GP=%f %s"%(ev_names[seq],e0,e1,lev[e0,e1],e2,scene_id,scan,op,Time.time_gps(st[seq]).j2000,str(Time.time_gps(st[seq]))))
+  
+          # Copy pixels from PKT
+          p1 = e1
+          fpc = FPPPKT - p1  # FPs to copy from first PKT
+          while op < op1 and e0 < tot_pkts:
+            #print("SCENE=%d SCAN=%d E0=%d E1=%d ST=%f GPT=%f" %(scene_id,scan,e0,e1,st[0],gpt[e0]))
+            gs = seq
+            if gpt[e0] > se.gps:
+              print("GPT %f past SE %f copying %s IDX=%d" %(gpt[e0],se.gps,ev_names[seq],e0))
+              scan = SCPS # force new scene
+              pkt_idx = e0 + 1
+              seq = 3
+              cont = 0
+              break # exit sequence copy loop
+            if gpt[e0]-st[0] > SCAN_DUR:
+              print("GPT %f past scan end %f copying %s IDX=%d" %(gpt[e0],st[0]+SCAN_DUR,ev_names[seq],e0))
+              scan = int( (gpt[e0] - ss.gps)/SCAN_DUR +0.5 ) # new scan
+              pkt_idx = e0 + 1
+              seq = 3
+              cont = 0
+              break # exit sequence copy loop
+  
+            for b in range( BANDS ): # transpose new packet to flex_buf
+              flex_buf[:,:,b] = np.transpose(bip[e0,:,:,b])
+            e3 = op1 - op
+            if fpc > e3:
+              fpc = e3  # runt at end of sequence
+              print("Last %s chunk:%d IDX=%d" %(ev_names[seq],e3,pkt_idx) )
+            dp = op - op0
+            #print("SEQ=%d LINE=%d DP=%d P1=%d FPC=%d" %(seq,line,dp,p1,fpc))
+            buf[seq][line:line+PPFP,dp:dp+fpc,:] = flex_buf[:,p1:p1+fpc,:]
+            if seq==2: ev_buf[scan,dp:dp+fpc] = lev[pkt_idx,p1:p1+fpc]
             op += fpc  #  next FP pointer in pix_buf
-            if op == FPPSC:  # copy BB pixels
-              # find cold BB pixels
-              p0,p1,ev0 = self.locate_ev( pkt_idx, tot_pkts, ev_codes[1,:], lid)
-              if ev0 == 2:
-                print("Could not find CBB EV SCENE=%s SCAN=%d IDX=%d P1=%d"%(scene_id,scan,p0,p1))
-                return -1
-              print("Found CBB PKT=%d P1=%d PH=%d SCENE=%s SCAN=%d OP=%d" % (p0,p1,ev0,scene_id,scan,op))
-              fpc = FPPPKT - p1
-              pkt_idx = p0
-              flex_buf[:fpc,:,:] = bip[pkt_idx,p1:,:,:]
-              ev_buf[op:op+fpc] = lid[pkt_idx,p1:]
-              pktid0 = pid[pkt_idx]
-              pkt_idx += 1
-              pktid = pid[pkt_idx]
-              if p1>0:
-                flex_buf[fpc:,:,:] = bip[pkt_idx,:p1,:,:]
-                ev_buf[op+fpc:op+BBLEN] = lid[pkt_idx,:p1]
-              for b in range(BANDS):
-                pix_buf[:,op:op+BBLEN,b] = np.transpose(flex_buf[:BBLEN,:,b])
-              bb_cnt += 1
-              good_bb += 1
-              op += BBLEN
-              # find hot BB pixels
-              p0,p1,ev0 = self.locate_ev( pkt_idx, tot_pkts, ev_codes[2,:], lid)
-              if ev0 == 2:
-                print("Could not find HBB EV SCENE=%s SCAN=%d IDX=%d P1=%d"%(scene_id,scan,p0,p1))
-                return -1
-              print("Found HBB PKT=%d P1=%d PH=%d SCENE=%s SCAN=%d OP=%d" % (p0,p1,ev0,scene_id,scan,op))
-              fpc = FPPPKT - p1
-              pkt_idx = p0
-              flex_buf[:fpc,:,:] = bip[pkt_idx,p1:,:,:]
-              ev_buf[op:op+fpc] = lid[pkt_idx,p1:]
-              pktid0 = pid[pkt_idx]
-              pkt_idx += 1
-              pktid = pid[pkt_idx]
-              if p1>0:
-                flex_buf[fpc:,:,:] = bip[pkt_idx,:p1,:,:]
-                ev_buf[op+fpc:op+BBLEN] = lid[pkt_idx,:p1]
-              for b in range(BANDS):
-                pix_buf[:,op:op+BBLEN,b] = np.transpose(flex_buf[:BBLEN,:,b])
-              bb_cnt += 1
-              good_bb += 1
-              op += BBLEN
-            #  end copying BB pixels
+            fpc = FPPPKT # full PKTs after (partial) first PKT
+            p1 = 0
+            e0 += 1
+            #cnt[seq] += 1.0
+            good[seq] += 1.0
+            # end copying current PKT
+          # end seq copy loop
+          pkt_idx = e0 - 1 # back up 1 packet for next seek
+          if e1 > 0:
+            #cnt[seq] -= 1
+            good[gs] -= 1
+        # end seq loop
 
-            p1 = 0  #  copy whole packets after the first (if partial)
-            fpc = FPPPKT
-            idx_inc = 1  #  normal packet increment
-            if op<FPPSC:
-              pktid0 = pid[pkt_idx]  #  save current packt ID
-              pkt_idx += idx_inc
-            pkt_cnt += 1
-            good_pkt += 1
-          else:  #  need to skip to future line
-            print("flushing scan %d packet=%d OP=%d" % (scan, pkt_idx, op))
-            idx_inc = 0  # do not read a new packet
-            op = op + skip - FPB3
-            if skip > 0:
-              print("PKTID mismatch: Expected %d found %d" % (pktid0+1, pktid))
-              pkt_cnt += skip/FPPPKT
-              skip = 0
-          # end copying or skipping pix_buf
-        # end filling current pix_buf and ev_buf
+        if s0<SCPS:
+          print("SCENE=%s SCAN=%d LINE=%d DT=%f s2k=%f IDX=%d P1=%d OP=%d P0T=%f"%(scene_id,s0,line,dt,pix_time[s0],pkt_idx,e1,op,pktp0t.j2000))
+          if scan>=SCPS:
+            print("Forced to next scene IDX=%d E1=%d OP=%d" %(pkt_idx,e1,op) )
+            scans += 1
+          elif scan>s0:
+            print("Forced to next scan %d IDX=%d E1=%d OP=%d" %(scan,pkt_idx,e1,op) )
+            scans += 1
 
-        # copy to output file
-        pix_ev.append(ev_buf[:FPPSC].copy())
-        for b in range( BANDS ):
-          pix_dat[b].append(pix_buf[:,0:FPPSC,b].copy())
-          b295[b].append(pix_buf[:,FPPSC:FPPSC+BBLEN,b].copy())
-          b325[b].append(pix_buf[:,FPPSC+BBLEN:FPB3,b].copy())
         op = 0
-        line += PPFP
-        pktp0t += SC_DUR
-        scan += 1
-        ' end copy image and BB pixels and EV for current scan '
-      ' end scans loop '
-      good_pkt -= 1
-      pkt_cnt += int( float( (SCPS - scan) * FPB3 ) / 64.0 + 0.5 ) - 1
-      if scan < SCPS: print("Total scans read  %d, padding" % scan )
-      while scan < SCPS:  #  fill out incomplete scene with null values
-        pix_buf[:,:,:] = 0xffff  # pre-fill with null values
-        ev_buf[:] = 0xffffffff
-        pix_ev.append(ev_buf[:FPPSC].copy())
-        for b in range( BANDS ):
-          pix_dat[b].append(pix_buf[:,0:FPPSC,b].copy())
-          b295[b].append(pix_buf[:,FPPSC:FPPSC+BBLEN,b].copy())
-          b325[b].append(pix_buf[:,FPPSC+BBLEN:FPB3,b].copy())
-        scan += 1
+        if cont==1:
+          pktp0t += SCAN_DUR
+          scans += 1
+          scan += 1
+      # end scan loop
 
-      ' create scene file and image pixel, J2K, and FPIE ENC groups '
+      #bb_cnt = cnt[0] + cnt[1]
+      bb_cnt = scans*2
+      good_bb = good[0] + good[1]
+      #pkt_cnt = cnt[2]
+      pkt_cnt = int( float( scans*FPPSC ) / 64.0 + 0.5 )
+      good_pkt = good[2]
+
+      # copy to output files
+
+      ' create scene file and image pixel, J2K, and FPIE EV groups '
       pname = self.create_file( "L1A_RAW_PIX", orbit, scene_id, ss, se,
                                 prod=False, intermediate=True)
       l1a_fp = h5py.File( pname, "r+", driver='core' )
@@ -509,65 +525,72 @@ class L1aRawPixGenerate(object):
       del sm['AutomaticQualityFlag']
       sm['AutomaticQualityFlag'] = '%16.10e' % bcomp
       print("====  ", datetime.now(), "  ====")
-      print("SCENE %s completed, (%f) %d good out of %d IMG packets, (%f) %d good out of %d BB packets" % ( scene_id, pcomp, good_pkt, pkt_cnt, bcomp, good_bb, bb_cnt ))
+      print("SCENE %s completed, SCANS=%d (%f) %d / %d GOOD/IMG, (%f) %d / %d GOOD/BB" % ( scene_id, scans, pcomp, good_pkt, pkt_cnt, bcomp, good_bb, bb_cnt ))
 
       l1a_upg = l1a_fp.create_group("/UncalibratedPixels")
       l1a_ptg = l1a_fp.create_group("/Time")
       l1a_peg = l1a_fp.create_group("/FPIEencoder")
       l1a_bpg = l1a_bp.create_group("/BlackBodyPixels")
-      pix_time=np.array(pix_time).repeat(256)
+      l1a_rtg = l1a_bp.create_group("/rtdBlackbodyGradients")
+      #pix_time=np.array(pix_time).repeat(256)
       t = l1a_ptg.create_dataset("line_start_time_j2000", data=pix_time,
                                  dtype="f8" )
       t.attrs["Description"] = "J2000 time of first pixel in line"
       t.attrs["Units"] = "second"
-      t = l1a_peg.create_dataset("EncoderValue", data=np.array(pix_ev),
-                                 dtype="u4" )
+      t = l1a_peg.create_dataset("EncoderValue", data=ev_buf, dtype="u4" )
+
+      e0, e1, e2 = img.shape
+      print("Writing file %s size=%d %d %d BANDS=%d" %( pname, e0, e1, e2, BANDS ) )
       for b in range( BANDS ):
         t = l1a_upg.create_dataset("pixel_data_%d" %(b+1),
-                                   data=np.vstack(pix_dat[b]),
+                                   data=img[:,:,b],
                                    chunks=(PPFP,FPPSC), dtype="u2" )
         t.attrs['Units']='dimensionless'
         t = l1a_bpg.create_dataset("B%d_blackbody_295K" %(b+1),
-                                   data=np.vstack(b295[b]), chunks=(PPFP,BBLEN),
+                                   data=cbb[:,:,b], chunks=(PPFP,BBLEN),
                                                   dtype="u2")
         t.attrs['Units']='dimensionless'
         t = l1a_bpg.create_dataset("B%d_blackbody_325K" %(b+1),
-                                   data=np.vstack(b325[b]), chunks=(PPFP,BBLEN),
+                                   data=hbb[:,:,b], chunks=(PPFP,BBLEN),
                                                   dtype="u2" )
         t.attrs['Units']='dimensionless'
-      good_pkt = 0
-      pkt_cnt = 0
-      good_bb = 0
-      bb_cnt = 0
+
+      # copy RTD temps to BB file
+      p0 = np.argmax( bbtime >= ss.gps )
+      p1 = np.argmax( bbtime >= se.gps )
+      print("Copying RTD for SCENE %d P0=%d P1=%d" %(scene_id, p0, p1))
+      bt=l1a_rtg.create_dataset("time_j2000", shape=(p1-p0+1,), dtype='f8')
+      r2=l1a_rtg.create_dataset("RTD_295K", shape=(p1-p0+1,5,), dtype='f4')
+      r3=l1a_rtg.create_dataset("RTD_325K", shape=(p1-p0+1,5,), dtype='f4')
+      for i in range( p0, p1+1 ):
+        bt[i-p0] = Time.time_gps( bbtime[i] ).j2000
+        for j in range( 5 ):
+          r2[i-p0,j] = prc[j]( p7r( bbt[i,0,j] ) ) + 273.15
+          r3[i-p0,j] = prh[j]( p7r( bbt[i,1,j] ) ) + 273.15
+
     ' end scene loop '
 
-    ' Read HK packets to build up ENG and raw ATT/EPH files '
-    aqc = att.shape[0]
-
     ' create engineering file and datasets '
-    print("crerating ENG and ATT files, AQC=%d" % aqc )
+    print("creating ENG file, EPC=%d" % epc )
     feng = self.create_file( "L1A_ENG", orbit, None, o_start_time,
                              o_end_time, primary_file=True )
     eng = h5py.File( feng, "r+", driver='core' )
-    epc = bbt.shape[0]
     eng_g = eng.create_group("/rtdBlackbodyGradients")
     rtd295 = eng_g.create_dataset("RTD_295K", shape=(epc,5), dtype='f4')
     rtd325 = eng_g.create_dataset("RTD_325K", shape=(epc,5), dtype='f4')
     rtdtime = eng_g.create_dataset("time_j2000", shape=(epc,2), dtype='f8')
     for i in range(epc):  # Convert DNs to Kelvin with PRT parameters
       for j in range( 5 ):
-        dn = bbt[i,0,j]
-        rtd295[i,j] = prc[j]( p7r( ( (dn>>8)&0xff) | ( (dn&0xff)<<8 ) ) )
-        dn = bbt[i,1,j]
-        rtd325[i,j] = prh[j]( p7r( ( (dn>>8)&0xff) | ( (dn&0xff)<<8 ) ) )
-      rtdtime[i,0] = Time.time_gps( bb_time[i] ).j2000  # sample time
-      rtdtime[i,1] = Time.time_gps( bb_fsw[i] ).j2000  # hk pkt time
+        rtd295[i,j] = prc[j]( p7r( bbt[i,0,j] ) ) + 273.15
+        rtd325[i,j] = prh[j]( p7r( bbt[i,1,j] ) ) + 273.15
+      rtdtime[i,0] = Time.time_gps( bbtime[i] ).j2000  # sample time
+      rtdtime[i,1] = Time.time_gps( bbfsw[i] ).j2000  # hk pkt time
     rtd295.attrs['Units']='K and XY'
     rtd325.attrs['Units']='K and XY'
-    eng.close()
 
-    print("====  ", datetime.now(), "  ====")
     ' create raw attitude/ephemeris file and datasets '
+    aqc = att.shape[0]
+    print("creating raw ATT file, AQC=%d" % aqc )
     fatt = self.create_file("L1A_RAW_ATT", orbit, None, o_start_time,
                             o_end_time, prod=False, intermediate=True)
     attf = h5py.File( fatt, "r+", driver='core' )
@@ -584,7 +607,7 @@ class L1aRawPixGenerate(object):
     a2k.attrs['Units']='Seconds'
     e2k.attrs['Units']='Seconds'
     q[:,:] = att[:,:]
-    q.attrs['Description']='Attitude quaternion,goes from spacecraft to ECI. The coefficient convention used has the real part in the first column.'
+    q.attrs['Description']='Attitude quaternion, goes from spacecraft to ECI. The coefficient convention used has the real part in the first column.'
     q.attrs['Units']='dimensionless'
     epos[:,:] = pos[:,:]
     epos.attrs['Description']='ECI position'
@@ -595,6 +618,7 @@ class L1aRawPixGenerate(object):
     attf.close()
 
     # Write out a dummy log file
+    eng.close()
     print("This is a dummy log file", file = self.log)
     self.log.flush()
     print("====  End run ", datetime.now(), "  ====")
