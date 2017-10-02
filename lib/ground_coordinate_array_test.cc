@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE(projection_test)
 {
   // Don't normally run this, it takes a bit of time for a unit test
   // (about 35 seconds on pistol)
-  return;
+  //return;
   GroundCoordinateArray gca(igc);
   boost::shared_ptr<GeoCal::MemoryRasterImage> ras = gca.raster_cover();
   BOOST_CHECK_EQUAL(ras->number_line(), 7628);

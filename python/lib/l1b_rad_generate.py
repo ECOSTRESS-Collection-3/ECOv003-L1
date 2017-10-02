@@ -63,11 +63,15 @@ class L1bRadGenerate(object):
         g = fout.create_group("Radiance")
         for b in range(5):
             t = g.create_dataset("radiance_%d" % (b + 1),
-                                 data = self.image(b).astype(np.float32))
+                                 data = self.image(b).astype(np.float32),
+                                 fillvalue = -9999)
+            t.attrs["_FillValue"] = -9999.0
             t.attrs["Units"] = "W/m^2/sr/um"
         g = fout.create_group("SWIR")
         t = g.create_dataset("swir_dn",
-                             data = self.image(5).astype(np.int16))
+                             data = self.image(5).astype(np.int16),
+                             fillvalue = -9999)
+        t.attrs["_FillValue"] = -9999
         t.attrs["Units"] = "dimensionless"
         g = fout.create_group("Time")
         t = g.create_dataset("line_start_time_j2000",
