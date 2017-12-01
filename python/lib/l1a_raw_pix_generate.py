@@ -610,6 +610,7 @@ class L1aRawPixGenerate(object):
         t.attrs['Units']='dimensionless'
 
       # copy RTD temps to BB file
+      '''  Time mismatch between RTD temps and scene
       p0 = np.argmax( bbtime >= rst )
       p1 = np.argmax( bbtime >= rse )
       print("Copying RTD for SCENE %d P0=%d P1=%d" %(scene_id, p0, p1))
@@ -622,13 +623,14 @@ class L1aRawPixGenerate(object):
         for j in range( 5 ):
           r2[i-p0,j] = prc[j]( p7r( bbt[i,0,j] ) )
           r3[i-p0,j] = prh[j]( p7r( bbt[i,1,j] ) )
+      '''
 
     ' end scene loop '
 
     ' Create refined scene file '
-    sss = os.path.basename( self.l0b )[10:25]
-    ses = str( Time.time_gps( rse ) )
-    sf = "Scene_%5s_%s_%s.txt" % ( orbit, sss, ses[0:4]+ses[5:7]+ses[8:13]+ses[14:16]+ses[17:19])
+    sss = str( o_start_time )
+    ses = str( o_end_time )
+    sf = "Scene_%5s_%s_%s.txt" % ( orbit, sss[0:4]+sss[5:7]+sss[8:13]+sss[14:16]+sss[17:19], ses[0:4]+ses[5:7]+ses[8:13]+ses[14:16]+ses[17:19])
     sfd = open( sf, "w" )
     for i in range( scene_id ): sfd.write( scenes[i] )
     sfd.close()
