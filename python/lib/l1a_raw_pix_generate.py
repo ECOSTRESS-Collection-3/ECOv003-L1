@@ -315,21 +315,19 @@ class L1aRawPixGenerate(object):
     cbb = np.zeros( ( SCPS*PPFP, BBLEN, BANDS ), dtype=np.uint16 )
     pix_time = np.zeros( SCPS*PPFP, dtype=np.float64 )
     ev_buf = np.zeros( (SCPS, FPPSC), dtype=np.uint32 )
-    buf = [0,1,2]
-    buf[0] = hbb
-    buf[1] = cbb
-    buf[2] = img
+    obuf = [0,1,2]
+    obuf[0] = hbb
+    obuf[1] = cbb
+    obuf[2] = img
 
     good = np.zeros( 3, dtype=np.float32 )
     gpix = np.zeros( 3, dtype=np.float32 )
     scenes = []  # record refined scene start/stop times
 
     pkt_idx = 0 # start looking at first packet in file
-    o_start_time = None
     # iterate through scenes from scene start/stop file
+    o_start_time = None
     for orbit, scene_id, sts, ste in self.process_scene_file():
-      if o_start_time is None: o_start_time = sts
-      o_end_time = ste
       print("====  ", datetime.now(), "  ====")
       print("SCENE=%03d START=%s(%f) END=%s(%f)" % ( scene_id, sts, sts.gps, ste, ste.gps) )
 
@@ -466,19 +464,24 @@ class L1aRawPixGenerate(object):
             if gpt[e0] > rse:
               print("** GPT %f past scene end %f at %s IDX=%d" %(gpt[e0],rse,ev_names[seq],e0))
               if seq==2 and op>op0:
-                  scans += 1  # save collected IMG pixels
-                  sse = gpt[e0] + p1*FP_DUR
+                #scans += 1  # save collected IMG pixels
+                sse = gpt[e0] + p1*FP_DUR
+                print("    Scans=%d New scene end time %s(%f)" %( scans, Time.time_gps(sse),sse))
+              else:
+                obuf[0][line:line+PPFP] = 0xffff
+                obuf[1][line:line+PPFP] = 0xffff
+                cont = 0
               scan = SCPS  # force new scene
-              print("    Scans=%d New scene end time %s(%f)" %( scans, Time.time_gps(sse),sse))
-              cont = 0
               break # break out of sequence copy loop
 
             if gpt[e0] > sst+SCAN_DUR:
               print("** GPT %f past scan end %f at %s IDX=%d" %(gpt[e0],sst+SCAN_DUR,ev_names[seq],e0))
-              if seq==2 and op>op0: scans += 1
+              if seq==0 or seq==1:
+                obuf[0][line:line+PPFP] = 0xffff
+                obuf[1][line:line+PPFP] = 0xffff
+                cont = 0
               scan = int( (gpt[e0] - rst)/SCAN_DUR +0.5 ) # new scan
               print("    Scans=%d New Scan %d" % (scans, scan) )
-              cont = 0
               break # break out of sequence copy loop
   
             for b in range( BANDS ): # transpose new packet to flex_buf
@@ -497,7 +500,7 @@ class L1aRawPixGenerate(object):
 
             '  TO DO:  adjust for non-contiguous IMG packets within scan '
 
-            buf[seq][line:line+PPFP,dp:dp+fpc,:] = flex_buf[:,p1:p1+fpc,:]
+            obuf[seq][line:line+PPFP,dp:dp+fpc,:] = flex_buf[:,p1:p1+fpc,:]
             if seq==2: ev_buf[scan,dp:dp+fpc] = lev[e0,p1:p1+fpc]
             gpix[seq] += fpc
             op += fpc  #  next output FP pointer in buf
@@ -549,6 +552,8 @@ class L1aRawPixGenerate(object):
       good_img = good[2]
       img_cnt = scans*FPPSC
       rse = sse  # refined scene end time
+      if o_start_time is None: o_start_time = Time.time_gps( rst )
+      o_end_time = Time.time_gps( rse )
       scenes.append("%5d	%03d	%s	%s\n" %( orbit, scene_id,
         str( Time.time_gps( rst ) )[:26], str( Time.time_gps( rse ) )[:26] ) )
 
@@ -608,6 +613,7 @@ class L1aRawPixGenerate(object):
       p0 = np.argmax( bbtime >= rst )
       p1 = np.argmax( bbtime >= rse )
       print("Copying RTD for SCENE %d P0=%d P1=%d" %(scene_id, p0, p1))
+      print(" ")
       bt=l1a_rtg.create_dataset("time_j2000", shape=(p1-p0+1,), dtype='f8')
       r2=l1a_rtg.create_dataset("RTD_295K", shape=(p1-p0+1,5,), dtype='f4')
       r3=l1a_rtg.create_dataset("RTD_325K", shape=(p1-p0+1,5,), dtype='f4')
