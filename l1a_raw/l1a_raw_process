@@ -45,21 +45,6 @@ print("L1A_RAW_PROCESS L0B=%s SCENE_FILE=%s PROD_DIR=%s OSP_DIR=%s SHORT=%s" % (
 makedirs_p(prod_dir)
 os.chdir(prod_dir)
 
-scn = prod_dir + os.path.splitext( os.path.basename( l0b ) )[0] + '.scn'
-cmd = 'python ' + osp_dir + 'l0b_scan.py ' + l0b + ' > ' + scn
-print("Running CMD %s" %cmd )
-stat = os.system( cmd )
-if stat > 0:
-  print("Scan error %d" %stat )
-  exit -1
-sp = os.path.dirname(scene_file)
-cmd = 'grep Scene ' + scn
-p = os.popen(cmd)
-sf = p.read().rstrip()
-p.close()
-scene_file = sp + '/' + sf
-print("Adjusted SCENE_FILE=%s" %scene_file )
-
 l1arawpix = L1aRawPixGenerate(l0b, osp_dir, scene_file)
 l1arawpix.run()
 

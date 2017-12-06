@@ -610,7 +610,6 @@ class L1aRawPixGenerate(object):
         t.attrs['Units']='dimensionless'
 
       # copy RTD temps to BB file
-      '''  Time mismatch between RTD temps and scene
       p0 = np.argmax( bbtime >= rst )
       p1 = np.argmax( bbtime >= rse )
       print("Copying RTD for SCENE %d P0=%d P1=%d" %(scene_id, p0, p1))
@@ -623,7 +622,6 @@ class L1aRawPixGenerate(object):
         for j in range( 5 ):
           r2[i-p0,j] = prc[j]( p7r( bbt[i,0,j] ) )
           r3[i-p0,j] = prh[j]( p7r( bbt[i,1,j] ) )
-      '''
 
     ' end scene loop '
 
