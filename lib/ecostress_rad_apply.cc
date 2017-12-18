@@ -24,9 +24,9 @@ EcostressRadApply::EcostressRadApply
 {
   range_check(Band, 0, 6);
   dn = boost::make_shared<GeoCal::GdalRasterImage>("HDF5:\"" + Dn_fname + "\"://UncalibratedDN/b" + boost::lexical_cast<std::string>(Band + 1) + "_image");
-  if(Band != 5) {
-    gain = boost::make_shared<GeoCal::GdalRasterImage>("HDF5:\"" + Gain_fname + "\"://Gain/b" + boost::lexical_cast<std::string>(Band + 1) + "_gain");
-    offset = boost::make_shared<GeoCal::GdalRasterImage>("HDF5:\"" + Gain_fname + "\"://Offset/b" + boost::lexical_cast<std::string>(Band + 1) + "_offset");
+  if(Band != 0) {
+    gain = boost::make_shared<GeoCal::GdalRasterImage>("HDF5:\"" + Gain_fname + "\"://Gain/b" + boost::lexical_cast<std::string>(Band) + "_gain");
+    offset = boost::make_shared<GeoCal::GdalRasterImage>("HDF5:\"" + Gain_fname + "\"://Offset/b" + boost::lexical_cast<std::string>(Band) + "_offset");
   }
   number_line_ = dn->number_line();
   number_sample_ = dn->number_sample();

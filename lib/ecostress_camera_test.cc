@@ -43,15 +43,15 @@ BOOST_AUTO_TEST_CASE(compare_spreadsheet)
   //   actually one past the max pixel)
   // For y, we have:
   //     Y values  pixel    Band  Index (1 based)
-  //     3.20mm  -80 pixel  1.62  6  1.4  2
-  //     1.92mm  -48        12.05 1  0.5  3
-  //     0.64mm  -16        8.28  5  0.1  4
-  //    -0.64mm   16        8.64  4  0.1  5
-  //    -1.92mm   48        11.35 2  0.6  6
-  //    -3.20mm   80        9.07  3  1.6  7
+  //     3.20mm  -80 pixel  1.62  1  1.4  2
+  //     1.92mm  -48        12.05 6  0.5  3
+  //     0.64mm  -16        8.28  2  0.1  4
+  //    -0.64mm   16        8.64  3  0.1  5
+  //    -1.92mm   48        11.35 5  0.6  6
+  //    -3.20mm   80        9.07  4  1.6  7
   EcostressCamera cam;
   blitz::Array<double, 1> yp_expect(6);
-  yp_expect = 1.92, -1.92, -3.20, -0.64, 0.64, 3.20;
+  yp_expect = 3.20, 0.64, -0.64, -3.20, -1.92, 1.92;
   for(int b = 0; b < yp_expect.rows(); ++b) {
     double xp, yp;
     cam.fc_to_focal_plane(GeoCal::FrameCoordinate(0,0), b, xp, yp);

@@ -10,7 +10,7 @@ namespace Ecostress {
   this little bit of code into C++.
 
   Just so we don't need special handling, we handle the case of Band =
-  5 (Band is 0 based, so this is SW band). For this band, we don't
+  0 (This is SW band). For this band, we don't
   have a gain or offset to apply.
 
   We propagate bad pixels through as -9999.

@@ -99,7 +99,7 @@ def ecostress_to_aster_band():
     these aren't exact, these are just the closest match. There is no match
     for the 12.05 micron ecostress band, we reuse the 10.95 - 11.65 band. These
     band numbers are 1 based (matching the ASTER documentation).'''
-    return [14, 14, 12, 11, 10, 4]
+    return [4, 10, 11, 12, 14, 14]
 
 def ecostress_radiance_scale_factor(band):
     '''Not sure what we will use here, right now we use the ASTER scale. Probably

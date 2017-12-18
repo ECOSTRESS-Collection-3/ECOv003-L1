@@ -872,6 +872,14 @@ _swig_wrap_la_CXXFLAGS = $(AM_CXXFLAGS)
 _swig_wrap_la_LDFLAGS = -module -avoid-version
 _swig_wrap_la_LIBADD = libecostress.la
 _swig_wrap_la_SOURCES = $(INCLUDE_SWIG_SRC) @swigsrc@/swig_wrap.cc
+
+# Only generate these files in maintainer mode, otherwise consider them
+# as input.
+
+# SWIG doesn't like the GCC extension -isystem (which is like -I, but lets
+# GCC know not to complain about things in the header files we can't change).
+# Just replace -isystem with -I for swig
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@GSWIG_FLAGS = $(patsubst -isystem%,-I%, $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS))
 ecostressincdir = @includedir@/ecostress
 ecostressswigincdir = @prefix@/share/ecostress/swig
 libecostress_la_SOURCES = @srclib@/ecostress_camera.cc \
@@ -2641,24 +2649,21 @@ install-swig-python-2: install-libLTLIBRARIES install-pkgpythonswigLTLIBRARIES i
 install-swig-python: all
 	$(MAKE) -j 1 install-swig-python-2 
 
-# Only generate these files in maintainer mode, otherwise consider them
-# as input.
-
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@$(swigsrc)/%_wrap.Pcc : %.i %.cc %.h $(SWIG_TARGET)
-@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -MM -MF $(builddir)/$@.tmp -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GSWIG_FLAGS) -MM -MF $(builddir)/$@.tmp -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	sed 's,\($*_wrap\)\.cc[ :]*,\1.cc $@ : ,g' < $@.tmp > $@
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	rm $@.tmp
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	echo "$(swigsrc)/$*_wrap.cc: $(<D)/$*.cc" >> $@
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	echo "$(swigsrc)/$*_wrap.cc: $(<D)/$*.h" >> $@
 
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@$(swigsrc)/%_wrap.Pcc : %.i %.h $(SWIG_TARGET)
-@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -MM -MF $(builddir)/$@.tmp -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GSWIG_FLAGS) -MM -MF $(builddir)/$@.tmp -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	sed 's,\($*_wrap\)\.cc[ :]*,\1.cc $@ : ,g' < $@.tmp > $@
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	rm $@.tmp
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	echo "$(swigsrc)/$*_wrap.cc: $(<D)/$*.h" >> $@
 
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@$(swigsrc)/%_wrap.Pcc : %.i $(SWIG_TARGET)
-@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -MM -MF $(builddir)/$@.tmp -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GSWIG_FLAGS) -MM -MF $(builddir)/$@.tmp -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	sed 's,\($*_wrap\)\.cc[ :]*,\1.cc $@ : ,g' < $@.tmp > $@
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	rm $@.tmp
 
@@ -2673,7 +2678,7 @@ install-swig-python: all
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@        $(PYTHON) $(srcdir)/config/doxy2swig.py $*_doc/xml/index.xml $*_doc.i
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	rm -r $*_doc
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	echo "%include \"$*.i\"" >> $*_doc.i
-@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $*_doc.i 
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GSWIG_FLAGS) -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $*_doc.i 
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	rm $*_doc.i
 
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@$(srcdir)/$(swigsrc)/%_wrap.cc: %.i %.h $(DOXYGEN_TARGET) $(SWIG_TARGET)
@@ -2683,11 +2688,11 @@ install-swig-python: all
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@        $(PYTHON) $(srcdir)/config/doxy2swig.py $*_doc/xml/index.xml $*_doc.i
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	rm -r $*_doc
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	echo "%include \"$*.i\"" >> $*_doc.i
-@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $*_doc.i 
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GSWIG_FLAGS) -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $*_doc.i 
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	rm $*_doc.i
 
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@$(srcdir)/$(swigsrc)/%_wrap.cc: %.i $(SWIG_TARGET)
-@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GSWIG_FLAGS) -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
 
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@-include $(patsubst %.cc, %.Pcc, $(INCLUDE_SWIG_SRC))
 

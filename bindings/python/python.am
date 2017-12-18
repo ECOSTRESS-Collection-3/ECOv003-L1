@@ -76,21 +76,26 @@ install-swig-python: all
 if MAINTAINER_MODE
 if HAVE_SWIG
 
+# SWIG doesn't like the GCC extension -isystem (which is like -I, but lets
+# GCC know not to complain about things in the header files we can't change).
+# Just replace -isystem with -I for swig
+GSWIG_FLAGS=$(patsubst -isystem%,-I%, $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS))
+
 $(swigsrc)/%_wrap.Pcc : %.i %.cc %.h $(SWIG_TARGET)
-	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -MM -MF $(builddir)/$@.tmp -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
+	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GSWIG_FLAGS) -MM -MF $(builddir)/$@.tmp -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
 	sed 's,\($*_wrap\)\.cc[ :]*,\1.cc $@ : ,g' < $@.tmp > $@
 	rm $@.tmp
 	echo "$(swigsrc)/$*_wrap.cc: $(<D)/$*.cc" >> $@
 	echo "$(swigsrc)/$*_wrap.cc: $(<D)/$*.h" >> $@
 
 $(swigsrc)/%_wrap.Pcc : %.i %.h $(SWIG_TARGET)
-	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -MM -MF $(builddir)/$@.tmp -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
+	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GSWIG_FLAGS) -MM -MF $(builddir)/$@.tmp -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
 	sed 's,\($*_wrap\)\.cc[ :]*,\1.cc $@ : ,g' < $@.tmp > $@
 	rm $@.tmp
 	echo "$(swigsrc)/$*_wrap.cc: $(<D)/$*.h" >> $@
 
 $(swigsrc)/%_wrap.Pcc : %.i $(SWIG_TARGET)
-	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -MM -MF $(builddir)/$@.tmp -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
+	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GSWIG_FLAGS) -MM -MF $(builddir)/$@.tmp -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
 	sed 's,\($*_wrap\)\.cc[ :]*,\1.cc $@ : ,g' < $@.tmp > $@
 	rm $@.tmp
 
@@ -105,7 +110,7 @@ $(srcdir)/$(swigsrc)/%_wrap.cc: %.i %.h %.cc $(DOXYGEN_TARGET) $(SWIG_TARGET)
         $(PYTHON) $(srcdir)/config/doxy2swig.py $*_doc/xml/index.xml $*_doc.i
 	rm -r $*_doc
 	echo "%include \"$*.i\"" >> $*_doc.i
-	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $*_doc.i 
+	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GSWIG_FLAGS) -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $*_doc.i 
 	rm $*_doc.i
 
 $(srcdir)/$(swigsrc)/%_wrap.cc: %.i %.h $(DOXYGEN_TARGET) $(SWIG_TARGET)
@@ -115,11 +120,11 @@ $(srcdir)/$(swigsrc)/%_wrap.cc: %.i %.h $(DOXYGEN_TARGET) $(SWIG_TARGET)
         $(PYTHON) $(srcdir)/config/doxy2swig.py $*_doc/xml/index.xml $*_doc.i
 	rm -r $*_doc
 	echo "%include \"$*.i\"" >> $*_doc.i
-	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $*_doc.i 
+	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GSWIG_FLAGS) -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $*_doc.i 
 	rm $*_doc.i
 
 $(srcdir)/$(swigsrc)/%_wrap.cc: %.i $(SWIG_TARGET)
-	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS) -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
+	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GSWIG_FLAGS) -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<
 
 BUILT_SOURCES+= $(addprefix $(srcdir)/, $(INCLUDE_SWIG_SRC))
 BUILT_SOURCES+= $(srcdir)/$(swigsrc)/swig_wrap.cc
