@@ -35,24 +35,16 @@ if(False):
 # Explicitly list input file
 config = RunConfig(args.run_config)
 
-# Not sure where this will from eventually, but for now just hardcode
-build_id = "0.30"
-pge_version = "0.30"
-build_version = "0100"
-
 l0b = os.path.abspath(config["InputFileGroup", "L0B"])
-l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
 scene_file = os.path.abspath(config["StaticAncillaryFileGroup", "Scene"])
-dirname = config["ProductPathGroup", "ProductPath"]
-file_version = config["ProductPathGroup", "ProductCounter"]
+osp_dir = config["StaticAncillaryFileGroup", "L1A_OSP_DIR"]
+prod_dir = config["ProductPathGroup", "ProductPath"]
+shortname =  config["ProductPathGroup","ShortName"]
+print("L1A_RAW_PROCESS L0B=%s SCENE_FILE=%s PROD_DIR=%s OSP_DIR=%s SHORT=%s" % (l0b, scene_file, prod_dir, osp_dir, shortname ) )
 
-makedirs_p(dirname)
-os.chdir(dirname)
+makedirs_p(prod_dir)
+os.chdir(prod_dir)
 
-l1arawpix = L1aRawPixGenerate(l0b, l1_osp_dir, scene_file,
-                              run_config=config,
-                              build_id=build_id, pge_version=pge_version,
-                              build_version=build_version,
-                              file_version=file_version)
+l1arawpix = L1aRawPixGenerate(l0b, osp_dir, scene_file)
 l1arawpix.run()
 
