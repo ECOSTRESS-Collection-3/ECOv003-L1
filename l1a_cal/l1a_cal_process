@@ -44,7 +44,6 @@ pge_version = "0.30"
 build_version = "0100"
 
 l1a_bb = os.path.abspath(config["InputFileGroup", "L1A_BB"])
-l1a_eng = os.path.abspath(config["InputFileGroup", "L1A_ENG"])
 l1a_raw_pix = os.path.abspath(config["InputFileGroup", "L1A_RAW_PIX"])
 l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
 dirname = config["ProductPathGroup", "ProductPath"]
@@ -65,7 +64,7 @@ log_fname = os.path.splitext(ofile)[0] + ".log"
 log = open(log_fname, "w")
 try:
 # Generate output
-    l1apix = L1aPixGenerate(l1a_bb, l1a_raw_pix, l1a_eng, l1_osp_dir,
+    l1apix = L1aPixGenerate(l1a_bb, l1a_raw_pix, l1_osp_dir,
                             ofile, ofile_gain,
                             log=log, quiet=quiet, run_config=config,
                             build_id=build_id, pge_version=pge_version,

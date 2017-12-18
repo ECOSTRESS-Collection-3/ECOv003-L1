@@ -10,7 +10,7 @@ import os
 class L1aPixGenerate(object):
     '''This generates a L1A pix file from the given L1A_BB and L1A_RAW
     files.'''
-    def __init__(self, l1a_bb, l1a_raw, l1a_eng, l1_osp_dir, output_name,
+    def __init__(self, l1a_bb, l1a_raw, l1_osp_dir, output_name,
                  output_gain_name,
                  local_granule_id = None,
                  run_config = None, log = None,
@@ -22,7 +22,6 @@ class L1aPixGenerate(object):
         command.'''
         self.l1a_bb = os.path.abspath(l1a_bb)
         self.l1a_raw = os.path.abspath(l1a_raw)
-        self.l1a_eng = os.path.abspath(l1a_eng)
         self.l1_osp_dir = os.path.abspath(l1_osp_dir)
         self.output_name = output_name
         self.output_gain_name = output_gain_name
@@ -56,7 +55,6 @@ class L1aPixGenerate(object):
             dirname = self._create_dir()
             os.chdir(dirname)
             res = process_run(["vicarb", "el1a_bbcal",
-                               "inph5e=%s" % self.l1a_eng,
                                "inph5i=%s" % self.l1a_raw,
                                "inph5b=%s" % self.l1a_bb,
                                "inpupf=%s/L1A_PCF_UPF.txt" % self.l1_osp_dir,

@@ -2,7 +2,7 @@
 !   el1a_bbcal.pdf (Ecostress L1A BlackBody calibration)
 !   An L1A_CAL PGE Program supporting the ECOSTRESS Project
 !***Date/Version:
-!   16FEB2017 Version: 0.9 T.L.Logan
+!   28NOV2017 Version: 0.98 T.L.Logan (alg2 cw passing error)
 !   Written for VICAR with TAE scripting.
 !***Function:
 !   ECOSTRESS L1A Blackbody Radiometric Calibration.
@@ -21,17 +21,15 @@
 procedure
 !Progam Parameters****************************************************
 !User Supplied Parameters:
-! inph5e: L1A_ENG      /path/name for pt-RTDs Blackbody temperatures (10 Kelvin temps)
 ! inph5i: L1A_RAW_PIX  /path/name for Raw Imagery; Six wavelength bands
-! inph5b: L1A_BB       /path/name for FPA Blackbody DN; Six wavelength bands
+! inph5b: L1A_BB       /path/name for FPA Blackbody DN; 6 bands; Plus pt-RTDs
 ! inpupf: L1A_PCF_UPF  /path/name for L1A-CAL PGE Processing Control File
 ! outp1:  L1A_PIX      /path for Output L1A_PIX file
 ! outp2:  transfer     /path for Output Intermediate Radiance, Gain/Offset & Temp files
 ! pcount: File Version (vv) provided by PCS (Product Counter) 
-parm   inph5e  string   def="/project/test/eyc/l1a_raw_tests/ref/ECOSTRESS_L1A_ENG_80005_20150124T204251_0100_01.h5"
-parm   inph5i  string   def="/project/test/eyc/l1a_raw_tests/ref/L1A_RAW_PIX_80005_001_20150124T204251_0100_01.h5" 
-parm   inph5b  string   def="/project/test/eyc/l1a_raw_tests/ref/ECOSTRESS_L1A_BB_80005_001_20150124T204251_0100_01.h5"
-parm   inpupf  string   def="/project/sandbox/tllogan/l1a_test/L1A_PCF_UPF.txt"
+parm   inph5i  string   def="/project/test/eyc/instrument/out/L1A_RAW_PIX_80005_002_20170810T195606_0100_05.h5" 
+parm   inph5b  string   def="/project/test/eyc/instrument/out/ECOSTRESS_L1A_BB_80005_002_20170810T195606_0100_05.h5"
+parm   inpupf  string   def="./L1A_PCF_UPF.txt"
 parm   outp1   string   def="./"
 parm   outp2   string   def="./"
 parm   pcount  type=(string,2) def="18"
@@ -40,8 +38,8 @@ parm   palg    integer  def=1 valid=(1:2) !Planck algorithm; 1=CW; 2=Iteration
 parm   rad2k   integer  def=1 valid=(0:1) !Convert radiance to Kelvin. 0=No; 1=Yes
 parm   radout  integer  def=1 valid=(0:1) !Output radiance image. 0=No; 1=Yes
 parm   debug   integer  def=2 valid=(0:2) !Verbose Messages; 0=No;1=Yes;2=Yes+Del-x
-parm   pre325  real     def=325.0  !Pre-Flight 325BB temperature Kelvins
-parm   pre295  real     def=295.0  !Pre-Flight 295BB temperature Kelvins
+parm   pre325  real     def=313.15  !Pre-Flight 325BB temperature Kelvins
+parm   pre295  real     def=294.95  !Pre-Flight 295BB temperature Kelvins
 parm   bbgain  real     def=1.0    !Blackbody Adjustment Gain value
 parm   bboffs  real     def=0.0    !Blackbody Adjustment Offset value
 !Internal Temporary Local Directories:
@@ -51,7 +49,7 @@ parm   outimg  string   def="UncalibratedDN"    !Output dir for image DN
 parm   outbdn  string   def="BlackBodyDN"       !Output dir for fpa DN
 parm   outwat  string   def="ImgRadiance"       !Output dir for image radiance
 !Local Parameters:
-local  bandn   integer  !Thermal Bands 1-5
+local  bandn   integer  !Thermal Bands 2-6
 local  cw      real     !center wavelength dummy real
 local  bw      real     !band width dummy real
 local  lw      real     !low end band width dummy real
@@ -140,12 +138,6 @@ file2tcl  inp=&inph5b val=found
 tush      echo "Searching for L1A_BB" >> L1AjobStatus.log
 if       (found=1) tush echo "Found &inph5b" >> L1AjobStatus.log
 if       (found=0) write "MSG: ***ERROR - FILE &inph5b NOT FOUND***"
-if       (found=0) goto error1
-!Verify L1A_ENG
-file2tcl  inp=&inph5e val=found
-tush      echo "Searching for L1A_ENG" >> L1AjobStatus.log
-if       (found=1) tush echo "Found &inph5e" >> L1AjobStatus.log
-if       (found=0) write "MSG: ***ERROR - FILE &inph5e NOT FOUND***"
 if       (found=0) goto error1
 !Verify L1A_PCF_UPF
 file2tcl  inp=&inpupf val=found
@@ -364,25 +356,23 @@ tush      echo "" >> L1Ajob_&"suffix".log
 tush      echo "***Creating FPA Blackbodys" >> L1Ajob_&"suffix".log
 !Input pt-RTD Blackbody Temperature Measurements
 write    "Beginning ush gdalinfo" 
-ush       gdalinfo &inph5e
+ush       gdalinfo &inph5b
 !Calculate pt-RTD Hot Blackbody Temperature
 write    "Beginning ush h5dump" 
-ush       h5dump -d /"rtdBlackbodyGradients"/"RTD_325K" -o 325_txt_&id &inph5e
-write    "Beginning ush cat" 
-ush cat   325_txt_&id 325_txt_&id > x325_txt_&id
-asc2tcl   inp=x325_txt_&id seq=1 keyword="(0):" vtype=8 val=rtd1
+ush       h5dump -d /"rtdBlackbodyGradients"/"RTD_325K" -s "0,0" -S "1,1" -c "2,5" -o x325_txt_&id &inph5b
+asc2tcl   inp=x325_txt_&id seq=1 keyword="(0,0):" vtype=8 val=rtd1
 write    "rtd1= &rtd1 "
-asc2tcl   inp=x325_txt_&id seq=2 keyword="(0):" vtype=8 val=rtd2
+asc2tcl   inp=x325_txt_&id seq=2 keyword="(0,0):" vtype=8 val=rtd2
 write    "rtd2= &rtd2 "
-asc2tcl   inp=x325_txt_&id seq=3 keyword="(0):" vtype=8 val=rtd3
+asc2tcl   inp=x325_txt_&id seq=3 keyword="(0,0):" vtype=8 val=rtd3
 write    "rtd3= &rtd3 "
-asc2tcl   inp=x325_txt_&id seq=4 keyword="(0):" vtype=8 val=rtd4
+asc2tcl   inp=x325_txt_&id seq=4 keyword="(0,0):" vtype=8 val=rtd4
 write    "rtd4= &rtd4 "
-asc2tcl   inp=x325_txt_&id seq=5 keyword="(0):" vtype=8 val=rtd5
+asc2tcl   inp=x325_txt_&id seq=5 keyword="(0,0):" vtype=8 val=rtd5
 write    "rtd5= &rtd5 "
 write    " "
 !Create 1x5 temperature image and IBIS Tables
-ibis-gen  tab_&id nc=3 nr=6
+ibis-gen  tab_&id nc=3 nr=16
 ibis-gen  int_&id nc=5 nr=1 datacol=(1,2,3,4,5) +
           data=(&rtd1,&rtd2,&rtd3,&rtd4,&rtd5)
 ibis-l    int_&id
@@ -420,18 +410,96 @@ hist      img_&id size=(1,3,1,3) mean=avg sigma=sd 'nohi 'excl
 edibis    tab_&id comm=("(6,1) set 6")
 edibis    tab_&id comm=("(6,2) set &avg")
 edibis    tab_&id comm=("(6,3) set &sd")
+!Zero-out RTD 2
+f2        img_&id im2_&id func="(samp!=2)*in1"
+list      im2_&id
+!Combo 7: RTDs 1,3,4,5
+hist      im2_&id size=(1,1,1,5) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(7,1) set 7")
+edibis    tab_&id comm=("(7,2) set &avg")
+edibis    tab_&id comm=("(7,3) set &sd")
+!Combo 8: RTDs 1,3,4
+hist      im2_&id size=(1,1,1,4) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(8,1) set 8")
+edibis    tab_&id comm=("(8,2) set &avg")
+edibis    tab_&id comm=("(8,3) set &sd")
+!Zero-out RTD 3
+f2        img_&id im2_&id func="(samp!=3)*in1"
+list      im2_&id
+!Combo 9: RTDs 1,2,4,5
+hist      im2_&id size=(1,1,1,5) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(9,1) set 9")
+edibis    tab_&id comm=("(9,2) set &avg")
+edibis    tab_&id comm=("(9,3) set &sd")
+!Combo 10: RTDs 1,2,4
+hist      im2_&id size=(1,1,1,4) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(10,1) set 10")
+edibis    tab_&id comm=("(10,2) set &avg")
+edibis    tab_&id comm=("(10,3) set &sd")
+!Combo 11: RTDs 2,4,5
+hist      im2_&id size=(1,2,1,4) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(11,1) set 11")
+edibis    tab_&id comm=("(11,2) set &avg")
+edibis    tab_&id comm=("(11,3) set &sd")
+!Zero-out RTD 4
+f2        img_&id im2_&id func="(samp!=4)*in1"
+list      im2_&id
+!Combo 12: RTDs 1,2,3,5
+hist      im2_&id size=(1,1,1,5) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(12,1) set 12")
+edibis    tab_&id comm=("(12,2) set &avg")
+edibis    tab_&id comm=("(12,3) set &sd")
+!Combo 13: RTDs 2,3,5
+hist      im2_&id size=(1,2,1,5) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(13,1) set 13")
+edibis    tab_&id comm=("(13,2) set &avg")
+edibis    tab_&id comm=("(13,3) set &sd")
+!Zero-out RTD 3&4
+f2        img_&id im2_&id func="((samp!=3)&(samp!=4))*in1"
+list      im2_&id
+!Combo 14: RTDs 1,2,5
+hist      im2_&id size=(1,1,1,5) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(14,1) set 14")
+edibis    tab_&id comm=("(14,2) set &avg")
+edibis    tab_&id comm=("(14,3) set &sd")
+!Zero-out RTD 2&4
+f2        img_&id im2_&id func="((samp!=2)&(samp!=4))*in1"
+list      im2_&id
+!Combo 15: RTDs 1,3,5
+hist      im2_&id size=(1,1,1,5) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(15,1) set 15")
+edibis    tab_&id comm=("(15,2) set &avg")
+edibis    tab_&id comm=("(15,3) set &sd")
+!Zero-out RTD 2&3
+f2        img_&id im2_&id func="((samp!=2)&(samp!=3))*in1"
+list      im2_&id
+!Combo 16: RTDs 1,4,5
+hist      im2_&id size=(1,1,1,5) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(16,1) set 16")
+edibis    tab_&id comm=("(16,2) set &avg")
+edibis    tab_&id comm=("(16,3) set &sd")
 write     "Column1 Table Codes:"
-write     "1: RTDs 1,2,3,4,5"
-write     "2: RTDs 1,2,3,4"
-write     "3: RTDs 1,2,3"
-write     "4: RTDs 2,3,4,5"
-write     "5: RTDs 2,3,4"
-write     "6: RTDs 3,4,5"
+write     "1:  RTDs 1,2,3,4,5"
+write     "2:  RTDs 1,2,3,4"
+write     "3:  RTDs 1,2,3"
+write     "4:  RTDs 2,3,4,5"
+write     "5:  RTDs 2,3,4"
+write     "6:  RTDs 3,4,5"
+write     "7:  RTDs 1,3,4,5"
+write     "8:  RTDs 1,3,4"
+write     "9:  RTDs 1,2,4,5"
+write     "10: RTDs 1,2,4"
+write     "11: RTDs 2,4,5"
+write     "12: RTDs 1,2,3,5"
+write     "13: RTDs 2,3,5"
+write     "14: RTDs 1,2,5"
+write     "15: RTDs 1,3,5"
+write     "16: RTDs 1,4,5"
 !Analyze statistics and select the best Blackbody Temperature
 sort      tab_&id sortcol=(3,2) 'ascend  !Bring lowest STD to top
 ibis-l    tab_&id cols=(1,2,3) cfor="%5.0f %11.3f %11.6f"
 rowop2    tab_&id tab2_&id keycol=(2,2) +
-          range=(-9999,320,330,9999) 'delete !Remove BAD Temps
+          range=(-9999,310,330,9999) 'delete !Remove BAD Temps
 !Note: if no combos meet Rowop2 requirements, the Ibis2tcl step will
 !error, Temp & STD will default to init (0.0), and the UPF-supplied
 !temperature values will be used. 
@@ -460,22 +528,20 @@ end-if
 let       temp=0.0 !Reset default
 let       std=0.0  !Reset default
 write    "Beginning ush h5dump" 
-ush       h5dump -d /"rtdBlackbodyGradients"/"RTD_295K" -o 295_txt_&id &inph5e
-write    "Beginning ush cat" 
-ush       cat 295_txt_&id 295_txt_&id > x295_txt_&id
-asc2tcl   inp=x295_txt_&id seq=1 keyword="(0):" vtype=8 val=rtd1
+ush       h5dump -d /"rtdBlackbodyGradients"/"RTD_295K" -s "0,0" -S "1,1" -c "2,5" -o x295_txt_&id &inph5b
+asc2tcl   inp=x295_txt_&id seq=1 keyword="(0,0):" vtype=8 val=rtd1
 write    "rtd1= &rtd1 "
-asc2tcl   inp=x295_txt_&id seq=2 keyword="(0):" vtype=8 val=rtd2
+asc2tcl   inp=x295_txt_&id seq=2 keyword="(0,0):" vtype=8 val=rtd2
 write    "rtd2= &rtd2 "
-asc2tcl   inp=x295_txt_&id seq=3 keyword="(0):" vtype=8 val=rtd3
+asc2tcl   inp=x295_txt_&id seq=3 keyword="(0,0):" vtype=8 val=rtd3
 write    "rtd3= &rtd3 "
-asc2tcl   inp=x295_txt_&id seq=4 keyword="(0):" vtype=8 val=rtd4
+asc2tcl   inp=x295_txt_&id seq=4 keyword="(0,0):" vtype=8 val=rtd4
 write    "rtd4= &rtd4 "
-asc2tcl   inp=x295_txt_&id seq=5 keyword="(0):" vtype=8 val=rtd5
+asc2tcl   inp=x295_txt_&id seq=5 keyword="(0,0):" vtype=8 val=rtd5
 write    "rtd5= &rtd5 "
 write    " "
 !Create 1x5 temperature image and IBIS Tables
-ibis-gen  tab_&id nc=3 nr=6
+ibis-gen  tab_&id nc=3 nr=16
 ibis-gen  int_&id nc=5 nr=1 datacol=(1,2,3,4,5) +
           data=(&rtd1,&rtd2,&rtd3,&rtd4,&rtd5)
 ibis-l    int_&id
@@ -513,13 +579,91 @@ hist      img_&id size=(1,3,1,3) mean=avg sigma=sd 'nohi 'excl
 edibis    tab_&id comm=("(6,1) set 6")
 edibis    tab_&id comm=("(6,2) set &avg")
 edibis    tab_&id comm=("(6,3) set &sd")
+!Zero-out RTD 2
+f2        img_&id im2_&id func="(samp!=2)*in1"
+list      im2_&id
+!Combo 7: RTDs 1,3,4,5
+hist      im2_&id size=(1,1,1,5) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(7,1) set 7")
+edibis    tab_&id comm=("(7,2) set &avg")
+edibis    tab_&id comm=("(7,3) set &sd")
+!Combo 8: RTDs 1,3,4
+hist      im2_&id size=(1,1,1,4) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(8,1) set 8")
+edibis    tab_&id comm=("(8,2) set &avg")
+edibis    tab_&id comm=("(8,3) set &sd")
+!Zero-out RTD 3
+f2        img_&id im2_&id func="(samp!=3)*in1"
+list      im2_&id
+!Combo 9: RTDs 1,2,4,5
+hist      im2_&id size=(1,1,1,5) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(9,1) set 9")
+edibis    tab_&id comm=("(9,2) set &avg")
+edibis    tab_&id comm=("(9,3) set &sd")
+!Combo 10: RTDs 1,2,4
+hist      im2_&id size=(1,1,1,4) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(10,1) set 10")
+edibis    tab_&id comm=("(10,2) set &avg")
+edibis    tab_&id comm=("(10,3) set &sd")
+!Combo 11: RTDs 2,4,5
+hist      im2_&id size=(1,2,1,4) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(11,1) set 11")
+edibis    tab_&id comm=("(11,2) set &avg")
+edibis    tab_&id comm=("(11,3) set &sd")
+!Zero-out RTD 4
+f2        img_&id im2_&id func="(samp!=4)*in1"
+list      im2_&id
+!Combo 12: RTDs 1,2,3,5
+hist      im2_&id size=(1,1,1,5) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(12,1) set 12")
+edibis    tab_&id comm=("(12,2) set &avg")
+edibis    tab_&id comm=("(12,3) set &sd")
+!Combo 13: RTDs 2,3,5
+hist      im2_&id size=(1,2,1,5) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(13,1) set 13")
+edibis    tab_&id comm=("(13,2) set &avg")
+edibis    tab_&id comm=("(13,3) set &sd")
+!Zero-out RTD 3&4
+f2        img_&id im2_&id func="((samp!=3)&(samp!=4))*in1"
+list      im2_&id
+!Combo 14: RTDs 1,2,5
+hist      im2_&id size=(1,1,1,5) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(14,1) set 14")
+edibis    tab_&id comm=("(14,2) set &avg")
+edibis    tab_&id comm=("(14,3) set &sd")
+!Zero-out RTD 2&4
+f2        img_&id im2_&id func="((samp!=2)&(samp!=4))*in1"
+list      im2_&id
+!Combo 15: RTDs 1,3,5
+hist      im2_&id size=(1,1,1,5) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(15,1) set 15")
+edibis    tab_&id comm=("(15,2) set &avg")
+edibis    tab_&id comm=("(15,3) set &sd")
+!Zero-out RTD 2&3
+f2        img_&id im2_&id func="((samp!=2)&(samp!=3))*in1"
+list      im2_&id
+!Combo 16: RTDs 1,4,5
+hist      im2_&id size=(1,1,1,5) mean=avg sigma=sd 'nohi 'excl
+edibis    tab_&id comm=("(16,1) set 16")
+edibis    tab_&id comm=("(16,2) set &avg")
+edibis    tab_&id comm=("(16,3) set &sd")
 write     "Column1 Table Codes:"
-write     "1: RTDs 1,2,3,4,5"
-write     "2: RTDs 1,2,3,4"
-write     "3: RTDs 1,2,3"
-write     "4: RTDs 2,3,4,5"
-write     "5: RTDs 2,3,4"
-write     "6: RTDs 3,4,5"
+write     "1:  RTDs 1,2,3,4,5"
+write     "2:  RTDs 1,2,3,4"
+write     "3:  RTDs 1,2,3"
+write     "4:  RTDs 2,3,4,5"
+write     "5:  RTDs 2,3,4"
+write     "6:  RTDs 3,4,5"
+write     "7:  RTDs 1,3,4,5"
+write     "8:  RTDs 1,3,4"
+write     "9:  RTDs 1,2,4,5"
+write     "10: RTDs 1,2,4"
+write     "11: RTDs 2,4,5"
+write     "12: RTDs 1,2,3,5"
+write     "13: RTDs 2,3,5"
+write     "14: RTDs 1,2,5"
+write     "15: RTDs 1,3,5"
+write     "16: RTDs 1,4,5"
 !Analyze statistics and select the best Blackbody Temperature
 sort      tab_&id sortcol=(3,2) 'ascend  !Bring lowest STD to top
 ibis-l    tab_&id cols=(1,2,3) cfor="%5.0f %11.3f %11.6f"
@@ -555,12 +699,12 @@ end-if
 !Loop through the 5 TIR bands
 tush      echo "" >> L1Ajob_&"suffix".log
 tush      echo "***Converting FPA to Radiance" >> L1Ajob_&"suffix".log
-let       bandn = 0
+let       bandn = 0 
 
 loop
 
 let       bandn = (bandn + 1)
-if       (bandn = 7) break  !B6 is SWIR; Include for Completeness
+if       (bandn = 7) break  !B1 is SWIR; Include for Completeness
 write    ""
 write    "MSG: ***Calibrating FPA B&bandn "
 write    ""
@@ -615,6 +759,7 @@ let       lw = lw&bandn
 write    "MSG: ***Low End Bandwidth= &lw "
 let       hw = hw&bandn
 write    "MSG: ***High End bandwidth= &hw "
+let       cw = cw&bandn
 !325 Blackbody
 !325 Lower boundary
 f2        xkel325_&id xsum1_&id func="in1*0.0"
@@ -725,14 +870,14 @@ datetime
 !Call 2pt Proc Module**************************************************
 !Call/Run the 2point DN-to-Radiance proc for each band.
 !2pt DN to Radiance Conversion, 5 TIR bands
-!B6 SWIR is Dark Current subtracted
+!B1 SWIR is Dark Current subtracted
 tush      echo "" >> L1Ajob_&"suffix".log
 tush      echo "***Calling 2pt Radiance Program" >> L1Ajob_&"suffix".log
 let       bandn = 0
 loop
 let       bandn = (bandn + 1)
 if       (bandn = 7) break 
-if       (bandn <> 6) let cw = cw&bandn
+if       (bandn <> 1) let cw = cw&bandn
 
 el1a_2pt  band=&bandn rad2k=&rad2k radout=&radout debug=&debug +
           inph5i=&inph5i +
