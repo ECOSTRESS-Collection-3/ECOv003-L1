@@ -282,6 +282,7 @@ class L0BSimulate(object):
 
     self.l0b_fname = l0b_fname
     l0b_fd = h5py.File(self.l0b_fname, "w", driver='core')
+    l1e = h5py.File(self.l1a_eng_fname,"r")
 
     # Write Standarad Metadata fake-out WriteStandardMetadata()
     m = WriteStandardMetadata(l0b_fd, product_specfic_group ="L0BMetadata",
@@ -295,6 +296,8 @@ class L0BSimulate(object):
     b = a[3].split('T')
     m.set("RangeEndingDate", b[0])
     m.set("RangeEndingTime", b[1])
+    m.set("StartOrbitNumber", l1e["/StandardMetadata/StartOrbitNumber"][()])
+    m.set("StopOrbitNumber", l1e["/StandardMetadata/StopOrbitNumber"][()])
     m.write()
     l0b_fd.flush()
 
@@ -308,7 +311,6 @@ class L0BSimulate(object):
     ev=att_fd["Ephemeris/eci_velocity"]
     et=att_fd["Ephemeris/time_j2000"]
 
-    l1e = h5py.File(self.l1a_eng_fname,"r")
     r2k = l1e["rtdBlackbodyGradients/RTD_295K"]
     r3k = l1e["rtdBlackbodyGradients/RTD_325K"]
     enc, enr = r2k.shape
