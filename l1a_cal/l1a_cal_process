@@ -7,6 +7,11 @@ from ecostress import *
 import os
 import re
 
+# Get version information, in the top directory
+import sys
+sys.path.append(os.path.dirname(os.path.abspath(sys.path[0])))
+from ecostress_version import *
+
 version = "1.0"
 usage='''Usage:
   l1a_cal_process [options] <run_config>
@@ -38,11 +43,6 @@ if(False):
 # Explicitly list input file
 config = RunConfig(args.run_config)
 
-# Not sure where this will from eventually, but for now just hardcode
-build_id = "0.30"
-pge_version = "0.30"
-build_version = "0100"
-
 l1a_bb = os.path.abspath(config["InputFileGroup", "L1A_BB"])
 l1a_raw_pix = os.path.abspath(config["InputFileGroup", "L1A_RAW_PIX"])
 l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
@@ -67,7 +67,8 @@ try:
     l1apix = L1aPixGenerate(l1a_bb, l1a_raw_pix, l1_osp_dir,
                             ofile, ofile_gain,
                             log=log, quiet=quiet, run_config=config,
-                            build_id=build_id, pge_version=pge_version,
+                            build_id=build_id,
+                            pge_version=pge_version["l1a_cal"],
                             file_version=file_version)
     l1apix.run()
     # Write out a dummy log file

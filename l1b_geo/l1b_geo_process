@@ -7,6 +7,11 @@ import os
 import re
 import shutil
 
+# Get version information, in the top directory
+import sys
+sys.path.append(os.path.dirname(os.path.abspath(sys.path[0])))
+from ecostress_version import *
+
 version = "1.0"
 usage='''Usage:
   l1b_geo_process [options] <run_config>
@@ -38,11 +43,6 @@ if(False):
 
 config = RunConfig(args.run_config)
 
-# Not sure where this will from eventually, but for now just hardcode
-build_id = "0.30"
-pge_version = "0.30"
-build_version = "0100"
-
 l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
 ncpu = int(config["Process", "NumberCpu"])
 
@@ -70,9 +70,12 @@ try:
     for i in range(len(radlist)):
         orbit, scene, acquisition_time = orbit_from_metadata(radlist[i])
         ofile.append(ecostress_file_name("L1B_GEO", orbit, scene,
-            acquisition_time, build = build_version, version = file_version))
+            acquisition_time, build = build_version,
+            version = file_version))
         ofile2.append(ecostress_file_name("L1B_ATT", orbit, scene,
-            acquisition_time, build = build_version, version = file_version))
+            acquisition_time,
+            build = build_version, 
+            version = file_version))
 
     log_fname = os.path.splitext(ofile[0])[0] + ".log"
     
@@ -96,7 +99,8 @@ try:
         l1bgeo = L1bGeoGenerate(igc[i], lwm, ofile[i],
                                 number_line = args.number_line,
                                 run_config = config, log_fname = log_fname,
-                                build_id=build_id, pge_version=pge_version)
+                                build_id = build_id,
+                                pge_version = pge_version["l1b_geo"])
         l1bgeo.run(pool)
     
         # Temp, don't correct anything in attitude file

@@ -12,7 +12,7 @@ BOOST_AUTO_TEST_CASE(basic_test)
   std::string gain_name = test_data_dir() + "L1A_RAD_GAIN_80005_001_20150124T204251_0100_02.h5.expected";
   EcostressRadAverage r(boost::make_shared<EcostressRadApply>(dn_name,
 							      gain_name, 1));
-  BOOST_CHECK_CLOSE(r.read_double(124,2000,1,1)(0,0), 7.96805, 1e-2);
+  BOOST_CHECK_CLOSE(r.read_double(124,2000,1,1)(0,0), 7.95808, 1e-2);
 }
 
 BOOST_AUTO_TEST_CASE(serialization)

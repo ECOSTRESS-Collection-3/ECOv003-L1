@@ -138,7 +138,7 @@ class L1aRawPixGenerate(object):
   def __init__(self, l0b, osp_dir, scene_file, run_config = None,
                build_id = "0.30",
                pge_version = "0.30", build_version="0100",
-               file_version = "05"):
+               file_version = "01"):
       '''Create a L1aRawPixGenerate to process the given L0 file. 
       To actually generate, execute the 'run' command.'''
       self.l0b = l0b
@@ -375,8 +375,7 @@ class L1aRawPixGenerate(object):
 
 #    ADDRESS EMPTY SCENE    '
 
-      while scan < SCPS and pxet < ste:
-
+      while scan < SCPS and pxet <= ste:
         cont = 1
         s0 = scan
         line = scan * PPFP
@@ -600,11 +599,11 @@ class L1aRawPixGenerate(object):
                                    data=img[:,:,bo[b]],
                                    chunks=(PPFP,FPPSC), dtype="u2" )
         t.attrs['Units']='dimensionless'
-        t = l1a_bpg.create_dataset("B%d_blackbody_295K" %(b+1),
+        t = l1a_bpg.create_dataset("b%d_blackbody_295" %(b+1),
                                    data=cbb[:,:,bo[b]], chunks=(PPFP,BBLEN),
                                                   dtype="u2")
         t.attrs['Units']='dimensionless'
-        t = l1a_bpg.create_dataset("B%d_blackbody_325K" %(b+1),
+        t = l1a_bpg.create_dataset("b%d_blackbody_325" %(b+1),
                                    data=hbb[:,:,bo[b]], chunks=(PPFP,BBLEN),
                                                   dtype="u2" )
         t.attrs['Units']='dimensionless'
@@ -632,6 +631,8 @@ class L1aRawPixGenerate(object):
     sfd = open( sf, "w" )
     for i in range( scene_id ): sfd.write( scenes[i] )
     sfd.close()
+    l1a_fp.close()
+    l1a_bp.close()
 
     ' create engineering file and datasets '
     print("creating ENG file, EPC=%d" % epc )

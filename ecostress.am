@@ -3,6 +3,7 @@
 # Build these up as we go
 dist_installecostress_SCRIPTS = 
 SWIG_FLAG =
+installecostress_SCRIPTS = ecostress_version.py
 
 # End to end test. This should be run after install
 # (so like an installcheck, but we run this separate because

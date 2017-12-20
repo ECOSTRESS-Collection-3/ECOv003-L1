@@ -7,6 +7,11 @@ from ecostress import *
 import os
 import re
 
+# Get version information, in the top directory
+import sys
+sys.path.append(os.path.dirname(os.path.abspath(sys.path[0])))
+from ecostress_version import *
+
 version = "1.0"
 usage='''Usage:
   l1b_rad_process [options] <run_config>
@@ -35,11 +40,6 @@ if(False):
 # Explicitly list input file
 config = RunConfig(args.run_config)
 
-# Not sure where this will from eventually, but for now just hardcode
-build_id = "0.30"
-pge_version = "0.30"
-build_version = "0100"
-
 l1a_pix = os.path.abspath(config["InputFileGroup", "L1A_PIX"])
 l1a_gain = os.path.abspath(config["InputFileGroup", "L1A_RAD_GAIN"])
 l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
@@ -58,7 +58,8 @@ os.chdir(dirname)
 
 orbit, scene, acquisition_time = orbit_from_metadata(l1a_pix)
 ofile = ecostress_file_name("L1B_RAD", orbit, scene, acquisition_time,
-                            build = build_version, version = file_version)
+                            build = build_version,
+                            version = file_version)
 
 log_fname = os.path.splitext(ofile)[0] + ".log"
 log = open(log_fname, "w")
@@ -66,7 +67,8 @@ try:
     # Generate output
     l1brad = L1bRadGenerate(igc, l1a_pix, l1a_gain, ofile, run_config = config,
                             log = log,
-                            build_id=build_id, pge_version=pge_version)
+                            build_id = build_id,
+                            pge_version = pge_version["l1b_rad"])
     l1brad.run()
     # Write out a dummy log file
     print("This is a dummy log file", file = log)

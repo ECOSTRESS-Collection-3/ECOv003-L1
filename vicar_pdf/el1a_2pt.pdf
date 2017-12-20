@@ -106,8 +106,8 @@ tush      echo "Histogram 0/1 Mask Mean=&avg SD=&sd" >> L1Ajob_&"suffix".log
 write    "Beginning ush gdalinfo"
 ush       gdalinfo &inph5b
 write    "Beginning ush gda_translate"
-ush       gdal_translate -of VICAR -ot Int16 'HDF5:"&inph5b"://BlackBodyPixels/B&"band"_blackbody_325K' xxa_325_&id
-ush       gdal_translate -of VICAR -ot Int16 'HDF5:"&inph5b"://BlackBodyPixels/B&"band"_blackbody_295K' xxa_295_&id
+ush       gdal_translate -of VICAR -ot Int16 'HDF5:"&inph5b"://BlackBodyPixels/b&"band"_blackbody_325' xxa_325_&id
+ush       gdal_translate -of VICAR -ot Int16 'HDF5:"&inph5b"://BlackBodyPixels/b&"band"_blackbody_295' xxa_295_&id
 !Verify 325BB image size, if not 11264x64, stop processing
 form      xxa_325_&id format nl ns
 write    "MSG: ***Input Band&"band" BB325 Image Size is: &nl Lines x &ns Samples "

@@ -23,6 +23,13 @@ class L1aRawPixSimulate(object):
                              data = self.l1a_pix["Time/line_start_time_j2000"])
         t.attrs["Description"] = "J2000 time of first pixel in line"
         t.attrs["Units"] = "second"
+        # Not actually used for anything yet, but we need a value here
+        enc_value = np.zeros(self.l1a_pix["Time/line_start_time_j2000"].shape,
+                             dtype = np.int32)
+        g = fout.create_group("FPIEencoder")
+        t = g.create_dataset("EncoderValue", data=enc_value)
+        t.attrs["Description"] = "Encoder values. Dummy for now"
+        t.attrs["Units"] = "dimensionless"
         self.m = WriteStandardMetadata(fout,
                                        product_specfic_group = "L1A_RAW_PIXMetadata",
                                        pge_name = "L1A_RAW_PGE")

@@ -160,7 +160,8 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES = script/setup_ecostress.csh \
-	script/setup_ecostress.sh lib/global_fixture_default.cc
+	script/setup_ecostress.sh lib/global_fixture_default.cc \
+	ecostress_version.py
 CONFIG_CLEAN_VPATH_FILES =
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
@@ -192,6 +193,7 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(ecostresspkgpythondir)" \
 	"$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgpythonswigdir)" \
 	"$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" \
+	"$(DESTDIR)$(installecostressdir)" \
 	"$(DESTDIR)$(installecostressdir)" \
 	"$(DESTDIR)$(ecostresspkgpythondir)" \
 	"$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(vicarpdfdir)" \
@@ -272,7 +274,8 @@ ecostress_test_all_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(AM_CXXFLAGS) $(CXXFLAGS) $(ecostress_test_all_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SCRIPTS = $(dist_bin_SCRIPTS) $(dist_installecostress_SCRIPTS)
+SCRIPTS = $(dist_bin_SCRIPTS) $(dist_installecostress_SCRIPTS) \
+	$(installecostress_SCRIPTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -524,11 +527,12 @@ TEST_LOG_COMPILE = $(TEST_LOG_COMPILER) $(AM_TEST_LOG_FLAGS) \
 	$(TEST_LOG_FLAGS)
 am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(srcdir)/bindings/python/python.am $(srcdir)/common.am \
-	$(srcdir)/ecostress.am $(srcdir)/include.am \
-	$(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1a_raw/l1a_raw.am \
-	$(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/l1b_rad/l1b_rad.am \
-	$(srcdir)/lib/lib.am $(srcdir)/python/lib/lib.am \
-	$(srcdir)/python/python.am $(srcdir)/script/script.am \
+	$(srcdir)/ecostress.am $(srcdir)/ecostress_version.py.in \
+	$(srcdir)/include.am $(srcdir)/l1a_cal/l1a_cal.am \
+	$(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1b_geo/l1b_geo.am \
+	$(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/lib/lib.am \
+	$(srcdir)/python/lib/lib.am $(srcdir)/python/python.am \
+	$(srcdir)/script/script.am \
 	$(srcdir)/unit_test_data/unit_test_data.am \
 	$(srcdir)/vicar_pdf/vicar_pdf.am $(top_srcdir)/config/compile \
 	$(top_srcdir)/config/config.guess \
@@ -805,6 +809,7 @@ dist_installecostress_SCRIPTS = @l1a_raw_src@/L1A_RAW_PGE \
 # SWIG part
 # ================================================
 SWIG_FLAG = -O
+installecostress_SCRIPTS = ecostress_version.py
 l0b_file = $(end_to_end_test_data)/ECOSTRESS_L0B_20150124T204251_20150124T204533_0100_01.h5
 scene_file = $(end_to_end_test_data)/Scene_80005_20150124T204251_20150124T204533.txt
 l1a_raw_run_config = $(end_to_end_test_data)/ECOSTRESS_L1A_RAW_RunConfig_20150124T204251.xml
@@ -990,6 +995,8 @@ script/setup_ecostress.csh: $(top_builddir)/config.status $(top_srcdir)/script/s
 script/setup_ecostress.sh: $(top_builddir)/config.status $(top_srcdir)/script/setup_ecostress.sh.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 lib/global_fixture_default.cc: $(top_builddir)/config.status $(top_srcdir)/lib/global_fixture_default.cc.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+ecostress_version.py: $(top_builddir)/config.status $(srcdir)/ecostress_version.py.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 
 install-ecostresspkgpythonLTLIBRARIES: $(ecostresspkgpython_LTLIBRARIES)
@@ -1340,6 +1347,41 @@ install-dist_installecostressSCRIPTS: $(dist_installecostress_SCRIPTS)
 uninstall-dist_installecostressSCRIPTS:
 	@$(NORMAL_UNINSTALL)
 	@list='$(dist_installecostress_SCRIPTS)'; test -n "$(installecostressdir)" || exit 0; \
+	files=`for p in $$list; do echo "$$p"; done | \
+	       sed -e 's,.*/,,;$(transform)'`; \
+	dir='$(DESTDIR)$(installecostressdir)'; $(am__uninstall_files_from_dir)
+install-installecostressSCRIPTS: $(installecostress_SCRIPTS)
+	@$(NORMAL_INSTALL)
+	@list='$(installecostress_SCRIPTS)'; test -n "$(installecostressdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(installecostressdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(installecostressdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  if test -f "$$d$$p"; then echo "$$d$$p"; echo "$$p"; else :; fi; \
+	done | \
+	sed -e 'p;s,.*/,,;n' \
+	    -e 'h;s|.*|.|' \
+	    -e 'p;x;s,.*/,,;$(transform)' | sed 'N;N;N;s,\n, ,g' | \
+	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1; } \
+	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
+	    if ($$2 == $$4) { files[d] = files[d] " " $$1; \
+	      if (++n[d] == $(am__install_max)) { \
+		print "f", d, files[d]; n[d] = 0; files[d] = "" } } \
+	    else { print "f", d "/" $$4, $$1 } } \
+	  END { for (d in files) print "f", d, files[d] }' | \
+	while read type dir files; do \
+	     if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
+	     test -z "$$files" || { \
+	       echo " $(INSTALL_SCRIPT) $$files '$(DESTDIR)$(installecostressdir)$$dir'"; \
+	       $(INSTALL_SCRIPT) $$files "$(DESTDIR)$(installecostressdir)$$dir" || exit $$?; \
+	     } \
+	; done
+
+uninstall-installecostressSCRIPTS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(installecostress_SCRIPTS)'; test -n "$(installecostressdir)" || exit 0; \
 	files=`for p in $$list; do echo "$$p"; done | \
 	       sed -e 's,.*/,,;$(transform)'`; \
 	dir='$(DESTDIR)$(installecostressdir)'; $(am__uninstall_files_from_dir)
@@ -2390,7 +2432,7 @@ all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(SCRIPTS) $(DATA) \
 install-binPROGRAMS: install-libLTLIBRARIES
 
 installdirs:
-	for dir in "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(vicarpdfdir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(ecostressincdir)" "$(DESTDIR)$(ecostressswigincdir)" "$(DESTDIR)$(includedir)"; do \
+	for dir in "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(vicarpdfdir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(ecostressincdir)" "$(DESTDIR)$(ecostressswigincdir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -2466,8 +2508,9 @@ install-data-am: install-dist_installecostressSCRIPTS \
 	install-ecostresspkgpythonLTLIBRARIES \
 	install-ecostresspkgpythonPYTHON \
 	install-ecostressswigincHEADERS install-includeHEADERS \
-	install-installecostressDATA install-pkgconfigDATA \
-	install-pkgpythonswigLTLIBRARIES install-pkgpythonswigPYTHON
+	install-installecostressDATA install-installecostressSCRIPTS \
+	install-pkgconfigDATA install-pkgpythonswigLTLIBRARIES \
+	install-pkgpythonswigPYTHON
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
 install-dvi: install-dvi-am
@@ -2523,7 +2566,8 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	uninstall-ecostresspkgpythonLTLIBRARIES \
 	uninstall-ecostresspkgpythonPYTHON \
 	uninstall-ecostressswigincHEADERS uninstall-includeHEADERS \
-	uninstall-installecostressDATA uninstall-libLTLIBRARIES \
+	uninstall-installecostressDATA \
+	uninstall-installecostressSCRIPTS uninstall-libLTLIBRARIES \
 	uninstall-pkgconfigDATA uninstall-pkgpythonswigLTLIBRARIES \
 	uninstall-pkgpythonswigPYTHON
 	@$(NORMAL_INSTALL)
@@ -2551,23 +2595,23 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	install-ecostressswigincHEADERS install-exec install-exec-am \
 	install-html install-html-am install-includeHEADERS \
 	install-info install-info-am install-installecostressDATA \
-	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
-	install-pkgconfigDATA install-pkgpythonswigLTLIBRARIES \
-	install-pkgpythonswigPYTHON install-ps install-ps-am \
-	install-strip installcheck installcheck-am installcheck-local \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am recheck tags tags-am \
-	uninstall uninstall-am uninstall-binPROGRAMS \
-	uninstall-dist_binSCRIPTS \
+	install-installecostressSCRIPTS install-libLTLIBRARIES \
+	install-man install-pdf install-pdf-am install-pkgconfigDATA \
+	install-pkgpythonswigLTLIBRARIES install-pkgpythonswigPYTHON \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installcheck-local installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am recheck tags tags-am uninstall \
+	uninstall-am uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	uninstall-dist_installecostressSCRIPTS \
 	uninstall-dist_vicarpdfDATA uninstall-ecostressincHEADERS \
 	uninstall-ecostresspkgpythonLTLIBRARIES \
 	uninstall-ecostresspkgpythonPYTHON \
 	uninstall-ecostressswigincHEADERS uninstall-hook \
 	uninstall-includeHEADERS uninstall-installecostressDATA \
-	uninstall-libLTLIBRARIES uninstall-pkgconfigDATA \
-	uninstall-pkgpythonswigLTLIBRARIES \
+	uninstall-installecostressSCRIPTS uninstall-libLTLIBRARIES \
+	uninstall-pkgconfigDATA uninstall-pkgpythonswigLTLIBRARIES \
 	uninstall-pkgpythonswigPYTHON
 
 .PRECIOUS: Makefile

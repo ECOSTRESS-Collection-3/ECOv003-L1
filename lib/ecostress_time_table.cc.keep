@@ -60,16 +60,8 @@ void EcostressTimeTable::read_file(const std::string& Fname)
   GeoCal::HdfFile f(Fname);
   averaging_done_ = f.has_object("/L1B_RADMetadata");
   blitz::Array<double, 1> t = f.read_field<double, 1>("/Time/line_start_time_j2000");
-  for(int i = 0; i < t.rows(); i += number_line_scan()) {
-    // Check for fill data. We need a "reasonable" value even if the
-    // time is missing, so we just use the nominal_scan_spacing.
-    if(t(i) == 0.0) {
-      if(i == 0)
-	throw Exception("Don't currently handle fill data at the first line in the image");
-      tstart_scan_.push_back(tstart_scan_.back() + nominal_scan_spacing);
-    } else 
-      tstart_scan_.push_back(GeoCal::Time::time_j2000(t(i)));
-  }
+  for(int i = 0; i < t.rows(); i += number_line_scan())
+    tstart_scan_.push_back(GeoCal::Time::time_j2000(t(i)));
 }
 
 //-------------------------------------------------------------------------
@@ -101,6 +93,13 @@ EcostressTimeTable::EcostressTimeTable
 GeoCal::ImageCoordinate EcostressTimeTable::image_coordinate
 (GeoCal::Time T, const GeoCal::FrameCoordinate& F) const
 {
+  // Due to rounding, we sometimes get times that are slightly out of
+  // range. Rather than triggering an error, have a small tolerance in
+  // the time that we adjust to fit in the range.
+  if(T < min_time() && fabs(T - min_time()) <= 1e-6)
+    T = min_time();
+  if(T > max_time() && fabs(T - max_time()) <= 1e-6)
+    T = max_time();
   range_check_inclusive(T, min_time(), max_time());
   int tindex = std::lower_bound(tstart_scan_.begin(), tstart_scan_.end(), T) -
     tstart_scan_.begin();
@@ -121,17 +120,31 @@ EcostressTimeTable::image_coordinate_with_derivative
   (const GeoCal::TimeWithDerivative& T, 
    const GeoCal::FrameCoordinateWithDerivative& F) const
 {
-  range_check_inclusive(T.value(), min_time(), max_time());
+  // Due to rounding, we sometimes get times that are slightly out of
+  // range. Rather than triggering an error, have a small tolerance in
+  // the time that we adjust to fit in the range.
+  Time tv = T.value();
+  AutoDerivative<double> tv2 = T.pgs();
+  if(tv < min_time() && fabs(tv - min_time()) <= 1e-6) {
+    tv = min_time();
+    tv2.value() = min_time().pgs();
+  }
+  if(tv > max_time() && fabs(tv - max_time()) <= 1e-6) {
+    tv = max_time();
+    tv2.value() = max_time().pgs();
+  }
+  range_check_inclusive(tv, min_time(), max_time());
   int tindex = std::lower_bound(tstart_scan_.begin(), tstart_scan_.end(),
-				T.value()) - tstart_scan_.begin();
-  if(tindex == (int) tstart_scan_.size() || tstart_scan_[tindex] > T.value())
+				tv) - tstart_scan_.begin();
+  if(tindex == (int) tstart_scan_.size() || tstart_scan_[tindex] > tv)
     --tindex;
   ImageCoordinateWithDerivative res;
   if(averaging_done()) 
     res.line = F.line / 2.0 + tindex * number_line_scan();
   else
     res.line = F.line + tindex * number_line_scan();
-  res.sample = (T - tstart_scan_[tindex]) / frame_time + F.sample;
+  res.sample = (TimeWithDerivative::time_pgs(tv2) -
+		tstart_scan_[tindex]) / frame_time + F.sample;
   return res;
 }
 

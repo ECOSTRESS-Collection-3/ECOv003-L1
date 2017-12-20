@@ -99,11 +99,11 @@ class L1aPixGenerate(object):
         g2 = fout_gain.create_group("Offset")
         for b in range(1, 6):
             t = g.create_dataset("b%d_gain" % b,
-                  data=mmap_file("%s/ImgRadiance/b%d_gain.rel" % (dirname, b)))
+                  data=mmap_file("%s/ImgRadiance/b%d_gain.rel" % (dirname, b+1)))
             t.attrs["Units"] = "W/m^2/sr/um"
             t = g2.create_dataset("b%d_offset" % b,
                   data=mmap_file("%s/ImgRadiance/b%d_offset.rel" %
-                                 (dirname,b)))
+                                 (dirname,b+1)))
             t.attrs["Units"] = "W/m^2/sr/um"
         # Copy over metadata
         fin = h5py.File(self.l1a_raw, "r")

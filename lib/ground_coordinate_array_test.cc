@@ -33,8 +33,8 @@ BOOST_AUTO_TEST_CASE(projection_test)
   //return;
   GroundCoordinateArray gca(igc);
   boost::shared_ptr<GeoCal::MemoryRasterImage> ras = gca.raster_cover();
-  BOOST_CHECK_EQUAL(ras->number_line(), 7628);
-  BOOST_CHECK_EQUAL(ras->number_sample(), 9598);
+  BOOST_CHECK_EQUAL(ras->number_line(), 7642);
+  BOOST_CHECK_EQUAL(ras->number_sample(), 9619);
   for(int lstart = 0 ; lstart < igc->number_line();
       lstart += igc->number_line_scan())
     gca.project_surface_scan_arr(*ras, lstart);

@@ -8,12 +8,13 @@ from multiprocessing import Pool
 # a subset of the files, using the existing test data instead. Here we
 # can just turn each thing on or off. To regenerate everything, this
 # should all be True
-create_l1a_pix = True
-create_l1a_bb = True
+create_l1a_pix = False
+create_l1a_bb = False
 create_l1a_raw_pix = True
-create_l1a_raw_att = True
+create_l1a_raw_att = False
 create_l1a_eng = True
 create_l0b = True
+osp_dir= "../../ecostress-test-data/latest/l1_osp_dir"
 
 # Center times for each of the passes. See the wiki at 
 # https://wiki.jpl.nasa.gov/display/ecostress/Test+Data and subpages for details
@@ -121,7 +122,7 @@ if(create_l1a_raw_att):
 
 l1a_eng_fname = ecostress_file_name("L1A_ENG", orbit_num[pass_index], None,
                                     start_time)
-l1a_eng_sim = L1aEngSimulate()
+l1a_eng_sim = L1aEngSimulate(l1a_raw_att_fname)
 if(create_l1a_eng):
     l1a_eng_sim.create_file(l1a_eng_fname)
 
@@ -129,7 +130,8 @@ l0b_fname = ecostress_file_name("L0B", None, None, start_time, end_time)
 scene_fname = ecostress_file_name("Scene", orbit_num[pass_index], None,
                                   start_time, end_time, extension=".txt",
                                   intermediate=True)
-l0b_sim = L0BSimulate(l1a_raw_att_fname, l1a_eng_fname, scene_files)
+l0b_sim = L0BSimulate(l1a_raw_att_fname, l1a_eng_fname, scene_files,
+                      osp_dir=osp_dir)
 if(create_l0b):
     l0b_sim.create_file(l0b_fname)
     

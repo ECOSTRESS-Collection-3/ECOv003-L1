@@ -1,10 +1,11 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(ecostress-level1, 0.30)
+AC_INIT(ecostress-level1, 0.40)
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([config/m4])
 AC_CONFIG_FILES([script/setup_ecostress.csh script/setup_ecostress.sh])
 AC_CONFIG_FILES([lib/global_fixture_default.cc])
+AC_CONFIG_FILES([ecostress_version.py])
 
 ECOSTRESS_COMMON
 

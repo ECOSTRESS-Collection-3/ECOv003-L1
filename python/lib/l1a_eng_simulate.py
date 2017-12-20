@@ -5,19 +5,26 @@ from .write_standard_metadata import WriteStandardMetadata
 class L1aEngSimulate(object):
     '''This is used to generate L1A_ENG simulated data. Right now, this is just
     dummy data.'''
-    def __init__(self):
+    def __init__(self, l1a_raw_att_fname):
         '''Create a L1APixSimulate to process the given L1B_RAD file.'''
-        pass
+        # Right now, get times from raw att file
+        f = h5py.File(l1a_raw_att_fname)
+        self.time_j2000 = f["/Ephemeris/time_j2000"][:]
         
     def create_file(self, l1a_eng_fname):
         fout = h5py.File(l1a_eng_fname, "w")
         g = fout.create_group("rtdBlackbodyGradients")
+        data = np.zeros((self.time_j2000.shape[0], 5))
+        data[:,:] = 325
         t = g.create_dataset("RTD_325K",
-                             data = np.array([325,325,325,325,325], dtype = np.float32))
+                             data = np.array(data, dtype = np.float32))
         t.attrs["Units"] = "K and XY"
+        data[:,:] = 295
         t = g.create_dataset("RTD_295K",
-                             data = np.array([295,295,295,295,295], dtype = np.float32))
+                             data = np.array(data, dtype = np.float32))
         t.attrs["Units"] = "K and XY"
+        t = g.create_dataset("Time_j2000", data = self.time_j2000)
+        t.attrs["Units"] = "Seconds"
         m = WriteStandardMetadata(fout, product_specfic_group = "L1A_ENGMetadata",
                                   pge_name = "L1A_RAW_PGE",
                                   orbit_based = True)
