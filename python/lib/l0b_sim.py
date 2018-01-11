@@ -416,8 +416,6 @@ class L0BSimulate(object):
         pix_dat[b] = pix_fd["/UncalibratedPixels/pixel_data_%d" %(b+1)]
         b295[b] = bb_fd["/BlackBodyPixels/b%d_blackbody_295" % (b+1)]
         b325[b] = bb_fd["/BlackBodyPixels/b%d_blackbody_325" % (b+1)]
-        ### b295[b] = bb_fd["/BlackBodyPixels/B%d_blackbody_295K" % (b+1)]
-        ### b325[b] = bb_fd["/BlackBodyPixels/B%d_blackbody_325K" % (b+1)]
 
       pix_2k=pix_fd["/Time/line_start_time_j2000"]
       env=pix_fd["FPIEencoder/EncoderValue"]

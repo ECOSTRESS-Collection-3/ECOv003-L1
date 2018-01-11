@@ -41,11 +41,11 @@ class L1aBbSimulate(object):
         fout = h5py.File(l1a_bb_fname, "w")
         g = fout.create_group("BlackBodyPixels")
         for b in range(6):
-            t = g.create_dataset("B%d_blackbody_325K" % (b+1),
+            t = g.create_dataset("b%d_blackbody_325" % (b+1),
                    data = self.gaussian_data(self.bb_325_mean[b],
                                              self.bb_325_sigma[b]))
             t.attrs["Units"] = "dimensionless"
-            t = g.create_dataset("B%d_blackbody_295K" % (b+1),
+            t = g.create_dataset("b%d_blackbody_295" % (b+1),
                    data = self.gaussian_data(self.bb_295_mean[b],
                                              self.bb_295_sigma[b]))
             t.attrs["Units"] = "dimensionless"
