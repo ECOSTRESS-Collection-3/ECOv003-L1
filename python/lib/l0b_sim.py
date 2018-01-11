@@ -187,12 +187,17 @@ FP_TOL = 3
 class L0BSimulate(object):
   # This is used to generate L0 simulated data. We take the output of the
   # l1a_raw pge and reverse the processing to produce a L0 file.
-  def __init__(self, l1a_raw_att_fname, l1a_eng_fname, scene_files):
+  def __init__(self, l1a_raw_att_fname, l1a_eng_fname, scene_files,
+               osp_dir=None):
     # Create a L0Simulate to process the given files. The orbit based files
     # are passed in as a file name, and the scene based files are passed as a dict
     # with keys of scene id. The values in the dict are an array, the first entry
     # is the L1A_RAW_PIX file and the second is the L1A_BB file.
     self.l1a_eng_fname = l1a_eng_fname
+    if(osp_dir is None):
+      self.osp_dir = os.path.dirname(self.l1a_eng_fname)
+    else:
+      self.osp_dir = osp_dir
     self.l1a_raw_att_fname = l1a_raw_att_fname
     self.scene_files = scene_files
 
@@ -215,8 +220,7 @@ class L0BSimulate(object):
 
     #  Read the PRT coefficients
     PRT = np.zeros( (17,3), dtype=np.float64 )
-    osp_dir = os.path.dirname(self.l1a_eng_fname)
-    with open( osp_dir + "/prt_coef.txt", "r") as pf:
+    with open(self.osp_dir + "/prt_coef.txt", "r") as pf:
       for i, pvl in enumerate( pf ):
         p0, p1, p2, p3 = re.split(r'\s+', pvl.strip())
         PRT[i,0] = float(p1)
@@ -241,7 +245,7 @@ class L0BSimulate(object):
     ev_codes = np.zeros( (4,4), dtype=np.int32 )
     ev_names = [ p0 for p0 in range( 4 ) ]
     ' open EV codes file '
-    with open( osp_dir + "/ev_codes.txt", "r") as ef:
+    with open(self.osp_dir + "/ev_codes.txt", "r") as ef:
       for i,evl in enumerate(ef):
         p0, p1, p2, p3, p4 = re.split(r'\s+', evl.strip())
         ev_names[i] = p0
