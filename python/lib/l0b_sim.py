@@ -262,6 +262,9 @@ class L0BSimulate(object):
     dt2 = (ev_codes[2,0] - ev_codes[1,0]) * EV_DUR
     print("DT3=%f, DT2=%f" %( dt3, dt2 ) )
 
+    #bo = [5, 3, 2, 0, 1, 4]  # L0B to L1A (raw pix)
+    bo = [3, 4, 2, 1, 5, 0]  # L1A to L0B (sim)
+
     self.l0b_fname = l0b_fname
     l0b_fd = h5py.File(self.l0b_fname, "w", driver='core')
 
@@ -405,8 +408,10 @@ class L0BSimulate(object):
       # link to pixel and bb datsasets
       for b in range( BANDS ):
         pix_dat[b] = pix_fd["/UncalibratedPixels/pixel_data_%d" %(b+1)]
-        b295[b] = bb_fd["/BlackBodyPixels/B%d_blackbody_295K" % (b+1)]
-        b325[b] = bb_fd["/BlackBodyPixels/B%d_blackbody_325K" % (b+1)]
+        b295[b] = bb_fd["/BlackBodyPixels/b%d_blackbody_295" % (b+1)]
+        b325[b] = bb_fd["/BlackBodyPixels/b%d_blackbody_325" % (b+1)]
+        ### b295[b] = bb_fd["/BlackBodyPixels/B%d_blackbody_295K" % (b+1)]
+        ### b325[b] = bb_fd["/BlackBodyPixels/B%d_blackbody_325K" % (b+1)]
 
       pix_2k=pix_fd["/Time/line_start_time_j2000"]
       env=pix_fd["FPIEencoder/EncoderValue"]
@@ -488,7 +493,7 @@ class L0BSimulate(object):
             # write packet data
             lid[pkt_id,:] = ev_buf[bts:pte]
             for b in range(BANDS):
-              bip[pkt_id,:,:,b] = pix_buf[:,bts:pte,b].transpose()
+              bip[pkt_id,:,:,b] = pix_buf[:,bts:pte,bo[b]].transpose()
             # next point in pix_buf
             bts = pte
             # next packet
@@ -520,6 +525,7 @@ class L0BSimulate(object):
               bte = FPPPKT
               print("Final runt packet: %d" % p0 )
               pix_buf[ 0:PPFP, p0:FPPPKT, :] = 0xffff
+              ev_buf[ p0:FPPPKT ] = 0xffffffff
           # end writing current packet
 
         # next line in scene
