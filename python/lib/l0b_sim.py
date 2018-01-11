@@ -175,48 +175,24 @@ ANG2 = float( int( (ANG1 + FP_ANG*float(BBLEN*2))*1000.0 ) )/1000.0
 # covered by 25.475 degree of mirror scan.  Mirror
 # is 2-sided, so every other scan is 180 degrees apart
 MAX_FPIE=1749248
-
 #EV_DUR = 60.0/RPM/float( MAX_FPIE ) # = 1.3504 microsecond/count
 #EV_DUR = 60.0/RPM/float( MAX_FPIE ) - 1.357079461852133e-10  # = 1.3504 microsecond/count - fudge factor
 EV_DUR = 60.0/RPM/float( MAX_FPIE ) - 1.3722110553414009e-10  # = 1.3504 microsecond/count - fudge factor
-
-CNT_DUR = (60/25.4)/float( MAX_FPIE )  # = 1.3504 microsecond
 ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.00020580272 deg/count
-PIX_ANG = 25.475 / float( FPPSC )  # = 0.004717592 deg
-PIX_EV = PIX_ANG / ANG_INC # = 22.92289 counts/pix
-# For now, if you change this number make sure to also change
-# frame_time in EcostressTimeTable. Eventually that should go away,
-# the time table should be reading this from the input data. But for
-# now this is hardcoded.
-#
-# Short term, change this to match EcostressTimeTable pixel duration.
-# We will want to change this back, but for now change this to match
-# existing test data. See Issue #13 in github.
-#PIX_DUR = 0.0000321982
-PIX_DUR = 0.0000321875
-PKT_DUR = PIX_DUR * float( FPPPKT )
-# Black body pixels are BEFORE image pixels
-ANG1 = 25.475 / 2.0
-ANG0 = 0.0 - PIX_ANG * float( BBLEN*2.0 ) - ANG1
-FP_TOL = 3
 FP_EV = FP_DUR*RPM*MAX_FPIE / 60.0 # = 22.922887 counts/FP
 PKT_EV = FP_DUR*RPM*MAX_FPIE*FPPPKT/60.0 # = 1525.460873 counts/PKT
 IMG_EV = FP_DUR*RPM*MAX_FPIE*FPPSC/60.0 # = 128710.76112 counts/IMG
+FP_TOL = 3
 
 class L0BSimulate(object):
   # This is used to generate L0 simulated data. We take the output of the
   # l1a_raw pge and reverse the processing to produce a L0 file.
-  def __init__(self, l1a_raw_att_fname, l1a_eng_fname, scene_files,
-               osp_dir=None):
+  def __init__(self, l1a_raw_att_fname, l1a_eng_fname, scene_files):
     # Create a L0Simulate to process the given files. The orbit based files
     # are passed in as a file name, and the scene based files are passed as a dict
     # with keys of scene id. The values in the dict are an array, the first entry
     # is the L1A_RAW_PIX file and the second is the L1A_BB file.
     self.l1a_eng_fname = l1a_eng_fname
-    if(osp_dir is None):
-      self.osp_dir = os.path.dirname(self.l1a_eng_fname)
-    else:
-      self.osp_dir = osp_dir
     self.l1a_raw_att_fname = l1a_raw_att_fname
     self.scene_files = scene_files
 
@@ -229,9 +205,9 @@ class L0BSimulate(object):
     b = 2.0*x[0]*x[3]*x[4] + x[1]*x[3]
     c = x[0]*x[4]*x[4] + x[1]*x[4] + x[2] - ( K - 273.15 ) # needs to be celsius
     rdn = (np.sqrt( b*b - 4.0*a*c) - b) / ( 2.0*a )
-    #print("kelvin2DN,X=%f %f %f %f %f K=%f RDN=%f" % (x[0],x[1],x[2],x[3],x[4],K,rdn))
     dn = int( rdn+0.5 )
-    return ( (dn>>8)&0xff ) | ( (dn&0xff)<<8 ) # Big-Endian
+    #print("kelvin2DN,X=%f %f %f %f %f K=%f RDN=%f DN=%d" % (x[0],x[1],x[2],x[3],x[4],K,rdn,dn))
+    return ( dn ) # little-Endian
 
   def create_file(self, l0b_fname):
     print("====  CREATE_FILE L0B_FNAME %s ====" % l0b_fname )
@@ -239,7 +215,8 @@ class L0BSimulate(object):
 
     #  Read the PRT coefficients
     PRT = np.zeros( (17,3), dtype=np.float64 )
-    with open(self.osp_dir + "/prt_coef.txt", "r") as pf:
+    osp_dir = os.path.dirname(self.l1a_eng_fname)
+    with open( osp_dir + "/prt_coef.txt", "r") as pf:
       for i, pvl in enumerate( pf ):
         p0, p1, p2, p3 = re.split(r'\s+', pvl.strip())
         PRT[i,0] = float(p1)
@@ -264,7 +241,7 @@ class L0BSimulate(object):
     ev_codes = np.zeros( (4,4), dtype=np.int32 )
     ev_names = [ p0 for p0 in range( 4 ) ]
     ' open EV codes file '
-    with open(self.osp_dir + "/ev_codes.txt", "r") as ef:
+    with open( osp_dir + "/ev_codes.txt", "r") as ef:
       for i,evl in enumerate(ef):
         p0, p1, p2, p3, p4 = re.split(r'\s+', evl.strip())
         ev_names[i] = p0
@@ -275,10 +252,18 @@ class L0BSimulate(object):
         print("EV_CODES[%d](%s) = (%d,%d) (%d,%d)" % (i,ev_names[i],
                  ev_codes[i,0], ev_codes[i,1], ev_codes[i,2], ev_codes[i,3] ))
     ef.close()
-    e0 = ev_codes[3,0]
-    e1 = ev_codes[3,1]
-    e2 = ev_codes[3,2]
-    e3 = ev_codes[3,3]
+    ev0 = ev_codes[3,0]
+    ev1 = ev_codes[3,1]
+    ev2 = ev_codes[3,2]
+    ev3 = ev_codes[3,3]
+
+    # backup times from IMG to BB3 and BB2
+    dt3 = (ev_codes[2,0] - ev_codes[0,0]) * EV_DUR
+    dt2 = (ev_codes[2,0] - ev_codes[1,0]) * EV_DUR
+    print("DT3=%f, DT2=%f" %( dt3, dt2 ) )
+
+    #bo = [5, 3, 2, 0, 1, 4]  # L0B to L1A (raw pix)
+    bo = [3, 4, 2, 1, 5, 0]  # L1A to L0B (sim)
 
     self.l0b_fname = l0b_fname
     l0b_fd = h5py.File(self.l0b_fname, "w", driver='core')
@@ -361,8 +346,9 @@ class L0BSimulate(object):
     #  ****  convert Kelvin to DN  ****
     for i in range( enc ):
       for j in range(enr):
-        bbt[i,0,j] = self.kelvin2DN(kh[j,:], r2k[i,j])
-        bbt[i,1,j] = self.kelvin2DN(kc[j,:], r3k[i,j])
+        bbt[i,0,j] = self.kelvin2DN(kc[j,:], r2k[i,j])
+        bbt[i,1,j] = self.kelvin2DN(kh[j,:], r3k[i,j])
+        #print("ENC=%d ENR=%d R2K=%f R3K=%f BB2=%d BB3=%d" %(enr,enc,r2k[i,j],r3k[i,j],bbt[i,0,j],bbt[i,1,j]))
 
     bb_time[:] = att_time[:aqc]  # just copy times from ATT/EPH for now
     bb_fsw[:] = att_fsw[:epc]
@@ -396,10 +382,10 @@ class L0BSimulate(object):
 
     for i in range( 2 ):  # generate EVs for both mirror phases
       for j in range( BBLEN ):  # BB pixels
-        evc[i,j+e0] = int(ev_codes[0,i*2] + j*FP_EV + 0.5) %MAX_FPIE
-        evc[i,j+e1] = int(ev_codes[1,i*2] + j*FP_EV + 0.5) %MAX_FPIE
+        evc[i,j+ev0] = int(ev_codes[0,i*2] + j*FP_EV + 0.5) %MAX_FPIE
+        evc[i,j+ev1] = int(ev_codes[1,i*2] + j*FP_EV + 0.5) %MAX_FPIE
       for j in range( FPPSC ):  # image pixels
-        evc[i,j+e2] = int(ev_codes[2,i*2] + j*FP_EV + 0.5) %MAX_FPIE
+        evc[i,j+ev2] = int(ev_codes[2,i*2] + j*FP_EV + 0.5) %MAX_FPIE
 
     p0 = 0
     prev = 0
@@ -424,8 +410,10 @@ class L0BSimulate(object):
       # link to pixel and bb datsasets
       for b in range( BANDS ):
         pix_dat[b] = pix_fd["/UncalibratedPixels/pixel_data_%d" %(b+1)]
-        b295[b] = bb_fd["/BlackBodyPixels/B%d_blackbody_295K" % (b+1)]
-        b325[b] = bb_fd["/BlackBodyPixels/B%d_blackbody_325K" % (b+1)]
+        b295[b] = bb_fd["/BlackBodyPixels/b%d_blackbody_295" % (b+1)]
+        b325[b] = bb_fd["/BlackBodyPixels/b%d_blackbody_325" % (b+1)]
+        ### b295[b] = bb_fd["/BlackBodyPixels/B%d_blackbody_295K" % (b+1)]
+        ### b325[b] = bb_fd["/BlackBodyPixels/B%d_blackbody_325K" % (b+1)]
 
       pix_2k=pix_fd["/Time/line_start_time_j2000"]
       env=pix_fd["FPIEencoder/EncoderValue"]
@@ -451,9 +439,9 @@ class L0BSimulate(object):
       while line < lines:
 
         # pix_buf and ev_buf offsets
-        ps0 = p0+e0; pe0 = ps0 + BBLEN # HBB first
-        ps1 = p0+e1; pe1 = ps1 + BBLEN # then CBB
-        ps2 = p0+e2; pe2 = ps2 + FPPSC # then IMG
+        ps0 = p0+ev0; pe0 = ps0 + BBLEN # HBB first
+        ps1 = p0+ev1; pe1 = ps1 + BBLEN # then CBB
+        ps2 = p0+ev2; pe2 = ps2 + FPPSC # then IMG
 
         # assemble pix and bb data into buffer, with offset from previous buffer
         for b in range( BANDS ):
@@ -467,42 +455,49 @@ class L0BSimulate(object):
         ##   ev_buf[ps0+i] = (ev_buf[ps1+i] - int( BBLEN*FP_EV+0.5 ))%MAX_FPIE
         ## scan += 1
 
-        ev_buf[ps0:pe0] = evc[evp,e0:e0+BBLEN] # use generated EVs
-        ev_buf[ps1:pe1] = evc[evp,e1:e1+BBLEN]
-        ev_buf[ps2:pe2] = evc[evp,e2:e2+FPPSC]
+        ev_buf[ps0:pe0] = evc[evp,ev0:ev0+BBLEN] # use generated EVs
+        ev_buf[ps1:pe1] = evc[evp,ev1:ev1+BBLEN]
+        ev_buf[ps2:pe2] = evc[evp,ev2:ev2+FPPSC]
 
         # step through buffer in packet steps (FPPPKT) starting from 0
         bts = 0
         bte = p0 + FPB3
-        t2k = pix_2k[line] - FP_DUR*BBLEN*2
+        t2k = pix_2k[line]
         if p0 > 0: t2k += FP_DUR * float( FPPPKT - p0 ) # for next packet
         ### angnadir = 180.0 - angnadir
         print("====  ", datetime.now(), "  ====")
-        print("L=%d PKT=%d T2K=%f P2K=%f EVP=%d BTE=%d P0=%d PS0=%d PS1=%d PS2=%d PE2=%d" %(line,pkt_id,t2k,pix_2k[line],evp,bte,p0,ps0,ps1,ps2,pe2))
+        print("L=%d PKT=%d GPT=%f GPP=%f T0=%f EVP=%d BTE=%d P0=%d PS0=%d PS1=%d PS2=%d PE2=%d" %(line,pkt_id,Time.time_j2000(t2k).gps,Time.time_j2000(pix_2k[line]).gps,Time.time_j2000(t0).gps,evp,bte,p0,ps0,ps1,ps2,pe2))
         while bts < bte:
 
           # see where current buffer pointer is
-          pe1 = bts + FPPPKT
+          pte = bts + FPPPKT
           #print("SCENE=%s PKT_ID=%d BTS=%d BTE=%d" %(scene, pkt_id,  bts, bte))
           # write a packet if sufficient data
-          if pe1 <= bte:
+          if pte <= bte:
 
             # write next packet ancillary data
             pid[pkt_id] = pkt_id+1
-            # *** add FPIE sync clock and FPIE 1st pix to FSWT offset (1MHz)
+            ' *** add FPIE sync clock and FPIE 1st pix to FSWT offset (1MHz)'
+            b = bts - p0
+            if b>=ev0 and b<ev1:
+              t = dt3
+            elif b>=ev1 and b<ev2:
+              t = dt2
+            else:
+              t = 0
             if prev == 0:
-              fswt[pkt_id] = Time.time_j2000(t2k).gps
-              t2k += PKT_DUR
+              fswt[pkt_id] = Time.time_j2000(t2k-t).gps
+              if t==0 and b>=0: t2k += PKT_DUR
             else:
               fswt[pkt_id] = Time.time_j2000(t0).gps
-            print("SCENE=%s Pkt %d T2k=%f T0=%f BTS=%d PE1=%d BTE=%d PREV=%d EV0=%d" %(scene, pkt_id, t2k, t0, bts, pe1, bte, prev,ev_buf[bts]))
+            print("SCENE=%s Pkt %d GPT=%f T0=%f BTS=%d PTE=%d BTE=%d PREV=%d EV0=%d B=%d" %(scene, pkt_id, Time.time_j2000(t2k-t).gps, Time.time_j2000(t0).gps, bts, pte, bte, prev,ev_buf[bts],b))
 
             # write packet data
-            lid[pkt_id,:] = ev_buf[bts:pe1]
+            lid[pkt_id,:] = ev_buf[bts:pte]
             for b in range(BANDS):
-              bip[pkt_id,:,:,b] = pix_buf[:,bts:pe1,b].transpose()
+              bip[pkt_id,:,:,b] = pix_buf[:,bts:pte,bo[b]].transpose()
             # next point in pix_buf
-            bts = pe1
+            bts = pte
             # next packet
             pkt_id += 1
             prev = 0
@@ -514,12 +509,12 @@ class L0BSimulate(object):
               evp = 1 - evp  #  swap EV arrays
 
           else: # at the remainder of current pix_buf
-            print("Remainder SCENE=%d BTE=%d BTS=%d PKT_ID=%d" % (v,bte, bts,pkt_id))
 
             # set offset to next pix_buf
             p0 = bte - bts
             prev = p0
-            t0 = t2k # save FSWT from end of current san for next packet
+            t0 = t2k # save FSWT from end of current scan for next packet
+            print("Remainder SCENE=%d BTE=%d BTS=%d PKT_ID=%d T0=%f" % (v,bte, bts,pkt_id,Time.time_j2000(t0).gps))
             # move remainder data to front of pix_buf
             pix_buf[:,:p0,:] = pix_buf[:,bts:bte,:]
             ev_buf[:p0] = ev_buf[bts:bte]
@@ -531,7 +526,8 @@ class L0BSimulate(object):
               bts = 0
               bte = FPPPKT
               print("Final runt packet: %d" % p0 )
-              pix_buf[ 0:PPFP, p0:FPPPKT, :] = 0
+              pix_buf[ 0:PPFP, p0:FPPPKT, :] = 0xffff
+              ev_buf[ p0:FPPPKT ] = 0xffffffff
           # end writing current packet
 
         # next line in scene
@@ -541,6 +537,7 @@ class L0BSimulate(object):
       # close current raw pix and bb files
       pix_fd.close()
       bb_fd.close()
+      print("End SCENE=%s time=%s" %( scene, str(datetime.now())))
       l0b_fd.flush()
       # end writing packets for current scene file
     # *** take care of runt packet of last scene ***

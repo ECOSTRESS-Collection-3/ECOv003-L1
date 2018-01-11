@@ -108,6 +108,7 @@ FP_DUR = 0.0000321875
 #FP_DUR = 0.0000322
 #FP_DUR = 3.095533197239234e-5 - 1.9077034883720932e-8  # this is consistent with FOV of 25.475; = 24.475/(5400*6*RPM) - fudge
 PKT_DUR = FP_DUR * float( FPPPKT )
+PKT_DURT = PKT_DUR*.05
 IMG_DUR = FP_DUR * float( FPPSC )
 PIX_DUR = FP_DUR * float( BBLEN*2 + FPPSC )
 RPM = 25.4
@@ -136,8 +137,8 @@ class L1aRawPixGenerate(object):
   '''This generates a L1A_RAW_PIX, L1A_BB, L1A_ENG and L1A_RAW_ATT
   files from a L0B input.'''
   def __init__(self, l0b, osp_dir, scene_file, run_config = None,
-               build_id = "0.30",
-               pge_version = "0.30", build_version="0100",
+               build_id = "0.40",
+               pge_version = "0.40", build_version="0101",
                file_version = "01"):
       '''Create a L1aRawPixGenerate to process the given L0 file. 
       To actually generate, execute the 'run' command.'''
@@ -261,6 +262,10 @@ class L1aRawPixGenerate(object):
                                                   ev_codes[i,4],ev_codes[i,5] ))
     ef.close()
 
+    det = [EV_DUR*((ev_codes[1,0]-ev_codes[0,0])%MAX_FPIE),
+           EV_DUR*((ev_codes[2,0]-ev_codes[1,0])%MAX_FPIE),
+           EV_DUR*((ev_codes[0,2]-ev_codes[2,0])%MAX_FPIE)]
+
 #  Set up band order
 
     bo = [5, 3, 2, 0, 1, 4]
@@ -304,7 +309,7 @@ class L1aRawPixGenerate(object):
 
     # extract encoder values
     i,j = lid.shape
-    lev = np.zeros( (i,j), dtype=np.uint32 )
+    lev = np.zeros( (i,j), dtype=np.int32 )
     lev[:,:] = lid[:,:]&0x1fffff
 
     # working array
@@ -338,7 +343,7 @@ class L1aRawPixGenerate(object):
       t0 = Time.time_gps( gpt[pkt_idx] )
       dt = float( int( (t0 - sts)*100000.0 + 0.5 ) )  # diff to 10 usec
       while dt < 0.0 and pkt_idx<tot_pkts:
-        print("Search packet %d ID=%d GPT=%f STS=%f DT=%f" % ( pkt_idx, pid[pkt_idx], t0.gps, sts.gps, dt/100000.0 ) )
+        print("Search packet %d ID=%d GPS=%f STS=%f DT=%f" % ( pkt_idx, pid[pkt_idx], t0.gps, sts.gps, dt/100000.0 ) )
         pkt_idx += 1
         t0 = Time.time_gps( gpt[pkt_idx] )
         dt = float( int( (t0 - sts)*100000.0 + 0.5 ) )
@@ -371,24 +376,22 @@ class L1aRawPixGenerate(object):
       scan = 0
       scans = 0
       if pkt_idx > 0: pkt_idx -= 1 # compensate for time code error
-      t0 = gpt[pkt_idx]  # FSWT of first packet in scene
 
-#    ADDRESS EMPTY SCENE    '
+      while scan < SCPS and pxet < ste:
 
-      while scan < SCPS and pxet <= ste:
         cont = 1
-        s0 = scan
-        line = scan * PPFP
+        flex_buf[:,:,:] = 0xffff
+        e1 = 0
         #  Loop through HBB, CBB, and IMG sequences in scan
         for seq in range( 3 ):
           gpix[seq] = 0
           e0 = pkt_idx
           e2 = 2
           while e0 < tot_pkts and e2 == 2:  # loop through packets
-            dt = gpt[e0] - t0
-            t0 = gpt[e0]
+            if e0==0: dt = 0
+            else: dt = abs(( float(lev[e0,0]) - float(lev[e0-1,e1]) ) * EV_DUR)
             if dt > SCAN_DUR and seq > 0:
-              print("** Discontinuity seeking %s IDX=%d DT=%f" %(ev_names[seq],e0,dt))
+              print("** Discontinuity seeking %s IDX=%d DT=%f E1=%d" %(ev_names[seq],e0,dt,e1))
               cont = 0
 
               if gpt[e0] > rse:  #  PKT past end of scene
@@ -417,10 +420,10 @@ class L1aRawPixGenerate(object):
               else: e1 += 1 # check next EV
             ' end seeking SEQ in current packet '
 
-            if e2 == 2: e0 += 1 # look in next packet
+            if e2 == 2:
+              e0 += 1 # look in next packet
+              e1 = 0
           ' End seeking SEQ through packets '
-
-          #print("Seeked %s SCENE=%s SCAN=%d IDX=%d P1=%d" %(ev_names[seq],scene_id,scan,e0,e1))
 
           if e0>=tot_pkts: # hit EOF; finish up any existing scans
             print("** Hit EOF ")
@@ -438,66 +441,62 @@ class L1aRawPixGenerate(object):
           op = op0  # initialize output FP pointer
 
           # calculate fswt for first FP in SEQ
-          if e1 == 0:
-            p0t = gpt[e0]
+          if e1 == 0:  # use current packet FSWT
             dt = 0
-          else:
-            dt = ( (int(lev[e0,e1]) - int(lev[e0,0]))%MAX_FPIE ) * EV_DUR
-            te = gpt[e0-1] + dt + PKT_DUR ### time code error
-            tn = gpt[e0+1] + (e1 - FPPPKT) * FP_DUR # from next pkt
-            if tn - te > SCAN_DUR: p0t  = tn
-            else: p0t = te
+            p0t = gpt[e0]
+          else:  # count back from FSWT of next packet
+            dt = (e1-FPPPKT) * FP_DUR
+            p0t = gpt[e0+1] + dt
+
           if seq==0:  # save scan starting time
             sst = p0t
-            lid0 = lid[e0,0]
             if scan==0: rst = p0t  # save refined scene start time
+            scan = int( ( sst - rst ) / SCAN_DUR + 0.5 )
+            line = scan * PPFP
+            print("Calculated scan=%d SCENE=%s" % (scan, scene_id) )
           elif seq==2:  # save and replicate IMG start time
             pix_time[line:line+PPFP] = Time.time_gps( p0t ).j2000
-          print("Found %s LID[%d,%d]=%d PH=%d SCENE=%s SCAN=%d OP=%d OP0=%d OP1=%d GPS=%f %s"%(ev_names[seq],e0,e1,lev[e0,e1],e2,scene_id,scan,op,op0,op1,p0t,Time.time_gps(p0t)))
+          print("Found %s LID[%d,%d]=%d PH=%d SCENE=%s SCAN=%d GPS=%f %s"%(ev_names[seq],e0,e1,lev[e0,e1],e2,scene_id,scan,p0t,Time.time_gps(p0t)))
   
           # Copy pixels from PKT
           p1 = e1
           fpc = FPPPKT - p1  # FPs to copy from first PKT
           while op < op1 and e0 < tot_pkts:
-            #print("SCENE=%d SCAN=%d E0=%d E1=%d ST=%f GPT=%f" %(scene_id,scan,e0,e1,st[0],gpt[e0]))
-            if gpt[e0] > rse:
-              print("** GPT %f past scene end %f at %s IDX=%d" %(gpt[e0],rse,ev_names[seq],e0))
-              if seq==2 and op>op0:
-                #scans += 1  # save collected IMG pixels
-                sse = gpt[e0] + p1*FP_DUR
-                print("    Scans=%d New scene end time %s(%f)" %( scans, Time.time_gps(sse),sse))
-              else:
-                obuf[0][line:line+PPFP] = 0xffff
-                obuf[1][line:line+PPFP] = 0xffff
-                cont = 0
-              scan = SCPS  # force new scene
-              break # break out of sequence copy loop
+            #print("SCENE=%d SCAN=%d E0=%d E1=%d GPS=%f" %(scene_id,scan,e0,e1,gpt[e0]))
 
-            if gpt[e0] > sst+SCAN_DUR:
-              print("** GPT %f past scan end %f at %s IDX=%d" %(gpt[e0],sst+SCAN_DUR,ev_names[seq],e0))
-              if seq==0 or seq==1:
-                obuf[0][line:line+PPFP] = 0xffff
-                obuf[1][line:line+PPFP] = 0xffff
-                cont = 0
-              scan = int( (gpt[e0] - rst)/SCAN_DUR +0.5 ) # new scan
-              print("    Scans=%d New Scan %d" % (scans, scan) )
-              break # break out of sequence copy loop
-  
+            e3 = op1 - op
+            if seq==2 and op>op0 and op<=op1-FPPPKT:
+              lid0 = e0; lid1 = e0+1  # correct time
+              #lid0 = e0-1; lid1 = e0  # time code error
+              if e0 < tot_pkts - 1: dt = abs( gpt[lid1] - gpt[lid0] - PKT_DUR )
+              else: dt = 0.0  # at last packet
+              if dt > PKT_DURT:  # large time jump between PKTS
+                if e0==tot_pkts - 1 or e3<=FPPPKT: e4 = 0
+                else: e4 = float((lev[e0+1,0] - lev[e0,0])%MAX_FPIE) * EV_DUR
+                if e4 > PKT_DUR:  # EV jump within packet
+                  e4 = int( dt/FP_DUR + 0.5 )
+                  print("Time jump at IDX[%d](%f) DT=%f OPINC=%d OP=%d" %(e0,gpt[e0],dt,e4,op))
+                  if op+e4>=op1:  # new packet time past end of current scan
+                    sse = gpt[e0-1] + PKT_DUR
+                    print("Terminating scan %d at FP %d SSE=%f" % (scan,op,sse))
+                    break
+                  else:
+                    op += e4
+                    print("Skipping %d FPs, new OP=%d" % (e4,op) )
+
             for b in range( BANDS ): # transpose new packet to flex_buf
               flex_buf[:,:,b] = np.transpose(bip[e0,:,:,b])
-            e3 = op1 - op
-            if fpc > e3:
+            if fpc >= e3:
               fpc = e3  # runt at end of sequence
               print("Last %s chunk:%d IDX=%d" %(ev_names[seq],e3,e0), end="" )
               if seq==2:
-                sse = gpt[e0] + fpc*FP_DUR
+                sse = gpt[e0-1] + PKT_DUR + fpc*FP_DUR
                 print(" SSE=%f" % sse )
               else:
                 print(" ")
+              if e3==FPPPKT: e3 = 0
             dp = op - op0
             #print("SEQ=%d LINE=%d DP=%d P1=%d FPC=%d" %(seq,line,dp,p1,fpc))
-
-            '  TO DO:  adjust for non-contiguous IMG packets within scan '
 
             obuf[seq][line:line+PPFP,dp:dp+fpc,:] = flex_buf[:,p1:p1+fpc,:]
             if seq==2: ev_buf[scan,dp:dp+fpc] = lev[e0,p1:p1+fpc]
@@ -508,14 +507,16 @@ class L1aRawPixGenerate(object):
             e0 += 1
 
           # end seq copy loop
-          if e0>=tot_pkts: pkt_idx = tot_pkts - 1
+          if e0>=tot_pkts:
+            pkt_idx = tot_pkts - 1
+            sse = gpt[pkt_idx] + PKT_DUR
           else:
-            if op>= op1: pkt_idx = e0-1
+            if op>op0 and e3>0: pkt_idx = e0-1
             else: pkt_idx = e0
           if cont==0: break  # drop into scan loop
         # end seq loop
 
-        print("SCENE=%s SCAN=%d SCANS=%d LINE=%d DT=%f s2k=%f IDX=%d P1=%d OP=%d RSE=%f"%(scene_id,scan,scans,line,dt,pix_time[scans],pkt_idx,e1,op,rse))
+        print("SCENE=%s SCAN=%d SCANS=%d LINE=%d DT=%f s2k=%f IDX=%d P1=%d OP=%d RSE=%f"%(scene_id,scan,scans,line,dt,pix_time[scans],pkt_idx,e3,op,rse))
 
 # cont==0 from:
 # - No SEQ from scene start time
@@ -523,15 +524,6 @@ class L1aRawPixGenerate(object):
 
 # - EOF seeking SEQ
 #   exit scan loop, complete current scene, if any scans
-# - New SEQ data beyond current scene
-#   exit scan loop, complete current scene, if any scans
-# - Copy PKT beyond current scene
-#   exit scan loop, complete current scene, if any scans
-
-# - New SEQ data beyond current scan
-#   resume with new scan
-# - Copy PKT beyond current scan
-#   resume with new scan
 
         if cont==0:
           if scans==0:  # restart scanning with new IDX
@@ -553,7 +545,7 @@ class L1aRawPixGenerate(object):
       rse = sse  # refined scene end time
       if o_start_time is None: o_start_time = Time.time_gps( rst )
       o_end_time = Time.time_gps( rse )
-      scenes.append("%5d	%03d	%s	%s\n" %( orbit, scene_id,
+      scenes.append("%05d	%03d	%s	%s\n" %( orbit, scene_id,
         str( Time.time_gps( rst ) )[:26], str( Time.time_gps( rse ) )[:26] ) )
 
       # copy to output files
@@ -585,7 +577,6 @@ class L1aRawPixGenerate(object):
       l1a_peg = l1a_fp.create_group("/FPIEencoder")
       l1a_bpg = l1a_bp.create_group("/BlackBodyPixels")
       l1a_rtg = l1a_bp.create_group("/rtdBlackbodyGradients")
-      #pix_time=np.array(pix_time).repeat(256)
       t = l1a_ptg.create_dataset("line_start_time_j2000", data=pix_time,
                                  dtype="f8" )
       t.attrs["Description"] = "J2000 time of first pixel in line"
@@ -611,7 +602,7 @@ class L1aRawPixGenerate(object):
       # copy RTD temps to BB file
       p0 = np.argmax( bbtime >= rst )
       p1 = np.argmax( bbtime >= rse )
-      print("Copying RTD for SCENE %d P0=%d P1=%d" %(scene_id, p0, p1))
+      print("Copying RTD for SCENE %d P0=%d P1=%d %s" %(scene_id, p0, p1, str(datetime.now())))
       print(" ")
       bt=l1a_rtg.create_dataset("time_j2000", shape=(p1-p0+1,), dtype='f8')
       r2=l1a_rtg.create_dataset("RTD_295K", shape=(p1-p0+1,5,), dtype='f4')
@@ -622,17 +613,17 @@ class L1aRawPixGenerate(object):
           r2[i-p0,j] = prc[j]( p7r( bbt[i,0,j] ) )
           r3[i-p0,j] = prh[j]( p7r( bbt[i,1,j] ) )
 
+      l1a_fp.close()
+      l1a_bp.close()
     ' end scene loop '
 
     ' Create refined scene file '
     sss = str( o_start_time )
     ses = str( o_end_time )
-    sf = "Scene_%5s_%s_%s.txt" % ( orbit, sss[0:4]+sss[5:7]+sss[8:13]+sss[14:16]+sss[17:19], ses[0:4]+ses[5:7]+ses[8:13]+ses[14:16]+ses[17:19])
+    sf = "Scene_%05d_%s_%s.txt" % ( orbit, sss[0:4]+sss[5:7]+sss[8:13]+sss[14:16]+sss[17:19], ses[0:4]+ses[5:7]+ses[8:13]+ses[14:16]+ses[17:19])
     sfd = open( sf, "w" )
     for i in range( scene_id ): sfd.write( scenes[i] )
     sfd.close()
-    l1a_fp.close()
-    l1a_bp.close()
 
     ' create engineering file and datasets '
     print("creating ENG file, EPC=%d" % epc )
