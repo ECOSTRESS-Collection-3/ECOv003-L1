@@ -452,8 +452,12 @@ class L1aRawPixGenerate(object):
             sst = p0t
             if scan==0: rst = p0t  # save refined scene start time
             scan = int( ( sst - rst ) / SCAN_DUR + 0.5 )
-            line = scan * PPFP
             print("Calculated scan=%d SCENE=%s" % (scan, scene_id) )
+            if scan >= SCPS:
+              print("PKT[%d] Time %f outside of current scene %d Terminating" %( e0, sst, scene_id ) )
+              cont = 0
+              break
+            line = scan * PPFP
           elif seq==2:  # save and replicate IMG start time
             pix_time[line:line+PPFP] = Time.time_gps( p0t ).j2000
           print("Found %s LID[%d,%d]=%d PH=%d SCENE=%s SCAN=%d GPS=%f %s"%(ev_names[seq],e0,e1,lev[e0,e1],e2,scene_id,scan,p0t,Time.time_gps(p0t)))
