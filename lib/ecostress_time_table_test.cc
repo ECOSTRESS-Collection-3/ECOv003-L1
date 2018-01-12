@@ -59,8 +59,8 @@ BOOST_AUTO_TEST_CASE(basic_test)
 
 BOOST_AUTO_TEST_CASE(read_file)
 {
-  EcostressTimeTable tt(test_data_dir() + "ECOSTRESS_L1A_PIX_80005_001_20150124T204251_0100_02.h5.expected");
-  EcostressTimeTable tt2(test_data_dir() + "ECOSTRESS_L1B_RAD_80005_001_20150124T204251_0100_01.h5.expected");
+  EcostressTimeTable tt(test_data_dir() + "ECOSTRESS_L1A_PIX_80005_001_20150124T204250_0100_02.h5.expected");
+  EcostressTimeTable tt2(test_data_dir() + "ECOSTRESS_L1B_RAD_80005_001_20150124T204250_0100_01.h5.expected");
   BOOST_CHECK_EQUAL(tt.averaging_done(), false);
   BOOST_CHECK_EQUAL(tt2.averaging_done(), true);
 }

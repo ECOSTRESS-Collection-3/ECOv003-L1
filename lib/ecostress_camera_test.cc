@@ -13,7 +13,7 @@ BOOST_AUTO_TEST_CASE(basic_test)
     GeoCal::serialize_read<EcostressCamera>(unit_test_data_dir() + "camera.xml");
   // We'll need to create fixture with this stuff
   std::string orb_fname = test_data_dir() +
-    "L1A_RAW_ATT_80005_20150124T204251_0100_01.h5.expected";
+    "L1A_RAW_ATT_80005_20150124T204250_0100_01.h5.expected";
   GeoCal::HdfOrbit<GeoCal::Eci, GeoCal::TimeJ2000Creator> orb
     (orb_fname, "", "Ephemeris/time_j2000", "Ephemeris/eci_position",
      "Ephemeris/eci_velocity", "Attitude/time_j2000", "Attitude/quaternion");

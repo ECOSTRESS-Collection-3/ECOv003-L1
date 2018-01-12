@@ -25,13 +25,13 @@ public:
     camera = GeoCal::serialize_read<EcostressCamera>
       (unit_test_data_dir() + "camera.xml");
     std::string orb_fname = test_data_dir() +
-    "L1A_RAW_ATT_80005_20150124T204251_0100_01.h5.expected";
+    "L1A_RAW_ATT_80005_20150124T204250_0100_01.h5.expected";
     orbit = boost::make_shared<GeoCal::HdfOrbit<GeoCal::Eci,
 						GeoCal::TimeJ2000Creator> >
       (orb_fname, "", "Ephemeris/time_j2000", "Ephemeris/eci_position",
        "Ephemeris/eci_velocity", "Attitude/time_j2000", "Attitude/quaternion");
     std::string l1a_pix_fname = test_data_dir() +
-      "ECOSTRESS_L1A_PIX_80005_001_20150124T204251_0100_02.h5.expected";
+      "ECOSTRESS_L1A_PIX_80005_001_20150124T204250_0100_02.h5.expected";
     // Force this to act like averaging, even though l1a_pix_fname is
     // high resolution.
     time_table = boost::make_shared<EcostressTimeTable>(l1a_pix_fname, true);
@@ -40,7 +40,7 @@ public:
     scan_mirror = boost::make_shared<EcostressScanMirror>();
     boost::shared_ptr<GeoCal::RasterImage> img =
       boost::make_shared<GeoCal::GdalRasterImage>
-      ("HDF5:\""+test_data_dir() + "ECOSTRESS_L1B_RAD_80005_001_20150124T204251_0100_01.h5.expected\"://SWIR/swir_dn");
+      ("HDF5:\""+test_data_dir() + "ECOSTRESS_L1B_RAD_80005_001_20150124T204250_0100_01.h5.expected\"://SWIR/swir_dn");
     boost::shared_ptr<GeoCal::RasterImage> no_img;
     igc = boost::make_shared<EcostressImageGroundConnection>
       (orbit, time_table, camera, scan_mirror, dem, img, "Test title");

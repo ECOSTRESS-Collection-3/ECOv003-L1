@@ -115,13 +115,13 @@ def igc(unit_test_data, test_data):
     if(not have_swig):
         raise RuntimeError("You need to install the ecostress swig code first. You can install just this by doing 'make install-swig-python'")
     cam = read_shelve(unit_test_data + "camera.xml")
-    orb_fname = test_data + "L1A_RAW_ATT_80005_20150124T204251_0100_01.h5.expected"
+    orb_fname = test_data + "L1A_RAW_ATT_80005_20150124T204250_0100_01.h5.expected"
     orb = HdfOrbit_Eci_TimeJ2000(orb_fname, "", "Ephemeris/time_j2000",
                                  "Ephemeris/eci_position",
                                  "Ephemeris/eci_velocity",
                                  "Attitude/time_j2000",
                                  "Attitude/quaternion")
-    rad_fname = test_data + "ECOSTRESS_L1B_RAD_80005_001_20150124T204251_0100_01.h5.expected"
+    rad_fname = test_data + "ECOSTRESS_L1B_RAD_80005_001_20150124T204250_0100_01.h5.expected"
 
     f = h5py.File(rad_fname, "r")
     tmlist = f["/Time/line_start_time_j2000"][::128]
@@ -141,11 +141,11 @@ def igc(unit_test_data, test_data):
 
 @pytest.yield_fixture(scope="function")
 def dn_fname(unit_test_data, test_data):
-    yield test_data + "ECOSTRESS_L1A_PIX_80005_001_20150124T204251_0100_02.h5.expected"
+    yield test_data + "ECOSTRESS_L1A_PIX_80005_001_20150124T204250_0100_02.h5.expected"
 
 @pytest.yield_fixture(scope="function")
 def gain_fname(unit_test_data, test_data):
-    yield test_data + "L1A_RAD_GAIN_80005_001_20150124T204251_0100_02.h5.expected"
+    yield test_data + "L1A_RAD_GAIN_80005_001_20150124T204250_0100_02.h5.expected"
     
 @pytest.yield_fixture(scope="function")
 def igc_hres(unit_test_data, test_data):
@@ -154,13 +154,13 @@ def igc_hres(unit_test_data, test_data):
     if(not have_swig):
         raise RuntimeError("You need to install the ecostress swig code first. You can install just this by doing 'make install-swig-python'")
     cam = read_shelve(unit_test_data + "camera.xml")
-    orb_fname = test_data + "L1A_RAW_ATT_80005_20150124T204251_0100_01.h5.expected"
+    orb_fname = test_data + "L1A_RAW_ATT_80005_20150124T204250_0100_01.h5.expected"
     orb = HdfOrbit_Eci_TimeJ2000(orb_fname, "", "Ephemeris/time_j2000",
                                  "Ephemeris/eci_position",
                                  "Ephemeris/eci_velocity",
                                  "Attitude/time_j2000",
                                  "Attitude/quaternion")
-    rad_fname = test_data + "ECOSTRESS_L1B_RAD_80005_001_20150124T204251_0100_01.h5.expected"
+    rad_fname = test_data + "ECOSTRESS_L1B_RAD_80005_001_20150124T204250_0100_01.h5.expected"
 
     f = h5py.File(rad_fname, "r")
     tmlist = f["/Time/line_start_time_j2000"][::128]
