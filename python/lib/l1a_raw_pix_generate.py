@@ -620,7 +620,8 @@ class L1aRawPixGenerate(object):
     ' Create refined scene file '
     sss = str( o_start_time )
     ses = str( o_end_time )
-    sf = "Scene_%05d_%s_%s.txt" % ( orbit, sss[0:4]+sss[5:7]+sss[8:13]+sss[14:16]+sss[17:19], ses[0:4]+ses[5:7]+ses[8:13]+ses[14:16]+ses[17:19])
+    sst = str( datetime.now() )[0:19]
+    sf = "Scene_%05d_%s_%s_%s.txt" % ( orbit, sss[0:4]+sss[5:7]+sss[8:13]+sss[14:16]+sss[17:19], ses[0:4]+ses[5:7]+ses[8:13]+ses[14:16]+ses[17:19], sst[0:4]+sst[5:7]+sst[8:10]+'T'+sst[11:13]+sst[14:16]+sst[17:19])
     sfd = open( sf, "w" )
     for i in range( scene_id ): sfd.write( scenes[i] )
     sfd.close()
