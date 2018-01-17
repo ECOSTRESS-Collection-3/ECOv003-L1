@@ -470,8 +470,8 @@ class L1aRawPixGenerate(object):
 
             e3 = op1 - op
             if seq==2 and op>op0 and op<=op1-FPPPKT:
-              lid0 = e0; lid1 = e0+1  # correct time
-              #lid0 = e0-1; lid1 = e0  # time code error
+              #lid0 = e0; lid1 = e0+1  # correct time
+              lid0 = e0-1; lid1 = e0  # time code error
               if e0 < tot_pkts - 1: dt = abs( gpt[lid1] - gpt[lid0] - PKT_DUR )
               else: dt = 0.0  # at last packet
               if dt > PKT_DURT:  # large time jump between PKTS
