@@ -3,7 +3,7 @@
 !   An L1A_CAL PGE Program supporting the ECOSTRESS Project
 !   Written for VICAR with TAE scripting.
 !***Date/Version:
-!   17NOV2017 Version: 0.97 T.L.Logan (Bad stripes to -9998)
+!   18JAN2018 Version: 1.00 T.L.Logan (TVAC changes)
 !***Function:
 !   ECOSTRESS L1A 2point conversion of Blackbody calibration and TIR
 !     image DN to Radiance (watts/m2/sr/um).
@@ -41,10 +41,12 @@ local  avg    real     !Histogram mean
 local  count  integer  !Histogram number of elements
 body
 let      _onfail="goto error1"
+file2tcl  xxjob_fail.img val=found
+if       (found=1) ush rm xxjob_fail.img
 
 !Proc Startup Module***************************************************
 write    "MSG: ***Starting 2pt Processing for Band &band"
-tush      echo "***Starting 2pt Processing for Band &band" >> L1Ajob_&"suffix".log 
+tush      echo "***Starting 2pt Processing for Band &band" >> L1A_CAL_&"suffix".log 
 
 !Calculate 9-digit Random Number as a unique temporary variable name
 tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
@@ -64,9 +66,9 @@ write    "MSG: ***Input Image Size is: &nl Lines x &ns Samples "
 if       ((nl<>11264)or(ns<>5400)) write "MSG: ***ERROR "&"outimg"/b&"band"_image.hlf" has Incorrect Image Size "
 if       ((nl<>11264)or(ns<>5400)) goto error1
 write    "MSG: ***Finished Reading L1A_RAW_PIX Band &band"
-tush      echo "Finished Reading L1A_RAW_PIX Band &band" >> L1Ajob_&"suffix".log
+tush      echo "Finished Reading L1A_RAW_PIX Band &band" >> L1A_CAL_&"suffix".log
 hist     &"outimg"/b&"band"_image.hlf sigma=sd mean=avg
-tush      echo "Raw Band &band Mean=&avg SD=&sd" >> L1Ajob_&"suffix".log
+tush      echo "Raw Band &band Mean=&avg SD=&sd" >> L1A_CAL_&"suffix".log
 !Create Bad Stripes Mask
 gen       xxa_&id nl=11264 ns=5400 ival=1 linc=0 sinc=0 'half
 qsar      xxa_&id stripes_&id area=(+
@@ -98,14 +100,14 @@ else
           func="((in1>0).AND.(in1<=32000))" !Good DN=1; Bad DN=0
 end-if
 hist      mask_&id sigma=sd mean=avg
-tush      echo "Histogram 0/1 Mask Mean=&avg SD=&sd" >> L1Ajob_&"suffix".log
+tush      echo "Histogram 0/1 Mask Mean=&avg SD=&sd" >> L1A_CAL_&"suffix".log
 
 !Input L1A_BB DN Module************************************************
 !Extract Raw FPA DNs from L1A_BB, 1 band, both 325 and 295 BB files
 !Log hdf5 to vicar using gdal libraries.
 write    "Beginning ush gdalinfo"
 ush       gdalinfo &inph5b
-write    "Beginning ush gda_translate"
+write    "Beginning ush gdal_translate"
 ush       gdal_translate -of VICAR -ot Int16 'HDF5:"&inph5b"://BlackBodyPixels/b&"band"_blackbody_325' xxa_325_&id
 ush       gdal_translate -of VICAR -ot Int16 'HDF5:"&inph5b"://BlackBodyPixels/b&"band"_blackbody_295' xxa_295_&id
 !Verify 325BB image size, if not 11264x64, stop processing
@@ -119,7 +121,7 @@ write    "MSG: ***Input Band&"band" BB295 Image Size is: &nl Lines x &ns Samples
 if       ((nl<>11264)or(ns<>64)) write "MSG: ***ERROR "BB295" has Incorrect Image Size "
 if       ((nl<>11264)or(ns<>64)) goto error1
 write    "MSG: ***Finished Reading L1A_BB Band &band files"
-tush      echo "Finished Reading L1A_BB Band &band files" >> L1Ajob_&"suffix".log
+tush      echo "Finished Reading L1A_BB Band &band files" >> L1A_CAL_&"suffix".log
 
 !Average BB FPAs from 11264x64 to 11264x1
 cform     xxa_325_&id xxa_&id oform=real
@@ -151,7 +153,7 @@ size      xxgain_&id xxd_&id size=(1,1,11264,5400) oform=real 'noin
 f2        inp=(xxd_&id,mask_&id) out=&"outwat"/b&"band"_gain.rel +
           func="(in1*(in2==1))+((in2==0)*(-9999))+((in2==(-1))*(-9998))" format=real
 write    "MSG: ***Finished Creating Gain/Offsets for Band &band"
-tush      echo "Finished Creating Gain/Offsets for Band &band" >> L1Ajob_&"suffix".log
+tush      echo "Finished Creating Gain/Offsets for Band &band" >> L1A_CAL_&"suffix".log
 
 !2-Point Conversion Module*********************************************
 !DN to Radiance two-point conversion: R=a+(b*DN)
@@ -164,10 +166,12 @@ f2       (&"outwat"/b&"band"_offset.rel,&"outwat"/b&"band"_gain.rel,&"outimg"/b&
 f2        inp=(xxe_&id,mask_&id) out=&"outwat"/b&"band"_rad.rel +
           func="(in1*(in2==1))+((in2==0)*(-9999))+((in2==(-1))*(-9998))" format=real
 write    "MSG: ***Finished 2pt DN-to-Rad Conversion for Band &band"
-tush      echo "Finished 2pt DN-to-Rad Conversion for Band &band" >> L1Ajob_&"suffix".log
+tush      echo "Finished 2pt DN-to-Rad Conversion for Band &band" >> L1A_CAL_&"suffix".log
 if       (debug>0)
- hist     &"outwat"/b&"band"_rad.rel sigma=sd mean=avg count=count
- tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1Ajob_&"suffix".log
+!Remove -9998 (Dropped Lines) from histogram (Set to zero). Retain -9999 (Bad Data).
+ f2       &"outwat"/b&"band"_rad.rel xxb_&id func="(in1!=(-9998))*in1"
+ hist     xxb_&id sigma=sd mean=avg count=count 'exclude
+ tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1A_CAL_&"suffix".log
 end-if
 
 skip2>
@@ -184,10 +188,12 @@ f2       (&"outwat"/b&"band"_rad.rel) xxe_&id +
 f2        inp=(xxe_&id,mask_&id) out=&"outwat"/b&"band"_temp.hlf +
           func="(in1*(in2==1))+((in2==0)*(-9999))+((in2==(-1))*(-9998))" format=half
 write    "MSG: ***Finished Rad-to-Temp Conversion for Band &band"
-tush      echo "Finished Rad-to-Temp Conversion for Band &band" >> L1Ajob_&"suffix".log
+tush      echo "Finished Rad-to-Temp Conversion for Band &band" >> L1A_CAL_&"suffix".log
 if       (debug>0)
- hist     &"outwat"/b&"band"_temp.hlf sigma=sd mean=avg count=count
- tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1Ajob_&"suffix".log
+!Remove -9998 (Dropped Lines) from histogram (Set to zero). Retain -9999 (Bad Data).
+ f2       &"outwat"/b&"band"_temp.hlf xxb_&id func="(in1!=(-9998))*in1"
+ hist     xxb_&id sigma=sd mean=avg count=count 'exclude
+ tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1A_CAL_&"suffix".log
 end-if
 goto      skip3   !Bands 2-6 skip over SWIR processing
 
@@ -205,10 +211,10 @@ f2       (&"outimg"/b1_image.hlf,xxa_&id) xxe_&id +
 f2        inp=(xxe_&id,mask_&id) out=&"outwat"/b1_dcc.hlf +
           func="(in1*(in2==1))+((in2==0)*(-9999))+((in2==(-1))*(-9998))" format=half
 write    "MSG: ***Finished DC Subtraction for Band &band"
-tush      echo "Finished DC Subtraction for Band &band" >> L1Ajob_&"suffix".log
+tush      echo "Finished DC Subtraction for Band &band" >> L1A_CAL_&"suffix".log
 if       (debug>0)
  hist     &"outwat"/b1_dcc.hlf sigma=sd mean=avg count=count
- tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1Ajob_&"suffix".log
+ tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1A_CAL_&"suffix".log
 end-if
 
 skip3>
@@ -220,9 +226,10 @@ error1>
 !Miscellaneous Error:
 write    "MSG: ***Unknown Error --- Aborting"
 write    "MSG: ***L1A_2PT job Failed"
-tush      echo ***Unknown Error --- Aborting >> L1Ajob_&"suffix".log
-tush      echo ***L1A_2PT Job Failed >> L1Ajob_&"suffix".log
-ush       echo VICAR_RESULT-1-[Job Failed] >> L1Ajob_&"suffix".log
+tush      echo ***Unknown Error --- Aborting >> L1A_CAL_&"suffix".log
+tush      echo ***L1A_2PT Job Failed >> L1A_CAL_&"suffix".log
+ush       echo VICAR_RESULT-1-[Job Failed] >> L1A_CAL_&"suffix".log
+gen       xxjob_fail.img nl=10 ns=10 ival=0 linc=0 sinc=0 'byte
 let       $SFI=-1
 
 theend>

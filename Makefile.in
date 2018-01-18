@@ -818,7 +818,7 @@ l1b_cal_run_config = $(foreach n,001 002 003, $(end_to_end_test_data)/ECOSTRESS_
 l1b_geo_run_config = $(end_to_end_test_data)/ECOSTRESS_L1B_GEO_RunConfig_20150124T204251.xml
 H5DIFF_FLAG = -d 2e-2
 dist_vicarpdf_DATA = @srcpdf@/el1a_2pt.pdf @srcpdf@/el1a_bbcal.pdf \
-	@srcpdf@/sim_l1a_bb.pdf
+	@srcpdf@/el1a_tvac.pdf @srcpdf@/sim_l1a_bb.pdf
 installecostress_DATA = @srcscript@/setup_ecostress.csh @srcscript@/setup_ecostress.sh
 
 # Cython code to generate

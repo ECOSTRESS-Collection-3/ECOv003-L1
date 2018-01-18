@@ -2,7 +2,7 @@
 !   el1a_bbcal.pdf (Ecostress L1A BlackBody calibration)
 !   An L1A_CAL PGE Program supporting the ECOSTRESS Project
 !***Date/Version:
-!   28NOV2017 Version: 0.98 T.L.Logan (alg2 cw passing error)
+!   18JAN2018 Version: 1.00 T.L.Logan (tvac changes)
 !   Written for VICAR with TAE scripting.
 !***Function:
 !   ECOSTRESS L1A Blackbody Radiometric Calibration.
@@ -27,8 +27,8 @@ procedure
 ! outp1:  L1A_PIX      /path for Output L1A_PIX file
 ! outp2:  transfer     /path for Output Intermediate Radiance, Gain/Offset & Temp files
 ! pcount: File Version (vv) provided by PCS (Product Counter) 
-parm   inph5i  string   def="/project/test/eyc/instrument/out/L1A_RAW_PIX_80005_002_20170810T195606_0100_05.h5" 
-parm   inph5b  string   def="/project/test/eyc/instrument/out/ECOSTRESS_L1A_BB_80005_002_20170810T195606_0100_05.h5"
+parm   inph5i  string   def="/project/test/eyc/instrument/out/L1A_RAW_PIX_05423_001_20171215T220120_0101_01.h5" 
+parm   inph5b  string   def="/project/test/eyc/instrument/out/ECOSTRESS_L1A_BB_05423_001_20171215T220120_0101_01.h5"
 parm   inpupf  string   def="./L1A_PCF_UPF.txt"
 parm   outp1   string   def="./"
 parm   outp2   string   def="./"
@@ -182,13 +182,13 @@ write    "MSG: ***Product File Version= &pcount "
 let       suffixI = "&"orbit"_&"scene"_&"date"T&"time"_&"build"_&ver"
 let       suffix = "&"orbit"_&"scene"_&"date"T&"time"_&"build"_&pcount"
 !Rename Status Log file
-ush       mv L1AjobStatus.log L1Ajob_&"suffix".log
-tush      echo "" >> L1Ajob_&"suffix".log
-tush      echo "***Scene ID Information:" >> L1Ajob_&"suffix".log
+ush       mv L1AjobStatus.log L1A_CAL_&"suffix".log
+tush      echo "" >> L1A_CAL_&"suffix".log
+tush      echo "***Scene ID Information:" >> L1A_CAL_&"suffix".log
 write    "MSG: ***Input Scene ID= &suffixI "
-tush      echo "Input Scene ID: &suffixI" >> L1Ajob_&"suffix".log
+tush      echo "Input Scene ID: &suffixI" >> L1A_CAL_&"suffix".log
 write    "MSG: ***Outut Scene ID= &suffix " 
-tush      echo "Output Product ID: &suffix" >> L1Ajob_&"suffix".log
+tush      echo "Output Product ID: &suffix" >> L1A_CAL_&"suffix".log
 
 !Calculate 9-digit Random Number as a unique temporary variable name
 tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
@@ -203,9 +203,9 @@ write    "***** LISTING the PCF File: *****"
 write    " "
 ush       cat &inpupf
 write    " "
-tush      echo "" >> L1Ajob_&"suffix".log
-tush      echo "*** LISTING the PCF File for this Job:" >> L1Ajob_&"suffix".log
-ush       cat &inpupf >> L1Ajob_&"suffix".log
+tush      echo "" >> L1A_CAL_&"suffix".log
+tush      echo "*** LISTING the PCF File for this Job:" >> L1A_CAL_&"suffix".log
+ush       cat &inpupf >> L1A_CAL_&"suffix".log
 
 !Read the PCF file Parameters
 tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
@@ -352,8 +352,8 @@ if       (found=0) write "MSG: ***&"outp2"/&outwat Directory Not Found --- Was C
 !the L1A_ENG file. The 5 RTD temperatures for each blackbody are averaged
 !in all combinations of 3, 4, and 5 values, with the combination with the
 !lowest variance selected as the best representation of the BB temperature. 
-tush      echo "" >> L1Ajob_&"suffix".log
-tush      echo "***Creating FPA Blackbodys" >> L1Ajob_&"suffix".log
+tush      echo "" >> L1A_CAL_&"suffix".log
+tush      echo "***Creating FPA Blackbodys" >> L1A_CAL_&"suffix".log
 !Input pt-RTD Blackbody Temperature Measurements
 write    "Beginning ush gdalinfo" 
 ush       gdalinfo &inph5b
@@ -450,7 +450,7 @@ edibis    tab_&id comm=("(12,1) set 12")
 edibis    tab_&id comm=("(12,2) set &avg")
 edibis    tab_&id comm=("(12,3) set &sd")
 !Combo 13: RTDs 2,3,5
-hist      im2_&id size=(1,2,1,5) mean=avg sigma=sd 'nohi 'excl
+hist      im2_&id size=(1,2,1,4) mean=avg sigma=sd 'nohi 'excl
 edibis    tab_&id comm=("(13,1) set 13")
 edibis    tab_&id comm=("(13,2) set &avg")
 edibis    tab_&id comm=("(13,3) set &sd")
@@ -520,8 +520,8 @@ copy      xkel325_&id &"outkel"/fpa_325.rel
 if       (debug>0)
  write   "MSG: ***325 Kelvin Black Body Histogram"
  hist     xkel325_&id sigma=sd mean=avg count=count
- tush     echo "325 Kelvin Black Body Histogram:" >> L1Ajob_&"suffix".log
- tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1Ajob_&"suffix".log
+ tush     echo "325 Kelvin Black Body Histogram:" >> L1A_CAL_&"suffix".log
+ tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1A_CAL_&"suffix".log
 end-if
 
 !Calculate pt-RTD Cold Blackbody Temperature
@@ -619,7 +619,7 @@ edibis    tab_&id comm=("(12,1) set 12")
 edibis    tab_&id comm=("(12,2) set &avg")
 edibis    tab_&id comm=("(12,3) set &sd")
 !Combo 13: RTDs 2,3,5
-hist      im2_&id size=(1,2,1,5) mean=avg sigma=sd 'nohi 'excl
+hist      im2_&id size=(1,2,1,4) mean=avg sigma=sd 'nohi 'excl
 edibis    tab_&id comm=("(13,1) set 13")
 edibis    tab_&id comm=("(13,2) set &avg")
 edibis    tab_&id comm=("(13,3) set &sd")
@@ -689,16 +689,16 @@ copy      xkel295_&id &"outkel"/fpa_295.rel
 if       (debug>0)
  write   "MSG: ***295 Kelvin Black Body Histogram"
  hist     xkel295_&id sigma=sd mean=avg count=count
- tush     echo "295 Kelvin Black Body Histogram:" >> L1Ajob_&"suffix".log
- tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1Ajob_&"suffix".log
+ tush     echo "295 Kelvin Black Body Histogram:" >> L1A_CAL_&"suffix".log
+ tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1A_CAL_&"suffix".log
 end-if
 
 !Convert Kelvin FPA to Radiance Module*********************************
 !For each thermal band fpa, convert FPA Kelvin temperature to Spectral
 !  Radiance.
 !Loop through the 5 TIR bands
-tush      echo "" >> L1Ajob_&"suffix".log
-tush      echo "***Converting FPA to Radiance" >> L1Ajob_&"suffix".log
+tush      echo "" >> L1A_CAL_&"suffix".log
+tush      echo "***Converting FPA to Radiance" >> L1A_CAL_&"suffix".log
 let       bandn = 0 
 
 loop
@@ -708,7 +708,7 @@ if       (bandn = 7) break  !B1 is SWIR; Include for Completeness
 write    ""
 write    "MSG: ***Calibrating FPA B&bandn "
 write    ""
-tush      echo "***Calibrating FPA B&bandn" >> L1Ajob_&"suffix".log
+tush      echo "***Calibrating FPA B&bandn" >> L1A_CAL_&"suffix".log
 
 !c1=First Planck Constant
 !c2=Second Planck Constant
@@ -723,7 +723,7 @@ tush      echo "***Calibrating FPA B&bandn" >> L1Ajob_&"suffix".log
 !http://ncc.nesdis.noaa.gov/data/planck.html
 if       (palg = 1)
 write    "MSG: ***Planck Algorithm 1 - Band &bandn "
-tush      echo "Planck Algorithm 1 - Band &bandn" >> L1Ajob_&"suffix".log
+tush      echo "Planck Algorithm 1 - Band &bandn" >> L1A_CAL_&"suffix".log
 !325 Blackbody
 let       cw = cw&bandn
 write    "MSG: ***Center Wavelength= &cw "
@@ -733,8 +733,8 @@ copy      xrad325_b&"bandn"_&id &"outrad"/b&"bandn"_325.rel
 if       (debug>0)
  write   "MSG: ***325 BlackBody Radiance Histogram"
  hist     xrad325_b&"bandn"_&id sigma=sd mean=avg count=count
- tush     echo "325 BlackBody Radiance Histogram:" >> L1Ajob_&"suffix".log
- tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1Ajob_&"suffix".log
+ tush     echo "325 BlackBody Radiance Histogram:" >> L1A_CAL_&"suffix".log
+ tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1A_CAL_&"suffix".log
 end-if
 !295 Blackbody
 f2        xkel295_&id xrad295_b&"bandn"_&id +
@@ -743,8 +743,8 @@ copy      xrad295_b&"bandn"_&id &"outrad"/b&"bandn"_295.rel
 if       (debug>0)
  write   "MSG: ***295 BlackBody Radiance Histogram"
  hist     xrad295_b&"bandn"_&id sigma=sd mean=avg count=count
- tush     echo "295 BlackBody Radiance Histogram:" >> L1Ajob_&"suffix".log
- tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1Ajob_&"suffix".log
+ tush     echo "295 BlackBody Radiance Histogram:" >> L1A_CAL_&"suffix".log
+ tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1A_CAL_&"suffix".log
 end-if
 else
 
@@ -752,7 +752,7 @@ else
 !wavelength to calculate the Planck Function. Source:
 !Gouillioud,R., 2015. "ECOSTRESS_Error_Budget_2015-04-08.xlsm" NASA/JPL.
 write    "MSG: ***Planck Algorithm 2 - Band &bandn "
-tush      echo "Planck Algorithm 2 - Band &bandn" >> L1Ajob_&"suffix".log
+tush      echo "Planck Algorithm 2 - Band &bandn" >> L1A_CAL_&"suffix".log
 let       bw = bw&bandn
 write    "MSG: ***Band Width= &bw "
 let       lw = lw&bandn
@@ -808,8 +808,8 @@ copy      xrad325_b&"bandn"_&id &"outrad"/b&"bandn"_325.rel
 if       (debug>0)
  write   "MSG: ***325 BlackBody Radiance Histogram"
  hist     xrad325_b&"bandn"_&id sigma=sd mean=avg count=count
- tush     echo "325 BlackBody Radiance Histogram:" >> L1Ajob_&"suffix".log
- tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1Ajob_&"suffix".log
+ tush     echo "325 BlackBody Radiance Histogram:" >> L1A_CAL_&"suffix".log
+ tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1A_CAL_&"suffix".log
 end-if
 
 
@@ -860,8 +860,8 @@ copy      xrad295_b&"bandn"_&id &"outrad"/b&"bandn"_295.rel
 if       (debug>0)
  write   "MSG: ***295 BlackBody Radiance Histogram"
  hist     xrad295_b&"bandn"_&id sigma=sd mean=avg count=count
- tush     echo "295 BlackBody Radiance Histogram:" >> L1Ajob_&"suffix".log
- tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1Ajob_&"suffix".log
+ tush     echo "295 BlackBody Radiance Histogram:" >> L1A_CAL_&"suffix".log
+ tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1A_CAL_&"suffix".log
 end-if
 end-if
 end-loop
@@ -871,8 +871,8 @@ datetime
 !Call/Run the 2point DN-to-Radiance proc for each band.
 !2pt DN to Radiance Conversion, 5 TIR bands
 !B1 SWIR is Dark Current subtracted
-tush      echo "" >> L1Ajob_&"suffix".log
-tush      echo "***Calling 2pt Radiance Program" >> L1Ajob_&"suffix".log
+tush      echo "" >> L1A_CAL_&"suffix".log
+tush      echo "***Calling 2pt Radiance Program" >> L1A_CAL_&"suffix".log
 let       bandn = 0
 loop
 let       bandn = (bandn + 1)
@@ -888,18 +888,21 @@ el1a_2pt  band=&bandn rad2k=&rad2k radout=&radout debug=&debug +
           outwat=&"outp2"/&outwat +
           outp1=&outp1 c1=&c1 c2=&c2 cw=&cw suffix=&suffix
 end-loop
-tush      echo "" >> L1Ajob_&"suffix".log
-tush      echo "***L1A_CAL Batchjob Completed at date/time:" >> L1Ajob_&"suffix".log
-tush      date >> L1Ajob_&"suffix".log
+tush      echo "" >> L1A_CAL_&"suffix".log
+tush      echo "***L1A_CAL Batchjob Completed at date/time:" >> L1A_CAL_&"suffix".log
+tush      date >> L1A_CAL_&"suffix".log
 if       ($SFI=-1) goto error2
+file2tcl  xxjob_fail.img val=found
+if       (found=1) write   "MSG: ***2pt Job Failure Detected"
+if       (found=1) goto error2
 datetime
 
 !Program Ending Maintenance Module*************************************
 !Successful Completion:
 write    "MSG: ***L1A_BBCAL Job Successful"
 write    "VICAR_RESULT-0-[Job Successful]"
-tush      echo ***L1A_BBCAL Job Successful >> L1Ajob_&"suffix".log
-ush       echo VICAR_RESULT-0-[Job Successful] >> L1Ajob_&"suffix".log
+tush      echo ***L1A_BBCAL Job Successful >> L1A_CAL_&"suffix".log
+ush       echo VICAR_RESULT-0-[Job Successful] >> L1A_CAL_&"suffix".log
 goto      theend
 
 error1>
@@ -913,23 +916,27 @@ if       (found=1)
   tush    echo ***L1A_BBCAL Job Failed >> L1AjobStatus.log
   ush     echo VICAR_RESULT-1-[Job Failed] >> L1AjobStatus.log
 else
-  tush    echo ***File or Directory Not Found >> L1Ajob_&"suffix".log
-  tush    echo ***L1A_BBCAL Job Failed >> L1Ajob_&"suffix".log
-  ush     echo VICAR_RESULT-1-[Job Failed] >> L1Ajob_&"suffix".log
+  tush    echo ***File or Directory Not Found >> L1A_CAL_&"suffix".log
+  tush    echo ***L1A_BBCAL Job Failed >> L1A_CAL_&"suffix".log
+  ush     echo VICAR_RESULT-1-[Job Failed] >> L1A_CAL_&"suffix".log
 end-if
 let      $SFI=-1
 goto      theend
 
 error2>
 !Miscellaneous Error:
+file2tcl  xxjob_fail.img val=found
+if       (found=1) ush rm xxjob_fail.img
 write    "MSG: ***Unknown Error --- Aborting"
 write    "MSG: ***L1A_BBCAL Job Failed"
 write    "VICAR_RESULT-1-""Job Failed"""
-tush      echo ***Unknown Error --- Aborting >> L1Ajob_&"suffix".log
-tush      echo ***L1A_BBCAL Job Failed >> L1Ajob_&"suffix".log
-ush       echo VICAR_RESULT-1-[Job Failed] >> L1Ajob_&"suffix".log
+tush      echo ***Unknown Error --- Aborting >> L1A_CAL_&"suffix".log
+tush      echo ***L1A_BBCAL Job Failed >> L1A_CAL_&"suffix".log
+ush       echo VICAR_RESULT-1-[Job Failed] >> L1A_CAL_&"suffix".log
 let      $SFI=-1
 
 theend>
 if       ((debug=0)or(debug=2)) ush rm *_&id
+ush      cp L1A_CAL_&"suffix".log &"outp2"/&outwat/png4_L1A_CAL_&"suffix".txt
+el1a_tvac dir="&outp2/&outwat" id=&id suffix=&suffix
 end-proc
