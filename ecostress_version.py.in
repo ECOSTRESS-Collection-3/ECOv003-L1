@@ -2,11 +2,25 @@
 # and pge_version. This file is loaded by each of the PGEs, so you can
 # edit this information in one place through this file.
 
-build_id = "0.40"
+import os
+
+build_id = "0.40_testing3"
 build_version = "0100"
-pge_version = {"l1a_raw" : "0.40",
-               "l1a_cal" : "0.40",
-               "l1b_rad" : "0.40",
-               "l1b_geo" : "0.40",
+pge_version = {"l1a_raw" : "0.40_testing3",
+               "l1a_cal" : "0.40_testing3",
+               "l1b_rad" : "0.40_testing3",
+               "l1b_geo" : "0.40_testing3",
                }
 
+# For end to end testing, fake having the final 0.40 version. This allows us
+# to avoid needing to update the expected results for each delivery just because
+# of a change in the version metadata
+if 'ECOSTRESS_END_TO_END_TEST' in os.environ:
+    build_id = "0.40"
+    build_version = "0100"
+    pge_version = {"l1a_raw" : "0.40",
+                   "l1a_cal" : "0.40",
+                   "l1b_rad" : "0.40",
+                   "l1b_geo" : "0.40",
+                  }
+    

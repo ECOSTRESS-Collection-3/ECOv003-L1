@@ -35,11 +35,11 @@ end-to-end-check: installcheck-am
 	$(MKDIR_P) ./end_to_end_test_l0_input
 	$(LN_S) $(l0b_file) ./end_to_end_test_l0_input
 	$(LN_S) $(scene_file) ./end_to_end_test_l0_input
-	$(prefix)/L1A_RAW_PGE $(l1a_raw_run_config)
+	ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1A_RAW_PGE $(l1a_raw_run_config)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1a_raw/*.h5
-	$(PARALLEL) --gnu $(prefix)/L1A_CAL_PGE ::: $(l1a_cal_run_config)
+	ECOSTRESS_END_TO_END_TEST=t $(PARALLEL) --gnu $(prefix)/L1A_CAL_PGE ::: $(l1a_cal_run_config)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1a_cal/*.h5
-	ECOSTRESS_USE_AFIDS_ENV=t $(PARALLEL) --gnu $(prefix)/L1B_RAD_PGE ::: $(l1b_cal_run_config)
+	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(PARALLEL) --gnu $(prefix)/L1B_RAD_PGE ::: $(l1b_cal_run_config)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1b_rad/*.h5
-	ECOSTRESS_USE_AFIDS_ENV=t $(prefix)/L1B_GEO_PGE $(l1b_geo_run_config)
+	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1B_GEO_PGE $(l1b_geo_run_config)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1b_geo/*.h5
