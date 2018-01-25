@@ -532,7 +532,8 @@ class L1aRawPixGenerate(object):
         if cont==0:
           if scans==0:  # restart scanning with new IDX
             scan = 0
-
+          if pkt_idx==tot_pkts-1:  # EOF
+             break  # break out of scan loop
         else:
           good[:] += gpix[:]
           pxet += SCAN_DUR
@@ -541,6 +542,8 @@ class L1aRawPixGenerate(object):
 
       # end scan loop
       print("Out of scan loop scan=%d scans=%s" %( scan, scans ))
+
+      if scans==0: continue  # skip rest of processing
 
       good_bb = good[0] + good[1]
       bb_cnt = scans*2*BBLEN
@@ -620,6 +623,10 @@ class L1aRawPixGenerate(object):
       l1a_fp.close()
       l1a_bp.close()
     ' end scene loop '
+
+    if len(scenes)==0:
+      print("****  No scenes generated  ****")
+      return -1
 
     ' Create refined scene file '
     sss = str( o_start_time )
