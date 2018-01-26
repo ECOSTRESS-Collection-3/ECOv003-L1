@@ -609,7 +609,10 @@ class L1aRawPixGenerate(object):
       # copy RTD temps to BB file
       p0 = np.argmax( bbtime >= rst )
       p1 = np.argmax( bbtime >= rse )
-      print("Copying RTD for SCENE %d P0=%d P1=%d %s" %(scene_id, p0, p1, str(datetime.now())))
+      if p1 <= p0:
+        p0 = 0
+        p1 = len( bbtime ) - 1
+      print("Copying RTD for SCENE %d P0=%d P1=%d RST=%f RSE=%f %s" %(scene_id, p0, p1, rst, rse, str(datetime.now())))
       print(" ")
       bt=l1a_rtg.create_dataset("time_j2000", shape=(p1-p0+1,), dtype='f8')
       r2=l1a_rtg.create_dataset("RTD_295K", shape=(p1-p0+1,5,), dtype='f4')
