@@ -342,11 +342,12 @@ class L1aRawPixGenerate(object):
       ' search for packet containing scene start time '
       t0 = Time.time_gps( gpt[pkt_idx] )
       dt = float( int( (t0 - sts)*100000.0 + 0.5 ) )  # diff to 10 usec
+      pkt_idx += 1
       while dt < 0.0 and pkt_idx<tot_pkts:
         print("Search packet %d ID=%d GPS=%f STS=%f DT=%f" % ( pkt_idx, pid[pkt_idx], t0.gps, sts.gps, dt/100000.0 ) )
-        pkt_idx += 1
         t0 = Time.time_gps( gpt[pkt_idx] )
         dt = float( int( (t0 - sts)*100000.0 + 0.5 ) )
+        pkt_idx += 1
       ' end searching for packet matching scene start time '
       if pkt_idx >= tot_pkts:
         print("*** Could not find Scene %s time %s (%f) in file %s PKT=%d" % ( scene_id, str(sts), sts.gps, self.l0b, pkt_idx ) )
