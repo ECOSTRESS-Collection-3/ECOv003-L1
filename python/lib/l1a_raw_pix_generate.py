@@ -270,6 +270,16 @@ class L1aRawPixGenerate(object):
 
     bo = [5, 3, 2, 0, 1, 4]
 
+#  get orbit number
+
+    m=re.search('L0B_(.+?)_',self.l0b)
+    if m:
+      onum = m.group(1)
+      print("Orbit number from file name: %s" %onum )
+    else:
+      print("Could not find orbit number from L0B file name %s" %self.l0b)
+      return -1
+
 # open L0B file
     self.fin = h5py.File(self.l0b,"r", driver='core')
     bip=self.fin["flex/bip"]
@@ -333,6 +343,10 @@ class L1aRawPixGenerate(object):
     # iterate through scenes from scene start/stop file
     o_start_time = None
     for orbit, scene_id, sts, ste in self.process_scene_file():
+      orb = str( "%05d" %orbit )
+      if orb != onum:  # process only matching orbit numbers
+        print("Ignoring mismatch orbit number %s, ref=%s scene=%d" %(orb, onum, scene_id) )
+        continue
       print("====  ", datetime.now(), "  ====")
       print("SCENE=%03d START=%s(%f) END=%s(%f)" % ( scene_id, sts, sts.gps, ste, ste.gps) )
 
@@ -471,8 +485,8 @@ class L1aRawPixGenerate(object):
 
             e3 = op1 - op
             if seq==2 and op>op0 and op<=op1-FPPPKT:
-              #lid0 = e0; lid1 = e0+1  # correct time
-              lid0 = e0-1; lid1 = e0  # time code error
+              lid0 = e0; lid1 = e0+1  # correct time
+              #lid0 = e0-1; lid1 = e0  # time code error
               if e0 < tot_pkts - 1: dt = abs( gpt[lid1] - gpt[lid0] - PKT_DUR )
               else: dt = 0.0  # at last packet
               if dt > PKT_DURT:  # large time jump between PKTS
