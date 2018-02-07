@@ -10,7 +10,7 @@ from multiprocessing import Pool
 # should all be True
 create_l1a_pix = False
 create_l1a_bb = False
-create_l1a_raw_pix = True
+create_l1a_raw_pix = False
 create_l1a_raw_att = False
 create_l1a_eng = True
 create_l0b = True
@@ -126,7 +126,7 @@ l1a_eng_sim = L1aEngSimulate(l1a_raw_att_fname)
 if(create_l1a_eng):
     l1a_eng_sim.create_file(l1a_eng_fname)
 
-l0b_fname = ecostress_file_name("L0B", None, None, start_time, end_time)
+l0b_fname = ecostress_file_name("L0B", orbit_num[pass_index], None, start_time, end_time, intermediate=True)
 scene_fname = ecostress_file_name("Scene", orbit_num[pass_index], None,
                                   start_time, end_time, extension=".txt",
                                   intermediate=True)

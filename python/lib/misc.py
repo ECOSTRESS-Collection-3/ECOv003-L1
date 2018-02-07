@@ -132,13 +132,8 @@ def ecostress_file_name(product_type, orbit, scene, acquisition_time,
     else:
         front="ECOSTRESS_"
     if(product_type == "L0B"):
-        # 
-        # return "%s%s_%s_%s_%s_%s%s" % \
-        #      (front, product_type, time_to_file_string(acquisition_time),
-        #       time_to_file_string(end_time),
-        #       build, version, extension)
-        return "%s_%05d_%s_%s_%s%s" % \
-            (product_type, orbit, time_to_file_string(acquisition_time),
+        return "%s%s_%05d_%s_%s_%s%s" % \
+            (front, product_type, orbit, time_to_file_string(acquisition_time),
              build, version, extension)
     elif(product_type == "Scene"):
         return "%s%s_%05d_%s_%s%s" % \
