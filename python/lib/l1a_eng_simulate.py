@@ -8,8 +8,8 @@ class L1aEngSimulate(object):
     def __init__(self, l1a_raw_att_fname):
         '''Create a L1APixSimulate to process the given L1B_RAD file.'''
         # Right now, get times from raw att file
-        f = h5py.File(l1a_raw_att_fname)
-        self.time_j2000 = f["/Ephemeris/time_j2000"][:]
+        self.att_file = h5py.File(l1a_raw_att_fname)
+        self.time_j2000 = self.att_file["/Ephemeris/time_j2000"][:]
         
     def create_file(self, l1a_eng_fname):
         fout = h5py.File(l1a_eng_fname, "w")
@@ -28,6 +28,10 @@ class L1aEngSimulate(object):
         m = WriteStandardMetadata(fout, product_specfic_group = "L1A_ENGMetadata",
                                   pge_name = "L1A_RAW_PGE",
                                   orbit_based = True)
+        m.set("RangeBeginningDate", self.att_file["/StandardMetadata/RangeBeginningDate"][()])
+        m.set("RangeBeginningTime", self.att_file["/StandardMetadata/RangeBeginningTime"][()])
+        m.set("RangeEndingDate", self.att_file["/StandardMetadata/RangeEndingDate"][()])
+        m.set("RangeEndingTime", self.att_file["/StandardMetadata/RangeEndingTime"][()])
         m.write()
         fout.close()
 
