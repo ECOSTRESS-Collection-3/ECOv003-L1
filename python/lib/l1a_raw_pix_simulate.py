@@ -16,7 +16,7 @@ class L1aRawPixSimulate(object):
         g = fout.create_group("UncalibratedPixels")
         for b in range(6):
             t = g.create_dataset("pixel_data_%d" % (b+1),
-                   data = self.l1a_pix["/UncalibratedDN/b%d_image" % (b+1)])
+                   data = self.l1a_pix["/UncalibratedDN/b%d_image" % (b+1)].astype(np.uint16))
             t.attrs["Units"] = "dimensionless"
         g = fout.create_group("Time")
         t = g.create_dataset("line_start_time_j2000",

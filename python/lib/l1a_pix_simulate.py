@@ -40,7 +40,7 @@ class L1aPixSimulate(object):
         # Note we can change this to work with gain and offset if we want
         # to test this functionality. But for now we use the same DN that
         # the ASTER data is in, so no scaling is needed.
-        r = r.astype(np.uint16)
+        r = r.astype(np.int16)
         return r
 
     def create_file(self, l1a_pix_fname, pool = None):
