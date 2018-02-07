@@ -270,6 +270,16 @@ class L1aRawPixGenerate(object):
 
     bo = [5, 3, 2, 0, 1, 4]
 
+#  get orbit number
+
+    m=re.search('L0B_(.+?)_',self.l0b)
+    if m:
+      onum = m.group(1)
+      print("Orbit number from file name: %s" %onum )
+    else:
+      print("Could not find orbit number from L0B file name %s" %self.l0b)
+      return -1
+
 # open L0B file
     self.fin = h5py.File(self.l0b,"r", driver='core')
     bip=self.fin["flex/bip"]
@@ -333,6 +343,10 @@ class L1aRawPixGenerate(object):
     # iterate through scenes from scene start/stop file
     o_start_time = None
     for orbit, scene_id, sts, ste in self.process_scene_file():
+      orb = str( "%05d" %orbit )
+      if orb != onum:  # process only matching orbit numbers
+        print("Ignoring mismatch orbit number %s, ref=%s scene=%d" %(orb, onum, scene_id) )
+        continue
       print("====  ", datetime.now(), "  ====")
       print("SCENE=%03d START=%s(%f) END=%s(%f)" % ( scene_id, sts, sts.gps, ste, ste.gps) )
 
@@ -342,11 +356,12 @@ class L1aRawPixGenerate(object):
       ' search for packet containing scene start time '
       t0 = Time.time_gps( gpt[pkt_idx] )
       dt = float( int( (t0 - sts)*100000.0 + 0.5 ) )  # diff to 10 usec
+      pkt_idx += 1
       while dt < 0.0 and pkt_idx<tot_pkts:
         print("Search packet %d ID=%d GPS=%f STS=%f DT=%f" % ( pkt_idx, pid[pkt_idx], t0.gps, sts.gps, dt/100000.0 ) )
-        pkt_idx += 1
         t0 = Time.time_gps( gpt[pkt_idx] )
         dt = float( int( (t0 - sts)*100000.0 + 0.5 ) )
+        pkt_idx += 1
       ' end searching for packet matching scene start time '
       if pkt_idx >= tot_pkts:
         print("*** Could not find Scene %s time %s (%f) in file %s PKT=%d" % ( scene_id, str(sts), sts.gps, self.l0b, pkt_idx ) )
@@ -470,8 +485,8 @@ class L1aRawPixGenerate(object):
 
             e3 = op1 - op
             if seq==2 and op>op0 and op<=op1-FPPPKT:
-              #lid0 = e0; lid1 = e0+1  # correct time
-              lid0 = e0-1; lid1 = e0  # time code error
+              lid0 = e0; lid1 = e0+1  # correct time
+              #lid0 = e0-1; lid1 = e0  # time code error
               if e0 < tot_pkts - 1: dt = abs( gpt[lid1] - gpt[lid0] - PKT_DUR )
               else: dt = 0.0  # at last packet
               if dt > PKT_DURT:  # large time jump between PKTS
@@ -532,7 +547,8 @@ class L1aRawPixGenerate(object):
         if cont==0:
           if scans==0:  # restart scanning with new IDX
             scan = 0
-
+          if pkt_idx==tot_pkts-1:  # EOF
+             break  # break out of scan loop
         else:
           good[:] += gpix[:]
           pxet += SCAN_DUR
@@ -541,6 +557,8 @@ class L1aRawPixGenerate(object):
 
       # end scan loop
       print("Out of scan loop scan=%d scans=%s" %( scan, scans ))
+
+      if scans==0: continue  # skip rest of processing
 
       good_bb = good[0] + good[1]
       bb_cnt = scans*2*BBLEN
@@ -606,7 +624,10 @@ class L1aRawPixGenerate(object):
       # copy RTD temps to BB file
       p0 = np.argmax( bbtime >= rst )
       p1 = np.argmax( bbtime >= rse )
-      print("Copying RTD for SCENE %d P0=%d P1=%d %s" %(scene_id, p0, p1, str(datetime.now())))
+      if p1 <= p0:
+        p0 = 0
+        p1 = len( bbtime ) - 1
+      print("Copying RTD for SCENE %d P0=%d P1=%d RST=%f RSE=%f %s" %(scene_id, p0, p1, rst, rse, str(datetime.now())))
       print(" ")
       bt=l1a_rtg.create_dataset("time_j2000", shape=(p1-p0+1,), dtype='f8')
       r2=l1a_rtg.create_dataset("RTD_295K", shape=(p1-p0+1,5,), dtype='f4')
@@ -620,6 +641,10 @@ class L1aRawPixGenerate(object):
       l1a_fp.close()
       l1a_bp.close()
     ' end scene loop '
+
+    if len(scenes)==0:
+      print("****  No scenes generated  ****")
+      return -1
 
     ' Create refined scene file '
     sss = str( o_start_time )
