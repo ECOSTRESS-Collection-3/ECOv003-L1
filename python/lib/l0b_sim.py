@@ -278,13 +278,10 @@ class L0BSimulate(object):
         proc_lev_desc = 'Level 0B Data Parameters',
         pge_name="L0B",
         build_id="0.0", pge_version="0.0", level0_file=True )
-    a = self.l0b_fname.split('_')
-    b = a[2].split('T')
-    m.set("RangeBeginningDate", b[0])
-    m.set("RangeBeginningTime", b[1])
-    b = a[3].split('T')
-    m.set("RangeEndingDate", b[0])
-    m.set("RangeEndingTime", b[1])
+    m.set("RangeBeginningDate", l1e["/StandardMetadata/RangeBeginningDate"][()])
+    m.set("RangeBeginningTime", l1e["/StandardMetadata/RangeBeginningTime"][()])
+    m.set("RangeEndingDate", l1e["/StandardMetadata/RangeEndingDate"][()])
+    m.set("RangeEndingTime", l1e["/StandardMetadata/RangeEndingTime"][()])
     m.set("StartOrbitNumber", l1e["/StandardMetadata/StartOrbitNumber"][()])
     m.set("StopOrbitNumber", l1e["/StandardMetadata/StopOrbitNumber"][()])
     m.write()
