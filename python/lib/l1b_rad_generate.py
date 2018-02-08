@@ -28,13 +28,10 @@ class L1bRadGenerate(object):
     def image(self, band):
         '''Generate L1B_RAD image.
         
-        Right now, we just average and scale pixels. We currently use
-        one fixed scaling factor to go to radiance, this will be
-        replaced with the scaling from the black body data.
+        This applies the gains from L1A_PIX to scale to radiance data.
         
-        This does not do anything right now for band to band
-        registration, we just punt on this and assume the bands are
-        already registered (true of our test data).'''
+        We use a quadratic transformation to do band to band registration.
+        '''
 
         rad = EcostressRadApply(self.l1a_pix_fname, self.l1a_gain_fname, band)
         res = np.empty((int(rad.number_line/2), rad.number_sample))

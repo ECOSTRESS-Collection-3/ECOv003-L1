@@ -8,10 +8,10 @@ from multiprocessing import Pool
 # a subset of the files, using the existing test data instead. Here we
 # can just turn each thing on or off. To regenerate everything, this
 # should all be True
-create_l1a_pix = False
-create_l1a_bb = False
-create_l1a_raw_pix = False
-create_l1a_raw_att = False
+create_l1a_pix = True
+create_l1a_bb = True
+create_l1a_raw_pix = True
+create_l1a_raw_att = True
 create_l1a_eng = True
 create_l0b = True
 osp_dir= "../../ecostress-test-data/latest/l1_osp_dir"
@@ -49,7 +49,7 @@ if(not os.path.exists(aster_mosaic_dir)):
 # but is compressed there.
 sdata = [VicarLiteRasterImage(aster_mosaic_dir + "calnorm_b%d.img" % b, 1,
                               VicarLiteFile.READ, 1000, 1000)
-         for b in [14,14,12,11,10,4]]
+         for b in ecostress_to_aster_band()]
 
 orb = OrbitTimeShift(SpiceOrbit(SpiceOrbit.ISS_ID, "iss_spice/iss_2015.bsp"),
                      time_shift[pass_index])
