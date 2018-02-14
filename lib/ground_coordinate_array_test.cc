@@ -13,14 +13,16 @@ BOOST_AUTO_TEST_CASE(basic_test)
 {
   GroundCoordinateArray gca(igc);
   GroundCoordinateArray gca_hres(igc_hres);
-  blitz::Array<double, 3> res = gca.ground_coor_scan_arr(4, 20);
-  blitz::Array<double, 3> res_hres = gca_hres.ground_coor_scan_arr(4*2, 20*2);
+  blitz::Array<double, 5> res = gca.ground_coor_scan_arr(4, 20);
+  blitz::Array<double, 5> res_hres = gca_hres.ground_coor_scan_arr(4*2, 20*2);
   BOOST_CHECK_EQUAL(res.rows(), 20);
   BOOST_CHECK_EQUAL(res.cols(), 5400);
-  BOOST_CHECK_EQUAL(res.depth(), 3);
-  GeoCal::Geodetic pt(res(10-4,20,0),res(10-4,20,1),res(10-4,20,2));
-  GeoCal::Geodetic pt_hres(res_hres(20-8,20,0),res_hres(20-8,20,1),
-			   res_hres(20-8,20,2));
+  BOOST_CHECK_EQUAL(res.depth(), 1);
+  BOOST_CHECK_EQUAL(res.shape()[3], 1);
+  BOOST_CHECK_EQUAL(res.shape()[4], 3);
+  GeoCal::Geodetic pt(res(10-4,20,0,0,0),res(10-4,20,0,0,1),res(10-4,20,0,0,2));
+  GeoCal::Geodetic pt_hres(res_hres(20-8,20,0,0,0),res_hres(20-8,20,0,0,1),
+			   res_hres(20-8,20,0,0,2));
   BOOST_CHECK(distance(pt, *igc->ground_coordinate(GeoCal::ImageCoordinate(10, 20))) < 1.0);
   BOOST_CHECK(distance(pt_hres, *igc_hres->ground_coordinate(GeoCal::ImageCoordinate(20, 20))) < 1.0);
   BOOST_CHECK(distance(pt_hres, pt) < 1.0);
@@ -29,17 +31,19 @@ BOOST_AUTO_TEST_CASE(basic_test)
 BOOST_AUTO_TEST_CASE(projection_test)
 {
   // Don't normally run this, it takes a bit of time for a unit test
-  // (about 35 seconds on pistol)
-  //return;
-  GroundCoordinateArray gca(igc);
+  // (about 400 seconds on pistol)
+  return;
+  GroundCoordinateArray gca(igc, false, 2, 2);
   boost::shared_ptr<GeoCal::MemoryRasterImage> ras = gca.raster_cover();
   BOOST_CHECK_EQUAL(ras->number_line(), 7628);
   BOOST_CHECK_EQUAL(ras->number_sample(), 9598);
   for(int lstart = 0 ; lstart < igc->number_line();
-      lstart += igc->number_line_scan())
+      lstart += igc->number_line_scan()) {
+    std::cerr << "Starting line: " << lstart << "\n";
     gca.project_surface_scan_arr(*ras, lstart);
+  }
   GeoCal::GdalRasterImage::save("proj.img", "VICAR", *ras,
-  				GeoCal::GdalRasterImage::Int16);
+   				GeoCal::GdalRasterImage::Int16);
 }
 
 // BOOST_AUTO_TEST_CASE(projection_before_processing_test)
@@ -62,7 +66,7 @@ BOOST_AUTO_TEST_CASE(full_test)
   // (about 35 seconds on pistol)
   return;
   GroundCoordinateArray gca(igc);
-  blitz::Array<double, 3> res = gca.ground_coor_arr();
+  blitz::Array<double, 5> res = gca.ground_coor_arr();
 }
 
 BOOST_AUTO_TEST_CASE(serialization)

@@ -55,11 +55,11 @@ void SimulatedRadiance::init()
 blitz::Array<double, 2> SimulatedRadiance::radiance_scan
 (int Start_line, int Number_line) const
 {
-  blitz::Array<double, 3> gcarr = gca_->ground_coor_scan_arr(Start_line, Number_line);
+  blitz::Array<double, 5> gcarr = gca_->ground_coor_scan_arr(Start_line, Number_line);
   blitz::Array<double, 2> res(gcarr.rows(), gcarr.cols());
   for(int i = 0; i < gcarr.rows(); ++i)
     for(int j = 0; j < gcarr.cols(); ++j) {
-      GeoCal::Geodetic gc(gcarr(i,j,0),gcarr(i,j,1),gcarr(i,j,2));
+      GeoCal::Geodetic gc(gcarr(i,j,0,0,0),gcarr(i,j,0,0,1),gcarr(i,j,0,0,2));
       GeoCal::ImageCoordinate ic = img_avg_->coordinate(gc);
       if(ic.line < 0 || ic.line > img_avg_->number_line() - 1 ||
 	 ic.sample < 0 || ic.sample > img_avg_->number_sample() - 1)

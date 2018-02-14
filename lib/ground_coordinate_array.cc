@@ -1,6 +1,7 @@
 #include "ground_coordinate_array.h"
 #include "ecostress_serialize_support.h"
 #include "geocal/ostream_pad.h"
+#include "geocal/vicar_raster_image.h"
 
 using namespace Ecostress;
 
@@ -21,7 +22,8 @@ void GroundCoordinateArray::serialize(Archive & ar, const unsigned int version)
 {
   ECOSTRESS_GENERIC_BASE(GroundCoordinateArray);
   ar & GEOCAL_NVP_(igc)
-    & GEOCAL_NVP(include_angle);
+    & GEOCAL_NVP(include_angle) & GEOCAL_NVP(nsub_line)
+    & GEOCAL_NVP(nsub_sample);
   boost::serialization::split_member(ar, *this, version);
 }
 
@@ -37,14 +39,16 @@ void GroundCoordinateArray::init()
   if(!tt)
     throw GeoCal::Exception("GroundCoordinateArray only works with EcostressTimeTable");
   int nl = cam->number_line(b);
-  if(tt->averaging_done())
-    for(int i = 0; i < nl; ++i)
-      camera_slv.push_back(cam->sc_look_vector(GeoCal::FrameCoordinate(2*i, 0), b));
-  else
-    for(int i = 0; i < nl; ++i)
-      camera_slv.push_back(cam->sc_look_vector(GeoCal::FrameCoordinate(i, 0), b));
-  dist.resize((int) camera_slv.size());
-  res.resize((int) camera_slv.size(), igc_->number_sample(),
+  camera_slv.resize(nl, nsub_line, nsub_sample);
+  for(int i = 0; i < nl; ++i)
+    for(int j = 0; j < nsub_line; ++j)
+      for(int k = 0; k < nsub_sample; ++k)
+	if(tt->averaging_done())
+	  camera_slv(i,j,k) = cam->sc_look_vector(GeoCal::FrameCoordinate(2*(i + (double) j / nsub_line), (double) k / nsub_sample), b);
+	else
+	  camera_slv(i,j,k) = cam->sc_look_vector(GeoCal::FrameCoordinate(i + (double) j / nsub_line, (double) k / nsub_sample), b);
+  dist.resize(nl, nsub_line, nsub_sample);
+  res.resize(nl, igc_->number_sample(), nsub_line, nsub_sample,
 	     (include_angle ? 7 : 3));
 }
 
@@ -59,6 +63,25 @@ GroundCoordinateArray::raster_cover(double Resolution) const
   boost::shared_ptr<GeoCal::MemoryRasterImage> res =
     boost::make_shared<GeoCal::MemoryRasterImage>(cover(Resolution));
   res->data()(blitz::Range::all(), blitz::Range::all()) = 0;
+  return res;
+}
+
+//-------------------------------------------------------------------------
+/// Create a VicarLiteRasterImage that matches cover(), and fill it in
+/// with 0 fill data.
+//-------------------------------------------------------------------------
+
+boost::shared_ptr<GeoCal::VicarLiteRasterImage>
+GroundCoordinateArray::raster_cover_vicar(const std::string& Fname,
+					  double Resolution) const
+{
+  GeoCal::VicarRasterImage f(Fname, cover(Resolution), "HALF");
+  f.close();
+  boost::shared_ptr<GeoCal::VicarLiteRasterImage> res =
+    boost::make_shared<GeoCal::VicarLiteRasterImage>(Fname, 1, GeoCal::VicarLiteFile::UPDATE);
+  for(int i = 0; i < res->number_line(); ++i)
+    for(int j = 0; j < res->number_sample(); ++j)
+      res->write(i, j, 0);
   return res;
 }
 
@@ -84,10 +107,43 @@ GeoCal::MapInfo GroundCoordinateArray::cover(double Resolution) const
 }
 
 //-------------------------------------------------------------------------
+/// Create a MemoryRasterImage that matches cover(), and fill it in
+/// with 0 fill data. Then project all the data to the surface.
+///
+/// We fill in Ras with whatever the last encountered value is, i.e. we
+/// make no attempt to average data. We could implement averaging if
+/// needed, but for right now we just put in the value.
+//-------------------------------------------------------------------------
+
+boost::shared_ptr<GeoCal::MemoryRasterImage>
+GroundCoordinateArray::project_surface(double Resolution) const
+{
+  boost::shared_ptr<GeoCal::MemoryRasterImage> res = raster_cover(Resolution);
+  for(int i = 0; i < tt->number_scan(); ++i) {
+    int lstart, lend;
+    tt->scan_index_to_line(i, lstart, lend);
+    // std::cerr << "Doing " << lstart << " to " << lend << "\n";
+    project_surface_scan_arr(*res, lstart, lend-lstart);
+  }
+  return res;
+}
+
+
+//-------------------------------------------------------------------------
 /// This projects the Igc to the surface for a single scan array. We
 /// fill in Ras with whatever the last encountered value is, i.e. we
 /// make no attempt to average data. We could implement averaging if
 /// needed, but for right now we just put in the value.
+///
+/// Note a serious advantage to "just overwrite value" is that we can
+/// use a memory mapped VicarLiteRasterImage and run
+/// project_surface_scan_arr in parallel through python with no
+/// special coordination. If two processes write to the same location,
+/// we just get whichever one happened to write last. This does mean
+/// that our data is non-deterministic, but that doesn't matter if we
+/// are just using the data to do image matching. If it does matter
+/// for your application, then don't run project_surface_scan_arr in
+/// parallel. 
 ///
 /// We do nothing with points that we don't see, so if for example you
 /// want a fill value you should make sure to fill in Data before
@@ -97,20 +153,23 @@ GeoCal::MapInfo GroundCoordinateArray::cover(double Resolution) const
 void GroundCoordinateArray::project_surface_scan_arr
 (GeoCal::RasterImage& Data, int Start_line, int Number_line) const
 {
-  blitz::Array<double,3> gp = ground_coor_scan_arr(Start_line, Number_line);
+  blitz::Array<double,5> gp = ground_coor_scan_arr(Start_line, Number_line);
   for(int i = 0; i < gp.rows(); ++i)
-    for(int j = 0; j < gp.cols(); ++j) {
-      GeoCal::ImageCoordinate ic = Data.coordinate(GeoCal::Geodetic(gp(i,j,0),
-								    gp(i,j,1)));
-      int ln = (int) floor(ic.line + 0.5);
-      int smp = (int) floor(ic.sample + 0.5);
-      if(ln >= 0 && ln < Data.number_line() && smp >= 0 &&
-	 smp < Data.number_sample() && Start_line + i < igc_->number_line()) {
-	int val = igc_->image()->read(Start_line + i, j);
-	if(val > -9998)
-	  Data.write(ln, smp, val);
-      }
-    }
+    for(int j = 0; j < gp.cols(); ++j) 
+      for(int k = 0; k < gp.depth(); ++k) 
+	for(int l = 0; l < gp.shape()[3]; ++l) {
+	  GeoCal::ImageCoordinate ic =
+	    Data.coordinate(GeoCal::Geodetic(gp(i,j,k,l,0), gp(i,j,k,l,1)));
+	  int ln = (int) floor(ic.line + 0.5);
+	  int smp = (int) floor(ic.sample + 0.5);
+	  if(ln >= 0 && ln < Data.number_line() && smp >= 0 &&
+	     smp < Data.number_sample() &&
+	     Start_line + i < igc_->number_line()) {
+	    int val = igc_->image()->read(Start_line + i, j);
+	    if(val > -9998)
+	      Data.write(ln, smp, val);
+	  }
+	}
 }
 
 //-------------------------------------------------------------------------
@@ -135,25 +194,30 @@ blitz::Array<double, 2> GroundCoordinateArray::interpolate
 }
 //-------------------------------------------------------------------------
 /// This returns the ground coordinates for every pixel in the
-/// ImageGroundConnection as a number_line x number_sample x 3 array,
+/// ImageGroundConnection as a number_line x number_sample x nsub_line
+/// x nsub_sample x 3 array,
 /// with the coordinates as latitude, longitude, height. These are the
 /// same values that you would get from just repeatedly calling
 /// igc()->ground_coordinate(ic), but we take advantage of the special
 /// form of the Ecostress scan to speed up this calculation a lot.
 ///
 /// If include_angle was specified in the construtor, we return a
-/// number_line x number_sample x 7 array with coordinates as
+/// number_line x number_sample x nsub_line x nsub_sample x 7
+/// array with coordinates as
 /// latitude, longitude, height, view_zenith, view_azimuth,
 /// solar_zenith, solar_azimuth.
 //-------------------------------------------------------------------------
 
-blitz::Array<double,3> GroundCoordinateArray::ground_coor_arr() const
+blitz::Array<double,5> GroundCoordinateArray::ground_coor_arr() const
 {
-  blitz::Array<double, 3> r(igc_->number_line(), igc_->number_sample(), 3);
+  blitz::Array<double, 5> r(igc_->number_line(), igc_->number_sample(),
+			    nsub_line, nsub_sample,
+			    (include_angle ? 7 : 3));
   for(int i = 0; i < tt->number_scan(); ++i) {
     int lstart, lend;
     tt->scan_index_to_line(i, lstart, lend);
-    r(blitz::Range(lstart, lend-1), blitz::Range::all(), blitz::Range::all()) =
+    r(blitz::Range(lstart, lend-1), blitz::Range::all(), blitz::Range::all(),
+      blitz::Range::all(), blitz::Range::all()) =
       ground_coor_scan_arr(lstart, lend-lstart);
   }
   return res;
@@ -161,7 +225,8 @@ blitz::Array<double,3> GroundCoordinateArray::ground_coor_arr() const
 
 //-------------------------------------------------------------------------
 /// This return the ground coordinates as a number_line x
-/// number_sample x 3 array, with the coordinates as latitude,
+/// number_sample x nsub_line x nsub_sample x 3 array, with
+/// the coordinates as latitude,
 /// longitude, and height. You don't normally call this function,
 /// instead you likely want ground_coor_arr. We have this function
 /// exposed to aid with testing - it is quicker to call this for a
@@ -170,12 +235,13 @@ blitz::Array<double,3> GroundCoordinateArray::ground_coor_arr() const
 /// ground_coor_arr separately if desired.
 ///
 /// If include_angle was specified in the construtor, we return a
-/// number_line x number_sample x 7 array with coordinates as
+/// number_line x number_sample x nsub_line x nsub_sample x 7
+/// array with coordinates as
 /// latitude, longitude, height, view_zenith, view_azimuth,
 /// solar_zenith, solar_azimuth.
 //-------------------------------------------------------------------------
 
-blitz::Array<double,3>
+blitz::Array<double,5>
 GroundCoordinateArray::ground_coor_scan_arr
 (int Start_line, int Number_line) const
 {
@@ -192,13 +258,15 @@ GroundCoordinateArray::ground_coor_scan_arr
   else
     el = std::min(sl + Number_line, (int) tt->number_line_scan());
   ground_coor_arr_samp(Start_line, ms, true);
-  blitz::Array<double, 1> dist_middle(dist.copy());
+  blitz::Array<double, 3> dist_middle(dist.copy());
   for(int smp = ms + 1; smp < igc_->number_sample(); ++smp)
     ground_coor_arr_samp(Start_line, smp);
   dist = dist_middle;
   for(int smp = ms - 1; smp >= 0; --smp)
     ground_coor_arr_samp(Start_line, smp);
-  return blitz::Array<double, 3>(res(blitz::Range(sl, el-1),
+  return blitz::Array<double, 5>(res(blitz::Range(sl, el-1),
+				     blitz::Range::all(),
+				     blitz::Range::all(),
 				     blitz::Range::all(),
 				     blitz::Range::all()));
 }
@@ -216,39 +284,45 @@ void GroundCoordinateArray::ground_coor_arr_samp(int Start_line, int Sample,
   CartesianFixedLookVector slv;
   if(include_angle)
     slv = CartesianFixedLookVector::solar_look_vector(t);
-  for(int i = sl; i < el; ++i) {
-    CartesianFixedLookVector lv = od->cf_look_vector(camera_slv[i]);
-    boost::shared_ptr<CartesianFixed> pt;
-    if(Initial_samp)
-      pt = igc_->dem().intersect(*cf, lv, igc_->resolution(), igc_->max_height());
-    else {
-      double start_dist = dist(i);
-      if(i - 1 >= sl)
-	start_dist = std::min(start_dist, dist(i-1));
-      if(i + 1 < el)
-	start_dist = std::min(start_dist, dist(i+1));
-      pt = igc_->dem().intersect_start_length(*cf, lv, igc_->resolution(),
-					     start_dist);
-    }
-    pt->lat_lon_height(res(i, Sample, 0), res(i, Sample, 1), res(i, Sample, 2));
-    dist(i) = sqrt(sqr(pt->position[0] - cf->position[0]) +
-		   sqr(pt->position[1] - cf->position[1]) +
-		   sqr(pt->position[2] - cf->position[2]));
-    if(include_angle) {
-      LnLookVector vln(CartesianFixedLookVector(*pt,*cf),*pt);
-      res(i,Sample,3) = vln.view_zenith();
-      res(i,Sample, 4) = vln.view_azimuth();
-      LnLookVector sln(slv, *pt);
-      res(i,Sample,5) = sln.view_zenith();
-      res(i,Sample, 6) = sln.view_azimuth();
-    }
-  }
+  for(int i = sl; i < el; ++i) 
+    for(int j = 0; j < nsub_line; ++j)
+      for(int k = 0; k < nsub_sample; ++k) {
+	CartesianFixedLookVector lv = od->cf_look_vector(camera_slv(i, j, k));
+	boost::shared_ptr<CartesianFixed> pt;
+	if(Initial_samp)
+	  pt = igc_->dem().intersect(*cf, lv, igc_->resolution(),
+				     igc_->max_height());
+	else {
+	  double start_dist = dist(i, j, k);
+	  if(i - 1 >= sl)
+	    start_dist = std::min(start_dist, dist(i-1, j, k));
+	  if(i + 1 < el)
+	    start_dist = std::min(start_dist, dist(i+1, j, k));
+	  pt = igc_->dem().intersect_start_length(*cf, lv, igc_->resolution(),
+						  start_dist);
+	}
+	pt->lat_lon_height(res(i, Sample, j, k, 0), res(i, Sample, j, k, 1),
+			   res(i, Sample, j, k, 2));
+	dist(i, j, k) = sqrt(sqr(pt->position[0] - cf->position[0]) +
+			     sqr(pt->position[1] - cf->position[1]) +
+			     sqr(pt->position[2] - cf->position[2]));
+	if(include_angle) {
+	  LnLookVector vln(CartesianFixedLookVector(*pt,*cf),*pt);
+	  res(i,Sample,j, k, 3) = vln.view_zenith();
+	  res(i,Sample,j, k, 4) = vln.view_azimuth();
+	  LnLookVector sln(slv, *pt);
+	  res(i,Sample,j, k, 5) = sln.view_zenith();
+	  res(i,Sample,j, k, 6) = sln.view_azimuth();
+	}
+      }
 }
 
 void GroundCoordinateArray::print(std::ostream& Os) const
 {
   GeoCal::OstreamPad opad(Os, "    ");
-  Os << "GroundCoordinateArray:\n";
+  Os << "GroundCoordinateArray:\n"
+     << "  Nsub_line: " << nsub_line << "\n"
+     << "  Nsub_sample: " << nsub_sample << "\n";
   Os << "  Igc:\n";
   opad << *igc_;
   opad.strict_sync();

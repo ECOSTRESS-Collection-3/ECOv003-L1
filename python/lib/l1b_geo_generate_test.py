@@ -2,7 +2,6 @@ from .l1b_geo_generate import *
 from test_support import *
 from multiprocessing import Pool
 
-
 def test_l1b_geo_generate(isolated_dir, igc, lwm):
     # Only do 100 lines so this runs quickly as a test
     if(False):

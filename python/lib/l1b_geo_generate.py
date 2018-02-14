@@ -52,13 +52,13 @@ class L1bGeoGenerate(object):
             print("Done with [%d, %d]" % (start_line, start_line+res.shape[0]),
                   file = self.log)
             self.log.flush()
-        lat = res[:,:,0]
-        lon = res[:,:,1]
-        height = res[:,:,2]
-        vzenith = res[:,:,3]
-        vazimuth = res[:,:,4]
-        szenith = res[:,:,5]
-        sazimuth = res[:,:,6]
+        lat = res[:,:,0,0,0]
+        lon = res[:,:,0,0,1]
+        height = res[:,:,0,0,2]
+        vzenith = res[:,:,0,0,3]
+        vazimuth = res[:,:,0,0,4]
+        szenith = res[:,:,0,0,5]
+        sazimuth = res[:,:,0,0,6]
         lfrac = GroundCoordinateArray.interpolate(self.lwm, lat, lon) * 100.0
         tlinestart = np.array([self.igc.pixel_time(ImageCoordinate(ln, 0)).j2000 for ln in range(start_line, start_line+res.shape[0])])
         return lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac, tlinestart

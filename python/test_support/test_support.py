@@ -4,7 +4,7 @@ import os
 from geocal import makedirs_p, read_shelve, Ipi, SrtmDem, \
     IpiImageGroundConnection, SrtmLwmData, HdfOrbit_Eci_TimeJ2000, \
     MeasuredTimeTable, Time, ImageCoordinate, VicarLiteRasterImage, \
-    VicarLiteFile, Vector_Time
+    VicarLiteFile, Vector_Time, GdalRasterImage
 import h5py
 try:
     from ecostress_swig import *
@@ -139,6 +139,14 @@ def igc(unit_test_data, test_data):
     igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
     yield igc
 
+@pytest.yield_fixture(scope="function")
+def igc_with_img(igc, test_data):
+    '''Like igc, but also with raster image included'''
+    igcwimg = igc
+    rad_fname = test_data + "ECOSTRESS_L1B_RAD_80005_001_20150124T204250_0100_01.h5.expected"
+    igcwimg.image = GdalRasterImage('HDF5:"%s"://SWIR/swir_dn' % rad_fname)
+    yield igcwimg
+    
 @pytest.yield_fixture(scope="function")
 def dn_fname(unit_test_data, test_data):
     yield test_data + "ECOSTRESS_L1A_PIX_80005_001_20150124T204250_0100_02.h5.expected"

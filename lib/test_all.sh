@@ -19,6 +19,8 @@ if [ ${valgrind} ] ; then
     tool_command="valgrind --max-stackframe=5000000 --error-exitcode=1 --track-origins=yes --suppressions=$(dirname $0)/../config/valgrind.suppressions"
 elif [ ${gdb} ]; then
     tool_command="gdb --args"
+elif [ ${profile} ]; then
+    tool_command="valgrind --tool=callgrind"
 else
     tool_command=""
 fi
