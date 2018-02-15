@@ -15,6 +15,7 @@ from ecostress_version import *
 version = "1.0"
 usage='''Usage:
   l1a_cal_process [options] <run_config>
+  l1a_cal_process [options] <l1a_bb> <l1a_raw_pix> <osp_dir> <prod_dir>
   l1a_cal_process -h | --help
   l1a_cal_process -v | --version
 
@@ -41,13 +42,21 @@ if(False):
     time.sleep(20)
 
 # Explicitly list input file
-config = RunConfig(args.run_config)
-
-l1a_bb = os.path.abspath(config["InputFileGroup", "L1A_BB"])
-l1a_raw_pix = os.path.abspath(config["InputFileGroup", "L1A_RAW_PIX"])
-l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
-dirname = config["ProductPathGroup", "ProductPath"]
-file_version = config["ProductPathGroup", "ProductCounter"]
+if(args.run_config):
+    config = RunConfig(args.run_config)
+    l1a_bb = os.path.abspath(config["InputFileGroup", "L1A_BB"])
+    l1a_raw_pix = os.path.abspath(config["InputFileGroup", "L1A_RAW_PIX"])
+    l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
+    dirname = config["ProductPathGroup", "ProductPath"]
+    file_version = config["ProductPathGroup", "ProductCounter"]
+else:
+    config = None
+    l1a_bb = os.path.abspath(args.l1a_bb)
+    l1a_raw_pix = os.path.abspath(args.l1a_raw_pix)
+    l1_osp_dir = os.path.abspath(args.osp_dir)
+    dirname = os.path.abspath(args.prod_dir)
+    file_version = "01"
+    
 quiet = not args.verbose
 
 makedirs_p(dirname)

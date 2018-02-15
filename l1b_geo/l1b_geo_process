@@ -15,6 +15,7 @@ from ecostress_version import *
 version = "1.0"
 usage='''Usage:
   l1b_geo_process [options] <run_config>
+  l1b_geo_process [options] <l1a_raw_att> <osp_dir> <prod_dir> <l1b_rad>...
   l1b_geo_process -h | --help
   l1b_geo_process -v | --version
 
@@ -41,22 +42,39 @@ if(False):
     import time
     time.sleep(20)
 
-config = RunConfig(args.run_config)
-
-l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
-ncpu = int(config["Process", "NumberCpu"])
-
+if(args.run_config):
+    config = RunConfig(args.run_config)
+    l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
+    ncpu = int(config["Process", "NumberCpu"])
+    orb = create_orbit_raw(config)
+    dem = create_dem(config)
+    lwm = create_lwm(config)
+    ortho_base = create_ortho_base(config)
+    radlist = config.as_list("InputFileGroup", "L1B_RAD")
+    radlist = [os.path.abspath(f) for f in radlist]
+    dirname = config["ProductPathGroup", "ProductPath"]
+    file_version = config["ProductPathGroup", "ProductCounter"]
+    orbfname = os.path.abspath(config["TimeBasedFileGroup", "L1A_RAW_ATT"])
+else:
+    config = None
+    l1_osp_dir = os.path.abspath(args.osp_dir)
+    ncpu = 10
+    dirname = os.path.abspath(args.prod_dir)
+    file_version = "01"
+    orbfname = os.path.abspath(args.l1a_raw_att)
+    orb = HdfOrbit_Eci_TimeJ2000(orbfname, "", "Ephemeris/time_j2000",
+                                 "Ephemeris/eci_position",
+                                 "Ephemeris/eci_velocity",
+                                 "Attitude/time_j2000",
+                                 "Attitude/quaternion")
+    dem = SrtmDem(os.environ["ELEV_ROOT"],False,
+                  DatumGeoid96(os.environ["AFIDS_VDEV_DATA"] +
+                               "/EGM96_20_x100.HLF"))
+    lwm = SrtmLwmData("/raid27/tllogan/all_lwm_links", False)
+    ortho_base_fname = "/raid22/band62_VICAR"
+    radlist = [os.path.abspath(f) for f in args.l1b_rad]
+    
 cam = read_shelve(l1_osp_dir + "/camera.xml")
-orb = create_orbit_raw(config)
-dem = create_dem(config)
-lwm = create_lwm(config)
-ortho_base = create_ortho_base(config)
-
-radlist = config.as_list("InputFileGroup", "L1B_RAD")
-radlist = [os.path.abspath(f) for f in radlist]
-dirname = config["ProductPathGroup", "ProductPath"]
-file_version = config["ProductPathGroup", "ProductCounter"]
-orbfname = os.path.abspath(config["TimeBasedFileGroup", "L1A_RAW_ATT"])
 
 makedirs_p(dirname)
 os.chdir(dirname)
@@ -107,7 +125,8 @@ try:
         shutil.copyfile(orbfname, ofile2[i])
         f = h5py.File(ofile2[i], "r+")
         m = WriteStandardMetadata(f)
-        m.process_run_config_metadata(config)
+        if(config is not None):
+            m.process_run_config_metadata(config)
         m.write()
 
     log = open(log_fname, "a")

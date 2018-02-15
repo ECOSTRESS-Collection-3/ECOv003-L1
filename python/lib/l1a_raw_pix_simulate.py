@@ -23,8 +23,10 @@ class L1aRawPixSimulate(object):
                              data = self.l1a_pix["Time/line_start_time_j2000"])
         t.attrs["Description"] = "J2000 time of first pixel in line"
         t.attrs["Units"] = "second"
-        # Not actually used for anything yet, but we need a value here
-        enc_value = np.zeros(self.l1a_pix["Time/line_start_time_j2000"].shape,
+        # Not actually used for anything yet, but we need a value here.
+        # We have a fixed value here, I think that is ok because the real
+        # l1a_raw_pix_generate.py pads data to this size
+        enc_value = np.zeros((44, 5400),
                              dtype = np.int32)
         g = fout.create_group("FPIEencoder")
         t = g.create_dataset("EncoderValue", data=enc_value)

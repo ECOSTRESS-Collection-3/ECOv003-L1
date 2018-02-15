@@ -15,6 +15,7 @@ from ecostress_version import *
 version = "1.0"
 usage='''Usage:
   l1b_rad_process [options] <run_config>
+  l1b_rad_process [options] <l1a_pix> <l1a_gain> <l1a_raw_att> <osp_dir> <prod_dir>
   l1b_rad_process -h | --help
   l1b_rad_process -v | --version
 
@@ -38,17 +39,34 @@ if(False):
     time.sleep(20)
 
 # Explicitly list input file
-config = RunConfig(args.run_config)
-
-l1a_pix = os.path.abspath(config["InputFileGroup", "L1A_PIX"])
-l1a_gain = os.path.abspath(config["InputFileGroup", "L1A_RAD_GAIN"])
-l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
-dirname = config["ProductPathGroup", "ProductPath"]
-file_version = config["ProductPathGroup", "ProductCounter"]
+if(args.run_config):
+    config = RunConfig(args.run_config)
+    l1a_pix = os.path.abspath(config["InputFileGroup", "L1A_PIX"])
+    l1a_gain = os.path.abspath(config["InputFileGroup", "L1A_RAD_GAIN"])
+    l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
+    dirname = config["ProductPathGroup", "ProductPath"]
+    file_version = config["ProductPathGroup", "ProductCounter"]
+    orb = create_orbit_raw(config)
+    dem = create_dem(config)
+else:
+    config = None
+    l1a_pix = os.path.abspath(args.l1a_pix)
+    l1a_gain = os.path.abspath(args.l1a_gain)
+    l1_osp_dir = os.path.abspath(args.osp_dir)
+    dirname = os.path.abspath(args.prod_dir)
+    file_version = "01"
+    orbfname = os.path.abspath(args.l1a_raw_att)
+    orb = HdfOrbit_Eci_TimeJ2000(orbfname, "", "Ephemeris/time_j2000",
+                                 "Ephemeris/eci_position",
+                                 "Ephemeris/eci_velocity",
+                                 "Attitude/time_j2000",
+                                 "Attitude/quaternion")
+    dem = SrtmDem(os.environ["ELEV_ROOT"],False,
+                  DatumGeoid96(os.environ["AFIDS_VDEV_DATA"] +
+                               "/EGM96_20_x100.HLF"))
+    
 
 cam = read_shelve(l1_osp_dir + "/camera.xml")
-orb = create_orbit_raw(config)
-dem = create_dem(config)
 tt = create_time_table(l1a_pix)
 sm = create_scan_mirror()
 igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
