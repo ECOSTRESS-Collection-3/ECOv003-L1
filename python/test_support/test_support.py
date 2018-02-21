@@ -189,3 +189,8 @@ slow = pytest.mark.skipif(
     not pytest.config.getoption("--run-slow"),
     reason="need --run-slow option to run"
 )
+
+# Short hand for marking as unconditional skipping. Good for tests we
+# don't normally run, but might want to comment out for a specific debugging
+# reason.
+skip = pytest.mark.skip
