@@ -25,6 +25,11 @@ Options:
   -h --help         
        Print this message
 
+  --number-cpu=d
+       Number of CPUs to use when processing. Ignored if we are using a 
+       run_config file, this is instead passed through the config file.
+       [default: 10]
+
   --number-line=d
        Number of lines to process. Normally you process the whole scene, but
        can be useful for testing to process only a subset. [default: -1]
@@ -58,7 +63,7 @@ if(args.run_config):
 else:
     config = None
     l1_osp_dir = os.path.abspath(args.osp_dir)
-    ncpu = 10
+    ncpu = args.number_cpu
     dirname = os.path.abspath(args.prod_dir)
     file_version = "01"
     orbfname = os.path.abspath(args.l1a_raw_att)
