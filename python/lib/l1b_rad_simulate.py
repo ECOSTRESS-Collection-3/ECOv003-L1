@@ -1,4 +1,4 @@
-from geocal import *
+import geocal
 import pickle
 from .pickle_method import *
 from multiprocessing import Pool
@@ -41,7 +41,7 @@ class L1bRadSimulate(object):
         if(self.dem is None):
             # False here says we use a height of 0 for missing tiles, useful
             # for data that is partially over the ocean
-            self.dem = SrtmDem("", False)
+            self.dem = geocal.SrtmDem("", False)
 
     def create_file(self, l1b_rad_fname, pool = None):
         fout = h5py.File(l1b_rad_fname, "w")
@@ -98,10 +98,10 @@ class L1bRadSimulate(object):
         print("Doing band %d" % (band + 1))
         if(camera_band is None):
             camera_band = band
-        ipi = Ipi(self.orbit, self.camera, camera_band, self.time_table.min_time,
+        ipi = geocal.Ipi(self.orbit, self.camera, camera_band, self.time_table.min_time,
                   self.time_table.max_time, self.time_table)
-        igc = IpiImageGroundConnection(ipi, self.dem, None)
-        self.igc_ray_cast = IgcSimulatedRayCaster(igc, self.surface_image[band],
+        igc = geocal.IpiImageGroundConnection(ipi, self.dem, None)
+        self.igc_ray_cast = geocal.IgcSimulatedRayCaster(igc, self.surface_image[band],
                                                   self.number_integration_step,
                                                   self.raycast_resolution)
         if(pool is None):
@@ -117,3 +117,4 @@ class L1bRadSimulate(object):
         return r
 
         
+__all__ = ["L1bRadSimulate"] 

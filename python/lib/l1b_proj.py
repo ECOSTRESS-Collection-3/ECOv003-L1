@@ -1,4 +1,3 @@
-from geocal import *
 from ecostress_swig import *
 import pickle
 from .pickle_method import *
@@ -38,3 +37,4 @@ class L1bProj(object):
             
         
         
+__all__ = ["L1bProj"]

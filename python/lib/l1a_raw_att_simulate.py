@@ -56,8 +56,4 @@ class L1aRawAttSimulate(object):
         m.write()
         fout.close()
 
-
-
-
-
-
+__all__ = ["L1aRawAttSimulate"]

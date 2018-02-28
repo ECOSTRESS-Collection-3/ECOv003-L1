@@ -1,4 +1,4 @@
-from geocal import *
+import geocal
 import h5py
 import shutil
 from .write_standard_metadata import WriteStandardMetadata
@@ -6,6 +6,7 @@ from .misc import process_run
 from .exception import VicarRunException
 import re
 import os
+import subprocess
 
 class L1aPixGenerate(object):
     '''This generates a L1A pix file from the given L1A_BB and L1A_RAW
@@ -79,30 +80,30 @@ class L1aPixGenerate(object):
         g = fout.create_group("UncalibratedDN")
         for b in range(1, 7):
             t = g.create_dataset("b%d_image" % b,
-                  data=mmap_file("%s/UncalibratedDN/b%d_image.hlf" %
+                  data=geocal.mmap_file("%s/UncalibratedDN/b%d_image.hlf" %
                                  (dirname, b)))
             t.attrs["Units"] = "dimensionless"
         g = fout.create_group("BlackbodyTemp")
         for temp in (325, 295):
             t = g.create_dataset("fpa_%d" % temp,
-                  data=mmap_file("%s/BlackbodyTemp/fpa_%d.rel" %
+                  data=geocal.mmap_file("%s/BlackbodyTemp/fpa_%d.rel" %
                                  (dirname, temp)))
             t.attrs["Units"] = "K"
         g = fout.create_group("BlackbodyRadiance")
         for b in range(1, 7):
             for temp in (325, 295):
                 t = g.create_dataset("b%d_%d" % (b, temp),
-                  data=mmap_file("%s/BlackbodyRadiance/b%d_%d.rel" %
+                  data=geocal.mmap_file("%s/BlackbodyRadiance/b%d_%d.rel" %
                                  (dirname, b, temp)))
                 t.attrs["Units"] = "W/m^2/sr/um"
         g = fout_gain.create_group("Gain")
         g2 = fout_gain.create_group("Offset")
         for b in range(1, 6):
             t = g.create_dataset("b%d_gain" % b,
-                  data=mmap_file("%s/ImgRadiance/b%d_gain.rel" % (dirname, b+1)))
+                  data=geocal.mmap_file("%s/ImgRadiance/b%d_gain.rel" % (dirname, b+1)))
             t.attrs["Units"] = "W/m^2/sr/um"
             t = g2.create_dataset("b%d_offset" % b,
-                  data=mmap_file("%s/ImgRadiance/b%d_offset.rel" %
+                  data=geocal.mmap_file("%s/ImgRadiance/b%d_offset.rel" %
                                  (dirname,b+1)))
             t.attrs["Units"] = "W/m^2/sr/um"
         # Copy over metadata
@@ -145,3 +146,5 @@ class L1aPixGenerate(object):
               fin["/StandardMetadata/RangeEndingTime"][()])
         m.write()
         m2.write()
+
+__all__ = ["L1aPixGenerate"]

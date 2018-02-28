@@ -42,9 +42,4 @@ class L1aRawPixSimulate(object):
         self.m.write()
         fout.close()
 
-
-
-
-
-
-
+__all__ = ["L1aRawPixSimulate"]

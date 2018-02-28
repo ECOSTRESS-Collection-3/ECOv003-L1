@@ -1,9 +1,10 @@
-from geocal import *
+import geocal
 from ecostress_swig import *
 import h5py
 import shutil
 from .write_standard_metadata import WriteStandardMetadata
 from .misc import ecostress_radiance_scale_factor
+import numpy as np
 
 class L1bRadGenerate(object):
     '''This generates a L1B rad file from the given L1A_PIX file.'''
@@ -40,16 +41,16 @@ class L1bRadGenerate(object):
             print("Doing scan_index %d for band %d" % (scan_index, band),
                   file=self.log)
             tplist = band_to_band_tie_points(self.igc, scan_index, band)
-            m = QuadraticGeometricModel()
+            m = geocal.QuadraticGeometricModel()
             m.fit_transformation(tplist)
             sline = scan_index * self.igc.number_line_scan
             nlinescan = self.igc.number_line_scan
-            radsub = SubRasterImage(rad, sline, 0, nlinescan,
+            radsub = geocal.SubRasterImage(rad, sline, 0, nlinescan,
                                     rad.number_sample)
             fill_value = -9999
-            rbreg = GeometricModelImage(radsub, m, radsub.number_line,
+            rbreg = geocal.GeometricModelImage(radsub, m, radsub.number_line,
                                         radsub.number_sample, fill_value,
-                                        GeometricModelImage.NEAREST_NEIGHBOR)
+                                        geocal.GeometricModelImage.NEAREST_NEIGHBOR)
             rbreg_avg = EcostressRadAverage(rbreg)
             res[int(sline/2):int((sline+nlinescan)/2),:] = rbreg_avg.read_all_double()
         return res
@@ -91,3 +92,5 @@ class L1bRadGenerate(object):
         m.set("RangeEndingTime",
               self.l1a_pix["/StandardMetadata/RangeEndingTime"][()])
         m.write()
+
+__all__ = ["L1bRadGenerate"]        

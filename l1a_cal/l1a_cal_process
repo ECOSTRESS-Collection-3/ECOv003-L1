@@ -2,8 +2,8 @@
 #
 # This runs the L1A Cal process.
 
-from geocal import *
-from ecostress import *
+import geocal
+import ecostress
 import os
 import re
 
@@ -32,7 +32,7 @@ Options:
        Print program version
 '''
 
-args = docopt_simple(usage, version=version)
+args = geocal.docopt_simple(usage, version=version)
 
 # Can use this to wait a short time so we can attach strace to this
 # process, useful to find all the files that we are accessing.
@@ -43,7 +43,7 @@ if(False):
 
 # Explicitly list input file
 if(args.run_config):
-    config = RunConfig(args.run_config)
+    config = ecostress.RunConfig(args.run_config)
     l1a_bb = os.path.abspath(config["InputFileGroup", "L1A_BB"])
     l1a_raw_pix = os.path.abspath(config["InputFileGroup", "L1A_RAW_PIX"])
     l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
@@ -59,13 +59,13 @@ else:
     
 quiet = not args.verbose
 
-makedirs_p(dirname)
+geocal.makedirs_p(dirname)
 os.chdir(dirname)
 
-orbit, scene, acquisition_time = orbit_from_metadata(l1a_raw_pix)
-ofile = ecostress_file_name("L1A_PIX", orbit, scene, acquisition_time,
+orbit, scene, acquisition_time = ecostress.orbit_from_metadata(l1a_raw_pix)
+ofile = ecostress.ecostress_file_name("L1A_PIX", orbit, scene, acquisition_time,
                             build = build_version, version = file_version)
-ofile_gain = ecostress_file_name("L1A_RAD_GAIN", orbit, scene,
+ofile_gain = ecostress.ecostress_file_name("L1A_RAD_GAIN", orbit, scene,
                                  acquisition_time,
                                  build = build_version, version = file_version,
                                  intermediate = True)
@@ -73,7 +73,7 @@ log_fname = os.path.splitext(ofile)[0] + ".log"
 log = open(log_fname, "w")
 try:
 # Generate output
-    l1apix = L1aPixGenerate(l1a_bb, l1a_raw_pix, l1_osp_dir,
+    l1apix = ecostress.L1aPixGenerate(l1a_bb, l1a_raw_pix, l1_osp_dir,
                             ofile, ofile_gain,
                             log=log, quiet=quiet, run_config=config,
                             build_id=build_id,

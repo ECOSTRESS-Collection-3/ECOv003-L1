@@ -2,8 +2,8 @@
 #
 # This runs the L1B Rad process.
 
-from geocal import *
-from ecostress import *
+import geocal
+import ecostress
 import os
 import re
 
@@ -29,7 +29,7 @@ Options:
        Print program version
 '''
 
-args = docopt_simple(usage, version=version)
+args = geocal.docopt_simple(usage, version=version)
 
 # Can use this to wait a short time so we can attach strace to this
 # process, useful to find all the files that we are accessing.
@@ -40,14 +40,14 @@ if(False):
 
 # Explicitly list input file
 if(args.run_config):
-    config = RunConfig(args.run_config)
+    config = ecostress.RunConfig(args.run_config)
     l1a_pix = os.path.abspath(config["InputFileGroup", "L1A_PIX"])
     l1a_gain = os.path.abspath(config["InputFileGroup", "L1A_RAD_GAIN"])
     l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
     dirname = config["ProductPathGroup", "ProductPath"]
     file_version = config["ProductPathGroup", "ProductCounter"]
-    orb = create_orbit_raw(config)
-    dem = create_dem(config)
+    orb = ecostress.create_orbit_raw(config)
+    dem = ecostress.create_dem(config)
 else:
     config = None
     l1a_pix = os.path.abspath(args.l1a_pix)
@@ -56,26 +56,26 @@ else:
     dirname = os.path.abspath(args.prod_dir)
     file_version = "01"
     orbfname = os.path.abspath(args.l1a_raw_att)
-    orb = HdfOrbit_Eci_TimeJ2000(orbfname, "", "Ephemeris/time_j2000",
+    orb = geocal.HdfOrbit_Eci_TimeJ2000(orbfname, "", "Ephemeris/time_j2000",
                                  "Ephemeris/eci_position",
                                  "Ephemeris/eci_velocity",
                                  "Attitude/time_j2000",
                                  "Attitude/quaternion")
-    dem = SrtmDem(os.environ["ELEV_ROOT"],False,
+    dem = geocal.SrtmDem(os.environ["ELEV_ROOT"],False,
                   DatumGeoid96(os.environ["AFIDS_VDEV_DATA"] +
                                "/EGM96_20_x100.HLF"))
     
 
-cam = read_shelve(l1_osp_dir + "/camera.xml")
-tt = create_time_table(l1a_pix)
-sm = create_scan_mirror()
-igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
+cam = geocal.read_shelve(l1_osp_dir + "/camera.xml")
+tt = ecostress.create_time_table(l1a_pix)
+sm = ecostress.create_scan_mirror()
+igc = ecostress.EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
 
-makedirs_p(dirname)
+geocal.makedirs_p(dirname)
 os.chdir(dirname)
 
-orbit, scene, acquisition_time = orbit_from_metadata(l1a_pix)
-ofile = ecostress_file_name("L1B_RAD", orbit, scene, acquisition_time,
+orbit, scene, acquisition_time = ecostress.orbit_from_metadata(l1a_pix)
+ofile = ecostress.ecostress_file_name("L1B_RAD", orbit, scene, acquisition_time,
                             build = build_version,
                             version = file_version)
 
@@ -83,10 +83,11 @@ log_fname = os.path.splitext(ofile)[0] + ".log"
 log = open(log_fname, "w")
 try:
     # Generate output
-    l1brad = L1bRadGenerate(igc, l1a_pix, l1a_gain, ofile, run_config = config,
-                            log = log,
-                            build_id = build_id,
-                            pge_version = pge_version["l1b_rad"])
+    l1brad = ecostress.L1bRadGenerate(igc, l1a_pix, l1a_gain, ofile,
+                                      run_config = config,
+                                      log = log,
+                                      build_id = build_id,
+                                      pge_version = pge_version["l1b_rad"])
     l1brad.run()
     # Write out a dummy log file
     print("This is a dummy log file", file = log)

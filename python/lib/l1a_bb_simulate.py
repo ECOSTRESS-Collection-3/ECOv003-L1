@@ -59,9 +59,5 @@ class L1aBbSimulate(object):
         self.m.write()
         fout.close()
 
-
-
-
-
-
+__all__ = ["L1aBbSimulate"]
 

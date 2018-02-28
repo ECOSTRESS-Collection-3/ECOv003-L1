@@ -1,4 +1,4 @@
-from geocal import *
+import geocal
 from ecostress_swig import *
 import pickle
 from .pickle_method import *
@@ -7,6 +7,7 @@ import math
 from multiprocessing import Pool
 from .write_standard_metadata import WriteStandardMetadata
 from .misc import time_split
+import numpy as np
 
 class L1bGeoGenerate(object):
     '''This generate a L1B geo output file from a given
@@ -60,7 +61,7 @@ class L1bGeoGenerate(object):
         szenith = res[:,:,0,0,5]
         sazimuth = res[:,:,0,0,6]
         lfrac = GroundCoordinateArray.interpolate(self.lwm, lat, lon) * 100.0
-        tlinestart = np.array([self.igc.pixel_time(ImageCoordinate(ln, 0)).j2000 for ln in range(start_line, start_line+res.shape[0])])
+        tlinestart = np.array([self.igc.pixel_time(geocal.ImageCoordinate(ln, 0)).j2000 for ln in range(start_line, start_line+res.shape[0])])
         return lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac, tlinestart
 
     def loc(self, pool = None):
@@ -163,3 +164,5 @@ GEOGCS["WGS 84",
         t.attrs["Description"] = "J2000 time of first pixel in line"
         t.attrs["Units"] = "second"
         m.write()
+
+__all__ = ["L1bGeoGenerate"]

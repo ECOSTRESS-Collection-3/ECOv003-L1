@@ -1,4 +1,3 @@
-## from geocal import *
 import h5py
 import shutil
 import re
@@ -707,3 +706,5 @@ class L1aRawPixGenerate(object):
     print("This is a dummy log file", file = self.log)
     self.log.flush()
     print("====  End run ", datetime.now(), "  ====")
+
+__all__ = ["L1aRawPixGenerate"]

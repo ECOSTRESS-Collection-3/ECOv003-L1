@@ -8,17 +8,19 @@
 # be able to locally run tests and do development without installing the full
 # system.
 
-from __future__ import absolute_import
-import os
-import re
-import glob
-from geocal import *
+import os as _os
+import re as _re
+import glob as _glob
 from ecostress_swig import *
 
-for i in glob.glob(os.path.dirname(__file__) + "/*.py"):
-    mname = os.path.basename(i).split('.')[0]
+for _i in _glob.glob(_os.path.dirname(__file__) + "/*.py"):
+    mname = _os.path.basename(_i).split('.')[0]
     # Don't load ipython, which is ipython magic extensions, or unit tests
     if(not mname == "ipython" and
        not mname == "cython_try" and
-       not re.search('_test', mname)):
+       not _re.search('_test', mname)):
         exec("from .%s import *" % mname)
+del _i
+del _re
+del _os
+del _glob
