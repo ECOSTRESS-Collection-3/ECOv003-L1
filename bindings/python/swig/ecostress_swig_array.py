@@ -596,4 +596,7 @@ BlitzArray_int_8_swigregister = _ecostress_swig_array.BlitzArray_int_8_swigregis
 BlitzArray_int_8_swigregister(BlitzArray_int_8)
 
 
+__all__ = ["BlitzArray_double_1", "BlitzArray_double_2", "BlitzArray_double_3", "BlitzArray_double_4", "BlitzArray_double_5", "BlitzArray_double_6", "BlitzArray_double_7", "BlitzArray_double_8", "BlitzArray_bool_1", "BlitzArray_bool_2", "BlitzArray_bool_3", "BlitzArray_bool_4", "BlitzArray_bool_5", "BlitzArray_bool_6", "BlitzArray_bool_7", "BlitzArray_bool_8", "BlitzArray_int_1", "BlitzArray_int_2", "BlitzArray_int_3", "BlitzArray_int_4", "BlitzArray_int_5", "BlitzArray_int_6", "BlitzArray_int_7", "BlitzArray_int_8"]
+
+
 

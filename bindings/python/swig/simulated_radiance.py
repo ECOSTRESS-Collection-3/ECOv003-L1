@@ -319,4 +319,7 @@ SimulatedRadiance_swigregister = _simulated_radiance.SimulatedRadiance_swigregis
 SimulatedRadiance_swigregister(SimulatedRadiance)
 
 
+__all__ = ["SimulatedRadiance"]
+
+
 

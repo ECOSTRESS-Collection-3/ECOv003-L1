@@ -47,6 +47,6 @@ end-to-end-check: installcheck-am
 
 # Run l1b_geo on its own
 
-l1b-geo-run: 
+l1b-geo-run: install
 	-rm -r ./l1b_geo_run
 	$(prefix)/L1B_GEO_PGE --number-cpu=20 $(end_to_end_test_data)/L1A_RAW_ATT_80005_20150124T204250_0100_01.h5.expected $(end_to_end_test_data)/l1_osp_dir ./l1b_geo_run $(end_to_end_test_data)/ECOSTRESS_L1B_RAD_80005_00*.h5.expected

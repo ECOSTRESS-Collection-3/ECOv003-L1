@@ -286,4 +286,7 @@ EcostressParaxialTransform_swigregister = _ecostress_paraxial_transform.Ecostres
 EcostressParaxialTransform_swigregister(EcostressParaxialTransform)
 
 
+__all__ = ["EcostressParaxialTransform"]
+
+
 

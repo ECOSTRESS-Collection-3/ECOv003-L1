@@ -412,4 +412,7 @@ EcostressImageGroundConnection_swigregister = _ecostress_image_ground_connection
 EcostressImageGroundConnection_swigregister(EcostressImageGroundConnection)
 
 
+__all__ = ["EcostressImageGroundConnection"]
+
+
 

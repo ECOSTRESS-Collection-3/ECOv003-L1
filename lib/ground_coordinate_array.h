@@ -69,10 +69,15 @@ public:
   void project_surface_scan_arr(GeoCal::RasterImage& Data,
 				int Start_line, int Number_line=-1) const;
   GeoCal::MapInfo cover(double Resolution=70.0) const;
+  GeoCal::MapInfo cover(const GeoCal::MapInfo& Mi) const;
   boost::shared_ptr<GeoCal::MemoryRasterImage>
   raster_cover(double Resolution=70.0) const;
+  boost::shared_ptr<GeoCal::MemoryRasterImage>
+  raster_cover(const GeoCal::MapInfo& Mi) const;
   boost::shared_ptr<GeoCal::VicarLiteRasterImage>
   raster_cover_vicar(const std::string& Fname, double Resolution=70.0) const;
+  boost::shared_ptr<GeoCal::VicarLiteRasterImage>
+  raster_cover_vicar(const std::string& Fname, const GeoCal::MapInfo& Mi) const;
 private:
   boost::shared_ptr<EcostressImageGroundConnection> igc_;
   bool include_angle;

@@ -296,4 +296,7 @@ EcostressTimeTable.nominal_scan_spacing = _ecostress_time_table.cvar.EcostressTi
 EcostressTimeTable.frame_time = _ecostress_time_table.cvar.EcostressTimeTable_frame_time
 
 
+__all__ = ["EcostressTimeTable"]
+
+
 

@@ -104,6 +104,7 @@ try:
     
     # Create igc/tiepoint for all the data
     igc = []
+    proj_fname = []
     f = SQLiteShelf("data.db")
     f["_extra_python_init"] = "from ecostress import *"
     f = None
@@ -113,8 +114,13 @@ try:
         # Work with the SWIR channel data
         ras = GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" % radlist[i])
         igc.append(EcostressImageGroundConnection(orb, tt, cam, sm, dem, ras))
+        proj_fname.append("proj%d.img" % i)
         write_shelve("data.db:igc_original_%d" % i, igc[i])
 
+    # Project data to surface
+    p = L1bProj(igc, proj_fname)
+    p.proj(pool=pool)
+    
     # Generate output data
     for i in range(len(radlist)):
         # Generate output

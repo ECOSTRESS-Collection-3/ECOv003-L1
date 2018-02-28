@@ -286,4 +286,7 @@ EcostressScanMirror_swigregister = _ecostress_scan_mirror.EcostressScanMirror_sw
 EcostressScanMirror_swigregister(EcostressScanMirror)
 
 
+__all__ = ["EcostressScanMirror"]
+
+
 

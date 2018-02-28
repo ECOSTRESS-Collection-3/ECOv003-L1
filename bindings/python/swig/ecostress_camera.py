@@ -219,6 +219,9 @@ EcostressParaxialTransform._v_par_to_real = new_instancemethod(_ecostress_camera
 EcostressParaxialTransform_swigregister = _ecostress_camera.EcostressParaxialTransform_swigregister
 EcostressParaxialTransform_swigregister(EcostressParaxialTransform)
 
+
+__all__ = ["EcostressParaxialTransform"]
+
 class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
     """
 
@@ -270,6 +273,9 @@ class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
 EcostressCamera._v_paraxial_transform = new_instancemethod(_ecostress_camera.EcostressCamera__v_paraxial_transform, None, EcostressCamera)
 EcostressCamera_swigregister = _ecostress_camera.EcostressCamera_swigregister
 EcostressCamera_swigregister(EcostressCamera)
+
+
+__all__ = ["EcostressCamera"]
 
 
 

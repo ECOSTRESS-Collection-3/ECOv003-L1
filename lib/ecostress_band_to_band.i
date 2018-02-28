@@ -15,3 +15,5 @@ namespace Ecostress {
    int Nline_pt=10, int Nsamp_pt=30);
 }
 
+// List of things "import *" will include
+%python_export("band_to_band_tie_points")

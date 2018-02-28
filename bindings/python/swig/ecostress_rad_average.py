@@ -234,4 +234,7 @@ EcostressRadAverage_swigregister = _ecostress_rad_average.EcostressRadAverage_sw
 EcostressRadAverage_swigregister(EcostressRadAverage)
 
 
+__all__ = ["EcostressRadAverage"]
+
+
 

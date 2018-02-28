@@ -67,6 +67,20 @@ GroundCoordinateArray::raster_cover(double Resolution) const
 }
 
 //-------------------------------------------------------------------------
+/// Create a MemoryRasterImage that matches cover(), and fill it in
+/// with 0 fill data.
+//-------------------------------------------------------------------------
+
+boost::shared_ptr<GeoCal::MemoryRasterImage>
+GroundCoordinateArray::raster_cover(const GeoCal::MapInfo& Mi) const
+{
+  boost::shared_ptr<GeoCal::MemoryRasterImage> res =
+    boost::make_shared<GeoCal::MemoryRasterImage>(cover(Mi));
+  res->data()(blitz::Range::all(), blitz::Range::all()) = 0;
+  return res;
+}
+
+//-------------------------------------------------------------------------
 /// Create a VicarLiteRasterImage that matches cover(), and fill it in
 /// with 0 fill data.
 //-------------------------------------------------------------------------
@@ -76,6 +90,25 @@ GroundCoordinateArray::raster_cover_vicar(const std::string& Fname,
 					  double Resolution) const
 {
   GeoCal::VicarRasterImage f(Fname, cover(Resolution), "HALF");
+  f.close();
+  boost::shared_ptr<GeoCal::VicarLiteRasterImage> res =
+    boost::make_shared<GeoCal::VicarLiteRasterImage>(Fname, 1, GeoCal::VicarLiteFile::UPDATE);
+  for(int i = 0; i < res->number_line(); ++i)
+    for(int j = 0; j < res->number_sample(); ++j)
+      res->write(i, j, 0);
+  return res;
+}
+
+//-------------------------------------------------------------------------
+/// Create a VicarLiteRasterImage that matches cover(), and fill it in
+/// with 0 fill data.
+//-------------------------------------------------------------------------
+
+boost::shared_ptr<GeoCal::VicarLiteRasterImage>
+GroundCoordinateArray::raster_cover_vicar(const std::string& Fname,
+					  const GeoCal::MapInfo& Mi) const
+{
+  GeoCal::VicarRasterImage f(Fname, cover(Mi), "HALF");
   f.close();
   boost::shared_ptr<GeoCal::VicarLiteRasterImage> res =
     boost::make_shared<GeoCal::VicarLiteRasterImage>(Fname, 1, GeoCal::VicarLiteFile::UPDATE);
@@ -104,6 +137,11 @@ GeoCal::MapInfo GroundCoordinateArray::cover(double Resolution) const
   GeoCal::MapInfo cib01_scaled = cib01.scale(Resolution / resbase,
 				     Resolution / resbase);
   return igc_->cover(cib01_scaled);
+}
+
+GeoCal::MapInfo GroundCoordinateArray::cover(const GeoCal::MapInfo& Mi) const
+{
+  return igc_->cover(Mi);
 }
 
 //-------------------------------------------------------------------------
