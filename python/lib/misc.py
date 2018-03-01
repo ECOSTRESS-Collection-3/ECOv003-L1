@@ -30,9 +30,8 @@ def create_ortho_base(config):
         # run config file
         if(os.path.exists("/raid22/band62_VICAR")):
             ortho_base_dir = "/raid22/band62_VICAR"
-    # Not using yet
-    return None
-    
+    return geocal.Landsat7Global(ortho_base_dir,
+                                 geocal.Landsat7Global.BAND62)
 
 def create_lwm(config):
     '''Create the land water mask. In production, use the directory passed

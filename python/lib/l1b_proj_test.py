@@ -5,18 +5,12 @@ from multiprocessing import Pool
 # Don't normally run, this takes about 1 minute with 10 processors
 @slow
 def test_l1b_proj(isolated_dir, igc_with_img):
-    p = L1bProj([igc_with_img, igc_with_img], ["proj1.img", "proj2.img"])
+    ortho = Landsat7Global("/raid22/band62_VICAR", Landsat7Global.BAND62)
+    p = L1bProj([igc_with_img, igc_with_img], ["proj1.img", "proj2.img"],
+                ["ref1.img", "ref2.img"], ortho)
     pool = Pool(20)
     p.proj(pool=pool)
 
-# Not so much as test, as notes on how to generate the orthobase to match
-# against
-@skip
-def test_ref(isolated_dir, igc_with_img):
-    p = L1bProj(igc_with_img, "proj.img")
-    ortho = Landsat7Global("/raid22/band62_VICAR", Landsat7Global.BAND62)
-    ortho.create_subset_file("ortho.img", "VICAR", [p.f.ground_coordinate(ImageCoordinate(0,0)), p.f.ground_coordinate(ImageCoordinate(p.f.number_line-1,p.f.number_sample-1))])
-    
 @skip
 def test_temp(unit_test_data):
     cam = read_shelve(unit_test_data + "camera.xml")

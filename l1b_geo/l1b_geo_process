@@ -78,7 +78,8 @@ else:
                   geocal.DatumGeoid96(os.environ["AFIDS_VDEV_DATA"] +
                                "/EGM96_20_x100.HLF"))
     lwm = geocal.SrtmLwmData("/raid27/tllogan/all_lwm_links", False)
-    ortho_base_fname = "/raid22/band62_VICAR"
+    ortho_base = geocal.Landsat7Global("/raid22/band62_VICAR",
+                                       geocal.Landsat7Global.BAND62)
     radlist = [os.path.abspath(f) for f in args.l1b_rad]
     
 cam = geocal.read_shelve(l1_osp_dir + "/camera.xml")
@@ -107,6 +108,7 @@ try:
     # Create igc/tiepoint for all the data
     igc = []
     proj_fname = []
+    ref_fname = []
     f = geocal.SQLiteShelf("data.db")
     f["_extra_python_init"] = "from ecostress import *"
     f = None
@@ -116,11 +118,12 @@ try:
         # Work with the SWIR channel data
         ras = geocal.GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" % radlist[i])
         igc.append(ecostress.EcostressImageGroundConnection(orb, tt, cam, sm, dem, ras))
-        proj_fname.append("proj%d.img" % i)
+        proj_fname.append("proj_initial_%d.img" % i)
+        ref_fname.append("ref_%d.img" % i)
         geocal.write_shelve("data.db:igc_original_%d" % i, igc[i])
 
     # Project data to surface
-    p = ecostress.L1bProj(igc, proj_fname)
+    p = ecostress.L1bProj(igc, proj_fname, ref_fname, ortho_base)
     p.proj(pool=pool)
     
     # Generate output data
