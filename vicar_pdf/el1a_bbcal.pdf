@@ -2,7 +2,7 @@
 !   el1a_bbcal.pdf (Ecostress L1A BlackBody calibration)
 !   An L1A_CAL PGE Program supporting the ECOSTRESS Project
 !***Date/Version:
-!   18JAN2018 Version: 1.00 T.L.Logan (tvac changes)
+!   20FEB2018 Version: 1.03 T.L.Logan (UPF switch for tvac code)
 !   Written for VICAR with TAE scripting.
 !***Function:
 !   ECOSTRESS L1A Blackbody Radiometric Calibration.
@@ -27,8 +27,8 @@ procedure
 ! outp1:  L1A_PIX      /path for Output L1A_PIX file
 ! outp2:  transfer     /path for Output Intermediate Radiance, Gain/Offset & Temp files
 ! pcount: File Version (vv) provided by PCS (Product Counter) 
-parm   inph5i  string   def="/project/test/eyc/instrument/out/L1A_RAW_PIX_05423_001_20171215T220120_0101_01.h5" 
-parm   inph5b  string   def="/project/test/eyc/instrument/out/ECOSTRESS_L1A_BB_05423_001_20171215T220120_0101_01.h5"
+parm   inph5i  string   def="/project/tvac/store/PRODUCTS/L1A_RAW_PIX/2018/02/02/L1A_RAW_PIX_90029_001_20180202T132742_0105_01.h5" 
+parm   inph5b  string   def="/project/tvac/store/PRODUCTS/L1A_BB/2018/02/02/ECOSTRESS_L1A_BB_90029_001_20180202T132742_0105_01.h5"
 parm   inpupf  string   def="./L1A_PCF_UPF.txt"
 parm   outp1   string   def="./"
 parm   outp2   string   def="./"
@@ -38,10 +38,14 @@ parm   palg    integer  def=1 valid=(1:2) !Planck algorithm; 1=CW; 2=Iteration
 parm   rad2k   integer  def=1 valid=(0:1) !Convert radiance to Kelvin. 0=No; 1=Yes
 parm   radout  integer  def=1 valid=(0:1) !Output radiance image. 0=No; 1=Yes
 parm   debug   integer  def=2 valid=(0:2) !Verbose Messages; 0=No;1=Yes;2=Yes+Del-x
-parm   pre325  real     def=313.15  !Pre-Flight 325BB temperature Kelvins
-parm   pre295  real     def=294.95  !Pre-Flight 295BB temperature Kelvins
+parm   pre325  real     def=318.75  !Pre-Flight HOT 325BB temperature Kelvins
+parm   pre295  real     def=293.00  !Pre-Flight COLD 295BB temperature Kelvins
 parm   bbgain  real     def=1.0    !Blackbody Adjustment Gain value
 parm   bboffs  real     def=0.0    !Blackbody Adjustment Offset value
+parm   tvac    integer  def=1 valid=(0:1) !Run TVAC Code; 0=No; 1=Yes
+parm   target  integer  def=4686 !TVAC Target extraction size=(1,target-64,256,256)
+parm   bbsp1   integer  def=750  !TVAC BB Hot Spot1 size=(364,bbsp1-25,50,50)
+parm   bbsp2   integer  def=2975 !TVAC BB Hot Spot2 size=(364,bbsp2-25,50,50)
 !Internal Temporary Local Directories:
 parm   outkel  string   def="BlackbodyTemp"     !Output dir for fpa kelvin.
 parm   outrad  string   def="BlackbodyRadiance" !Output dir for fpa radiance.
@@ -115,7 +119,7 @@ let      _onfail="goto error2"
 
 datetime
 !Proc Startup Module***************************************************
-write    "***L1A_CAL PGE Batchjob Starting"
+write    "MSG: ***L1A_CAL PGE Batchjob Starting"
 write    " "
 
 !Create a temporary Status Log file
@@ -242,6 +246,18 @@ tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
          "fileVar2DecVal &inpupf RADIANCE_IMAGES=") intvar=radout
 write    "MSG: ***RADIANCE_IMAGES= &radout "
 tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
+         "fileVar2DecVal &inpupf TVAC=") intvar=tvac
+write    "MSG: ***TVAC= &tvac "
+tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
+         "fileVar2DecVal &inpupf TVAC_TARGET=") intvar=target
+write    "MSG: ***TVAC_TARGET= &target "
+tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
+         "fileVar2DecVal &inpupf TVAC_HOTSPOT1=") intvar=bbsp1
+write    "MSG: ***TVAC_HOTSPOT1= &bbsp1 "
+tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
+         "fileVar2DecVal &inpupf TVAC_HOTSPOT2=") intvar=bbsp2
+write    "MSG: ***TVAC_HOTSPOT2= &bbsp2 "
+tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
          "fileVar2Val &inpupf FIRST_CONSTANT_C1=") realvar=c1
 write    "MSG: ***FIRST_CONSTANT_C1= &c1 "
 tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
@@ -355,10 +371,10 @@ if       (found=0) write "MSG: ***&"outp2"/&outwat Directory Not Found --- Was C
 tush      echo "" >> L1A_CAL_&"suffix".log
 tush      echo "***Creating FPA Blackbodys" >> L1A_CAL_&"suffix".log
 !Input pt-RTD Blackbody Temperature Measurements
-write    "Beginning ush gdalinfo" 
+write    "MSG: Beginning ush gdalinfo" 
 ush       gdalinfo &inph5b
 !Calculate pt-RTD Hot Blackbody Temperature
-write    "Beginning ush h5dump" 
+write    "MSG: Beginning ush h5dump" 
 ush       h5dump -d /"rtdBlackbodyGradients"/"RTD_325K" -s "0,0" -S "1,1" -c "2,5" -o x325_txt_&id &inph5b
 asc2tcl   inp=x325_txt_&id seq=1 keyword="(0,0):" vtype=8 val=rtd1
 write    "rtd1= &rtd1 "
@@ -505,14 +521,15 @@ rowop2    tab_&id tab2_&id keycol=(2,2) +
 !temperature values will be used. 
 ibis2tcl  tab2_&id v1=temp v2=std ibisloc=(1,2,1,3) vartype=(0,0)
 ibis-l    tab_&id nr=1 cols=(1,2,3) cfor="%5.0f %11.3f %11.6f"
-write    "***RTD Temp= &temp  RTD STD= &std "
-if       ((std>0.2)or(temp<1))
- write   "***Bad RTDs, Using UPF-Supplied Temperature"
+write    "MSG: ***RTD Temp= &temp  RTD STD= &std "
+if       ((std>0.3)or(temp<1))
+ write   "MSG: ***Bad RTDs, Using UPF-Supplied HOT Temperature"
+ tush     echo "***Bad RTDs, Using UPF HOT Default***" >> L1A_CAL_&"suffix".log
  let      t325=pre325
 else
  let      t325=&temp
 end-if
-write    "***Hot Blackbody Temperature= &t325 Kelvin"
+write    "MSG: ***Hot Blackbody Temperature= &t325 Kelvin"
 gen       xxa_&id nl=11264 ns=1 ival=&t325 linc=0. sinc=0. 'real
 f2        xxa_&id xkel325_&id func="((in1*&"bbgain")+&bboffs)"
 hist      xkel325_&id
@@ -668,20 +685,21 @@ write     "16: RTDs 1,4,5"
 sort      tab_&id sortcol=(3,2) 'ascend  !Bring lowest STD to top
 ibis-l    tab_&id cols=(1,2,3) cfor="%5.0f %11.3f %11.6f"
 rowop2    tab_&id tab2_&id keycol=(2,2) +
-          range=(-9999,290,300,9999) 'delete !Remove BAD Temps
+          range=(-9999,275,305,9999) 'delete !Remove BAD Temps
 !Note: if no combos meet Rowop2 requirements, the Ibis2tcl step will
 !error, Temp & STD will default to init (0.0), and the UPF-supplied
 !temperature values will be used. 
 ibis2tcl  tab2_&id v1=temp v2=std ibisloc=(1,2,1,3) vartype=(0,0)
 ibis-l    tab_&id nr=1 cols=(1,2,3) cfor="%5.0f %11.3f %11.6f"
-write    "***RTD Temp= &temp  RTD STD= &std "
-if       ((std>0.2)or(temp<1))
- write   "***Bad RTDs, Using UPF-Supplied Temperature"
+write    "MSG: ***RTD Temp= &temp  RTD STD= &std "
+if       ((std>0.3)or(temp<1))
+ write   "MSG: ***Bad RTDs, Using UPF-Supplied COLD Temperature"
+ tush     echo "***Bad RTDs, Using UPF COLD Default***" >> L1A_CAL_&"suffix".log
  let      t295=pre295
 else
  let      t295=&temp
 end-if
-write    "***Cold Blackbody Temperature= &t295 Kelvin"
+write    "MSG: ***Cold Blackbody Temperature= &t295 Kelvin"
 gen       xxa_&id nl=11264 ns=1 ival=&t295 linc=0. sinc=0. 'real
 f2        xxa_&id xkel295_&id func="((in1*&"bbgain")+&bboffs)"
 hist      xkel295_&id
@@ -888,6 +906,13 @@ el1a_2pt  band=&bandn rad2k=&rad2k radout=&radout debug=&debug +
           outwat=&"outp2"/&outwat +
           outp1=&outp1 c1=&c1 c2=&c2 cw=&cw suffix=&suffix
 end-loop
+
+if       (tvac=1)
+ el1a_tvac dir="&outp2/&outwat" id=&id suffix=&suffix +
+           cctar=&target cctmp1=&bbsp1 cctmp2=&bbsp2
+else
+end-if
+
 tush      echo "" >> L1A_CAL_&"suffix".log
 tush      echo "***L1A_CAL Batchjob Completed at date/time:" >> L1A_CAL_&"suffix".log
 tush      date >> L1A_CAL_&"suffix".log
@@ -936,7 +961,6 @@ ush       echo VICAR_RESULT-1-[Job Failed] >> L1A_CAL_&"suffix".log
 let      $SFI=-1
 
 theend>
-if       ((debug=0)or(debug=2)) ush rm *_&id
-ush      cp L1A_CAL_&"suffix".log &"outp2"/&outwat/png4_L1A_CAL_&"suffix".txt
-el1a_tvac dir="&outp2/&outwat" id=&id suffix=&suffix
+if (tvac=1) ush cp L1A_CAL_&"suffix".log &"outp2"/&outwat/png4_L1A_CAL_&"suffix".txt
+if ((debug=0)or(debug=2)) ush rm *_&id
 end-proc

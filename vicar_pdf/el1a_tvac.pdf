@@ -1,14 +1,17 @@
 !tvac verification script: Produce png and text verification files.
-!TLLOGAN: 18JAN2018 version 1.00
+!TLLOGAN: 20FEB2018 version 1.03 (Pass parms thru UPF & center positions)
 procedure
-parm   dir    string   def=""
+parm   dir    string   def="./"
 parm   id     string   def="3000"
 parm   suffix string   def="suffix" 
-local  sd     real     !Histogram standard deviation
+parm   cctar  integer  def=4686 !center sample for target
+parm   cctmp1 integer  def=750  !center sample for Temp1 CLD
+parm   cctmp2 integer  def=2975 !center sample for Temp2 HLD
+local  std    real     !Histogram standard deviation
 local  avg    real     !Histogram mean
-local  sstar  integer  init=2650 !starting sample for the target
-local  sstmp1  integer init=796  !starting sample for the Temperature1
-local  sstmp2  integer init=4581 !starting sample for the Temperature2
+local  sstar  integer  !starting sample for the target
+local  sstmp1 integer  !starting sample for the Temperature1 Cld
+local  sstmp2 integer  !starting sample for the Temperature2 Hot
 body
 
 !png1
@@ -37,64 +40,79 @@ fitg        xxe_&id xxd_&id percent=2.0 'gauss 'byte
 ush         gdal_translate -of PNG xxd_&id &dir/png2_&"suffix".png
 
 !png3
+let         sstar = cctar-64
 size        &dir/b3_temp.hlf xxe_&id nl=512 ns=512 area=(1,&sstar,256,256)
 fitg        xxe_&id xxd_&id percent=2.0 'gauss 'byte
 ush         gdal_translate -of PNG xxd_&id &dir/png3_&"suffix".png
 
 !png5
-ibis-gen    tvac_ktemp.int nr=6 nc=4 datacols=(1,2) +
+ibis-gen    tvac_ktemp.int nr=6 nc=6 datacols=(1,2) +
             data=(1.0,1.6,2,8.3,3,8.8,4,9.1,5,10.5,6,12.0)
 !swir
-hist        xxtemp_&id size=(384,&sstmp1,10,10) +
-            mean=avg sigma=sd 'nohi 'excl
+let         sstmp1=cctmp1-25
+let         sstmp2=cctmp2-25
+hist        xxtemp_&id size=(364,&sstmp1,50,50) +
+            mean=avg sigma=std 'nohi 'excl
 edibis      tvac_ktemp.int comm=("(1,3) set &avg")
-hist        xxtemp_&id size=(384,&sstmp2,10,10) +
-            mean=avg sigma=sd 'nohi 'excl
-edibis      tvac_ktemp.int comm=("(1,4) set &avg")
+edibis      tvac_ktemp.int comm=("(1,4) set &std")
+hist        xxtemp_&id size=(364,&sstmp2,50,50) +
+            mean=avg sigma=std 'nohi 'excl
+edibis      tvac_ktemp.int comm=("(1,5) set &avg")
+edibis      tvac_ktemp.int comm=("(1,6) set &std")
 !8.3
-hist        xxtemp_&id size=(1184,&sstmp1,10,10) +
-            mean=avg sigma=sd 'nohi 'excl
+hist        xxtemp_&id size=(1164,&sstmp1,50,50) +
+            mean=avg sigma=std 'nohi 'excl
 edibis      tvac_ktemp.int comm=("(2,3) set &avg")
-hist        xxtemp_&id size=(1184,&sstmp2,10,10) +
-            mean=avg sigma=sd 'nohi 'excl
-edibis      tvac_ktemp.int comm=("(2,4) set &avg")
+edibis      tvac_ktemp.int comm=("(2,4) set &std")
+hist        xxtemp_&id size=(1164,&sstmp2,50,50) +
+            mean=avg sigma=std 'nohi 'excl
+edibis      tvac_ktemp.int comm=("(2,5) set &avg")
+edibis      tvac_ktemp.int comm=("(2,6) set &std")
 !8.8
-hist        xxtemp_&id size=(1984,&sstmp1,10,10) +
-            mean=avg sigma=sd 'nohi 'excl
+hist        xxtemp_&id size=(1964,&sstmp1,50,50) +
+            mean=avg sigma=std 'nohi 'excl
 edibis      tvac_ktemp.int comm=("(3,3) set &avg")
-hist        xxtemp_&id size=(1984,&sstmp2,10,10) +
-            mean=avg sigma=sd 'nohi 'excl
-edibis      tvac_ktemp.int comm=("(3,4) set &avg")
+edibis      tvac_ktemp.int comm=("(3,4) set &std")
+hist        xxtemp_&id size=(1964,&sstmp2,50,50) +
+            mean=avg sigma=std 'nohi 'excl
+edibis      tvac_ktemp.int comm=("(3,5) set &avg")
+edibis      tvac_ktemp.int comm=("(3,6) set &std")
 !9.1
-hist        xxtemp_&id size=(2784,&sstmp1,10,10) +
-            mean=avg sigma=sd 'nohi 'excl
+hist        xxtemp_&id size=(2764,&sstmp1,50,50) +
+            mean=avg sigma=std 'nohi 'excl
 edibis      tvac_ktemp.int comm=("(4,3) set &avg")
-hist        xxtemp_&id size=(2784,&sstmp2,10,10) +
-            mean=avg sigma=sd 'nohi 'excl
-edibis      tvac_ktemp.int comm=("(4,4) set &avg")
+edibis      tvac_ktemp.int comm=("(4,4) set &std")
+hist        xxtemp_&id size=(2764,&sstmp2,50,50) +
+            mean=avg sigma=std 'nohi 'excl
+edibis      tvac_ktemp.int comm=("(4,5) set &avg")
+edibis      tvac_ktemp.int comm=("(4,6) set &std")
 !10.5
-hist        xxtemp_&id size=(3584,&sstmp1,10,10) +
-            mean=avg sigma=sd 'nohi 'excl
+hist        xxtemp_&id size=(3564,&sstmp1,50,50) +
+            mean=avg sigma=std 'nohi 'excl
 edibis      tvac_ktemp.int comm=("(5,3) set &avg")
-hist        xxtemp_&id size=(3584,&sstmp2,10,10) +
-            mean=avg sigma=sd 'nohi 'excl
-edibis      tvac_ktemp.int comm=("(5,4) set &avg")
+edibis      tvac_ktemp.int comm=("(5,4) set &std")
+hist        xxtemp_&id size=(3564,&sstmp2,50,50) +
+            mean=avg sigma=std 'nohi 'excl
+edibis      tvac_ktemp.int comm=("(5,5) set &avg")
+edibis      tvac_ktemp.int comm=("(5,6) set &std")
 !12.0
-hist        xxtemp_&id size=(4384,&sstmp1,10,10) +
-            mean=avg sigma=sd 'nohi 'excl
+hist        xxtemp_&id size=(4364,&sstmp1,50,50) +
+            mean=avg sigma=std 'nohi 'excl
 edibis      tvac_ktemp.int comm=("(6,3) set &avg")
-hist        xxtemp_&id size=(4384,&sstmp2,10,10) +
-            mean=avg sigma=sd 'nohi 'excl
-edibis      tvac_ktemp.int comm=("(6,4) set &avg")
-ibis-l      tvac_ktemp.int cols=(1,2,3,4)
+edibis      tvac_ktemp.int comm=("(6,4) set &std")
+hist        xxtemp_&id size=(4364,&sstmp2,50,50) +
+            mean=avg sigma=std 'nohi 'excl
+edibis      tvac_ktemp.int comm=("(6,5) set &avg")
+edibis      tvac_ktemp.int comm=("(6,6) set &std")
+ibis-l      tvac_ktemp.int cols=(1,2,3,4,5,6)
 ibis-l      tvac_ktemp.int outfile=&dir/png5_&"suffix".txt +
-            cols=(1,2,3,4) 'nohead 'nocol +
-            pream=("        L1A_CAL CALIBRATION TEMPERATURES KELVIN",+
-            "        Bands     Microns     Temp1       Temp2", +
-            "        ========================================")
+            cols=(1,2,3,4,5,6) 'nohead 'nocol +
+pream=("                      L1A_CAL CALIBRATION TEMPERATURES KELVIN",+
+"        Bands     Microns     Temp1         STD1      Temp2         STD2", +
+"        ================================================================")
 
 write       "***L1A_CAL TVAC test script Completed***"
 
-ush         rm *_&id
+!ush         rm *_&id
 ush         rm &dir/png*.xml
 end-proc
