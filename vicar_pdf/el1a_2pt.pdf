@@ -3,7 +3,7 @@
 !   An L1A_CAL PGE Program supporting the ECOSTRESS Project
 !   Written for VICAR with TAE scripting.
 !***Date/Version:
-!   18JAN2018 Version: 1.00 T.L.Logan (TVAC changes)
+!   20FEB2018 Version: 1.03 T.L.Logan (No Changes)
 !***Function:
 !   ECOSTRESS L1A 2point conversion of Blackbody calibration and TIR
 !     image DN to Radiance (watts/m2/sr/um).
@@ -233,5 +233,5 @@ gen       xxjob_fail.img nl=10 ns=10 ival=0 linc=0 sinc=0 'byte
 let       $SFI=-1
 
 theend>
-if          ((debug=0)or(debug=2))ush rm -f *_&id *.aux.xml &"outimg"/*.aux.xml
+if          ((debug=0)or(debug=2)) ush rm -f *_&id *.aux.xml &"outimg"/*.aux.xml
 end-proc
