@@ -369,7 +369,8 @@ class L1aRawPixGenerate(object):
       if dt>0.0:
         if pkt_idx>0 :
           pkt_idx -= 1  # found scene start time in previous packet
-          print("Located scene %s start time %f in PKT[%d] %s(%f) DT=%f" % ( scene_id, sts.gps, pkt_idx, str(t0), t0.gps, dt/10000.0 ) )
+          dt = dt/100000.0
+          print("Located scene %s start time %f in PKT[%d] %s(%f) DT=%f" % ( scene_id, sts.gps, pkt_idx, str(t0), t0.gps, dt ) )
 
         else:
           print("Scene start time %s(%f) < PKT[0] time %s(%f)" %(sts,sts.gps, t0,t0.gps) )
@@ -652,7 +653,7 @@ class L1aRawPixGenerate(object):
     sst = str( datetime.now() )[0:19]
     sf = "Scene_%05d_%s_%s_%s.txt" % ( orbit, sss[0:4]+sss[5:7]+sss[8:13]+sss[14:16]+sss[17:19], ses[0:4]+ses[5:7]+ses[8:13]+ses[14:16]+ses[17:19], sst[0:4]+sst[5:7]+sst[8:10]+'T'+sst[11:13]+sst[14:16]+sst[17:19])
     sfd = open( sf, "w" )
-    for i in range( scene_id ): sfd.write( scenes[i] )
+    for i in range( len(scenes) ): sfd.write( scenes[i] )
     sfd.close()
 
     ' create engineering file and datasets '
