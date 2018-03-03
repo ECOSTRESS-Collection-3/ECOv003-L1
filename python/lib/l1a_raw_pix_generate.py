@@ -354,27 +354,10 @@ class L1aRawPixGenerate(object):
 
       #*** Assume packets in time sequence ***
       ' search for packet containing scene start time '
+      pkt_idx = np.argmax( gpt>sts.gps )
       t0 = Time.time_gps( gpt[pkt_idx] )
-      dt = float( int( (t0 - sts)*100000.0 + 0.5 ) )  # diff to 10 usec
-      pkt_idx += 1
-      while dt < 0.0 and pkt_idx<tot_pkts:
-        print("Search packet %d ID=%d GPS=%f STS=%f DT=%f" % ( pkt_idx, pid[pkt_idx], t0.gps, sts.gps, dt/100000.0 ) )
-        t0 = Time.time_gps( gpt[pkt_idx] )
-        dt = float( int( (t0 - sts)*100000.0 + 0.5 ) )
-        pkt_idx += 1
-      ' end searching for packet matching scene start time '
-      if pkt_idx >= tot_pkts:
-        print("*** Could not find Scene %s time %s (%f) in file %s PKT=%d" % ( scene_id, str(sts), sts.gps, self.l0b, pkt_idx ) )
-        return -1
-      if dt>0.0:
-        if pkt_idx>0 :
-          pkt_idx -= 1  # found scene start time in previous packet
-          dt = dt/100000.0
-          print("Located scene %s start time %f in PKT[%d] %s(%f) DT=%f" % ( scene_id, sts.gps, pkt_idx, str(t0), t0.gps, dt ) )
-
-        else:
-          print("Scene start time %s(%f) < PKT[0] time %s(%f)" %(sts,sts.gps, t0,t0.gps) )
-          dt = 0  # force initial scene start time to pkt[0] time
+      dt = t0 - sts
+      print("Located scene %s start time %f in PKT[%d] %s(%f) DT=%f" % ( scene_id, sts.gps, pkt_idx, str(t0), t0.gps, dt ) )
       rst = t0.gps - dt
       rse = ste.gps  # initialize refined scene end time
       print("Initial guess of refined scene start time %s(%f)" %( Time.time_gps(rst), rst) )
