@@ -354,6 +354,10 @@ class L1aRawPixGenerate(object):
 
       #*** Assume packets in time sequence ***
       ' search for packet containing scene start time '
+      if sts.gps > gpt[tot_pkts-1]:
+        t0 = Time.time_gps( gpt[tot_pkts-1] )
+        print("Scene time %s(%f) past data time %s(%f)" %( sts, sts.gps, t0, gpt[tot_pkts-1] ) )
+        continue
       pkt_idx = np.argmax( gpt>sts.gps )
       t0 = Time.time_gps( gpt[pkt_idx] )
       dt = t0 - sts
@@ -444,6 +448,9 @@ class L1aRawPixGenerate(object):
             dt = 0
             p0t = gpt[e0]
           else:  # count back from FSWT of next packet
+            if e0 >= tot_pkts-1:  # reached EOF
+              cont = 0
+              break  # get out of SEQ loop
             dt = (e1-FPPPKT) * FP_DUR
             p0t = gpt[e0+1] + dt
 
@@ -464,7 +471,7 @@ class L1aRawPixGenerate(object):
           # Copy pixels from PKT
           p1 = e1
           fpc = FPPPKT - p1  # FPs to copy from first PKT
-          while op < op1 and e0 < tot_pkts:
+          while op < op1 and e0 < tot_pkts-1:
             #print("SCENE=%d SCAN=%d E0=%d E1=%d GPS=%f" %(scene_id,scan,e0,e1,gpt[e0]))
 
             e3 = op1 - op
