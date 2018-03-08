@@ -89,6 +89,21 @@ EcostressImageGroundConnection::orbit_data
   return res;
 }
 
+boost::shared_ptr<GeoCal::QuaternionOrbitData>
+EcostressImageGroundConnection::orbit_data
+(const GeoCal::TimeWithDerivative& T,
+ const GeoCal::AutoDerivative<double>& Ic_sample) const
+{
+  boost::shared_ptr<GeoCal::QuaternionOrbitData> od =
+   boost::dynamic_pointer_cast<GeoCal::QuaternionOrbitData>(orb->orbit_data(T));
+  if(!od)
+    throw GeoCal::Exception("EcostressImageGroundConnection only works with orbits that return a QuaternionOrbitData");
+  boost::shared_ptr<GeoCal::QuaternionOrbitData> res =
+    boost::make_shared<GeoCal::QuaternionOrbitData>(*od);
+  res->sc_to_ci_with_derivative(od->sc_to_ci_with_derivative() * sm->rotation_quaterion(Ic_sample));
+  return res;
+}
+
 // See base class for description
 void EcostressImageGroundConnection::print(std::ostream& Os) const
 {
@@ -179,4 +194,40 @@ void EcostressImageGroundConnection::image_coordinate_scan_index
       const_cast<EcostressImageGroundConnection*>(this)->band(start_band);
     throw;
   }
+}
+
+// See base class for description
+blitz::Array<double, 2> 
+EcostressImageGroundConnection::image_coordinate_jac_parm
+(const GeoCal::GroundCoordinate& Gc) const
+{
+ boost::shared_ptr<EcostressTimeTable> ett =
+    boost::dynamic_pointer_cast<EcostressTimeTable>(tt);
+  if(!ett)
+    throw GeoCal::Exception("image_coordinate currently only works with EcostressTimeTable");
+  GeoCal::ImageCoordinateWithDerivative ic;
+  double best_line = -1e20;
+  for(int i = 0; i < ett->number_scan(); ++i) {
+    SampleFuncWithDerivative f(*this, i, Gc);
+    if(f.line_in_range()) {
+      double ln = f.fc_at_sol().line.value();
+      if(ln > best_line) {
+	best_line = ln;
+	ic = f.image_coordinate();
+      }
+    }
+  }
+  if(best_line < -1e19)
+    throw GeoCal::ImageGroundConnectionFailed();
+  blitz::Array<double, 2> res(2, std::max(ic.line.number_variable(), 
+				   ic.sample.number_variable()));
+  if(!ic.line.is_constant())
+    res(0, blitz::Range::all()) = ic.line.gradient();
+  else
+    res(0, blitz::Range::all()) = 0;
+  if(!ic.sample.is_constant())
+    res(1, blitz::Range::all()) = ic.sample.gradient();
+  else
+    res(1, blitz::Range::all()) = 0;
+  return res; 
 }

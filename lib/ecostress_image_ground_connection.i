@@ -35,6 +35,9 @@ public:
   (const GeoCal::GroundCoordinate& Gc) const;
   boost::shared_ptr<GeoCal::QuaternionOrbitData> orbit_data
     (const GeoCal::Time& T, double Ic_sample) const;
+  boost::shared_ptr<GeoCal::QuaternionOrbitData> orbit_data
+  (const GeoCal::TimeWithDerivative& T,
+   const GeoCal::AutoDerivative<double>& Ic_sample) const;
   void image_coordinate_scan_index
   (const GeoCal::GroundCoordinate& Gc,
    int Scan_index, GeoCal::ImageCoordinate& OUTPUT, bool& OUTPUT,

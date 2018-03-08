@@ -7513,7 +7513,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection_orbit_data(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection_orbit_data__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::EcostressImageGroundConnection *arg1 = (Ecostress::EcostressImageGroundConnection *) 0 ;
   GeoCal::Time *arg2 = 0 ;
@@ -7527,10 +7527,9 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection_orbit_data(PyObject *S
   boost::shared_ptr< GeoCal::Time const > tempshared2 ;
   double val3 ;
   int ecode3 = 0 ;
-  PyObject *swig_obj[3] ;
   boost::shared_ptr< GeoCal::QuaternionOrbitData > result;
   
-  if (!SWIG_Python_UnpackTuple(args,"EcostressImageGroundConnection_orbit_data",3,3,swig_obj)) SWIG_fail;
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
   {
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnection_t, 0 |  0 , &newmem);
@@ -7591,6 +7590,146 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection_orbit_data(PyObject *S
   return resultobj;
 fail:
   return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection_orbit_data__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressImageGroundConnection *arg1 = (Ecostress::EcostressImageGroundConnection *) 0 ;
+  GeoCal::TimeWithDerivative *arg2 = 0 ;
+  GeoCal::AutoDerivative< double > *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnection const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnection const > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  boost::shared_ptr< GeoCal::TimeWithDerivative const > tempshared2 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  boost::shared_ptr< GeoCal::AutoDerivative< double > const > tempshared3 ;
+  boost::shared_ptr< GeoCal::QuaternionOrbitData > result;
+  
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnection_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressImageGroundConnection_orbit_data" "', argument " "1"" of type '" "Ecostress::EcostressImageGroundConnection const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnection > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnection > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnection * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnection > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnection * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::TimeWithDerivative *ptr;
+    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], (void**)(&ptr), SWIGTYPE_p_GeoCal__TimeWithDerivative,  0 , &newmem);
+    if (SWIG_IsOK(res2)) {
+      arg2 = ptr;
+    } else {
+      res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t,  0 , &newmem);
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "EcostressImageGroundConnection_orbit_data" "', argument " "2"" of type '" "GeoCal::TimeWithDerivative const &""'"); 
+      }
+      if (!argp2) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressImageGroundConnection_orbit_data" "', argument " "2"" of type '" "GeoCal::TimeWithDerivative const &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared2 = *reinterpret_cast< boost::shared_ptr< const GeoCal::TimeWithDerivative > * >(argp2);
+        delete reinterpret_cast< boost::shared_ptr< const GeoCal::TimeWithDerivative > * >(argp2);
+        arg2 = const_cast< GeoCal::TimeWithDerivative * >(tempshared2.get());
+      } else {
+        arg2 = const_cast< GeoCal::TimeWithDerivative * >(reinterpret_cast< boost::shared_ptr< const GeoCal::TimeWithDerivative > * >(argp2)->get());
+      }
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::AutoDerivative<double> *ptr;
+    res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], (void**)(&ptr), SWIGTYPE_p_GeoCal__AutoDerivativeT_double_t,  0 , &newmem);
+    if (SWIG_IsOK(res3)) {
+      arg3 = ptr;
+    } else {
+      res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,  0 , &newmem);
+      if (!SWIG_IsOK(res3)) {
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "EcostressImageGroundConnection_orbit_data" "', argument " "3"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
+      }
+      if (!argp3) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressImageGroundConnection_orbit_data" "', argument " "3"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared3 = *reinterpret_cast< boost::shared_ptr< const GeoCal::AutoDerivative<double> > * >(argp3);
+        delete reinterpret_cast< boost::shared_ptr< const GeoCal::AutoDerivative<double> > * >(argp3);
+        arg3 = const_cast< GeoCal::AutoDerivative< double > * >(tempshared3.get());
+      } else {
+        arg3 = const_cast< GeoCal::AutoDerivative< double > * >(reinterpret_cast< boost::shared_ptr< const GeoCal::AutoDerivative<double> > * >(argp3)->get());
+      }
+    }
+  }
+  {
+    try {
+      result = ((Ecostress::EcostressImageGroundConnection const *)arg1)->orbit_data((GeoCal::TimeWithDerivative const &)*arg2,(GeoCal::AutoDerivative< double > const &)*arg3);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    resultobj = GeoCal::swig_to_python(result);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection_orbit_data(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[4] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"EcostressImageGroundConnection_orbit_data",0,3,argv))) SWIG_fail;
+  --argc;
+  if (argc == 3) {
+    int _v = 0;
+    {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t, 0);
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_1;
+    {
+      {
+        int res = SWIG_AsVal_double(argv[2], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_1;
+    return _wrap_EcostressImageGroundConnection_orbit_data__SWIG_0(self, argc, argv);
+  }
+check_1:
+  
+  if (argc == 3) {
+    return _wrap_EcostressImageGroundConnection_orbit_data__SWIG_1(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'EcostressImageGroundConnection_orbit_data'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressImageGroundConnection::orbit_data(GeoCal::Time const &,double) const\n"
+    "    Ecostress::EcostressImageGroundConnection::orbit_data(GeoCal::TimeWithDerivative const &,GeoCal::AutoDerivative< double > const &) const\n");
+  return 0;
 }
 
 
@@ -8841,9 +8980,9 @@ static PyMethodDef SwigMethods[] = {
 		""},
 	 { (char *)"EcostressImageGroundConnection_orbit_data", _wrap_EcostressImageGroundConnection_orbit_data, METH_VARARGS, (char *)"\n"
 		"\n"
-		"boost::shared_ptr< GeoCal::QuaternionOrbitData > EcostressImageGroundConnection::orbit_data(const GeoCal::Time &T, double Ic_sample) const\n"
-		"Return orbit data for the given time, which has the scan mirror angle\n"
-		"applied to it. \n"
+		"boost::shared_ptr< GeoCal::QuaternionOrbitData > EcostressImageGroundConnection::orbit_data(const GeoCal::TimeWithDerivative &T, const GeoCal::AutoDerivative<\n"
+		"double > &Ic_sample) const\n"
+		"\n"
 		""},
 	 { (char *)"EcostressImageGroundConnection_image_coordinate_scan_index", _wrap_EcostressImageGroundConnection_image_coordinate_scan_index, METH_VARARGS, (char *)"\n"
 		"\n"
