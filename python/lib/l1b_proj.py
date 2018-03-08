@@ -8,17 +8,18 @@ class L1bProj(object):
     '''This handles projecting a Igc to the surface, forming a vicar file
     that we can then match against. We can do this in parallel if you
     pass a pool in.'''
-    def __init__(self, igc_list, fname_list, ref_fname_list, ortho_base):
+    def __init__(self, igccol, fname_list, ref_fname_list, ortho_base):
         '''Project igc and generate a Vicar file fname.'''
         # We do 2x2 subpixeling. May need to adapt this once we figure
         # out the size we will use with Landsat data
-        self.igc_list = igc_list
+        self.igccol = igccol
         self.gc_arr = list()
         self.f = list()
         self.ortho_base = ortho_base
         self.ref_fname_list = ref_fname_list
-        for i, igc in enumerate(self.igc_list):
-            self.gc_arr.append(GroundCoordinateArray(igc, False, 2, 2))
+        for i in range(self.igccol.number_image):
+            self.gc_arr.append(GroundCoordinateArray(
+                self.igccol.image_ground_connection(i), False, 2, 2))
             self.f.append(self.gc_arr[i].raster_cover_vicar(fname_list[i],
                                           self.ortho_base.map_info))
     def proj_scan(self, it):
@@ -38,7 +39,8 @@ class L1bProj(object):
                                                                           smp)))
             self.ortho_base.create_subset_file(self.ref_fname_list[i], "VICAR",
                                                pt, Type = "Int16")
-        for i, igc in enumerate(self.igc_list):
+        for i in range(self.igccol.number_image):
+            igc = self.igccol.image_ground_connection(i)
             for j in range(igc.time_table.number_scan):
                 ls,le = igc.time_table.scan_index_to_line(j)
                 it.append((i, ls, le-ls))

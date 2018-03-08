@@ -81,8 +81,12 @@ else:
     ortho_base = geocal.Landsat7Global("/raid22/band62_VICAR",
                                        geocal.Landsat7Global.BAND62)
     radlist = [os.path.abspath(f) for f in args.l1b_rad]
-    
+
+orb = geocal.OrbitOffsetCorrection(orb)
 cam = geocal.read_shelve(l1_osp_dir + "/camera.xml")
+
+sys.path.append(l1_osp_dir)
+import l1b_geo_config
 
 geocal.makedirs_p(dirname)
 os.chdir(dirname)
@@ -106,31 +110,47 @@ try:
     log_fname = os.path.splitext(ofile[0])[0] + ".log"
     
     # Create igc/tiepoint for all the data
-    igc = []
-    proj_fname = []
-    ref_fname = []
-    f = geocal.SQLiteShelf("data.db")
-    f["_extra_python_init"] = "from ecostress import *"
-    f = None
+    igccol = geocal.IgcArray([], False)
+    with open("extra_python_init.py", "w") as fh:
+        print("from ecostress import *\n", file=fh)
     for i in range(len(radlist)):
         tt = ecostress.create_time_table(radlist[i])
         sm = ecostress.create_scan_mirror()
+        if(i == 0):
+            orb.insert_position_time_point(tt.min_time)
+            orb.insert_attitude_time_point(tt.min_time)
+        if(i == len(radlist) - 1):
+            orb.insert_position_time_point(tt.max_time)
+            orb.insert_attitude_time_point(tt.max_time)
         # Work with the SWIR channel data
         ras = geocal.GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" % radlist[i])
-        igc.append(ecostress.EcostressImageGroundConnection(orb, tt, cam, sm, dem, ras))
-        proj_fname.append("proj_initial_%d.img" % i)
-        ref_fname.append("ref_%d.img" % i)
-        geocal.write_shelve("data.db:igc_original_%d" % i, igc[i])
+        igccol.add_igc(ecostress.EcostressImageGroundConnection(orb, tt, cam,
+                                       sm, dem, ras, "Scene %d" % (i + 1)))
+
+    igccol.add_object(orb)
+    geocal.write_shelve("igccol_initial.xml", igccol)
 
     # Project data to surface
-    p = ecostress.L1bProj(igc, proj_fname, ref_fname, ortho_base)
-    p.proj(pool=pool)
+    t = ecostress.L1bTpCollect(igccol, ortho_base,
+                               fftsize=l1b_geo_config.fftsize,
+                               magnify=l1b_geo_config.magnify,
+                               magmin=l1b_geo_config.magmin,
+                               toler=l1b_geo_config.toler,
+                               redo=l1b_geo_config.redo,
+                               ffthalf=l1b_geo_config.ffthalf,
+                               seed=l1b_geo_config.seed,
+                               num_x=l1b_geo_config.num_x,
+                               num_y=l1b_geo_config.num_y)
+    
+    tpcol = t.tpcol(pool=pool)
+    geocal.write_shelve("tpcol.xml", tpcol)
     
     # Generate output data
     for i in range(len(radlist)):
         # Generate output
         print("Doing scene number %d" %i)
-        l1bgeo = ecostress.L1bGeoGenerate(igc[i], lwm, ofile[i],
+        l1bgeo = ecostress.L1bGeoGenerate(igccol.image_ground_connection(i),
+                                lwm, ofile[i],
                                 number_line = args.number_line,
                                 run_config = config, log_fname = log_fname,
                                 build_id = build_id,
