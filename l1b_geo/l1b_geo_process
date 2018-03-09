@@ -110,7 +110,7 @@ try:
     log_fname = os.path.splitext(ofile[0])[0] + ".log"
     
     # Create igc/tiepoint for all the data
-    igccol_initial = geocal.IgcArray([], False)
+    igccol_initial = ecostress.EcostressIgcCollection()
     with open("extra_python_init.py", "w") as fh:
         print("from ecostress import *\n", file=fh)
     for i in range(len(radlist)):
