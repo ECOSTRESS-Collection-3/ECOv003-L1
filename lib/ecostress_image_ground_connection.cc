@@ -440,3 +440,62 @@ EcostressImageGroundConnection::image_coordinate_jac_parm
     res(1, blitz::Range::all()) = 0;
   return res; 
 }
+
+blitz::Array<double, 1> 
+EcostressImageGroundConnection::collinearity_residual
+(const GeoCal::GroundCoordinate& Gc,
+ const GeoCal::ImageCoordinate& Ic_actual) const
+{
+  // Instead of the difference in ImageCoordinates returned by the
+  // Ipi, use the difference in the FrameCoordinate for the time
+  // associated with Ic_actual. This is faster to calculate, and the
+  // Jacobian is much better behaved.
+  GeoCal::Time t;
+  GeoCal::FrameCoordinate fc_actual;
+  tt->time(Ic_actual, t, fc_actual);
+  GeoCal::FrameCoordinate fc_predict = orbit_data(t, Ic_actual.sample)->
+    frame_coordinate(Gc, *cam, b);
+  blitz::Array<double, 1> res(2);
+  res(0) = fc_predict.line - fc_actual.line;
+  res(1) = fc_predict.sample - fc_actual.sample;
+  return res;
+}
+
+blitz::Array<double, 2> 
+EcostressImageGroundConnection::collinearity_residual_jacobian
+(const GeoCal::GroundCoordinate& Gc,
+ const GeoCal::ImageCoordinate& Ic_actual) const
+{
+  GeoCal::TimeWithDerivative t;
+  GeoCal::FrameCoordinateWithDerivative fc_actual;
+  GeoCal::ImageCoordinateWithDerivative ica(Ic_actual.line, Ic_actual.sample);
+  tt->time_with_derivative(ica, t, fc_actual);
+  GeoCal::FrameCoordinateWithDerivative fc_predict = orbit_data(t, ica.sample)->
+    frame_coordinate_with_derivative(Gc, *cam, b);
+  blitz::Array<double, 2> res(2, fc_predict.line.number_variable() + 3);
+  res(0, blitz::Range(0, res.cols() - 4)) = 
+    (fc_predict.line - fc_actual.line).gradient();
+  res(1, blitz::Range(0, res.cols() - 4)) = 
+    (fc_predict.sample - fc_actual.sample).gradient();
+
+  // Part of jacobian for cf coordinates.
+  boost::shared_ptr<GeoCal::OrbitData> od = orbit_data(t.value(), Ic_actual.sample);
+  boost::shared_ptr<GeoCal::CartesianFixed> p1 = od->position_cf();
+  boost::shared_ptr<GeoCal::CartesianFixed> p2 = Gc.convert_to_cf();
+  GeoCal::CartesianFixedLookVectorWithDerivative lv;
+  for(int i = 0; i < 3; ++i) {
+    GeoCal::AutoDerivative<double> p(p2->position[i], i, 3);
+    lv.look_vector[i] = p - p1->position[i];
+  }
+  GeoCal::ScLookVectorWithDerivative sl = od->sc_look_vector(lv);
+  boost::shared_ptr<GeoCal::Camera> c = cam;
+  GeoCal::ArrayAd<double, 1> poriginal = c->parameter_with_derivative();
+  c->parameter_with_derivative(c->parameter());
+  GeoCal::FrameCoordinateWithDerivative fc_gc =
+    c->frame_coordinate_with_derivative(sl, b);
+  c->parameter_with_derivative(poriginal);
+  res(0, blitz::Range(res.cols() - 3, blitz::toEnd)) = fc_gc.line.gradient();
+  res(1, blitz::Range(res.cols() - 3, blitz::toEnd)) = fc_gc.sample.gradient();
+  return res;
+}
+

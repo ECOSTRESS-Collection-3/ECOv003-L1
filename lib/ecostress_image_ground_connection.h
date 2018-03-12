@@ -47,6 +47,12 @@ public:
 		 GeoCal::CartesianFixedLookVector& Lv,
 		 boost::shared_ptr<GeoCal::CartesianFixed>& P) const
   { throw GeoCal::Exception("Need to implement this.\n"); }
+  virtual blitz::Array<double, 1> 
+  collinearity_residual(const GeoCal::GroundCoordinate& Gc,
+			const GeoCal::ImageCoordinate& Ic_actual) const;
+  virtual blitz::Array<double, 2> 
+  collinearity_residual_jacobian(const GeoCal::GroundCoordinate& Gc,
+		        const GeoCal::ImageCoordinate& Ic_actual) const;
   virtual boost::shared_ptr<GeoCal::GroundCoordinate> 
   ground_coordinate_dem(const GeoCal::ImageCoordinate& Ic,
 			const GeoCal::Dem& D) const;
