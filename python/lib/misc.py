@@ -4,6 +4,7 @@ import re
 import subprocess
 import h5py
 import os
+import sys
 from ecostress_swig import *
 
 def create_dem(config):

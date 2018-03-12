@@ -84,6 +84,8 @@ else:
 
 orb = geocal.OrbitOffsetCorrection(orb)
 cam = geocal.read_shelve(l1_osp_dir + "/camera.xml")
+# Don't fit any of the camera parameters, hold them all fixed
+cam.mask_all_parameter()
 
 sys.path.append(l1_osp_dir)
 import l1b_geo_config
@@ -144,8 +146,13 @@ try:
     if(not l1b_geo_config.skip_sba):
         tpcol = t.tpcol(pool=pool)
         geocal.write_shelve("tpcol.xml", tpcol)
-        # Temp, before we put sba in
-        igccol_corrected = igccol_initial
+        log = open(log_fname, "a")
+        ecostress.process_run(["sba", "--verbose", "--initial-hold-gcp-fixed",
+                          "--gcp-sigma=50",  "igccol_initial.xml",
+                          "tpcol.xml", "igccol_sba.xml", "tpcol_sba.xml"],
+                         out_fh=log)
+        log.flush()
+        igccol_corrected = geocal.read_shelve("igccol_sba.xml")
     else:
         igccol_corrected = igccol_initial
         
