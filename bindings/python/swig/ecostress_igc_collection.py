@@ -196,9 +196,7 @@ class EcostressIgcCollection(geocal_swig.igc_array.IgcArray):
 
     This is a collection of EcostressImageGroundConnection.
 
-    This is just a IgcArray, with a few convenience functions put in. We
-    may remove this as a separate class, for but now we'll have this in
-    place.
+    This is just a IgcArray, with a few convenience functions put in.
 
     C++ includes: ecostress_igc_collection.h 
     """

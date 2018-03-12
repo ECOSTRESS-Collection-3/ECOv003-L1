@@ -52,6 +52,9 @@ BOOST_AUTO_TEST_CASE(image_coordinate)
 }
 
 
+// Note jacobian test in ecostress_igc_collection_test.cc, it is
+// easier to test with a full collection.
+
 BOOST_AUTO_TEST_CASE(serialization)
 {
   std::string d = GeoCal::serialize_write_string(igc);

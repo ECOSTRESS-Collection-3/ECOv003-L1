@@ -19,6 +19,197 @@ void EcostressImageGroundConnection::serialize(Archive & ar,
 ECOSTRESS_IMPLEMENT(EcostressImageGroundConnection);
 
 //-------------------------------------------------------------------------
+/// Constructor
+//-------------------------------------------------------------------------
+
+EcostressImageGroundConnection::SampleFunc::SampleFunc
+(const EcostressImageGroundConnection& Igc, int Scan_index,
+ const GeoCal::GroundCoordinate& Gp)
+      : igc(Igc), can_solve(false), gp(Gp),
+	tt(boost::dynamic_pointer_cast<EcostressTimeTable>(Igc.time_table()))
+{
+  // We can worry about generalizing this if it ever becomes an
+  // issue, but for now we assume the time table is an EcostressTimeTable.
+  if(!tt)
+    throw GeoCal::Exception("image_coordinate currently only works with EcostressTimeTable");
+  epoch = tt->min_time();
+  int lstart, lend;
+  tt->scan_index_to_line(Scan_index, lstart, lend);
+  GeoCal::Time tmin, tmax;
+  GeoCal::FrameCoordinate fc;
+  tt->time(GeoCal::ImageCoordinate(lstart, 0), tmin, fc);
+  tt->time(GeoCal::ImageCoordinate(lstart, Igc.number_sample() - 1), tmax,
+	   fc);
+  if((*this)(tmin - epoch) * (*this)(tmax - epoch) > 0)
+    // Ok if we fail to get a solution, we just leave can_solve false
+    return;
+  try {
+    tsol = epoch + gsl_root(*this, tmin - epoch, tmax - epoch);
+    can_solve = true;
+  } catch(const GeoCal::ConvergenceFailure& E) {
+    // Ok if we fail to get a solution, we just leave can_solve false
+  }
+}
+
+//-------------------------------------------------------------------------
+/// Constructor
+//-------------------------------------------------------------------------
+
+EcostressImageGroundConnection::SampleFuncWithDerivative::SampleFuncWithDerivative
+(const EcostressImageGroundConnection& Igc, int Scan_index,
+ const GeoCal::GroundCoordinate& Gp)
+  : igc(Igc), can_solve(false), gp(Gp),
+    tt(boost::dynamic_pointer_cast<EcostressTimeTable>(Igc.time_table()))
+{
+  // We can worry about generalizing this if it ever becomes an
+  // issue, but for now we assume the time table is an EcostressTimeTable.
+  if(!tt)
+    throw GeoCal::Exception("image_coordinate currently only works with EcostressTimeTable");
+  epoch = tt->min_time();
+  int lstart, lend;
+  tt->scan_index_to_line(Scan_index, lstart, lend);
+  GeoCal::Time tmin, tmax;
+  GeoCal::FrameCoordinate fc;
+  tt->time(GeoCal::ImageCoordinate(lstart, 0), tmin, fc);
+  tt->time(GeoCal::ImageCoordinate(lstart, Igc.number_sample() - 1), tmax,
+	   fc);
+  if((*this)(tmin - epoch) * (*this)(tmax - epoch) > 0)
+    // Ok if we fail to get a solution, we just leave can_solve false
+    return;
+  try {
+    tsol = GeoCal::TimeWithDerivative(epoch) +
+      gsl_root_with_derivative(*this, tmin - epoch, tmax - epoch);
+    can_solve = true;
+  } catch(const GeoCal::ConvergenceFailure& E) {
+    // Ok if we fail to get a solution, we just leave can_solve false
+  }
+}
+
+//-------------------------------------------------------------------------
+/// FrameCoordinates at the solution
+//-------------------------------------------------------------------------
+
+GeoCal::FrameCoordinate
+EcostressImageGroundConnection::SampleFunc::fc_at_sol() const
+{
+  double sample =
+    tt->image_coordinate(tsol, GeoCal::FrameCoordinate(0,0)).sample;
+  return igc.orbit_data(tsol, sample)->frame_coordinate(gp, *igc.camera(), igc.band());
+}
+
+//-------------------------------------------------------------------------
+/// FrameCoordinates at the solution
+//-------------------------------------------------------------------------
+
+GeoCal::FrameCoordinateWithDerivative
+EcostressImageGroundConnection::SampleFuncWithDerivative::fc_at_sol() const
+{
+  GeoCal::AutoDerivative<double> sample =
+    tt->image_coordinate_with_derivative(tsol, GeoCal::FrameCoordinateWithDerivative(0,0)).sample;
+  return igc.orbit_data(tsol, sample)->frame_coordinate_with_derivative(gp, *igc.camera(), igc.band());
+}
+
+//-------------------------------------------------------------------------
+/// Return true if line coordinate is in the range of the camera.
+//-------------------------------------------------------------------------
+
+bool EcostressImageGroundConnection::SampleFunc::line_in_range() const
+{
+  if(!can_solve)
+    return false;
+  double ln = fc_at_sol().line;
+  return ln >= 0 && ln <= igc.camera()->number_line(igc.band());
+}
+
+//-------------------------------------------------------------------------
+/// Return true if line coordinate is in the range of the camera.
+//-------------------------------------------------------------------------
+
+bool EcostressImageGroundConnection::SampleFuncWithDerivative::line_in_range() const
+{
+  if(!can_solve)
+    return false;
+  double ln = fc_at_sol().line.value();
+  return ln >= 0 && ln <= igc.camera()->number_line(igc.band());
+}
+
+//-------------------------------------------------------------------------
+/// ImageCoordinates at the solution
+//-------------------------------------------------------------------------
+
+GeoCal::ImageCoordinate
+EcostressImageGroundConnection::SampleFunc::image_coordinate() const
+{
+  if(!can_solve)
+    throw GeoCal::Exception("Can't solve");
+  return tt->image_coordinate(tsol, fc_at_sol());
+}
+
+//-------------------------------------------------------------------------
+/// ImageCoordinates at the solution
+//-------------------------------------------------------------------------
+
+GeoCal::ImageCoordinateWithDerivative
+EcostressImageGroundConnection::SampleFuncWithDerivative::image_coordinate() const
+{
+  if(!can_solve)
+    throw GeoCal::Exception("Can't solve");
+  return tt->image_coordinate_with_derivative(tsol, fc_at_sol());
+}
+
+//-------------------------------------------------------------------------
+/// Function used by solver
+//-------------------------------------------------------------------------
+
+double EcostressImageGroundConnection::SampleFunc::operator()
+  (const double& Toffset) const
+{
+  double sample =
+    tt->image_coordinate(epoch + Toffset,
+			 GeoCal::FrameCoordinate(0,0)).sample;
+  return igc.orbit_data(epoch + Toffset, sample)->frame_coordinate(gp, *igc.camera(), igc.band()).sample;
+}
+
+//-------------------------------------------------------------------------
+/// Function used by solver
+//-------------------------------------------------------------------------
+
+double EcostressImageGroundConnection::SampleFuncWithDerivative::operator()
+  (const double& Toffset) const
+{
+  double sample =
+    tt->image_coordinate(epoch + Toffset,
+			 GeoCal::FrameCoordinate(0,0)).sample;
+  return igc.orbit_data(epoch + Toffset, sample)->frame_coordinate(gp, *igc.camera(), igc.band()).sample;
+}
+
+//-------------------------------------------------------------------------
+/// Derivative with respect to Toffset
+//-------------------------------------------------------------------------
+
+double EcostressImageGroundConnection::SampleFuncWithDerivative::df
+(double Toffset) const
+{
+  // Do this numerically for now, we can revisit this if needed
+  const double delta = 1e-4;
+  return ((*this)(Toffset + delta) - (*this)(Toffset)) / delta;
+}
+
+//-------------------------------------------------------------------------
+/// Derivative with respect to parameters
+//-------------------------------------------------------------------------
+GeoCal::AutoDerivative<double>
+EcostressImageGroundConnection::SampleFuncWithDerivative::f_with_derivative
+(double Toffset) const
+{
+  GeoCal::AutoDerivative<double> sample =
+    tt->image_coordinate_with_derivative
+    (GeoCal::TimeWithDerivative(epoch) + Toffset,
+     GeoCal::FrameCoordinateWithDerivative(0,0)).sample;
+  return igc.orbit_data(GeoCal::TimeWithDerivative(epoch) + Toffset, sample)->frame_coordinate_with_derivative(gp, *igc.camera(), igc.band()).sample;
+}
+
+//-------------------------------------------------------------------------
 /// Constructor.
 //-------------------------------------------------------------------------
 
@@ -201,7 +392,25 @@ blitz::Array<double, 2>
 EcostressImageGroundConnection::image_coordinate_jac_parm
 (const GeoCal::GroundCoordinate& Gc) const
 {
- boost::shared_ptr<EcostressTimeTable> ett =
+  // Not sure what the problem is, but the jacobian we calculate with
+  // AutoDerivative doesn't agree at all with the finite difference
+  // jacobian for the sample coordinate (line agrees pretty
+  // well). Spent a bit of time trying to track this down, but
+  // couldn't find the problem. We don't actually use this for the
+  // sba, since we override the collinearity_residual function. So for
+  // now, just throw an exception if this is called. If this ever ends
+  // up mattering, we can work through this and try to figure out
+  // whatever the problem is here.
+  // There is a stubbed out unit test in ecostress_igc_collection_test.cc
+  // (so *not* ecostress_image_ground_connection_test.cc because
+  // easier set up with a full collection) that illustrates the problem.
+
+  throw GeoCal::Exception("Not implemented");
+
+  // Leave the rest of the code in place, but we don't actually execute
+  // any of it.
+  
+  boost::shared_ptr<EcostressTimeTable> ett =
     boost::dynamic_pointer_cast<EcostressTimeTable>(tt);
   if(!ett)
     throw GeoCal::Exception("image_coordinate currently only works with EcostressTimeTable");
