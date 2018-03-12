@@ -16,6 +16,7 @@ namespace Ecostress {
 class EcostressCamera : public GeoCal::QuaternionCamera {
 public:
   EcostressCamera();
+  void mask_all_parameter();
   %python_attribute_with_set(paraxial_transform, boost::shared_ptr<EcostressParaxialTransform>);
   %pickle_serialization();
 };

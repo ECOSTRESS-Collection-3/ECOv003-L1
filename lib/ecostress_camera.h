@@ -35,6 +35,8 @@ public:
   virtual boost::math::quaternion<GeoCal::AutoDerivative<double> > 
   focal_plane_to_dcs(int Band, const GeoCal::AutoDerivative<double>& Xfp, 
 		     const GeoCal::AutoDerivative<double>& Yfp) const;
+  /// Convenience function to mask all the parameters we can fit for.
+  void mask_all_parameter() { parameter_mask_ = false; }
 private:
   boost::shared_ptr<EcostressParaxialTransform> paraxial_transform_;
   friend class boost::serialization::access;

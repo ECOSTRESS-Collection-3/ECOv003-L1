@@ -248,6 +248,15 @@ class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
         """
         _ecostress_camera.EcostressCamera_swiginit(self, _ecostress_camera.new_EcostressCamera())
 
+    def mask_all_parameter(self):
+        """
+
+        void Ecostress::EcostressCamera::mask_all_parameter()
+        Convenience function to mask all the parameters we can fit for. 
+        """
+        return _ecostress_camera.EcostressCamera_mask_all_parameter(self)
+
+
     def _v_paraxial_transform(self, *args):
         """
 
@@ -270,6 +279,7 @@ class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
       return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
 
     __swig_destroy__ = _ecostress_camera.delete_EcostressCamera
+EcostressCamera.mask_all_parameter = new_instancemethod(_ecostress_camera.EcostressCamera_mask_all_parameter, None, EcostressCamera)
 EcostressCamera._v_paraxial_transform = new_instancemethod(_ecostress_camera.EcostressCamera__v_paraxial_transform, None, EcostressCamera)
 EcostressCamera_swigregister = _ecostress_camera.EcostressCamera_swigregister
 EcostressCamera_swigregister(EcostressCamera)

@@ -6940,6 +6940,48 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_EcostressCamera_mask_all_parameter(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressCamera *arg1 = (Ecostress::EcostressCamera *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressCamera > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressCamera > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera_mask_all_parameter" "', argument " "1"" of type '" "Ecostress::EcostressCamera *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressCamera * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressCamera * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      (arg1)->mask_all_parameter();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_EcostressCamera__v_paraxial_transform__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::EcostressCamera *arg1 = (Ecostress::EcostressCamera *) 0 ;
@@ -7167,6 +7209,11 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		"Right now we have everything hardcoded, we'll change this to use a\n"
 		"configuration file in the future. \n"
+		""},
+	 { (char *)"EcostressCamera_mask_all_parameter", (PyCFunction)_wrap_EcostressCamera_mask_all_parameter, METH_O, (char *)"\n"
+		"\n"
+		"void Ecostress::EcostressCamera::mask_all_parameter()\n"
+		"Convenience function to mask all the parameters we can fit for. \n"
 		""},
 	 { (char *)"EcostressCamera__v_paraxial_transform", _wrap_EcostressCamera__v_paraxial_transform, METH_VARARGS, (char *)"\n"
 		"\n"
