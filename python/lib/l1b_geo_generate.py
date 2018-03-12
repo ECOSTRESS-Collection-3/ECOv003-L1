@@ -50,7 +50,7 @@ class L1bGeoGenerate(object):
         print("Done with [%d, %d]" % (start_line, start_line+res.shape[0]))
         if(self.log_fname is not None):
             self.log = open(self.log_fname, "a")
-            print("Done with [%d, %d]" % (start_line, start_line+res.shape[0]),
+            print("INFO:L1bGeoGenerate:Done with [%d, %d]" % (start_line, start_line+res.shape[0]),
                   file = self.log)
             self.log.flush()
         lat = res[:,:,0,0,0]

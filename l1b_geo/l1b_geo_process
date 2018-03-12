@@ -142,7 +142,8 @@ try:
                                ffthalf=l1b_geo_config.ffthalf,
                                seed=l1b_geo_config.seed,
                                num_x=l1b_geo_config.num_x,
-                               num_y=l1b_geo_config.num_y)
+                               num_y=l1b_geo_config.num_y,
+                               log_fname=log_fname)
     if(not l1b_geo_config.skip_sba):
         tpcol = t.tpcol(pool=pool)
         geocal.write_shelve("tpcol.xml", tpcol)
@@ -160,6 +161,9 @@ try:
     for i in range(len(radlist)):
         # Generate output
         print("Doing scene number %d" %i)
+        log = open(log_fname, "a")
+        print("INFO:l1b_geo_process:Doing scene number %d" % i, file=log)
+        log.flush()
         l1bgeo = ecostress.L1bGeoGenerate(
                                 igccol_corrected.image_ground_connection(i),
                                 lwm, ofile[i],
