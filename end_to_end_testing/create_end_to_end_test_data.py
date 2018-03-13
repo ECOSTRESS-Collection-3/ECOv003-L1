@@ -67,7 +67,7 @@ dem = SrtmDem("",False)
 sm = EcostressScanMirror()
 
 # Camera comes from the separate ecostress_camera_generate.py script
-cam = read_shelve("camera.xml")
+cam = read_shelve("camera_20180208.xml")
 # ***********************************
 # Need to fix this time calculation
 # ***********************************

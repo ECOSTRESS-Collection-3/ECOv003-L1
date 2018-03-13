@@ -18,10 +18,10 @@ class L1aBbSimulate(object):
         self.bb_295_mean = [1238, 1238, 996, 925, 849, 4]
         self.bb_295_sigma = [0, 0, 0, 0, 0, 1]
         if(use_swir_all_band):
-            self.bb_325_mean[:] = self.bb_325_mean[0]
-            self.bb_325_sigma[:] = self.bb_325_sigma[0]
-            self.bb_295_mean[:] = self.bb_295_mean[0]
-            self.bb_295_sigma[:] = self.bb_295_sigma[0]
+            self.bb_325_mean = [self.bb_325_mean[0]] * 6
+            self.bb_325_sigma = [self.bb_325_sigma[0]] * 6
+            self.bb_295_mean[:] = [self.bb_295_mean[0]] * 6
+            self.bb_295_sigma[:] = [self.bb_295_sigma[0]] * 6
         
     def copy_metadata(self, field):
         self.m.set(field, self.l1a_pix["/StandardMetadata/" + field].value)
