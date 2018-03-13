@@ -5,9 +5,23 @@
 import pandas as pd
 import numpy as np
 from multipolyfit import multipolyfit
-from ecostress import *
+import ecostress
+import geocal
 
-df = pd.read_excel("FPA distortion20140522.xlsx", "Data", header = 0,
+# Note nothing actually changes here, I think the differences go into the
+# actual ecostress camera model
+# Original test data
+if(False):
+    inp = "FPA distortion20140522.xlsx"
+    out1 = "cam_paraxial_20140522.xml"
+    out2 = "camera_20140522.xml"
+# Updated camera model from Bill Johnson
+if(True):
+    inp = "FPA distortion20180208.xlsx"
+    out1 = "cam_paraxial_20180208.xml"
+    out2 = "camera_20180208.xml"
+
+df = pd.read_excel(inp, "Data", header = 0,
                    skiprows = [1,])
 real = np.empty((df['Predicted X'].shape[0], 2))
 pred = np.empty((df['Predicted X'].shape[0], 2))
@@ -38,15 +52,15 @@ t, powers = multipolyfit(pred, real[:,1], deg, powers_out=True)
 print(powers)
 
 # Create a EcostressParaxialTransform that fits this data.
-tran = EcostressParaxialTransform()
+tran = ecostress.EcostressParaxialTransform()
 tran.real_to_par[0,:] = multipolyfit(real, pred[:,0], deg)
 tran.real_to_par[1,:] = multipolyfit(real, pred[:,1], deg)
 tran.par_to_real[0,:] = multipolyfit(pred, real[:,0], deg)
 tran.par_to_real[1,:] = multipolyfit(pred, real[:,1], deg)
-write_shelve("cam_paraxial.xml", tran)
-cam = EcostressCamera()
+geocal.write_shelve(out1, tran)
+cam = ecostress.EcostressCamera()
 cam.paraxial_transform = tran
-write_shelve("camera.xml", cam)
+geocal.write_shelve(out2, cam)
 
 # Check that we calculate the right values
 print("Predict real x max error (pixel) ", 
