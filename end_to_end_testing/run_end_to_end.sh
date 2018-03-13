@@ -7,9 +7,9 @@ scene_file="/home/smyth/Local/ecostress-test-data/latest/Scene_80005_20150124T20
 
 #l1a_raw_process L0B_80005_20150124T204251_0100_01.h5 ${scene_file} ${l1_osp_dir} l1a_raw_run
 
-l1a_cal_process l1a_raw_run/*BB*_80005_001*.h5 l1a_raw_run/*PIX*_80005_001*.h5 ${l1_osp_dir} l1a_cal_run
-l1a_cal_process l1a_raw_run/*BB*_80005_002*.h5 l1a_raw_run/*PIX*_80005_002*.h5 ${l1_osp_dir} l1a_cal_run
-l1a_cal_process l1a_raw_run/*BB*_80005_003*.h5 l1a_raw_run/*PIX*_80005_003*.h5 ${l1_osp_dir} l1a_cal_run
+#l1a_cal_process l1a_raw_run/*BB*_80005_001*.h5 l1a_raw_run/*PIX*_80005_001*.h5 ${l1_osp_dir} l1a_cal_run
+#l1a_cal_process l1a_raw_run/*BB*_80005_002*.h5 l1a_raw_run/*PIX*_80005_002*.h5 ${l1_osp_dir} l1a_cal_run
+#l1a_cal_process l1a_raw_run/*BB*_80005_003*.h5 l1a_raw_run/*PIX*_80005_003*.h5 ${l1_osp_dir} l1a_cal_run
 
 l1b_rad_process l1a_cal_run/*PIX*_80005_001*.h5 l1a_cal_run/*GAIN*_80005_001*.h5 l1a_raw_run/*ATT*_80005_*.h5 ${l1_osp_dir} l1b_rad_run
 l1b_rad_process l1a_cal_run/*PIX*_80005_002*.h5 l1a_cal_run/*GAIN*_80005_002*.h5 l1a_raw_run/*ATT*_80005_*.h5 ${l1_osp_dir} l1b_rad_run

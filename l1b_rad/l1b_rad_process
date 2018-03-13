@@ -62,7 +62,7 @@ else:
                                  "Attitude/time_j2000",
                                  "Attitude/quaternion")
     dem = geocal.SrtmDem(os.environ["ELEV_ROOT"],False,
-                  DatumGeoid96(os.environ["AFIDS_VDEV_DATA"] +
+                  geocal.DatumGeoid96(os.environ["AFIDS_VDEV_DATA"] +
                                "/EGM96_20_x100.HLF"))
     
 
