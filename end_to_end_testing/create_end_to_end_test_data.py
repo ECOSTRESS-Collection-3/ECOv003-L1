@@ -14,6 +14,9 @@ create_l1a_raw_pix = True
 create_l1a_raw_att = True
 create_l1a_eng = True
 create_l0b = True
+# For testing band to band, useful to use the same radiance data for all
+# bands.
+use_swir_all_band = True
 osp_dir= "../../ecostress-test-data/latest/l1_osp_dir"
 
 # Center times for each of the passes. See the wiki at 
@@ -50,6 +53,11 @@ if(not os.path.exists(aster_mosaic_dir)):
 sdata = [VicarLiteRasterImage(aster_mosaic_dir + "calnorm_b%d.img" % b, 1,
                               VicarLiteFile.READ, 1000, 1000)
          for b in ecostress_to_aster_band()]
+if(use_swir_all_band):
+    sdata = [VicarLiteRasterImage(aster_mosaic_dir + "calnorm_b%d.img" % b, 1,
+                                  VicarLiteFile.READ, 1000, 1000)
+             for b in [4,4,4,4,4,4]]
+
 
 orb = OrbitTimeShift(SpiceOrbit(SpiceOrbit.ISS_ID, "iss_spice/iss_2015.bsp"),
                      time_shift[pass_index])
@@ -100,7 +108,8 @@ for s in range(nscene[pass_index]):
     
     l1a_bb_fname = ecostress_file_name("L1A_BB", orbit_num[pass_index],
                                        s + 1, tt.min_time)
-    l1a_bb_sim = L1aBbSimulate(l1a_pix_fname)
+    l1a_bb_sim = L1aBbSimulate(l1a_pix_fname,
+                               use_swir_all_band=use_swir_all_band)
     if(create_l1a_bb):
         l1a_bb_sim.create_file(l1a_bb_fname)
 
