@@ -185,6 +185,36 @@ def igc_hres(unit_test_data, test_data):
     igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
     yield igc
     
+@pytest.yield_fixture(scope="function")
+def igc_btob(unit_test_data, test_data):
+    '''Like igc_hres, but using test data better suited for band to band 
+    testing. We have the SWIR band for each of the bands'''
+    if(not have_swig):
+        raise RuntimeError("You need to install the ecostress swig code first. You can install just this by doing 'make install-swig-python'")
+    cam = read_shelve(unit_test_data + "camera.xml")
+    orb_fname = test_data + "band_to_band/L1A_RAW_ATT_80005_20150124T204250_0100_01.h5"
+    orb = HdfOrbit_Eci_TimeJ2000(orb_fname, "", "Ephemeris/time_j2000",
+                                 "Ephemeris/eci_position",
+                                 "Ephemeris/eci_velocity",
+                                 "Attitude/time_j2000",
+                                 "Attitude/quaternion")
+    rad_fname = test_data + "band_to_band/ECOSTRESS_L1A_PIX_80005_001_20150124T204250_0100_01.h5"
+
+    f = h5py.File(rad_fname, "r")
+    tmlist = f["/Time/line_start_time_j2000"][::256]
+    # False here means we've haven't averaged the 256 lines.
+    vtime = Vector_Time()
+    for t in tmlist:
+        vtime.append(Time.time_j2000(t))
+    tt = EcostressTimeTable(vtime, False)
+    
+    # False here says it ok for SrtmDem to not have tile. This gives support
+    # for data that is over the ocean.
+    dem = SrtmDem("",False)
+    sm = EcostressScanMirror()
+    igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
+    yield igc
+
 slow = pytest.mark.skipif(
     not pytest.config.getoption("--run-slow"),
     reason="need --run-slow option to run"
