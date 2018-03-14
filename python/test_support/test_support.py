@@ -4,7 +4,7 @@ import os
 from geocal import makedirs_p, read_shelve, Ipi, SrtmDem, \
     IpiImageGroundConnection, SrtmLwmData, HdfOrbit_Eci_TimeJ2000, \
     MeasuredTimeTable, Time, ImageCoordinate, VicarLiteRasterImage, \
-    VicarLiteFile, Vector_Time, GdalRasterImage
+    VicarLiteFile, Vector_Time, GdalRasterImage, Landsat7Global
 import h5py
 try:
     from ecostress_swig import *
@@ -87,10 +87,20 @@ def aster_mosaic_dir():
     yield dir
 
 @pytest.yield_fixture(scope="function")
+def ortho():
+    dir = "/project/ancillary/LANDSAT/band62_VICAR"
+    if(not os.path.exists(dir)):
+        # Location on pistol
+        dir = "/raid22/band62_VICAR"
+    if(not os.path.exists(dir)):
+        raise RuntimeError("Can't find location of ortho base")
+    return Landsat7Global(dir, Landsat7Global.BAND62)
+
+@pytest.yield_fixture(scope="function")
 def aster_mosaic_surface_data(aster_mosaic_dir):
     sdata = [VicarLiteRasterImage(aster_mosaic_dir + "calnorm_b%d.img" % b, 1,
                                   VicarLiteFile.READ, 1000, 1000)
-             for b in [14,14,12,11,10,4]]
+             for b in [4, 10, 11, 12, 14, 14]]
     yield sdata
         
 @pytest.yield_fixture(scope="function")
