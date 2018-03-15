@@ -88,13 +88,13 @@ def aster_mosaic_dir():
 
 @pytest.yield_fixture(scope="function")
 def ortho():
-    dir = "/project/ancillary/LANDSAT/band62_VICAR"
+    dir = "/project/ancillary/LANDSAT"
     if(not os.path.exists(dir)):
         # Location on pistol
-        dir = "/raid22/band62_VICAR"
+        dir = "/raid22"
     if(not os.path.exists(dir)):
         raise RuntimeError("Can't find location of ortho base")
-    return Landsat7Global(dir, Landsat7Global.BAND62)
+    return Landsat7Global(dir, Landsat7Global.BAND5)
 
 @pytest.yield_fixture(scope="function")
 def aster_mosaic_surface_data(aster_mosaic_dir):

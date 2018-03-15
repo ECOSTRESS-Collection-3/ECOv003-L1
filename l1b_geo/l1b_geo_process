@@ -78,8 +78,8 @@ else:
                   geocal.DatumGeoid96(os.environ["AFIDS_VDEV_DATA"] +
                                "/EGM96_20_x100.HLF"))
     lwm = geocal.SrtmLwmData("/raid27/tllogan/all_lwm_links", False)
-    ortho_base = geocal.Landsat7Global("/raid22/band62_VICAR",
-                                       geocal.Landsat7Global.BAND62)
+    ortho_base = geocal.Landsat7Global("/raid22",
+                                       geocal.Landsat7Global.BAND5)
     radlist = [os.path.abspath(f) for f in args.l1b_rad]
 
 orb = geocal.OrbitOffsetCorrection(orb)
@@ -129,7 +129,6 @@ try:
         igccol_initial.add_igc(ecostress.EcostressImageGroundConnection(orb, tt, cam,
                                        sm, dem, ras, "Scene %d" % (i + 1)))
 
-    igccol_initial.add_object(orb)
     geocal.write_shelve("igccol_initial.xml", igccol_initial)
 
     # Project data to surface
