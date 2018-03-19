@@ -46,6 +46,7 @@ class L1bGeoGenerate(object):
         # Handle number_sample too large here, so we don't have to
         # have special handling elsewhere
         start_line, number_line = it
+        # Note res here refers to an internal cache array of gc_arr
         res = self.gc_arr.ground_coor_scan_arr(start_line, number_line)
         print("Done with [%d, %d]" % (start_line, start_line+res.shape[0]))
         if(self.log_fname is not None):
@@ -53,13 +54,17 @@ class L1bGeoGenerate(object):
             print("INFO:L1bGeoGenerate:Done with [%d, %d]" % (start_line, start_line+res.shape[0]),
                   file = self.log)
             self.log.flush()
-        lat = res[:,:,0,0,0]
-        lon = res[:,:,0,0,1]
-        height = res[:,:,0,0,2]
-        vzenith = res[:,:,0,0,3]
-        vazimuth = res[:,:,0,0,4]
-        szenith = res[:,:,0,0,5]
-        sazimuth = res[:,:,0,0,6]
+        # Note the copy() here is very important. As an optimization, ground_coor_scan_arr
+        # return a reference to an internal cache variable. This array gets overwritten in
+        # the next call to ground_coor_scan_arr. So we need to explicitly copy anything
+        # we want to keep. 
+        lat = res[:,:,0,0,0].copy()
+        lon = res[:,:,0,0,1].copy()
+        height = res[:,:,0,0,2].copy()
+        vzenith = res[:,:,0,0,3].copy()
+        vazimuth = res[:,:,0,0,4].copy()
+        szenith = res[:,:,0,0,5].copy()
+        sazimuth = res[:,:,0,0,6].copy()
         lfrac = GroundCoordinateArray.interpolate(self.lwm, lat, lon) * 100.0
         tlinestart = np.array([self.igc.pixel_time(geocal.ImageCoordinate(ln, 0)).j2000 for ln in range(start_line, start_line+res.shape[0])])
         return lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac, tlinestart
