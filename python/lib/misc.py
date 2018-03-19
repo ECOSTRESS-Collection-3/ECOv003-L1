@@ -29,8 +29,8 @@ def create_ortho_base(config):
     if("ECOSTRESS_USE_AFIDS_ENV" in os.environ):
         # Location on pistol, use if found, otherwise use setting in
         # run config file
-        if(os.path.exists("/raid22/band62_VICAR")):
-            ortho_base_dir = "/raid22/band62_VICAR"
+        if(os.path.exists("/raid22/band5_VICAR")):
+            ortho_base_dir = "/raid22"
     return geocal.Landsat7Global(ortho_base_dir,
                                  geocal.Landsat7Global.BAND5)
 
