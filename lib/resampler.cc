@@ -60,7 +60,6 @@ Resampler::Resampler
   data_index.resize(lat.rows(), lon.cols(), 2);
   data_index(ra,ra,0) = blitz::cast<int>(blitz::rint((lat-latstart)/latdelta));
   data_index(ra,ra,1) = blitz::cast<int>(blitz::rint((lon-lonstart)/londelta));
-  std::cerr << "data_index range: " << blitz::min(data_index) << " " << blitz::max(data_index) << "\n";
 }
 
 //-------------------------------------------------------------------------

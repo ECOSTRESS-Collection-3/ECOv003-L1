@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE(basic_test)
     std::cerr << igc->ground_coordinate(GeoCal::ImageCoordinate(5,10))->height_reference_surface() << "\n";
   }
   BOOST_CHECK(distance(*igc->ground_coordinate(GeoCal::ImageCoordinate(5,10)),
-       GeoCal::Geodetic(37.71295947, -124.6506934, -37.54351398)) < 1.0);
+          GeoCal::Geodetic(37.7129523, -124.650274, -37.5432529)) < 1.0);
   BOOST_CHECK(distance(*igc->ground_coordinate(GeoCal::ImageCoordinate(5,10)),
 		       *igc_hres->ground_coordinate(GeoCal::ImageCoordinate(5*2,10))) < 1.0);
 }
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE(serialization)
   boost::shared_ptr<EcostressImageGroundConnection> igcr =
     GeoCal::serialize_read_string<EcostressImageGroundConnection>(d);
   BOOST_CHECK(distance(*igcr->ground_coordinate(GeoCal::ImageCoordinate(5,10)),
-       GeoCal::Geodetic(37.71295947, -124.6506934, -37.54351398)) < 1.0);
+       GeoCal::Geodetic(37.7129523, -124.650274, -37.5432529)) < 1.0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

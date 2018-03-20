@@ -18,8 +18,6 @@ BOOST_AUTO_TEST_CASE(basic_test)
   Landsat7Global orth("/raid22", Landsat7Global::BAND5);
   MapInfo mi = orth.map_info().scale(2, 2);
   Resampler r(lat, lon, mi);
-  std::cerr << r << "\n";
-  std::cerr << r.map_info();
   r.resample_field("swir_res.img", swir_dn);
 }
 

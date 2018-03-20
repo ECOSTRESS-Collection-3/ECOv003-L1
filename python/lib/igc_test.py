@@ -2,7 +2,6 @@ try:
     from ecostress_swig import *
 except ImportError:
     raise RuntimeError("You need to install the ecostress swig code first. You can install just this by doing 'make install-swig-python'")
-from geocal import *
 from test_support import *
 import matplotlib.pyplot as plt
 

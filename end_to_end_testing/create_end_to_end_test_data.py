@@ -16,7 +16,7 @@ create_l1a_eng = True
 create_l0b = True
 # For testing band to band, useful to use the same radiance data for all
 # bands.
-use_swir_all_band = True
+use_swir_all_band = False
 gain_fname = "../../ecostress-test-data/latest/L1A_RAD_GAIN_80005_001_20150124T204250_0100_02.h5.expected"
 #gain_fname = None
 osp_dir= "../../ecostress-test-data/latest/l1_osp_dir"

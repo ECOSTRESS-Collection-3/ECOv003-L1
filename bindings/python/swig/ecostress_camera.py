@@ -237,16 +237,17 @@ class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
 
-    def __init__(self):
+    def __init__(self, Focal_length, Frame_to_sc_q):
         """
 
-        EcostressCamera::EcostressCamera()
+        EcostressCamera::EcostressCamera(double Focal_length=427.6, boost::math::quaternion< double >
+        Frame_to_sc_q=boost::math::quaternion< double >(0, 0, 0, 1))
         Constructor.
 
-        Right now we have everything hardcoded, we'll change this to use a
-        configuration file in the future. 
+        We've hardcoded things we don't expect to change (e.g., the line and
+        sample pitch). 
         """
-        _ecostress_camera.EcostressCamera_swiginit(self, _ecostress_camera.new_EcostressCamera())
+        _ecostress_camera.EcostressCamera_swiginit(self, _ecostress_camera.new_EcostressCamera(Focal_length, Frame_to_sc_q))
 
     def mask_all_parameter(self):
         """

@@ -14,15 +14,14 @@ void EcostressCamera::serialize(Archive & ar, const unsigned int version)
 ECOSTRESS_IMPLEMENT(EcostressCamera);
 
 //-----------------------------------------------------------------------
-/// Constructor. Right now we have everything hardcoded, we'll change
-/// this to use a configuration file in the future.
-///
-/// \todo Not 100% sure about 180 rotation about z axis here
+/// Constructor. We've hardcoded things we don't expect to change
+/// (e.g., the line and sample pitch).
 //-----------------------------------------------------------------------
 
-EcostressCamera::EcostressCamera()
-  : QuaternionCamera(boost::math::quaternion<double>(0,0,0,1), 256, 1,
-		     40e-3, 40e-3, 425, GeoCal::FrameCoordinate(128,0.5),
+EcostressCamera::EcostressCamera(double Focal_length, boost::math::quaternion<double> Frame_to_sc_q)
+  : QuaternionCamera(Frame_to_sc_q, 256, 1,
+		     40e-3, 40e-3, Focal_length,
+		     GeoCal::FrameCoordinate(128,0.5),
 		     QuaternionCamera::LINE_IS_X,
 		     QuaternionCamera::INCREASE_IS_NEGATIVE,
 		     QuaternionCamera::INCREASE_IS_NEGATIVE)
@@ -50,7 +49,6 @@ EcostressCamera::EcostressCamera()
   yindex = 2, 4, 5, 7, 6, 3;
   for(int i = 0; i < yindex.rows(); ++i)
     principal_point_[i] = GeoCal::FrameCoordinate(128, -(yindex(i) - 4.5) * 32);
-  // Not sure about orientation of this
 }
 
 /// See base class for description

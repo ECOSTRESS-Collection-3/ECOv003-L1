@@ -15,11 +15,15 @@ if(False):
     inp = "FPA distortion20140522.xlsx"
     out1 = "cam_paraxial_20140522.xml"
     out2 = "camera_20140522.xml"
+    focal_length = 425
+    frame_to_sc_q = geocal.Quaternion_double(0,0,0,1)
 # Updated camera model from Bill Johnson
 if(True):
     inp = "FPA distortion20180208.xlsx"
     out1 = "cam_paraxial_20180208.xml"
     out2 = "camera_20180208.xml"
+    focal_length = 427.5
+    frame_to_sc_q = geocal.Quaternion_double(0,0,0,1)
 
 df = pd.read_excel(inp, "Data", header = 0,
                    skiprows = [1,])
@@ -58,7 +62,7 @@ tran.real_to_par[1,:] = multipolyfit(real, pred[:,1], deg)
 tran.par_to_real[0,:] = multipolyfit(pred, real[:,0], deg)
 tran.par_to_real[1,:] = multipolyfit(pred, real[:,1], deg)
 geocal.write_shelve(out1, tran)
-cam = ecostress.EcostressCamera()
+cam = ecostress.EcostressCamera(focal_length, frame_to_sc_q)
 cam.paraxial_transform = tran
 geocal.write_shelve(out2, cam)
 
