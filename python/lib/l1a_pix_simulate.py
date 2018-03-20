@@ -8,12 +8,15 @@ from geocal import ImageCoordinate
 class L1aPixSimulate(object):
     '''This is used to generate L1A_PIX simulated data from a L1B_RAD file.
     This is the inverse of the l1b_rad_generate process.'''
-    def __init__(self, igc, surface_image):
+    def __init__(self, igc, surface_image, gain_fname = None,
+                 scale_factor = None):
         '''Create a L1APixSimulate to process the given 
         EcostressImageGroundConnection.  We supply the surface map projected 
         image as an array, one entry per band in the igc.'''
         self.igc = igc
         self.surface_image = surface_image
+        self.gain_fname = gain_fname
+        self.scale_factor = scale_factor
 
     def image_parallel_func(self, it):
         '''Calculate image for a subset of data.'''
@@ -37,9 +40,16 @@ class L1aPixSimulate(object):
         # Don't think we have any negative data, but go ahead and zero this out
         # if there is any
         r[r<0] = 0
-        # Note we can change this to work with gain and offset if we want
-        # to test this functionality. But for now we use the same DN that
-        # the ASTER data is in, so no scaling is needed.
+        if(self.scale_factor is not None and
+           self.scale_factor[band] is not None):
+            r = self.scale_factor[band] * r
+        # If we have a gain_fname, use that to scale the data
+        if(band != 0 and self.gain_fname is not None):
+            f = h5py.File(self.gain_fname, "r")
+            gain = f["Gain/b%d_gain" % band][:]
+            offset = f["Offset/b%d_offset" % band][:]
+            r = (r - offset) / gain
+            r[(gain < -9998) | (offset < -9998)] = 0
         r = r.astype(np.int16)
         return r
 

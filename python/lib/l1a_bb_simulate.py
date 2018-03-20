@@ -5,23 +5,14 @@ from .write_standard_metadata import WriteStandardMetadata
 class L1aBbSimulate(object):
     '''This is used to generate L1A_BB simulated data. Right now, this is just
     dummy data.'''
-    def __init__(self, l1a_pix_fname, use_swir_all_band = False):
-        '''Create a L1APixSimulate to process the given L1A_PIX file.
-
-        For testing band to band, it is useful to use the SWIR band data
-        for all bands (so if registered the output will match values). Can
-        pass in use_swir_all_band as True to force this.'''
+    def __init__(self, l1a_pix_fname):
+        '''Create a L1APixSimulate to process the given L1A_PIX file.'''
         self.l1a_pix = h5py.File(l1a_pix_fname, "r")
         # I don't really understand how Tom calculated this.
-        self.bb_325_mean = [2845, 2845, 2603, 2532, 2456, 6]
-        self.bb_325_sigma = [0, 0, 0, 0, 0, 1]
-        self.bb_295_mean = [1238, 1238, 996, 925, 849, 4]
-        self.bb_295_sigma = [0, 0, 0, 0, 0, 1]
-        if(use_swir_all_band):
-            self.bb_325_mean = [self.bb_325_mean[0]] * 6
-            self.bb_325_sigma = [self.bb_325_sigma[0]] * 6
-            self.bb_295_mean[:] = [self.bb_295_mean[0]] * 6
-            self.bb_295_sigma[:] = [self.bb_295_sigma[0]] * 6
+        self.bb_325_mean = [6, 2456, 2532, 2603, 2845, 2845]
+        self.bb_325_sigma = [0, 0, 0, 0, 0, 0]
+        self.bb_295_mean = [4, 849, 925, 996, 1238, 1238]
+        self.bb_295_sigma = [0, 0, 0, 0, 0, 0]
         
     def copy_metadata(self, field):
         self.m.set(field, self.l1a_pix["/StandardMetadata/" + field].value)
