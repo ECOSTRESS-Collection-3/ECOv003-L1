@@ -103,15 +103,15 @@ PPSC = int( (SCPS*FPB3+FPPPKT-1) / FPPPKT )
 # existing test data. See Issue #13 in github.
 #FP_DUR = 0.0000321982 - 1.2617745535714285714285714285714e-6
 #FP_DUR = 0.0000321875 - 1.2510745535714285714285714285714e-6
-FP_DUR = 0.0000321875
+FP_DUR = 0.000032196620  # 0.0000322 nominal
 #FP_DUR = 0.00003180890736809696 # measured from test data 20170808
 #FP_DUR = 0.0000322
 #FP_DUR = 3.095533197239234e-5 - 1.9077034883720932e-8  # this is consistent with FOV of 25.475; = 24.475/(5400*6*RPM) - fudge
 PKT_DUR = FP_DUR * float( FPPPKT )
-PKT_DURT = PKT_DUR*.05
+PKT_DURT = PKT_DUR*.05  # PKT duration tolerance
 IMG_DUR = FP_DUR * float( FPPSC )
 PIX_DUR = FP_DUR * float( BBLEN*2 + FPPSC )
-RPM = 25.4
+RPM = 25.396627  # 25.4 nominal
 MPER = 60.0/RPM # mirror period = 2.3622047 sec / rev
 SCAN_DUR = MPER/2.0 # half-mirror rotation = 1.1811024 sec
 FP_ANG = FP_DUR*RPM*6.0 # FP angle = .0047175926 deg / FP
@@ -127,10 +127,10 @@ EV_DUR = 60.0/RPM/float( MAX_FPIE )  # = 1.3504 microsecond/count
 #EV_DUR = 60.0/RPM/float( MAX_FPIE ) - 1.357079461852133e-10  # = 1.3504 microsecond/count - fudge factor
 #EV_DUR = 1.3505012369820937e-06 # measured from test data 20170803
 ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.00020580272 deg/count
-FP_EV = FP_DUR*RPM*MAX_FPIE/60.0 + .004260048 # = 23.835326 counts/FP
+FP_EV = FP_DUR*RPM*MAX_FPIE/60.0 # = 23.84375 counts/FP
+FP_EVT = FP_EV*1.1  # FP EV count tolerance
 PKT_EV = FP_DUR*RPM*MAX_FPIE*FPPPKT/60.0 # = 1525.460873 counts/PKT
 IMG_EV = FP_DUR*RPM*MAX_FPIE*FPPSC/60.0 # = 128710.76112 counts/IMG
-FP_TOL = 3
 SCENE_DUR = SCAN_DUR * SCPS
 
 class L1aRawPixGenerate(object):
@@ -277,7 +277,7 @@ class L1aRawPixGenerate(object):
       onum = m.group(1)
       print("Orbit number from file name: %s" %onum )
     else:
-      print("Could not find orbit number from L0B file name %s" %self.l0b)
+      print("*** Could not find orbit number from L0B file name %s" %self.l0b)
       return -1
 
 # open L0B file
@@ -321,6 +321,7 @@ class L1aRawPixGenerate(object):
     i,j = lid.shape
     lev = np.zeros( (i,j), dtype=np.int32 )
     lev[:,:] = lid[:,:]&0x1fffff
+    ldd = np.zeros( j-1, dtype=np.int32 )
 
     # working array
     flex_buf = np.zeros( (PPFP, FPPPKT, BANDS), dtype=np.uint16 )
@@ -342,6 +343,7 @@ class L1aRawPixGenerate(object):
     pkt_idx = 0 # start looking at first packet in file
     # iterate through scenes from scene start/stop file
     o_start_time = None
+    jumps = 0
     for orbit, scene_id, sts, ste in self.process_scene_file():
       orb = str( "%05d" %orbit )
       if orb != onum:  # process only matching orbit numbers
@@ -389,8 +391,8 @@ class L1aRawPixGenerate(object):
         for seq in range( 3 ):
           gpix[seq] = 0
           e0 = pkt_idx
-          e2 = 2
-          while e0 < tot_pkts and e2 == 2:  # loop through packets
+          ph = 2  # mirror phase
+          while e0 < tot_pkts and ph == 2:  # loop through packets
             if e0==0: dt = 0
             else: dt = abs(( float(lev[e0,0]) - float(lev[e0-1,e1]) ) * EV_DUR)
             if dt > SCAN_DUR and seq > 0:
@@ -415,15 +417,15 @@ class L1aRawPixGenerate(object):
 
             # find start of sequence and mirror phase in PKT
             e1 = 0
-            while e1 < FPPPKT and e2 == 2:
+            while e1 < FPPPKT and ph == 2:
               lid0 = ( lev[e0,e1] + ev_codes[seq,4] ) % MAX_FPIE
               lid1 = ( lev[e0,e1] + ev_codes[seq,5] ) % MAX_FPIE
-              if lid0 >= ev_codes[seq,0] and lid0 <= ev_codes[seq,1]: e2 = 0
-              elif lid1 >= ev_codes[seq,2] and lid1 <= ev_codes[seq,3]: e2 = 1
+              if lid0 >= ev_codes[seq,0] and lid0 <= ev_codes[seq,1]: ph = 0
+              elif lid1 >= ev_codes[seq,2] and lid1 <= ev_codes[seq,3]: ph = 1
               else: e1 += 1 # check next EV
             ' end seeking SEQ in current packet '
 
-            if e2 == 2:
+            if ph == 2:
               e0 += 1 # look in next packet
               e1 = 0
           ' End seeking SEQ through packets '
@@ -460,13 +462,13 @@ class L1aRawPixGenerate(object):
             scan = int( ( sst - rst ) / SCAN_DUR + 0.5 )
             print("Calculated scan=%d SCENE=%s" % (scan, scene_id) )
             if scan >= SCPS:
-              print("PKT[%d] Time %f outside of current scene %d Terminating" %( e0, sst, scene_id ) )
+              print("PKT[%d] Time %f outside of current scene %d Terminating" %( e0, gpt[e0], scene_id ) )
               cont = 0
               break
             line = scan * PPFP
           elif seq==2:  # save and replicate IMG start time
             pix_time[line:line+PPFP] = Time.time_gps( p0t ).j2000
-          print("Found %s LID[%d,%d]=%d PH=%d SCENE=%s SCAN=%d GPS=%f %s"%(ev_names[seq],e0,e1,lev[e0,e1],e2,scene_id,scan,p0t,Time.time_gps(p0t)))
+          print("Found %s LID[%d,%d]=%d PH=%d SCENE=%s SCAN=%d GPS=%f %s"%(ev_names[seq],e0,e1,lev[e0,e1],ph,scene_id,scan,p0t,Time.time_gps(p0t)))
   
           # Copy pixels from PKT
           p1 = e1
@@ -474,25 +476,30 @@ class L1aRawPixGenerate(object):
           while op < op1 and e0 < tot_pkts-1:
             #print("SCENE=%d SCAN=%d E0=%d E1=%d GPS=%f" %(scene_id,scan,e0,e1,gpt[e0]))
 
-            e3 = op1 - op
+            e3 = op1 - op  # remaining FPs to fill
+            e4 = 0
             if seq==2 and op>op0 and op<=op1-FPPPKT:
               lid0 = e0; lid1 = e0+1  # correct time
               #lid0 = e0-1; lid1 = e0  # time code error
               if e0 < tot_pkts - 1: dt = abs( gpt[lid1] - gpt[lid0] - PKT_DUR )
               else: dt = 0.0  # at last packet
               if dt > PKT_DURT:  # large time jump between PKTS
+                jumps += 1
                 if e0==tot_pkts - 1 or e3<=FPPPKT: e4 = 0
                 else: e4 = float((lev[e0+1,0] - lev[e0,0])%MAX_FPIE) * EV_DUR
                 if e4 > PKT_DUR:  # EV jump within packet
                   e4 = int( dt/FP_DUR + 0.5 )
-                  print("Time jump at IDX[%d](%f) DT=%f OPINC=%d OP=%d" %(e0,gpt[e0],dt,e4,op))
+                  print("Time jump at IDX[%d](%f) DT=%f OPINC=%d OP=%d" %(e0+1,gpt[e0+1],dt,e4,op))
                   if op+e4>=op1:  # new packet time past end of current scan
-                    sse = gpt[e0-1] + PKT_DUR
-                    print("Terminating scan %d at FP %d SSE=%f" % (scan,op,sse))
-                    break
+                    e4 = 0
+                    cont = 0
                   else:
-                    op += e4
                     print("Skipping %d FPs, new OP=%d" % (e4,op) )
+                  ldd[:] = (lev[e0,1:] - lev[e0,:FPPPKT-1])%MAX_FPIE
+                  fpc = np.argmax( ldd > FP_EVT )
+                  if fpc==0: fpc = FPPPKT
+                  else: fpc += 1
+                  print("Copying remaining %d FPs of scan %d from PKT %d" % (fpc, scan, e0))
 
             for b in range( BANDS ): # transpose new packet to flex_buf
               flex_buf[:,:,b] = np.transpose(bip[e0,:,:,b])
@@ -511,7 +518,15 @@ class L1aRawPixGenerate(object):
             obuf[seq][line:line+PPFP,dp:dp+fpc,:] = flex_buf[:,p1:p1+fpc,:]
             if seq==2: ev_buf[scan,dp:dp+fpc] = lev[e0,p1:p1+fpc]
             gpix[seq] += fpc
-            op += fpc  #  next output FP pointer in buf
+            if e4>0:  #  next output FP pointer in buf
+              op += e4
+            else:
+              op += fpc
+            if cont==0:  # next packet past end of current scan
+               cont = 1
+               sse = gpt[e0-1] + PKT_DUR + fpc * FP_DUR
+               print("Terminating scan %d at FP %d SSE=%f" % (scan,op,sse))
+               break
             fpc = FPPPKT # full PKTs after (partial) first PKT
             p1 = 0
             e0 += 1
@@ -613,11 +628,15 @@ class L1aRawPixGenerate(object):
         t.attrs['Units']='dimensionless'
 
       # copy RTD temps to BB file
-      p0 = np.argmax( bbtime >= rst )
-      p1 = np.argmax( bbtime >= rse )
+      if epc > 0:
+        p0 = np.argmax( bbtime >= rst )
+        p1 = np.argmax( bbtime >= rse )
+      else:
+        p0 = 0
+        p1 = -1
       if p1 <= p0:
         p0 = 0
-        p1 = len( bbtime ) - 1
+        p1 = epc - 1
       print("Copying RTD for SCENE %d P0=%d P1=%d RST=%f RSE=%f %s" %(scene_id, p0, p1, rst, rse, str(datetime.now())))
       print(" ")
       bt=l1a_rtg.create_dataset("time_j2000", shape=(p1-p0+1,), dtype='f8')
@@ -634,8 +653,8 @@ class L1aRawPixGenerate(object):
     ' end scene loop '
 
     if len(scenes)==0:
-      print("****  No scenes generated  ****")
-      return -1
+      print("****  FATAL  ****  No scenes generated  ****")
+      return -2
 
     ' Create refined scene file '
     sss = str( o_start_time )
@@ -648,7 +667,12 @@ class L1aRawPixGenerate(object):
 
     ' create engineering file and datasets '
     print("creating ENG file, EPC=%d" % epc )
-    feng = self.create_file( "L1A_ENG", orbit, None, o_start_time,
+    if epc > 0:
+      feng = self.create_file( "L1A_ENG", orbit, None,
+        Time.time_gps(bbtime[0]), Time.time_gps(bbtime[epc-1]),
+                                         primary_file=True )
+    else:
+      feng = self.create_file( "L1A_ENG", orbit, None, o_start_time,
                              o_end_time, primary_file=True )
     eng = h5py.File( feng, "r+", driver='core' )
     eng_g = eng.create_group("/rtdBlackbodyGradients")
@@ -667,7 +691,12 @@ class L1aRawPixGenerate(object):
     ' create raw attitude/ephemeris file and datasets '
     aqc = att.shape[0]
     print("creating raw ATT file, AQC=%d" % aqc )
-    fatt = self.create_file("L1A_RAW_ATT", orbit, None, o_start_time,
+    if aqc > 0:
+      fatt = self.create_file("L1A_RAW_ATT", orbit, None,
+        Time.time_gps(att_time[0]), Time.time_gps(att_time[aqc-1]),
+                                        prod=False, intermediate=True)
+    else:
+      fatt = self.create_file("L1A_RAW_ATT", orbit, None, o_start_time,
                             o_end_time, prod=False, intermediate=True)
     attf = h5py.File( fatt, "r+", driver='core' )
     att_g = attf.create_group("/Attitude")
@@ -698,3 +727,4 @@ class L1aRawPixGenerate(object):
     print("This is a dummy log file", file = self.log)
     self.log.flush()
     print("====  End run ", datetime.now(), "  ====")
+    return jumps
