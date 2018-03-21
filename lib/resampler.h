@@ -19,12 +19,16 @@ class Resampler : public GeoCal::Printable<Resampler> {
 public:
   Resampler(const boost::shared_ptr<GeoCal::RasterImage>& Latitude,
 	    const boost::shared_ptr<GeoCal::RasterImage>& Longitude,
-	    const GeoCal::MapInfo& Mi, int Num_sub_pixel = 2);
+	    const GeoCal::MapInfo& Mi, int Num_sub_pixel = 2,
+	    bool Exactly_match_mi = false);
   virtual ~Resampler() {}
   const GeoCal::MapInfo& map_info() const { return mi; }
   int number_sub_pixel() const {return nsub; }
   void resample_field(const std::string& Fname,
-		      const boost::shared_ptr<GeoCal::RasterImage>& Data);
+		      const boost::shared_ptr<GeoCal::RasterImage>& Data,
+		      double Scale_data=1.0,
+		      const std::string& File_type="REAL",
+		      bool Negative_to_zero=false);
   virtual void print(std::ostream& Os) const
   { Os << "ECOSTRESS Resampler";}
 private:

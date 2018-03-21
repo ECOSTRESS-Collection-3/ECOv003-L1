@@ -204,12 +204,12 @@ class Resampler(geocal_swig.generic_object.GenericObject):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
 
-    def __init__(self, Latitude, Longitude, Mi, Num_sub_pixel=2):
+    def __init__(self, Latitude, Longitude, Mi, Num_sub_pixel=2, Exactly_match_mi=False):
         """
 
         Resampler::Resampler(const boost::shared_ptr< GeoCal::RasterImage > &Latitude, const
         boost::shared_ptr< GeoCal::RasterImage > &Longitude, const
-        GeoCal::MapInfo &Mi, int Num_sub_pixel=2)
+        GeoCal::MapInfo &Mi, int Num_sub_pixel=2, bool Exactly_match_mi=false)
         Constructor.
 
         This takes the latitude and longitude fields as RasterImage (we could
@@ -224,18 +224,31 @@ class Resampler(geocal_swig.generic_object.GenericObject):
         We also pass in the number of subpixels to calculate, so for example
         to work with 60 m landsat like map projection you'd want this to be 2.
 
+        By default, we only use Mi to determine the pixel resolution, and we
+        make sure the output covers the full latitude/longitude range. You can
+        optionally specify that we exactly match the passed in Mi, regardless
+        of the actually coverage of the lat/lon. This is useful if we are
+        producing output files to compare against some existing file. 
         """
-        _resampler.Resampler_swiginit(self, _resampler.new_Resampler(Latitude, Longitude, Mi, Num_sub_pixel))
+        _resampler.Resampler_swiginit(self, _resampler.new_Resampler(Latitude, Longitude, Mi, Num_sub_pixel, Exactly_match_mi))
 
-    def resample_field(self, Fname, Data):
+    def resample_field(self, *args):
         """
 
         void Resampler::resample_field(const std::string &Fname, const boost::shared_ptr<
-        GeoCal::RasterImage > &Data)
+        GeoCal::RasterImage > &Data, double Scale_data=1.0, const std::string
+        &File_type="REAL", bool Negative_to_zero=false)
         Resample the given data, and write out to a VICAR file with the given
-        name. 
+        name.
+
+        You can optionally scale the output data, and specify the file output
+        type to write. This is useful if you want to view float data in xvd,
+        which works much better with scaled int.
+
+        You can optionally map all negative values to zero, useful to view
+        data without large negative fill values (e.g., -9999) 
         """
-        return _resampler.Resampler_resample_field(self, Fname, Data)
+        return _resampler.Resampler_resample_field(self, *args)
 
 
     def _v_map_info(self):

@@ -5339,6 +5339,20 @@ SWIG_AsVal_int (PyObject * obj, int *val)
 }
 
 
+SWIGINTERN int
+SWIG_AsVal_bool (PyObject *obj, bool *val)
+{
+  int r;
+  if (!PyBool_Check(obj))
+    return SWIG_ERROR;
+  r = PyObject_IsTrue(obj);
+  if (r == -1)
+    return SWIG_ERROR;
+  if (val) *val = r ? true : false;
+  return SWIG_OK;
+}
+
+
 struct SWIG_null_deleter {
   void operator() (void const *) const {
   }
@@ -6307,6 +6321,135 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
   boost::shared_ptr< GeoCal::RasterImage > *arg2 = 0 ;
   GeoCal::MapInfo *arg3 = 0 ;
   int arg4 ;
+  bool arg5 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  boost::shared_ptr< GeoCal::RasterImage > tempshared1 ;
+  boost::shared_ptr< GeoCal::RasterImage > temp2shared1 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  boost::shared_ptr< GeoCal::RasterImage > tempshared2 ;
+  boost::shared_ptr< GeoCal::RasterImage > temp2shared2 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  boost::shared_ptr< GeoCal::MapInfo const > tempshared3 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  bool val5 ;
+  int ecode5 = 0 ;
+  Ecostress::Resampler *result = 0 ;
+  
+  if ((nobjs < 5) || (nobjs > 5)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Resampler" "', argument " "1"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp1) tempshared1 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp1);
+      arg1 = &tempshared1;
+    } else {
+      arg1 = (argp1) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp1) : &tempshared1;
+    }
+    // Special handling if this is a director class. In that case, we
+    // don't own the underlying python object. Instead,
+    // we tell python we have a reference to the underlying object, and
+    // when this gets destroyed we decrement the reference to the python
+    // object. 
+    Swig::Director* dp = dynamic_cast<Swig::Director*>(arg1->get());
+    if(dp) {
+      Py_INCREF(dp->swig_get_self());
+      temp2shared1.reset(arg1->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      arg1 = &temp2shared1;
+    }
+  }
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_Resampler" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp2) tempshared2 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2);
+      delete reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2);
+      arg2 = &tempshared2;
+    } else {
+      arg2 = (argp2) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2) : &tempshared2;
+    }
+    // Special handling if this is a director class. In that case, we
+    // don't own the underlying python object. Instead,
+    // we tell python we have a reference to the underlying object, and
+    // when this gets destroyed we decrement the reference to the python
+    // object. 
+    Swig::Director* dp = dynamic_cast<Swig::Director*>(arg2->get());
+    if(dp) {
+      Py_INCREF(dp->swig_get_self());
+      temp2shared2.reset(arg2->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      arg2 = &temp2shared2;
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::MapInfo *ptr;
+    res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], (void**)(&ptr), SWIGTYPE_p_GeoCal__MapInfo,  0 , &newmem);
+    if (SWIG_IsOK(res3)) {
+      arg3 = ptr;
+    } else {
+      res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t,  0 , &newmem);
+      if (!SWIG_IsOK(res3)) {
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
+      }
+      if (!argp3) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared3 = *reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3);
+        delete reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3);
+        arg3 = const_cast< GeoCal::MapInfo * >(tempshared3.get());
+      } else {
+        arg3 = const_cast< GeoCal::MapInfo * >(reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3)->get());
+      }
+    }
+  }
+  ecode4 = SWIG_AsVal_int(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_Resampler" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  ecode5 = SWIG_AsVal_bool(swig_obj[4], &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_Resampler" "', argument " "5"" of type '" "bool""'");
+  } 
+  arg5 = static_cast< bool >(val5);
+  {
+    try {
+      result = (Ecostress::Resampler *)new Ecostress::Resampler((boost::shared_ptr< GeoCal::RasterImage > const &)*arg1,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg2,(GeoCal::MapInfo const &)*arg3,arg4,arg5);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::Resampler > *smartresult = result ? new boost::shared_ptr<  Ecostress::Resampler >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  boost::shared_ptr< GeoCal::RasterImage > *arg1 = 0 ;
+  boost::shared_ptr< GeoCal::RasterImage > *arg2 = 0 ;
+  GeoCal::MapInfo *arg3 = 0 ;
+  int arg4 ;
   void *argp1 ;
   int res1 = 0 ;
   boost::shared_ptr< GeoCal::RasterImage > tempshared1 ;
@@ -6422,7 +6565,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_2(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   boost::shared_ptr< GeoCal::RasterImage > *arg1 = 0 ;
   boost::shared_ptr< GeoCal::RasterImage > *arg2 = 0 ;
@@ -6537,29 +6680,350 @@ fail:
 
 SWIGINTERN PyObject *_wrap_new_Resampler(PyObject *self, PyObject *args) {
   int argc;
-  PyObject *argv[5] = {
+  PyObject *argv[6] = {
     0
   };
   
-  if (!(argc = SWIG_Python_UnpackTuple(args,"new_Resampler",0,4,argv))) SWIG_fail;
+  if (!(argc = SWIG_Python_UnpackTuple(args,"new_Resampler",0,5,argv))) SWIG_fail;
   --argc;
   if (argc == 3) {
-    return _wrap_new_Resampler__SWIG_1(self, argc, argv);
+    return _wrap_new_Resampler__SWIG_2(self, argc, argv);
   }
   if (argc == 4) {
+    return _wrap_new_Resampler__SWIG_1(self, argc, argv);
+  }
+  if (argc == 5) {
     return _wrap_new_Resampler__SWIG_0(self, argc, argv);
   }
   
 fail:
   SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_Resampler'.\n"
     "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::Resampler::Resampler(boost::shared_ptr< GeoCal::RasterImage > const &,boost::shared_ptr< GeoCal::RasterImage > const &,GeoCal::MapInfo const &,int,bool)\n"
     "    Ecostress::Resampler::Resampler(boost::shared_ptr< GeoCal::RasterImage > const &,boost::shared_ptr< GeoCal::RasterImage > const &,GeoCal::MapInfo const &,int)\n"
     "    Ecostress::Resampler::Resampler(boost::shared_ptr< GeoCal::RasterImage > const &,boost::shared_ptr< GeoCal::RasterImage > const &,GeoCal::MapInfo const &)\n");
   return 0;
 }
 
 
-SWIGINTERN PyObject *_wrap_Resampler_resample_field(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
+  std::string *arg2 = 0 ;
+  boost::shared_ptr< GeoCal::RasterImage > *arg3 = 0 ;
+  double arg4 ;
+  std::string *arg5 = 0 ;
+  bool arg6 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::Resampler > tempshared1 ;
+  boost::shared_ptr< Ecostress::Resampler > *smartarg1 = 0 ;
+  int res2 = SWIG_OLDOBJ ;
+  void *argp3 ;
+  int res3 = 0 ;
+  boost::shared_ptr< GeoCal::RasterImage > tempshared3 ;
+  boost::shared_ptr< GeoCal::RasterImage > temp2shared3 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  int res5 = SWIG_OLDOBJ ;
+  bool val6 ;
+  int ecode6 = 0 ;
+  
+  if ((nobjs < 6) || (nobjs > 6)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::Resampler > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::Resampler > * >(argp1);
+      arg1 = const_cast< Ecostress::Resampler * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::Resampler > * >(argp1);
+      arg1 = const_cast< Ecostress::Resampler * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(swig_obj[1], &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_resample_field" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Resampler_resample_field" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  {
+    int newmem = 0;
+    res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Resampler_resample_field" "', argument " "3"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp3) tempshared3 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3);
+      delete reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3);
+      arg3 = &tempshared3;
+    } else {
+      arg3 = (argp3) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3) : &tempshared3;
+    }
+    // Special handling if this is a director class. In that case, we
+    // don't own the underlying python object. Instead,
+    // we tell python we have a reference to the underlying object, and
+    // when this gets destroyed we decrement the reference to the python
+    // object. 
+    Swig::Director* dp = dynamic_cast<Swig::Director*>(arg3->get());
+    if(dp) {
+      Py_INCREF(dp->swig_get_self());
+      temp2shared3.reset(arg3->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      arg3 = &temp2shared3;
+    }
+  }
+  ecode4 = SWIG_AsVal_double(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Resampler_resample_field" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  {
+    std::string *ptr = (std::string *)0;
+    res5 = SWIG_AsPtr_std_string(swig_obj[4], &ptr);
+    if (!SWIG_IsOK(res5)) {
+      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "Resampler_resample_field" "', argument " "5"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Resampler_resample_field" "', argument " "5"" of type '" "std::string const &""'"); 
+    }
+    arg5 = ptr;
+  }
+  ecode6 = SWIG_AsVal_bool(swig_obj[5], &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Resampler_resample_field" "', argument " "6"" of type '" "bool""'");
+  } 
+  arg6 = static_cast< bool >(val6);
+  {
+    try {
+      (arg1)->resample_field((std::string const &)*arg2,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg3,arg4,(std::string const &)*arg5,arg6);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res5)) delete arg5;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res5)) delete arg5;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
+  std::string *arg2 = 0 ;
+  boost::shared_ptr< GeoCal::RasterImage > *arg3 = 0 ;
+  double arg4 ;
+  std::string *arg5 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::Resampler > tempshared1 ;
+  boost::shared_ptr< Ecostress::Resampler > *smartarg1 = 0 ;
+  int res2 = SWIG_OLDOBJ ;
+  void *argp3 ;
+  int res3 = 0 ;
+  boost::shared_ptr< GeoCal::RasterImage > tempshared3 ;
+  boost::shared_ptr< GeoCal::RasterImage > temp2shared3 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  int res5 = SWIG_OLDOBJ ;
+  
+  if ((nobjs < 5) || (nobjs > 5)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::Resampler > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::Resampler > * >(argp1);
+      arg1 = const_cast< Ecostress::Resampler * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::Resampler > * >(argp1);
+      arg1 = const_cast< Ecostress::Resampler * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(swig_obj[1], &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_resample_field" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Resampler_resample_field" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  {
+    int newmem = 0;
+    res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Resampler_resample_field" "', argument " "3"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp3) tempshared3 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3);
+      delete reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3);
+      arg3 = &tempshared3;
+    } else {
+      arg3 = (argp3) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3) : &tempshared3;
+    }
+    // Special handling if this is a director class. In that case, we
+    // don't own the underlying python object. Instead,
+    // we tell python we have a reference to the underlying object, and
+    // when this gets destroyed we decrement the reference to the python
+    // object. 
+    Swig::Director* dp = dynamic_cast<Swig::Director*>(arg3->get());
+    if(dp) {
+      Py_INCREF(dp->swig_get_self());
+      temp2shared3.reset(arg3->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      arg3 = &temp2shared3;
+    }
+  }
+  ecode4 = SWIG_AsVal_double(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Resampler_resample_field" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  {
+    std::string *ptr = (std::string *)0;
+    res5 = SWIG_AsPtr_std_string(swig_obj[4], &ptr);
+    if (!SWIG_IsOK(res5)) {
+      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "Resampler_resample_field" "', argument " "5"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Resampler_resample_field" "', argument " "5"" of type '" "std::string const &""'"); 
+    }
+    arg5 = ptr;
+  }
+  {
+    try {
+      (arg1)->resample_field((std::string const &)*arg2,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg3,arg4,(std::string const &)*arg5);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res5)) delete arg5;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res5)) delete arg5;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_2(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
+  std::string *arg2 = 0 ;
+  boost::shared_ptr< GeoCal::RasterImage > *arg3 = 0 ;
+  double arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::Resampler > tempshared1 ;
+  boost::shared_ptr< Ecostress::Resampler > *smartarg1 = 0 ;
+  int res2 = SWIG_OLDOBJ ;
+  void *argp3 ;
+  int res3 = 0 ;
+  boost::shared_ptr< GeoCal::RasterImage > tempshared3 ;
+  boost::shared_ptr< GeoCal::RasterImage > temp2shared3 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  
+  if ((nobjs < 4) || (nobjs > 4)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::Resampler > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::Resampler > * >(argp1);
+      arg1 = const_cast< Ecostress::Resampler * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::Resampler > * >(argp1);
+      arg1 = const_cast< Ecostress::Resampler * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(swig_obj[1], &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_resample_field" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Resampler_resample_field" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  {
+    int newmem = 0;
+    res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Resampler_resample_field" "', argument " "3"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp3) tempshared3 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3);
+      delete reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3);
+      arg3 = &tempshared3;
+    } else {
+      arg3 = (argp3) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3) : &tempshared3;
+    }
+    // Special handling if this is a director class. In that case, we
+    // don't own the underlying python object. Instead,
+    // we tell python we have a reference to the underlying object, and
+    // when this gets destroyed we decrement the reference to the python
+    // object. 
+    Swig::Director* dp = dynamic_cast<Swig::Director*>(arg3->get());
+    if(dp) {
+      Py_INCREF(dp->swig_get_self());
+      temp2shared3.reset(arg3->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      arg3 = &temp2shared3;
+    }
+  }
+  ecode4 = SWIG_AsVal_double(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Resampler_resample_field" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  {
+    try {
+      (arg1)->resample_field((std::string const &)*arg2,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg3,arg4);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_3(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
   std::string *arg2 = 0 ;
@@ -6573,9 +7037,8 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field(PyObject *SWIGUNUSEDPARM(sel
   int res3 = 0 ;
   boost::shared_ptr< GeoCal::RasterImage > tempshared3 ;
   boost::shared_ptr< GeoCal::RasterImage > temp2shared3 ;
-  PyObject *swig_obj[3] ;
   
-  if (!SWIG_Python_UnpackTuple(args,"Resampler_resample_field",3,3,swig_obj)) SWIG_fail;
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
   {
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
@@ -6642,6 +7105,38 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field(PyObject *SWIGUNUSEDPARM(sel
 fail:
   if (SWIG_IsNewObj(res2)) delete arg2;
   return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Resampler_resample_field(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[7] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"Resampler_resample_field",0,6,argv))) SWIG_fail;
+  --argc;
+  if (argc == 3) {
+    return _wrap_Resampler_resample_field__SWIG_3(self, argc, argv);
+  }
+  if (argc == 4) {
+    return _wrap_Resampler_resample_field__SWIG_2(self, argc, argv);
+  }
+  if (argc == 5) {
+    return _wrap_Resampler_resample_field__SWIG_1(self, argc, argv);
+  }
+  if (argc == 6) {
+    return _wrap_Resampler_resample_field__SWIG_0(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'Resampler_resample_field'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::Resampler::resample_field(std::string const &,boost::shared_ptr< GeoCal::RasterImage > const &,double,std::string const &,bool)\n"
+    "    Ecostress::Resampler::resample_field(std::string const &,boost::shared_ptr< GeoCal::RasterImage > const &,double,std::string const &)\n"
+    "    Ecostress::Resampler::resample_field(std::string const &,boost::shared_ptr< GeoCal::RasterImage > const &,double)\n"
+    "    Ecostress::Resampler::resample_field(std::string const &,boost::shared_ptr< GeoCal::RasterImage > const &)\n");
+  return 0;
 }
 
 
@@ -6855,7 +7350,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		"Resampler::Resampler(const boost::shared_ptr< GeoCal::RasterImage > &Latitude, const\n"
 		"boost::shared_ptr< GeoCal::RasterImage > &Longitude, const\n"
-		"GeoCal::MapInfo &Mi, int Num_sub_pixel=2)\n"
+		"GeoCal::MapInfo &Mi, int Num_sub_pixel=2, bool Exactly_match_mi=false)\n"
 		"Constructor.\n"
 		"\n"
 		"This takes the latitude and longitude fields as RasterImage (we could\n"
@@ -6870,13 +7365,26 @@ static PyMethodDef SwigMethods[] = {
 		"We also pass in the number of subpixels to calculate, so for example\n"
 		"to work with 60 m landsat like map projection you'd want this to be 2.\n"
 		"\n"
+		"By default, we only use Mi to determine the pixel resolution, and we\n"
+		"make sure the output covers the full latitude/longitude range. You can\n"
+		"optionally specify that we exactly match the passed in Mi, regardless\n"
+		"of the actually coverage of the lat/lon. This is useful if we are\n"
+		"producing output files to compare against some existing file. \n"
 		""},
 	 { (char *)"Resampler_resample_field", _wrap_Resampler_resample_field, METH_VARARGS, (char *)"\n"
 		"\n"
 		"void Resampler::resample_field(const std::string &Fname, const boost::shared_ptr<\n"
-		"GeoCal::RasterImage > &Data)\n"
+		"GeoCal::RasterImage > &Data, double Scale_data=1.0, const std::string\n"
+		"&File_type=\"REAL\", bool Negative_to_zero=false)\n"
 		"Resample the given data, and write out to a VICAR file with the given\n"
-		"name. \n"
+		"name.\n"
+		"\n"
+		"You can optionally scale the output data, and specify the file output\n"
+		"type to write. This is useful if you want to view float data in xvd,\n"
+		"which works much better with scaled int.\n"
+		"\n"
+		"You can optionally map all negative values to zero, useful to view\n"
+		"data without large negative fill values (e.g., -9999) \n"
 		""},
 	 { (char *)"Resampler__v_map_info", (PyCFunction)_wrap_Resampler__v_map_info, METH_O, (char *)"\n"
 		"\n"

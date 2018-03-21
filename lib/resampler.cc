@@ -31,11 +31,18 @@ ECOSTRESS_IMPLEMENT(Resampler);
 /// We also pass in the number of subpixels to calculate, so for
 /// example to work with 60 m landsat like map projection you'd want
 /// this to be 2.
+///
+/// By default, we only use Mi to determine the pixel resolution, and
+/// we make sure the output covers the full latitude/longitude
+/// range. You can optionally specify that we exactly match the passed
+/// in Mi, regardless of the actually coverage of the lat/lon. This is
+/// useful if we are producing output files to compare against some
+/// existing file.
 //-------------------------------------------------------------------------
 Resampler::Resampler
 (const boost::shared_ptr<GeoCal::RasterImage>& Latitude,
  const boost::shared_ptr<GeoCal::RasterImage>& Longitude,
- const GeoCal::MapInfo& Mi, int Num_sub_pixel)
+ const GeoCal::MapInfo& Mi, int Num_sub_pixel, bool Exactly_match_mi)
   : nsub(Num_sub_pixel)
 {
   blitz::Range ra = blitz::Range::all();
@@ -50,7 +57,10 @@ Resampler::Resampler
 						blitz::min(lon)));
   ptlist.push_back(boost::make_shared<Geodetic>(blitz::max(lat),
 						blitz::max(lon)));
-  mi = Mi.cover(ptlist);
+  if(Exactly_match_mi)
+    mi = Mi;
+  else
+    mi = Mi.cover(ptlist);
   double latstart, lonstart;
   double latdelta, londelta;
   mi.index_to_coordinate(0,0,lonstart,latstart);
@@ -64,12 +74,20 @@ Resampler::Resampler
 
 //-------------------------------------------------------------------------
 /// Resample the given data, and write out to a VICAR file with the
-/// given name
+/// given name.
+///
+/// You can optionally scale the output data, and specify the file
+/// output type to write. This is useful if you want to view float
+/// data in xvd, which works much better with scaled int.
+///
+/// You can optionally map all negative values to zero, useful to view
+/// data without large negative fill values (e.g., -9999)
 //-------------------------------------------------------------------------
 
 void Resampler::resample_field
 (const std::string& Fname,
- const boost::shared_ptr<GeoCal::RasterImage>& Data)
+ const boost::shared_ptr<GeoCal::RasterImage>& Data,
+ double Scale_data, const std::string& File_type, bool Negative_to_zero)
 {
   MagnifyBilinear datamag(Data, nsub);
   blitz::Array<double, 2> d = datamag.read_double(0,0, datamag.number_line(),
@@ -88,8 +106,10 @@ void Resampler::resample_field
 	cnt(ln,smp) += 1;
       }
     }
-  res = blitz::where(cnt == 0, 0, res / cnt);
-  VicarRasterImage f(Fname, mi, "REAL");
+  res = blitz::where(cnt == 0, 0, res / cnt * Scale_data);
+  if(Negative_to_zero)
+    res = blitz::where(res < 0, 0, res);
+  VicarRasterImage f(Fname, mi, File_type);
   f.write(0,0,res);
 }
 

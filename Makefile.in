@@ -765,7 +765,8 @@ lib_LTLIBRARIES = libecostress.la
 noinst_LTLIBRARIES = 
 dist_bin_SCRIPTS = @l1a_raw_src@/l1a_raw_process \
 	@l1a_cal_src@/l1a_cal_process @l1b_rad_src@/l1b_rad_process \
-	@l1b_geo_src@/l1b_geo_process
+	@l1b_geo_src@/l1b_geo_process @l1b_geo_src@/l1b_project \
+	@l1b_geo_src@/l1b_orthobase
 AM_LDFLAGS = 
 BUILT_SOURCES = complain_if_afids $(am__append_1) $(am__append_2)
 include_HEADERS = 
