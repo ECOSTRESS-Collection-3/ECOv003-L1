@@ -9,6 +9,7 @@ version = "1.0"
 usage='''Usage:
   l1b_project [options] <l1b_geo_file> <input_file> <field_name> <output_file>
   l1b_project [options] --all-band <l1b_geo_file> <l1b_rad_file> <output_base>
+  l1b_project [options] --all-band-real <l1b_geo_file> <l1b_rad_file> <output_base>
   l1b_project -h | --help
   l1b_project -v | --version
 
@@ -21,6 +22,11 @@ plus the SWIR DN band using the --all-band option. We produce HALF output,
 scaling the radiance by 100.0 (so this is good for looking in xvd). The
 output base is given, and we generate the output file name (e.g., foo_b1.img,
 foo_b2.img ... foo_swir.img). We map negative values to zero.
+
+If you use the --all-band-real then we generate data like --all-band,
+but for the radiance fields we leave as floating point.  Files have
+names like foo_b1.real. --negative-to-zero is honored, default is to
+not do this but you can specify the option to request this.
 
 Options:
   -h --help         
@@ -87,7 +93,7 @@ lon = geocal.GdalRasterImage("HDF5:\"%s\"://Geolocation/longitude" %
                              args.l1b_geo_file)
 res = ecostress.Resampler(lat, lon, mi, args.number_subpixel,
                           args.exactly_match_map_info)
-if(args.all_band):
+if(args.all_band or args.all_band_real):
     data = geocal.GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" %
                                   args.l1b_rad_file)
     print("Doing SWIR band")
@@ -96,8 +102,12 @@ if(args.all_band):
         data = geocal.GdalRasterImage("HDF5:\"%s\"://Radiance/radiance_%d" %
                                       (args.l1b_rad_file, b+1))
         print("Doing band %d" % (b+1))
-        res.resample_field("%s_b%d.img" % (args.output_base, b+1), data,
-                           100.0, "HALF", True)
+        if(args.all_band_real):
+            res.resample_field("%s_b%d.real" % (args.output_base, b+1), data,
+                               1.0, "REAL", args.negative_to_zero)
+        else:
+            res.resample_field("%s_b%d.img" % (args.output_base, b+1), data,
+                               100.0, "HALF", True)
 else:
     data = geocal.GdalRasterImage("HDF5:\"%s\":/%s" %
                                   (args.input_file, args.field_name))
