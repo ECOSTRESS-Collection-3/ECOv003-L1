@@ -38,8 +38,9 @@ class L1bRadGenerate(object):
         res = np.empty((int(rad.number_line/2), rad.number_sample))
         nscan = int(rad.number_line / self.igc.number_line_scan)
         for scan_index in range(nscan):
-            print("Doing scan_index %d for band %d" % (scan_index, band),
-                  file=self.log)
+            if(self.log is not None):
+                print("Doing scan_index %d for band %d" % (scan_index, band),
+                      file=self.log)
             tplist = band_to_band_tie_points(self.igc, scan_index, band)
             m = geocal.QuadraticGeometricModel()
             m.fit_transformation(tplist)
@@ -47,7 +48,8 @@ class L1bRadGenerate(object):
             nlinescan = self.igc.number_line_scan
             radsub = geocal.SubRasterImage(rad, sline, 0, nlinescan,
                                     rad.number_sample)
-            fill_value = -9999
+            fill_value = FILL_VALUE_NOT_SEEN
+            # Note nearest neighbor preserves fill values
             rbreg = geocal.GeometricModelImage(radsub, m, radsub.number_line,
                                         radsub.number_sample, fill_value,
                                         geocal.GeometricModelImage.NEAREST_NEIGHBOR)
@@ -60,16 +62,40 @@ class L1bRadGenerate(object):
         fout = h5py.File(self.output_name, "w")
         g = fout.create_group("Radiance")
         for b in range(5):
+            data = self.image(b+1).astype(np.float32)
             t = g.create_dataset("radiance_%d" % (b + 1),
-                                 data = self.image(b+1).astype(np.float32),
-                                 fillvalue = -9999)
-            t.attrs["_FillValue"] = -9999.0
+                                 data = data,
+                                 fillvalue = FILL_VALUE_BAD_OR_MISSING)
+            t.attrs["_FillValue"] = FILL_VALUE_BAD_OR_MISSING
             t.attrs["Units"] = "W/m^2/sr/um"
+            dqi = np.zeros(data.shape, dtype=np.int8)
+            dqi[data == FILL_VALUE_NOT_SEEN] = DQI_NOT_SEEN
+            dqi[data == FILL_VALUE_STRIPED] = DQI_FILLED
+            dqi[data == FILL_VALUE_BAD_OR_MISSING] = DQI_BAD_OR_MISSING
+            t = g.create_dataset("data_quality_%d" % (b + 1),
+                                 data = dqi)
+            t.attrs["Description"] = '''
+Data quality indicator. 
+  0 - DQI_GOOD, normal data, nothing wrong with it
+  1 - DQI_FILLED, data was part of instrument 
+      'stripe', and we have filled this in 
+      (see ATB) 
+  2 - DQI_BAD_OR_MISSING, indicates data with a bad 
+      value (e.g., negative DN) or missing packets.
+
+  3 - DQI_NOT_SEEN, pixels where because of the 
+      difference in time that a sample is seen with 
+      each band, the ISS has moved enough we haven't 
+      seen the pixel. So data is missing, but by
+      instrument design instead of some problem.
+'''
+            t.attrs["Units"] = "dimensionless"
+            
         g = fout.create_group("SWIR")
         t = g.create_dataset("swir_dn",
                              data = self.image(0).astype(np.int16),
-                             fillvalue = -9999)
-        t.attrs["_FillValue"] = -9999
+                             fillvalue = FILL_VALUE_BAD_OR_MISSING)
+        t.attrs["_FillValue"] = FILL_VALUE_BAD_OR_MISSING
         t.attrs["Units"] = "dimensionless"
         g = fout.create_group("Time")
         t = g.create_dataset("line_start_time_j2000",
