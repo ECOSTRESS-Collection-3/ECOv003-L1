@@ -49,7 +49,17 @@ class L1aPixSimulate(object):
             gain = f["Gain/b%d_gain" % band][:]
             offset = f["Offset/b%d_offset" % band][:]
             r = (r - offset) / gain
-            r[(gain < -9998) | (offset < -9998)] = 0
+            r[(gain <= fill_value_threshold) |
+              (offset < fill_value_threshold)] = 0
+        # We don't record this anywhere in the HDF file that I can easily
+        # find. But we want to add the dark current subtraction back in so
+        # we get the original DNs out.
+        # This is the average of the two blackbody values for
+        # 325K and 295K. The l1a_bb_simulate.py value averages to 5. If
+        # we end up changing this, we can probably come up with a better
+        # way of modifying this.
+        if(band == 0):
+            r[r > fill_value_threshold] += 5
         r = r.astype(np.int16)
         return r
 

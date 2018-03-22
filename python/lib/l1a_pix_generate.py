@@ -78,7 +78,10 @@ class L1aPixGenerate(object):
         fout_gain = h5py.File(self.output_gain_name, "w")
         # Copy output from vicar into output file.
         g = fout.create_group("UncalibratedDN")
-        for b in range(1, 7):
+        t = g.create_dataset("b1_image",
+                  data=geocal.mmap_file("%s/ImgRadiance/b1_dcc.hlf" % dirname))
+        t.attrs["Units"] = "dimensionless"
+        for b in range(2, 7):
             t = g.create_dataset("b%d_image" % b,
                   data=geocal.mmap_file("%s/UncalibratedDN/b%d_image.hlf" %
                                  (dirname, b)))
