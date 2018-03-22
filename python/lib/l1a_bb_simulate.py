@@ -8,10 +8,20 @@ class L1aBbSimulate(object):
     def __init__(self, l1a_pix_fname):
         '''Create a L1APixSimulate to process the given L1A_PIX file.'''
         self.l1a_pix = h5py.File(l1a_pix_fname, "r")
-        # I don't really understand how Tom calculated this.
+        # We can calculate with these values by doing something like:
+        # b_295 = np.array([VicarLiteRasterImage("BlackbodyRadiance/b%d_295.rel" % (b+1)).read_double(10,10,1,1)[0,0] for b in range(6)])
+        # b_325 = np.array([VicarLiteRasterImage("BlackbodyRadiance/b%d325.rel" % (b+1)).read_double(10,10,1,1)[0,0] for b in range(6)])
+        # off = (b_325 * bb_295_mean - b_295 * bb_325_mean) / (bb_295_mean - bb_325_mean)
+        # gain = (b_295 - b_325) / (bb_295_mean - bb_325_mean)
+        # 
+        # Nominal values from Tom, adjusted to offset is negative value (which
+        # is better for our simulations, since DN < 0 is marked as bad,
+        # radiance values < offset get marked as bad when we push through our
+        # simulation
         self.bb_325_mean = [6, 2456, 2532, 2603, 2845, 2845]
         self.bb_325_sigma = [0, 0, 0, 0, 0, 0]
-        self.bb_295_mean = [4, 849, 925, 996, 1238, 1238]
+        # Played with these values until we got a slightly negative offset
+        self.bb_295_mean = [4, 849+580, 925+590, 996+590, 1238+610, 1238+710]
         self.bb_295_sigma = [0, 0, 0, 0, 0, 0]
         
     def copy_metadata(self, field):

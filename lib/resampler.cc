@@ -1,5 +1,6 @@
 #include "resampler.h"
 #include "ecostress_serialize_support.h"
+#include "ecostress_dqi.h"
 #include "geocal/magnify_bilinear.h"
 #include "geocal/geodetic.h"
 #include "geocal/vicar_raster_image.h"
@@ -101,7 +102,7 @@ void Resampler::resample_field
       int ln, smp;
       ln = data_index(i,j,0);
       smp = data_index(i,j,1);
-      if(d(i,j) > -9998) {
+      if(d(i,j) > fill_value_threshold) {
 	res(ln,smp) += d(i,j);
 	cnt(ln,smp) += 1;
       }

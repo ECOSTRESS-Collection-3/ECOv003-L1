@@ -1,5 +1,6 @@
 #include "ground_coordinate_array.h"
 #include "ecostress_serialize_support.h"
+#include "ecostress_dqi.h"
 #include "geocal/ostream_pad.h"
 #include "geocal/vicar_raster_image.h"
 
@@ -204,7 +205,7 @@ void GroundCoordinateArray::project_surface_scan_arr
 	     smp < Data.number_sample() &&
 	     Start_line + i < igc_->number_line()) {
 	    int val = igc_->image()->read(Start_line + i, j);
-	    if(val > -9998)
+	    if(val > fill_value_threshold)
 	      Data.write(ln, smp, val);
 	  }
 	}

@@ -27,6 +27,7 @@ EXTRA_DIST+= @srclib@/test_all.sh
 ecostressinc_HEADERS+= @srclib@/ecostress_serialize_support.h
 ecostressinc_HEADERS+= @srclib@/ecostress_camera.h
 libecostress_la_SOURCES+= @srclib@/ecostress_camera.cc
+ecostressinc_HEADERS+= @srclib@/ecostress_dqi.h
 ecostressinc_HEADERS+= @srclib@/ecostress_paraxial_transform.h
 libecostress_la_SOURCES+= @srclib@/ecostress_paraxial_transform.cc
 ecostressinc_HEADERS+= @srclib@/ecostress_time_table.h
@@ -53,6 +54,8 @@ libecostress_la_SOURCES+= @srclib@/simulated_radiance.cc
 # Files that contain SWIG wrapper information.
 SWIG_SRC += @swigsrc@/ecostress_swig_array_wrap.cc
 ecostressswiginc_HEADERS+= @srclib@/ecostress_swig_array.i
+SWIG_SRC += @swigsrc@/ecostress_dqi_wrap.cc
+ecostressswiginc_HEADERS+= @srclib@/ecostress_dqi.i
 SWIG_SRC += @swigsrc@/ecostress_camera_wrap.cc
 ecostressswiginc_HEADERS+= @srclib@/ecostress_camera.i
 SWIG_SRC += @swigsrc@/ecostress_paraxial_transform_wrap.cc
