@@ -15,3 +15,4 @@ l1b_rad_process l1a_cal_run/*PIX*_80006_001*.h5 l1a_cal_run/*GAIN*_80006_001*.h5
 l1b_geo_process l1a_raw_run/*ATT*_80006_*.h5 ${l1_osp_dir} l1b_geo_run l1b_rad_run/*RAD*_80006_001*.h5
 
 l1b_project --all-band l1b_geo_run/*GEO*80006*_001*.h5 l1b_rad_run/*RAD*_80006_001*.h5 glynn_geo
+l1b_project --all-band-real l1b_geo_run/*GEO*80006*_001*.h5 l1b_rad_run/*RAD*_80006_001*.h5 glynn_geo

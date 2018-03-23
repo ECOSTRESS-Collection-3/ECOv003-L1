@@ -15,4 +15,9 @@ l1b_rad_process l1a_cal_run/*PIX*_80005_001*.h5 l1a_cal_run/*GAIN*_80005_001*.h5
 l1b_rad_process l1a_cal_run/*PIX*_80005_002*.h5 l1a_cal_run/*GAIN*_80005_002*.h5 l1a_raw_run/*ATT*_80005_*.h5 ${l1_osp_dir} l1b_rad_run
 l1b_rad_process l1a_cal_run/*PIX*_80005_003*.h5 l1a_cal_run/*GAIN*_80005_003*.h5 l1a_raw_run/*ATT*_80005_*.h5 ${l1_osp_dir} l1b_rad_run
 
+l1b_geo_process l1a_raw_run/*ATT*_80005_*.h5 ${l1_osp_dir} l1b_geo_run l1b_rad_run/*RAD*_80005_*.h5
+
+l1b_project --all-band l1b_geo_run/*GEO*80005*_001*.h5 l1b_rad_run/*RAD*_80005_001*.h5 geo
+l1b_project --all-band-real l1b_geo_run/*GEO*80005*_001*.h5 l1b_rad_run/*RAD*_80005_001*.h5 geo
+
 
