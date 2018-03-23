@@ -10,7 +10,7 @@ class L1aBbSimulate(object):
         self.l1a_pix = h5py.File(l1a_pix_fname, "r")
         # We can calculate with these values by doing something like:
         # b_295 = np.array([VicarLiteRasterImage("BlackbodyRadiance/b%d_295.rel" % (b+1)).read_double(10,10,1,1)[0,0] for b in range(6)])
-        # b_325 = np.array([VicarLiteRasterImage("BlackbodyRadiance/b%d325.rel" % (b+1)).read_double(10,10,1,1)[0,0] for b in range(6)])
+        # b_325 = np.array([VicarLiteRasterImage("BlackbodyRadiance/b%d_325.rel" % (b+1)).read_double(10,10,1,1)[0,0] for b in range(6)])
         # off = (b_325 * bb_295_mean - b_295 * bb_325_mean) / (bb_295_mean - bb_325_mean)
         # gain = (b_295 - b_325) / (bb_295_mean - bb_325_mean)
         # 
