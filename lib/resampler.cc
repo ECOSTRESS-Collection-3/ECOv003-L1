@@ -1,6 +1,7 @@
 #include "resampler.h"
 #include "ecostress_serialize_support.h"
 #include "ecostress_dqi.h"
+#include "geocal/magnify_replicate.h"
 #include "geocal/magnify_bilinear.h"
 #include "geocal/geodetic.h"
 #include "geocal/vicar_raster_image.h"
@@ -90,7 +91,9 @@ void Resampler::resample_field
  const boost::shared_ptr<GeoCal::RasterImage>& Data,
  double Scale_data, const std::string& File_type, bool Negative_to_zero)
 {
-  MagnifyBilinear datamag(Data, nsub);
+  // We do replication here since we are counting subpixels. This is
+  // particularly important to get the fill values correct.
+  MagnifyReplicate datamag(Data, nsub);
   blitz::Array<double, 2> d = datamag.read_double(0,0, datamag.number_line(),
 						  datamag.number_sample());
   blitz::Array<double, 2> res(mi.number_y_pixel(), mi.number_x_pixel());
@@ -103,11 +106,22 @@ void Resampler::resample_field
       ln = data_index(i,j,0);
       smp = data_index(i,j,1);
       if(d(i,j) > fill_value_threshold) {
+	// Clear out any fill value we may have set
+	if(cnt(ln,smp) == 0)
+	  res(ln,smp) = 0.0;
 	res(ln,smp) += d(i,j);
 	cnt(ln,smp) += 1;
+      } else {
+	// Populate with fill value if we don't already have data
+	if(cnt(ln, smp) == 0) {
+	  if(res(ln, smp) > fill_value_threshold)
+	    res(ln, smp) = d(i,j);
+	  else
+	    res(ln, smp) = std::max(res(ln, smp), d(i,j));
+	}
       }
     }
-  res = blitz::where(cnt == 0, 0, res / cnt * Scale_data);
+  res = blitz::where(cnt == 0, res, res / cnt * Scale_data);
   if(Negative_to_zero)
     res = blitz::where(res < 0, 0, res);
   VicarRasterImage f(Fname, mi, File_type);
