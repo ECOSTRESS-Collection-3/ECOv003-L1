@@ -490,8 +490,8 @@ class L1aRawPixGenerate(object):
               if adt > PKT_DURT:  # large time jump between PKTS
                 jumps += 1
                 if e0==tot_pkts - 1 or e3<=FPPPKT: e4 = 0
-                else: e4 = float((lev[e0+1,0] - lev[e0,0])%MAX_FPIE) * EV_DUR
-                if e4 > PKT_DUR:  # EV jump within packet
+                else: e4 = float((lev[e0+1,0] - lev[e0,0])%MAX_FPIE) * EV_DUR - PKT_DUR
+                if abs(e4) > PKT_DURT:  # EV jump within packet
                   e4 = int( dt/FP_DUR + 0.5 )
                   print("*** Orbit %s Scene %d scan %d Time jump at IDX[%d](%f) DT=%f OPINC=%d OP=%d" %(orb, scene_id, scan, e0+1,gpt[e0+1],dt,e4,op))
                   ldd[:] = (lev[e0,1:] - lev[e0,:FPPPKT-1])%MAX_FPIE
@@ -499,6 +499,7 @@ class L1aRawPixGenerate(object):
                   if fpc==0: fpc = FPPPKT
                   else: fpc += 1
                   print("Copying remaining %d FPs of scan %d from PKT %d" % (fpc, scan, e0))
+                else: e4 = 0
 
             for b in range( BANDS ): # transpose new packet to flex_buf
               flex_buf[:,:,b] = np.transpose(bip[e0,:,:,b])
@@ -510,9 +511,9 @@ class L1aRawPixGenerate(object):
                 print(" SSE=%f" % sse )
               else:
                 print(" ")
-              if e3==FPPPKT: e3 = 0
+              if e3==FPPPKT: e3 = 0  # next search in next packet
             dp = op - op0
-            #print("SEQ=%d LINE=%d DP=%d P1=%d FPC=%d" %(seq,line,dp,p1,fpc))
+            #print("SEQ=%d LINE=%d OP=%d(%f) DP=%d(%f) P1=%d(%f) FPC=%d(%f) E4=%d(%f)" %(seq,line,op,op,dp,dp,p1,p1,fpc,fpc,e4,e4))
 
             obuf[seq][line:line+PPFP,dp:dp+fpc,:] = flex_buf[:,p1:p1+fpc,:]
             if seq==2: ev_buf[scan,dp:dp+fpc] = lev[e0,p1:p1+fpc]
