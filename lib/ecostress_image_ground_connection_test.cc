@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE(basic_test)
     std::cerr << igc->ground_coordinate(GeoCal::ImageCoordinate(5,10))->height_reference_surface() << "\n";
   }
   BOOST_CHECK(distance(*igc->ground_coordinate(GeoCal::ImageCoordinate(5,10)),
-       GeoCal::Geodetic(37.73483228, -124.6297803, -37.50088508)) < 1.0);
+          GeoCal::Geodetic(37.7129523, -124.650274, -37.5432529)) < 1.0);
   BOOST_CHECK(distance(*igc->ground_coordinate(GeoCal::ImageCoordinate(5,10)),
 		       *igc_hres->ground_coordinate(GeoCal::ImageCoordinate(5*2,10))) < 1.0);
 }
@@ -52,6 +52,9 @@ BOOST_AUTO_TEST_CASE(image_coordinate)
 }
 
 
+// Note jacobian test in ecostress_igc_collection_test.cc, it is
+// easier to test with a full collection.
+
 BOOST_AUTO_TEST_CASE(serialization)
 {
   std::string d = GeoCal::serialize_write_string(igc);
@@ -60,7 +63,7 @@ BOOST_AUTO_TEST_CASE(serialization)
   boost::shared_ptr<EcostressImageGroundConnection> igcr =
     GeoCal::serialize_read_string<EcostressImageGroundConnection>(d);
   BOOST_CHECK(distance(*igcr->ground_coordinate(GeoCal::ImageCoordinate(5,10)),
-       GeoCal::Geodetic(37.73483228, -124.6297803, -37.50088508)) < 1.0);
+       GeoCal::Geodetic(37.7129523, -124.650274, -37.5432529)) < 1.0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

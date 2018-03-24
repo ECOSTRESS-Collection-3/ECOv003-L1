@@ -219,6 +219,9 @@ EcostressParaxialTransform._v_par_to_real = new_instancemethod(_ecostress_camera
 EcostressParaxialTransform_swigregister = _ecostress_camera.EcostressParaxialTransform_swigregister
 EcostressParaxialTransform_swigregister(EcostressParaxialTransform)
 
+
+__all__ = ["EcostressParaxialTransform"]
+
 class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
     """
 
@@ -234,16 +237,26 @@ class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
 
-    def __init__(self):
+    def __init__(self, Focal_length, Frame_to_sc_q):
         """
 
-        EcostressCamera::EcostressCamera()
+        EcostressCamera::EcostressCamera(double Focal_length=427.6, boost::math::quaternion< double >
+        Frame_to_sc_q=boost::math::quaternion< double >(0, 0, 0, 1))
         Constructor.
 
-        Right now we have everything hardcoded, we'll change this to use a
-        configuration file in the future. 
+        We've hardcoded things we don't expect to change (e.g., the line and
+        sample pitch). 
         """
-        _ecostress_camera.EcostressCamera_swiginit(self, _ecostress_camera.new_EcostressCamera())
+        _ecostress_camera.EcostressCamera_swiginit(self, _ecostress_camera.new_EcostressCamera(Focal_length, Frame_to_sc_q))
+
+    def mask_all_parameter(self):
+        """
+
+        void Ecostress::EcostressCamera::mask_all_parameter()
+        Convenience function to mask all the parameters we can fit for. 
+        """
+        return _ecostress_camera.EcostressCamera_mask_all_parameter(self)
+
 
     def _v_paraxial_transform(self, *args):
         """
@@ -267,9 +280,13 @@ class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
       return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
 
     __swig_destroy__ = _ecostress_camera.delete_EcostressCamera
+EcostressCamera.mask_all_parameter = new_instancemethod(_ecostress_camera.EcostressCamera_mask_all_parameter, None, EcostressCamera)
 EcostressCamera._v_paraxial_transform = new_instancemethod(_ecostress_camera.EcostressCamera__v_paraxial_transform, None, EcostressCamera)
 EcostressCamera_swigregister = _ecostress_camera.EcostressCamera_swigregister
 EcostressCamera_swigregister(EcostressCamera)
+
+
+__all__ = ["EcostressCamera"]
 
 
 

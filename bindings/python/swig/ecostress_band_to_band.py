@@ -212,4 +212,7 @@ def band_to_band_tie_points(Igc, Scan_index, Band, Nline_pt=10, Nsamp_pt=30):
     """
     return _ecostress_band_to_band.band_to_band_tie_points(Igc, Scan_index, Band, Nline_pt, Nsamp_pt)
 
+__all__ = ["band_to_band_tie_points"]
+
+
 

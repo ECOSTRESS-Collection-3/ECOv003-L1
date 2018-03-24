@@ -241,4 +241,7 @@ EcostressRadApply_swigregister = _ecostress_rad_apply.EcostressRadApply_swigregi
 EcostressRadApply_swigregister(EcostressRadApply)
 
 
+__all__ = ["EcostressRadApply"]
+
+
 

@@ -1,5 +1,6 @@
 #include "ecostress_rad_average.h"
 #include "ecostress_serialize_support.h"
+#include "ecostress_dqi.h"
 
 using namespace Ecostress;
 
@@ -32,13 +33,13 @@ void EcostressRadAverage::calc(int Lstart, int Sstart) const
     for(int j = 0; j < data.cols(); ++j) {
       double v1 = raw(2*i,j);
       double v2 = raw(2*i+1,j);
-      if(v1 < -9998) {
-	if(v2 < -9998)
-	  data(i,j) = -9999;
+      if(v1 <= fill_value_threshold) {
+	if(v2 <= fill_value_threshold)
+	  data(i,j) = std::max(v1, v2);
 	else
 	  data(i,j) = v2;
       } else {
-	if(v2 < -9998)
+	if(v2 <= fill_value_threshold)
 	  data(i,j) = v1;
 	else
 	  data(i,j) = (v1 + v2) / 2;

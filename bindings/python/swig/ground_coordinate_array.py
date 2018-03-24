@@ -191,6 +191,7 @@ import geocal_swig.with_parameter
 import geocal_swig.geocal_exception
 import geocal_swig.observer
 import geocal_swig.raster_image_variable
+import geocal_swig.dem_map_info
 class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
     """
 
@@ -213,28 +214,25 @@ class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
     Note that this is very similar to the IgcRayCaster class found in
     GeoCal. However that is designed for a pushbroom camera, while we have
     a push whisk broom. So we use different logic for coming up with the
-    initial guess as the ray length, but it is the same idea. We also
-    don't actually need to do this with subpixels for this particular
-    application, so we simplify the logic a little bit by only worrying
-    about the middle of each image pixel.
+    initial guess as the ray length, but it is the same idea.
 
     C++ includes: ground_coordinate_array.h 
     """
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
 
-    def __init__(self, Igc, Include_angle=False):
+    def __init__(self, Igc, Include_angle=False, Nsub_line=1, Nsub_sample=1):
         """
 
         Ecostress::GroundCoordinateArray::GroundCoordinateArray(const boost::shared_ptr< EcostressImageGroundConnection > &Igc, bool
-        Include_angle=false)
+        Include_angle=false, int Nsub_line=1, int Nsub_sample=1)
         Constructor.
 
         Because they are closely related, you can optionally set
         Include_angle=true and we will include view_zenith, view_azimuth,
         solar_zenith and solar_azimuth in our calculation. 
         """
-        _ground_coordinate_array.GroundCoordinateArray_swiginit(self, _ground_coordinate_array.new_GroundCoordinateArray(Igc, Include_angle))
+        _ground_coordinate_array.GroundCoordinateArray_swiginit(self, _ground_coordinate_array.new_GroundCoordinateArray(Igc, Include_angle, Nsub_line, Nsub_sample))
 
     def _v_igc(self):
         """
@@ -253,19 +251,20 @@ class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
     def ground_coor_arr(self):
         """
 
-        blitz::Array< double, 3 > GroundCoordinateArray::ground_coor_arr() const
+        blitz::Array< double, 5 > GroundCoordinateArray::ground_coor_arr() const
         This returns the ground coordinates for every pixel in the
-        ImageGroundConnection as a number_line x number_sample x 3 array, with
-        the coordinates as latitude, longitude, height.
+        ImageGroundConnection as a number_line x number_sample x nsub_line x
+        nsub_sample x 3 array, with the coordinates as latitude, longitude,
+        height.
 
         These are the same values that you would get from just repeatedly
         calling igc()->ground_coordinate(ic), but we take advantage of the
         special form of the Ecostress scan to speed up this calculation a lot.
 
         If include_angle was specified in the construtor, we return a
-        number_line x number_sample x 7 array with coordinates as latitude,
-        longitude, height, view_zenith, view_azimuth, solar_zenith,
-        solar_azimuth. 
+        number_line x number_sample x nsub_line x nsub_sample x 7 array with
+        coordinates as latitude, longitude, height, view_zenith, view_azimuth,
+        solar_zenith, solar_azimuth. 
         """
         return _ground_coordinate_array.GroundCoordinateArray_ground_coor_arr(self)
 
@@ -273,9 +272,10 @@ class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
     def ground_coor_scan_arr(self, Start_line, Number_line=-1):
         """
 
-        blitz::Array< double, 3 > GroundCoordinateArray::ground_coor_scan_arr(int Start_line, int Number_line=-1) const
+        blitz::Array< double, 5 > GroundCoordinateArray::ground_coor_scan_arr(int Start_line, int Number_line=-1) const
         This return the ground coordinates as a number_line x number_sample x
-        3 array, with the coordinates as latitude, longitude, and height.
+        nsub_line x nsub_sample x 3 array, with the coordinates as latitude,
+        longitude, and height.
 
         You don't normally call this function, instead you likely want
         ground_coor_arr. We have this function exposed to aid with testing -
@@ -284,34 +284,56 @@ class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
         processing we can do each ground_coor_arr separately if desired.
 
         If include_angle was specified in the construtor, we return a
-        number_line x number_sample x 7 array with coordinates as latitude,
-        longitude, height, view_zenith, view_azimuth, solar_zenith,
-        solar_azimuth. 
+        number_line x number_sample x nsub_line x nsub_sample x 7 array with
+        coordinates as latitude, longitude, height, view_zenith, view_azimuth,
+        solar_zenith, solar_azimuth. 
         """
         return _ground_coordinate_array.GroundCoordinateArray_ground_coor_scan_arr(self, Start_line, Number_line)
 
 
-    def cover(self, Resolution=70.0):
+    def cover(self, *args):
         """
 
-        GeoCal::MapInfo GroundCoordinateArray::cover(double Resolution=70.0) const
-        Calculate the map info to cover the ground projection of the Igc.
-
-        This is like what the python program igc_project calculates, but it is
-        more convenient to have this in C++ here. The Resolution is in meters.
+        GeoCal::MapInfo GroundCoordinateArray::cover(const GeoCal::MapInfo &Mi) const
 
         """
-        return _ground_coordinate_array.GroundCoordinateArray_cover(self, Resolution)
+        return _ground_coordinate_array.GroundCoordinateArray_cover(self, *args)
 
 
-    def raster_cover(self, Resolution=70.0):
+    def raster_cover(self, *args):
         """
 
-        boost::shared_ptr< GeoCal::MemoryRasterImage > GroundCoordinateArray::raster_cover(double Resolution=70.0) const
+        boost::shared_ptr< GeoCal::MemoryRasterImage > GroundCoordinateArray::raster_cover(const GeoCal::MapInfo &Mi) const
         Create a MemoryRasterImage that matches cover(), and fill it in with 0
         fill data. 
         """
-        return _ground_coordinate_array.GroundCoordinateArray_raster_cover(self, Resolution)
+        return _ground_coordinate_array.GroundCoordinateArray_raster_cover(self, *args)
+
+
+    def raster_cover_vicar(self, *args):
+        """
+
+        boost::shared_ptr< GeoCal::VicarLiteRasterImage > GroundCoordinateArray::raster_cover_vicar(const std::string &Fname, const GeoCal::MapInfo &Mi) const
+        Create a VicarLiteRasterImage that matches cover(), and fill it in
+        with 0 fill data. 
+        """
+        return _ground_coordinate_array.GroundCoordinateArray_raster_cover_vicar(self, *args)
+
+
+    def project_surface(self, Resolution=70.0):
+        """
+
+        boost::shared_ptr< GeoCal::MemoryRasterImage > GroundCoordinateArray::project_surface(double Resolution=70.0) const
+        Create a MemoryRasterImage that matches cover(), and fill it in with 0
+        fill data.
+
+        Then project all the data to the surface.
+
+        We fill in Ras with whatever the last encountered value is, i.e. we
+        make no attempt to average data. We could implement averaging if
+        needed, but for right now we just put in the value. 
+        """
+        return _ground_coordinate_array.GroundCoordinateArray_project_surface(self, Resolution)
 
 
     def project_surface_scan_arr(self, Data, Start_line, Number_line):
@@ -323,6 +345,15 @@ class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
         We fill in Ras with whatever the last encountered value is, i.e. we
         make no attempt to average data. We could implement averaging if
         needed, but for right now we just put in the value.
+
+        Note a serious advantage to "just overwrite value" is that we can
+        use a memory mapped VicarLiteRasterImage and run
+        project_surface_scan_arr in parallel through python with no special
+        coordination. If two processes write to the same location, we just get
+        whichever one happened to write last. This does mean that our data is
+        non-deterministic, but that doesn't matter if we are just using the
+        data to do image matching. If it does matter for your application,
+        then don't run project_surface_scan_arr in parallel.
 
         We do nothing with points that we don't see, so if for example you
         want a fill value you should make sure to fill in Data before calling
@@ -356,6 +387,8 @@ GroundCoordinateArray.ground_coor_arr = new_instancemethod(_ground_coordinate_ar
 GroundCoordinateArray.ground_coor_scan_arr = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray_ground_coor_scan_arr, None, GroundCoordinateArray)
 GroundCoordinateArray.cover = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray_cover, None, GroundCoordinateArray)
 GroundCoordinateArray.raster_cover = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray_raster_cover, None, GroundCoordinateArray)
+GroundCoordinateArray.raster_cover_vicar = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray_raster_cover_vicar, None, GroundCoordinateArray)
+GroundCoordinateArray.project_surface = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray_project_surface, None, GroundCoordinateArray)
 GroundCoordinateArray.project_surface_scan_arr = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray_project_surface_scan_arr, None, GroundCoordinateArray)
 GroundCoordinateArray.__str__ = new_instancemethod(_ground_coordinate_array.GroundCoordinateArray___str__, None, GroundCoordinateArray)
 GroundCoordinateArray_swigregister = _ground_coordinate_array.GroundCoordinateArray_swigregister
@@ -374,6 +407,9 @@ def GroundCoordinateArray_interpolate(Data, Lat, Lon):
     this runs much faster than doing this operation in python. 
     """
     return _ground_coordinate_array.GroundCoordinateArray_interpolate(Data, Lat, Lon)
+
+
+__all__ = ["GroundCoordinateArray"]
 
 
 

@@ -26,8 +26,8 @@ BOOST_AUTO_TEST_CASE(basic_test)
     od->surface_intersect(*cam, GeoCal::FrameCoordinate(1,0), dem);
   boost::shared_ptr<GeoCal::CartesianFixed> gp3 =
     od->surface_intersect(*cam, GeoCal::FrameCoordinate(0,1), dem);
-  BOOST_CHECK_CLOSE(distance(*gp1, *gp2), 38.87907, 1e-2);
-  BOOST_CHECK_CLOSE(distance(*gp1, *gp3), 39.6724, 1e-2);
+  BOOST_CHECK_CLOSE(distance(*gp1, *gp2), 38.8346, 1e-2);
+  BOOST_CHECK_CLOSE(distance(*gp1, *gp3), 39.9935, 1e-2);
 }
 
 BOOST_AUTO_TEST_CASE(compare_spreadsheet)

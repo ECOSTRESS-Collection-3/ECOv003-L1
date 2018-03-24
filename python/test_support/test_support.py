@@ -4,7 +4,7 @@ import os
 from geocal import makedirs_p, read_shelve, Ipi, SrtmDem, \
     IpiImageGroundConnection, SrtmLwmData, HdfOrbit_Eci_TimeJ2000, \
     MeasuredTimeTable, Time, ImageCoordinate, VicarLiteRasterImage, \
-    VicarLiteFile, Vector_Time
+    VicarLiteFile, Vector_Time, GdalRasterImage, Landsat7Global
 import h5py
 try:
     from ecostress_swig import *
@@ -87,10 +87,20 @@ def aster_mosaic_dir():
     yield dir
 
 @pytest.yield_fixture(scope="function")
+def ortho():
+    dir = "/project/ancillary/LANDSAT"
+    if(not os.path.exists(dir)):
+        # Location on pistol
+        dir = "/raid22"
+    if(not os.path.exists(dir)):
+        raise RuntimeError("Can't find location of ortho base")
+    return Landsat7Global(dir, Landsat7Global.BAND5)
+
+@pytest.yield_fixture(scope="function")
 def aster_mosaic_surface_data(aster_mosaic_dir):
     sdata = [VicarLiteRasterImage(aster_mosaic_dir + "calnorm_b%d.img" % b, 1,
                                   VicarLiteFile.READ, 1000, 1000)
-             for b in [14,14,12,11,10,4]]
+             for b in [4, 10, 11, 12, 14, 14]]
     yield sdata
         
 @pytest.yield_fixture(scope="function")
@@ -140,6 +150,14 @@ def igc(unit_test_data, test_data):
     yield igc
 
 @pytest.yield_fixture(scope="function")
+def igc_with_img(igc, test_data):
+    '''Like igc, but also with raster image included'''
+    igcwimg = igc
+    rad_fname = test_data + "ECOSTRESS_L1B_RAD_80005_001_20150124T204250_0100_01.h5.expected"
+    igcwimg.image = GdalRasterImage('HDF5:"%s"://SWIR/swir_dn' % rad_fname)
+    yield igcwimg
+    
+@pytest.yield_fixture(scope="function")
 def dn_fname(unit_test_data, test_data):
     yield test_data + "ECOSTRESS_L1A_PIX_80005_001_20150124T204250_0100_02.h5.expected"
 
@@ -177,7 +195,42 @@ def igc_hres(unit_test_data, test_data):
     igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
     yield igc
     
+@pytest.yield_fixture(scope="function")
+def igc_btob(unit_test_data, test_data):
+    '''Like igc_hres, but using test data better suited for band to band 
+    testing. We have the SWIR band for each of the bands'''
+    if(not have_swig):
+        raise RuntimeError("You need to install the ecostress swig code first. You can install just this by doing 'make install-swig-python'")
+    cam = read_shelve(unit_test_data + "camera.xml")
+    orb_fname = test_data + "band_to_band/L1A_RAW_ATT_80005_20150124T204250_0100_01.h5"
+    orb = HdfOrbit_Eci_TimeJ2000(orb_fname, "", "Ephemeris/time_j2000",
+                                 "Ephemeris/eci_position",
+                                 "Ephemeris/eci_velocity",
+                                 "Attitude/time_j2000",
+                                 "Attitude/quaternion")
+    rad_fname = test_data + "band_to_band/ECOSTRESS_L1A_PIX_80005_001_20150124T204250_0100_01.h5"
+
+    f = h5py.File(rad_fname, "r")
+    tmlist = f["/Time/line_start_time_j2000"][::256]
+    # False here means we've haven't averaged the 256 lines.
+    vtime = Vector_Time()
+    for t in tmlist:
+        vtime.append(Time.time_j2000(t))
+    tt = EcostressTimeTable(vtime, False)
+    
+    # False here says it ok for SrtmDem to not have tile. This gives support
+    # for data that is over the ocean.
+    dem = SrtmDem("",False)
+    sm = EcostressScanMirror()
+    igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
+    yield igc
+
 slow = pytest.mark.skipif(
     not pytest.config.getoption("--run-slow"),
     reason="need --run-slow option to run"
 )
+
+# Short hand for marking as unconditional skipping. Good for tests we
+# don't normally run, but might want to comment out for a specific debugging
+# reason.
+skip = pytest.mark.skip

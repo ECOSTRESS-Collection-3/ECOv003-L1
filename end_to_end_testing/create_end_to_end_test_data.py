@@ -14,8 +14,12 @@ create_l1a_raw_pix = True
 create_l1a_raw_att = True
 create_l1a_eng = True
 create_l0b = True
+# For testing band to band, useful to use the same radiance data for all
+# bands.
+use_swir_all_band = False
+gain_fname = "../../ecostress-test-data/latest/L1A_RAD_GAIN_80005_001_20150124T204250_0100_02.h5.expected"
+#gain_fname = None
 osp_dir= "../../ecostress-test-data/latest/l1_osp_dir"
-
 # Center times for each of the passes. See the wiki at 
 # https://wiki.jpl.nasa.gov/display/ecostress/Test+Data and subpages for details
 
@@ -48,8 +52,18 @@ if(not os.path.exists(aster_mosaic_dir)):
 # bands comes from the wiki. Data originally comes from /raid11/astermos,
 # but is compressed there.
 sdata = [VicarLiteRasterImage(aster_mosaic_dir + "calnorm_b%d.img" % b, 1,
-                              VicarLiteFile.READ, 1000, 1000)
+                              VicarLiteFile.READ, 10000, 10000)
          for b in ecostress_to_aster_band()]
+# Scale to get radiance, except for band 1 that we leave as DN
+sfactor = [aster_radiance_scale_factor()[ecostress_to_aster_band()[i] - 1] for
+           i in range(6)]
+sfactor[0] = None
+if(use_swir_all_band):
+    sdata = [VicarLiteRasterImage(aster_mosaic_dir + "calnorm_b%d.img" % b, 1,
+                                  VicarLiteFile.READ, 10000, 10000)
+             for b in [4,4,4,4,4,4]]
+    sfactor = [aster_radiance_scale_factor()[3]] * 6
+    sfactor[0] = None
 
 orb = OrbitTimeShift(SpiceOrbit(SpiceOrbit.ISS_ID, "iss_spice/iss_2015.bsp"),
                      time_shift[pass_index])
@@ -59,7 +73,7 @@ dem = SrtmDem("",False)
 sm = EcostressScanMirror()
 
 # Camera comes from the separate ecostress_camera_generate.py script
-cam = read_shelve("camera.xml")
+cam = read_shelve("camera_20180208.xml")
 # ***********************************
 # Need to fix this time calculation
 # ***********************************
@@ -94,7 +108,8 @@ for s in range(nscene[pass_index]):
         end_time = tt.max_time
     l1a_pix_fname = ecostress_file_name("L1A_PIX", orbit_num[pass_index],
                                         s + 1, tt.min_time)
-    l1a_pix_sim = L1aPixSimulate(igc, sdata)
+    l1a_pix_sim = L1aPixSimulate(igc, sdata, gain_fname = gain_fname,
+                                 scale_factor = sfactor)
     if(create_l1a_pix):
         l1a_pix_sim.create_file(l1a_pix_fname, pool=pool)
     

@@ -1,0 +1,39 @@
+#! /usr/bin/env python
+#
+# This projects L1B geo data
+import geocal
+import ecostress
+import os
+
+version = "1.0"
+usage='''Usage:
+  l1b_orthobase [options] <input_file> <output_file>
+  l1b_orthobase -h | --help
+  l1b_orthobase -v | --version
+
+This create an output image file containing the orthobase data covering the
+given input file.
+Options:
+  -h --help         
+       Print this message
+
+  -v --version      
+       Print program version
+'''
+
+args = geocal.docopt_simple(usage, version=version)
+
+if(os.path.exists("/project/ancillary/LANDSAT")):
+    # eco-scf location
+    ortho_base = geocal.Landsat7Global("/project/ancillary/LANDSAT",
+                                       geocal.Landsat7Global.BAND5)
+else:
+    # pistol location
+    ortho_base = geocal.Landsat7Global("/raid22",
+                                       geocal.Landsat7Global.BAND5)
+
+mi = geocal.GdalRasterImage(args.input_file).map_info
+ortho_base.create_subset_file(args.output_file, "VICAR",
+                              Desired_map_info = mi,
+                              Translate_arg = "-ot Int16")
+

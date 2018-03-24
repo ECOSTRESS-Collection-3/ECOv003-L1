@@ -191,6 +191,7 @@ import geocal_swig.with_parameter
 import geocal_swig.geocal_exception
 import geocal_swig.observer
 import geocal_swig.raster_image_variable
+import geocal_swig.dem_map_info
 class SimulatedRadiance(geocal_swig.generic_object.GenericObject):
     """
 
@@ -316,6 +317,9 @@ SimulatedRadiance._v_map_projected_image = new_instancemethod(_simulated_radianc
 SimulatedRadiance.__str__ = new_instancemethod(_simulated_radiance.SimulatedRadiance___str__, None, SimulatedRadiance)
 SimulatedRadiance_swigregister = _simulated_radiance.SimulatedRadiance_swigregister
 SimulatedRadiance_swigregister(SimulatedRadiance)
+
+
+__all__ = ["SimulatedRadiance"]
 
 
 

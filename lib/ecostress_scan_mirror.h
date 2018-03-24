@@ -51,6 +51,10 @@ public:
   double scan_mirror_angle(double Ic_sample) const
   { return scan_start_ + Ic_sample * scan_step_; }
 
+  GeoCal::AutoDerivative<double> scan_mirror_angle
+  (const GeoCal::AutoDerivative<double>& Ic_sample) const
+  { return scan_start_ + Ic_sample * scan_step_; }
+  
 //-------------------------------------------------------------------------
 /// Rotation matrix that take the view vector for the Camera and takes
 /// it to the space craft coordinate system.
@@ -58,6 +62,10 @@ public:
 
   boost::math::quaternion<double>
   rotation_quaterion(double Ic_sample) const
+  { return GeoCal::quat_rot_x(scan_mirror_angle(Ic_sample) *
+			      GeoCal::Constant::deg_to_rad); }
+  boost::math::quaternion<GeoCal::AutoDerivative<double> >
+  rotation_quaterion(const GeoCal::AutoDerivative<double>& Ic_sample) const
   { return GeoCal::quat_rot_x(scan_mirror_angle(Ic_sample) *
 			      GeoCal::Constant::deg_to_rad); }
   virtual void print(std::ostream& Os) const;

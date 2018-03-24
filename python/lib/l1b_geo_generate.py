@@ -1,4 +1,4 @@
-from geocal import *
+import geocal
 from ecostress_swig import *
 import pickle
 from .pickle_method import *
@@ -7,6 +7,7 @@ import math
 from multiprocessing import Pool
 from .write_standard_metadata import WriteStandardMetadata
 from .misc import time_split
+import numpy as np
 
 class L1bGeoGenerate(object):
     '''This generate a L1B geo output file from a given
@@ -45,22 +46,27 @@ class L1bGeoGenerate(object):
         # Handle number_sample too large here, so we don't have to
         # have special handling elsewhere
         start_line, number_line = it
+        # Note res here refers to an internal cache array of gc_arr
         res = self.gc_arr.ground_coor_scan_arr(start_line, number_line)
         print("Done with [%d, %d]" % (start_line, start_line+res.shape[0]))
         if(self.log_fname is not None):
             self.log = open(self.log_fname, "a")
-            print("Done with [%d, %d]" % (start_line, start_line+res.shape[0]),
+            print("INFO:L1bGeoGenerate:Done with [%d, %d]" % (start_line, start_line+res.shape[0]),
                   file = self.log)
             self.log.flush()
-        lat = res[:,:,0]
-        lon = res[:,:,1]
-        height = res[:,:,2]
-        vzenith = res[:,:,3]
-        vazimuth = res[:,:,4]
-        szenith = res[:,:,5]
-        sazimuth = res[:,:,6]
+        # Note the copy() here is very important. As an optimization, ground_coor_scan_arr
+        # return a reference to an internal cache variable. This array gets overwritten in
+        # the next call to ground_coor_scan_arr. So we need to explicitly copy anything
+        # we want to keep. 
+        lat = res[:,:,0,0,0].copy()
+        lon = res[:,:,0,0,1].copy()
+        height = res[:,:,0,0,2].copy()
+        vzenith = res[:,:,0,0,3].copy()
+        vazimuth = res[:,:,0,0,4].copy()
+        szenith = res[:,:,0,0,5].copy()
+        sazimuth = res[:,:,0,0,6].copy()
         lfrac = GroundCoordinateArray.interpolate(self.lwm, lat, lon) * 100.0
-        tlinestart = np.array([self.igc.pixel_time(ImageCoordinate(ln, 0)).j2000 for ln in range(start_line, start_line+res.shape[0])])
+        tlinestart = np.array([self.igc.pixel_time(geocal.ImageCoordinate(ln, 0)).j2000 for ln in range(start_line, start_line+res.shape[0])])
         return lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac, tlinestart
 
     def loc(self, pool = None):
@@ -163,3 +169,5 @@ GEOGCS["WGS 84",
         t.attrs["Description"] = "J2000 time of first pixel in line"
         t.attrs["Units"] = "second"
         m.write()
+
+__all__ = ["L1bGeoGenerate"]

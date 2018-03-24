@@ -3470,59 +3470,60 @@ namespace Swig {
 #define SWIGTYPE_p_blitz__ArrayT_int_6_t swig_types[51]
 #define SWIGTYPE_p_blitz__ArrayT_int_7_t swig_types[52]
 #define SWIGTYPE_p_blitz__ArrayT_int_8_t swig_types[53]
-#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t swig_types[54]
-#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t swig_types[55]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t swig_types[56]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t swig_types[57]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_3_t_t swig_types[58]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_4_t_t swig_types[59]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t swig_types[60]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t swig_types[61]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Camera_t swig_types[62]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_t swig_types[63]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_t swig_types[64]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_t swig_types[65]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_t swig_types[66]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__DcsLookVector_t swig_types[67]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__FrameCoordinateWithDerivative_t swig_types[68]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__FrameCoordinate_t swig_types[69]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GenericObject_t swig_types[70]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t swig_types[71]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t swig_types[72]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObservableT_GeoCal__Camera_t_t swig_types[73]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Camera_t_t swig_types[74]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__QuaternionCamera_t swig_types[75]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_t swig_types[76]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVector_t swig_types[77]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__SimpleCamera_t swig_types[78]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t swig_types[79]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t swig_types[80]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameterNested_t swig_types[81]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameter_t swig_types[82]
-#define SWIGTYPE_p_char swig_types[83]
-#define SWIGTYPE_p_char_type swig_types[84]
-#define SWIGTYPE_p_difference_type swig_types[85]
-#define SWIGTYPE_p_double swig_types[86]
-#define SWIGTYPE_p_fmtflags swig_types[87]
-#define SWIGTYPE_p_int_type swig_types[88]
-#define SWIGTYPE_p_iostate swig_types[89]
-#define SWIGTYPE_p_off_type swig_types[90]
-#define SWIGTYPE_p_openmode swig_types[91]
-#define SWIGTYPE_p_pos_type swig_types[92]
-#define SWIGTYPE_p_seekdir swig_types[93]
-#define SWIGTYPE_p_size_t swig_types[94]
-#define SWIGTYPE_p_size_type swig_types[95]
-#define SWIGTYPE_p_state_type swig_types[96]
-#define SWIGTYPE_p_std__basic_iosT_char_std__char_traitsT_char_t_t swig_types[97]
-#define SWIGTYPE_p_std__basic_iostreamT_char_std__char_traitsT_char_t_t swig_types[98]
-#define SWIGTYPE_p_std__basic_istreamT_char_std__char_traitsT_char_t_t swig_types[99]
-#define SWIGTYPE_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t swig_types[100]
-#define SWIGTYPE_p_std__invalid_argument swig_types[101]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[102]
-#define SWIGTYPE_p_traits_type swig_types[103]
-#define SWIGTYPE_p_value_type swig_types[104]
-static swig_type_info *swig_types[106];
-static swig_module_info swig_module = {swig_types, 105, 0, 0, 0, 0};
+#define SWIGTYPE_p_boost__math__quaternionT_double_t swig_types[54]
+#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t swig_types[55]
+#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t swig_types[56]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t swig_types[57]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t swig_types[58]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_3_t_t swig_types[59]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_4_t_t swig_types[60]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t swig_types[61]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t swig_types[62]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Camera_t swig_types[63]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_t swig_types[64]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_t swig_types[65]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_t swig_types[66]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_t swig_types[67]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__DcsLookVector_t swig_types[68]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__FrameCoordinateWithDerivative_t swig_types[69]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__FrameCoordinate_t swig_types[70]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GenericObject_t swig_types[71]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t swig_types[72]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t swig_types[73]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObservableT_GeoCal__Camera_t_t swig_types[74]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Camera_t_t swig_types[75]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__QuaternionCamera_t swig_types[76]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_t swig_types[77]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVector_t swig_types[78]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__SimpleCamera_t swig_types[79]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t swig_types[80]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t swig_types[81]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameterNested_t swig_types[82]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameter_t swig_types[83]
+#define SWIGTYPE_p_char swig_types[84]
+#define SWIGTYPE_p_char_type swig_types[85]
+#define SWIGTYPE_p_difference_type swig_types[86]
+#define SWIGTYPE_p_double swig_types[87]
+#define SWIGTYPE_p_fmtflags swig_types[88]
+#define SWIGTYPE_p_int_type swig_types[89]
+#define SWIGTYPE_p_iostate swig_types[90]
+#define SWIGTYPE_p_off_type swig_types[91]
+#define SWIGTYPE_p_openmode swig_types[92]
+#define SWIGTYPE_p_pos_type swig_types[93]
+#define SWIGTYPE_p_seekdir swig_types[94]
+#define SWIGTYPE_p_size_t swig_types[95]
+#define SWIGTYPE_p_size_type swig_types[96]
+#define SWIGTYPE_p_state_type swig_types[97]
+#define SWIGTYPE_p_std__basic_iosT_char_std__char_traitsT_char_t_t swig_types[98]
+#define SWIGTYPE_p_std__basic_iostreamT_char_std__char_traitsT_char_t_t swig_types[99]
+#define SWIGTYPE_p_std__basic_istreamT_char_std__char_traitsT_char_t_t swig_types[100]
+#define SWIGTYPE_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t swig_types[101]
+#define SWIGTYPE_p_std__invalid_argument swig_types[102]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[103]
+#define SWIGTYPE_p_traits_type swig_types[104]
+#define SWIGTYPE_p_value_type swig_types[105]
+static swig_type_info *swig_types[107];
+static swig_module_info swig_module = {swig_types, 106, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -6918,12 +6919,37 @@ SWIGINTERN PyObject *EcostressParaxialTransform_swiginit(PyObject *SWIGUNUSEDPAR
 
 SWIGINTERN PyObject *_wrap_new_EcostressCamera(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
+  double arg1 ;
+  SwigValueWrapper< boost::math::quaternion< double > > arg2 ;
+  double val1 ;
+  int ecode1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  PyObject *swig_obj[2] ;
   Ecostress::EcostressCamera *result = 0 ;
   
-  if (!SWIG_Python_UnpackTuple(args,"new_EcostressCamera",0,0,0)) SWIG_fail;
+  if (!SWIG_Python_UnpackTuple(args,"new_EcostressCamera",2,2,swig_obj)) SWIG_fail;
+  ecode1 = SWIG_AsVal_double(swig_obj[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_EcostressCamera" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  {
+    res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_boost__math__quaternionT_double_t,  0  | 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_EcostressCamera" "', argument " "2"" of type '" "boost::math::quaternion< double >""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_EcostressCamera" "', argument " "2"" of type '" "boost::math::quaternion< double >""'");
+    } else {
+      boost::math::quaternion< double > * temp = reinterpret_cast< boost::math::quaternion< double > * >(argp2);
+      arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp;
+    }
+  }
   {
     try {
-      result = (Ecostress::EcostressCamera *)new Ecostress::EcostressCamera();
+      result = (Ecostress::EcostressCamera *)new Ecostress::EcostressCamera(arg1,arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
     } catch (const std::exception& e) {
@@ -6934,6 +6960,48 @@ SWIGINTERN PyObject *_wrap_new_EcostressCamera(PyObject *SWIGUNUSEDPARM(self), P
     boost::shared_ptr<  Ecostress::EcostressCamera > *smartresult = result ? new boost::shared_ptr<  Ecostress::EcostressCamera >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
     resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
   }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressCamera_mask_all_parameter(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressCamera *arg1 = (Ecostress::EcostressCamera *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressCamera > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressCamera > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera_mask_all_parameter" "', argument " "1"" of type '" "Ecostress::EcostressCamera *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressCamera * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressCamera * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      (arg1)->mask_all_parameter();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
   return NULL;
@@ -7160,13 +7228,19 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"delete_EcostressParaxialTransform", (PyCFunction)_wrap_delete_EcostressParaxialTransform, METH_O, NULL},
 	 { (char *)"EcostressParaxialTransform_swigregister", EcostressParaxialTransform_swigregister, METH_VARARGS, NULL},
 	 { (char *)"EcostressParaxialTransform_swiginit", EcostressParaxialTransform_swiginit, METH_VARARGS, NULL},
-	 { (char *)"new_EcostressCamera", (PyCFunction)_wrap_new_EcostressCamera, METH_NOARGS, (char *)"\n"
+	 { (char *)"new_EcostressCamera", _wrap_new_EcostressCamera, METH_VARARGS, (char *)"\n"
 		"\n"
-		"EcostressCamera::EcostressCamera()\n"
+		"EcostressCamera::EcostressCamera(double Focal_length=427.6, boost::math::quaternion< double >\n"
+		"Frame_to_sc_q=boost::math::quaternion< double >(0, 0, 0, 1))\n"
 		"Constructor.\n"
 		"\n"
-		"Right now we have everything hardcoded, we'll change this to use a\n"
-		"configuration file in the future. \n"
+		"We've hardcoded things we don't expect to change (e.g., the line and\n"
+		"sample pitch). \n"
+		""},
+	 { (char *)"EcostressCamera_mask_all_parameter", (PyCFunction)_wrap_EcostressCamera_mask_all_parameter, METH_O, (char *)"\n"
+		"\n"
+		"void Ecostress::EcostressCamera::mask_all_parameter()\n"
+		"Convenience function to mask all the parameters we can fit for. \n"
 		""},
 	 { (char *)"EcostressCamera__v_paraxial_transform", _wrap_EcostressCamera__v_paraxial_transform, METH_VARARGS, (char *)"\n"
 		"\n"
@@ -7563,6 +7637,7 @@ static swig_type_info _swigt__p_blitz__ArrayT_int_5_t = {"_p_blitz__ArrayT_int_5
 static swig_type_info _swigt__p_blitz__ArrayT_int_6_t = {"_p_blitz__ArrayT_int_6_t", "blitz::Array< int,6 > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_blitz__ArrayT_int_7_t = {"_p_blitz__ArrayT_int_7_t", "blitz::Array< int,7 > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_blitz__ArrayT_int_8_t = {"_p_blitz__ArrayT_int_8_t", "blitz::Array< int,8 > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__math__quaternionT_double_t = {"_p_boost__math__quaternionT_double_t", "boost::math::quaternion< double > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_Ecostress__EcostressCamera_t = {"_p_boost__shared_ptrT_Ecostress__EcostressCamera_t", "boost::shared_ptr< Ecostress::EcostressCamera > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t = {"_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t", "boost::shared_ptr< Ecostress::EcostressParaxialTransform > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t = {"_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t", "boost::shared_ptr< GeoCal::ArrayAd< double,1 > > *", 0, 0, (void*)0, 0};
@@ -7670,6 +7745,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_blitz__ArrayT_int_6_t,
   &_swigt__p_blitz__ArrayT_int_7_t,
   &_swigt__p_blitz__ArrayT_int_8_t,
+  &_swigt__p_boost__math__quaternionT_double_t,
   &_swigt__p_boost__shared_ptrT_Ecostress__EcostressCamera_t,
   &_swigt__p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t,
@@ -7777,6 +7853,7 @@ static swig_cast_info _swigc__p_blitz__ArrayT_int_5_t[] = {  {&_swigt__p_blitz__
 static swig_cast_info _swigc__p_blitz__ArrayT_int_6_t[] = {  {&_swigt__p_blitz__ArrayT_int_6_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_blitz__ArrayT_int_7_t[] = {  {&_swigt__p_blitz__ArrayT_int_7_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_blitz__ArrayT_int_8_t[] = {  {&_swigt__p_blitz__ArrayT_int_8_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__math__quaternionT_double_t[] = {  {&_swigt__p_boost__math__quaternionT_double_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_Ecostress__EcostressCamera_t[] = {  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressCamera_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t[] = {  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -7884,6 +7961,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_blitz__ArrayT_int_6_t,
   _swigc__p_blitz__ArrayT_int_7_t,
   _swigc__p_blitz__ArrayT_int_8_t,
+  _swigc__p_boost__math__quaternionT_double_t,
   _swigc__p_boost__shared_ptrT_Ecostress__EcostressCamera_t,
   _swigc__p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t,
   _swigc__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t,

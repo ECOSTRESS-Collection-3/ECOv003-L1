@@ -1,7 +1,9 @@
-from geocal import *
+import geocal
 import h5py
 from .write_standard_metadata import WriteStandardMetadata
 from .misc import time_split
+import math
+import numpy as np
 
 class L1bAttGenerate(object):
     '''This generates the L1B att output file from the given 
@@ -33,12 +35,12 @@ class L1bAttGenerate(object):
         rate = 1.181
         tstart = tt.min_time
         tend = tt.max_time
-        npt = int(ceil((tend-tstart) / rate))
+        npt = int(math.ceil((tend-tstart) / rate))
         tm = [tstart + i * rate for i in range(npt + 1)]
         tj2000 = [t.j2000 for t in tm]
         pos = np.array([orb.position_ci(t).position for t in tm])
         vel = np.array([orb.orbit_data(t).velocity_ci for t in tm])
-        att = np.array([quaternion_to_array(orb.orbit_data(t).sc_to_ci) 
+        att = np.array([geocal.quaternion_to_array(orb.orbit_data(t).sc_to_ci) 
                         for t in tm])
         return tj2000, pos, vel, att
 
@@ -73,3 +75,5 @@ class L1bAttGenerate(object):
         att.attrs["Description"] = "Attitude quaternion. This gives orientation of the spacecraft with the ECI coordinate system."
         att.attrs["Units"] = "dimensionless"
         m.write()
+
+__all__ = ["L1bAttGenerate"]        

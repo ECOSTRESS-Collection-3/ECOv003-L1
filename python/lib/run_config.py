@@ -36,3 +36,4 @@ class RunConfig(object):
             return res
         return [res,]
         
+__all__ = ["RunConfig"]

@@ -1,0 +1,115 @@
+#! /usr/bin/env python
+#
+# This projects L1B geo data
+import geocal
+import ecostress
+import os
+
+version = "1.0"
+usage='''Usage:
+  l1b_project [options] <l1b_geo_file> <input_file> <field_name> <output_file>
+  l1b_project [options] --all-band <l1b_geo_file> <l1b_rad_file> <output_base>
+  l1b_project [options] --all-band-real <l1b_geo_file> <l1b_rad_file> <output_base>
+  l1b_project -h | --help
+  l1b_project -v | --version
+
+This takes L1B_GEO output and uses it to project L1B_RAD fields. Note that if
+you want to look at things like the solar zenith angles projected, you can
+also pass l1b_geo_file to the input.
+
+Because it is a common thing to want to do, we can process all radiance bands
+plus the SWIR DN band using the --all-band option. We produce HALF output,
+scaling the radiance by 100.0 (so this is good for looking in xvd). The
+output base is given, and we generate the output file name (e.g., foo_b1.img,
+foo_b2.img ... foo_swir.img). We map negative values to zero.
+
+If you use the --all-band-real then we generate data like --all-band,
+but for the radiance fields we leave as floating point.  Files have
+names like foo_b1.real. --negative-to-zero is honored, default is to
+not do this but you can specify the option to request this.
+
+Options:
+  -h --help         
+       Print this message
+
+  --exactly-match-map-info
+       Default behavior is to use the resolution of the supplied or default
+       map info, but adjust the bounding box to cover the full 
+       latitude/longitude range. But you can optionally specify this option
+       to exactly match the supplied map info, useful if you want the output
+       file to match an existing file for more direct comparison.
+       
+  --file-type=f
+       The output file type. Default is REAL, but you can specify any VICAR
+       type (e.g., HALF, BYTE). [default: REAL]
+
+  --map-info=f
+       Use the resolution of the supplied file. Default is to use our
+       Landsat orthobase as ~60m resolution.
+
+  --negative-to-zero
+       If specified, map all negative values to zero in the output. Useful
+       to view data without large bad values (e.g., -9999).
+
+  --number-subpixel=d
+       Number of subpixels to use in resampling. Should be chosen to we are
+       at a high enough resolution to cover the desired pixel output size
+       without holes in the data. [default: 2]
+
+  --resolution=r
+       Scale the given/default map info to the give resolution in meters.
+       Default is to use the native resolution (about 60m)
+       [default: -1]
+
+  --scale-data=d
+       Value to scale the output data by. Useful if you want to convert from
+       radiance floating point to a scaled integer output. [default: 1.0]
+
+  -v --version      
+       Print program version
+'''
+
+args = geocal.docopt_simple(usage, version=version)
+
+if(args.map_info):
+    mi = geocal.GdalRasterImage(args.map_info).map_info
+else:
+    if(os.path.exists("/project/ancillary/LANDSAT")):
+       # eco-scf location
+       mi = geocal.Landsat7Global("/project/ancillary/LANDSAT",
+                       geocal.Landsat7Global.BAND5).map_info.scale(2,2)
+    else:
+       # pistol location
+       mi = geocal.Landsat7Global("/raid22",
+                       geocal.Landsat7Global.BAND5).map_info.scale(2,2)
+
+if(args.resolution > 0):
+    resbase = mi.resolution_meter
+    mi = mi.scale(args.resolution / resbase, args.resolution / resbase)
+    
+lat = geocal.GdalRasterImage("HDF5:\"%s\"://Geolocation/latitude" %
+                             args.l1b_geo_file)
+lon = geocal.GdalRasterImage("HDF5:\"%s\"://Geolocation/longitude" %
+                             args.l1b_geo_file)
+res = ecostress.Resampler(lat, lon, mi, args.number_subpixel,
+                          args.exactly_match_map_info)
+if(args.all_band or args.all_band_real):
+    data = geocal.GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" %
+                                  args.l1b_rad_file)
+    print("Doing SWIR band")
+    res.resample_field(args.output_base + "_swir.img", data, 1.0, "HALF", True)
+    for b in range(5):
+        data = geocal.GdalRasterImage("HDF5:\"%s\"://Radiance/radiance_%d" %
+                                      (args.l1b_rad_file, b+1))
+        print("Doing band %d" % (b+1))
+        if(args.all_band_real):
+            res.resample_field("%s_b%d.real" % (args.output_base, b+1), data,
+                               1.0, "REAL", args.negative_to_zero)
+        else:
+            res.resample_field("%s_b%d.img" % (args.output_base, b+1), data,
+                               100.0, "HALF", True)
+else:
+    data = geocal.GdalRasterImage("HDF5:\"%s\":/%s" %
+                                  (args.input_file, args.field_name))
+    res.resample_field(args.output_file, data, args.scale_data,
+                       args.file_type, args.negative_to_zero)

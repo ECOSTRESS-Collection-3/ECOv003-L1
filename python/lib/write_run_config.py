@@ -64,3 +64,4 @@ class WriteRunConfig(object):
             fh.write(str(self))
 
 
+__all__ = ["WriteRunConfig"]

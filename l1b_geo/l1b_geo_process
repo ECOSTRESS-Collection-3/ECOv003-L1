@@ -1,11 +1,13 @@
 #! /usr/bin/env python
 #
 # This runs the L1B Geo process.
-from geocal import *
-from ecostress import *
+import geocal
+import ecostress
 import os
 import re
 import shutil
+import h5py
+from multiprocessing import Pool
 
 # Get version information, in the top directory
 import sys
@@ -15,6 +17,7 @@ from ecostress_version import *
 version = "1.0"
 usage='''Usage:
   l1b_geo_process [options] <run_config>
+  l1b_geo_process [options] <l1a_raw_att> <osp_dir> <prod_dir> <l1b_rad>...
   l1b_geo_process -h | --help
   l1b_geo_process -v | --version
 
@@ -24,6 +27,11 @@ Options:
   -h --help         
        Print this message
 
+  --number-cpu=d
+       Number of CPUs to use when processing. Ignored if we are using a 
+       run_config file, this is instead passed through the config file.
+       [default: 10]
+
   --number-line=d
        Number of lines to process. Normally you process the whole scene, but
        can be useful for testing to process only a subset. [default: -1]
@@ -32,7 +40,7 @@ Options:
        Print program version
 '''
 
-args = docopt_simple(usage, version=version)
+args = geocal.docopt_simple(usage, version=version)
 
 # Can use this to wait a short time so we can attach strace to this
 # process, useful to find all the files that we are accessing.
@@ -41,24 +49,48 @@ if(False):
     import time
     time.sleep(20)
 
-config = RunConfig(args.run_config)
+if(args.run_config):
+    config = ecostress.RunConfig(args.run_config)
+    l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
+    ncpu = int(config["Process", "NumberCpu"])
+    orb = ecostress.create_orbit_raw(config)
+    dem = ecostress.create_dem(config)
+    lwm = ecostress.create_lwm(config)
+    ortho_base = ecostress.create_ortho_base(config)
+    radlist = config.as_list("InputFileGroup", "L1B_RAD")
+    radlist = [os.path.abspath(f) for f in radlist]
+    dirname = config["ProductPathGroup", "ProductPath"]
+    file_version = config["ProductPathGroup", "ProductCounter"]
+    orbfname = os.path.abspath(config["TimeBasedFileGroup", "L1A_RAW_ATT"])
+else:
+    config = None
+    l1_osp_dir = os.path.abspath(args.osp_dir)
+    ncpu = args.number_cpu
+    dirname = os.path.abspath(args.prod_dir)
+    file_version = "01"
+    orbfname = os.path.abspath(args.l1a_raw_att)
+    orb = geocal.HdfOrbit_Eci_TimeJ2000(orbfname, "", "Ephemeris/time_j2000",
+                                 "Ephemeris/eci_position",
+                                 "Ephemeris/eci_velocity",
+                                 "Attitude/time_j2000",
+                                 "Attitude/quaternion")
+    dem = geocal.SrtmDem(os.environ["ELEV_ROOT"],False,
+                  geocal.DatumGeoid96(os.environ["AFIDS_VDEV_DATA"] +
+                               "/EGM96_20_x100.HLF"))
+    lwm = geocal.SrtmLwmData("/raid27/tllogan/all_lwm_links", False)
+    ortho_base = geocal.Landsat7Global("/raid22",
+                                       geocal.Landsat7Global.BAND5)
+    radlist = [os.path.abspath(f) for f in args.l1b_rad]
 
-l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
-ncpu = int(config["Process", "NumberCpu"])
+orb = geocal.OrbitOffsetCorrection(orb)
+cam = geocal.read_shelve(l1_osp_dir + "/camera.xml")
+# Don't fit any of the camera parameters, hold them all fixed
+cam.mask_all_parameter()
 
-cam = read_shelve(l1_osp_dir + "/camera.xml")
-orb = create_orbit_raw(config)
-dem = create_dem(config)
-lwm = create_lwm(config)
-ortho_base = create_ortho_base(config)
+sys.path.append(l1_osp_dir)
+import l1b_geo_config
 
-radlist = config.as_list("InputFileGroup", "L1B_RAD")
-radlist = [os.path.abspath(f) for f in radlist]
-dirname = config["ProductPathGroup", "ProductPath"]
-file_version = config["ProductPathGroup", "ProductCounter"]
-orbfname = os.path.abspath(config["TimeBasedFileGroup", "L1A_RAW_ATT"])
-
-makedirs_p(dirname)
+geocal.makedirs_p(dirname)
 os.chdir(dirname)
 
 log_fname = None
@@ -68,11 +100,11 @@ try:
     ofile = []
     ofile2 = []
     for i in range(len(radlist)):
-        orbit, scene, acquisition_time = orbit_from_metadata(radlist[i])
-        ofile.append(ecostress_file_name("L1B_GEO", orbit, scene,
+        orbit, scene, acquisition_time = ecostress.orbit_from_metadata(radlist[i])
+        ofile.append(ecostress.ecostress_file_name("L1B_GEO", orbit, scene,
             acquisition_time, build = build_version,
             version = file_version))
-        ofile2.append(ecostress_file_name("L1B_ATT", orbit, scene,
+        ofile2.append(ecostress.ecostress_file_name("L1B_ATT", orbit, scene,
             acquisition_time,
             build = build_version, 
             version = file_version))
@@ -80,23 +112,60 @@ try:
     log_fname = os.path.splitext(ofile[0])[0] + ".log"
     
     # Create igc/tiepoint for all the data
-    igc = []
-    f = SQLiteShelf("data.db")
-    f["_extra_python_init"] = "from ecostress import *"
-    f = None
+    igccol_initial = ecostress.EcostressIgcCollection()
+    with open("extra_python_init.py", "w") as fh:
+        print("from ecostress import *\n", file=fh)
     for i in range(len(radlist)):
-        tt = create_time_table(radlist[i])
-        sm = create_scan_mirror()
+        tt = ecostress.create_time_table(radlist[i])
+        sm = ecostress.create_scan_mirror()
+        if(i == 0):
+            orb.insert_position_time_point(tt.min_time)
+            orb.insert_attitude_time_point(tt.min_time)
+        if(i == len(radlist) - 1):
+            orb.insert_position_time_point(tt.max_time)
+            orb.insert_attitude_time_point(tt.max_time)
         # Work with the SWIR channel data
-        ras = GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" % radlist[i])
-        igc.append(EcostressImageGroundConnection(orb, tt, cam, sm, dem, ras))
-        write_shelve("data.db:igc_original_%d" % i, igc[i])
+        ras = geocal.GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" % radlist[i])
+        igccol_initial.add_igc(ecostress.EcostressImageGroundConnection(orb, tt, cam,
+                                       sm, dem, ras, "Scene %d" % (i + 1)))
 
+    geocal.write_shelve("igccol_initial.xml", igccol_initial)
+
+    # Project data to surface
+    t = ecostress.L1bTpCollect(igccol_initial, ortho_base,
+                               fftsize=l1b_geo_config.fftsize,
+                               magnify=l1b_geo_config.magnify,
+                               magmin=l1b_geo_config.magmin,
+                               toler=l1b_geo_config.toler,
+                               redo=l1b_geo_config.redo,
+                               ffthalf=l1b_geo_config.ffthalf,
+                               seed=l1b_geo_config.seed,
+                               num_x=l1b_geo_config.num_x,
+                               num_y=l1b_geo_config.num_y,
+                               log_fname=log_fname)
+    if(not l1b_geo_config.skip_sba):
+        tpcol = t.tpcol(pool=pool)
+        geocal.write_shelve("tpcol.xml", tpcol)
+        log = open(log_fname, "a")
+        ecostress.process_run(["sba", "--verbose", "--initial-hold-gcp-fixed",
+                          "--gcp-sigma=50",  "igccol_initial.xml",
+                          "tpcol.xml", "igccol_sba.xml", "tpcol_sba.xml"],
+                         out_fh=log)
+        log.flush()
+        igccol_corrected = geocal.read_shelve("igccol_sba.xml")
+    else:
+        igccol_corrected = igccol_initial
+        
     # Generate output data
     for i in range(len(radlist)):
         # Generate output
         print("Doing scene number %d" %i)
-        l1bgeo = L1bGeoGenerate(igc[i], lwm, ofile[i],
+        log = open(log_fname, "a")
+        print("INFO:l1b_geo_process:Doing scene number %d" % i, file=log)
+        log.flush()
+        l1bgeo = ecostress.L1bGeoGenerate(
+                                igccol_corrected.image_ground_connection(i),
+                                lwm, ofile[i],
                                 number_line = args.number_line,
                                 run_config = config, log_fname = log_fname,
                                 build_id = build_id,
@@ -106,8 +175,9 @@ try:
         # Temp, don't correct anything in attitude file
         shutil.copyfile(orbfname, ofile2[i])
         f = h5py.File(ofile2[i], "r+")
-        m = WriteStandardMetadata(f)
-        m.process_run_config_metadata(config)
+        m = ecostress.WriteStandardMetadata(f)
+        if(config is not None):
+            m.process_run_config_metadata(config)
         m.write()
 
     log = open(log_fname, "a")

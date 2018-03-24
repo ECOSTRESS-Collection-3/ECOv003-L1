@@ -178,3 +178,5 @@ class WriteStandardMetadata(object):
         else:
             pg = self.hdf_file.create_group(self.product_specfic_group)
         pg["AncillaryFiles"] = np.int32(0)
+
+__all__ = ["WriteStandardMetadata"]

@@ -1,4 +1,3 @@
-## from geocal import *
 import h5py
 import shutil
 import re
@@ -391,11 +390,14 @@ class L1aRawPixGenerate(object):
         for seq in range( 3 ):
           gpix[seq] = 0
           e0 = pkt_idx
-          ph = 2  # mirror phase
+          ph = 2  # mirror phase should be 0 or 1
+          ph0 = 2
+          '''  *** confirm all sequences come from same phase ***  '''
           while e0 < tot_pkts and ph == 2:  # loop through packets
             if e0==0: dt = 0
-            else: dt = abs(( float(lev[e0,0]) - float(lev[e0-1,e1]) ) * EV_DUR)
-            if dt > SCAN_DUR and seq > 0:
+            else: dt = ( float(lev[e0,0]) - float(lev[e0-1,e1]) ) * EV_DUR
+            adt = abs( dt )
+            if adt > SCAN_DUR and seq > 0:
               print("** Discontinuity seeking %s IDX=%d DT=%f E1=%d" %(ev_names[seq],e0,dt,e1))
               cont = 0
 
@@ -481,20 +483,17 @@ class L1aRawPixGenerate(object):
             if seq==2 and op>op0 and op<=op1-FPPPKT:
               lid0 = e0; lid1 = e0+1  # correct time
               #lid0 = e0-1; lid1 = e0  # time code error
-              if e0 < tot_pkts - 1: dt = abs( gpt[lid1] - gpt[lid0] - PKT_DUR )
-              else: dt = 0.0  # at last packet
-              if dt > PKT_DURT:  # large time jump between PKTS
+              if e0 < tot_pkts - 1:
+                dt = gpt[lid1] - gpt[lid0] - PKT_DUR
+                adt = abs( dt )
+              else: adt = 0.0  # at last packet
+              if adt > PKT_DURT:  # large time jump between PKTS
                 jumps += 1
                 if e0==tot_pkts - 1 or e3<=FPPPKT: e4 = 0
                 else: e4 = float((lev[e0+1,0] - lev[e0,0])%MAX_FPIE) * EV_DUR
                 if e4 > PKT_DUR:  # EV jump within packet
                   e4 = int( dt/FP_DUR + 0.5 )
-                  print("Time jump at IDX[%d](%f) DT=%f OPINC=%d OP=%d" %(e0+1,gpt[e0+1],dt,e4,op))
-                  if op+e4>=op1:  # new packet time past end of current scan
-                    e4 = 0
-                    cont = 0
-                  else:
-                    print("Skipping %d FPs, new OP=%d" % (e4,op) )
+                  print("*** Orbit %s Scene %d scan %d Time jump at IDX[%d](%f) DT=%f OPINC=%d OP=%d" %(orb, scene_id, scan, e0+1,gpt[e0+1],dt,e4,op))
                   ldd[:] = (lev[e0,1:] - lev[e0,:FPPPKT-1])%MAX_FPIE
                   fpc = np.argmax( ldd > FP_EVT )
                   if fpc==0: fpc = FPPPKT
@@ -518,11 +517,8 @@ class L1aRawPixGenerate(object):
             obuf[seq][line:line+PPFP,dp:dp+fpc,:] = flex_buf[:,p1:p1+fpc,:]
             if seq==2: ev_buf[scan,dp:dp+fpc] = lev[e0,p1:p1+fpc]
             gpix[seq] += fpc
-            if e4>0:  #  next output FP pointer in buf
-              op += e4
-            else:
-              op += fpc
-            if cont==0:  # next packet past end of current scan
+            op = op + e4 + fpc
+            if op<op0 or op>op1:  # next packet outside of current scan
                cont = 1
                sse = gpt[e0-1] + PKT_DUR + fpc * FP_DUR
                print("Terminating scan %d at FP %d SSE=%f" % (scan,op,sse))
@@ -578,6 +574,8 @@ class L1aRawPixGenerate(object):
 
       # copy to output files
 
+      ''' ***  Use input BBbb and VV in file name  *** '''
+
       ' create scene file and image pixel, J2K, and FPIE EV groups '
       pname = self.create_file( "L1A_RAW_PIX", orbit, scene_id,
          Time.time_gps(rst), Time.time_gps(rse), prod=False, intermediate=True)
@@ -598,7 +596,7 @@ class L1aRawPixGenerate(object):
       del sm['AutomaticQualityFlag']
       sm['AutomaticQualityFlag'] = '%16.10e' % bcomp
       print("====  ", datetime.now(), "  ====")
-      print("SCENE %s completed, SCANS=%d (%f) %d/%d GOOD/IMG, (%f) %d/%d GOOD/BB" % ( scene_id, scans, pcomp, good_img, img_cnt, bcomp, good_bb, bb_cnt ))
+      print("Orbit %s SCENE %s completed, SCANS=%d (%f) %d/%d GOOD/IMG, (%f) %d/%d GOOD/BB" % ( orb, scene_id, scans, pcomp, good_img, img_cnt, bcomp, good_bb, bb_cnt ))
 
       l1a_upg = l1a_fp.create_group("/UncalibratedPixels")
       l1a_ptg = l1a_fp.create_group("/Time")

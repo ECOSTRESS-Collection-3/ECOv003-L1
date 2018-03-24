@@ -223,14 +223,14 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
         """
         _ecostress_image_ground_connection.EcostressImageGroundConnection_swiginit(self, _ecostress_image_ground_connection.new_EcostressImageGroundConnection(*args))
 
-    def orbit_data(self, T, Ic_sample):
+    def orbit_data(self, *args):
         """
 
-        boost::shared_ptr< GeoCal::QuaternionOrbitData > EcostressImageGroundConnection::orbit_data(const GeoCal::Time &T, double Ic_sample) const
-        Return orbit data for the given time, which has the scan mirror angle
-        applied to it. 
+        boost::shared_ptr< GeoCal::QuaternionOrbitData > EcostressImageGroundConnection::orbit_data(const GeoCal::TimeWithDerivative &T, const GeoCal::AutoDerivative<
+        double > &Ic_sample) const
+
         """
-        return _ecostress_image_ground_connection.EcostressImageGroundConnection_orbit_data(self, T, Ic_sample)
+        return _ecostress_image_ground_connection.EcostressImageGroundConnection_orbit_data(self, *args)
 
 
     def image_coordinate_scan_index(self, Gc, Scan_index, Band=-1):
@@ -410,6 +410,9 @@ EcostressImageGroundConnection._v_camera = new_instancemethod(_ecostress_image_g
 EcostressImageGroundConnection._v_scan_mirror = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_scan_mirror, None, EcostressImageGroundConnection)
 EcostressImageGroundConnection_swigregister = _ecostress_image_ground_connection.EcostressImageGroundConnection_swigregister
 EcostressImageGroundConnection_swigregister(EcostressImageGroundConnection)
+
+
+__all__ = ["EcostressImageGroundConnection"]
 
 
 

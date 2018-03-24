@@ -47,6 +47,12 @@ public:
 		 GeoCal::CartesianFixedLookVector& Lv,
 		 boost::shared_ptr<GeoCal::CartesianFixed>& P) const
   { throw GeoCal::Exception("Need to implement this.\n"); }
+  virtual blitz::Array<double, 1> 
+  collinearity_residual(const GeoCal::GroundCoordinate& Gc,
+			const GeoCal::ImageCoordinate& Ic_actual) const;
+  virtual blitz::Array<double, 2> 
+  collinearity_residual_jacobian(const GeoCal::GroundCoordinate& Gc,
+		        const GeoCal::ImageCoordinate& Ic_actual) const;
   virtual boost::shared_ptr<GeoCal::GroundCoordinate> 
   ground_coordinate_dem(const GeoCal::ImageCoordinate& Ic,
 			const GeoCal::Dem& D) const;
@@ -56,8 +62,7 @@ public:
   virtual GeoCal::ImageCoordinate image_coordinate
   (const GeoCal::GroundCoordinate& Gc) const;
   virtual blitz::Array<double, 2> 
-  image_coordinate_jac_parm(const GeoCal::GroundCoordinate& Gc) const
-  { throw GeoCal::Exception("Need to implement this.\n"); }
+  image_coordinate_jac_parm(const GeoCal::GroundCoordinate& Gc) const;
   virtual void print(std::ostream& Os) const;
 
   virtual int number_line() const { return tt->max_line() + 1; }
@@ -80,6 +85,9 @@ public:
 				   int Band = -1) const;
   boost::shared_ptr<GeoCal::QuaternionOrbitData> orbit_data
   (const GeoCal::Time& T, double Ic_sample) const;
+  boost::shared_ptr<GeoCal::QuaternionOrbitData> orbit_data
+  (const GeoCal::TimeWithDerivative& T,
+   const GeoCal::AutoDerivative<double>& Ic_sample) const;
   virtual bool has_time() const { return true; }
   virtual GeoCal::Time pixel_time(const GeoCal::ImageCoordinate& Ic) const
   {
@@ -199,63 +207,38 @@ private:
   class SampleFunc: public GeoCal::DFunctor {
   public:
     SampleFunc(const EcostressImageGroundConnection& Igc, int Scan_index,
-	       const GeoCal::GroundCoordinate& Gp)
-      : igc(Igc), can_solve(false), gp(Gp),
-	tt(boost::dynamic_pointer_cast<EcostressTimeTable>(Igc.time_table()))
-    {
-      // We can worry about generalizing this if it ever becomes an
-      // issue, but for now we assume the time table is an EcostressTimeTable.
-      if(!tt)
-	throw GeoCal::Exception("image_coordinate currently only works with EcostressTimeTable");
-      epoch = tt->min_time();
-      int lstart, lend;
-      tt->scan_index_to_line(Scan_index, lstart, lend);
-      GeoCal::Time tmin, tmax;
-      GeoCal::FrameCoordinate fc;
-      tt->time(GeoCal::ImageCoordinate(lstart, 0), tmin, fc);
-      tt->time(GeoCal::ImageCoordinate(lstart, Igc.number_sample() - 1), tmax,
-	       fc);
-      if((*this)(tmin - epoch) * (*this)(tmax - epoch) > 0)
-	// Ok if we fail to get a solution, we just leave can_solve false
-	return;
-      try {
-	tsol = epoch + gsl_root(*this, tmin - epoch, tmax - epoch);
-	can_solve = true;
-      } catch(const GeoCal::ConvergenceFailure& E) {
-	// Ok if we fail to get a solution, we just leave can_solve false
-      }
-    }
+	       const GeoCal::GroundCoordinate& Gp);
     virtual ~SampleFunc() {}
-    GeoCal::FrameCoordinate fc_at_sol() const
-    {
-      double sample =
-	tt->image_coordinate(tsol, GeoCal::FrameCoordinate(0,0)).sample;
-      return igc.orbit_data(tsol, sample)->frame_coordinate(gp, *igc.camera(), igc.band());
-    }
-    bool line_in_range() const
-    {
-      if(!can_solve)
-	return false;
-      double ln = fc_at_sol().line;
-      return ln >= 0 && ln <= igc.camera()->number_line(igc.band());
-    }
-    GeoCal::ImageCoordinate image_coordinate() const
-    {
-      if(!can_solve)
-	throw GeoCal::Exception("Can't solve");
-      return tt->image_coordinate(tsol, fc_at_sol());
-    }
-    virtual double operator()(const double& Toffset) const
-    {
-      double sample =
-	tt->image_coordinate(epoch + Toffset,
-			     GeoCal::FrameCoordinate(0,0)).sample;
-      return igc.orbit_data(epoch + Toffset, sample)->frame_coordinate(gp, *igc.camera(), igc.band()).sample;
-    }
+    GeoCal::FrameCoordinate fc_at_sol() const;
+    bool line_in_range() const;
+    GeoCal::ImageCoordinate image_coordinate() const;
+    virtual double operator()(const double& Toffset) const;
   private:
     const EcostressImageGroundConnection& igc;
     bool can_solve;
     GeoCal::Time epoch, tsol;
+    const GeoCal::GroundCoordinate& gp;
+    boost::shared_ptr<EcostressTimeTable> tt;
+  };
+
+  class SampleFuncWithDerivative: public GeoCal::DFunctorWithDerivative {
+  public:
+    SampleFuncWithDerivative(const EcostressImageGroundConnection& Igc,
+			     int Scan_index,
+			     const GeoCal::GroundCoordinate& Gp);
+    virtual ~SampleFuncWithDerivative() {}
+    GeoCal::FrameCoordinateWithDerivative fc_at_sol() const;
+    bool line_in_range() const;
+    GeoCal::ImageCoordinateWithDerivative image_coordinate() const;
+    virtual double operator()(const double& Toffset) const;
+    virtual double df(double Toffset) const;
+    virtual GeoCal::AutoDerivative<double> f_with_derivative(double Toffset)
+      const;
+  private:
+    const EcostressImageGroundConnection& igc;
+    bool can_solve;
+    GeoCal::Time epoch;
+    GeoCal::TimeWithDerivative tsol;
     const GeoCal::GroundCoordinate& gp;
     boost::shared_ptr<EcostressTimeTable> tt;
   };

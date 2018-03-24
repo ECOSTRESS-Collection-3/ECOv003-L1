@@ -1,9 +1,10 @@
 # This is various miscellaneous routines that don't fit elsewhere
-from geocal import *
+import geocal
 import re
 import subprocess
 import h5py
 import os
+import sys
 from ecostress_swig import *
 
 def create_dem(config):
@@ -16,7 +17,7 @@ def create_dem(config):
     if("ECOSTRESS_USE_AFIDS_ENV" in os.environ):
         datum = os.environ["AFIDS_VDEV_DATA"] + "/EGM96_20_x100.HLF"
         srtm_dir = os.environ["ELEV_ROOT"]
-    dem = SrtmDem(srtm_dir,False, DatumGeoid96(datum))
+    dem = geocal.SrtmDem(srtm_dir,False, geocal.DatumGeoid96(datum))
     return dem
 
 def create_ortho_base(config):
@@ -28,11 +29,10 @@ def create_ortho_base(config):
     if("ECOSTRESS_USE_AFIDS_ENV" in os.environ):
         # Location on pistol, use if found, otherwise use setting in
         # run config file
-        if(os.path.exists("/raid22/band62_VICAR")):
-            ortho_base_dir = "/raid22/band62_VICAR"
-    # Not using yet
-    return None
-    
+        if(os.path.exists("/raid22/band5_VICAR")):
+            ortho_base_dir = "/raid22"
+    return geocal.Landsat7Global(ortho_base_dir,
+                                 geocal.Landsat7Global.BAND5)
 
 def create_lwm(config):
     '''Create the land water mask. In production, use the directory passed
@@ -46,7 +46,7 @@ def create_lwm(config):
         # run config file
         if(os.path.exists("/raid27/tllogan/all_lwm_links")):
             srtm_lwm_dir = "/raid27/tllogan/all_lwm_links"
-    lwm = SrtmLwmData(srtm_lwm_dir, False)
+    lwm = geocal.SrtmLwmData(srtm_lwm_dir, False)
     return lwm
     
 def setup_spice(config):
@@ -67,7 +67,7 @@ def create_orbit_raw(config):
     # Create orbit. We give all the names of the fields, since we don't use the
     # default names HdfOrbit expects. I'm not sure if Eci and J2000 is what we
     # will end up using, but this is what is used by the test data now.
-    orb = HdfOrbit_Eci_TimeJ2000(orbfname, "", "Ephemeris/time_j2000",
+    orb = geocal.HdfOrbit_Eci_TimeJ2000(orbfname, "", "Ephemeris/time_j2000",
                                  "Ephemeris/eci_position",
                                  "Ephemeris/eci_velocity",
                                  "Attitude/time_j2000",
@@ -189,6 +189,13 @@ def orbit_from_metadata(fname):
     sid = fin["/StandardMetadata/SceneID"].value
     bdate = fin["/StandardMetadata/RangeBeginningDate"].value
     btime = fin["/StandardMetadata/RangeBeginningTime"].value
-    acquisition_time = Time.parse_time("%sT%sZ" % (bdate, btime))
+    acquisition_time = geocal.Time.parse_time("%sT%sZ" % (bdate, btime))
     return int(onum), int(sid), acquisition_time
     
+
+__all__ = ["create_dem", "create_ortho_base", "create_lwm", "setup_spice",
+           "create_orbit_raw", "create_time_table", "create_scan_mirror",
+           "aster_radiance_scale_factor", "ecostress_to_aster_band",
+           "ecostress_radiance_scale_factor", "time_to_file_string",
+           "time_split", "ecostress_file_name", "process_run",
+           "orbit_from_metadata"]
