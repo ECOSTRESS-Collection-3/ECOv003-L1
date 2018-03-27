@@ -17,6 +17,7 @@ ecostresspkgpython_PYTHON+= @srcpythonlib@/run_config.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/write_run_config.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/write_standard_metadata.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/exception.py
+ecostresspkgpython_PYTHON+= @srcpythonlib@/ecostress_interpolate.py
 
 # Cython code to generate
 ecostresspkgpython_PYTHON+= @srcpythonlib@/cython_try.py
