@@ -10,12 +10,15 @@ BOOST_FIXTURE_TEST_SUITE(resampler, GlobalFixture)
 
 BOOST_AUTO_TEST_CASE(basic_test)
 {
+  // Skip if we don't have landsat data available.
+  if(landsat7_dir() == "")
+    return;
   std::string fname = test_data_dir() + "ECOSTRESS_L1B_GEO_80005_001_20150124T204250_0100_01.h5.expected";
   std::string fname2 = test_data_dir() + "ECOSTRESS_L1B_RAD_80005_001_20150124T204250_0100_01.h5.expected";
   boost::shared_ptr<GdalRasterImage> lat = boost::make_shared<GdalRasterImage>("HDF5:\"" + fname + "\"://Geolocation/latitude");
   boost::shared_ptr<GdalRasterImage> lon = boost::make_shared<GdalRasterImage>("HDF5:\"" + fname + "\"://Geolocation/longitude");
   boost::shared_ptr<GdalRasterImage> swir_dn = boost::make_shared<GdalRasterImage>("HDF5:\"" + fname2 + "\"://SWIR/swir_dn");
-  Landsat7Global orth("/raid22", Landsat7Global::BAND5);
+  Landsat7Global orth(landsat7_dir(), Landsat7Global::BAND5);
   MapInfo mi = orth.map_info().scale(2, 2);
   Resampler r(lat, lon, mi);
   r.resample_field("swir_res.img", swir_dn);
