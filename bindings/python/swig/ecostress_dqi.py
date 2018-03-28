@@ -189,8 +189,11 @@ def _new_from_set(cls, version, *args):
 _ecostress_dqi.DQI_GOOD_swigconstant(_ecostress_dqi)
 DQI_GOOD = _ecostress_dqi.DQI_GOOD
 
-_ecostress_dqi.DQI_FILLED_swigconstant(_ecostress_dqi)
-DQI_FILLED = _ecostress_dqi.DQI_FILLED
+_ecostress_dqi.DQI_INTERPOLATED_swigconstant(_ecostress_dqi)
+DQI_INTERPOLATED = _ecostress_dqi.DQI_INTERPOLATED
+
+_ecostress_dqi.DQI_STRIPE_NOT_INTERPOLATED_swigconstant(_ecostress_dqi)
+DQI_STRIPE_NOT_INTERPOLATED = _ecostress_dqi.DQI_STRIPE_NOT_INTERPOLATED
 
 _ecostress_dqi.DQI_BAD_OR_MISSING_swigconstant(_ecostress_dqi)
 DQI_BAD_OR_MISSING = _ecostress_dqi.DQI_BAD_OR_MISSING
@@ -207,7 +210,7 @@ FILL_VALUE_STRIPED = _ecostress_dqi.FILL_VALUE_STRIPED
 _ecostress_dqi.FILL_VALUE_NOT_SEEN_swigconstant(_ecostress_dqi)
 FILL_VALUE_NOT_SEEN = _ecostress_dqi.FILL_VALUE_NOT_SEEN
 
-__all__ = ["DQI_GOOD","DQI_FILLED","DQI_BAD_OR_MISSING","DQI_NOT_SEEN","FILL_VALUE_BAD_OR_MISSING","FILL_VALUE_STRIPED","FILL_VALUE_NOT_SEEN","fill_value_threshold"]
+__all__ = ["DQI_GOOD","DQI_INTERPOLATED","DQI_STRIPE_NOT_INTERPOLATED","DQI_BAD_OR_MISSING","DQI_NOT_SEEN","FILL_VALUE_BAD_OR_MISSING","FILL_VALUE_STRIPED","FILL_VALUE_NOT_SEEN","fill_value_threshold"]
 
 
 cvar = _ecostress_dqi.cvar

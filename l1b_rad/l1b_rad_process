@@ -66,6 +66,9 @@ else:
                                "/EGM96_20_x100.HLF"))
     
 
+sys.path.append(l1_osp_dir)
+import l1b_rad_config
+
 cam = geocal.read_shelve(l1_osp_dir + "/camera.xml")
 tt = ecostress.create_time_table(l1a_pix)
 sm = ecostress.create_scan_mirror()
@@ -84,10 +87,11 @@ log = open(log_fname, "w")
 try:
     # Generate output
     l1brad = ecostress.L1bRadGenerate(igc, l1a_pix, l1a_gain, ofile,
-                                      run_config = config,
-                                      log = log,
-                                      build_id = build_id,
-                                      pge_version = pge_version["l1b_rad"])
+              run_config = config,
+              log = log,
+              build_id = build_id,
+              pge_version = pge_version["l1b_rad"],
+              interpolate_stripe_data = l1b_rad_config.interpolate_stripe_data)
     l1brad.run()
     # Write out a dummy log file
     print("This is a dummy log file", file = log)

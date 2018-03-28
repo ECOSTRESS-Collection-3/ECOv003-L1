@@ -132,6 +132,11 @@ afids_latest rather than the system area:
     CFLAGS="-I/pkg/afids/afids_latest/include" \
     pip install -r ~/GeoCal/requirements.txt
     pip install -r ~/ecostress-level1/requirements.txt
+	
+Note that we can use the intel built verison of tensorflow, which has better
+performance
+
+    pip install https://anaconda.org/intel/tensorflow/1.6.0/download/tensorflow-1.6.0-cp35-cp35m-linux_x86_64.whl
     
 Bliss Setup
 -----------

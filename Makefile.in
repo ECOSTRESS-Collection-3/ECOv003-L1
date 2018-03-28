@@ -851,7 +851,9 @@ ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
 	@srcpythonlib@/pickle_method.py @srcpythonlib@/run_config.py \
 	@srcpythonlib@/write_run_config.py \
 	@srcpythonlib@/write_standard_metadata.py \
-	@srcpythonlib@/exception.py @srcpythonlib@/cython_try.py
+	@srcpythonlib@/exception.py \
+	@srcpythonlib@/ecostress_interpolate.py \
+	@srcpythonlib@/cython_try.py
 
 # Number of jobs to run at once. Default is to automatically determine this,
 # but you can specify a different number.
@@ -2799,6 +2801,12 @@ end-to-end-check-glynn: installcheck-am
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_glynn_l1b_rad/*.h5
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1B_GEO_PGE $(l1b_geo_run_config_glynn)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_glynn_l1b_geo/*.h5
+
+# Run l1b_rad on its own
+
+l1b-rad-run: install
+	-rm -r ./l1b_rad_run
+	$(prefix)/L1B_RAD_PGE $(end_to_end_test_data)/ECOSTRESS_L1A_PIX_80005_001_20150124T204250_0100_02.h5.expected $(end_to_end_test_data)/L1A_RAD_GAIN_80005_001_20150124T204250_0100_02.h5.expected $(end_to_end_test_data)/L1A_RAW_ATT_80005_20150124T204250_0100_01.h5.expected $(end_to_end_test_data)/l1_osp_dir ./l1b_rad_run
 
 # Run l1b_geo on its own
 

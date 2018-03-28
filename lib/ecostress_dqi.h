@@ -6,7 +6,12 @@ namespace Ecostress {
   Data quality indicator values.
 
   DQI_GOOD   normal data, nothing wrong with it
-  DQI_FILLED indicates strip data that we have filled in.
+  DQI_INTERPOLATED 
+             indicates strip data that we have filled in with
+             interpolated data (see ATB for details on algorithm)
+  DQI_STRIPE_NOT_INTERPOLATED
+             Stripe data that we could not fill in with interpolated 
+             data
   DQI_BAD_OR_MISSING 
              indicates data with a bad value (e.g., negative DN)
              or missing packets. We don't bother distinguishing
@@ -17,8 +22,9 @@ namespace Ecostress {
              we haven't seen the pixel. So data is missing, but by
              instrument design instead of some problem.
 *******************************************************************/
-  enum Dqi { DQI_GOOD = 0, DQI_FILLED = 1, DQI_BAD_OR_MISSING = 2,
-	     DQI_NOT_SEEN = 3};
+  enum Dqi { DQI_GOOD = 0, DQI_INTERPOLATED = 1,
+	     DQI_STRIPE_NOT_INTERPOLATED = 2,
+	     DQI_BAD_OR_MISSING = 3, DQI_NOT_SEEN = 4 };
 
 /****************************************************************//**
   Fill values used in the radiance data for various DQI values.

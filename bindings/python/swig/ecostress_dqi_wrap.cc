@@ -6055,13 +6055,24 @@ SWIGINTERN PyObject *DQI_GOOD_swigconstant(PyObject *SWIGUNUSEDPARM(self), PyObj
 }
 
 
-SWIGINTERN PyObject *DQI_FILLED_swigconstant(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *DQI_INTERPOLATED_swigconstant(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *module;
   PyObject *d;
   if (!SWIG_Python_UnpackTuple(args,(char*)"swigconstant", 1, 1,&module)) return NULL;
   d = PyModule_GetDict(module);
   if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "DQI_FILLED",SWIG_From_int(static_cast< int >(Ecostress::DQI_FILLED)));
+  SWIG_Python_SetConstant(d, "DQI_INTERPOLATED",SWIG_From_int(static_cast< int >(Ecostress::DQI_INTERPOLATED)));
+  return SWIG_Py_Void();
+}
+
+
+SWIGINTERN PyObject *DQI_STRIPE_NOT_INTERPOLATED_swigconstant(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *module;
+  PyObject *d;
+  if (!SWIG_Python_UnpackTuple(args,(char*)"swigconstant", 1, 1,&module)) return NULL;
+  d = PyModule_GetDict(module);
+  if (!d) return NULL;
+  SWIG_Python_SetConstant(d, "DQI_STRIPE_NOT_INTERPOLATED",SWIG_From_int(static_cast< int >(Ecostress::DQI_STRIPE_NOT_INTERPOLATED)));
   return SWIG_Py_Void();
 }
 
@@ -6157,7 +6168,8 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_VARARGS, NULL},
 	 { (char *)"SHARED_PTR_DISOWN_swigconstant", SHARED_PTR_DISOWN_swigconstant, METH_VARARGS, NULL},
 	 { (char *)"DQI_GOOD_swigconstant", DQI_GOOD_swigconstant, METH_VARARGS, NULL},
-	 { (char *)"DQI_FILLED_swigconstant", DQI_FILLED_swigconstant, METH_VARARGS, NULL},
+	 { (char *)"DQI_INTERPOLATED_swigconstant", DQI_INTERPOLATED_swigconstant, METH_VARARGS, NULL},
+	 { (char *)"DQI_STRIPE_NOT_INTERPOLATED_swigconstant", DQI_STRIPE_NOT_INTERPOLATED_swigconstant, METH_VARARGS, NULL},
 	 { (char *)"DQI_BAD_OR_MISSING_swigconstant", DQI_BAD_OR_MISSING_swigconstant, METH_VARARGS, NULL},
 	 { (char *)"DQI_NOT_SEEN_swigconstant", DQI_NOT_SEEN_swigconstant, METH_VARARGS, NULL},
 	 { (char *)"FILL_VALUE_BAD_OR_MISSING_swigconstant", FILL_VALUE_BAD_OR_MISSING_swigconstant, METH_VARARGS, NULL},
