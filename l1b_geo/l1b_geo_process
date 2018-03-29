@@ -61,6 +61,7 @@ if(args.run_config):
     radlist = [os.path.abspath(f) for f in radlist]
     dirname = config["ProductPathGroup", "ProductPath"]
     file_version = config["ProductPathGroup", "ProductCounter"]
+    build_id = config["PrimaryExecutable", "BuildID"]
     orbfname = os.path.abspath(config["TimeBasedFileGroup", "L1A_RAW_ATT"])
 else:
     config = None
@@ -93,6 +94,8 @@ import l1b_geo_config
 geocal.makedirs_p(dirname)
 os.chdir(dirname)
 
+inlist = [l1_osp_dir + "/l1b_geo_config.py", orb.file_name]
+inlist.extend(radlist)
 log_fname = None
 try:
     pool = Pool(ncpu)
@@ -102,15 +105,15 @@ try:
     for i in range(len(radlist)):
         orbit, scene, acquisition_time = ecostress.orbit_from_metadata(radlist[i])
         ofile.append(ecostress.ecostress_file_name("L1B_GEO", orbit, scene,
-            acquisition_time, build = build_version,
+            acquisition_time, build = build_id,
             version = file_version))
         ofile2.append(ecostress.ecostress_file_name("L1B_ATT", orbit, scene,
             acquisition_time,
-            build = build_version, 
+            build = build_id, 
             version = file_version))
 
     log_fname = os.path.splitext(ofile[0])[0] + ".log"
-    
+p    
     # Create igc/tiepoint for all the data
     igccol_initial = ecostress.EcostressIgcCollection()
     with open("extra_python_init.py", "w") as fh:
@@ -165,7 +168,7 @@ try:
         log.flush()
         l1bgeo = ecostress.L1bGeoGenerate(
                                 igccol_corrected.image_ground_connection(i),
-                                lwm, ofile[i],
+                                lwm, ofile[i],inlist,
                                 number_line = args.number_line,
                                 run_config = config, log_fname = log_fname,
                                 build_id = build_id,
@@ -178,6 +181,9 @@ try:
         m = ecostress.WriteStandardMetadata(f)
         if(config is not None):
             m.process_run_config_metadata(config)
+        m.set("ImageLines", 0)
+        m.set("ImagePixels", 0)
+        m.set_input_pointer(inlist)
         m.write()
 
     log = open(log_fname, "a")

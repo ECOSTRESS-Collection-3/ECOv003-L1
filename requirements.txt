@@ -19,4 +19,9 @@ tflearn
 # We do this with:
 # pip install https://anaconda.org/intel/tensorflow/1.6.0/download/tensorflow-1.6.0-cp35-cp35m-linux_x86_64.whl
 # On pistol, this version has an illegal instruction
-tensorflow
+#
+# Turns out on eco-tb1 this has really terrible peformance, it completely sucks
+# up the machine and has really bad performance. Not sure why this is so
+# crappy, but looks like we are much better off using tensorflow==1.5.0 ther
+# also
+tensorflow==1.5.0

@@ -34,6 +34,8 @@ class WriteStandardMetadata(object):
         # Fill in values we can.
         self.set('AncillaryInputPointer', product_specfic_group)
         self.set('AutomaticQualityFlag', 'PASS')
+        self.set('CampaignShortName', 'Primary')
+        self.set('CollectionLabel', '')
         self.set('DataFormatType', 'NCSAHDF5')
         # How do we determine these?
         self.set('HDFVersionID', '1.8.16')
@@ -52,6 +54,7 @@ class WriteStandardMetadata(object):
         self.set('ProducerAgency', 'JPL')
         self.set('ProducerInstitution', 'Caltech')
         self.set('CampaignShortName', 'Primary')
+        self.set('RegionID', '')
         self.set('DayNightFlag', 'Day')
         self.set('SISName', "Level 1 Product Specification Document (JPL D-94634)")
         self.set('SISVersion', "Preliminary")
@@ -78,6 +81,10 @@ class WriteStandardMetadata(object):
             self.set('SceneID', m.group('scene_id'))
         self.set('ProcessingLevelID', m.group('process_level'))
 
+    def set_input_pointer(self, flist):
+        '''Take a list of file names, and generates the InputPointer from this'''
+        self.set('InputPointer', ",".join(os.path.basename(i) for i in flist))
+       
     def set(self, m, v):
         if(self.data[m] is None):
             raise RuntimeError("Key '%m' is not in standard metadata" % m)

@@ -14,7 +14,7 @@ class L1bGeoGenerate(object):
     ImageGroundConnection. I imagine we will modify this as time
     goes on, this is really just a placeholder.
     '''
-    def __init__(self, igc, lwm, output_name, run_config = None,
+    def __init__(self, igc, lwm, output_name, inlist, run_config = None,
                  start_line = 0,
                  number_line = -1,
                  local_granule_id = None, log_fname = None,
@@ -40,6 +40,7 @@ class L1bGeoGenerate(object):
         self.log = None
         self.build_id = build_id
         self.pge_version = pge_version
+        self.inlist = inlist
 
     def loc_parallel_func(self, it):
         '''Variation of loc that is easier to use with a multiprocessor pool.'''
@@ -104,6 +105,7 @@ class L1bGeoGenerate(object):
         fout = h5py.File(self.output_name, "w")
         m = WriteStandardMetadata(fout,
                                   product_specfic_group = "L1GEOMetadata",
+                                  proc_lev_desc = "Level 1B Geolocation Parameters",                                  
                                   pge_name="L1B_GEO",
                                   build_id = self.build_id,
                                   pge_version= self.pge_version,
@@ -114,12 +116,15 @@ class L1bGeoGenerate(object):
         m.set("EastBoundingCoordinate", lon[lon > -998].max())
         m.set("SouthBoundingCoordinate", lat[lat > -998].min())
         m.set("NorthBoundingCoordinate", lat[lat > -998].max())
+        m.set("ImageLines", lat.shape[0])
+        m.set("ImagePixels", lat.shape[1])
         dt, tm = time_split(self.igc.time_table.min_time)
         m.set("RangeBeginningDate", dt)
         m.set("RangeBeginningTime", tm)
         dt, tm = time_split(self.igc.time_table.max_time)
         m.set("RangeEndingDate", dt)
         m.set("RangeEndingTime", tm)
+        m.set_input_pointer(self.inlist)
         g = fout.create_group("Geolocation")
         g.attrs["Projection"] = '''\
 The latitude, longitude, and height are relative to the WGS-84

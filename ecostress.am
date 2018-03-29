@@ -34,6 +34,7 @@ l1b_cal_run_config_glynn = $(foreach n,001, $(end_to_end_test_data)/ECOSTRESS_L1
 l1b_geo_run_config_glynn = $(end_to_end_test_data)/ECOSTRESS_L1B_GEO_RunConfig_20150124T204431.xml
 
 H5DIFF_FLAG=-d 2e-2
+
 # Note, if you need to update the expected a results a "trick" is to
 # replace H5DIFF with "cp" on the make line (so make end-to-end-check H5DIFF=cp H5DIFF_FLAG= )
 end-to-end-check: installcheck-am

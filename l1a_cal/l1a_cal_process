@@ -49,6 +49,7 @@ if(args.run_config):
     l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
     dirname = config["ProductPathGroup", "ProductPath"]
     file_version = config["ProductPathGroup", "ProductCounter"]
+    build_id = config["PrimaryExecutable", "BuildID"]
 else:
     config = None
     l1a_bb = os.path.abspath(args.l1a_bb)
@@ -64,10 +65,10 @@ os.chdir(dirname)
 
 orbit, scene, acquisition_time = ecostress.orbit_from_metadata(l1a_raw_pix)
 ofile = ecostress.ecostress_file_name("L1A_PIX", orbit, scene, acquisition_time,
-                            build = build_version, version = file_version)
+                            build = build_id, version = file_version)
 ofile_gain = ecostress.ecostress_file_name("L1A_RAD_GAIN", orbit, scene,
                                  acquisition_time,
-                                 build = build_version, version = file_version,
+                                 build = build_id, version = file_version,
                                  intermediate = True)
 log_fname = os.path.splitext(ofile)[0] + ".log"
 log = open(log_fname, "w")
@@ -83,7 +84,7 @@ try:
     # Write out a dummy log file
     print("L1A_CAL_PGE:INFO-0-[Job Successful]", file=log)
     log.flush()
-except VicarRunException as e:
+except geocal.VicarRunException as e:
     print("L1A_CAL_PGE:ERROR-1-[%s]" % e.message, file=log)
     log.flush()
     raise

@@ -118,12 +118,14 @@ class L1aPixGenerate(object):
         t.attrs["Units"] = "second"
         m = WriteStandardMetadata(fout,
                                   product_specfic_group = "L1APIXMetadata",
+                                  proc_lev_desc = "Level 1A Calibration Parameters",
                                   pge_name="L1A_CAL_PGE",
                                   build_id = self.build_id,
                                   pge_version= self.pge_version,
                                   local_granule_id = self.local_granule_id)
         m2 = WriteStandardMetadata(fout_gain,
                                   product_specfic_group = "L1APIXMetadata",
+                                  proc_lev_desc = "Level 1A Calibration Parameters",
                                   pge_name="L1A_CAL_PGE",
                                   build_id = self.build_id,
                                   pge_version= self.pge_version,
@@ -147,6 +149,15 @@ class L1aPixGenerate(object):
               fin["/StandardMetadata/RangeEndingDate"][()])
         m2.set("RangeEndingTime",
               fin["/StandardMetadata/RangeEndingTime"][()])
+        shp = geocal.mmap_file("%s/ImgRadiance/b1_dcc.hlf" % dirname).shape
+        m.set("ImageLines", shp[0])
+        m.set("ImagePixels", shp[1])
+        m2.set("ImageLines", shp[0])
+        m2.set("ImagePixels", shp[1])
+        m.set_input_pointer([self.l1a_raw, self.l1a_bb,
+                             "%s/L1A_PCF_UPF.txt" % self.l1_osp_dir])
+        m2.set_input_pointer([self.l1a_raw, self.l1a_bb,
+                              "%s/L1A_PCF_UPF.txt" % self.l1_osp_dir])
         m.write()
         m2.write()
 

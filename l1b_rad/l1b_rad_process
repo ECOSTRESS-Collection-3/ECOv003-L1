@@ -46,6 +46,7 @@ if(args.run_config):
     l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
     dirname = config["ProductPathGroup", "ProductPath"]
     file_version = config["ProductPathGroup", "ProductCounter"]
+    build_id = config["PrimaryExecutable", "BuildID"]
     orb = ecostress.create_orbit_raw(config)
     dem = ecostress.create_dem(config)
 else:
@@ -79,7 +80,7 @@ os.chdir(dirname)
 
 orbit, scene, acquisition_time = ecostress.orbit_from_metadata(l1a_pix)
 ofile = ecostress.ecostress_file_name("L1B_RAD", orbit, scene, acquisition_time,
-                            build = build_version,
+                            build = build_id,
                             version = file_version)
 
 log_fname = os.path.splitext(ofile)[0] + ".log"
@@ -91,10 +92,9 @@ try:
               log = log,
               build_id = build_id,
               pge_version = pge_version["l1b_rad"],
-              interpolate_stripe_data = l1b_rad_config.interpolate_stripe_data)
+              interpolate_stripe_data = l1b_rad_config.interpolate_stripe_data,
+              seed = l1b_rad_config.seed)
     l1brad.run()
-    # Write out a dummy log file
-    print("This is a dummy log file", file = log)
     print("L1B_RAD_PGE:INFO-0-[Job Successful]", file=log)
     log.flush()
 except:

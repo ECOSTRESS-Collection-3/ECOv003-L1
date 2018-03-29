@@ -133,10 +133,14 @@ afids_latest rather than the system area:
     pip install -r ~/GeoCal/requirements.txt
     pip install -r ~/ecostress-level1/requirements.txt
 	
-Note that we can use the intel built verison of tensorflow, which has better
-performance
+*Old text: Note that we can use the intel built verison of tensorflow, which has better
+performance*
 
     pip install https://anaconda.org/intel/tensorflow/1.6.0/download/tensorflow-1.6.0-cp35-cp35m-linux_x86_64.whl
+	
+**NOTE:	 Actually, the intel version has terrible performance, it uses up tons
+of memory and runs really slow on eco-tb1. Not sure what the issue is. But
+instead, use tensorflow==1.5.0**
     
 Bliss Setup
 -----------

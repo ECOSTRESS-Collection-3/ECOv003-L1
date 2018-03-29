@@ -2760,6 +2760,7 @@ complain_if_afids:
 # runs 80006
 
 export end_to_end_test_data = @testdatadir@
+
 # Note, if you need to update the expected a results a "trick" is to
 # replace H5DIFF with "cp" on the make line (so make end-to-end-check H5DIFF=cp H5DIFF_FLAG= )
 end-to-end-check: installcheck-am

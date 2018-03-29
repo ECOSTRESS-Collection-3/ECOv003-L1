@@ -136,8 +136,8 @@ class L1aRawPixGenerate(object):
   '''This generates a L1A_RAW_PIX, L1A_BB, L1A_ENG and L1A_RAW_ATT
   files from a L0B input.'''
   def __init__(self, l0b, osp_dir, scene_file, run_config = None,
-               build_id = "0.40",
-               pge_version = "0.40", build_version="0101",
+               build_id = "0101",
+               pge_version = "0.40", 
                file_version = "01"):
       '''Create a L1aRawPixGenerate to process the given L0 file. 
       To actually generate, execute the 'run' command.'''
@@ -147,7 +147,6 @@ class L1aRawPixGenerate(object):
       self.run_config = run_config
       self.build_id = build_id
       self.pge_version = pge_version
-      self.build_version = build_version
       self.file_version = file_version
 
   def process_scene_file(self):
@@ -168,10 +167,10 @@ class L1aRawPixGenerate(object):
   def create_file(self, prod_type, orbit, scene, start_time, end_time,
                   primary_file = False, prod=True, intermediate=False):
     '''Create the file, generate the standard metadata, and return
-    the file name.'''
+    the file handle and metadata handle.'''
 
     fname = ecostress_file_name(prod_type, orbit, scene, start_time,
-                                build=self.build_version,
+                                build=self.build_id,
                                 version=self.file_version,
                                 intermediate=intermediate)
     if(primary_file):
@@ -192,9 +191,8 @@ class L1aRawPixGenerate(object):
     dt, tm = time_split(end_time)
     m.set("RangeEndingDate", dt)
     m.set("RangeEndingTime", tm)
-    m.write()
-    fout.close()
-    return fname
+    m.set_input_pointer([self.l0b, self.scene_file])
+    return fout, m, fname
 
   def run(self):
 
@@ -572,24 +570,18 @@ class L1aRawPixGenerate(object):
       # copy to output files
 
       ' create scene file and image pixel, J2K, and FPIE EV groups '
-      pname = self.create_file( "L1A_RAW_PIX", orbit, scene_id,
+      l1a_fp, l1a_fp_met, pname = self.create_file( "L1A_RAW_PIX", orbit, scene_id,
          Time.time_gps(rst), Time.time_gps(rse), prod=False, intermediate=True)
-      l1a_fp = h5py.File( pname, "r+", driver='core' )
 
       ' create BB file and BlackBodyPixels group '
-      bname = self.create_file( "L1A_BB", orbit, scene_id,
+      l1a_bp, l1a_bp_met, fname = self.create_file( "L1A_BB", orbit, scene_id,
               Time.time_gps(rst), Time.time_gps(rse), prod=True )
-      l1a_bp=h5py.File( bname, "r+", driver='core' )
 
       ' record scene completeness '
       pcomp = float( good_img ) / float( img_cnt )
-      sm = l1a_fp['StandardMetadata']
-      del sm['AutomaticQualityFlag']
-      sm['AutomaticQualityFlag'] = '%16.10e' % pcomp
+      l1a_fp_met.set('AutomaticQualityFlag', '%16.10e' % pcomp)
       bcomp = float( good_bb ) / float( bb_cnt )
-      sm = l1a_bp['StandardMetadata']
-      del sm['AutomaticQualityFlag']
-      sm['AutomaticQualityFlag'] = '%16.10e' % bcomp
+      l1a_bp_met.set('AutomaticQualityFlag', '%16.10e' % bcomp)
       print("====  ", datetime.now(), "  ====")
       print("SCENE %s completed, SCANS=%d (%f) %d/%d GOOD/IMG, (%f) %d/%d GOOD/BB" % ( scene_id, scans, pcomp, good_img, img_cnt, bcomp, good_bb, bb_cnt ))
 
@@ -606,6 +598,10 @@ class L1aRawPixGenerate(object):
 
       e0, e1, e2 = img.shape
       print("Writing file %s size=%d %d %d BANDS=%d" %( pname, e0, e1, e2, BANDS ) )
+      l1a_fp_met.set('ImageLines', img[:,:,bo[0]].shape[0])
+      l1a_fp_met.set('ImagePixels', img[:,:,bo[0]].shape[1])
+      l1a_bp_met.set('ImageLines', cbb[:,:,bo[0]].shape[0])
+      l1a_bp_met.set('ImagePixels', cbb[:,:,bo[0]].shape[1])
       for b in range( BANDS ):
         t = l1a_upg.create_dataset("pixel_data_%d" %(b+1),
                                    data=img[:,:,bo[b]],
@@ -637,6 +633,8 @@ class L1aRawPixGenerate(object):
           r2[i-p0,j] = prc[j]( p7r( bbt[i,0,j] ) )
           r3[i-p0,j] = prh[j]( p7r( bbt[i,1,j] ) )
 
+      l1a_fp_met.write()
+      l1a_bp_met.write()
       l1a_fp.close()
       l1a_bp.close()
     ' end scene loop '
@@ -656,9 +654,8 @@ class L1aRawPixGenerate(object):
 
     ' create engineering file and datasets '
     print("creating ENG file, EPC=%d" % epc )
-    feng = self.create_file( "L1A_ENG", orbit, None, o_start_time,
-                             o_end_time, primary_file=True )
-    eng = h5py.File( feng, "r+", driver='core' )
+    eng, eng_met, fname = self.create_file( "L1A_ENG", orbit, None,
+               o_start_time, o_end_time, primary_file=True )
     eng_g = eng.create_group("/rtdBlackbodyGradients")
     rtd295 = eng_g.create_dataset("RTD_295K", shape=(epc,5), dtype='f4')
     rtd325 = eng_g.create_dataset("RTD_325K", shape=(epc,5), dtype='f4')
@@ -675,9 +672,8 @@ class L1aRawPixGenerate(object):
     ' create raw attitude/ephemeris file and datasets '
     aqc = att.shape[0]
     print("creating raw ATT file, AQC=%d" % aqc )
-    fatt = self.create_file("L1A_RAW_ATT", orbit, None, o_start_time,
-                            o_end_time, prod=False, intermediate=True)
-    attf = h5py.File( fatt, "r+", driver='core' )
+    attf, attf_met, fname = self.create_file("L1A_RAW_ATT", orbit, None,
+                     o_start_time, o_end_time, prod=False, intermediate=True)
     att_g = attf.create_group("/Attitude")
     a2k = att_g.create_dataset("time_j2000", shape=(aqc,), dtype='f8' )
     q = att_g.create_dataset("quaternion", shape=(aqc,4), dtype='f8' )
@@ -699,9 +695,15 @@ class L1aRawPixGenerate(object):
     evel[:,:] = vel[:,:]
     evel.attrs['Description']='ECI velocity'
     evel.attrs['Units']='m/s'
+    attf_met.set('ImageLines', 0)
+    attf_met.set('ImagePixels', 0)
+    attf_met.write()
     attf.close()
 
     # Write out a dummy log file
+    eng_met.set('ImageLines', 0)
+    eng_met.set('ImagePixels', 0)
+    eng_met.write()
     eng.close()
     print("This is a dummy log file", file = self.log)
     self.log.flush()
