@@ -87,7 +87,7 @@ log_fname = os.path.splitext(ofile)[0] + ".log"
 log = open(log_fname, "w")
 try:
     # Generate output
-    l1brad = ecostress.L1bRadGenerate(igc, l1a_pix, l1a_gain, ofile,
+    l1brad = ecostress.L1bRadGenerate(igc, l1a_pix, l1a_gain, ofile,l1_osp_dir,
               run_config = config,
               log = log,
               build_id = build_id,
