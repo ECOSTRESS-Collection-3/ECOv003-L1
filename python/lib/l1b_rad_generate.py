@@ -144,7 +144,7 @@ Data quality indicator.
         m.set("ImageLines", data_swir.shape[0])
         m.set("ImagePixels", data_swir.shape[1])
         m.set_input_pointer([self.l1a_pix_fname, self.l1a_gain_fname,
-                             l1_osp_dir + "/l1b_rad_config.py"])
+                             self.l1_osp_dir + "/l1b_rad_config.py"])
         m.write()
 
 __all__ = ["L1bRadGenerate"]        
