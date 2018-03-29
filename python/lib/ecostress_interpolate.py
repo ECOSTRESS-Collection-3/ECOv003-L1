@@ -11,12 +11,19 @@ from tflearn.layers.estimator import regression
 class EcostressInterpolate(object):
     def __init__(self, training_size = 600000, layer_size_1 = 20,
                  layer_size_2 = 10, activation_function = 'LeakyReLU',
-                 tensorboard_dir='./tensorboard'):
+                 tensorboard_dir='./tensorboard',
+                 seed = 1234):
+        '''Initialize data. The directory tensorboard_dir is a scratch 
+        directory, and should be something that we can create/write to.
+        For repeatably results, there is a seed passed in. Set this to
+        none if you want to use the current system time (so each run
+        is different).'''
         self.training_size = training_size
         self.layer_size_1 = layer_size_1
         self.layer_size_2 = layer_size_2
         self.activation_function = activation_function
         self.tensorboard_dir = tensorboard_dir
+        self.seed = seed
         
     def normalize_data(self, datain):
         '''Take a 5400x5400x5 raw array (not normalized with -9999 coding)
@@ -43,9 +50,6 @@ class EcostressInterpolate(object):
         return dat
     
     def forward_net(self):
-        tf.reset_default_graph()
-        tflearn.init_graph(soft_placement=True)
-
         # training a convolutional neural net model
         convnet = input_data(shape=[None, 3, 3, 3], name='input')
     
@@ -77,6 +81,7 @@ class EcostressInterpolate(object):
         training_x = np.zeros( [ self.training_size, 3, 3, 3 ] )
         training_y = np.zeros( [ self.training_size, 1 ] )
         counter = 0
+        random.seed(self.seed)
         # Probably slow loop, we should come back to speed this up.
         while counter < self.training_size:
             random_x_ind = random.randint(1, dataset.shape[0] - 2)
@@ -183,11 +188,13 @@ outputs: prediction_matrices:  a list of 2 5325x5325 array containing
             print("Done creating training data")
                 
             tf.reset_default_graph()
-            tflearn.init_graph(soft_placement=True)
+            tflearn.init_graph(soft_placement=True, seed=self.seed)
+            if(self.seed is not None):
+                tf.set_random_seed(self.seed)
             
             model = tflearn.DNN(self.forward_net(),
                                 tensorboard_dir=self.tensorboard_dir)
-            model.fit(training_x , training_y, n_epoch=10)
+            model.fit(training_x , training_y, n_epoch=10, shuffle=False)
         
             testing_y = model.predict( testing_x )
         
