@@ -2781,7 +2781,9 @@ end-to-end-check: installcheck-am
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(PARALLEL) --gnu $(prefix)/L1B_RAD_PGE ::: $(l1b_cal_run_config)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1b_rad/*.h5
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1B_GEO_PGE $(l1b_geo_run_config)
-	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1b_geo/*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_ATT*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" /Geolocation/latitude ::: ./end_to_end_test_l1b_geo/*L1B_GEO*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" /Geolocation/longitude ::: ./end_to_end_test_l1b_geo/*L1B_GEO*.h5
 
 end-to-end-check-glynn: installcheck-am
 	-rm -r ./end_to_end_test_glynn_l0_input
@@ -2801,7 +2803,9 @@ end-to-end-check-glynn: installcheck-am
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(PARALLEL) --gnu $(prefix)/L1B_RAD_PGE ::: $(l1b_cal_run_config_glynn)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_glynn_l1b_rad/*.h5
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1B_GEO_PGE $(l1b_geo_run_config_glynn)
-	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_glynn_l1b_geo/*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_glynn_l1b_geo/*L1B_ATT*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" /Geolocation/latitude ::: ./end_to_end_test_glynn_l1b_geo/*L1B_GEO*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" /Geolocation/longitude ::: ./end_to_end_test_glynn_l1b_geo/*L1B_GEO*.h5
 
 # Run l1b_rad on its own
 
