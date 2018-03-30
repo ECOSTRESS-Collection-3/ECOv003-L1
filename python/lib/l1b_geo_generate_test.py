@@ -6,7 +6,8 @@ def test_l1b_geo_generate(isolated_dir, igc, lwm):
     # Only do 100 lines so this runs quickly as a test
     if(False):
         write_shelve("igc.xml", igc)
-    l1bgeo = L1bGeoGenerate(igc, lwm, "l1b_geo.h5", number_line = 100,
+    l1bgeo = L1bGeoGenerate(igc, lwm, "l1b_geo.h5", ["fake_input.h5", ],
+                            number_line = 100,
                             local_granule_id = "ECOSTRESS_L1B_GEO_80001_001_20151024_020211_0100_01.h5")
     l1bgeo.run()
 
