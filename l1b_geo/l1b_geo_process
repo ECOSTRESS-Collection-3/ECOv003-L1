@@ -78,9 +78,20 @@ else:
     dem = geocal.SrtmDem(os.environ["ELEV_ROOT"],False,
                   geocal.DatumGeoid96(os.environ["AFIDS_VDEV_DATA"] +
                                "/EGM96_20_x100.HLF"))
-    lwm = geocal.SrtmLwmData("/raid27/tllogan/all_lwm_links", False)
-    ortho_base = geocal.Landsat7Global("/raid22",
-                                       geocal.Landsat7Global.BAND5)
+    if(os.path.exists("/raid27/tllogan/all_lwm_links")):
+        lwm = geocal.SrtmLwmData("/raid27/tllogan/all_lwm_links", False)
+    elif(os.path.exists("/project/ancillary/SRTM/srtm_v3_lwm")):
+        lwm = geocal.SrtmLwmData("/project/ancillary/SRTM/srtm_v3_lwm", False)
+    else:
+        raise RuntimeError("Can't find land/water mask data")
+    if(os.path.exists("/raid22/band5_VICAR")):
+        ortho_base = geocal.Landsat7Global("/raid22",
+                                           geocal.Landsat7Global.BAND5)
+    elif(os.path.exists("/project/ancillary/LANDSAT")):
+        ortho_base = geocal.Landsat7Global("/project/ancillary/LANDSAT",
+                                           geocal.Landsat7Global.BAND5)
+    else:
+        raise RuntimeError("Can't find Landsat global orthobase data")
     radlist = [os.path.abspath(f) for f in args.l1b_rad]
 
 orb = geocal.OrbitOffsetCorrection(orb)
