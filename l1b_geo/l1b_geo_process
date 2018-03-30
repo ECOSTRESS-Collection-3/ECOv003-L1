@@ -94,26 +94,26 @@ import l1b_geo_config
 geocal.makedirs_p(dirname)
 os.chdir(dirname)
 
-inlist = [l1_osp_dir + "/l1b_geo_config.py", orb.file_name]
-inlist.extend(radlist)
+inlist = [orbfname, *radlist]
+inlist.append(l1_osp_dir + "/l1b_geo_config.py", )
 log_fname = None
 try:
     pool = Pool(ncpu)
     # Determine output file names
     ofile = []
-    ofile2 = []
     for i in range(len(radlist)):
         orbit, scene, acquisition_time = ecostress.orbit_from_metadata(radlist[i])
         ofile.append(ecostress.ecostress_file_name("L1B_GEO", orbit, scene,
             acquisition_time, build = build_id,
             version = file_version))
-        ofile2.append(ecostress.ecostress_file_name("L1B_ATT", orbit, scene,
-            acquisition_time,
-            build = build_id, 
-            version = file_version))
+        if(i == 0):
+            ofile2 = ecostress.ecostress_file_name("L1B_ATT", orbit, None,
+                                                   acquisition_time,
+                                                   build = build_id, 
+                                                   version = file_version)
 
     log_fname = os.path.splitext(ofile[0])[0] + ".log"
-p    
+    
     # Create igc/tiepoint for all the data
     igccol_initial = ecostress.EcostressIgcCollection()
     with open("extra_python_init.py", "w") as fh:
@@ -175,16 +175,29 @@ p
                                 pge_version = pge_version["l1b_geo"])
         l1bgeo.run(pool)
     
-        # Temp, don't correct anything in attitude file
-        shutil.copyfile(orbfname, ofile2[i])
-        f = h5py.File(ofile2[i], "r+")
-        m = ecostress.WriteStandardMetadata(f)
-        if(config is not None):
-            m.process_run_config_metadata(config)
-        m.set("ImageLines", 0)
-        m.set("ImagePixels", 0)
-        m.set_input_pointer(inlist)
-        m.write()
+    # Temp, don't correct anything in attitude file
+    shutil.copyfile(orbfname, ofile2)
+    f = h5py.File(ofile2, "r+")
+    m = ecostress.WriteStandardMetadata(f,
+                          product_specfic_group = "L1GEOMetadata",
+                          proc_lev_desc = "Level 1B Geolocation Parameters",
+                          pge_name="L1B_GEO",
+                          build_id = build_id,
+                          orbit_based = True,
+                          pge_version= pge_version["l1b_geo"])
+    if(config is not None):
+        m.process_run_config_metadata(config)
+    m.set("ImageLines", 0)
+    m.set("ImagePixels", 0)
+    dt, tm = ecostress.time_split(orb.min_time)
+    m.set("RangeBeginningDate", dt)
+    m.set("RangeBeginningTime", tm)
+    dt, tm = ecostress.time_split(orb.max_time)
+    m.set("RangeEndingDate", dt)
+    m.set("RangeEndingTime", tm)
+        
+    m.set_input_pointer(inlist)
+    m.write()
 
     log = open(log_fname, "a")
     print("L1A_GEO_PGE:INFO-0-[Job Successful]", file=log)
