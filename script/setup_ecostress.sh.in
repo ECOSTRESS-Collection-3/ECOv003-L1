@@ -22,3 +22,9 @@ if [ -n "$PATH" ]; then
 else
   export PATH=${ECOSTRESSTOP}/bin:@pythonpath@
 fi
+# Tensorflow spits out messages as it runs. These are nice on an
+# interactive terminal, but really mangle things when run as a
+# batch file. Suppress if we are not in an interactive shell
+if [ -z "$PS1" ]; then
+    export TF_CPP_MIN_LOG_LEVEL=1
+fi

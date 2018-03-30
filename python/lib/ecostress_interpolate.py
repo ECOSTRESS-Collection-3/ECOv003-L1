@@ -2,11 +2,27 @@ import tflearn
 import tensorflow as tf
 import numpy as np
 import random
+import os
 from ecostress_swig import *
 
 from tflearn.layers.conv import conv_2d, max_pool_2d
 from tflearn.layers.core import input_data, dropout, fully_connected
 from tflearn.layers.estimator import regression
+
+# Turn off output from tflearn. Not clear how to do this directly, we
+# actually looked into the tflearn to figure out how to do this
+# monkeypatching. We use the environment variable TF_CPP_MIN_LOG_LEVEL which
+# is suppose to control other tensorflow logging. We have logic in
+# setup_ecostress.sh.in to set this is we are not in an interactive terminal,
+# or of course people can set this in their environment directly.
+
+def _on_batch_end(self, training_state, snapshot=False):
+    # Skip printing
+    pass
+
+if("TF_CPP_MIN_LOG_LEVEL" in os.environ and int(os.environ("TF_CPP_MIN_LOG_LEVEL")) > 0):
+    tflearn.callbacks.CURSES_SUPPORTED = False
+    tflearn.callbacks.TermLogger.on_batch_end = _on_batch_end
 
 class EcostressInterpolate(object):
     def __init__(self, training_size = 600000, layer_size_1 = 20,
