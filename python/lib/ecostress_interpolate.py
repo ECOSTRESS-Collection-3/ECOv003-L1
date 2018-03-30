@@ -20,7 +20,7 @@ def _on_batch_end(self, training_state, snapshot=False):
     # Skip printing
     pass
 
-if("TF_CPP_MIN_LOG_LEVEL" in os.environ and int(os.environ("TF_CPP_MIN_LOG_LEVEL")) > 0):
+if("TF_CPP_MIN_LOG_LEVEL" in os.environ and int(os.environ["TF_CPP_MIN_LOG_LEVEL"]) > 0):
     tflearn.callbacks.CURSES_SUPPORTED = False
     tflearn.callbacks.TermLogger.on_batch_end = _on_batch_end
 
