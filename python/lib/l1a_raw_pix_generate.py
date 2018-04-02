@@ -136,8 +136,8 @@ class L1aRawPixGenerate(object):
   '''This generates a L1A_RAW_PIX, L1A_BB, L1A_ENG and L1A_RAW_ATT
   files from a L0B input.'''
   def __init__(self, l0b, osp_dir, scene_file, run_config = None,
-               build_id = "0101",
-               pge_version = "0.40", 
+               build_id = "0.40",
+               pge_version = "0.40", build_version="0101",
                file_version = "01"):
       '''Create a L1aRawPixGenerate to process the given L0 file. 
       To actually generate, execute the 'run' command.'''
@@ -147,6 +147,7 @@ class L1aRawPixGenerate(object):
       self.run_config = run_config
       self.build_id = build_id
       self.pge_version = pge_version
+      self.build_version = build_version
       self.file_version = file_version
 
   def process_scene_file(self):
@@ -170,7 +171,7 @@ class L1aRawPixGenerate(object):
     the file handle and metadata handle.'''
 
     fname = ecostress_file_name(prod_type, orbit, scene, start_time,
-                                build=self.build_id,
+                                build=self.build_version,
                                 version=self.file_version,
                                 intermediate=intermediate)
     if(primary_file):
@@ -259,9 +260,10 @@ class L1aRawPixGenerate(object):
                                                   ev_codes[i,4],ev_codes[i,5] ))
     ef.close()
 
-    det = [EV_DUR*((ev_codes[1,0]-ev_codes[0,0])%MAX_FPIE),
-           EV_DUR*((ev_codes[2,0]-ev_codes[1,0])%MAX_FPIE),
-           EV_DUR*((ev_codes[0,2]-ev_codes[2,0])%MAX_FPIE)]
+    det = [(EV_DUR*((ev_codes[0,2]-ev_codes[2,0])%MAX_FPIE)-IMG_DUR)*1.05,  # btw IMG and HBB
+           (EV_DUR*((ev_codes[1,0]-ev_codes[0,0])%MAX_FPIE)-PKT_DUR)*1.05,  # btw HBB and CBB
+           (EV_DUR*((ev_codes[2,0]-ev_codes[1,0])%MAX_FPIE)-PKT_DUR)*1.05]  # btw CBB and IMG
+    print("DET: %f %f %f" %( det[0], det[1], det[2] ) )
 
 #  Set up band order
 
@@ -300,6 +302,14 @@ class L1aRawPixGenerate(object):
     bbt=self.fin["hk/status/temperature"]
     bb_time=self.fin["hk/status/time"]
     bb_fsw=self.fin["hk/status/time_fsw"]
+
+    if "/hk/bad/hr/time_dpuio" in self.fin and "/hk/bad/hr/time_error_correction" in self.fin:
+        tdpuio = self.fin["/hk/bad/hr/time_dpuio"]
+        iss_tcorr = self.fin["/hk/bad/hr/time_error_correction"]
+        print("ISS time error correction")
+    else:
+        tdpuio = 0
+        iss_tcorr = 0
 
     epc = bb_time.shape[0]
     bbtime = np.zeros( epc, dtype=np.float64 )
@@ -356,7 +366,7 @@ class L1aRawPixGenerate(object):
       if sts.gps > gpt[tot_pkts-1]:
         t0 = Time.time_gps( gpt[tot_pkts-1] )
         print("Scene time %s(%f) past data time %s(%f)" %( sts, sts.gps, t0, gpt[tot_pkts-1] ) )
-        continue
+        continue  # go to next scene
       pkt_idx = np.argmax( gpt>sts.gps )
       t0 = Time.time_gps( gpt[pkt_idx] )
       dt = t0 - sts
@@ -385,8 +395,9 @@ class L1aRawPixGenerate(object):
         flex_buf[:,:,:] = 0xffff
         e1 = 0
         #  Loop through HBB, CBB, and IMG sequences in scan
-        for seq in range( 3 ):
-          gpix[seq] = 0
+        seq = 0
+        gpix[:] = 0
+        while seq<3:
           e0 = pkt_idx
           ph = 2  # mirror phase should be 0 or 1
           ph0 = 2
@@ -474,30 +485,35 @@ class L1aRawPixGenerate(object):
           p1 = e1
           fpc = FPPPKT - p1  # FPs to copy from first PKT
           while op < op1 and e0 < tot_pkts-1:
-            #print("SCENE=%d SCAN=%d E0=%d E1=%d GPS=%f" %(scene_id,scan,e0,e1,gpt[e0]))
+            #print("SCENE=%d SCAN=%d E0=%d E1=%d GPS=%f SEQ=%d OP=%d" %(scene_id,scan,e0,e1,gpt[e0], seq, op))
 
             e3 = op1 - op  # remaining FPs to fill
             e4 = 0
-            if seq==2 and op>op0 and op<=op1-FPPPKT:
-              lid0 = e0; lid1 = e0+1  # correct time
-              #lid0 = e0-1; lid1 = e0  # time code error
-              if e0 < tot_pkts - 1:
-                dt = gpt[lid1] - gpt[lid0] - PKT_DUR
-                adt = abs( dt )
-              else: adt = 0.0  # at last packet
-              if adt > PKT_DURT:  # large time jump between PKTS
-                jumps += 1
-                if e0==tot_pkts - 1 or e3<=FPPPKT: e4 = 0
-                else: e4 = float((lev[e0+1,0] - lev[e0,0])%MAX_FPIE) * EV_DUR - PKT_DUR
-                if abs(e4) > PKT_DURT:  # EV jump within packet
-                  e4 = int( dt/FP_DUR + 0.5 )
-                  print("*** Orbit %s Scene %d scan %d Time jump at IDX[%d](%f) DT=%f OPINC=%d OP=%d" %(orb, scene_id, scan, e0+1,gpt[e0+1],dt,e4,op))
-                  ldd[:] = (lev[e0,1:] - lev[e0,:FPPPKT-1])%MAX_FPIE
-                  fpc = np.argmax( ldd > FP_EVT )
-                  if fpc==0: fpc = FPPPKT
+            lid0 = e0; lid1 = e0+1  # correct time
+            #lid0 = e0-1; lid1 = e0  # time code error
+            dt = gpt[lid1] - gpt[lid0]
+            if p1==0: e2 = (seq-1)%3
+            else: e2 = seq
+            if (op==op0 and dt<0) or (op==op0 and dt>det[e2]) or (seq==2 and op>=op0+FPPPKT and op<op1-FPPPKT and abs(dt-PKT_DUR)>PKT_DURT):
+              jumps += 1
+              print("*** Orbit %s Scene %d scan %d %s Time jump PKT=%d %f DT=%10.8f E4=%d OP=%d" %(orb, scene_id, scan, ev_names[seq], e0+1,gpt[e0+1],dt,e4,op), end="")
+              if e0==tot_pkts - 1 or (op>op0 and e3<=FPPPKT):  # at end of sequence
+                e4 = 0
+              else:
+                e4 = float((lev[e0+1,0] - lev[e0,FPPPKT-1])%MAX_FPIE)
+              if e4 > FP_EVT:  # EV jump within packet
+                e4 = int( dt/FP_DUR + 0.5 )
+                print(" OPINC=%d  ***" %e4)
+                ldd[:] = (lev[e0,1:] - lev[e0,:FPPPKT-1])%MAX_FPIE
+                fpc = np.argmax( ldd > FP_EVT )
+                if fpc==0: fpc = FPPPKT
+                else:
+                  if op==op0: fpc = FPPPKT - p1
                   else: fpc += 1
-                  print("Copying remaining %d FPs of scan %d from PKT %d" % (fpc, scan, e0))
-                else: e4 = 0
+                print("Copying remaining %d FPs of scan %d from PKT %d" % (fpc, scan, e0))
+              else:
+                print(" ...continuing")
+                e4 = 0
 
             for b in range( BANDS ): # transpose new packet to flex_buf
               flex_buf[:,:,b] = np.transpose(bip[e0,:,:,b])
@@ -520,7 +536,10 @@ class L1aRawPixGenerate(object):
             if op<op0 or op>op1:  # next packet outside of current scan
                cont = 1
                sse = gpt[e0-1] + PKT_DUR + fpc * FP_DUR
-               print("Terminating scan %d at FP %d SSE=%f" % (scan,op,sse))
+               print("Terminating scan %d in %s at FP %d E0=%d SSE=%f" % (scan,ev_names[seq],op,e0,sse))
+               seq = 3  # force exit SEQ loop
+               e0 += 1
+               op = 0
                break
             fpc = FPPPKT # full PKTs after (partial) first PKT
             p1 = 0
@@ -534,6 +553,7 @@ class L1aRawPixGenerate(object):
             if op>op0 and e3>0: pkt_idx = e0-1
             else: pkt_idx = e0
           if cont==0: break  # drop into scan loop
+          seq += 1
         # end seq loop
 
         print("SCENE=%s SCAN=%d SCANS=%d LINE=%d DT=%f s2k=%f IDX=%d P1=%d OP=%d RSE=%f"%(scene_id,scan,scans,line,dt,pix_time[scans],pkt_idx,e3,op,rse))
@@ -541,9 +561,6 @@ class L1aRawPixGenerate(object):
 # cont==0 from:
 # - No SEQ from scene start time
 #   restart scan loop with scan=0, scans=0, new IDX and scene start time
-
-# - EOF seeking SEQ
-#   exit scan loop, complete current scene, if any scans
 
         if cont==0:
           if scans==0:  # restart scanning with new IDX
@@ -727,8 +744,5 @@ class L1aRawPixGenerate(object):
     eng.close()
     print("This is a dummy log file", file = self.log)
     self.log.flush()
-    print("====  End run ", datetime.now(), "  ====")
+    print("====  End run ", datetime.now(), "jumps=%d  ====" %jumps )
     return jumps
-
-__all__ = ["L1aRawPixGenerate"]
-  
