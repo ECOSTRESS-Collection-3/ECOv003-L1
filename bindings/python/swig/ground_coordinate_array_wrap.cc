@@ -5223,7 +5223,7 @@ namespace swig
 
 
 // Don't want to use threads with ruby
-#undef _REENTRANT
+//#undef _REENTRANT
 #include <blitz/array.h>
 #include <blitz/range.h>
 #define PY_ARRAY_UNIQUE_SYMBOL geocal_ARRAY_API
