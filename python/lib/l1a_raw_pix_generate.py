@@ -198,7 +198,10 @@ class L1aRawPixGenerate(object):
     prh[4] = np.poly1d([ PRT[16,2], PRT[16,1], PRT[16,0]+c2k ]) # PRT_469_T
 
 #  Get EV start codes for BB and IMG pixels
-    RPM, FP_DUR, MAX_FPIE, FPPSC = 0
+    RPM = 0
+    FP_DUR = 0
+    MAX_FPIE = 0
+    FPPSC = 0
     ev_codes = np.zeros( (4,6), dtype=np.int32 )
     ev_names = [ e0 for e0 in range(5) ]
     ' open EV codes file '
