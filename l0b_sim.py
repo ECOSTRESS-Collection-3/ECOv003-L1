@@ -213,10 +213,6 @@ class L0BSimulate(object):
     ev_codes = np.zeros( (4,4), dtype=np.int32 )
     ev_names = [ p0 for p0 in range( 5 ) ]
     ' open EV codes file '
-    RPM = 0
-    FP_DUR = 0
-    MAX_FPIE = 0
-    FPPSC = 0
     with open(self.osp_dir + "/ev_codes.txt", "r") as ef:
       for i,evl in enumerate(ef):
         p0, p1, p2, p3, p4 = re.split(r'\s+', evl.strip())
