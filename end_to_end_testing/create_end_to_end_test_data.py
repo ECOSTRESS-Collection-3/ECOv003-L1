@@ -31,6 +31,13 @@ pass_time = [Time.parse_time("2015-01-14T12:00:24.995464Z"),
 orbit_num = [80001, 80002, 80003, 80004, 80005]
 nscene = [1,1,1,1,3]
 
+# This offset comes from multiplying through the matrices in the ATBD together.
+# I doubt if we will have the accuracy to update these values, but we could
+# in principle improve these by doing a camera calibration. Note that the
+# offset is ~22 meter on the ground, so it is significant to include but not
+# huge compared to our ~70m pixel size and 50m geolocation requirement.
+x_offset_iss = np.array([10.8639, -19.2647, 7.0221])
+
 # By bad luck, we picked orbit times in some case that are an night.
 # Allow an offset to the reported time so we can "pretend" that the data
 # is really during the day. This really only affects the solar angles, and
@@ -65,8 +72,10 @@ if(use_swir_all_band):
     sfactor = [aster_radiance_scale_factor()[3]] * 6
     sfactor[0] = None
 
-orb = OrbitTimeShift(SpiceOrbit(SpiceOrbit.ISS_ID, "iss_spice/iss_2015.bsp"),
+orb_iss = OrbitTimeShift(SpiceOrbit(SpiceOrbit.ISS_ID, "iss_spice/iss_2015.bsp"),
                      time_shift[pass_index])
+orb = OrbitScCoorOffset(orb_iss, x_offset_iss)
+
 # False here says it ok for SrtmDem to not have tile. This gives support
 # for data that is over the ocean.
 dem = SrtmDem("",False)
@@ -131,7 +140,7 @@ for s in range(nscene[pass_index]):
 l1a_raw_att_fname = \
    ecostress_file_name("L1A_RAW_ATT", orbit_num[pass_index], None, start_time,
                        intermediate=True)
-l1a_raw_att_sim = L1aRawAttSimulate(orb, start_time, end_time)
+l1a_raw_att_sim = L1aRawAttSimulate(orb_iss, start_time, end_time)
 if(create_l1a_raw_att):
     l1a_raw_att_sim.create_file(l1a_raw_att_fname)
 

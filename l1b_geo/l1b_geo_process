@@ -27,6 +27,14 @@ Options:
   -h --help         
        Print this message
 
+  --ecostress-band=d
+       Ecostress band to use. Band 1 is the SWIR band, Band 2 is 8.28 micron
+       and so on. [default: 1]
+
+  --landsat-band=d
+       Landsat band to match to. For band 6, we have both low and high gain.
+       Enter this as 61 and 62. [default: 5]
+
   --number-cpu=d
        Number of CPUs to use when processing. Ignored if we are using a 
        run_config file, this is instead passed through the config file.
@@ -35,6 +43,12 @@ Options:
   --number-line=d
        Number of lines to process. Normally you process the whole scene, but
        can be useful for testing to process only a subset. [default: -1]
+
+  --orbit-offset=d
+       For testing, fake errors in the orbit. This is an alternative from
+       running the full end-to-end test generation, where we take the orbit
+       from l1a_raw but then add errors. The errors should be the yaw,pitch,
+       roll errors to add in degrees.
 
   -v --version      
        Print program version
@@ -84,23 +98,62 @@ else:
         lwm = geocal.SrtmLwmData("/project/ancillary/SRTM/srtm_v3_lwm", False)
     else:
         raise RuntimeError("Can't find land/water mask data")
+    if(args.landsat_band == 1):
+        lband = geocal.Landsat7Global.BAND1
+    elif(args.landsat_band == 2):
+        lband = geocal.Landsat7Global.BAND2
+    elif(args.landsat_band == 3):
+        lband = geocal.Landsat7Global.BAND3
+    elif(args.landsat_band == 4):
+        lband = geocal.Landsat7Global.BAND4
+    elif(args.landsat_band == 5):
+        lband = geocal.Landsat7Global.BAND5
+    elif(args.landsat_band == 61):
+        lband = geocal.Landsat7Global.BAND61
+    elif(args.landsat_band == 62):
+        lband = geocal.Landsat7Global.BAND62
+    elif(args.landsat_band == 7):
+        lband = geocal.Landsat7Global.BAND7
+    elif(args.landsat_band == 8):
+        lband = geocal.Landsat7Global.BAND8
+    else:
+        raise RuntimeError("Unrecognized band number")
     if(os.path.exists("/raid22/band5_VICAR")):
-        ortho_base = geocal.Landsat7Global("/raid22",
-                                           geocal.Landsat7Global.BAND5)
+        ortho_base = geocal.Landsat7Global("/raid22", lband)
     elif(os.path.exists("/project/ancillary/LANDSAT")):
-        ortho_base = geocal.Landsat7Global("/project/ancillary/LANDSAT",
-                                           geocal.Landsat7Global.BAND5)
+        ortho_base = geocal.Landsat7Global("/project/ancillary/LANDSAT", lband)
     else:
         raise RuntimeError("Can't find Landsat global orthobase data")
     radlist = [os.path.abspath(f) for f in args.l1b_rad]
 
+
+# Read in additional configuration parameters    
+sys.path.append(l1_osp_dir)
+import l1b_geo_config
+
+# Include offset between location of ecostress and the ISS orbital coordinates
+# origin.
+orb = geocal.OrbitQuaternionListOffset(orb, l1b_geo_config.x_offset_iss)
+
+if(args.orbit_offset):
+    print("Add in orbit errors %s" % args.orbit_offset)
+    # Want this in arcseconds, because this is what OrbitOffsetCorrection
+    # takes
+    yaw,pitch,roll = [float(i) * 60 * 60 for i in args.orbit_offset.split(",")]
+    orb = geocal.OrbitOffsetCorrection(orb)
+    orb.insert_attitude_time_point(orb.min_time)
+    orb.insert_attitude_time_point(orb.max_time)
+    orb.parameter = [yaw,pitch,roll] * 2
+    orb.fit_position_x = False
+    orb.fit_position_y = False
+    orb.fit_position_z = False
+    orb.fit_yaw = False
+    orb.fit_pitch = False
+    orb.fit_roll = False
 orb = geocal.OrbitOffsetCorrection(orb)
 cam = geocal.read_shelve(l1_osp_dir + "/camera.xml")
 # Don't fit any of the camera parameters, hold them all fixed
 cam.mask_all_parameter()
-
-sys.path.append(l1_osp_dir)
-import l1b_geo_config
 
 geocal.makedirs_p(dirname)
 os.chdir(dirname)
@@ -139,7 +192,13 @@ try:
             orb.insert_position_time_point(tt.max_time)
             orb.insert_attitude_time_point(tt.max_time)
         # Work with the SWIR channel data
-        ras = geocal.GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" % radlist[i])
+        if(args.ecostress_band ==1):
+            ras = geocal.GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" %
+                                         radlist[i])
+        else:
+            ras = geocal.GdalRasterImage("HDF5:\"%s\"://Radiance/radiance_%d" %
+                                         (radlist[i], args.ecostress_band - 1))
+            ras = geocal.ScaleImage(ras, 100.0)
         igccol_initial.add_igc(ecostress.EcostressImageGroundConnection(orb, tt, cam,
                                        sm, dem, ras, "Scene %d" % (i + 1)))
 
