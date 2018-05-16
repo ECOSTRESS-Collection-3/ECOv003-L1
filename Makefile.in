@@ -837,6 +837,7 @@ installecostress_DATA = @srcscript@/setup_ecostress.csh @srcscript@/setup_ecostr
 
 # Cython code to generate
 ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
+	@srcpythonlib@/coordinate_system.py \
 	@srcpythonlib@/l1b_att_generate.py @srcpythonlib@/l0b_sim.py \
 	@srcpythonlib@/l1a_raw_pix_simulate.py \
 	@srcpythonlib@/l1a_raw_pix_generate.py \
@@ -2817,7 +2818,8 @@ l1b-rad-run: install
 
 l1b-geo-run: install
 	-rm -r ./l1b_geo_run
-	$(prefix)/L1B_GEO_PGE --number-cpu=20 $(end_to_end_test_data)/L1A_RAW_ATT_80005_20150124T204250_0100_01.h5.expected $(end_to_end_test_data)/l1_osp_dir ./l1b_geo_run $(end_to_end_test_data)/ECOSTRESS_L1B_RAD_80005_00*.h5.expected
+	$(prefix)/L1B_GEO_PGE $(PROCESS_ARG) --number-cpu=20 $(end_to_end_test_data)/L1A_RAW_ATT_80005_20150124T204250_0100_01.h5.expected $(end_to_end_test_data)/l1_osp_dir ./l1b_geo_run $(end_to_end_test_data)/ECOSTRESS_L1B_RAD_80005_00*.h5.expected
+	source $(prefix)/setup_ecostress.sh && $(PYTHON) $(srcdir)/end_to_end_testing/diff_sba.py
 
 # Shortcut for just running py.test.
 python-check: script/setup_ecostress.sh
