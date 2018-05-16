@@ -1,5 +1,5 @@
 !tvac verification script: Produce png and text verification files.
-!TLLOGAN: 20FEB2018 version 1.03 (Pass parms thru UPF & center positions)
+!TLLOGAN: 05APR2018 version 2.00 (Shift Target offset)
 procedure
 parm   dir    string   def="./"
 parm   id     string   def="3000"
@@ -40,7 +40,7 @@ fitg        xxe_&id xxd_&id percent=2.0 'gauss 'byte
 ush         gdal_translate -of PNG xxd_&id &dir/png2_&"suffix".png
 
 !png3
-let         sstar = cctar-64
+let         sstar = cctar-128
 size        &dir/b3_temp.hlf xxe_&id nl=512 ns=512 area=(1,&sstar,256,256)
 fitg        xxe_&id xxd_&id percent=2.0 'gauss 'byte
 ush         gdal_translate -of PNG xxd_&id &dir/png3_&"suffix".png

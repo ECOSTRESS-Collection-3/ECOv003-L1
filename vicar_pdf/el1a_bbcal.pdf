@@ -2,7 +2,7 @@
 !   el1a_bbcal.pdf (Ecostress L1A BlackBody calibration)
 !   An L1A_CAL PGE Program supporting the ECOSTRESS Project
 !***Date/Version:
-!   20FEB2018 Version: 1.03 T.L.Logan (UPF switch for tvac code)
+!   10MAY2018 Version: 2.01 T.L.Logan (B2-B5 Linearity Correction)
 !   Written for VICAR with TAE scripting.
 !***Function:
 !   ECOSTRESS L1A Blackbody Radiometric Calibration.
@@ -27,8 +27,8 @@ procedure
 ! outp1:  L1A_PIX      /path for Output L1A_PIX file
 ! outp2:  transfer     /path for Output Intermediate Radiance, Gain/Offset & Temp files
 ! pcount: File Version (vv) provided by PCS (Product Counter) 
-parm   inph5i  string   def="/project/tvac/store/PRODUCTS/L1A_RAW_PIX/2018/02/02/L1A_RAW_PIX_90029_001_20180202T132742_0105_01.h5" 
-parm   inph5b  string   def="/project/tvac/store/PRODUCTS/L1A_BB/2018/02/02/ECOSTRESS_L1A_BB_90029_001_20180202T132742_0105_01.h5"
+parm   inph5i  string   def="/project/tvac/store/PRODUCTS/L1A_RAW_PIX/2018/02/02/L1A_RAW_PIX_90027_001_20180202T124453_0105_01.h5" 
+parm   inph5b  string   def="/project/tvac/store/PRODUCTS/L1A_BB/2018/02/02/ECOSTRESS_L1A_BB_90027_001_20180202T124453_0105_01.h5"
 parm   inpupf  string   def="./L1A_PCF_UPF.txt"
 parm   outp1   string   def="./"
 parm   outp2   string   def="./"
@@ -114,6 +114,16 @@ local  rtd4    real     !pt-RTD #4
 local  rtd5    real     !pt-RTD #5
 local  t325    real     init=0.0 !final pt-RTD temperature for Hot BB
 local  t295    real     init=0.0 !final pt-RTD temperature for Cold BB
+local  b2ival  real     init=0.0 !8.2u  Band2 linearity correction Inital Val
+local  b2sinc  real     init=0.0 !8.2u  Band2 linearity correction Sample Inc
+local  b3ival  real     init=0.0 !8.7u  Band3 linearity correction Inital Val
+local  b3sinc  real     init=0.0 !8.7u  Band3 linearity correction Sample Inc
+local  b4ival  real     init=0.0 !9.1u  Band4 linearity correction Inital Val
+local  b4sinc  real     init=0.0 !9.1u  Band4 linearity correction Sample Inc
+local  b5ival  real     init=0.0 !10.6u Band5 linearity correction Inital Val
+local  b5sinc  real     init=0.0 !10.6u Band5 linearity correction Sample Inc
+local  b6ival  real     init=0.0 !12.1u Band6 linearity correction Inital Val
+local  b6sinc  real     init=0.0 !12.1u Band6 linearity correction Sample Inc
 body
 let      _onfail="goto error2"
 
@@ -341,6 +351,36 @@ write    "MSG: ***B5_HW= &hw5 "
 tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
          "fileVar2Val &inpupf B6_HW=") realvar=hw6
 write    "MSG: ***B6_HW= &hw6 "
+tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
+         "fileVar2Val &inpupf B2IVAL=") realvar=b2ival
+write    "MSG: ***B2IVAL= &b2ival "
+tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
+         "fileVar2Val &inpupf B2SINC=") realvar=b2sinc
+write    "MSG: ***B2SINC= &b2sinc "
+tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
+         "fileVar2Val &inpupf B3IVAL=") realvar=b3ival
+write    "MSG: ***B3IVAL= &b3ival "
+tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
+         "fileVar2Val &inpupf B3SINC=") realvar=b3sinc
+write    "MSG: ***B3SINC= &b3sinc "
+tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
+         "fileVar2Val &inpupf B4IVAL=") realvar=b4ival
+write    "MSG: ***B4IVAL= &b4ival "
+tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
+         "fileVar2Val &inpupf B4SINC=") realvar=b4sinc
+write    "MSG: ***B4SINC= &b4sinc "
+tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
+         "fileVar2Val &inpupf B5IVAL=") realvar=b5ival
+write    "MSG: ***B5IVAL= &b5ival "
+tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
+         "fileVar2Val &inpupf B5SINC=") realvar=b5sinc
+write    "MSG: ***B5SINC= &b5sinc "
+tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
+         "fileVar2Val &inpupf B6IVAL=") realvar=b6ival
+write    "MSG: ***B6IVAL= &b6ival "
+tcl2tcl   script=("source $env(AFIDS_TCL)/taehelp.tcl; ", +
+         "fileVar2Val &inpupf B6SINC=") realvar=b6sinc
+write    "MSG: ***B6SINC= &b6sinc "
 
 !Verify Internal Directories
 !Verify Output FPA Kelvin Directory (if not found)
@@ -526,6 +566,7 @@ if       ((std>0.3)or(temp<1))
  write   "MSG: ***Bad RTDs, Using UPF-Supplied HOT Temperature"
  tush     echo "***Bad RTDs, Using UPF HOT Default***" >> L1A_CAL_&"suffix".log
  let      t325=pre325
+ gen      xxRTD_fail.img nl=10 ns=10 ival=0 linc=0 sinc=0 'byte
 else
  let      t325=&temp
 end-if
@@ -696,6 +737,7 @@ if       ((std>0.3)or(temp<1))
  write   "MSG: ***Bad RTDs, Using UPF-Supplied COLD Temperature"
  tush     echo "***Bad RTDs, Using UPF COLD Default***" >> L1A_CAL_&"suffix".log
  let      t295=pre295
+ gen      xxRTD_fail.img nl=10 ns=10 ival=0 linc=0 sinc=0 'byte
 else
  let      t295=&temp
 end-if
@@ -904,7 +946,10 @@ el1a_2pt  band=&bandn rad2k=&rad2k radout=&radout debug=&debug +
           outimg=&outimg +
           outbdn=&outbdn +
           outwat=&"outp2"/&outwat +
-          outp1=&outp1 c1=&c1 c2=&c2 cw=&cw suffix=&suffix
+          outp1=&outp1 c1=&c1 c2=&c2 cw=&cw suffix=&suffix +
+          b2ival=&b2ival b2sinc=&b2sinc +
+          b3ival=&b3ival b3sinc=&b3sinc b4ival=&b4ival b4sinc=&b4sinc +
+          b5ival=&b5ival b5sinc=&b5sinc b6ival=&b6ival b6sinc=&b6sinc
 end-loop
 
 if       (tvac=1)
@@ -919,6 +964,9 @@ tush      date >> L1A_CAL_&"suffix".log
 if       ($SFI=-1) goto error2
 file2tcl  xxjob_fail.img val=found
 if       (found=1) write   "MSG: ***2pt Job Failure Detected"
+if       (found=1) goto error2
+file2tcl  xxRTD_fail.img val=found
+if       (found=1) write   "MSG: ***pt-RTD Temperature Failure Detected"
 if       (found=1) goto error2
 datetime
 
@@ -952,10 +1000,12 @@ error2>
 !Miscellaneous Error:
 file2tcl  xxjob_fail.img val=found
 if       (found=1) ush rm xxjob_fail.img
-write    "MSG: ***Unknown Error --- Aborting"
+file2tcl  xxRTD_fail.img val=found
+if       (found=1) ush rm xxRTD_fail.img
+write    "MSG: ***Error Detected --- Aborting"
 write    "MSG: ***L1A_BBCAL Job Failed"
 write    "VICAR_RESULT-1-""Job Failed"""
-tush      echo ***Unknown Error --- Aborting >> L1A_CAL_&"suffix".log
+tush      echo ***Error Detected --- Aborting >> L1A_CAL_&"suffix".log
 tush      echo ***L1A_BBCAL Job Failed >> L1A_CAL_&"suffix".log
 ush       echo VICAR_RESULT-1-[Job Failed] >> L1A_CAL_&"suffix".log
 let      $SFI=-1

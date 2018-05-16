@@ -3,7 +3,7 @@
 !   An L1A_CAL PGE Program supporting the ECOSTRESS Project
 !   Written for VICAR with TAE scripting.
 !***Date/Version:
-!   20FEB2018 Version: 1.03 T.L.Logan (No Changes)
+!   10MAY2018 Version: 2.01 T.L.Logan (Add B2-B5 non-linearity correction)
 !***Function:
 !   ECOSTRESS L1A 2point conversion of Blackbody calibration and TIR
 !     image DN to Radiance (watts/m2/sr/um).
@@ -29,6 +29,16 @@ parm   cw     real     !Center WaveLength
 parm   c1     real     !First Planck Constant (1.191042E08)
 parm   c2     real     !Second Planck Constant (14387.752)
 parm   suffix string   !Scene ID suffix
+parm   b2ival real     !8.2u  Band2 linearity correction IVAL
+parm   b2sinc real     !8.2u  Band2 linearity correction SINC
+parm   b3ival real     !8.7u  Band3 linearity correction IVAL
+parm   b3sinc real     !8.7u  Band3 linearity correction SINC
+parm   b4ival real     !9.1u  Band4 linearity correction IVAL
+parm   b4sinc real     !9.1u  Band4 linearity correction SINC
+parm   b5ival real     !10.6u Band5 linearity correction IVAL
+parm   b5sinc real     !10.6u Band5 linearity correction SINC
+parm   b6ival real     !12.1u Band6 linearity correction IVAL
+parm   b6sinc real     !12.1u Band6 linearity correction SINC
 !Local Parameters:
 local  id     string   !Unique variable name
 local  nl     integer
@@ -147,13 +157,44 @@ f2       (&"inprad"/b&"band"_325.rel, +
 !Focal Plane gain/offset images are 11264x1, duplicate them to the size of input image.
 !Output size is 11264 lines by 5400 samples; then apply Bad Data Mask 
 size      xxoffs_&id xxd_&id size=(1,1,11264,5400) oform=real 'noin
-f2        inp=(xxd_&id,mask_&id) out=&"outwat"/b&"band"_offset.rel +
+
+!Add Non-Linearity Correction wedge to Band1 SWIR Offset
+!See L1A_PCF_UPF.txt (User Parameter File) for parameter information
+if       (band=2)
+gen       xxe_&id nl=11264 ns=5400 ival=&b2ival +
+          linc=0.0 sinc=&b2sinc 'real
+ f2       inp=(xxd_&id,mask_&id,xxe_&id) out=&"outwat"/b&"band"_offset.rel +
+          func="((in1+in3)*(in2==1))+((in2==0)*(-9999))+((in2==(-1))*(-9998))" format=real
+else-if  (band=3)
+gen       xxe_&id nl=11264 ns=5400 ival=&b3ival +
+          linc=0.0 sinc=&b3sinc 'real
+ f2       inp=(xxd_&id,mask_&id,xxe_&id) out=&"outwat"/b&"band"_offset.rel +
+          func="((in1+in3)*(in2==1))+((in2==0)*(-9999))+((in2==(-1))*(-9998))" format=real
+else-if  (band=4)
+gen       xxe_&id nl=11264 ns=5400 ival=&b4ival +
+          linc=0.0 sinc=&b4sinc 'real
+ f2       inp=(xxd_&id,mask_&id,xxe_&id) out=&"outwat"/b&"band"_offset.rel +
+          func="((in1+in3)*(in2==1))+((in2==0)*(-9999))+((in2==(-1))*(-9998))" format=real
+else-if  (band=5)
+gen       xxe_&id nl=11264 ns=5400 ival=&b5ival +
+          linc=0.0 sinc=&b5sinc 'real
+ f2       inp=(xxd_&id,mask_&id,xxe_&id) out=&"outwat"/b&"band"_offset.rel +
+          func="((in1+in3)*(in2==1))+((in2==0)*(-9999))+((in2==(-1))*(-9998))" format=real
+else-if  (band=6)
+gen       xxe_&id nl=11264 ns=5400 ival=&b6ival +
+          linc=0.0 sinc=&b6sinc 'real
+ f2       inp=(xxd_&id,mask_&id,xxe_&id) out=&"outwat"/b&"band"_offset.rel +
+          func="((in1+in3)*(in2==1))+((in2==0)*(-9999))+((in2==(-1))*(-9998))" format=real
+else
+ f2       inp=(xxd_&id,mask_&id) out=&"outwat"/b&"band"_offset.rel +
           func="(in1*(in2==1))+((in2==0)*(-9999))+((in2==(-1))*(-9998))" format=real
+end-if
+
 size      xxgain_&id xxd_&id size=(1,1,11264,5400) oform=real 'noin
 f2        inp=(xxd_&id,mask_&id) out=&"outwat"/b&"band"_gain.rel +
           func="(in1*(in2==1))+((in2==0)*(-9999))+((in2==(-1))*(-9998))" format=real
-write    "MSG: ***Finished Creating Gain/Offsets for Band &band"
-tush      echo "Finished Creating Gain/Offsets for Band &band" >> L1A_CAL_&"suffix".log
+write     "MSG: ***Finished Creating Gain/Offsets for Band &band"
+tush       echo "Finished Creating Gain/Offsets for Band &band" >> L1A_CAL_&"suffix".log
 
 !2-Point Conversion Module*********************************************
 !DN to Radiance two-point conversion: R=a+(b*DN)
@@ -224,9 +265,9 @@ goto      theend
 
 error1>
 !Miscellaneous Error:
-write    "MSG: ***Unknown Error --- Aborting"
+write    "MSG: ***Unknown 2pt Error --- Aborting"
 write    "MSG: ***L1A_2PT job Failed"
-tush      echo ***Unknown Error --- Aborting >> L1A_CAL_&"suffix".log
+tush      echo ***Unknown 2pt Error --- Aborting >> L1A_CAL_&"suffix".log
 tush      echo ***L1A_2PT Job Failed >> L1A_CAL_&"suffix".log
 ush       echo VICAR_RESULT-1-[Job Failed] >> L1A_CAL_&"suffix".log
 gen       xxjob_fail.img nl=10 ns=10 ival=0 linc=0 sinc=0 'byte
