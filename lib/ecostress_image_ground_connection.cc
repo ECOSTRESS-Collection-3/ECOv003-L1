@@ -44,7 +44,7 @@ EcostressImageGroundConnection::SampleFunc::SampleFunc
     // Ok if we fail to get a solution, we just leave can_solve false
     return;
   try {
-    tsol = epoch + gsl_root(*this, tmin - epoch, tmax - epoch);
+    tsol = epoch + root(*this, tmin - epoch, tmax - epoch);
     can_solve = true;
   } catch(const GeoCal::ConvergenceFailure& E) {
     // Ok if we fail to get a solution, we just leave can_solve false
@@ -78,7 +78,7 @@ EcostressImageGroundConnection::SampleFuncWithDerivative::SampleFuncWithDerivati
     return;
   try {
     tsol = GeoCal::TimeWithDerivative(epoch) +
-      gsl_root_with_derivative(*this, tmin - epoch, tmax - epoch);
+      root_with_derivative(*this, tmin - epoch, tmax - epoch);
     can_solve = true;
   } catch(const GeoCal::ConvergenceFailure& E) {
     // Ok if we fail to get a solution, we just leave can_solve false
