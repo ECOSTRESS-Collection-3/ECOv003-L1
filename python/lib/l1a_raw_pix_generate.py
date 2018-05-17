@@ -104,8 +104,8 @@ class L1aRawPixGenerate(object):
   '''This generates a L1A_RAW_PIX, L1A_BB, L1A_ENG and L1A_RAW_ATT
   files from a L0B input.'''
   def __init__(self, l0b, osp_dir, scene_file, run_config = None,
-               build_id = "0.40",
-               pge_version = "0.40", build_version="0101",
+               build_id = "0101",
+               pge_version = "0.40", 
                file_version = "01"):
       '''Create a L1aRawPixGenerate to process the given L0 file. 
       To actually generate, execute the 'run' command.'''
@@ -115,7 +115,6 @@ class L1aRawPixGenerate(object):
       self.run_config = run_config
       self.build_id = build_id
       self.pge_version = pge_version
-      self.build_version = build_version
       self.file_version = file_version
 
   def process_scene_file(self):
@@ -139,7 +138,7 @@ class L1aRawPixGenerate(object):
     the file handle and metadata handle.'''
 
     fname = ecostress_file_name(prod_type, orbit, scene, start_time,
-                                build=self.build_version,
+                                build=self.build_id,
                                 version=self.file_version,
                                 intermediate=intermediate)
     if(primary_file):

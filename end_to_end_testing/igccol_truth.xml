@@ -1,0 +1,922 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE boost_serialization>
+<boost_serialization signature="serialization::archive" version="13">
+<geocal_object class_id="0" tracking_level="0" version="1">
+	<px class_id="2" class_name="GeoCal::IgcArray" tracking_level="1" version="1" object_id="_0">
+		<WithParameterNested class_id="3" tracking_level="1" version="0" object_id="_1">
+			<obj_list class_id="4" tracking_level="0" version="0">
+				<count>3</count>
+				<item_version>1</item_version>
+				<item class_id="5" tracking_level="0" version="1">
+					<px class_id="7" class_name="Ecostress::EcostressImageGroundConnection" tracking_level="1" version="0" object_id="_2">
+						<ImageGroundConnection class_id="8" tracking_level="0" version="0">
+							<dem class_id="9" tracking_level="0" version="1">
+								<px class_id="10" class_name="GeoCal::SrtmDem" tracking_level="1" version="0" object_id="_3">
+									<DemMapInfo class_id="11" tracking_level="0" version="1">
+										<datum class_id="12" tracking_level="0" version="1">
+											<px class_id="13" class_name="GeoCal::DatumGeoid96" tracking_level="1" version="0" object_id="_4">
+												<fname>/opt/afids/data/vdev/EGM96_20_x100.HLF</fname>
+											</px>
+										</datum>
+										<map_info class_id="14" tracking_level="1" version="0" object_id="_5">
+											<conv class_id="15" tracking_level="0" version="1">
+												<px class_id="16" class_name="GeoCal::GeodeticConverter" tracking_level="1" version="0" object_id="_6"></px>
+											</conv>
+											<number_x_pixel>1296001</number_x_pixel>
+											<number_y_pixel>622801</number_y_pixel>
+											<param class_id="17" tracking_level="0" version="0">
+												<size>6</size>
+												<data>
+													<item>-1.80000000000000000e+02</item>
+													<item>2.77777777777777778e-04</item>
+													<item>0.00000000000000000e+00</item>
+													<item>8.30000000000000000e+01</item>
+													<item>0.00000000000000000e+00</item>
+													<item>-2.77777777777777778e-04</item>
+												</data>
+											</param>
+										</map_info>
+										<outside_dem_is_error>0</outside_dem_is_error>
+										<naif_code>399</naif_code>
+									</DemMapInfo>
+									<f class_id="18" tracking_level="0" version="1">
+										<px class_id="19" tracking_level="1" version="0" object_id="_7">
+											<VicarCartLabMultifile class_id="20" tracking_level="1" version="0" object_id="_8">
+												<CartLabMultifile class_id="21" tracking_level="0" version="0">
+													<dirbase>/opt/afids/data/srtmL2_filled</dirbase>
+													<number_line_per_tile>-1</number_line_per_tile>
+													<number_sample_per_tile>-1</number_sample_per_tile>
+													<number_tile_each_file>4</number_tile_each_file>
+													<file_name_end>_L2.hlf</file_name_end>
+													<lat_ref>0</lat_ref>
+													<lon_ref>100</lon_ref>
+													<mi_ref object_id="_9">
+														<conv>
+															<px class_id_reference="16" object_id_reference="_6"></px>
+														</conv>
+														<number_x_pixel>3601</number_x_pixel>
+														<number_y_pixel>3601</number_y_pixel>
+														<param>
+															<size>6</size>
+															<data>
+																<item>1.00000000000000000e+02</item>
+																<item>2.77777777777777778e-04</item>
+																<item>0.00000000000000000e+00</item>
+																<item>1.00000000000000000e+00</item>
+																<item>0.00000000000000000e+00</item>
+																<item>-2.77777777777777778e-04</item>
+															</data>
+														</param>
+													</mi_ref>
+													<no_coverage_is_error>0</no_coverage_is_error>
+													<no_coverage_fill_value>0</no_coverage_fill_value>
+													<number_file>4</number_file>
+												</CartLabMultifile>
+												<favor_memory_mapped>1</favor_memory_mapped>
+												<force_area_pixel>1</force_area_pixel>
+											</VicarCartLabMultifile>
+										</px>
+									</f>
+								</px>
+							</dem>
+							<image class_id="22" tracking_level="0" version="1">
+								<px class_id="-1"></px>
+							</image>
+							<image_mb class_id="23" tracking_level="0" version="1">
+								<px class_id="-1"></px>
+							</image_mb>
+							<title></title>
+							<image_mask class_id="24" tracking_level="0" version="1">
+								<px class_id="25" class_name="GeoCal::CombinedImageMask" tracking_level="1" version="0" object_id="_10">
+									<mask_list class_id="26" tracking_level="0" version="0">
+										<count>0</count>
+										<item_version>1</item_version>
+									</mask_list>
+								</px>
+							</image_mask>
+							<ground_mask class_id="27" tracking_level="0" version="1">
+								<px class_id="28" class_name="GeoCal::CombinedGroundMask" tracking_level="1" version="0" object_id="_11">
+									<mask_list class_id="29" tracking_level="0" version="0">
+										<count>0</count>
+										<item_version>1</item_version>
+									</mask_list>
+								</px>
+							</ground_mask>
+						</ImageGroundConnection>
+						<b>3</b>
+						<res>3.00000000000000000e+01</res>
+						<max_h>9.00000000000000000e+03</max_h>
+						<orb class_id="30" tracking_level="0" version="1">
+							<px class_id="31" class_name="GeoCal::OrbitScCoorOffset" tracking_level="1" version="0" object_id="_12">
+								<Orbit class_id="32" tracking_level="0" version="0">
+									<min_tm class_id="33" tracking_level="1" version="0" object_id="_13">
+										<time_pgs>-1.00982161800000000e+09</time_pgs>
+									</min_tm>
+									<max_tm object_id="_14">
+										<time_pgs>2.52676368006000000e+11</time_pgs>
+									</max_tm>
+								</Orbit>
+								<orbit_underlying>
+									<px class_id="34" class_name="GeoCal::OrbitTimeShift" tracking_level="1" version="0" object_id="_15">
+										<Orbit>
+											<min_tm object_id="_16">
+												<time_pgs>-1.00982161800000000e+09</time_pgs>
+											</min_tm>
+											<max_tm object_id="_17">
+												<time_pgs>2.52676368006000000e+11</time_pgs>
+											</max_tm>
+										</Orbit>
+										<orbit_original>
+											<px class_id="35" class_name="GeoCal::SpiceOrbit" tracking_level="1" version="0" object_id="_18">
+												<Orbit>
+													<min_tm object_id="_19">
+														<time_pgs>-1.00984321800000000e+09</time_pgs>
+													</min_tm>
+													<max_tm object_id="_20">
+														<time_pgs>2.52676368006000000e+11</time_pgs>
+													</max_tm>
+												</Orbit>
+												<body_id>399</body_id>
+												<satellite_id>25544</satellite_id>
+												<kernel_name>iss_spice/iss_2015.bsp</kernel_name>
+											</px>
+										</orbit_original>
+										<time_shift>2.16000000000000000e+04</time_shift>
+									</px>
+								</orbit_underlying>
+								<pos_off>
+									<size>3</size>
+									<data>
+										<item>1.08638999999999992e+01</item>
+										<item>-1.92647000000000013e+01</item>
+										<item>7.02210000000000001e+00</item>
+									</data>
+								</pos_off>
+							</px>
+						</orb>
+						<tt class_id="36" tracking_level="0" version="1">
+							<px class_id="37" class_name="Ecostress::EcostressTimeTable" tracking_level="1" version="0" object_id="_21">
+								<TimeTable class_id="38" tracking_level="0" version="0"></TimeTable>
+								<averaging_done>0</averaging_done>
+								<tstart_scan class_id="39" tracking_level="0" version="0">
+									<count>44</count>
+									<item_version>0</item_version>
+									<item object_id="_22">
+										<time_pgs>6.96285779230216861e+08</time_pgs>
+									</item>
+									<item object_id="_23">
+										<time_pgs>6.96285780411216855e+08</time_pgs>
+									</item>
+									<item object_id="_24">
+										<time_pgs>6.96285781592216849e+08</time_pgs>
+									</item>
+									<item object_id="_25">
+										<time_pgs>6.96285782773216844e+08</time_pgs>
+									</item>
+									<item object_id="_26">
+										<time_pgs>6.96285783954216838e+08</time_pgs>
+									</item>
+									<item object_id="_27">
+										<time_pgs>6.96285785135216832e+08</time_pgs>
+									</item>
+									<item object_id="_28">
+										<time_pgs>6.96285786316216826e+08</time_pgs>
+									</item>
+									<item object_id="_29">
+										<time_pgs>6.96285787497216821e+08</time_pgs>
+									</item>
+									<item object_id="_30">
+										<time_pgs>6.96285788678216815e+08</time_pgs>
+									</item>
+									<item object_id="_31">
+										<time_pgs>6.96285789859216809e+08</time_pgs>
+									</item>
+									<item object_id="_32">
+										<time_pgs>6.96285791040216804e+08</time_pgs>
+									</item>
+									<item object_id="_33">
+										<time_pgs>6.96285792221216917e+08</time_pgs>
+									</item>
+									<item object_id="_34">
+										<time_pgs>6.96285793402216911e+08</time_pgs>
+									</item>
+									<item object_id="_35">
+										<time_pgs>6.96285794583216906e+08</time_pgs>
+									</item>
+									<item object_id="_36">
+										<time_pgs>6.96285795764216900e+08</time_pgs>
+									</item>
+									<item object_id="_37">
+										<time_pgs>6.96285796945216894e+08</time_pgs>
+									</item>
+									<item object_id="_38">
+										<time_pgs>6.96285798126216888e+08</time_pgs>
+									</item>
+									<item object_id="_39">
+										<time_pgs>6.96285799307216883e+08</time_pgs>
+									</item>
+									<item object_id="_40">
+										<time_pgs>6.96285800488216877e+08</time_pgs>
+									</item>
+									<item object_id="_41">
+										<time_pgs>6.96285801669216871e+08</time_pgs>
+									</item>
+									<item object_id="_42">
+										<time_pgs>6.96285802850216866e+08</time_pgs>
+									</item>
+									<item object_id="_43">
+										<time_pgs>6.96285804031216860e+08</time_pgs>
+									</item>
+									<item object_id="_44">
+										<time_pgs>6.96285805212216854e+08</time_pgs>
+									</item>
+									<item object_id="_45">
+										<time_pgs>6.96285806393216848e+08</time_pgs>
+									</item>
+									<item object_id="_46">
+										<time_pgs>6.96285807574216843e+08</time_pgs>
+									</item>
+									<item object_id="_47">
+										<time_pgs>6.96285808755216837e+08</time_pgs>
+									</item>
+									<item object_id="_48">
+										<time_pgs>6.96285809936216831e+08</time_pgs>
+									</item>
+									<item object_id="_49">
+										<time_pgs>6.96285811117216825e+08</time_pgs>
+									</item>
+									<item object_id="_50">
+										<time_pgs>6.96285812298216820e+08</time_pgs>
+									</item>
+									<item object_id="_51">
+										<time_pgs>6.96285813479216814e+08</time_pgs>
+									</item>
+									<item object_id="_52">
+										<time_pgs>6.96285814660216808e+08</time_pgs>
+									</item>
+									<item object_id="_53">
+										<time_pgs>6.96285815841216803e+08</time_pgs>
+									</item>
+									<item object_id="_54">
+										<time_pgs>6.96285817022216916e+08</time_pgs>
+									</item>
+									<item object_id="_55">
+										<time_pgs>6.96285818203216910e+08</time_pgs>
+									</item>
+									<item object_id="_56">
+										<time_pgs>6.96285819384216905e+08</time_pgs>
+									</item>
+									<item object_id="_57">
+										<time_pgs>6.96285820565216899e+08</time_pgs>
+									</item>
+									<item object_id="_58">
+										<time_pgs>6.96285821746216893e+08</time_pgs>
+									</item>
+									<item object_id="_59">
+										<time_pgs>6.96285822927216887e+08</time_pgs>
+									</item>
+									<item object_id="_60">
+										<time_pgs>6.96285824108216882e+08</time_pgs>
+									</item>
+									<item object_id="_61">
+										<time_pgs>6.96285825289216876e+08</time_pgs>
+									</item>
+									<item object_id="_62">
+										<time_pgs>6.96285826470216870e+08</time_pgs>
+									</item>
+									<item object_id="_63">
+										<time_pgs>6.96285827651216865e+08</time_pgs>
+									</item>
+									<item object_id="_64">
+										<time_pgs>6.96285828832216859e+08</time_pgs>
+									</item>
+									<item object_id="_65">
+										<time_pgs>6.96285830013216853e+08</time_pgs>
+									</item>
+								</tstart_scan>
+							</px>
+						</tt>
+						<cam class_id="40" tracking_level="0" version="1">
+							<px class_id="41" class_name="Ecostress::EcostressCamera" tracking_level="1" version="0" object_id="_66">
+								<QuaternionCamera class_id="42" tracking_level="1" version="0" object_id="_67">
+									<focal_length class_id="43" tracking_level="0" version="0">
+										<val>4.27500000000000000e+02</val>
+										<grad>
+											<size>0</size>
+										</grad>
+									</focal_length>
+									<number_band>6</number_band>
+									<number_line>256</number_line>
+									<number_sample>1</number_sample>
+									<line_pitch>
+										<val>4.00000000000000008e-02</val>
+										<grad>
+											<size>0</size>
+										</grad>
+									</line_pitch>
+									<sample_pitch>
+										<val>4.00000000000000008e-02</val>
+										<grad>
+											<size>0</size>
+										</grad>
+									</sample_pitch>
+									<principal_point class_id="44" tracking_level="0" version="0">
+										<count>6</count>
+										<item_version>0</item_version>
+										<item class_id="45" tracking_level="1" version="0" object_id="_68">
+											<line>
+												<val>1.28000000000000000e+02</val>
+												<grad>
+													<size>0</size>
+												</grad>
+											</line>
+											<sample>
+												<val>8.00000000000000000e+01</val>
+												<grad>
+													<size>0</size>
+												</grad>
+											</sample>
+										</item>
+										<item object_id="_69">
+											<line>
+												<val>1.28000000000000000e+02</val>
+												<grad>
+													<size>0</size>
+												</grad>
+											</line>
+											<sample>
+												<val>1.60000000000000000e+01</val>
+												<grad>
+													<size>0</size>
+												</grad>
+											</sample>
+										</item>
+										<item object_id="_70">
+											<line>
+												<val>1.28000000000000000e+02</val>
+												<grad>
+													<size>0</size>
+												</grad>
+											</line>
+											<sample>
+												<val>-1.60000000000000000e+01</val>
+												<grad>
+													<size>0</size>
+												</grad>
+											</sample>
+										</item>
+										<item object_id="_71">
+											<line>
+												<val>1.28000000000000000e+02</val>
+												<grad>
+													<size>0</size>
+												</grad>
+											</line>
+											<sample>
+												<val>-8.00000000000000000e+01</val>
+												<grad>
+													<size>0</size>
+												</grad>
+											</sample>
+										</item>
+										<item object_id="_72">
+											<line>
+												<val>1.28000000000000000e+02</val>
+												<grad>
+													<size>0</size>
+												</grad>
+											</line>
+											<sample>
+												<val>-4.80000000000000000e+01</val>
+												<grad>
+													<size>0</size>
+												</grad>
+											</sample>
+										</item>
+										<item object_id="_73">
+											<line>
+												<val>1.28000000000000000e+02</val>
+												<grad>
+													<size>0</size>
+												</grad>
+											</line>
+											<sample>
+												<val>4.80000000000000000e+01</val>
+												<grad>
+													<size>0</size>
+												</grad>
+											</sample>
+										</item>
+									</principal_point>
+									<frame_to_sc class_id="46" tracking_level="0" version="0">
+										<q1>
+											<val>0.00000000000000000e+00</val>
+											<grad>
+												<size>0</size>
+											</grad>
+										</q1>
+										<q2>
+											<val>0.00000000000000000e+00</val>
+											<grad>
+												<size>0</size>
+											</grad>
+										</q2>
+										<q3>
+											<val>0.00000000000000000e+00</val>
+											<grad>
+												<size>0</size>
+											</grad>
+										</q3>
+										<q4>
+											<val>1.00000000000000000e+00</val>
+											<grad>
+												<size>0</size>
+											</grad>
+										</q4>
+									</frame_to_sc>
+									<frame_convention>0</frame_convention>
+									<line_direction>1</line_direction>
+									<sample_direction>1</sample_direction>
+									<parameter_mask class_id="47" tracking_level="0" version="0">
+										<size>18</size>
+										<data>
+											<item>1</item>
+											<item>1</item>
+											<item>1</item>
+											<item>1</item>
+											<item>1</item>
+											<item>1</item>
+											<item>1</item>
+											<item>1</item>
+											<item>1</item>
+											<item>1</item>
+											<item>1</item>
+											<item>1</item>
+											<item>1</item>
+											<item>1</item>
+											<item>1</item>
+											<item>1</item>
+											<item>1</item>
+											<item>1</item>
+										</data>
+									</parameter_mask>
+								</QuaternionCamera>
+								<paraxial_transform class_id="48" tracking_level="0" version="1">
+									<px class_id="49" tracking_level="1" version="0" object_id="_74">
+										<par_to_real class_id="50" tracking_level="0" version="0">
+											<rows>2</rows>
+											<cols>10</cols>
+											<data>
+												<item>4.52292421932940509e-16</item>
+												<item>9.99991316898324323e-01</item>
+												<item>-3.59845941600928029e-15</item>
+												<item>1.11022302462515654e-16</item>
+												<item>-4.15947093957343920e-03</item>
+												<item>0.00000000000000000e+00</item>
+												<item>1.14531673546358626e-04</item>
+												<item>-1.31838986107212206e-16</item>
+												<item>1.16212069286368084e-04</item>
+												<item>-8.32667279335296459e-17</item>
+												<item>2.59082675822808087e-04</item>
+												<item>-2.75474087985116967e-15</item>
+												<item>9.99988289480687076e-01</item>
+												<item>-2.20625641553631995e-03</item>
+												<item>1.01089980917757854e-16</item>
+												<item>-6.05524781186700910e-03</item>
+												<item>1.37048607667571394e-16</item>
+												<item>1.25541930836659606e-04</item>
+												<item>-1.11703177527658761e-16</item>
+												<item>1.25553877821248507e-04</item>
+											</data>
+										</par_to_real>
+										<real_to_par>
+											<rows>2</rows>
+											<cols>10</cols>
+											<data>
+												<item>-1.78427584270136881e-15</item>
+												<item>9.99976797839773890e-01</item>
+												<item>2.97505076130022417e-16</item>
+												<item>1.11022302462515654e-16</item>
+												<item>4.07292638491784341e-03</item>
+												<item>-2.22044604925031308e-16</item>
+												<item>-1.03344616967096205e-04</item>
+												<item>-5.55111512312578270e-17</item>
+												<item>-7.20043105942336789e-05</item>
+												<item>5.55111512312578270e-17</item>
+												<item>3.42459348963218113e-04</item>
+												<item>8.41916868252884365e-17</item>
+												<item>9.99974154695170259e-01</item>
+												<item>2.15248429678769823e-03</item>
+												<item>-3.19838983410548441e-17</item>
+												<item>5.95268202554572433e-03</item>
+												<item>1.47113912503225122e-18</item>
+												<item>-7.87885639342556621e-05</item>
+												<item>-3.97520899884323224e-18</item>
+												<item>-5.11824942531515886e-05</item>
+											</data>
+										</real_to_par>
+									</px>
+								</paraxial_transform>
+							</px>
+						</cam>
+						<sm class_id="51" tracking_level="0" version="1">
+							<px class_id="52" tracking_level="1" version="0" object_id="_75">
+								<scan_start>-2.55000000000000000e+01</scan_start>
+								<scan_end>2.55000000000000000e+01</scan_end>
+								<number_sample>5400</number_sample>
+							</px>
+						</sm>
+					</px>
+				</item>
+				<item>
+					<px class_id_reference="7" object_id="_76">
+						<ImageGroundConnection>
+							<dem>
+								<px class_id_reference="10" object_id_reference="_3"></px>
+							</dem>
+							<image>
+								<px class_id="-1"></px>
+							</image>
+							<image_mb>
+								<px class_id="-1"></px>
+							</image_mb>
+							<title></title>
+							<image_mask>
+								<px class_id_reference="25" object_id="_77">
+									<mask_list>
+										<count>0</count>
+										<item_version>1</item_version>
+									</mask_list>
+								</px>
+							</image_mask>
+							<ground_mask>
+								<px class_id_reference="28" object_id="_78">
+									<mask_list>
+										<count>0</count>
+										<item_version>1</item_version>
+									</mask_list>
+								</px>
+							</ground_mask>
+						</ImageGroundConnection>
+						<b>3</b>
+						<res>3.00000000000000000e+01</res>
+						<max_h>9.00000000000000000e+03</max_h>
+						<orb>
+							<px class_id_reference="31" object_id_reference="_12"></px>
+						</orb>
+						<tt>
+							<px class_id_reference="37" object_id="_79">
+								<TimeTable></TimeTable>
+								<averaging_done>0</averaging_done>
+								<tstart_scan>
+									<count>44</count>
+									<item_version>0</item_version>
+									<item object_id="_80">
+										<time_pgs>6.96285834428490758e+08</time_pgs>
+									</item>
+									<item object_id="_81">
+										<time_pgs>6.96285835609490752e+08</time_pgs>
+									</item>
+									<item object_id="_82">
+										<time_pgs>6.96285836790490746e+08</time_pgs>
+									</item>
+									<item object_id="_83">
+										<time_pgs>6.96285837971490741e+08</time_pgs>
+									</item>
+									<item object_id="_84">
+										<time_pgs>6.96285839152490735e+08</time_pgs>
+									</item>
+									<item object_id="_85">
+										<time_pgs>6.96285840333490729e+08</time_pgs>
+									</item>
+									<item object_id="_86">
+										<time_pgs>6.96285841514490724e+08</time_pgs>
+									</item>
+									<item object_id="_87">
+										<time_pgs>6.96285842695490718e+08</time_pgs>
+									</item>
+									<item object_id="_88">
+										<time_pgs>6.96285843876490712e+08</time_pgs>
+									</item>
+									<item object_id="_89">
+										<time_pgs>6.96285845057490706e+08</time_pgs>
+									</item>
+									<item object_id="_90">
+										<time_pgs>6.96285846238490701e+08</time_pgs>
+									</item>
+									<item object_id="_91">
+										<time_pgs>6.96285847419490814e+08</time_pgs>
+									</item>
+									<item object_id="_92">
+										<time_pgs>6.96285848600490808e+08</time_pgs>
+									</item>
+									<item object_id="_93">
+										<time_pgs>6.96285849781490803e+08</time_pgs>
+									</item>
+									<item object_id="_94">
+										<time_pgs>6.96285850962490797e+08</time_pgs>
+									</item>
+									<item object_id="_95">
+										<time_pgs>6.96285852143490791e+08</time_pgs>
+									</item>
+									<item object_id="_96">
+										<time_pgs>6.96285853324490786e+08</time_pgs>
+									</item>
+									<item object_id="_97">
+										<time_pgs>6.96285854505490780e+08</time_pgs>
+									</item>
+									<item object_id="_98">
+										<time_pgs>6.96285855686490774e+08</time_pgs>
+									</item>
+									<item object_id="_99">
+										<time_pgs>6.96285856867490768e+08</time_pgs>
+									</item>
+									<item object_id="_100">
+										<time_pgs>6.96285858048490763e+08</time_pgs>
+									</item>
+									<item object_id="_101">
+										<time_pgs>6.96285859229490757e+08</time_pgs>
+									</item>
+									<item object_id="_102">
+										<time_pgs>6.96285860410490751e+08</time_pgs>
+									</item>
+									<item object_id="_103">
+										<time_pgs>6.96285861591490746e+08</time_pgs>
+									</item>
+									<item object_id="_104">
+										<time_pgs>6.96285862772490740e+08</time_pgs>
+									</item>
+									<item object_id="_105">
+										<time_pgs>6.96285863953490734e+08</time_pgs>
+									</item>
+									<item object_id="_106">
+										<time_pgs>6.96285865134490728e+08</time_pgs>
+									</item>
+									<item object_id="_107">
+										<time_pgs>6.96285866315490723e+08</time_pgs>
+									</item>
+									<item object_id="_108">
+										<time_pgs>6.96285867496490717e+08</time_pgs>
+									</item>
+									<item object_id="_109">
+										<time_pgs>6.96285868677490711e+08</time_pgs>
+									</item>
+									<item object_id="_110">
+										<time_pgs>6.96285869858490705e+08</time_pgs>
+									</item>
+									<item object_id="_111">
+										<time_pgs>6.96285871039490700e+08</time_pgs>
+									</item>
+									<item object_id="_112">
+										<time_pgs>6.96285872220490813e+08</time_pgs>
+									</item>
+									<item object_id="_113">
+										<time_pgs>6.96285873401490808e+08</time_pgs>
+									</item>
+									<item object_id="_114">
+										<time_pgs>6.96285874582490802e+08</time_pgs>
+									</item>
+									<item object_id="_115">
+										<time_pgs>6.96285875763490796e+08</time_pgs>
+									</item>
+									<item object_id="_116">
+										<time_pgs>6.96285876944490790e+08</time_pgs>
+									</item>
+									<item object_id="_117">
+										<time_pgs>6.96285878125490785e+08</time_pgs>
+									</item>
+									<item object_id="_118">
+										<time_pgs>6.96285879306490779e+08</time_pgs>
+									</item>
+									<item object_id="_119">
+										<time_pgs>6.96285880487490773e+08</time_pgs>
+									</item>
+									<item object_id="_120">
+										<time_pgs>6.96285881668490767e+08</time_pgs>
+									</item>
+									<item object_id="_121">
+										<time_pgs>6.96285882849490762e+08</time_pgs>
+									</item>
+									<item object_id="_122">
+										<time_pgs>6.96285884030490756e+08</time_pgs>
+									</item>
+									<item object_id="_123">
+										<time_pgs>6.96285885211490750e+08</time_pgs>
+									</item>
+								</tstart_scan>
+							</px>
+						</tt>
+						<cam>
+							<px class_id_reference="41" object_id_reference="_66"></px>
+						</cam>
+						<sm>
+							<px class_id_reference="52" object_id_reference="_75"></px>
+						</sm>
+					</px>
+				</item>
+				<item>
+					<px class_id_reference="7" object_id="_124">
+						<ImageGroundConnection>
+							<dem>
+								<px class_id_reference="10" object_id_reference="_3"></px>
+							</dem>
+							<image>
+								<px class_id="-1"></px>
+							</image>
+							<image_mb>
+								<px class_id="-1"></px>
+							</image_mb>
+							<title></title>
+							<image_mask>
+								<px class_id_reference="25" object_id="_125">
+									<mask_list>
+										<count>0</count>
+										<item_version>1</item_version>
+									</mask_list>
+								</px>
+							</image_mask>
+							<ground_mask>
+								<px class_id_reference="28" object_id="_126">
+									<mask_list>
+										<count>0</count>
+										<item_version>1</item_version>
+									</mask_list>
+								</px>
+							</ground_mask>
+						</ImageGroundConnection>
+						<b>3</b>
+						<res>3.00000000000000000e+01</res>
+						<max_h>9.00000000000000000e+03</max_h>
+						<orb>
+							<px class_id_reference="31" object_id_reference="_12"></px>
+						</orb>
+						<tt>
+							<px class_id_reference="37" object_id="_127">
+								<TimeTable></TimeTable>
+								<averaging_done>0</averaging_done>
+								<tstart_scan>
+									<count>44</count>
+									<item_version>0</item_version>
+									<item object_id="_128">
+										<time_pgs>6.96285889626764536e+08</time_pgs>
+									</item>
+									<item object_id="_129">
+										<time_pgs>6.96285890807764530e+08</time_pgs>
+									</item>
+									<item object_id="_130">
+										<time_pgs>6.96285891988764524e+08</time_pgs>
+									</item>
+									<item object_id="_131">
+										<time_pgs>6.96285893169764519e+08</time_pgs>
+									</item>
+									<item object_id="_132">
+										<time_pgs>6.96285894350764513e+08</time_pgs>
+									</item>
+									<item object_id="_133">
+										<time_pgs>6.96285895531764507e+08</time_pgs>
+									</item>
+									<item object_id="_134">
+										<time_pgs>6.96285896712764502e+08</time_pgs>
+									</item>
+									<item object_id="_135">
+										<time_pgs>6.96285897893764496e+08</time_pgs>
+									</item>
+									<item object_id="_136">
+										<time_pgs>6.96285899074764490e+08</time_pgs>
+									</item>
+									<item object_id="_137">
+										<time_pgs>6.96285900255764484e+08</time_pgs>
+									</item>
+									<item object_id="_138">
+										<time_pgs>6.96285901436764479e+08</time_pgs>
+									</item>
+									<item object_id="_139">
+										<time_pgs>6.96285902617764592e+08</time_pgs>
+									</item>
+									<item object_id="_140">
+										<time_pgs>6.96285903798764586e+08</time_pgs>
+									</item>
+									<item object_id="_141">
+										<time_pgs>6.96285904979764581e+08</time_pgs>
+									</item>
+									<item object_id="_142">
+										<time_pgs>6.96285906160764575e+08</time_pgs>
+									</item>
+									<item object_id="_143">
+										<time_pgs>6.96285907341764569e+08</time_pgs>
+									</item>
+									<item object_id="_144">
+										<time_pgs>6.96285908522764564e+08</time_pgs>
+									</item>
+									<item object_id="_145">
+										<time_pgs>6.96285909703764558e+08</time_pgs>
+									</item>
+									<item object_id="_146">
+										<time_pgs>6.96285910884764552e+08</time_pgs>
+									</item>
+									<item object_id="_147">
+										<time_pgs>6.96285912065764546e+08</time_pgs>
+									</item>
+									<item object_id="_148">
+										<time_pgs>6.96285913246764541e+08</time_pgs>
+									</item>
+									<item object_id="_149">
+										<time_pgs>6.96285914427764535e+08</time_pgs>
+									</item>
+									<item object_id="_150">
+										<time_pgs>6.96285915608764529e+08</time_pgs>
+									</item>
+									<item object_id="_151">
+										<time_pgs>6.96285916789764524e+08</time_pgs>
+									</item>
+									<item object_id="_152">
+										<time_pgs>6.96285917970764518e+08</time_pgs>
+									</item>
+									<item object_id="_153">
+										<time_pgs>6.96285919151764512e+08</time_pgs>
+									</item>
+									<item object_id="_154">
+										<time_pgs>6.96285920332764506e+08</time_pgs>
+									</item>
+									<item object_id="_155">
+										<time_pgs>6.96285921513764501e+08</time_pgs>
+									</item>
+									<item object_id="_156">
+										<time_pgs>6.96285922694764495e+08</time_pgs>
+									</item>
+									<item object_id="_157">
+										<time_pgs>6.96285923875764489e+08</time_pgs>
+									</item>
+									<item object_id="_158">
+										<time_pgs>6.96285925056764483e+08</time_pgs>
+									</item>
+									<item object_id="_159">
+										<time_pgs>6.96285926237764478e+08</time_pgs>
+									</item>
+									<item object_id="_160">
+										<time_pgs>6.96285927418764591e+08</time_pgs>
+									</item>
+									<item object_id="_161">
+										<time_pgs>6.96285928599764585e+08</time_pgs>
+									</item>
+									<item object_id="_162">
+										<time_pgs>6.96285929780764580e+08</time_pgs>
+									</item>
+									<item object_id="_163">
+										<time_pgs>6.96285930961764574e+08</time_pgs>
+									</item>
+									<item object_id="_164">
+										<time_pgs>6.96285932142764568e+08</time_pgs>
+									</item>
+									<item object_id="_165">
+										<time_pgs>6.96285933323764563e+08</time_pgs>
+									</item>
+									<item object_id="_166">
+										<time_pgs>6.96285934504764557e+08</time_pgs>
+									</item>
+									<item object_id="_167">
+										<time_pgs>6.96285935685764551e+08</time_pgs>
+									</item>
+									<item object_id="_168">
+										<time_pgs>6.96285936866764545e+08</time_pgs>
+									</item>
+									<item object_id="_169">
+										<time_pgs>6.96285938047764540e+08</time_pgs>
+									</item>
+									<item object_id="_170">
+										<time_pgs>6.96285939228764534e+08</time_pgs>
+									</item>
+									<item object_id="_171">
+										<time_pgs>6.96285940409764528e+08</time_pgs>
+									</item>
+								</tstart_scan>
+							</px>
+						</tt>
+						<cam>
+							<px class_id_reference="41" object_id_reference="_66"></px>
+						</cam>
+						<sm>
+							<px class_id_reference="52" object_id_reference="_75"></px>
+						</sm>
+					</px>
+				</item>
+			</obj_list>
+		</WithParameterNested>
+		<igc_list class_id="53" tracking_level="0" version="0">
+			<count>3</count>
+			<item_version>1</item_version>
+			<item class_id="54" tracking_level="0" version="1">
+				<px class_id_reference="7" object_id_reference="_2"></px>
+			</item>
+			<item>
+				<px class_id_reference="7" object_id_reference="_76"></px>
+			</item>
+			<item>
+				<px class_id_reference="7" object_id_reference="_124"></px>
+			</item>
+		</igc_list>
+		<assume_igc_independent>1</assume_igc_independent>
+	</px>
+</geocal_object>
+</boost_serialization>
+

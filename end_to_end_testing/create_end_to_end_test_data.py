@@ -7,13 +7,13 @@ from multiprocessing import Pool
 # Often during development of test data we want to only regenerate
 # a subset of the files, using the existing test data instead. Here we
 # can just turn each thing on or off. To regenerate everything, this
-# should all be True
-create_l1a_pix = True
-create_l1a_bb = True
-create_l1a_raw_pix = True
-create_l1a_raw_att = True
-create_l1a_eng = True
-create_l0b = True
+# should all be False
+create_l1a_pix = False
+create_l1a_bb = False
+create_l1a_raw_pix = False
+create_l1a_raw_att = False
+create_l1a_eng = False
+create_l0b = False
 # For testing band to band, useful to use the same radiance data for all
 # bands.
 use_swir_all_band = False
@@ -100,11 +100,13 @@ toff = 5632 * tspace / 2
 tlen = 5632 * tspace
 scene_files = []
 pool = Pool(20)
+igc_arr = IgcArray([])
 for s in range(nscene[pass_index]):
     tstart = pass_time[pass_index] - toff + tspace + \
              s * tlen + time_shift[pass_index]
     tt = EcostressTimeTable(tstart, False)
     igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
+    igc_arr.add_igc(igc)
     # Save this for use in making the L0 and orbit based file name
     if(s == 0):
         start_time = tt.min_time
@@ -136,6 +138,8 @@ for s in range(nscene[pass_index]):
         l1a_raw_pix_sim.create_file(l1a_raw_pix_fname)
     scene_files.append([s+1, l1a_raw_pix_fname, l1a_bb_fname,
                         orbit_num[pass_index], tt.min_time, tt.max_time])
+
+write_shelve("igccol_truth.xml", igc_arr)
     
 l1a_raw_att_fname = \
    ecostress_file_name("L1A_RAW_ATT", orbit_num[pass_index], None, start_time,
