@@ -2786,6 +2786,9 @@ end-to-end-check: installcheck-am
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" /Geolocation/latitude ::: ./end_to_end_test_l1b_geo/*L1B_GEO*.h5
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" /Geolocation/longitude ::: ./end_to_end_test_l1b_geo/*L1B_GEO*.h5
 
+temp:
+	source $(prefix)/setup_ecostress.sh && $(PYTHON) $(srcdir)/end_to_end_testing/diff_end_to_end_sba.py
+
 end-to-end-check-glynn: installcheck-am
 	-rm -r ./end_to_end_test_glynn_l0_input
 	-rm -r ./end_to_end_test_glynn_l1a_raw
