@@ -4,6 +4,7 @@
 import geocal
 import ecostress
 import os
+import subprocess
 
 version = "1.0"
 usage='''Usage:
@@ -31,6 +32,10 @@ not do this but you can specify the option to request this.
 Options:
   -h --help         
        Print this message
+
+  --erdas
+       In addition to producing vicar format, convert the output to erdas
+       imagine file.
 
   --exactly-match-map-info
        Default behavior is to use the resolution of the supplied or default
@@ -94,6 +99,7 @@ lon = geocal.GdalRasterImage("HDF5:\"%s\"://Geolocation/longitude" %
 res = ecostress.Resampler(lat, lon, mi, args.number_subpixel,
                           args.exactly_match_map_info)
 if(args.all_band or args.all_band_real):
+    flist = []
     data = geocal.GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" %
                                   args.l1b_rad_file)
     print("Doing SWIR band")
@@ -103,11 +109,19 @@ if(args.all_band or args.all_band_real):
                                       (args.l1b_rad_file, b+1))
         print("Doing band %d" % (b+1))
         if(args.all_band_real):
-            res.resample_field("%s_b%d.real" % (args.output_base, b+1), data,
-                               1.0, "REAL", args.negative_to_zero)
+            fname = "%s_b%d.real" % (args.output_base, b+1)
+            res.resample_field(fname, data, 1.0, "REAL", args.negative_to_zero)
+            flist.append(fname)
         else:
-            res.resample_field("%s_b%d.img" % (args.output_base, b+1), data,
-                               100.0, "HALF", True)
+            fname = "%s_b%d.img" % (args.output_base, b+1)
+            res.resample_field(fname, data, 100.0, "HALF", True)
+            flist.append(fname)
+    flist.append(args.output_base + "_swir.img")
+    if(args.erdas):
+        cmd = ["gdal_to_erdas", "--multiple-band",
+               args.output_base + "erdas.img"]
+        cmd.extend(flist)
+        subprocess.run(cmd)
 else:
     data = geocal.GdalRasterImage("HDF5:\"%s\":/%s" %
                                   (args.input_file, args.field_name))
