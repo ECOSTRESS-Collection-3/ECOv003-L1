@@ -27,7 +27,7 @@ class L1aPixSimulate(object):
         print("Doing band %d" % (band + 1))
         self.igc.band = band
         # Don't bother averaging data, just use the center pixel. Since we
-        # are simulated, this should be find and is much faster.
+        # are simulated, this should be fine and is much faster.
         avg_fact = 1
         self.sim_rad = SimulatedRadiance(GroundCoordinateArray(self.igc),
                                          self.surface_image[band], avg_fact)
@@ -48,9 +48,13 @@ class L1aPixSimulate(object):
             f = h5py.File(self.gain_fname, "r")
             gain = f["Gain/b%d_gain" % band][:]
             offset = f["Offset/b%d_offset" % band][:]
+            # Remove bad pixels in gain/offset - we only want to introduce
+            # that based on the data, not on our current gain/offset
+            for i in range(256):
+                s = slice(i,None,256)
+                gain[s,:] = gain[s,:].max()
+                offset[s,:] = offset[s,:].max()
             r = (r - offset) / gain
-            r[(gain <= fill_value_threshold) |
-              (offset < fill_value_threshold)] = 0
         # We don't record this anywhere in the HDF file that I can easily
         # find. But we want to add the dark current subtraction back in so
         # we get the original DNs out.
