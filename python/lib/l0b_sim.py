@@ -281,13 +281,25 @@ class L0BSimulate(object):
     m = WriteStandardMetadata(l0b_fd, product_specfic_group ="L0BMetadata",
         proc_lev_desc = 'Level 0B Data Parameters',
         pge_name="L0B",
-        build_id="0.0", pge_version="0.0", level0_file=True )
+        build_id="0300", pge_version="3.00", level0_file=True )
     m.set("RangeBeginningDate", l1e["/StandardMetadata/RangeBeginningDate"][()])
     m.set("RangeBeginningTime", l1e["/StandardMetadata/RangeBeginningTime"][()])
     m.set("RangeEndingDate", l1e["/StandardMetadata/RangeEndingDate"][()])
     m.set("RangeEndingTime", l1e["/StandardMetadata/RangeEndingTime"][()])
     m.set("StartOrbitNumber", l1e["/StandardMetadata/StartOrbitNumber"][()])
     m.set("StopOrbitNumber", l1e["/StandardMetadata/StopOrbitNumber"][()])
+    m.set("ImageLines", 11264)
+    m.set("ProcessingLevelID", "L0B")
+    m.set("ProductionDateTime", "2018-05-22T12:00:00.OOOZ")
+    m.set("ProductionLocation", "ECOSTRESS Science Computing Facility")
+    m.set("SceneID", "NA")
+    m.set("ShortName", "L0b")
+    t = [self.l1a_raw_att_fname, self.l1a_eng_fname]
+    for scn in self.scene_files:
+      scene, l1a_raw_pix_fname, l1a_bb_fname, onum, tstart, tend = scn
+      t.append(l1a_raw_pix_fname)
+      t.append(l1a_bb_fname)
+    m.set_input_pointer(t)
     m.write()
     l0b_fd.flush()
 

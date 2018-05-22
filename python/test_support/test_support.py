@@ -199,6 +199,11 @@ def igc_hres(unit_test_data, test_data):
 def igc_btob(unit_test_data, test_data):
     '''Like igc_hres, but using test data better suited for band to band 
     testing. We have the SWIR band for each of the bands'''
+    # This was used initially to test band to band. It isn't worth keeping this
+    # test data up to date as we have modified things. so go ahead and
+    # just fail. We leave this here to mark what testing was done. If we do
+    # need to regenerate the test data for some issue, we can.
+    raise RuntimeError("No longer supported")
     if(not have_swig):
         raise RuntimeError("You need to install the ecostress swig code first. You can install just this by doing 'make install-swig-python'")
     cam = read_shelve(unit_test_data + "camera.xml")
