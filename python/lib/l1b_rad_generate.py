@@ -125,6 +125,11 @@ Data quality indicator.
                              data = self.l1a_pix["Time/line_start_time_j2000"][0::2])
         t.attrs["Description"] = "J2000 time of first pixel in line"
         t.attrs["Units"] = "second"
+        g = fout.create_group("FPIEencoder")
+        t = g.create_dataset("EncoderValue",
+                             data = self.l1a_pix["/FPIEencoder/EncoderValue"])
+        t.attrs["Description"] = "Mirror encoder value of each focal plane in each scan"
+        t.attrs["Units"] = "dimensionless"
         m = WriteStandardMetadata(fout, product_specfic_group = "L1B_RADMetadata",
                                   proc_lev_desc = "Level 1B Radiance Parameters",
                                   pge_name = "L1B_RAD_PGE",

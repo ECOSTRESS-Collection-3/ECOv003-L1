@@ -92,7 +92,7 @@ class L1aPixGenerate(object):
                   data=geocal.mmap_file("%s/BlackbodyTemp/fpa_%d.rel" %
                                  (dirname, temp)))
             t.attrs["Units"] = "K"
-        g = fout.create_group("BlackbodyRadiance")
+        g = fout.create_group("BlackbodyBandDN")
         for b in range(1, 7):
             for temp in (325, 295):
                 t = g.create_dataset("b%d_%d" % (b, temp),
@@ -116,6 +116,11 @@ class L1aPixGenerate(object):
                              data = fin["Time/line_start_time_j2000"])
         t.attrs["Description"] = "J2000 time of first pixel in line"
         t.attrs["Units"] = "second"
+        g = fout.create_group("FPIEencoder")
+        t = g.create_dataset("EncoderValue",
+                             data = fin["/FPIEencoder/EncoderValue"])
+        t.attrs["Description"] = "Mirror encoder value of each focal plane in each scan"
+        t.attrs["Units"] = "dimensionless"
         m = WriteStandardMetadata(fout,
                                   product_specfic_group = "L1APIXMetadata",
                                   proc_lev_desc = "Level 1A Calibration Parameters",
