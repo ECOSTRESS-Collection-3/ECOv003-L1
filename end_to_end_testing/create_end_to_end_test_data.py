@@ -7,13 +7,13 @@ from multiprocessing import Pool
 # Often during development of test data we want to only regenerate
 # a subset of the files, using the existing test data instead. Here we
 # can just turn each thing on or off. To regenerate everything, this
-# should all be False
-create_l1a_pix = False
-create_l1a_bb = False
-create_l1a_raw_pix = False
-create_l1a_raw_att = False
-create_l1a_eng = False
-create_l0b = False
+# should all be True
+create_l1a_pix = True
+create_l1a_bb = True
+create_l1a_raw_pix = True
+create_l1a_raw_att = True
+create_l1a_eng = True
+create_l0b = True
 # For testing band to band, useful to use the same radiance data for all
 # bands.
 use_swir_all_band = False

@@ -103,7 +103,7 @@
 								</px>
 							</ground_mask>
 						</ImageGroundConnection>
-						<b>3</b>
+						<b>5</b>
 						<res>3.00000000000000000e+01</res>
 						<max_h>9.00000000000000000e+03</max_h>
 						<orb class_id="30" tracking_level="0" version="1">
@@ -558,7 +558,7 @@
 								</px>
 							</ground_mask>
 						</ImageGroundConnection>
-						<b>3</b>
+						<b>5</b>
 						<res>3.00000000000000000e+01</res>
 						<max_h>9.00000000000000000e+03</max_h>
 						<orb>
@@ -744,7 +744,7 @@
 								</px>
 							</ground_mask>
 						</ImageGroundConnection>
-						<b>3</b>
+						<b>5</b>
 						<res>3.00000000000000000e+01</res>
 						<max_h>9.00000000000000000e+03</max_h>
 						<orb>
