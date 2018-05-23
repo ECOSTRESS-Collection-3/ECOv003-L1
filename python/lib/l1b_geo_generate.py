@@ -10,9 +10,7 @@ from .misc import time_split
 import numpy as np
 
 class L1bGeoGenerate(object):
-    '''This generate a L1B geo output file from a given
-    ImageGroundConnection. I imagine we will modify this as time
-    goes on, this is really just a placeholder.
+    '''This generate a L1B geo output file from a given ImageGroundConnection.
     '''
     def __init__(self, igc, lwm, output_name, inlist, run_config = None,
                  start_line = 0,
@@ -52,13 +50,14 @@ class L1bGeoGenerate(object):
         print("Done with [%d, %d]" % (start_line, start_line+res.shape[0]))
         if(self.log_fname is not None):
             self.log = open(self.log_fname, "a")
-            print("INFO:L1bGeoGenerate:Done with [%d, %d]" % (start_line, start_line+res.shape[0]),
-                  file = self.log)
+            print("INFO:L1bGeoGenerate:Done with [%d, %d]" %
+                  (start_line, start_line+res.shape[0]), file = self.log)
             self.log.flush()
-        # Note the copy() here is very important. As an optimization, ground_coor_scan_arr
-        # return a reference to an internal cache variable. This array gets overwritten in
-        # the next call to ground_coor_scan_arr. So we need to explicitly copy anything
-        # we want to keep. 
+        # Note the copy() here is very important. As an optimization,
+        # ground_coor_scan_arr return a reference to an internal cache
+        # variable. This array gets overwritten in the next call to
+        # ground_coor_scan_arr. So we need to explicitly copy anything
+        # we want to keep.
         lat = res[:,:,0,0,0].copy()
         lon = res[:,:,0,0,1].copy()
         height = res[:,:,0,0,2].copy()
@@ -68,7 +67,8 @@ class L1bGeoGenerate(object):
         sazimuth = res[:,:,0,0,6].copy()
         lfrac = GroundCoordinateArray.interpolate(self.lwm, lat, lon) * 100.0
         tlinestart = np.array([self.igc.pixel_time(geocal.ImageCoordinate(ln, 0)).j2000 for ln in range(start_line, start_line+res.shape[0])])
-        return lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac, tlinestart
+        return (lat, lon, height, vzenith, vazimuth, szenith, sazimuth,
+                lfrac, tlinestart)
 
     def loc(self, pool = None):
         '''Determine locations'''
@@ -93,8 +93,7 @@ class L1bGeoGenerate(object):
         szenith = np.vstack([rv[5] for rv in r])
         sazimuth = np.vstack([rv[6] for rv in r])
         lfrac = np.vstack([rv[7] for rv in r])
-        # This is 1d, so we only need to report one column of this
-        tlinestart = r[0][8]
+        tlinestart = np.hstack([rv[8] for rv in r])
         return lat,lon,height,vzenith, vazimuth, szenith,sazimuth, lfrac, \
             tlinestart
 
