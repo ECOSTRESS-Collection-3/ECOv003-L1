@@ -74,9 +74,9 @@ def create_orbit_raw(config):
                                  "Attitude/quaternion")
     return orb
 
-def create_time_table(fname):
+def create_time_table(fname, mirror_rpm, frame_time):
     '''Create the time table using the data from the given input.'''
-    return EcostressTimeTable(fname)
+    return EcostressTimeTable(fname, mirror_rpm, frame_time)
 
 def create_scan_mirror():
     '''Create the scan mirror'''

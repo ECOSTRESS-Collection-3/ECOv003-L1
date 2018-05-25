@@ -69,9 +69,11 @@ else:
 
 sys.path.append(l1_osp_dir)
 import l1b_rad_config
+import l1b_geo_config
 
 cam = geocal.read_shelve(l1_osp_dir + "/camera.xml")
-tt = ecostress.create_time_table(l1a_pix)
+tt = ecostress.create_time_table(l1a_pix, l1b_geo_config.mirror_rpm,
+                                 l1b_geo_config.frame_time)
 sm = ecostress.create_scan_mirror()
 igc = ecostress.EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
 

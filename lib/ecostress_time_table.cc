@@ -11,24 +11,24 @@ void EcostressTimeTable::serialize(Archive & ar, const unsigned int version)
   ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(TimeTable)
     & GEOCAL_NVP_(averaging_done)
     & GEOCAL_NVP_(tstart_scan);
+  // Older version didn't have mirror_rpm_ or frame_time_, but
+  // used hardcoded values. We set the hardcoded values in the default
+  // constructor.
+  if(version > 0)
+    ar & GEOCAL_NVP_(mirror_rpm) & GEOCAL_NVP_(frame_time);
 }
 
 ECOSTRESS_IMPLEMENT(EcostressTimeTable);
-
-// These numbers come for the the ECOSTRESS_SDS_Data_Bible.xls in
-// the Ecostress-sds git repository.
-const double EcostressTimeTable::nominal_scan_spacing = 1.181;
-// We should be getting this from the input data, but for now this
-// is hardcoded. If you change this, make sure to change PIX_DUR
-// in l0b_sim.py
-const double EcostressTimeTable::frame_time = 0.0000321875;
 
 //-------------------------------------------------------------------------
 /// Create a time table by reading the input file. The file should be
 /// a L1A_PIX or a L1B_RAD file
 //-------------------------------------------------------------------------
 
-EcostressTimeTable::EcostressTimeTable(const std::string& Fname)
+EcostressTimeTable::EcostressTimeTable(const std::string& Fname,
+				       double Mirror_rpm, double Frame_time)
+  : mirror_rpm_(Mirror_rpm),
+    frame_time_(Frame_time)
 {
   read_file(Fname);
 }
@@ -45,7 +45,10 @@ EcostressTimeTable::EcostressTimeTable(const std::string& Fname)
 //-------------------------------------------------------------------------
 
 EcostressTimeTable::EcostressTimeTable
-(const std::string& Fname, bool Averaging_done)
+(const std::string& Fname, bool Averaging_done,
+ double Mirror_rpm, double Frame_time)
+  : mirror_rpm_(Mirror_rpm),
+    frame_time_(Frame_time)
 {
   read_file(Fname);
   averaging_done_ = Averaging_done;
@@ -62,11 +65,11 @@ void EcostressTimeTable::read_file(const std::string& Fname)
   blitz::Array<double, 1> t = f.read_field<double, 1>("/Time/line_start_time_j2000");
   for(int i = 0; i < t.rows(); i += number_line_scan()) {
     // Check for fill data. We need a "reasonable" value even if the
-    // time is missing, so we just use the nominal_scan_spacing.
+    // time is missing, so we just use the nominal_scan_time().
     if(t(i) == 0.0) {
       if(i == 0)
 	throw Exception("Don't currently handle fill data at the first line in the image");
-      tstart_scan_.push_back(tstart_scan_.back() + nominal_scan_spacing);
+      tstart_scan_.push_back(tstart_scan_.back() + nominal_scan_time());
     } else 
       tstart_scan_.push_back(GeoCal::Time::time_j2000(t(i)));
   }
@@ -74,15 +77,18 @@ void EcostressTimeTable::read_file(const std::string& Fname)
 
 //-------------------------------------------------------------------------
 /// Create a time table with the given number of scans, with the time
-/// spaced exactly the nominal_scan_spacing.
+/// spaced exactly the nominal_scan_time().
 //-------------------------------------------------------------------------
 
 EcostressTimeTable::EcostressTimeTable
-(GeoCal::Time Tstart, bool Averaging_done, int Num_scan)
-  : averaging_done_(Averaging_done)
+(GeoCal::Time Tstart, bool Averaging_done, int Num_scan,
+ double Mirror_rpm, double Frame_time)
+  : averaging_done_(Averaging_done),
+    mirror_rpm_(Mirror_rpm),
+    frame_time_(Frame_time)
 {
   for(int i = 0; i < Num_scan; ++i)
-    tstart_scan_.push_back(Tstart + i * nominal_scan_spacing);
+    tstart_scan_.push_back(Tstart + i * nominal_scan_time());
 }
 
 //-------------------------------------------------------------------------
@@ -90,9 +96,13 @@ EcostressTimeTable::EcostressTimeTable
 //-------------------------------------------------------------------------
 
 EcostressTimeTable::EcostressTimeTable
-(const std::vector<GeoCal::Time> Tstart_scan, bool Averaging_done)
+(const std::vector<GeoCal::Time> Tstart_scan, bool Averaging_done,
+ double Mirror_rpm, double Frame_time)
+ 
 : averaging_done_(Averaging_done),
-  tstart_scan_(Tstart_scan)
+  tstart_scan_(Tstart_scan),
+  mirror_rpm_(Mirror_rpm),
+  frame_time_(Frame_time)
 {
   // Nothing more to do
 }
@@ -111,7 +121,7 @@ GeoCal::ImageCoordinate EcostressTimeTable::image_coordinate
     res.line = F.line / 2.0 + tindex * number_line_scan();
   else
     res.line = F.line + tindex * number_line_scan();
-  res.sample = (T - tstart_scan_[tindex]) / frame_time + F.sample;
+  res.sample = (T - tstart_scan_[tindex]) / frame_time() + F.sample;
   return res;
 }
 
@@ -131,7 +141,7 @@ EcostressTimeTable::image_coordinate_with_derivative
     res.line = F.line / 2.0 + tindex * number_line_scan();
   else
     res.line = F.line + tindex * number_line_scan();
-  res.sample = (T - tstart_scan_[tindex]) / frame_time + F.sample;
+  res.sample = (T - tstart_scan_[tindex]) / frame_time() + F.sample;
   return res;
 }
 
@@ -145,7 +155,7 @@ void EcostressTimeTable::time
   F.line = Ic.line - (tindex * number_line_scan());
   if(averaging_done())
     F.line *= 2.0;
-  T = tstart_scan_[tindex] + frame_time * Ic.sample;
+  T = tstart_scan_[tindex] + frame_time() * Ic.sample;
   F.sample = 0;
 }
 
@@ -161,16 +171,18 @@ void EcostressTimeTable::time_with_derivative
   if(averaging_done())
     F.line *= 2.0;
   T = GeoCal::TimeWithDerivative(tstart_scan_[tindex]) +
-    frame_time * Ic.sample;
+    frame_time() * Ic.sample;
   F.sample = 0;
 }
 
 void EcostressTimeTable::print(std::ostream& Os) const
 {
   Os << "EcostressTimeTable:\n"
-     << "  Start time:     " << min_time() << "\n"
-     << "  Number scan:    " << tstart_scan_.size() << "\n"
-     << "  Averaging done: " << (averaging_done_ ? "True\n" : "False\n");
+     << "  Start time:           " << min_time() << "\n"
+     << "  Number scan:          " << tstart_scan_.size() << "\n"
+     << "  Averaging done:       " << (averaging_done_ ? "True\n" : "False\n")
+     << "  Mirror RPM (nominal): " << mirror_rpm_ << "\n"
+     << "  Frame time:           " << frame_time_ << " s\n";
 }
 
 

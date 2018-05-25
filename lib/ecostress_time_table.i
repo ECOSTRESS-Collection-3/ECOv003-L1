@@ -14,19 +14,25 @@ namespace Ecostress {
 class EcostressTimeTable : public GeoCal::TimeTable {
 public:
   EcostressTimeTable(GeoCal::Time Tstart, bool Averaging_done = True,
-		     int Num_scan = 44);
+		     int Num_scan = 44, double Mirror_rpm = 25.4,
+		     double Frame_time = 0.0000321875);
   EcostressTimeTable(const std::vector<GeoCal::Time> Tstart_scan,
-		     bool Averaging_done = True);
-  EcostressTimeTable(const std::string& Fname);
-  EcostressTimeTable(const std::string& Fname, bool Averaging_done);
+		     bool Averaging_done = True, double Mirror_rpm = 25.4,
+		     double Frame_time = 0.0000321875);
+  EcostressTimeTable(const std::string& Fname, double Mirror_rpm = 25.4,
+		     double Frame_time = 0.0000321875);
+  EcostressTimeTable(const std::string& Fname, bool Averaging_done,
+		     double Mirror_rpm = 25.4,
+		     double Frame_time = 0.0000321875);
   virtual GeoCal::ImageCoordinate image_coordinate
     (GeoCal::Time T, const GeoCal::FrameCoordinate& F) const;
-  static const double nominal_scan_spacing;
-  static const double frame_time;
   void scan_index_to_line(int Scan_index, int& OUTPUT, int& OUTPUT) const;
   %python_attribute(averaging_done, bool);
   %python_attribute(number_line_scan, int);
   %python_attribute(number_scan, int);
+  %python_attribute(mirror_rpm, double);
+  %python_attribute(nominal_scan_time, double);
+  %python_attribute(frame_time, double);
   %pickle_serialization();
 };
 }

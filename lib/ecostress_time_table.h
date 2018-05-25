@@ -6,9 +6,6 @@ namespace Ecostress {
 /****************************************************************//**
   This is the ecostress time table.
 
-  Right now this is pretty much a place holder. We assume constant
-  time spacing between pixels.
-
   The table is different before and after we do the 2 line averaging
   in L1B_CAL, we indicate this by "averaging_done" set to true, which
   means each scan is treated as 128 lines rather than 256.
@@ -20,11 +17,16 @@ namespace Ecostress {
 class EcostressTimeTable: public GeoCal::TimeTable {
 public:
   EcostressTimeTable(GeoCal::Time Tstart, bool Averaging_done = true,
-		     int Num_scan = 44);
+		     int Num_scan = 44, double Mirror_rpm = 25.4,
+		     double Frame_time = 0.0000321875);
   EcostressTimeTable(const std::vector<GeoCal::Time> Tstart_scan,
-		     bool Averaging_done = true);
-  EcostressTimeTable(const std::string& Fname);
-  EcostressTimeTable(const std::string& Fname, bool Averaging_done);
+		     bool Averaging_done = true, double Mirror_rpm = 25.4,
+		     double Frame_time = 0.0000321875);
+  EcostressTimeTable(const std::string& Fname, double Mirror_rpm = 25.4,
+		     double Frame_time = 0.0000321875);
+  EcostressTimeTable(const std::string& Fname, bool Averaging_done,
+		     double Mirror_rpm = 25.4,
+		     double Frame_time = 0.0000321875);
   virtual ~EcostressTimeTable() {}
 
 //-------------------------------------------------------------------------
@@ -52,10 +54,8 @@ public:
   { return (int) tstart_scan_.size() * number_line_scan() - 1; }
   virtual GeoCal::Time min_time() const { return tstart_scan_[0]; }
   virtual GeoCal::Time max_time() const
-  { return *tstart_scan_.rbegin() + nominal_scan_spacing; }
+  { return *tstart_scan_.rbegin() + nominal_scan_time(); }
   virtual void print(std::ostream& Os) const;
-  static const double nominal_scan_spacing;
-  static const double frame_time;
   int number_line_scan() const { return (averaging_done_ ? 128 : 256); }
 
 //-------------------------------------------------------------------------
@@ -64,6 +64,31 @@ public:
 
   int number_scan() const {return (int) tstart_scan_.size(); }
 
+//-------------------------------------------------------------------------
+/// Mirror rotation speed, in rotations per minute (nominal, actual
+/// speed may be different).
+//-------------------------------------------------------------------------
+
+  double mirror_rpm() const { return mirror_rpm_; }
+
+//-------------------------------------------------------------------------
+/// Nominal spacing in seconds between scans. The actual time may be
+/// different, but this is the best approximation.
+//-------------------------------------------------------------------------
+
+  double nominal_scan_time() const
+  {
+    // The "/ 2" is because we get data on both sides of the mirror,
+    // so a scan takes 1/2 the time it takes for a full rotation.
+    return (60.0 / mirror_rpm_) / 2;
+  }
+
+//-------------------------------------------------------------------------
+/// Time in seconds between frames/samples.
+//-------------------------------------------------------------------------
+
+  double frame_time() const {return frame_time_;}
+  
 //-------------------------------------------------------------------------
 /// Image lines that go with a scan. Note this is the normal C
 /// convention of including the start but not the end, so
@@ -78,7 +103,8 @@ public:
 private:
   bool averaging_done_;
   std::vector<GeoCal::Time> tstart_scan_;
-  EcostressTimeTable() { }
+  double mirror_rpm_, frame_time_;
+  EcostressTimeTable() : mirror_rpm_(25.4), frame_time_(0.0000321875) { }
   friend class boost::serialization::access;
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version);
@@ -87,5 +113,6 @@ private:
 }
 
 BOOST_CLASS_EXPORT_KEY(Ecostress::EcostressTimeTable);
+BOOST_CLASS_VERSION(Ecostress::EcostressTimeTable, 1);
 #endif
 

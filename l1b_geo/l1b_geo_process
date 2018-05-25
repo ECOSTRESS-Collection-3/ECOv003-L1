@@ -183,7 +183,8 @@ try:
     with open("extra_python_init.py", "w") as fh:
         print("from ecostress import *\n", file=fh)
     for i in range(len(radlist)):
-        tt = ecostress.create_time_table(radlist[i])
+        tt = ecostress.create_time_table(radlist[i], l1b_geo_config.mirror_rpm,
+                                         l1b_geo_config.frame_time)
         sm = ecostress.create_scan_mirror()
         if(i == 0):
             orb.insert_position_time_point(tt.min_time)

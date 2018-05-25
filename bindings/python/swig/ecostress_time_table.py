@@ -189,9 +189,6 @@ class EcostressTimeTable(geocal_swig.time_table.TimeTable):
 
     This is the ecostress time table.
 
-    Right now this is pretty much a place holder. We assume constant time
-    spacing between pixels.
-
     The table is different before and after we do the 2 line averaging in
     L1B_CAL, we indicate this by "averaging_done" set to true, which
     means each scan is treated as 128 lines rather than 256.
@@ -209,7 +206,8 @@ class EcostressTimeTable(geocal_swig.time_table.TimeTable):
     def __init__(self, *args):
         """
 
-        EcostressTimeTable::EcostressTimeTable(const std::string &Fname, bool Averaging_done)
+        EcostressTimeTable::EcostressTimeTable(const std::string &Fname, bool Averaging_done, double
+        Mirror_rpm=25.4, double Frame_time=0.0000321875)
         Create a time table by reading the input file.
 
         The file should be a L1A_PIX or a L1B_RAD file.
@@ -277,6 +275,52 @@ class EcostressTimeTable(geocal_swig.time_table.TimeTable):
         return self._v_number_scan()
 
 
+    def _v_mirror_rpm(self):
+        """
+
+        double Ecostress::EcostressTimeTable::mirror_rpm() const
+        Mirror rotation speed, in rotations per minute (nominal, actual speed
+        may be different). 
+        """
+        return _ecostress_time_table.EcostressTimeTable__v_mirror_rpm(self)
+
+
+    @property
+    def mirror_rpm(self):
+        return self._v_mirror_rpm()
+
+
+    def _v_nominal_scan_time(self):
+        """
+
+        double Ecostress::EcostressTimeTable::nominal_scan_time() const
+        Nominal spacing in seconds between scans.
+
+        The actual time may be different, but this is the best approximation.
+
+        """
+        return _ecostress_time_table.EcostressTimeTable__v_nominal_scan_time(self)
+
+
+    @property
+    def nominal_scan_time(self):
+        return self._v_nominal_scan_time()
+
+
+    def _v_frame_time(self):
+        """
+
+        double Ecostress::EcostressTimeTable::frame_time() const
+        Time in seconds between frames/samples. 
+        """
+        return _ecostress_time_table.EcostressTimeTable__v_frame_time(self)
+
+
+    @property
+    def frame_time(self):
+        return self._v_frame_time()
+
+
     def __reduce__(self):
       return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
 
@@ -285,11 +329,11 @@ EcostressTimeTable.scan_index_to_line = new_instancemethod(_ecostress_time_table
 EcostressTimeTable._v_averaging_done = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_averaging_done, None, EcostressTimeTable)
 EcostressTimeTable._v_number_line_scan = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_number_line_scan, None, EcostressTimeTable)
 EcostressTimeTable._v_number_scan = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_number_scan, None, EcostressTimeTable)
+EcostressTimeTable._v_mirror_rpm = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_mirror_rpm, None, EcostressTimeTable)
+EcostressTimeTable._v_nominal_scan_time = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_nominal_scan_time, None, EcostressTimeTable)
+EcostressTimeTable._v_frame_time = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_frame_time, None, EcostressTimeTable)
 EcostressTimeTable_swigregister = _ecostress_time_table.EcostressTimeTable_swigregister
 EcostressTimeTable_swigregister(EcostressTimeTable)
-cvar = _ecostress_time_table.cvar
-EcostressTimeTable.nominal_scan_spacing = _ecostress_time_table.cvar.EcostressTimeTable_nominal_scan_spacing
-EcostressTimeTable.frame_time = _ecostress_time_table.cvar.EcostressTimeTable_frame_time
 
 
 __all__ = ["EcostressTimeTable"]
