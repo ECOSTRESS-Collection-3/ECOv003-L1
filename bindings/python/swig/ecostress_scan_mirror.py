@@ -199,7 +199,8 @@ class EcostressScanMirror(geocal_swig.generic_object.GenericObject):
         """
 
         Ecostress::EcostressScanMirror::EcostressScanMirror(double Scan_start=-25.5, double Scan_end=25.5, int
-        Number_sample=5400)
+        Number_sample=5400, int Max_encoder_value=1749248, int
+        Encoder_value_at_0=401443)
         Constructor.
 
         The scan angles are in degrees (seems more convenient than the normal

@@ -21,9 +21,12 @@ public:
 //-------------------------------------------------------------------------
 
   EcostressScanMirror(double Scan_start = -25.5, double Scan_end = 25.5,
-		      int Number_sample = 5400)
+		      int Number_sample = 5400,
+		      int Max_encoder_value = 1749248,
+		      int Encoder_value_at_0 = 401443)
     : scan_start_(Scan_start), scan_end_(Scan_end),
-      number_sample_(Number_sample)
+      number_sample_(Number_sample), max_encoder_value_(Max_encoder_value),
+      ev0_(Encoder_value_at_0)
   { init(); }
 
 //-------------------------------------------------------------------------
@@ -44,6 +47,36 @@ public:
 
   int number_sample() const {return number_sample_;}
 
+//-------------------------------------------------------------------------
+/// Maximum encoder value. Note that we go through 2 360 degree
+/// rotation because of the set up of the mirrors.
+//-------------------------------------------------------------------------
+
+  int max_encoder_value() const {return max_encoder_value_;}
+
+//-------------------------------------------------------------------------
+/// Angle that a single encoder value goes through, in degrees.
+//-------------------------------------------------------------------------
+
+  double angle_per_encoder_value() const
+  { return 360.0 / max_encoder_value() * 2; }
+
+//-------------------------------------------------------------------------
+/// Encoder value at 0 angle. This is for the first side of the mirror.
+//-------------------------------------------------------------------------
+
+  int encoder_value_at_0() const { return ev0_; }
+
+//-------------------------------------------------------------------------
+/// Calculate angle for a given encoder value.
+//-------------------------------------------------------------------------
+
+  double angle_from_encoder_value(int Evalue) const
+  {
+    return (Evalue % (max_encoder_value() / 2) - encoder_value_at_0()) *
+      angle_per_encoder_value();
+  }
+  
 //-------------------------------------------------------------------------
 /// Scan mirror angle, in degrees.
 //-------------------------------------------------------------------------
@@ -73,6 +106,7 @@ public:
 private:
   double scan_start_, scan_end_, scan_step_;
   int number_sample_;
+  int max_encoder_value_, ev0_;
   void init() { scan_step_ = (scan_end_ - scan_start_) / number_sample_; }
   friend class boost::serialization::access;
   template<class Archive>
