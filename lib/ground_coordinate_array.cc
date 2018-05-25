@@ -318,7 +318,7 @@ void GroundCoordinateArray::ground_coor_arr_samp(int Start_line, int Sample,
   FrameCoordinate fc;
   tt->time(ImageCoordinate(Start_line, Sample), t, fc);
   boost::shared_ptr<QuaternionOrbitData> od =
-    igc_->orbit_data(t, Sample);
+    igc_->orbit_data(t, tt->line_to_scan_index(Start_line), Sample);
   boost::shared_ptr<CartesianFixed> cf = od->position_cf();
   CartesianFixedLookVector slv;
   if(include_angle)

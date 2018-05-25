@@ -48,11 +48,11 @@ public:
 /// Scan mirror angle, in degrees.
 //-------------------------------------------------------------------------
 
-  double scan_mirror_angle(double Ic_sample) const
+  double scan_mirror_angle(int Scan_index, double Ic_sample) const
   { return scan_start_ + Ic_sample * scan_step_; }
 
   GeoCal::AutoDerivative<double> scan_mirror_angle
-  (const GeoCal::AutoDerivative<double>& Ic_sample) const
+  (int Scan_index, const GeoCal::AutoDerivative<double>& Ic_sample) const
   { return scan_start_ + Ic_sample * scan_step_; }
   
 //-------------------------------------------------------------------------
@@ -61,12 +61,13 @@ public:
 //-------------------------------------------------------------------------
 
   boost::math::quaternion<double>
-  rotation_quaterion(double Ic_sample) const
-  { return GeoCal::quat_rot_x(scan_mirror_angle(Ic_sample) *
+  rotation_quaternion(int Scan_index, double Ic_sample) const
+  { return GeoCal::quat_rot_x(scan_mirror_angle(Scan_index, Ic_sample) *
 			      GeoCal::Constant::deg_to_rad); }
   boost::math::quaternion<GeoCal::AutoDerivative<double> >
-  rotation_quaterion(const GeoCal::AutoDerivative<double>& Ic_sample) const
-  { return GeoCal::quat_rot_x(scan_mirror_angle(Ic_sample) *
+  rotation_quaternion(int Scan_index,
+		     const GeoCal::AutoDerivative<double>& Ic_sample) const
+  { return GeoCal::quat_rot_x(scan_mirror_angle(Scan_index, Ic_sample) *
 			      GeoCal::Constant::deg_to_rad); }
   virtual void print(std::ostream& Os) const;
 private:

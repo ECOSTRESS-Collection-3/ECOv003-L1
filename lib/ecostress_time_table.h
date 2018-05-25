@@ -100,6 +100,12 @@ public:
     Lstart = number_line_scan() * Scan_index;
     Lend = number_line_scan() * (Scan_index+1);
   }
+
+//-------------------------------------------------------------------------
+/// Convert line to scan index
+//-------------------------------------------------------------------------
+  int line_to_scan_index(double Line) const
+  { return (int) floor(Line / number_line_scan()); }
 private:
   bool averaging_done_;
   std::vector<GeoCal::Time> tstart_scan_;

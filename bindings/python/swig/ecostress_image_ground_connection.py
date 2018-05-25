@@ -222,8 +222,8 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
     def orbit_data(self, *args):
         """
 
-        boost::shared_ptr< GeoCal::QuaternionOrbitData > EcostressImageGroundConnection::orbit_data(const GeoCal::TimeWithDerivative &T, const GeoCal::AutoDerivative<
-        double > &Ic_sample) const
+        boost::shared_ptr< GeoCal::QuaternionOrbitData > EcostressImageGroundConnection::orbit_data(const GeoCal::TimeWithDerivative &T, double Ic_line, const
+        GeoCal::AutoDerivative< double > &Ic_sample) const
 
         """
         return _ecostress_image_ground_connection.EcostressImageGroundConnection_orbit_data(self, *args)

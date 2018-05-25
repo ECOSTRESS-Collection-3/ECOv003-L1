@@ -11,9 +11,9 @@ BOOST_AUTO_TEST_CASE(basic_test)
   BOOST_CHECK_CLOSE(sm.scan_start(), -25.5, 1e-4);
   BOOST_CHECK_CLOSE(sm.scan_end(), 25.5, 1e-4);
   BOOST_CHECK_EQUAL(sm.number_sample(), 5400);
-  BOOST_CHECK_CLOSE(sm.scan_mirror_angle(0),
+  BOOST_CHECK_CLOSE(sm.scan_mirror_angle(0, 0),
 		    -25.5, 1e-4);
-  BOOST_CHECK_CLOSE(sm.scan_mirror_angle(20.3),
+  BOOST_CHECK_CLOSE(sm.scan_mirror_angle(0, 20.3),
 		    -25.5 + (25.5 + 25.5) / 5400 * 20.3, 1e-4);
 }
 
@@ -29,9 +29,9 @@ BOOST_AUTO_TEST_CASE(serialization)
   BOOST_CHECK_CLOSE(smr->scan_start(), -25.5, 1e-4);
   BOOST_CHECK_CLOSE(smr->scan_end(), 25.5, 1e-4);
   BOOST_CHECK_EQUAL(smr->number_sample(), 5400);
-  BOOST_CHECK_CLOSE(smr->scan_mirror_angle(0),
+  BOOST_CHECK_CLOSE(smr->scan_mirror_angle(0, 0),
 		    -25.5, 1e-4);
-  BOOST_CHECK_CLOSE(smr->scan_mirror_angle(20.3),
+  BOOST_CHECK_CLOSE(smr->scan_mirror_angle(0, 20.3),
 		    -25.5 + (25.5 + 25.5) / 5400 * 20.3, 1e-4);
 }
 

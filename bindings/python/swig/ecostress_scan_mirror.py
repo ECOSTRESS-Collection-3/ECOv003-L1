@@ -210,47 +210,21 @@ class EcostressScanMirror(geocal_swig.generic_object.GenericObject):
     def scan_mirror_angle(self, *args):
         """
 
-        GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::scan_mirror_angle(const GeoCal::AutoDerivative< double > &Ic_sample) const
+        GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::scan_mirror_angle(int Scan_index, const GeoCal::AutoDerivative< double > &Ic_sample)
+        const
 
         """
         return _ecostress_scan_mirror.EcostressScanMirror_scan_mirror_angle(self, *args)
 
 
-    def rotation_quaterion(self, *args):
+    def rotation_quaternion(self, *args):
         """
 
-        boost::math::quaternion<GeoCal::AutoDerivative<double> > Ecostress::EcostressScanMirror::rotation_quaterion(const GeoCal::AutoDerivative< double > &Ic_sample) const
+        boost::math::quaternion<GeoCal::AutoDerivative<double> > Ecostress::EcostressScanMirror::rotation_quaternion(int Scan_index, const GeoCal::AutoDerivative< double > &Ic_sample)
+        const
 
         """
-        return _ecostress_scan_mirror.EcostressScanMirror_rotation_quaterion(self, *args)
-
-
-    def _v_scan_start(self):
-        """
-
-        double Ecostress::EcostressScanMirror::scan_start() const
-        Scan start in degrees. 
-        """
-        return _ecostress_scan_mirror.EcostressScanMirror__v_scan_start(self)
-
-
-    @property
-    def scan_start(self):
-        return self._v_scan_start()
-
-
-    def _v_scan_end(self):
-        """
-
-        double Ecostress::EcostressScanMirror::scan_end() const
-        Scan end in degrees. 
-        """
-        return _ecostress_scan_mirror.EcostressScanMirror__v_scan_end(self)
-
-
-    @property
-    def scan_end(self):
-        return self._v_scan_end()
+        return _ecostress_scan_mirror.EcostressScanMirror_rotation_quaternion(self, *args)
 
 
     def _v_number_sample(self):
@@ -272,9 +246,7 @@ class EcostressScanMirror(geocal_swig.generic_object.GenericObject):
 
     __swig_destroy__ = _ecostress_scan_mirror.delete_EcostressScanMirror
 EcostressScanMirror.scan_mirror_angle = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror_scan_mirror_angle, None, EcostressScanMirror)
-EcostressScanMirror.rotation_quaterion = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror_rotation_quaterion, None, EcostressScanMirror)
-EcostressScanMirror._v_scan_start = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_scan_start, None, EcostressScanMirror)
-EcostressScanMirror._v_scan_end = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_scan_end, None, EcostressScanMirror)
+EcostressScanMirror.rotation_quaternion = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror_rotation_quaternion, None, EcostressScanMirror)
 EcostressScanMirror._v_number_sample = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_number_sample, None, EcostressScanMirror)
 EcostressScanMirror.__str__ = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror___str__, None, EcostressScanMirror)
 EcostressScanMirror_swigregister = _ecostress_scan_mirror.EcostressScanMirror_swigregister

@@ -25,8 +25,8 @@ ECOSTRESS_IMPLEMENT(EcostressImageGroundConnection);
 EcostressImageGroundConnection::SampleFunc::SampleFunc
 (const EcostressImageGroundConnection& Igc, int Scan_index,
  const GeoCal::GroundCoordinate& Gp)
-      : igc(Igc), can_solve(false), gp(Gp),
-	tt(boost::dynamic_pointer_cast<EcostressTimeTable>(Igc.time_table()))
+  : igc(Igc), can_solve(false), scan_index(Scan_index), gp(Gp),
+    tt(boost::dynamic_pointer_cast<EcostressTimeTable>(Igc.time_table()))
 {
   // We can worry about generalizing this if it ever becomes an
   // issue, but for now we assume the time table is an EcostressTimeTable.
@@ -58,7 +58,7 @@ EcostressImageGroundConnection::SampleFunc::SampleFunc
 EcostressImageGroundConnection::SampleFuncWithDerivative::SampleFuncWithDerivative
 (const EcostressImageGroundConnection& Igc, int Scan_index,
  const GeoCal::GroundCoordinate& Gp)
-  : igc(Igc), can_solve(false), gp(Gp),
+  : igc(Igc), can_solve(false), scan_index(Scan_index), gp(Gp),
     tt(boost::dynamic_pointer_cast<EcostressTimeTable>(Igc.time_table()))
 {
   // We can worry about generalizing this if it ever becomes an
@@ -94,7 +94,7 @@ EcostressImageGroundConnection::SampleFunc::fc_at_sol() const
 {
   double sample =
     tt->image_coordinate(tsol, GeoCal::FrameCoordinate(0,0)).sample;
-  return igc.orbit_data(tsol, sample)->frame_coordinate(gp, *igc.camera(), igc.band());
+  return igc.orbit_data(tsol, scan_index * tt->number_line_scan(), sample)->frame_coordinate(gp, *igc.camera(), igc.band());
 }
 
 //-------------------------------------------------------------------------
@@ -106,7 +106,7 @@ EcostressImageGroundConnection::SampleFuncWithDerivative::fc_at_sol() const
 {
   GeoCal::AutoDerivative<double> sample =
     tt->image_coordinate_with_derivative(tsol, GeoCal::FrameCoordinateWithDerivative(0,0)).sample;
-  return igc.orbit_data(tsol, sample)->frame_coordinate_with_derivative(gp, *igc.camera(), igc.band());
+  return igc.orbit_data(tsol, scan_index * tt->number_line_scan(), sample)->frame_coordinate_with_derivative(gp, *igc.camera(), igc.band());
 }
 
 //-------------------------------------------------------------------------
@@ -167,7 +167,7 @@ double EcostressImageGroundConnection::SampleFunc::operator()
   double sample =
     tt->image_coordinate(epoch + Toffset,
 			 GeoCal::FrameCoordinate(0,0)).sample;
-  return igc.orbit_data(epoch + Toffset, sample)->frame_coordinate(gp, *igc.camera(), igc.band()).sample;
+  return igc.orbit_data(epoch + Toffset, scan_index * tt->number_line_scan(), sample)->frame_coordinate(gp, *igc.camera(), igc.band()).sample;
 }
 
 //-------------------------------------------------------------------------
@@ -180,7 +180,7 @@ double EcostressImageGroundConnection::SampleFuncWithDerivative::operator()
   double sample =
     tt->image_coordinate(epoch + Toffset,
 			 GeoCal::FrameCoordinate(0,0)).sample;
-  return igc.orbit_data(epoch + Toffset, sample)->frame_coordinate(gp, *igc.camera(), igc.band()).sample;
+  return igc.orbit_data(epoch + Toffset, scan_index * tt->number_line_scan(), sample)->frame_coordinate(gp, *igc.camera(), igc.band()).sample;
 }
 
 //-------------------------------------------------------------------------
@@ -206,7 +206,7 @@ EcostressImageGroundConnection::SampleFuncWithDerivative::f_with_derivative
     tt->image_coordinate_with_derivative
     (GeoCal::TimeWithDerivative(epoch) + Toffset,
      GeoCal::FrameCoordinateWithDerivative(0,0)).sample;
-  return igc.orbit_data(GeoCal::TimeWithDerivative(epoch) + Toffset, sample)->frame_coordinate_with_derivative(gp, *igc.camera(), igc.band()).sample;
+  return igc.orbit_data(GeoCal::TimeWithDerivative(epoch) + Toffset, scan_index * tt->number_line_scan(), sample)->frame_coordinate_with_derivative(gp, *igc.camera(), igc.band()).sample;
 }
 
 //-------------------------------------------------------------------------
@@ -246,7 +246,7 @@ EcostressImageGroundConnection::ground_coordinate_dem
   GeoCal::Time t;
   GeoCal::FrameCoordinate fc;
   tt->time(Ic, t, fc);
-  return orbit_data(t, Ic.sample)->surface_intersect(*cam, fc, D, res, b, max_h);
+  return orbit_data(t, Ic.line, Ic.sample)->surface_intersect(*cam, fc, D, res, b, max_h);
 }
 
 // See base class for description
@@ -258,7 +258,7 @@ EcostressImageGroundConnection::ground_coordinate_approx_height
   GeoCal::Time t;
   GeoCal::FrameCoordinate fc;
   tt->time(Ic, t, fc);
-  return orbit_data(t, Ic.sample)->reference_surface_intersect_approximate(*cam, fc, b, H);
+  return orbit_data(t, Ic.line, Ic.sample)->reference_surface_intersect_approximate(*cam, fc, b, H);
 }
 
 //-----------------------------------------------------------------------
@@ -268,30 +268,38 @@ EcostressImageGroundConnection::ground_coordinate_approx_height
 
 boost::shared_ptr<GeoCal::QuaternionOrbitData>
 EcostressImageGroundConnection::orbit_data
-(const GeoCal::Time& T, double Ic_sample) const
+(const GeoCal::Time& T, double Ic_line, double Ic_sample) const
 {
   boost::shared_ptr<GeoCal::QuaternionOrbitData> od =
    boost::dynamic_pointer_cast<GeoCal::QuaternionOrbitData>(orb->orbit_data(T));
   if(!od)
     throw GeoCal::Exception("EcostressImageGroundConnection only works with orbits that return a QuaternionOrbitData");
+  boost::shared_ptr<EcostressTimeTable> ett =
+    boost::dynamic_pointer_cast<EcostressTimeTable>(tt);
+  if(!ett)
+    throw GeoCal::Exception("orbit_data currently only works with EcostressTimeTable");
   boost::shared_ptr<GeoCal::QuaternionOrbitData> res =
     boost::make_shared<GeoCal::QuaternionOrbitData>(*od);
-  res->sc_to_ci(od->sc_to_ci() * sm->rotation_quaterion(Ic_sample));
+  res->sc_to_ci(od->sc_to_ci() * sm->rotation_quaternion(ett->line_to_scan_index(Ic_line), Ic_sample));
   return res;
 }
 
 boost::shared_ptr<GeoCal::QuaternionOrbitData>
 EcostressImageGroundConnection::orbit_data
-(const GeoCal::TimeWithDerivative& T,
+(const GeoCal::TimeWithDerivative& T, double Ic_line,
  const GeoCal::AutoDerivative<double>& Ic_sample) const
 {
   boost::shared_ptr<GeoCal::QuaternionOrbitData> od =
    boost::dynamic_pointer_cast<GeoCal::QuaternionOrbitData>(orb->orbit_data(T));
   if(!od)
     throw GeoCal::Exception("EcostressImageGroundConnection only works with orbits that return a QuaternionOrbitData");
+  boost::shared_ptr<EcostressTimeTable> ett =
+    boost::dynamic_pointer_cast<EcostressTimeTable>(tt);
+  if(!ett)
+    throw GeoCal::Exception("orbit_data currently only works with EcostressTimeTable");
   boost::shared_ptr<GeoCal::QuaternionOrbitData> res =
     boost::make_shared<GeoCal::QuaternionOrbitData>(*od);
-  res->sc_to_ci_with_derivative(od->sc_to_ci_with_derivative() * sm->rotation_quaterion(Ic_sample));
+  res->sc_to_ci_with_derivative(od->sc_to_ci_with_derivative() * sm->rotation_quaternion(ett->line_to_scan_index(Ic_line), Ic_sample));
   return res;
 }
 
@@ -453,8 +461,8 @@ EcostressImageGroundConnection::collinearity_residual
   GeoCal::Time t;
   GeoCal::FrameCoordinate fc_actual;
   tt->time(Ic_actual, t, fc_actual);
-  GeoCal::FrameCoordinate fc_predict = orbit_data(t, Ic_actual.sample)->
-    frame_coordinate(Gc, *cam, b);
+  GeoCal::FrameCoordinate fc_predict = orbit_data(t, Ic_actual.line,
+    Ic_actual.sample)->frame_coordinate(Gc, *cam, b);
   blitz::Array<double, 1> res(2);
   res(0) = fc_predict.line - fc_actual.line;
   res(1) = fc_predict.sample - fc_actual.sample;
@@ -470,7 +478,8 @@ EcostressImageGroundConnection::collinearity_residual_jacobian
   GeoCal::FrameCoordinateWithDerivative fc_actual;
   GeoCal::ImageCoordinateWithDerivative ica(Ic_actual.line, Ic_actual.sample);
   tt->time_with_derivative(ica, t, fc_actual);
-  GeoCal::FrameCoordinateWithDerivative fc_predict = orbit_data(t, ica.sample)->
+  GeoCal::FrameCoordinateWithDerivative fc_predict =
+    orbit_data(t, Ic_actual.line, ica.sample)->
     frame_coordinate_with_derivative(Gc, *cam, b);
   blitz::Array<double, 2> res(2, fc_predict.line.number_variable() + 3);
   res(0, blitz::Range(0, res.cols() - 4)) = 
@@ -479,7 +488,7 @@ EcostressImageGroundConnection::collinearity_residual_jacobian
     (fc_predict.sample - fc_actual.sample).gradient();
 
   // Part of jacobian for cf coordinates.
-  boost::shared_ptr<GeoCal::OrbitData> od = orbit_data(t.value(), Ic_actual.sample);
+  boost::shared_ptr<GeoCal::OrbitData> od = orbit_data(t.value(), Ic_actual.line, Ic_actual.sample);
   boost::shared_ptr<GeoCal::CartesianFixed> p1 = od->position_cf();
   boost::shared_ptr<GeoCal::CartesianFixed> p2 = Gc.convert_to_cf();
   GeoCal::CartesianFixedLookVectorWithDerivative lv;

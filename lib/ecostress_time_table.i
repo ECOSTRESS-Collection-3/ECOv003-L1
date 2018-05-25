@@ -27,6 +27,7 @@ public:
   virtual GeoCal::ImageCoordinate image_coordinate
     (GeoCal::Time T, const GeoCal::FrameCoordinate& F) const;
   void scan_index_to_line(int Scan_index, int& OUTPUT, int& OUTPUT) const;
+  int line_to_scan_index(double Line) const;
   %python_attribute(averaging_done, bool);
   %python_attribute(number_line_scan, int);
   %python_attribute(number_scan, int);

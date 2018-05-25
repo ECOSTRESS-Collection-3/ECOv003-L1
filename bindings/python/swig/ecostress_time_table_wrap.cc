@@ -7646,6 +7646,56 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_EcostressTimeTable_line_to_scan_index(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressTimeTable *arg1 = (Ecostress::EcostressTimeTable *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressTimeTable const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressTimeTable const > *smartarg1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject *swig_obj[2] ;
+  int result;
+  
+  if (!SWIG_Python_UnpackTuple(args,"EcostressTimeTable_line_to_scan_index",2,2,swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressTimeTable_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressTimeTable_line_to_scan_index" "', argument " "1"" of type '" "Ecostress::EcostressTimeTable const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressTimeTable * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressTimeTable * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_double(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "EcostressTimeTable_line_to_scan_index" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  {
+    try {
+      result = (int)((Ecostress::EcostressTimeTable const *)arg1)->line_to_scan_index(arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_averaging_done(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressTimeTable *arg1 = (Ecostress::EcostressTimeTable *) 0 ;
@@ -7997,6 +8047,11 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		"Note this is the normal C convention of including the start but not\n"
 		"the end, so Lstart <= L < Lend for L in scan Scan_index \n"
+		""},
+	 { (char *)"EcostressTimeTable_line_to_scan_index", _wrap_EcostressTimeTable_line_to_scan_index, METH_VARARGS, (char *)"\n"
+		"\n"
+		"int Ecostress::EcostressTimeTable::line_to_scan_index(double Line) const\n"
+		"Convert line to scan index. \n"
 		""},
 	 { (char *)"EcostressTimeTable__v_averaging_done", (PyCFunction)_wrap_EcostressTimeTable__v_averaging_done, METH_O, (char *)"\n"
 		"\n"

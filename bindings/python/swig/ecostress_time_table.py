@@ -231,6 +231,15 @@ class EcostressTimeTable(geocal_swig.time_table.TimeTable):
         return _ecostress_time_table.EcostressTimeTable_scan_index_to_line(self, Scan_index)
 
 
+    def line_to_scan_index(self, Line):
+        """
+
+        int Ecostress::EcostressTimeTable::line_to_scan_index(double Line) const
+        Convert line to scan index. 
+        """
+        return _ecostress_time_table.EcostressTimeTable_line_to_scan_index(self, Line)
+
+
     def _v_averaging_done(self):
         """
 
@@ -326,6 +335,7 @@ class EcostressTimeTable(geocal_swig.time_table.TimeTable):
 
     __swig_destroy__ = _ecostress_time_table.delete_EcostressTimeTable
 EcostressTimeTable.scan_index_to_line = new_instancemethod(_ecostress_time_table.EcostressTimeTable_scan_index_to_line, None, EcostressTimeTable)
+EcostressTimeTable.line_to_scan_index = new_instancemethod(_ecostress_time_table.EcostressTimeTable_line_to_scan_index, None, EcostressTimeTable)
 EcostressTimeTable._v_averaging_done = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_averaging_done, None, EcostressTimeTable)
 EcostressTimeTable._v_number_line_scan = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_number_line_scan, None, EcostressTimeTable)
 EcostressTimeTable._v_number_scan = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_number_scan, None, EcostressTimeTable)
