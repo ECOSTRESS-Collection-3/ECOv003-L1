@@ -245,29 +245,16 @@ try:
                                 pge_version = pge_version["l1b_geo"])
         l1bgeo.run(pool)
     
-    # Temp, don't correct anything in attitude file
-    shutil.copyfile(orbfname, ofile2)
-    f = h5py.File(ofile2, "r+")
-    m = ecostress.WriteStandardMetadata(f,
-                          product_specfic_group = "L1GEOMetadata",
-                          proc_lev_desc = "Level 1B Geolocation Parameters",
-                          pge_name="L1B_GEO",
-                          build_id = build_id,
-                          orbit_based = True,
-                          pge_version= pge_version["l1b_geo"])
-    if(config is not None):
-        m.process_run_config_metadata(config)
-    m.set("ImageLines", 0)
-    m.set("ImagePixels", 0)
-    dt, tm = ecostress.time_split(orb.min_time)
-    m.set("RangeBeginningDate", dt)
-    m.set("RangeBeginningTime", tm)
-    dt, tm = ecostress.time_split(orb.max_time)
-    m.set("RangeEndingDate", dt)
-    m.set("RangeEndingTime", tm)
-        
-    m.set_input_pointer(inlist)
-    m.write()
+    # Write out updated orbit data
+    fin = h5py.File(orbfname, "r")
+    tatt = [geocal.Time.time_j2000(t) for t in fin["Attitude/time_j2000"][:]]
+    teph = [geocal.Time.time_j2000(t) for t in fin["Ephemeris/time_j2000"][:]]
+    l1batt = ecostress.L1bAttGenerate(
+            igccol_corrected.image_ground_connection(0).orbit,
+            ofile2, tatt, teph, inlist, run_config = config,
+            build_id = build_id,
+            pge_version = pge_version["l1b_geo"])
+    l1batt.run()
 
     log = open(log_fname, "a")
     print("L1A_GEO_PGE:INFO-0-[Job Successful]", file=log)
