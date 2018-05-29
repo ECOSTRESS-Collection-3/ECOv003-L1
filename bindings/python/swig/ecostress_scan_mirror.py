@@ -186,8 +186,23 @@ class EcostressScanMirror(geocal_swig.generic_object.GenericObject):
 
     This is the ecostress can mirror.
 
-    I'm not real sure about the interface for this, we may change this
-    over time. But this is the initial version of this.
+    Note that we have independent values for encoder_value_at_0, one for
+    each side of the scan mirror. We would expect this to be exactly 1/2
+    the maximum encoder value, but for reasons not understood this doesn't
+    appear to be the case.
+
+    From Colin: You may recall we had an issue with the target being about
+    5 pixels offset from the start of of an acquisition depending on which
+    side of the mirror we were on. I then added a (configurable) 120
+    encoder start offset on one side of the mirror which is pretty close
+    to the gap you see in the data. We are not completely sure why we see
+    this gap, I believe the expectation was we would have to do some
+    calibration once in flight to make sure things line up.
+
+    We'll allow each side of the mirror to have an independent EV_0. If we
+    end up not having a gap, we can then just set the second EV_0 to first
+    EV_0 + maximum encoder value / 2, but if there is an offset we can
+    account for it.
 
     C++ includes: ecostress_scan_mirror.h 
     """
@@ -195,18 +210,15 @@ class EcostressScanMirror(geocal_swig.generic_object.GenericObject):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
 
-    def __init__(self, Scan_start=-25.5, Scan_end=25.5, Number_sample=5400):
+    def __init__(self, *args):
         """
 
-        Ecostress::EcostressScanMirror::EcostressScanMirror(double Scan_start=-25.5, double Scan_end=25.5, int
-        Number_sample=5400, int Max_encoder_value=1749248, int
-        Encoder_value_at_0=401443)
-        Constructor.
-
-        The scan angles are in degrees (seems more convenient than the normal
-        radians we use for angles). 
+        Ecostress::EcostressScanMirror::EcostressScanMirror(const blitz::Array< int, 2 > &Encoder_value, int
+        Max_encoder_value=1749248, int First_encoder_value_at_0=401443, int
+        Second_encoder_value_at_0=1275903)
+        Constructor, taking the encoder values. 
         """
-        _ecostress_scan_mirror.EcostressScanMirror_swiginit(self, _ecostress_scan_mirror.new_EcostressScanMirror(Scan_start, Scan_end, Number_sample))
+        _ecostress_scan_mirror.EcostressScanMirror_swiginit(self, _ecostress_scan_mirror.new_EcostressScanMirror(*args))
 
     def scan_mirror_angle(self, *args):
         """
@@ -228,11 +240,82 @@ class EcostressScanMirror(geocal_swig.generic_object.GenericObject):
         return _ecostress_scan_mirror.EcostressScanMirror_rotation_quaternion(self, *args)
 
 
+    def angle_from_encoder_value(self, *args):
+        """
+
+        GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::angle_from_encoder_value(const GeoCal::AutoDerivative< double > &Evalue) const
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror_angle_from_encoder_value(self, *args)
+
+
+    def angle_to_encoder_value(self, Angle_deg, Mirror_side):
+        """
+
+        int Ecostress::EcostressScanMirror::angle_to_encoder_value(double Angle_deg, int Mirror_side) const
+        Calculate encoder value from angle and mirror side (0 or 1). 
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror_angle_to_encoder_value(self, Angle_deg, Mirror_side)
+
+
+    def encoder_value_interpolate(self, *args):
+        """
+
+        GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::encoder_value_interpolate(int Scan_index, const GeoCal::AutoDerivative< double > Ic_sample)
+        const
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror_encoder_value_interpolate(self, *args)
+
+
+    def _v_first_encoder_value_at_0(self):
+        """
+
+        int Ecostress::EcostressScanMirror::first_encoder_value_at_0() const
+        Encoder value at 0 angle. This is for the first side of the mirror. 
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_first_encoder_value_at_0(self)
+
+
+    @property
+    def first_encoder_value_at_0(self):
+        return self._v_first_encoder_value_at_0()
+
+
+    def _v_second_encoder_value_at_0(self):
+        """
+
+        int Ecostress::EcostressScanMirror::second_encoder_value_at_0() const
+        Encoder value at 0 angle. This is for the second side of the mirror.
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_second_encoder_value_at_0(self)
+
+
+    @property
+    def second_encoder_value_at_0(self):
+        return self._v_second_encoder_value_at_0()
+
+
+    def _v_angle_per_encoder_value(self):
+        """
+
+        double Ecostress::EcostressScanMirror::angle_per_encoder_value() const
+        Angle that a single encoder value goes through, in degrees. 
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_angle_per_encoder_value(self)
+
+
+    @property
+    def angle_per_encoder_value(self):
+        return self._v_angle_per_encoder_value()
+
+
     def _v_number_sample(self):
         """
 
         int Ecostress::EcostressScanMirror::number_sample() const
-        Number sample. 
+        Number of samples in scan mirror. 
         """
         return _ecostress_scan_mirror.EcostressScanMirror__v_number_sample(self)
 
@@ -242,13 +325,49 @@ class EcostressScanMirror(geocal_swig.generic_object.GenericObject):
         return self._v_number_sample()
 
 
+    def _v_number_scan(self):
+        """
+
+        int Ecostress::EcostressScanMirror::number_scan() const
+        Number of scans in scan mirror. 
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_number_scan(self)
+
+
+    @property
+    def number_scan(self):
+        return self._v_number_scan()
+
+
+    def _v_encoder_value(self):
+        """
+
+        const blitz::Array<int, 2>& Ecostress::EcostressScanMirror::encoder_value() const
+        Angle encoder values. 
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_encoder_value(self)
+
+
+    @property
+    def encoder_value(self):
+        return self._v_encoder_value()
+
+
     def __reduce__(self):
       return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
 
     __swig_destroy__ = _ecostress_scan_mirror.delete_EcostressScanMirror
 EcostressScanMirror.scan_mirror_angle = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror_scan_mirror_angle, None, EcostressScanMirror)
 EcostressScanMirror.rotation_quaternion = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror_rotation_quaternion, None, EcostressScanMirror)
+EcostressScanMirror.angle_from_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror_angle_from_encoder_value, None, EcostressScanMirror)
+EcostressScanMirror.angle_to_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror_angle_to_encoder_value, None, EcostressScanMirror)
+EcostressScanMirror.encoder_value_interpolate = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror_encoder_value_interpolate, None, EcostressScanMirror)
+EcostressScanMirror._v_first_encoder_value_at_0 = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_first_encoder_value_at_0, None, EcostressScanMirror)
+EcostressScanMirror._v_second_encoder_value_at_0 = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_second_encoder_value_at_0, None, EcostressScanMirror)
+EcostressScanMirror._v_angle_per_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_angle_per_encoder_value, None, EcostressScanMirror)
 EcostressScanMirror._v_number_sample = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_number_sample, None, EcostressScanMirror)
+EcostressScanMirror._v_number_scan = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_number_scan, None, EcostressScanMirror)
+EcostressScanMirror._v_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_encoder_value, None, EcostressScanMirror)
 EcostressScanMirror.__str__ = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror___str__, None, EcostressScanMirror)
 EcostressScanMirror_swigregister = _ecostress_scan_mirror.EcostressScanMirror_swigregister
 EcostressScanMirror_swigregister(EcostressScanMirror)

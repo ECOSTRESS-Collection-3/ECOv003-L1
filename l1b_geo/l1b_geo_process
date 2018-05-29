@@ -185,7 +185,10 @@ try:
     for i in range(len(radlist)):
         tt = ecostress.create_time_table(radlist[i], l1b_geo_config.mirror_rpm,
                                          l1b_geo_config.frame_time)
-        sm = ecostress.create_scan_mirror()
+        sm = ecostress.create_scan_mirror(radlist[i],
+                                          l1b_geo_config.max_encoder_value,
+                                          l1b_geo_config.first_encoder_value_0,
+                                          l1b_geo_config.second_encoder_value_0)
         if(i == 0):
             orb.insert_position_time_point(tt.min_time)
             orb.insert_attitude_time_point(tt.min_time)

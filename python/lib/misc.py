@@ -78,11 +78,12 @@ def create_time_table(fname, mirror_rpm, frame_time):
     '''Create the time table using the data from the given input.'''
     return EcostressTimeTable(fname, mirror_rpm, frame_time)
 
-def create_scan_mirror():
+def create_scan_mirror(fname, max_encoder_value, first_encoder_value_0,
+                       second_encoder_value_0):
     '''Create the scan mirror'''
-    # Currently assume constant scan mirror rate. Later we should read
-    # this from l1a data
-    sm = EcostressScanMirror()
+    ev = h5py.File(fname, "r")["/FPIEencoder/EncoderValue"][:]
+    sm = EcostressScanMirror(ev, max_encoder_value, first_encoder_value_0,
+                             second_encoder_value_0)
     return sm
     
 def aster_radiance_scale_factor():

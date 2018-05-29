@@ -3,6 +3,7 @@ from geocal import *
 from ecostress import *
 import h5py
 from multiprocessing import Pool
+import sys
 
 # Often during development of test data we want to only regenerate
 # a subset of the files, using the existing test data instead. Here we
@@ -20,6 +21,9 @@ use_swir_all_band = False
 gain_fname = "../../ecostress-test-data/latest/L1A_RAD_GAIN_80005_001_20150124T204250_0100_02.h5.expected"
 #gain_fname = None
 osp_dir= "../../ecostress-test-data/latest/l1_osp_dir"
+sys.path.append(osp_dir)
+import l1b_geo_config
+
 # Center times for each of the passes. See the wiki at 
 # https://wiki.jpl.nasa.gov/display/ecostress/Test+Data and subpages for details
 
@@ -79,32 +83,37 @@ orb = OrbitScCoorOffset(orb_iss, x_offset_iss)
 # False here says it ok for SrtmDem to not have tile. This gives support
 # for data that is over the ocean.
 dem = SrtmDem("",False)
-sm = EcostressScanMirror()
+# Note that this is slightly different than what l0b_sim will calculate,
+# as far as I can tell due to different rounding. But the largest difference
+# is 1 encoder value, which is small compared to anything else and we can
+# ignore for this simulation (there is ~23 encoder values per frame, to 1 is
+# about 5% error in pixel location)
+sm = EcostressScanMirror(-l1b_geo_config.nominal_angle_range / 2,
+                         l1b_geo_config.nominal_angle_range / 2,
+                         l1b_geo_config.number_frame_per_scan,
+                         l1b_geo_config.number_scan,
+                         l1b_geo_config.max_encoder_value,
+                         l1b_geo_config.first_encoder_value_0,
+                         l1b_geo_config.second_encoder_value_0)
 
 # Camera comes from the separate ecostress_camera_generate.py script
 cam = read_shelve("camera_20180208.xml")
-# ***********************************
-# Need to fix this time calculation
-# ***********************************
-# The time table data comes from Eugene's SDS data bible file 
-# (ECOSTRESS_SDS_Data_Bible.xls in ecostress-sds git repository). The
-# real camera is a bit complicated, but we collect about 241 samples
-# of data (in along track direction) every 1.181 seconds. For a
-# pushbroom, we can divide this up evenly as an approximation. But
-# then there is an averaging step (which I don't know the details of)
-# that combines 2 pixels. So we have the factor of 2 given. Scene has
-# 5632 lines, which is where time calcuation comes from.
 
+# Approx calculation, used to get first time. This isn't hugely accurate,
+# but that is ok because we have tuned stuff so this starts at the right
+# time given our ASTER data
 tspace = 1.181 / 241 * 2
 toff = 5632 * tspace / 2
-tlen = 5632 * tspace
+tstart = pass_time[pass_index] - toff + tspace + time_shift[pass_index]
 scene_files = []
 pool = Pool(20)
 igc_arr = IgcArray([])
 for s in range(nscene[pass_index]):
-    tstart = pass_time[pass_index] - toff + tspace + \
-             s * tlen + time_shift[pass_index]
-    tt = EcostressTimeTable(tstart, False)
+    tt = EcostressTimeTable(tstart, False, l1b_geo_config.number_scan,
+                            l1b_geo_config.mirror_rpm,
+                            l1b_geo_config.frame_time)
+    # Next scene starts just after this scene
+    tstart = tt.max_time
     igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
     igc_arr.add_igc(igc)
     # Save this for use in making the L0 and orbit based file name

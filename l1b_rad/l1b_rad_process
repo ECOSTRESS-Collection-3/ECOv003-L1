@@ -74,7 +74,9 @@ import l1b_geo_config
 cam = geocal.read_shelve(l1_osp_dir + "/camera.xml")
 tt = ecostress.create_time_table(l1a_pix, l1b_geo_config.mirror_rpm,
                                  l1b_geo_config.frame_time)
-sm = ecostress.create_scan_mirror()
+sm = ecostress.create_scan_mirror(l1a_pix, l1b_geo_config.max_encoder_value,
+                                  l1b_geo_config.first_encoder_value_0,
+                                  l1b_geo_config.second_encoder_value_0)
 igc = ecostress.EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
 
 geocal.makedirs_p(dirname)

@@ -55,7 +55,7 @@ class WriteStandardMetadata(object):
         self.set('ProducerInstitution', 'Caltech')
         self.set('CampaignShortName', 'Primary')
         self.set('RegionID', '')
-        self.set('DayNightFlag', 'Day')
+        self.set('DayNightFlag', 'NA')
         self.set('SISName', "Level 1 Product Specification Document (JPL D-94634)")
         self.set('SISVersion', "Preliminary")
         self.set('BuildID', build_id)

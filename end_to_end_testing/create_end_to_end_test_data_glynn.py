@@ -22,6 +22,8 @@ create_l0b = True
 gain_fname = "../../ecostress-test-data/latest/L1A_RAD_GAIN_80005_001_20150124T204250_0100_02.h5.expected"
 #gain_fname = None
 osp_dir= "../../ecostress-test-data/latest/l1_osp_dir"
+sys.path.append(osp_dir)
+import l1b_geo_config
 
 orbit_num = 80006
 
@@ -67,7 +69,18 @@ sdata.extend([VicarLiteRasterImage(glynn_dir + "glynn_b%d.img" % (b+1), 1,
 # False here says it ok for SrtmDem to not have tile. This gives support
 # for data that is over the ocean.
 dem = SrtmDem("",False)
-sm = EcostressScanMirror()
+# Note that this is slightly different than what l0b_sim will calculate,
+# as far as I can tell due to different rounding. But the largest difference
+# is 1 encoder value, which is small compared to anything else and we can
+# ignore for this simulation (there is ~23 encoder values per frame, to 1 is
+# about 5% error in pixel location)
+sm = EcostressScanMirror(-l1b_geo_config.nominal_angle_range / 2,
+                         l1b_geo_config.nominal_angle_range / 2,
+                         l1b_geo_config.number_frame_per_scan,
+                         l1b_geo_config.number_scan,
+                         l1b_geo_config.max_encoder_value,
+                         l1b_geo_config.first_encoder_value_0,
+                         l1b_geo_config.second_encoder_value_0)
 
 # Camera comes from the separate ecostress_camera_generate.py script
 cam = read_shelve("camera_20180208.xml")
@@ -79,7 +92,9 @@ cam = read_shelve("camera_20180208.xml")
 tstart = geocal.Time.parse_time("2015-01-24T20:44:41.626764Z") - 10
 pool = Pool(20)
 
-tt = EcostressTimeTable(tstart, False)
+tt = EcostressTimeTable(tstart, False, l1b_geo_config.number_scan,
+                        l1b_geo_config.mirror_rpm,
+                        l1b_geo_config.frame_time)
 igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
 start_time = tt.min_time
 end_time = tt.max_time
