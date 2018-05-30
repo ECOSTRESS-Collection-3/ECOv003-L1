@@ -8187,10 +8187,10 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_EcostressScanMirror", _wrap_new_EcostressScanMirror, METH_VARARGS, (char *)"\n"
 		"\n"
-		"Ecostress::EcostressScanMirror::EcostressScanMirror(const blitz::Array< int, 2 > &Encoder_value, int\n"
+		"EcostressScanMirror::EcostressScanMirror(const blitz::Array< int, 2 > &Encoder_value, int\n"
 		"Max_encoder_value=1749248, int First_encoder_value_at_0=401443, int\n"
 		"Second_encoder_value_at_0=1275903)\n"
-		"Constructor, taking the encoder values. \n"
+		"Constructor, taking the encoder values. We fill in bad data values. \n"
 		""},
 	 { (char *)"EcostressScanMirror_scan_mirror_angle", _wrap_EcostressScanMirror_scan_mirror_angle, METH_VARARGS, (char *)"\n"
 		"\n"

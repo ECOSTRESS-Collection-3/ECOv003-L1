@@ -31,6 +31,7 @@ namespace Ecostress {
 
 class EcostressScanMirror: public GeoCal::Printable<EcostressScanMirror> {
 public:
+  enum { MIN_GOOD_DATA_FOR_REGRESSION = 10 };
   EcostressScanMirror(double Scan_start = -26.488105667851173,
 		      double Scan_end = 26.488105667851173,
 		      int Number_sample = 5400,
@@ -39,22 +40,11 @@ public:
 		      int First_encoder_value_at_0 = 401443,
 		      int Second_encoder_value_at_0 = 1275903
 		      );
-  
-//-------------------------------------------------------------------------
-/// Constructor, taking the encoder values
-//-------------------------------------------------------------------------
-
   EcostressScanMirror(const blitz::Array<int, 2>& Encoder_value,
 		      int Max_encoder_value = 1749248,
 		      int First_encoder_value_at_0 = 401443,
 		      int Second_encoder_value_at_0 = 1275903
-		      )
-    : evalue_(Encoder_value.copy()),
-      max_encoder_value_(Max_encoder_value),
-      ev0_(First_encoder_value_at_0),
-      ev0_2_(Second_encoder_value_at_0)
-  {
-  }
+		      );
   virtual ~EcostressScanMirror() {}
 
 //-------------------------------------------------------------------------
@@ -193,6 +183,7 @@ public:
 private:
   blitz::Array<int, 2> evalue_;
   int max_encoder_value_, ev0_, ev0_2_;
+  void fill_in_scan(int S);
   friend class boost::serialization::access;
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version);

@@ -213,10 +213,10 @@ class EcostressScanMirror(geocal_swig.generic_object.GenericObject):
     def __init__(self, *args):
         """
 
-        Ecostress::EcostressScanMirror::EcostressScanMirror(const blitz::Array< int, 2 > &Encoder_value, int
+        EcostressScanMirror::EcostressScanMirror(const blitz::Array< int, 2 > &Encoder_value, int
         Max_encoder_value=1749248, int First_encoder_value_at_0=401443, int
         Second_encoder_value_at_0=1275903)
-        Constructor, taking the encoder values. 
+        Constructor, taking the encoder values. We fill in bad data values. 
         """
         _ecostress_scan_mirror.EcostressScanMirror_swiginit(self, _ecostress_scan_mirror.new_EcostressScanMirror(*args))
 

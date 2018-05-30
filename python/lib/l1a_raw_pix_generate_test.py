@@ -25,11 +25,11 @@ def test_process_scene_file(test_data):
     assert t[1][1] == 2
     assert t[2][1] == 3
     assert t[0][2] == Time.parse_time("2015-01-24T20:42:51.000000Z")
-    assert t[1][2] == Time.parse_time("2015-01-24T20:43:43.000000Z")
-    assert t[2][2] == Time.parse_time("2015-01-24T20:44:41.000000Z")
-    assert t[0][3] == Time.parse_time("2015-01-24T20:43:43.000000Z")
-    assert t[1][3] == Time.parse_time("2015-01-24T20:44:41.000000Z")
-    assert t[2][3] == Time.parse_time("2015-01-24T20:45:38.000000Z")
+    assert t[1][2] == Time.parse_time("2015-01-24T20:43:42.200000Z")
+    assert t[2][2] == Time.parse_time("2015-01-24T20:44:34.200000Z")
+    assert t[0][3] == Time.parse_time("2015-01-24T20:43:42.200000Z")
+    assert t[1][3] == Time.parse_time("2015-01-24T20:44:34.200000Z")
+    assert t[2][3] == Time.parse_time("2015-01-24T20:45:29.000000Z")
 
 def test_process_scene_file2(test_data, unit_test_data):
     '''Look at what was a problem scene file uncovered in the V0.30 testing'''

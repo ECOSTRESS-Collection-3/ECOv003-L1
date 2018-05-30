@@ -148,6 +148,8 @@ for s in range(nscene[pass_index]):
     scene_files.append([s+1, l1a_raw_pix_fname, l1a_bb_fname,
                         orbit_num[pass_index], tt.min_time, tt.max_time])
 
+for s in range(nscene[pass_index]):
+    igc_arr.image_ground_connection(s).band = EcostressImageGroundConnection.REF_BAND
 write_shelve("igccol_truth.xml", igc_arr)
     
 l1a_raw_att_fname = \
