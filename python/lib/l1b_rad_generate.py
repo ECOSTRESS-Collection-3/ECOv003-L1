@@ -3,7 +3,7 @@ from ecostress_swig import *
 import h5py
 import shutil
 from .write_standard_metadata import WriteStandardMetadata
-from .misc import ecostress_radiance_scale_factor
+from .misc import is_day
 from .ecostress_interpolate import EcostressInterpolate
 import numpy as np
 
@@ -148,6 +148,7 @@ Data quality indicator.
               self.l1a_pix["/StandardMetadata/RangeEndingTime"][()])
         m.set("ImageLines", data_swir.shape[0])
         m.set("ImagePixels", data_swir.shape[1])
+        m.set("DayNightFlag", "Day" if is_day(self.igc) else "Night")
         m.set_input_pointer([self.l1a_pix_fname, self.l1a_gain_fname,
                              self.l1_osp_dir + "/l1b_rad_config.py"])
         m.write()

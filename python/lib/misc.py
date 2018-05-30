@@ -85,6 +85,15 @@ def create_scan_mirror(fname, max_encoder_value, first_encoder_value_0,
     sm = EcostressScanMirror(ev, max_encoder_value, first_encoder_value_0,
                              second_encoder_value_0)
     return sm
+
+def is_day(igc):
+    '''Determine if the center pixel of the igc is in day or night, defined
+    by having the solar elevation > 0'''
+    ic = geocal.ImageCoordinate(igc.number_line/2,igc.number_sample/2)
+    slv = geocal.CartesianFixedLookVector.solar_look_vector(igc.pixel_time(ic))
+    gpt = igc.ground_coordinate(ic)
+    sol_elv = 90 - geocal.LnLookVector(slv,gpt).view_zenith
+    return sol_elv > 0
     
 def aster_radiance_scale_factor():
     '''Return the ASTER scale factors. This is for L1T data, found at

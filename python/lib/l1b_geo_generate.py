@@ -6,7 +6,7 @@ import h5py
 import math
 from multiprocessing import Pool
 from .write_standard_metadata import WriteStandardMetadata
-from .misc import time_split
+from .misc import time_split, is_day
 import numpy as np
 
 class L1bGeoGenerate(object):
@@ -123,6 +123,7 @@ class L1bGeoGenerate(object):
         dt, tm = time_split(self.igc.time_table.max_time)
         m.set("RangeEndingDate", dt)
         m.set("RangeEndingTime", tm)
+        m.set("DayNightFlag", "Day" if is_day(self.igc) else "Night")
         m.set_input_pointer(self.inlist)
         g = fout.create_group("Geolocation")
         g.attrs["Projection"] = '''\

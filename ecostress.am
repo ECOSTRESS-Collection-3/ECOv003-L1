@@ -61,13 +61,6 @@ end-to-end-check: installcheck-am
 	source $(prefix)/setup_ecostress.sh && $(PYTHON) $(srcdir)/end_to_end_testing/diff_end_to_end_sba.py
 	source $(prefix)/setup_ecostress.sh && ( seq 3 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOSTRESS_L1B_GEO_80005_00{}_*.h5 end_to_end_test_l1b_rad/ECOSTRESS_L1B_RAD_80005_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
 
-temp:
-	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_ATT*.h5
-	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" /Geolocation/latitude ::: ./end_to_end_test_l1b_geo/*L1B_GEO*.h5
-	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" /Geolocation/longitude ::: ./end_to_end_test_l1b_geo/*L1B_GEO*.h5
-	source $(prefix)/setup_ecostress.sh && $(PYTHON) $(srcdir)/end_to_end_testing/diff_end_to_end_sba.py
-	source $(prefix)/setup_ecostress.sh && ( seq 3 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOSTRESS_L1B_GEO_80005_00{}_*.h5 end_to_end_test_l1b_rad/ECOSTRESS_L1B_RAD_80005_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
-
 end-to-end-check-glynn: installcheck-am
 	-rm -r ./end_to_end_test_glynn_l0_input
 	-rm -r ./end_to_end_test_glynn_l1a_raw
