@@ -20,7 +20,7 @@ def create_dem(config):
     dem = geocal.SrtmDem(srtm_dir,False, geocal.DatumGeoid96(datum))
     return dem
 
-def create_ortho_base(config):
+def ortho_base_directory(config):
     '''Create the ortho base. In production, take the directory passed in
     from the configuration file. But for testing, if ECOSTRESS_USE_AFIDS_ENV
     is defined then look for the location of this on pistol'''
@@ -31,8 +31,29 @@ def create_ortho_base(config):
         # run config file
         if(os.path.exists("/raid22/band5_VICAR")):
             ortho_base_dir = "/raid22"
-    return geocal.Landsat7Global(ortho_base_dir,
-                                 geocal.Landsat7Global.BAND5)
+    return ortho_base_dir
+
+def band_to_landsat_band(lband):
+    if(lband == 1):
+        return geocal.Landsat7Global.BAND1
+    elif(lband == 2):
+        return geocal.Landsat7Global.BAND2
+    elif(lband == 3):
+        return geocal.Landsat7Global.BAND3
+    elif(lband == 4):
+        return geocal.Landsat7Global.BAND4
+    elif(lband == 5):
+        return geocal.Landsat7Global.BAND5
+    elif(lband == 61):
+        return geocal.Landsat7Global.BAND61
+    elif(lband == 62):
+        return geocal.Landsat7Global.BAND62
+    elif(lband == 7):
+        return geocal.Landsat7Global.BAND7
+    elif(lband == 8):
+        return geocal.Landsat7Global.BAND8
+    else:
+        raise RuntimeError("Unrecognized band number")
 
 def create_lwm(config):
     '''Create the land water mask. In production, use the directory passed
@@ -203,9 +224,9 @@ def orbit_from_metadata(fname):
     return int(onum), int(sid), acquisition_time
     
 
-__all__ = ["create_dem", "create_ortho_base", "create_lwm", "setup_spice",
+__all__ = ["create_dem", "ortho_base_directory", "create_lwm", "setup_spice",
            "create_orbit_raw", "create_time_table", "create_scan_mirror",
            "aster_radiance_scale_factor", "ecostress_to_aster_band",
            "ecostress_radiance_scale_factor", "time_to_file_string",
            "time_split", "ecostress_file_name", "process_run",
-           "orbit_from_metadata"]
+           "orbit_from_metadata", "band_to_landsat_band"]

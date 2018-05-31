@@ -8,6 +8,7 @@ from geocal import *
 from ecostress import *
 import h5py
 from multiprocessing import Pool
+import sys
 
 # Often during development of test data we want to only regenerate
 # a subset of the files, using the existing test data instead. Here we

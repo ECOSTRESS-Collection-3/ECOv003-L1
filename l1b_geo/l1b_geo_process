@@ -29,11 +29,17 @@ Options:
 
   --ecostress-band=d
        Ecostress band to use. Band 1 is the SWIR band, Band 2 is 8.28 micron
-       and so on. [default: 1]
+       and so on. -1 means use the value found in the configuration file
+       [default: -1]
+
+  --force-night
+       Testing option to force the data to be treated as night, overriding
+       what the l1b_rad data says.
 
   --landsat-band=d
        Landsat band to match to. For band 6, we have both low and high gain.
-       Enter this as 61 and 62. [default: 5]
+       Enter this as 61 and 62. -1 means use the value found in the
+       configuration file [default: -1]
 
   --number-cpu=d
        Number of CPUs to use when processing. Ignored if we are using a 
@@ -70,7 +76,7 @@ if(args.run_config):
     orb = ecostress.create_orbit_raw(config)
     dem = ecostress.create_dem(config)
     lwm = ecostress.create_lwm(config)
-    ortho_base = ecostress.create_ortho_base(config)
+    ortho_base_dir = ecostress.ortho_base_directory(config)
     radlist = config.as_list("InputFileGroup", "L1B_RAD")
     radlist = [os.path.abspath(f) for f in radlist]
     dirname = config["ProductPathGroup", "ProductPath"]
@@ -98,30 +104,10 @@ else:
         lwm = geocal.SrtmLwmData("/project/ancillary/SRTM/srtm_v3_lwm", False)
     else:
         raise RuntimeError("Can't find land/water mask data")
-    if(args.landsat_band == 1):
-        lband = geocal.Landsat7Global.BAND1
-    elif(args.landsat_band == 2):
-        lband = geocal.Landsat7Global.BAND2
-    elif(args.landsat_band == 3):
-        lband = geocal.Landsat7Global.BAND3
-    elif(args.landsat_band == 4):
-        lband = geocal.Landsat7Global.BAND4
-    elif(args.landsat_band == 5):
-        lband = geocal.Landsat7Global.BAND5
-    elif(args.landsat_band == 61):
-        lband = geocal.Landsat7Global.BAND61
-    elif(args.landsat_band == 62):
-        lband = geocal.Landsat7Global.BAND62
-    elif(args.landsat_band == 7):
-        lband = geocal.Landsat7Global.BAND7
-    elif(args.landsat_band == 8):
-        lband = geocal.Landsat7Global.BAND8
-    else:
-        raise RuntimeError("Unrecognized band number")
     if(os.path.exists("/raid22/band5_VICAR")):
-        ortho_base = geocal.Landsat7Global("/raid22", lband)
+        ortho_base_dir = "/raid22"
     elif(os.path.exists("/project/ancillary/LANDSAT")):
-        ortho_base = geocal.Landsat7Global("/project/ancillary/LANDSAT", lband)
+        ortho_base_dir = "/project/ancillary/LANDSAT"
     else:
         raise RuntimeError("Can't find Landsat global orthobase data")
     radlist = [os.path.abspath(f) for f in args.l1b_rad]
@@ -131,6 +117,27 @@ else:
 sys.path.append(l1_osp_dir)
 import l1b_geo_config
 
+# Determine bands to match
+
+if(args.landsat_band == -1):
+    lband_day = l1b_geo_config.landsat_day_band
+    lband_night = l1b_geo_config.landsat_night_band
+else:
+    lband_day = args.landsat_band
+    lband_night = args.landsat_band
+
+ortho_base_day = geocal.Landsat7Global(ortho_base_dir,
+                            ecostress.band_to_landsat_band(lband_day))
+ortho_base_night = geocal.Landsat7Global(ortho_base_dir,
+                            ecostress.band_to_landsat_band(lband_night))
+
+if(args.ecostress_band == -1):
+    eband_day = l1b_geo_config.ecostress_day_band
+    eband_night = l1b_geo_config.ecostress_night_band
+else:
+    eband_day = args.ecostress_band
+    eband_night = eband_day
+    
 # Include offset between location of ecostress and the ISS orbital coordinates
 # origin.
 orb = geocal.OrbitQuaternionListOffset(orb, l1b_geo_config.x_offset_iss)
@@ -165,6 +172,8 @@ try:
     pool = Pool(ncpu)
     # Determine output file names
     ofile = []
+    is_day = []
+    ortho_base = []
     for i in range(len(radlist)):
         orbit, scene, acquisition_time = ecostress.orbit_from_metadata(radlist[i])
         ofile.append(ecostress.ecostress_file_name("L1B_GEO", orbit, scene,
@@ -195,14 +204,32 @@ try:
         if(i == len(radlist) - 1):
             orb.insert_position_time_point(tt.max_time)
             orb.insert_attitude_time_point(tt.max_time)
+        if(not args.force_night and
+           h5py.File(radlist[i],"r")["StandardMetadata/DayNightFlag"][()] == "Day"):
+            is_day.append(True)
+            eband = eband_day
+            lband = lband_day
+            ortho_base.append(ortho_base_day)
+        else:
+            is_day.append(False)
+            eband = eband_night
+            lband = lband_night
+            ortho_base.append(ortho_base_night)
         # Work with the SWIR channel data
-        if(args.ecostress_band ==1):
+        if(eband ==1):
             ras = geocal.GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" %
                                          radlist[i])
         else:
             ras = geocal.GdalRasterImage("HDF5:\"%s\"://Radiance/radiance_%d" %
-                                         (radlist[i], args.ecostress_band - 1))
+                                         (radlist[i], eband - 1))
             ras = geocal.ScaleImage(ras, 100.0)
+        print("Scene %d is %s, matching ecostress band %d to Landsat band %d" % ((i + 1), "Day" if is_day[i] else "Night", eband, lband))
+        log = open(log_fname, "a")
+        print("INFO:L1A_GEO_PGE:Scene %d is %s, matching ecostress band %d to Landsat band %d" %
+              ((i + 1), "Day" if is_day[i] else "Night", eband, lband),
+              file=log)
+        log.flush()
+        log = None
         igccol_initial.add_igc(ecostress.EcostressImageGroundConnection(orb, tt, cam,
                                        sm, dem, ras, "Scene %d" % (i + 1)))
 
@@ -242,7 +269,7 @@ try:
         log.flush()
         l1bgeo = ecostress.L1bGeoGenerate(
                                 igccol_corrected.image_ground_connection(i),
-                                lwm, ofile[i],inlist,
+                                lwm, ofile[i],inlist,is_day[i],
                                 number_line = args.number_line,
                                 run_config = config, log_fname = log_fname,
                                 build_id = build_id,

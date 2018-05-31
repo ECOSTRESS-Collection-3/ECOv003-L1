@@ -6,13 +6,14 @@ import h5py
 import math
 from multiprocessing import Pool
 from .write_standard_metadata import WriteStandardMetadata
-from .misc import time_split, is_day
+from .misc import time_split
 import numpy as np
 
 class L1bGeoGenerate(object):
     '''This generate a L1B geo output file from a given ImageGroundConnection.
     '''
-    def __init__(self, igc, lwm, output_name, inlist, run_config = None,
+    def __init__(self, igc, lwm, output_name, inlist, is_day,
+                 run_config = None,
                  start_line = 0,
                  number_line = -1,
                  local_granule_id = None, log_fname = None,
@@ -29,6 +30,7 @@ class L1bGeoGenerate(object):
         self.igc = igc
         self.gc_arr = GroundCoordinateArray(self.igc, True)
         self.lwm = lwm
+        self.is_day = is_day
         self.output_name = output_name
         self.start_line = start_line
         self.number_line = number_line
@@ -123,7 +125,7 @@ class L1bGeoGenerate(object):
         dt, tm = time_split(self.igc.time_table.max_time)
         m.set("RangeEndingDate", dt)
         m.set("RangeEndingTime", tm)
-        m.set("DayNightFlag", "Day" if is_day(self.igc) else "Night")
+        m.set("DayNightFlag", "Day" if self.is_day else "Night")
         m.set_input_pointer(self.inlist)
         g = fout.create_group("Geolocation")
         g.attrs["Projection"] = '''\

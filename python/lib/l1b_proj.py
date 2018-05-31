@@ -22,13 +22,13 @@ class L1bProj(object):
         # Want to scale to roughly 60 meters. Much of the landsat data is
         # at higher resolution, but ecostress is close to 70 meter pixel so
         # want data to roughly match
-        self.ortho_scale = round(60.0 / ortho_base.map_info.resolution_meter)
+        self.ortho_scale = [round(60.0 / b.map_info.resolution_meter) for b in self.ortho_base]
         for i in range(self.igccol.number_image):
             self.gc_arr.append(GroundCoordinateArray(
                 self.igccol.image_ground_connection(i), False, 2, 2))
             self.f.append(self.gc_arr[i].raster_cover_vicar(fname_list[i],
-                         self.ortho_base.map_info.scale(self.ortho_scale,
-                                                        self.ortho_scale)))
+                         self.ortho_base[i].map_info.scale(self.ortho_scale[i],
+                                                        self.ortho_scale[i])))
     def proj_scan(self, it):
         igc_ind, start_line, number_line = it
         self.gc_arr[igc_ind].project_surface_scan_arr(self.f[igc_ind],
@@ -45,7 +45,8 @@ class L1bProj(object):
     def proj(self, pool = None):
         it = []
         for i, bf in enumerate(self.f):
-            self.ortho_base.create_subset_file(self.ref_fname_list[i], "VICAR",
+            self.ortho_base[i].create_subset_file(self.ref_fname_list[i],
+                                              "VICAR",
                                                Desired_map_info = bf.map_info,
                                                Translate_arg = "-ot Int16")
         for i in range(self.igccol.number_image):
