@@ -9,7 +9,7 @@ import subprocess
 @skip
 def test_l1b_rad_generate(isolated_dir, igc_hres, dn_fname, gain_fname):
     l1brad = L1bRadGenerate(igc_hres, dn_fname, gain_fname,
-                            "ECOSTRESS_L1B_RAD_80005_001_20150124T204251_0100_01.h5")
+                            "ECOSTRESS_L1B_RAD_80005_001_20150124T204251_0100_01.h5", "fake_osp")
     l1brad.run()
 
 # Don't normally run this. We had this in place to look at band to band

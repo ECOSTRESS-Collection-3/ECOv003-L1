@@ -89,8 +89,10 @@ class L1bRadGenerate(object):
             data = self.image(b+1).astype(np.float32)
             t = g.create_dataset("radiance_%d" % (b + 1),
                                  data = dataset[:,:,b],
+                                 dtype='f4',
                                  fillvalue = FILL_VALUE_BAD_OR_MISSING)
-            t.attrs["_FillValue"] = FILL_VALUE_BAD_OR_MISSING
+            t.attrs.create("_FillValue", data=FILL_VALUE_BAD_OR_MISSING,
+                           dtype=t.dtype)
             t.attrs["Units"] = "W/m^2/sr/um"
             t = g.create_dataset("data_quality_%d" % (b + 1),
                                  data = dqi[:,:,b])
@@ -118,7 +120,8 @@ Data quality indicator.
         t = g.create_dataset("swir_dn",
                              data = data_swir,
                              fillvalue = FILL_VALUE_BAD_OR_MISSING)
-        t.attrs["_FillValue"] = FILL_VALUE_BAD_OR_MISSING
+        t.attrs.create("_FillValue", data=FILL_VALUE_BAD_OR_MISSING,
+                       dtype=t.dtype)
         t.attrs["Units"] = "dimensionless"
         g = fout.create_group("Time")
         t = g.create_dataset("line_start_time_j2000",
