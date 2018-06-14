@@ -280,7 +280,7 @@ try:
     fin = h5py.File(orbfname, "r")
     tatt = [geocal.Time.time_j2000(t) for t in fin["Attitude/time_j2000"][:]]
     teph = [geocal.Time.time_j2000(t) for t in fin["Ephemeris/time_j2000"][:]]
-    l1batt = ecostress.L1bAttGenerate(
+    l1batt = ecostress.L1bAttGenerate(orbfname,
             igccol_corrected.image_ground_connection(0).orbit,
             ofile2, tatt, teph, inlist, run_config = config,
             build_id = build_id,
