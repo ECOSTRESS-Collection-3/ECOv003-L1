@@ -108,9 +108,15 @@ class L1bProj(object):
         # Now resample data, and also resample orthobase to the same
         # map projection.
         it = list(range(self.igccol.number_image))
-        if(pool is None):
-            list(map(self.resample_data, it))
-        else:
-            pool.map(self.resample_data, it)
+        # Seem to run into trouble doing this in parallel, I think the
+        # memory use is high enough that it causes problems. May look
+        # to reduce resample_data memory use somehow. This step is quick
+        # enough that this probably isn't much of an actual problem in
+        # practice
+        list(map(self.resample_data, it))
+        #if(pool is None):
+        #    list(map(self.resample_data, it))
+        #else:
+        #    pool.map(self.resample_data, it)
         
 __all__ = ["L1bProj"]
