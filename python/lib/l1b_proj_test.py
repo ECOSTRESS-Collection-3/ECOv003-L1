@@ -4,7 +4,7 @@ from test_support import *
 from multiprocessing import Pool
 
 # Don't normally run, this takes about 1 minute with 10 processors
-#@slow
+@slow
 def test_l1b_proj(isolated_dir, igc_with_img):
     ortho = [Landsat7Global("/raid22", Landsat7Global.BAND5),
              Landsat7Global("/raid22", Landsat7Global.BAND5)]
