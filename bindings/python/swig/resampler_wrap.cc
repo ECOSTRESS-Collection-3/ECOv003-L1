@@ -6894,6 +6894,309 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_3(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  blitz::Array< double,2 > *arg1 = 0 ;
+  blitz::Array< double,2 > *arg2 = 0 ;
+  GeoCal::MapInfo *arg3 = 0 ;
+  int arg4 ;
+  bool arg5 ;
+  blitz::Array< double,2 > a1 ;
+  PythonObject numpy1 ;
+  blitz::Array< double,2 > a2 ;
+  PythonObject numpy2 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  boost::shared_ptr< GeoCal::MapInfo const > tempshared3 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  bool val5 ;
+  int ecode5 = 0 ;
+  Ecostress::Resampler *result = 0 ;
+  
+  if ((nobjs < 5) || (nobjs > 5)) SWIG_fail;
+  {
+    int res = SWIG_ConvertPtr(swig_obj[0], (void**)(&arg1), SWIGTYPE_p_blitz__ArrayT_double_2_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy1.obj = to_numpy<double >(swig_obj[0]);
+      if(!numpy1.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_Resampler', expecting type  Array<double,2>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy1.obj) !=2) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_Resampler', expecting type  Array<double,2>");
+        return NULL;
+      }
+      a1.reference(to_blitz_array<double, 2>(numpy1));
+      arg1 = &a1;
+    }
+  }
+  {
+    int res = SWIG_ConvertPtr(swig_obj[1], (void**)(&arg2), SWIGTYPE_p_blitz__ArrayT_double_2_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy2.obj = to_numpy<double >(swig_obj[1]);
+      if(!numpy2.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_Resampler', expecting type  Array<double,2>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy2.obj) !=2) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_Resampler', expecting type  Array<double,2>");
+        return NULL;
+      }
+      a2.reference(to_blitz_array<double, 2>(numpy2));
+      arg2 = &a2;
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::MapInfo *ptr;
+    res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], (void**)(&ptr), SWIGTYPE_p_GeoCal__MapInfo,  0 , &newmem);
+    if (SWIG_IsOK(res3)) {
+      arg3 = ptr;
+    } else {
+      res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t,  0 , &newmem);
+      if (!SWIG_IsOK(res3)) {
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
+      }
+      if (!argp3) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared3 = *reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3);
+        delete reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3);
+        arg3 = const_cast< GeoCal::MapInfo * >(tempshared3.get());
+      } else {
+        arg3 = const_cast< GeoCal::MapInfo * >(reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3)->get());
+      }
+    }
+  }
+  ecode4 = SWIG_AsVal_int(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_Resampler" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  ecode5 = SWIG_AsVal_bool(swig_obj[4], &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_Resampler" "', argument " "5"" of type '" "bool""'");
+  } 
+  arg5 = static_cast< bool >(val5);
+  {
+    try {
+      result = (Ecostress::Resampler *)new Ecostress::Resampler((blitz::Array< double,2 > const &)*arg1,(blitz::Array< double,2 > const &)*arg2,(GeoCal::MapInfo const &)*arg3,arg4,arg5);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::Resampler > *smartresult = result ? new boost::shared_ptr<  Ecostress::Resampler >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_4(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  blitz::Array< double,2 > *arg1 = 0 ;
+  blitz::Array< double,2 > *arg2 = 0 ;
+  GeoCal::MapInfo *arg3 = 0 ;
+  int arg4 ;
+  blitz::Array< double,2 > a1 ;
+  PythonObject numpy1 ;
+  blitz::Array< double,2 > a2 ;
+  PythonObject numpy2 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  boost::shared_ptr< GeoCal::MapInfo const > tempshared3 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  Ecostress::Resampler *result = 0 ;
+  
+  if ((nobjs < 4) || (nobjs > 4)) SWIG_fail;
+  {
+    int res = SWIG_ConvertPtr(swig_obj[0], (void**)(&arg1), SWIGTYPE_p_blitz__ArrayT_double_2_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy1.obj = to_numpy<double >(swig_obj[0]);
+      if(!numpy1.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_Resampler', expecting type  Array<double,2>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy1.obj) !=2) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_Resampler', expecting type  Array<double,2>");
+        return NULL;
+      }
+      a1.reference(to_blitz_array<double, 2>(numpy1));
+      arg1 = &a1;
+    }
+  }
+  {
+    int res = SWIG_ConvertPtr(swig_obj[1], (void**)(&arg2), SWIGTYPE_p_blitz__ArrayT_double_2_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy2.obj = to_numpy<double >(swig_obj[1]);
+      if(!numpy2.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_Resampler', expecting type  Array<double,2>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy2.obj) !=2) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_Resampler', expecting type  Array<double,2>");
+        return NULL;
+      }
+      a2.reference(to_blitz_array<double, 2>(numpy2));
+      arg2 = &a2;
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::MapInfo *ptr;
+    res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], (void**)(&ptr), SWIGTYPE_p_GeoCal__MapInfo,  0 , &newmem);
+    if (SWIG_IsOK(res3)) {
+      arg3 = ptr;
+    } else {
+      res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t,  0 , &newmem);
+      if (!SWIG_IsOK(res3)) {
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
+      }
+      if (!argp3) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared3 = *reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3);
+        delete reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3);
+        arg3 = const_cast< GeoCal::MapInfo * >(tempshared3.get());
+      } else {
+        arg3 = const_cast< GeoCal::MapInfo * >(reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3)->get());
+      }
+    }
+  }
+  ecode4 = SWIG_AsVal_int(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_Resampler" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  {
+    try {
+      result = (Ecostress::Resampler *)new Ecostress::Resampler((blitz::Array< double,2 > const &)*arg1,(blitz::Array< double,2 > const &)*arg2,(GeoCal::MapInfo const &)*arg3,arg4);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::Resampler > *smartresult = result ? new boost::shared_ptr<  Ecostress::Resampler >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_5(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  blitz::Array< double,2 > *arg1 = 0 ;
+  blitz::Array< double,2 > *arg2 = 0 ;
+  GeoCal::MapInfo *arg3 = 0 ;
+  blitz::Array< double,2 > a1 ;
+  PythonObject numpy1 ;
+  blitz::Array< double,2 > a2 ;
+  PythonObject numpy2 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  boost::shared_ptr< GeoCal::MapInfo const > tempshared3 ;
+  Ecostress::Resampler *result = 0 ;
+  
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  {
+    int res = SWIG_ConvertPtr(swig_obj[0], (void**)(&arg1), SWIGTYPE_p_blitz__ArrayT_double_2_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy1.obj = to_numpy<double >(swig_obj[0]);
+      if(!numpy1.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_Resampler', expecting type  Array<double,2>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy1.obj) !=2) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_Resampler', expecting type  Array<double,2>");
+        return NULL;
+      }
+      a1.reference(to_blitz_array<double, 2>(numpy1));
+      arg1 = &a1;
+    }
+  }
+  {
+    int res = SWIG_ConvertPtr(swig_obj[1], (void**)(&arg2), SWIGTYPE_p_blitz__ArrayT_double_2_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy2.obj = to_numpy<double >(swig_obj[1]);
+      if(!numpy2.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_Resampler', expecting type  Array<double,2>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy2.obj) !=2) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_Resampler', expecting type  Array<double,2>");
+        return NULL;
+      }
+      a2.reference(to_blitz_array<double, 2>(numpy2));
+      arg2 = &a2;
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::MapInfo *ptr;
+    res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], (void**)(&ptr), SWIGTYPE_p_GeoCal__MapInfo,  0 , &newmem);
+    if (SWIG_IsOK(res3)) {
+      arg3 = ptr;
+    } else {
+      res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t,  0 , &newmem);
+      if (!SWIG_IsOK(res3)) {
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
+      }
+      if (!argp3) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared3 = *reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3);
+        delete reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3);
+        arg3 = const_cast< GeoCal::MapInfo * >(tempshared3.get());
+      } else {
+        arg3 = const_cast< GeoCal::MapInfo * >(reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3)->get());
+      }
+    }
+  }
+  {
+    try {
+      result = (Ecostress::Resampler *)new Ecostress::Resampler((blitz::Array< double,2 > const &)*arg1,(blitz::Array< double,2 > const &)*arg2,(GeoCal::MapInfo const &)*arg3);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::Resampler > *smartresult = result ? new boost::shared_ptr<  Ecostress::Resampler >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_new_Resampler(PyObject *self, PyObject *args) {
   Py_ssize_t argc;
   PyObject *argv[6] = {
@@ -6903,13 +7206,61 @@ SWIGINTERN PyObject *_wrap_new_Resampler(PyObject *self, PyObject *args) {
   if (!(argc = SWIG_Python_UnpackTuple(args,"new_Resampler",0,5,argv))) SWIG_fail;
   --argc;
   if (argc == 3) {
+    int _v = 0;
+    {
+      int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t, 0);
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_1;
+    {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t, 0);
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_1;
     return _wrap_new_Resampler__SWIG_2(self, argc, argv);
   }
+check_1:
+  
+  if (argc == 3) {
+    return _wrap_new_Resampler__SWIG_5(self, argc, argv);
+  }
   if (argc == 4) {
+    int _v = 0;
+    {
+      int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t, 0);
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_3;
+    {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t, 0);
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_3;
     return _wrap_new_Resampler__SWIG_1(self, argc, argv);
   }
+check_3:
+  
+  if (argc == 4) {
+    return _wrap_new_Resampler__SWIG_4(self, argc, argv);
+  }
   if (argc == 5) {
+    int _v = 0;
+    {
+      int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t, 0);
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_5;
+    {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t, 0);
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_5;
     return _wrap_new_Resampler__SWIG_0(self, argc, argv);
+  }
+check_5:
+  
+  if (argc == 5) {
+    return _wrap_new_Resampler__SWIG_3(self, argc, argv);
   }
   
 fail:
@@ -6917,7 +7268,10 @@ fail:
     "  Possible C/C++ prototypes are:\n"
     "    Ecostress::Resampler::Resampler(boost::shared_ptr< GeoCal::RasterImage > const &,boost::shared_ptr< GeoCal::RasterImage > const &,GeoCal::MapInfo const &,int,bool)\n"
     "    Ecostress::Resampler::Resampler(boost::shared_ptr< GeoCal::RasterImage > const &,boost::shared_ptr< GeoCal::RasterImage > const &,GeoCal::MapInfo const &,int)\n"
-    "    Ecostress::Resampler::Resampler(boost::shared_ptr< GeoCal::RasterImage > const &,boost::shared_ptr< GeoCal::RasterImage > const &,GeoCal::MapInfo const &)\n");
+    "    Ecostress::Resampler::Resampler(boost::shared_ptr< GeoCal::RasterImage > const &,boost::shared_ptr< GeoCal::RasterImage > const &,GeoCal::MapInfo const &)\n"
+    "    Ecostress::Resampler::Resampler(blitz::Array< double,2 > const &,blitz::Array< double,2 > const &,GeoCal::MapInfo const &,int,bool)\n"
+    "    Ecostress::Resampler::Resampler(blitz::Array< double,2 > const &,blitz::Array< double,2 > const &,GeoCal::MapInfo const &,int)\n"
+    "    Ecostress::Resampler::Resampler(blitz::Array< double,2 > const &,blitz::Array< double,2 > const &,GeoCal::MapInfo const &)\n");
   return 0;
 }
 
@@ -7563,28 +7917,14 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_Resampler", _wrap_new_Resampler, METH_VARARGS, (char *)"\n"
 		"\n"
-		"Resampler::Resampler(const boost::shared_ptr< GeoCal::RasterImage > &Latitude, const\n"
-		"boost::shared_ptr< GeoCal::RasterImage > &Longitude, const\n"
+		"Resampler::Resampler(const blitz::Array< double, 2 > &Latitude_interpolated, const\n"
+		"blitz::Array< double, 2 > &Longitude_interpolated, const\n"
 		"GeoCal::MapInfo &Mi, int Num_sub_pixel=2, bool Exactly_match_mi=false)\n"
-		"Constructor.\n"
+		"Alternative constructor where we get the lat/lon from something other\n"
+		"than a file.\n"
 		"\n"
-		"This takes the latitude and longitude fields as RasterImage (we could\n"
-		"have taken the L1B_GEO file name, but taking RasterImage seems a\n"
-		"little more general). We take the MapInfo that we will resample to\n"
-		"(you can get that from something like mi =\n"
-		"Landsat7Global(\"/raid22\",Landsat7Global.BAND5).map_info.scale(2,2)\n"
-		"in python).\n"
-		"\n"
-		"We make sure the mapinfo covers the latitude/longitude range\n"
-		"\n"
-		"We also pass in the number of subpixels to calculate, so for example\n"
-		"to work with 60 m landsat like map projection you'd want this to be 2.\n"
-		"\n"
-		"By default, we only use Mi to determine the pixel resolution, and we\n"
-		"make sure the output covers the full latitude/longitude range. You can\n"
-		"optionally specify that we exactly match the passed in Mi, regardless\n"
-		"of the actually coverage of the lat/lon. This is useful if we are\n"
-		"producing output files to compare against some existing file. \n"
+		"The data should already be interpolated (e.g., in python do\n"
+		"scipy.ndimage.interpolation.zoom(t,Num_sub_pixel,order=2) \n"
 		""},
 	 { (char *)"Resampler_resample_field", _wrap_Resampler_resample_field, METH_VARARGS, (char *)"\n"
 		"\n"

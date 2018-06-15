@@ -59,7 +59,7 @@ Options:
   --number-subpixel=d
        Number of subpixels to use in resampling. Should be chosen to we are
        at a high enough resolution to cover the desired pixel output size
-       without holes in the data. [default: 2]
+       without holes in the data. [default: 3]
 
   --resolution=r
        Scale the given/default map info to the give resolution in meters.

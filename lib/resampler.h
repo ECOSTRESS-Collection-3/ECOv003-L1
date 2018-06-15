@@ -21,6 +21,10 @@ public:
 	    const boost::shared_ptr<GeoCal::RasterImage>& Longitude,
 	    const GeoCal::MapInfo& Mi, int Num_sub_pixel = 2,
 	    bool Exactly_match_mi = false);
+  Resampler(const blitz::Array<double, 2>& Latitude_interpolated,
+	    const blitz::Array<double, 2>& Longitude_interpolated,
+	    const GeoCal::MapInfo& Mi, int Num_sub_pixel = 2,
+	    bool Exactly_match_mi = false);
   virtual ~Resampler() {}
   const GeoCal::MapInfo& map_info() const { return mi; }
   int number_sub_pixel() const {return nsub; }
@@ -32,6 +36,9 @@ public:
   virtual void print(std::ostream& Os) const
   { Os << "ECOSTRESS Resampler";}
 private:
+  void init(const blitz::Array<double, 2>& lat,
+	    const blitz::Array<double, 2>& lon,
+	    const GeoCal::MapInfo& Mi, bool Exactly_match_mi);
   GeoCal::MapInfo mi;
   int nsub;
   blitz::Array<int, 3> data_index;

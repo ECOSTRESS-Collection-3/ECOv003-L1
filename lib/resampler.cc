@@ -41,19 +41,42 @@ ECOSTRESS_IMPLEMENT(Resampler);
 /// useful if we are producing output files to compare against some
 /// existing file.
 //-------------------------------------------------------------------------
+
 Resampler::Resampler
 (const boost::shared_ptr<GeoCal::RasterImage>& Latitude,
  const boost::shared_ptr<GeoCal::RasterImage>& Longitude,
  const GeoCal::MapInfo& Mi, int Num_sub_pixel, bool Exactly_match_mi)
   : nsub(Num_sub_pixel)
 {
-  blitz::Range ra = blitz::Range::all();
   MagnifyBilinear latmag(Latitude, Num_sub_pixel);
   MagnifyBilinear lonmag(Longitude, Num_sub_pixel);
   blitz::Array<double, 2> lat = latmag.read_double(0,0, latmag.number_line(),
 						   latmag.number_sample());
   blitz::Array<double, 2> lon = lonmag.read_double(0,0, lonmag.number_line(),
 						   lonmag.number_sample());
+  init(lat, lon, Mi, Exactly_match_mi);
+}
+
+//-------------------------------------------------------------------------
+/// Alternative constructor where we get the lat/lon from something
+/// other than a file. The data should already be interpolated (e.g.,
+/// in python do scipy.ndimage.interpolation.zoom(t,Num_sub_pixel,order=2)
+//-------------------------------------------------------------------------
+
+Resampler::Resampler
+(const blitz::Array<double, 2>& Latitude_interpolated,
+ const blitz::Array<double, 2>& Longitude_interpolated,
+ const GeoCal::MapInfo& Mi, int Num_sub_pixel, bool Exactly_match_mi)
+  : nsub(Num_sub_pixel)
+{
+  init(Latitude_interpolated, Longitude_interpolated, Mi, Exactly_match_mi);
+}
+
+void Resampler::init(const blitz::Array<double, 2>& lat,
+		     const blitz::Array<double, 2>& lon,
+		     const GeoCal::MapInfo& Mi, bool Exactly_match_mi)
+{
+  blitz::Range ra = blitz::Range::all();
   std::vector<boost::shared_ptr<GroundCoordinate> > ptlist;
   ptlist.push_back(boost::make_shared<Geodetic>(blitz::min(lat),
 						blitz::min(lon)));
@@ -73,7 +96,6 @@ Resampler::Resampler
   data_index(ra,ra,0) = blitz::cast<int>(blitz::rint((lat-latstart)/latdelta));
   data_index(ra,ra,1) = blitz::cast<int>(blitz::rint((lon-lonstart)/londelta));
 }
-
 //-------------------------------------------------------------------------
 /// Resample the given data, and write out to a VICAR file with the
 /// given name.

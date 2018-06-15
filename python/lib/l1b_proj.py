@@ -3,62 +3,114 @@ import geocal
 import pickle
 from .pickle_method import *
 from multiprocessing import Pool
-
+import numpy as np
+import scipy.ndimage
 class L1bProj(object):
     '''This handles projecting a Igc to the surface, forming a vicar file
     that we can then match against. We can do this in parallel if you
     pass a pool in.'''
     def __init__(self, igccol, fname_list, ref_fname_list, ortho_base,
-                 log_fname = None):
+                 log_fname = None, number_subpixel = 2,
+                 scratch_fname="initial_lat_lon.dat"):
         '''Project igc and generate a Vicar file fname.'''
         # We do 2x2 subpixeling. May need to adapt this once we figure
         # out the size we will use with Landsat data
         self.igccol = igccol
         self.gc_arr = list()
-        self.f = list()
         self.ortho_base = ortho_base
         self.ref_fname_list = ref_fname_list
+        self.fname_list = fname_list
         self.log_fname = log_fname
+        self.scratch_fname = scratch_fname
+        self.number_subpixel = number_subpixel
+                                        
         # Want to scale to roughly 60 meters. Much of the landsat data is
         # at higher resolution, but ecostress is close to 70 meter pixel so
         # want data to roughly match
-        self.ortho_scale = [round(60.0 / b.map_info.resolution_meter) for b in self.ortho_base]
+        self.ortho_scale = [round(60.0 / b.map_info.resolution_meter)
+                            for b in self.ortho_base]
         for i in range(self.igccol.number_image):
             self.gc_arr.append(GroundCoordinateArray(
-                self.igccol.image_ground_connection(i), False, 2, 2))
-            self.f.append(self.gc_arr[i].raster_cover_vicar(fname_list[i],
-                         self.ortho_base[i].map_info.scale(self.ortho_scale[i],
-                                                        self.ortho_scale[i])))
+                self.igccol.image_ground_connection(i)))
+
+    def scratch_file(self, create=False):
+        '''Open/Create the scratch file we use in our lat/lon calculation.'''
+        mode = "w+" if create else "r+"
+        return np.memmap(self.scratch_fname, dtype="f8",
+                         mode=mode,
+                         shape=(self.igccol.number_image,
+                          self.igccol.image_ground_connection(0).number_line,
+                         self.igccol.image_ground_connection(0).number_sample,
+                         2))
+
+    def resample_data(self, igc_ind):
+        mi = self.ortho_base[igc_ind].map_info.scale(self.ortho_scale[igc_ind],
+                                                     self.ortho_scale[igc_ind])
+        f = self.scratch_file()
+        lat = f[igc_ind,:,:,0]
+        lon = f[igc_ind,:,:,1]
+        # This is bilinear interpolation
+        lat = scipy.ndimage.interpolation.zoom(lat, self.number_subpixel,
+                                               order=1)
+        lon = scipy.ndimage.interpolation.zoom(lon, self.number_subpixel,
+                                               order=1)
+        # Resample data to project to surface
+        res = Resampler(lat, lon, mi, self.number_subpixel)
+        # Don't need this anymore, and the data is large. So free it
+        lat = None
+        lon = None
+        ras = self.igccol.image_ground_connection(igc_ind).image
+        print("Starting resample for scene %d" % (igc_ind + 1))
+        res.resample_field(self.fname_list[igc_ind], ras, 1.0, "HALF", True)
+        print("Done with resample for scene %d" % (igc_ind + 1))
+        print("Starting reference image for scene %d" % (igc_ind + 1))
+        ortho = self.ortho_base[igc_ind]
+        ortho.create_subset_file(self.ref_fname_list[igc_ind],
+                                 "VICAR",
+                                 Desired_map_info = res.map_info,
+                                 Translate_arg = "-ot Int16")
+        print("Done with reference image for scene %d" % (igc_ind + 1))
+        
     def proj_scan(self, it):
-        igc_ind, start_line, number_line = it
-        self.gc_arr[igc_ind].project_surface_scan_arr(self.f[igc_ind],
-                                                      start_line, number_line)
-        print("Done with [%d, %d, %d]" % (igc_ind, start_line,
-                                          start_line + number_line))
+        igc_ind, scan_index = it
+        igc = self.igccol.image_ground_connection(igc_ind)
+        start_line, end_line = igc.time_table.scan_index_to_line(scan_index)
+        t = self.gc_arr[igc_ind].ground_coor_scan_arr(start_line)
+        f = self.scratch_file()
+        f[igc_ind, start_line:end_line, :, :] = t[:,:,0,0,0:2]
+        print("Done with [%d, %d, %d]" % (igc_ind, start_line,end_line))
         if(self.log_fname is not None):
             self.log = open(self.log_fname, "a")
             print("INFO:L1bProj:Done with [%d, %d, %d]" %
-                  (igc_ind, start_line, start_line + number_line),
+                  (igc_ind, start_line, end_line),
                   file = self.log)
             self.log.flush()
         return True
+
     def proj(self, pool = None):
+        # Create file, but then close. We reopen in each process. Without
+        # this, numpy seems to create some sort of lock where only one
+        # process acts at a time.
+        f = self.scratch_file(create = True)
+        f = None
+        # Get lat/lon. We do this in parallel, processing each scan index of
+        # each scene.
         it = []
-        for i, bf in enumerate(self.f):
-            self.ortho_base[i].create_subset_file(self.ref_fname_list[i],
-                                              "VICAR",
-                                               Desired_map_info = bf.map_info,
-                                               Translate_arg = "-ot Int16")
         for i in range(self.igccol.number_image):
             igc = self.igccol.image_ground_connection(i)
             for j in range(igc.time_table.number_scan):
-                ls,le = igc.time_table.scan_index_to_line(j)
-                it.append((i, ls, le-ls))
+                it.append((i, j))
         if(pool is None):
-            map(self.proj_scan, it)
+            list(map(self.proj_scan, it))
         else:
             pool.map(self.proj_scan, it)
-            
-        
+
+        # Now resample data, and also resample orthobase to the same
+        # map projection.
+        it = list(range(self.igccol.number_image))
+        if(pool is None):
+            list(map(self.resample_data, it))
+        else:
+            pool.map(self.resample_data, it)
         
 __all__ = ["L1bProj"]
