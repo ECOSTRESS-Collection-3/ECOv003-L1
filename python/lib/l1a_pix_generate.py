@@ -98,7 +98,7 @@ class L1aPixGenerate(object):
                 t = g.create_dataset("b%d_%d" % (b, temp),
                   data=geocal.mmap_file("%s/BlackbodyRadiance/b%d_%d.rel" %
                                  (dirname, b, temp)))
-                t.attrs["Units"] = "W/m^2/sr/um"
+                t.attrs["Units"] = "dimensionless"
         g = fout_gain.create_group("Gain")
         g2 = fout_gain.create_group("Offset")
         for b in range(1, 6):
