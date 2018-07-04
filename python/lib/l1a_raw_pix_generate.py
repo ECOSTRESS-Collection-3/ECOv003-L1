@@ -311,7 +311,7 @@ class L1aRawPixGenerate(object):
         tdpuio = self.fin["/hk/bad/hr/time_dpuio"]
         iss_tcorr = self.fin["/hk/bad/hr/time_error_correction"]
         iss_tfsw = self.fin["/hk/bad/hr/time_fsw"]
-        print("ISS time error correction %f %d %f %f" %(hkbhrt, tdpuio, iss_tcorr, iss_tfsw))
+        print("ISS time error correction %d" %(len(tdpuio)))
     else:
         print("No ISS time correction in file")
         hkbhrt = 0
