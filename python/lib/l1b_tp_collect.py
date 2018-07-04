@@ -9,7 +9,8 @@ class L1bTpCollect(object):
     our Landsat orthobase.'''
     def __init__(self, igccol, ortho_base, fftsize=256, magnify=4.0,
                  magmin=2.0, toler=1.5, redo=36, ffthalf=2, seed=562,
-                 num_x=10,num_y=10, log_fname = None):
+                 num_x=10,num_y=10, log_fname = None,
+                 proj_number_subpixel=2):
         self.igccol = igccol
         self.ortho_base = ortho_base
         self.num_x=num_x
@@ -20,7 +21,8 @@ class L1bTpCollect(object):
         self.run_dir_name = ["tpmatch_%d" % (i + 1) for i in range(self.igccol.number_image)]
         self.log_fname = log_fname
         self.p = L1bProj(self.igccol, self.proj_fname, self.ref_fname,
-                         self.ortho_base, log_fname = self.log_fname)
+                         self.ortho_base, log_fname = self.log_fname,
+                         number_subpixel=proj_number_subpixel)
         self.tpcollect = geocal.TiePointCollectPicmtch(self.igccol,
                               self.proj_fname, image_index1=0,
                               ref_image_fname=self.ref_fname[0],

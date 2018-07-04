@@ -15,6 +15,9 @@ BOOST_AUTO_TEST_CASE(basic_test)
     BOOST_WARN_MESSAGE(false, "Skipping SimulatedRadiance test because ASTER mosaic data wasn't found");
     return;
   }
+  // This is a fairly slow test, so skip normally. We can turn this
+  // on if there are any issues
+  return;
   // Normally we want to average the ASTER data, but to speed up this
   // unit test skip this step.
   int avg_fact = 1;

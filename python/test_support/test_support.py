@@ -119,13 +119,16 @@ def test_data():
     yield tdata
 
 @pytest.yield_fixture(scope="function")
-def igc(unit_test_data, test_data):
+def orb_fname(unit_test_data, test_data):
+    yield test_data + "L1A_RAW_ATT_80005_20150124T204250_0100_01.h5.expected"
+    
+@pytest.yield_fixture(scope="function")
+def igc(unit_test_data, test_data, orb_fname):
     '''Like igc_old, but a more realistic IGC. This one is already averaged 
     (so 128 rows per scan)'''
     if(not have_swig):
         raise RuntimeError("You need to install the ecostress swig code first. You can install just this by doing 'make install-swig-python'")
     cam = read_shelve(unit_test_data + "camera.xml")
-    orb_fname = test_data + "L1A_RAW_ATT_80005_20150124T204250_0100_01.h5.expected"
     orb = HdfOrbit_Eci_TimeJ2000(orb_fname, "", "Ephemeris/time_j2000",
                                  "Ephemeris/eci_position",
                                  "Ephemeris/eci_velocity",

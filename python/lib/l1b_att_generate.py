@@ -11,7 +11,8 @@ class L1bAttGenerate(object):
 
     Note that despite the name, this is actually both attitude and ephemeris.
     '''
-    def __init__(self, orbcorr, output_name, tatt, teph, inlist,
+    def __init__(self, l1a_raw_att_fname, orbcorr, output_name,
+                 tatt, teph, inlist,
                  run_config = None, local_granule_id = None,
                  build_id = "0.30",
                  pge_version = "0.30"):
@@ -23,6 +24,7 @@ class L1bAttGenerate(object):
         metadata. Without this, we skip that metadata and just have fill data.
         This is useful for testing, but for production you'll always want to 
         have the run config available.'''
+        self.l1a_raw_att_fname = l1a_raw_att_fname
         self.orbcorr = orbcorr
         self.output_name = output_name
         self.tatt = tatt
@@ -55,6 +57,16 @@ class L1bAttGenerate(object):
         m.set("RangeEndingDate", dt)
         m.set("RangeEndingTime", tm)
         m.set_input_pointer(self.inlist)
+        fraw = h5py.File(self.l1a_raw_att_fname, "r")
+
+        g = fout.create_group("Uncorrected Attitude")
+        t = g.create_dataset("time_j2000",
+                             data=fraw["Attitude/time_j2000"])
+        t.attrs["Units"] = "Seconds"
+        t = g.create_dataset("quaternion", data=fraw["Attitude/quaternion"])
+        t.attrs["Description"] = "Attitude quaternion, goes from spacecraft to ECI. The coefficient convention used has the real part in the first column. This is the reported attitude from the ISS, without correction"
+        t.attrs["Units"] = "dimensionless"
+        
         g = fout.create_group("Attitude")
         t = g.create_dataset("time_j2000",
                              data=np.array([t.j2000 for t in self.tatt]))
@@ -66,6 +78,18 @@ class L1bAttGenerate(object):
         t = g.create_dataset("quaternion", data=quat)
         t.attrs["Description"] = "Attitude quaternion, goes from spacecraft to ECI. The coefficient convention used has the real part in the first column."
         t.attrs["Units"] = "dimensionless"
+
+        g = fout.create_group("Uncorrected Ephemeris")
+        t = g.create_dataset("time_j2000",
+                             data=fraw["Ephemeris/time_j2000"])
+        t.attrs["Units"] = "Seconds"
+        t = g.create_dataset("eci_position", data=fraw["Ephemeris/eci_position"])
+        t.attrs["Description"] = "ECI position. This is the reported position from the ISS, uncorrected."
+        t.attrs["Units"] = "m"
+        t = g.create_dataset("eci_velocity", data=fraw["Ephemeris/eci_velocity"])
+        t.attrs["Description"] = "ECI velocity. This is the reported position from the ISS, uncorrected."
+        t.attrs["Units"] = "m/s"
+
         g = fout.create_group("Ephemeris")
         t = g.create_dataset("time_j2000", 
                              data=np.array([t.j2000 for t in self.teph]))

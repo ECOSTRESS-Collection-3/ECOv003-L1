@@ -237,16 +237,17 @@ try:
 
     # Project data to surface
     t = ecostress.L1bTpCollect(igccol_initial, ortho_base,
-                               fftsize=l1b_geo_config.fftsize,
-                               magnify=l1b_geo_config.magnify,
-                               magmin=l1b_geo_config.magmin,
-                               toler=l1b_geo_config.toler,
-                               redo=l1b_geo_config.redo,
-                               ffthalf=l1b_geo_config.ffthalf,
-                               seed=l1b_geo_config.seed,
-                               num_x=l1b_geo_config.num_x,
-                               num_y=l1b_geo_config.num_y,
-                               log_fname=log_fname)
+                    fftsize=l1b_geo_config.fftsize,
+                    magnify=l1b_geo_config.magnify,
+                    magmin=l1b_geo_config.magmin,
+                    toler=l1b_geo_config.toler,
+                    redo=l1b_geo_config.redo,
+                    ffthalf=l1b_geo_config.ffthalf,
+                    seed=l1b_geo_config.seed,
+                    num_x=l1b_geo_config.num_x,
+                    num_y=l1b_geo_config.num_y,
+                    log_fname=log_fname,
+                    proj_number_subpixel=l1b_geo_config.proj_number_subpixel)
     if(not l1b_geo_config.skip_sba):
         tpcol = t.tpcol(pool=pool)
         geocal.write_shelve("tpcol.xml", tpcol)
@@ -280,7 +281,7 @@ try:
     fin = h5py.File(orbfname, "r")
     tatt = [geocal.Time.time_j2000(t) for t in fin["Attitude/time_j2000"][:]]
     teph = [geocal.Time.time_j2000(t) for t in fin["Ephemeris/time_j2000"][:]]
-    l1batt = ecostress.L1bAttGenerate(
+    l1batt = ecostress.L1bAttGenerate(orbfname,
             igccol_corrected.image_ground_connection(0).orbit,
             ofile2, tatt, teph, inlist, run_config = config,
             build_id = build_id,

@@ -13,6 +13,9 @@ BOOST_AUTO_TEST_CASE(basic_test)
   // Skip if we don't have landsat data available.
   if(landsat7_dir() == "")
     return;
+  // This is a fairly slow test, so skip normally. We can turn this
+  // on if there are any issues
+  return;
   std::string fname = test_data_dir() + "ECOSTRESS_L1B_GEO_80005_001_20150124T204250_0100_01.h5.expected";
   std::string fname2 = test_data_dir() + "ECOSTRESS_L1B_RAD_80005_001_20150124T204250_0100_01.h5.expected";
   boost::shared_ptr<GdalRasterImage> lat = boost::make_shared<GdalRasterImage>("HDF5:\"" + fname + "\"://Geolocation/latitude");

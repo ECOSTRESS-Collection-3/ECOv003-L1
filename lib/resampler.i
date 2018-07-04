@@ -19,6 +19,10 @@ public:
 	    const boost::shared_ptr<GeoCal::RasterImage>& Longitude,
 	    const GeoCal::MapInfo& Mi, int Num_sub_pixel = 2,
 	    bool Exactly_match_mi = false);
+  Resampler(const blitz::Array<double, 2>& Latitude_interpolated,
+	    const blitz::Array<double, 2>& Longitude_interpolated,
+	    const GeoCal::MapInfo& Mi, int Num_sub_pixel = 2,
+	    bool Exactly_match_mi = false);
   void resample_field(const std::string& Fname,
 		      const boost::shared_ptr<GeoCal::RasterImage>& Data,
 		      double Scale_data=1.0,

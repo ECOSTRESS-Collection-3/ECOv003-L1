@@ -290,7 +290,7 @@ class L0BSimulate(object):
     m.set("StopOrbitNumber", l1e["/StandardMetadata/StopOrbitNumber"][()])
     m.set("ImageLines", 11264)
     m.set("ProcessingLevelID", "L0B")
-    m.set("ProductionDateTime", "2018-05-22T12:00:00.OOOZ")
+    m.set("ProductionDateTime", "2018-05-22T12:00:00")
     m.set("ProductionLocation", "ECOSTRESS Science Computing Facility")
     m.set("SceneID", "NA")
     m.set("ShortName", "L0b")
