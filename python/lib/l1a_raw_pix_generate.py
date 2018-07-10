@@ -752,10 +752,10 @@ class L1aRawPixGenerate(object):
     q[:,:] = att[:,:]
     q.attrs['Description']='Attitude quaternion, goes from spacecraft to ECI. The coefficient convention used has the real part in the first column.'
     q.attrs['Units']='dimensionless'
-    epos[:,:] = pos[:,:] / 3.28
+    epos[:,:] = pos[:,:] * 0.3048
     epos.attrs['Description']='ECI position'
     epos.attrs['Units']='m'
-    evel[:,:] = vel[:,:] / 3.28
+    evel[:,:] = vel[:,:] * 0.3048
     evel.attrs['Description']='ECI velocity'
     evel.attrs['Units']='m/s'
     attf_met.set('ImageLines', 0)

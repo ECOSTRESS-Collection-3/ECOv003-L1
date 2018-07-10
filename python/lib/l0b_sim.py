@@ -343,8 +343,8 @@ class L0BSimulate(object):
 
     # Copy ATT/EPH into HK data set
     att[:,:] = aq[:,:]
-    pos[:,:] = ep[:,:] *3.28
-    vel[:,:] = ev[:,:] *3.28
+    pos[:,:] = ep[:,:] / 0.3046
+    vel[:,:] = ev[:,:] / 0.3046
     for i in range( aqc ): att_time[i] = Time.time_j2000(at[i]).gps
     for i in range( epc ): att_fsw[i] = Time.time_j2000(et[i]).gps
 
