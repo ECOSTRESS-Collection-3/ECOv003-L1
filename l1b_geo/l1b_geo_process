@@ -165,6 +165,10 @@ cam.mask_all_parameter()
 geocal.makedirs_p(dirname)
 os.chdir(dirname)
 
+# Reorder radlist by acquisition_time, it isn't necessarily given to us
+# in order.
+radlist = sorted(radlist, key=lambda f : ecostress.orbit_from_metadata(f)[2])
+
 inlist = [orbfname, *radlist]
 inlist.append(l1_osp_dir + "/l1b_geo_config.py", )
 log_fname = None
@@ -174,11 +178,13 @@ try:
     ofile = []
     is_day = []
     ortho_base = []
+    scenelist = []
     for i in range(len(radlist)):
         orbit, scene, acquisition_time = ecostress.orbit_from_metadata(radlist[i])
         ofile.append(ecostress.ecostress_file_name("L1B_GEO", orbit, scene,
             acquisition_time, build = build_id,
             version = file_version))
+        scenelist.append(scene)
         if(i == 0):
             ofile2 = ecostress.ecostress_file_name("L1B_ATT", orbit, None,
                                                    acquisition_time,
@@ -223,15 +229,15 @@ try:
             ras = geocal.GdalRasterImage("HDF5:\"%s\"://Radiance/radiance_%d" %
                                          (radlist[i], eband - 1))
             ras = geocal.ScaleImage(ras, 100.0)
-        print("Scene %d is %s, matching ecostress band %d to Landsat band %d" % ((i + 1), "Day" if is_day[i] else "Night", eband, lband))
+        print("Scene %d is %s, matching ecostress band %d to Landsat band %d" % (scenelist[i], "Day" if is_day[i] else "Night", eband, lband))
         log = open(log_fname, "a")
         print("INFO:L1A_GEO_PGE:Scene %d is %s, matching ecostress band %d to Landsat band %d" %
-              ((i + 1), "Day" if is_day[i] else "Night", eband, lband),
+              (scenelist[i], "Day" if is_day[i] else "Night", eband, lband),
               file=log)
         log.flush()
         log = None
         igccol_initial.add_igc(ecostress.EcostressImageGroundConnection(orb, tt, cam,
-                                       sm, dem, ras, "Scene %d" % (i + 1)))
+                          sm, dem, ras, "Scene %d" % scenelist[i]))
 
     geocal.write_shelve("igccol_initial.xml", igccol_initial)
 
@@ -264,9 +270,9 @@ try:
     # Generate output data
     for i in range(len(radlist)):
         # Generate output
-        print("Doing scene number %d" %i)
+        print("Doing scene number %d" % scenelist[i])
         log = open(log_fname, "a")
-        print("INFO:l1b_geo_process:Doing scene number %d" % i, file=log)
+        print("INFO:l1b_geo_process:Doing scene number %d" % scenelist[i], file=log)
         log.flush()
         l1bgeo = ecostress.L1bGeoGenerate(
                                 igccol_corrected.image_ground_connection(i),
