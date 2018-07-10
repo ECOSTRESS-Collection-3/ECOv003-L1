@@ -224,9 +224,10 @@ def orbit_from_metadata(fname):
     return int(onum), int(sid), acquisition_time
     
 
-__all__ = ["create_dem", "ortho_base_directory", "create_lwm", "setup_spice",
+__all__ = ["create_dem", "ortho_base_directory", "band_to_landsat_band",
+           "create_lwm", "setup_spice",
            "create_orbit_raw", "create_time_table", "create_scan_mirror",
-           "aster_radiance_scale_factor", "ecostress_to_aster_band",
+           "is_day", "aster_radiance_scale_factor", "ecostress_to_aster_band",
            "ecostress_radiance_scale_factor", "time_to_file_string",
            "time_split", "ecostress_file_name", "process_run",
-           "orbit_from_metadata", "band_to_landsat_band"]
+           "orbit_from_metadata"]
