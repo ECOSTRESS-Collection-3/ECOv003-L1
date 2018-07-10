@@ -307,11 +307,9 @@ class L1aRawPixGenerate(object):
     bb_fsw=self.fin["hk/status/time_fsw"]
 
     if "/hk/bad/hr/time_dpuio" in self.fin and "/hk/bad/hr/time_error_correction" in self.fin:
-        hkbhrt = self.fin["/hk/bad/hr/time"]
         tdpuio = self.fin["/hk/bad/hr/time_dpuio"]
-        iss_tcorr = self.fin["/hk/bad/hr/time_error_correction"]
-        iss_tfsw = self.fin["/hk/bad/hr/time_fsw"]
-        print("ISS time error correction %d" %(len(tdpuio)))
+        tcorr = self.fin["/hk/bad/hr/time_error_correction"]
+        print("ISS time error correction 0 %d %f" %(tdpuio[0], tcorr[0]))
     else:
         print("No ISS time correction in file")
         hkbhrt = 0
@@ -754,10 +752,10 @@ class L1aRawPixGenerate(object):
     q[:,:] = att[:,:]
     q.attrs['Description']='Attitude quaternion, goes from spacecraft to ECI. The coefficient convention used has the real part in the first column.'
     q.attrs['Units']='dimensionless'
-    epos[:,:] = pos[:,:]
+    epos[:,:] = pos[:,:] / 3.28
     epos.attrs['Description']='ECI position'
     epos.attrs['Units']='m'
-    evel[:,:] = vel[:,:]
+    evel[:,:] = vel[:,:] / 3.28
     evel.attrs['Description']='ECI velocity'
     evel.attrs['Units']='m/s'
     attf_met.set('ImageLines', 0)

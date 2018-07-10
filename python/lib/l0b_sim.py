@@ -281,25 +281,13 @@ class L0BSimulate(object):
     m = WriteStandardMetadata(l0b_fd, product_specfic_group ="L0BMetadata",
         proc_lev_desc = 'Level 0B Data Parameters',
         pge_name="L0B",
-        build_id="0300", pge_version="3.00", level0_file=True )
+        build_id="0.0", pge_version="0.0", level0_file=True )
     m.set("RangeBeginningDate", l1e["/StandardMetadata/RangeBeginningDate"][()])
     m.set("RangeBeginningTime", l1e["/StandardMetadata/RangeBeginningTime"][()])
     m.set("RangeEndingDate", l1e["/StandardMetadata/RangeEndingDate"][()])
     m.set("RangeEndingTime", l1e["/StandardMetadata/RangeEndingTime"][()])
     m.set("StartOrbitNumber", l1e["/StandardMetadata/StartOrbitNumber"][()])
     m.set("StopOrbitNumber", l1e["/StandardMetadata/StopOrbitNumber"][()])
-    m.set("ImageLines", 11264)
-    m.set("ProcessingLevelID", "L0B")
-    m.set("ProductionDateTime", "2018-05-22T12:00:00")
-    m.set("ProductionLocation", "ECOSTRESS Science Computing Facility")
-    m.set("SceneID", "NA")
-    m.set("ShortName", "L0b")
-    t = [self.l1a_raw_att_fname, self.l1a_eng_fname]
-    for scn in self.scene_files:
-      scene, l1a_raw_pix_fname, l1a_bb_fname, onum, tstart, tend = scn
-      t.append(l1a_raw_pix_fname)
-      t.append(l1a_bb_fname)
-    m.set_input_pointer(t)
     m.write()
     l0b_fd.flush()
 
@@ -355,8 +343,8 @@ class L0BSimulate(object):
 
     # Copy ATT/EPH into HK data set
     att[:,:] = aq[:,:]
-    pos[:,:] = ep[:,:]
-    vel[:,:] = ev[:,:]
+    pos[:,:] = ep[:,:] *3.28
+    vel[:,:] = ev[:,:] *3.28
     for i in range( aqc ): att_time[i] = Time.time_j2000(at[i]).gps
     for i in range( epc ): att_fsw[i] = Time.time_j2000(et[i]).gps
 
@@ -542,7 +530,8 @@ class L0BSimulate(object):
               bte = FPPPKT
               print("Final runt packet: %d" % p0 )
               pix_buf[ 0:PPFP, p0:FPPPKT, :] = 0xffff
-              ev_buf[ p0:FPPPKT ] = 0xffffffff
+              #ev_buf[ p0:FPPPKT ] = 0xffffffff
+              ev_buf[ p0:FPPPKT ] = ev_buf[p0]
           # end writing current packet
 
         # next line in scene
