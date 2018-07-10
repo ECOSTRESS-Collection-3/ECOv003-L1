@@ -68,11 +68,26 @@ class L1bAttGenerate(object):
         t.attrs["Units"] = "dimensionless"
         
         g = fout.create_group("Attitude")
+        # Add times, being careful not to past the edge of the orbit (since
+        # this depends on both ephemeris and attitude we may have points in
+        # one or the other that is outside the time range.
+        have_min_time = False
+        have_max_time = False
+        tatt = []
+        for t in self.tatt:
+            if(not have_min_time and t <= self.orbcorr.min_time) :
+                t = self.orbcorr.min_time
+                have_min_time = True
+            if(not have_max_time and t >= self.orbcorr.max_time):
+                t = self.orbcorr.max_time
+                have_max_time = True
+            if(t >= self.orbcorr.min_time and t <= self.orbcorr.max_time):
+                tatt.append(t)
         t = g.create_dataset("time_j2000",
-                             data=np.array([t.j2000 for t in self.tatt]))
+                             data=np.array([t.j2000 for t in tatt]))
         t.attrs["Units"] = "Seconds"
-        quat = np.zeros((len(self.tatt), 4))
-        for i, t in enumerate(self.tatt):
+        quat = np.zeros((len(tatt), 4))
+        for i, t in enumerate(tatt):
             od = self.orbcorr.orbit_data(t)
             quat[i, :] = geocal.quaternion_to_array(od.sc_to_ci)
         t = g.create_dataset("quaternion", data=quat)
@@ -91,11 +106,26 @@ class L1bAttGenerate(object):
         t.attrs["Units"] = "m/s"
 
         g = fout.create_group("Ephemeris")
+        # Add times, being careful not to past the edge of the orbit (since
+        # this depends on both ephemeris and attitude we may have points in
+        # one or the other that is outside the time range.
+        have_min_time = False
+        have_max_time = False
+        teph = []
+        for t in self.teph:
+            if(not have_min_time and t <= self.orbcorr.min_time) :
+                t = self.orbcorr.min_time
+                have_min_time = True
+            if(not have_max_time and t >= self.orbcorr.max_time):
+                t = self.orbcorr.max_time
+                have_max_time = True
+            if(t >= self.orbcorr.min_time and t <= self.orbcorr.max_time):
+                teph.append(t)
         t = g.create_dataset("time_j2000", 
-                             data=np.array([t.j2000 for t in self.teph]))
-        pos = np.zeros((len(self.teph), 3))
-        vel = np.zeros((len(self.teph), 3))
-        for i, t in enumerate(self.teph):
+                             data=np.array([t.j2000 for t in teph]))
+        pos = np.zeros((len(teph), 3))
+        vel = np.zeros((len(teph), 3))
+        for i, t in enumerate(teph):
             od = self.orbcorr.orbit_data(t)
             pos[i, :] = od.position_ci.position
             vel[i, :] = od.velocity_ci
