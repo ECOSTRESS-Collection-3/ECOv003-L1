@@ -745,8 +745,8 @@ class L1aRawPixGenerate(object):
     epos = eph_g.create_dataset("eci_position", shape=(aqc,3), dtype='f8' )
     evel = eph_g.create_dataset("eci_velocity", shape=(aqc,3), dtype='f8' )
     for i in range(aqc):
-      a2k[i] = Time.time_gps( att_time[i] ).j2000 # sample time
-      e2k[i] = Time.time_gps( att_fsw[i] ).j2000  # hk pkt time
+      a2k[i] = Time.time_gps( att_time[i] ).j2000 # hk pkt time
+      e2k[i] = Time.time_gps( att_time[i] ).j2000  # hk sample time
     a2k.attrs['Units']='Seconds'
     e2k.attrs['Units']='Seconds'
     q[:,:] = att[:,:]

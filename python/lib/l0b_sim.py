@@ -34,6 +34,9 @@ By seconds:
 "hk/bad/hr/time_fsw": shape (479,), type "<f8">
 "hk/bad/hr/velocity": shape (479, 3), type "<f4">
 
+"hk/bad/hr/time_dpuio": shape (479,), type "<u8">
+"hk/bad/hr/time__error_correction": shape (479,), type "<f8">
+
 "hk/status/mode/dpuio": shape (479,), type "<u4">
 "hk/status/mode/op": shape (479,), type "<u4">
 "hk/status/motor/bb1": shape (479,), type "<u4">
@@ -317,6 +320,11 @@ class L0BSimulate(object):
     att_fsw = hbh.create_dataset("time_fsw", (epc,), dtype=np.float64)
     vel = hbh.create_dataset("velocity", (epc,3), dtype=np.float32)
 
+    tdpuio = hbh.create_dataset("time_dpuio", (aqc,), dtype=np.uint64)
+    tdpuio[:] = 0
+    tcorr = hbh.create_dataset("time_error_correction", (aqc,), dtype=np.float64)
+    tcorr[:] = 0
+
     hs = l0b_fd.create_group("/hk/status")
     hsmd = l0b_fd.create_group("/hk/status/mode")
     dp_hsmd = hsmd.create_dataset("dpuio", (enc,), dtype=np.uint32)
@@ -343,8 +351,8 @@ class L0BSimulate(object):
 
     # Copy ATT/EPH into HK data set
     att[:,:] = aq[:,:]
-    pos[:,:] = ep[:,:] / 0.3046
-    vel[:,:] = ev[:,:] / 0.3046
+    pos[:,:] = ep[:,:] / 0.3048
+    vel[:,:] = ev[:,:] / 0.3048
     for i in range( aqc ): att_time[i] = Time.time_j2000(at[i]).gps
     for i in range( epc ): att_fsw[i] = Time.time_j2000(et[i]).gps
 
