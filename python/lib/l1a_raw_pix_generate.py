@@ -409,7 +409,7 @@ class L1aRawPixGenerate(object):
           e0 = pkt_idx
           ph = 2  # mirror phase should be 0 or 1
           '''  *** confirm all sequences come from same phase ***  '''
-          while e0 < tot_pkts and ph == 2:  # loop through packets
+          while e0 < tot_pkts and ph == 2:  # search for sequence start
             if e0==0: dt = 0
             else: dt = ( float((lev[e0,0] - lev[e0-1,e1])%MAX_FPIE) ) * EV_DUR
             adt = abs( dt )
@@ -492,14 +492,17 @@ class L1aRawPixGenerate(object):
           # Copy pixels from PKT
           p1 = e1
           fpc = FPPPKT - p1  # FPs to copy from first PKT
-          while op < op1 and e0 < tot_pkts-1:
+          while op < op1 and e0 < tot_pkts:
             #print("SCENE=%d SCAN=%d E0=%d E1=%d GPS=%f SEQ=%d OP=%d" %(scene_id,scan,e0,e1,gpt[e0], seq, op))
 
             e3 = op1 - op  # remaining FPs to fill
             e4 = 0
-            lid0 = e0; lid1 = e0+1  # correct time
-            #lid0 = e0-1; lid1 = e0  # time code error
-            dt = gpt[lid1] - gpt[lid0]
+            if e0 == tot_pkts-1:  # at last packet in file
+              dt = PKT_DUR
+            else:
+              lid0 = e0; lid1 = e0+1  # correct time
+              #lid0 = e0-1; lid1 = e0  # time code error
+              dt = gpt[lid1] - gpt[lid0]
             if p1==0: e2 = (seq-1)%3
             else: e2 = seq
             if op>op0 and (dt<0 or abs(dt-PKT_DUR)>PKT_DURT) and seq==2:  # time discontinuity
@@ -548,7 +551,7 @@ class L1aRawPixGenerate(object):
                 print(" ")
               if e3==FPPPKT: e3 = 0  # next search in next packet
             dp = op - op0
-            #print("SEQ=%d LINE=%d OP=%d(%f) DP=%d(%f) P1=%d(%f) FPC=%d(%f) E4=%d(%f)" %(seq,line,op,op,dp,dp,p1,p1,fpc,fpc,e4,e4))
+            #print("SEQ=%d LINE=%d OP=%d DP=%d P1=%d FPC=%d E0=%d E3=%d E4=%d" %(seq,line,op,dp,p1,fpc,e0,e3,e4))
 
             obuf[seq][line:line+PPFP,dp:dp+fpc,:] = flex_buf[:,p1:p1+fpc,:]
             if seq==2: ev_buf[scan,dp:dp+fpc] = lev[e0,p1:p1+fpc]

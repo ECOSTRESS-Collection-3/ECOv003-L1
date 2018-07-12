@@ -35,7 +35,7 @@ By seconds:
 "hk/bad/hr/velocity": shape (479, 3), type "<f4">
 
 "hk/bad/hr/time_dpuio": shape (479,), type "<u8">
-"hk/bad/hr/time__error_correction": shape (479,), type "<f8">
+"hk/bad/hr/time_error_correction": shape (479,), type "<f8">
 
 "hk/status/mode/dpuio": shape (479,), type "<u4">
 "hk/status/mode/op": shape (479,), type "<u4">
