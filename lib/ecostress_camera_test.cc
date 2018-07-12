@@ -26,8 +26,8 @@ BOOST_AUTO_TEST_CASE(basic_test)
     od->surface_intersect(*cam, GeoCal::FrameCoordinate(1,0), dem);
   boost::shared_ptr<GeoCal::CartesianFixed> gp3 =
     od->surface_intersect(*cam, GeoCal::FrameCoordinate(0,1), dem);
-  BOOST_CHECK_CLOSE(distance(*gp1, *gp2), 38.8346, 1e-2);
-  BOOST_CHECK_CLOSE(distance(*gp1, *gp3), 39.9935, 1e-2);
+  BOOST_CHECK_CLOSE(distance(*gp1, *gp2), 37.827328994175318, 1e-2);
+  BOOST_CHECK_CLOSE(distance(*gp1, *gp3), 37.068308359517161, 1e-2);
 }
 
 BOOST_AUTO_TEST_CASE(compare_spreadsheet)
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(compare_spreadsheet)
   //    -3.20mm   80        9.07  4  1.6  7
   EcostressCamera cam;
   blitz::Array<double, 1> yp_expect(6);
-  yp_expect = 3.20, 0.64, -0.64, -3.20, -1.92, 1.92;
+  yp_expect = -3.20, -0.64, 0.64, 3.20, 1.92, -1.92;
   for(int b = 0; b < yp_expect.rows(); ++b) {
     double xp, yp;
     cam.fc_to_focal_plane(GeoCal::FrameCoordinate(0,0), b, xp, yp);

@@ -17,7 +17,7 @@ class EcostressCamera : public GeoCal::QuaternionCamera {
 public:
   EcostressCamera(double Focal_length = 427.6,
 		  boost::math::quaternion<double> Frame_to_sc_q =
-		  boost::math::quaternion<double>(0,0,0,1));
+		  boost::math::quaternion<double>(1,0,0,0));
   virtual ~EcostressCamera() {}
   virtual void print(std::ostream& Os) const;
   const boost::shared_ptr<EcostressParaxialTransform>& paraxial_transform()

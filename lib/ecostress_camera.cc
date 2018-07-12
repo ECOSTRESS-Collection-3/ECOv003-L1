@@ -24,7 +24,7 @@ EcostressCamera::EcostressCamera(double Focal_length, boost::math::quaternion<do
 		     GeoCal::FrameCoordinate(128,0.5),
 		     QuaternionCamera::LINE_IS_X,
 		     QuaternionCamera::INCREASE_IS_NEGATIVE,
-		     QuaternionCamera::INCREASE_IS_NEGATIVE)
+		     QuaternionCamera::INCREASE_IS_POSITIVE)
 {
   paraxial_transform_ = boost::make_shared<EcostressParaxialTransform>();
   // This information comes from https://bravo-lib.jpl.nasa.gov/docushare/dsweb/Get/Document-1882647/FPA%20distortion20140522.xlsx

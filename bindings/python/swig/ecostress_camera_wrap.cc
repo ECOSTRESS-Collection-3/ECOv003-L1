@@ -7419,7 +7419,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"new_EcostressCamera", _wrap_new_EcostressCamera, METH_VARARGS, (char *)"\n"
 		"\n"
 		"EcostressCamera::EcostressCamera(double Focal_length=427.6, boost::math::quaternion< double >\n"
-		"Frame_to_sc_q=boost::math::quaternion< double >(0, 0, 0, 1))\n"
+		"Frame_to_sc_q=boost::math::quaternion< double >(1, 0, 0, 0))\n"
 		"Constructor.\n"
 		"\n"
 		"We've hardcoded things we don't expect to change (e.g., the line and\n"
