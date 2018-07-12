@@ -14,7 +14,8 @@ class L1bRadGenerate(object):
                  run_config = None, log = None, build_id = "0.30",
                  pge_version = "0.30",
                  interpolate_stripe_data = False,
-                 seed = 1234):
+                 seed = 1234,
+                 skip_band_to_band = False):
         '''Create a L1bRadGenerate with the given input files
         and output file name. To actually generate, execute the 'run'
         command.'''
@@ -31,6 +32,7 @@ class L1bRadGenerate(object):
         self.pge_version = pge_version
         self.interpolate_stripe_data = interpolate_stripe_data
         self.seed = seed
+        self.skip_band_to_band = skip_band_to_band
 
     def image(self, band):
         '''Generate L1B_RAD image.
@@ -48,19 +50,24 @@ class L1bRadGenerate(object):
             if(self.log is not None):
                 print("INFO:L1bRadGenerate:Doing scan_index %d for band %d" % (scan_index, band),
                       file=self.log)
-            tplist = band_to_band_tie_points(self.igc, scan_index, band)
-            m = geocal.QuadraticGeometricModel()
-            m.fit_transformation(tplist)
+            # Perform band to band, unless we have been directed to skip
+            # it (useful for initial working on band to band registration
             sline = scan_index * self.igc.number_line_scan
             nlinescan = self.igc.number_line_scan
             radsub = geocal.SubRasterImage(rad, sline, 0, nlinescan,
-                                    rad.number_sample)
-            fill_value = FILL_VALUE_NOT_SEEN
-            # Note nearest neighbor preserves fill values
-            rbreg = geocal.GeometricModelImage(radsub, m, radsub.number_line,
-                                        radsub.number_sample, fill_value,
-                                        geocal.GeometricModelImage.NEAREST_NEIGHBOR)
-            rbreg_avg = EcostressRadAverage(rbreg)
+                                           rad.number_sample)
+            if(not self.skip_band_to_band):
+                tplist = band_to_band_tie_points(self.igc, scan_index, band)
+                m = geocal.QuadraticGeometricModel()
+                m.fit_transformation(tplist)
+                fill_value = FILL_VALUE_NOT_SEEN
+                # Note nearest neighbor preserves fill values
+                rbreg = geocal.GeometricModelImage(radsub, m,
+                       radsub.number_line, radsub.number_sample, fill_value,
+                      geocal.GeometricModelImage.NEAREST_NEIGHBOR)
+                rbreg_avg = EcostressRadAverage(rbreg)
+            else:
+                rbreg_avg = EcostressRadAverage(radsub)
             res[int(sline/2):int((sline+nlinescan)/2),:] = rbreg_avg.read_all_double()
         return res
         
