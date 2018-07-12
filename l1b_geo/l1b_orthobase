@@ -17,6 +17,11 @@ Options:
   -h --help         
        Print this message
 
+  --landsat-band=d
+       Landsat band to match to. For band 6, we have both low and high gain.
+       Enter this as 61 and 62. -1 means use the value found in the
+       configuration file [default: 5]
+
   -v --version      
        Print program version
 '''
@@ -26,11 +31,11 @@ args = geocal.docopt_simple(usage, version=version)
 if(os.path.exists("/project/ancillary/LANDSAT")):
     # eco-scf location
     ortho_base = geocal.Landsat7Global("/project/ancillary/LANDSAT",
-                                       geocal.Landsat7Global.BAND5)
+                          ecostress.band_to_landsat_band(args.landsat_band))
 else:
     # pistol location
     ortho_base = geocal.Landsat7Global("/raid22",
-                                       geocal.Landsat7Global.BAND5)
+                          ecostress.band_to_landsat_band(args.landsat_band))
 
 mi = geocal.GdalRasterImage(args.input_file).map_info
 ortho_base.create_subset_file(args.output_file, "VICAR",
