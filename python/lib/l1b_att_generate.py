@@ -64,7 +64,7 @@ class L1bAttGenerate(object):
                              data=fraw["Attitude/time_j2000"])
         t.attrs["Units"] = "Seconds"
         t = g.create_dataset("quaternion", data=fraw["Attitude/quaternion"])
-        t.attrs["Description"] = "Attitude quaternion, goes from spacecraft to ECI. The coefficient convention used has the real part in the first column. This is the reported attitude from the ISS, without correction"
+        t.attrs["Description"] = "Attitude quaternion, goes from spacecraft to ECI (J2000 Inertial Frame). The coefficient convention used has the real part in the first column. This is the reported attitude from the ISS, without correction"
         t.attrs["Units"] = "dimensionless"
         
         g = fout.create_group("Attitude")
@@ -91,7 +91,7 @@ class L1bAttGenerate(object):
             od = self.orbcorr.orbit_data(t)
             quat[i, :] = geocal.quaternion_to_array(od.sc_to_ci)
         t = g.create_dataset("quaternion", data=quat)
-        t.attrs["Description"] = "Attitude quaternion, goes from spacecraft to ECI. The coefficient convention used has the real part in the first column."
+        t.attrs["Description"] = "Attitude quaternion, goes from spacecraft to ECI (J2000 Inertial Frame). The coefficient convention used has the real part in the first column."
         t.attrs["Units"] = "dimensionless"
 
         g = fout.create_group("Uncorrected Ephemeris")
@@ -99,10 +99,10 @@ class L1bAttGenerate(object):
                              data=fraw["Ephemeris/time_j2000"])
         t.attrs["Units"] = "Seconds"
         t = g.create_dataset("eci_position", data=fraw["Ephemeris/eci_position"])
-        t.attrs["Description"] = "ECI position. This is the reported position from the ISS, uncorrected."
+        t.attrs["Description"] = "ECI position (J2000 Inertial Frame). This is the reported position from the ISS, uncorrected."
         t.attrs["Units"] = "m"
         t = g.create_dataset("eci_velocity", data=fraw["Ephemeris/eci_velocity"])
-        t.attrs["Description"] = "ECI velocity. This is the reported position from the ISS, uncorrected."
+        t.attrs["Description"] = "ECI velocity (J2000 Inertial Frame). This is the reported position from the ISS, uncorrected."
         t.attrs["Units"] = "m/s"
 
         g = fout.create_group("Ephemeris")
@@ -130,10 +130,10 @@ class L1bAttGenerate(object):
             pos[i, :] = od.position_ci.position
             vel[i, :] = od.velocity_ci
         t = g.create_dataset("eci_position", data=pos)
-        t.attrs["Description"] = "ECI position"
+        t.attrs["Description"] = "ECI position (J2000 Inertial Frame)"
         t.attrs["Units"] = "m"
         t = g.create_dataset("eci_velocity", data=vel)
-        t.attrs["Description"] = "ECI velocity"
+        t.attrs["Description"] = "ECI velocity (J2000 Inertial Frame)"
         t.attrs["Units"] = "m/s"
         m.write()
 

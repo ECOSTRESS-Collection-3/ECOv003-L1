@@ -86,8 +86,7 @@ def create_orbit_raw(config):
     setup_spice(config)
     orbfname = os.path.abspath(config["TimeBasedFileGroup", "L1A_RAW_ATT"])
     # Create orbit. We give all the names of the fields, since we don't use the
-    # default names HdfOrbit expects. I'm not sure if Eci and J2000 is what we
-    # will end up using, but this is what is used by the test data now.
+    # default names HdfOrbit expects. 
     orb = geocal.HdfOrbit_Eci_TimeJ2000(orbfname, "", "Ephemeris/time_j2000",
                                  "Ephemeris/eci_position",
                                  "Ephemeris/eci_velocity",
