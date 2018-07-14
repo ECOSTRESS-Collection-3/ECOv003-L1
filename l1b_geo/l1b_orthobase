@@ -4,6 +4,7 @@
 import geocal
 import ecostress
 import os
+import subprocess
 
 version = "1.0"
 usage='''Usage:
@@ -16,6 +17,10 @@ given input file.
 Options:
   -h --help         
        Print this message
+
+  --erdas
+       In addition to producing vicar format, convert the output to erdas
+       imagine file.
 
   --landsat-band=d
        Landsat band to match to. For band 6, we have both low and high gain.
@@ -41,4 +46,9 @@ mi = geocal.GdalRasterImage(args.input_file).map_info
 ortho_base.create_subset_file(args.output_file, "VICAR",
                               Desired_map_info = mi,
                               Translate_arg = "-ot Int16")
+if(args.erdas):
+    cmd = ["gdal_to_erdas", args.output_file,
+                os.path.splitext(args.output_file)[0] + "_erdas.img"]
+    subprocess.run(cmd)
+
 
