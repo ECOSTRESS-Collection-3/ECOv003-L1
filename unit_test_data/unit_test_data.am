@@ -1,2 +1,5 @@
+EXTRA_DIST+= @unittestdata@/camera.xml
 EXTRA_DIST+= @unittestdata@/cam_paraxial.xml
 EXTRA_DIST+= @unittestdata@/SMAP_L1B_TB_SPS_RunConfig_20150228T224642376.xml
+EXTRA_DIST+= @unittestdata@/Scene_problem.txt
+EXTRA_DIST+= @unittestdata@/L1A_RAW_ATT_00049_20180709T214305_0400_01.h5

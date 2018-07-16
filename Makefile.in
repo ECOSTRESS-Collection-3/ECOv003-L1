@@ -222,6 +222,7 @@ _swig_wrap_la_DEPENDENCIES = libecostress.la
 am__objects_2 = @swigsrc@/_swig_wrap_la-ecostress_swig_array_wrap.lo \
 	@swigsrc@/_swig_wrap_la-ecostress_dqi_wrap.lo \
 	@swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo \
+	@swigsrc@/_swig_wrap_la-ecostress_orbit_wrap.lo \
 	@swigsrc@/_swig_wrap_la-ecostress_paraxial_transform_wrap.lo \
 	@swigsrc@/_swig_wrap_la-ecostress_time_table_wrap.lo \
 	@swigsrc@/_swig_wrap_la-ecostress_scan_mirror_wrap.lo \
@@ -244,6 +245,7 @@ _swig_wrap_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 libecostress_la_LIBADD =
 am_libecostress_la_OBJECTS =  \
 	@srclib@/libecostress_la-ecostress_camera.lo \
+	@srclib@/libecostress_la-ecostress_orbit.lo \
 	@srclib@/libecostress_la-ecostress_paraxial_transform.lo \
 	@srclib@/libecostress_la-ecostress_time_table.lo \
 	@srclib@/libecostress_la-ecostress_scan_mirror.lo \
@@ -265,6 +267,7 @@ am_ecostress_test_all_OBJECTS =  \
 	@srclib@/ecostress_test_all-global_fixture.$(OBJEXT) \
 	@srclib@/ecostress_test_all-global_fixture_default.$(OBJEXT) \
 	@srclib@/ecostress_test_all-ecostress_camera_test.$(OBJEXT) \
+	@srclib@/ecostress_test_all-ecostress_orbit_test.$(OBJEXT) \
 	@srclib@/ecostress_test_all-ecostress_paraxial_transform_test.$(OBJEXT) \
 	@srclib@/ecostress_test_all-ecostress_time_table_test.$(OBJEXT) \
 	@srclib@/ecostress_test_all-ecostress_scan_mirror_test.$(OBJEXT) \
@@ -305,6 +308,7 @@ am__depfiles_remade =  \
 	@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_test.Po \
 	@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_igc_collection_test.Po \
 	@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_image_ground_connection_test.Po \
+	@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_orbit_test.Po \
 	@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_paraxial_transform_test.Po \
 	@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_rad_apply_test.Po \
 	@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_rad_average_test.Po \
@@ -320,6 +324,7 @@ am__depfiles_remade =  \
 	@srclib@/$(DEPDIR)/libecostress_la-ecostress_camera.Plo \
 	@srclib@/$(DEPDIR)/libecostress_la-ecostress_igc_collection.Plo \
 	@srclib@/$(DEPDIR)/libecostress_la-ecostress_image_ground_connection.Plo \
+	@srclib@/$(DEPDIR)/libecostress_la-ecostress_orbit.Plo \
 	@srclib@/$(DEPDIR)/libecostress_la-ecostress_paraxial_transform.Plo \
 	@srclib@/$(DEPDIR)/libecostress_la-ecostress_rad_apply.Plo \
 	@srclib@/$(DEPDIR)/libecostress_la-ecostress_rad_average.Plo \
@@ -333,6 +338,7 @@ am__depfiles_remade =  \
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_dqi_wrap.Plo \
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_igc_collection_wrap.Plo \
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_image_ground_connection_wrap.Plo \
+	@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_orbit_wrap.Plo \
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_paraxial_transform_wrap.Plo \
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_rad_apply_wrap.Plo \
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_rad_average_wrap.Plo \
@@ -823,9 +829,11 @@ EXTRA_DIST = @srcpythonlib@/cython_sample.pyx \
 	%_wrap.cc, %.py, $(FULL_SWIG_SRC)) $(FULL_SWIG_SRC) \
 	$(srcdir)/$(swigsrc)/*_wrap.h @srclib@/test_all.sh \
 	@srclib@/unit_test_support.h @srclib@/global_fixture.h \
-	@srclib@/ecostress_igc_fixture.h \
+	@srclib@/ecostress_igc_fixture.h @unittestdata@/camera.xml \
 	@unittestdata@/cam_paraxial.xml \
-	@unittestdata@/SMAP_L1B_TB_SPS_RunConfig_20150228T224642376.xml
+	@unittestdata@/SMAP_L1B_TB_SPS_RunConfig_20150228T224642376.xml \
+	@unittestdata@/Scene_problem.txt \
+	@unittestdata@/L1A_RAW_ATT_00049_20180709T214305_0400_01.h5
 CYTHON_SRC = @srccython@/cython_sample.cc \
 	@srccython@/cython_sample2.cc
 pkgconfig_DATA = 
@@ -966,6 +974,7 @@ _swig_wrap_la_SOURCES = $(INCLUDE_SWIG_SRC) @swigsrc@/swig_wrap.cc
 ecostressincdir = @includedir@/ecostress
 ecostressswigincdir = @prefix@/share/ecostress/swig
 libecostress_la_SOURCES = @srclib@/ecostress_camera.cc \
+	@srclib@/ecostress_orbit.cc \
 	@srclib@/ecostress_paraxial_transform.cc \
 	@srclib@/ecostress_time_table.cc \
 	@srclib@/ecostress_scan_mirror.cc @srclib@/resampler.cc \
@@ -981,6 +990,7 @@ libecostress_la_SOURCES = @srclib@/ecostress_camera.cc \
 # List of source files
 ecostressinc_HEADERS = @srclib@/ecostress_serialize_support.h \
 	@srclib@/ecostress_camera.h @srclib@/ecostress_dqi.h \
+	@srclib@/ecostress_orbit.h \
 	@srclib@/ecostress_paraxial_transform.h \
 	@srclib@/ecostress_time_table.h \
 	@srclib@/ecostress_scan_mirror.h @srclib@/resampler.h \
@@ -993,6 +1003,7 @@ ecostressinc_HEADERS = @srclib@/ecostress_serialize_support.h \
 	@srclib@/simulated_radiance.h
 ecostressswiginc_HEADERS = @srclib@/ecostress_swig_array.i \
 	@srclib@/ecostress_dqi.i @srclib@/ecostress_camera.i \
+	@srclib@/ecostress_orbit.i \
 	@srclib@/ecostress_paraxial_transform.i \
 	@srclib@/ecostress_time_table.i \
 	@srclib@/ecostress_scan_mirror.i @srclib@/resampler.i \
@@ -1006,6 +1017,7 @@ ecostressswiginc_HEADERS = @srclib@/ecostress_swig_array.i \
 ecostress_test_all_SOURCES = @srclib@/test_all.cc \
 	@srclib@/global_fixture.cc @srclib@/global_fixture_default.cc \
 	@srclib@/ecostress_camera_test.cc \
+	@srclib@/ecostress_orbit_test.cc \
 	@srclib@/ecostress_paraxial_transform_test.cc \
 	@srclib@/ecostress_time_table_test.cc \
 	@srclib@/ecostress_scan_mirror_test.cc \
@@ -1021,6 +1033,7 @@ ecostress_test_all_SOURCES = @srclib@/test_all.cc \
 SWIG_SRC = @swigsrc@/ecostress_swig_array_wrap.cc \
 	@swigsrc@/ecostress_dqi_wrap.cc \
 	@swigsrc@/ecostress_camera_wrap.cc \
+	@swigsrc@/ecostress_orbit_wrap.cc \
 	@swigsrc@/ecostress_paraxial_transform_wrap.cc \
 	@swigsrc@/ecostress_time_table_wrap.cc \
 	@swigsrc@/ecostress_scan_mirror_wrap.cc \
@@ -1288,6 +1301,8 @@ _ecostress_level1.la: $(_ecostress_level1_la_OBJECTS) $(_ecostress_level1_la_DEP
 	@swigsrc@/$(am__dirstamp) @swigsrc@/$(DEPDIR)/$(am__dirstamp)
 @swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo:  \
 	@swigsrc@/$(am__dirstamp) @swigsrc@/$(DEPDIR)/$(am__dirstamp)
+@swigsrc@/_swig_wrap_la-ecostress_orbit_wrap.lo:  \
+	@swigsrc@/$(am__dirstamp) @swigsrc@/$(DEPDIR)/$(am__dirstamp)
 @swigsrc@/_swig_wrap_la-ecostress_paraxial_transform_wrap.lo:  \
 	@swigsrc@/$(am__dirstamp) @swigsrc@/$(DEPDIR)/$(am__dirstamp)
 @swigsrc@/_swig_wrap_la-ecostress_time_table_wrap.lo:  \
@@ -1323,6 +1338,8 @@ _swig_wrap.la: $(_swig_wrap_la_OBJECTS) $(_swig_wrap_la_DEPENDENCIES) $(EXTRA__s
 	@: > @srclib@/$(DEPDIR)/$(am__dirstamp)
 @srclib@/libecostress_la-ecostress_camera.lo:  \
 	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
+@srclib@/libecostress_la-ecostress_orbit.lo: @srclib@/$(am__dirstamp) \
+	@srclib@/$(DEPDIR)/$(am__dirstamp)
 @srclib@/libecostress_la-ecostress_paraxial_transform.lo:  \
 	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
 @srclib@/libecostress_la-ecostress_time_table.lo:  \
@@ -1355,6 +1372,8 @@ libecostress.la: $(libecostress_la_OBJECTS) $(libecostress_la_DEPENDENCIES) $(EX
 @srclib@/ecostress_test_all-global_fixture_default.$(OBJEXT):  \
 	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
 @srclib@/ecostress_test_all-ecostress_camera_test.$(OBJEXT):  \
+	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
+@srclib@/ecostress_test_all-ecostress_orbit_test.$(OBJEXT):  \
 	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
 @srclib@/ecostress_test_all-ecostress_paraxial_transform_test.$(OBJEXT):  \
 	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
@@ -1504,6 +1523,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_test.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_igc_collection_test.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_image_ground_connection_test.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_orbit_test.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_paraxial_transform_test.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_rad_apply_test.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_rad_average_test.Po@am__quote@ # am--include-marker
@@ -1519,6 +1539,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_camera.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_igc_collection.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_image_ground_connection.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_orbit.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_paraxial_transform.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_rad_apply.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_rad_average.Plo@am__quote@ # am--include-marker
@@ -1532,6 +1553,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_dqi_wrap.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_igc_collection_wrap.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_image_ground_connection_wrap.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_orbit_wrap.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_paraxial_transform_wrap.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_rad_apply_wrap.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_rad_average_wrap.Plo@am__quote@ # am--include-marker
@@ -1614,6 +1636,13 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@swigsrc@/ecostress_camera_wrap.cc' object='@swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -c -o @swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo `test -f '@swigsrc@/ecostress_camera_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/ecostress_camera_wrap.cc
+
+@swigsrc@/_swig_wrap_la-ecostress_orbit_wrap.lo: @swigsrc@/ecostress_orbit_wrap.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -MT @swigsrc@/_swig_wrap_la-ecostress_orbit_wrap.lo -MD -MP -MF @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_orbit_wrap.Tpo -c -o @swigsrc@/_swig_wrap_la-ecostress_orbit_wrap.lo `test -f '@swigsrc@/ecostress_orbit_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/ecostress_orbit_wrap.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_orbit_wrap.Tpo @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_orbit_wrap.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@swigsrc@/ecostress_orbit_wrap.cc' object='@swigsrc@/_swig_wrap_la-ecostress_orbit_wrap.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -c -o @swigsrc@/_swig_wrap_la-ecostress_orbit_wrap.lo `test -f '@swigsrc@/ecostress_orbit_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/ecostress_orbit_wrap.cc
 
 @swigsrc@/_swig_wrap_la-ecostress_paraxial_transform_wrap.lo: @swigsrc@/ecostress_paraxial_transform_wrap.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -MT @swigsrc@/_swig_wrap_la-ecostress_paraxial_transform_wrap.lo -MD -MP -MF @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_paraxial_transform_wrap.Tpo -c -o @swigsrc@/_swig_wrap_la-ecostress_paraxial_transform_wrap.lo `test -f '@swigsrc@/ecostress_paraxial_transform_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/ecostress_paraxial_transform_wrap.cc
@@ -1705,6 +1734,13 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/ecostress_camera.cc' object='@srclib@/libecostress_la-ecostress_camera.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/libecostress_la-ecostress_camera.lo `test -f '@srclib@/ecostress_camera.cc' || echo '$(srcdir)/'`@srclib@/ecostress_camera.cc
+
+@srclib@/libecostress_la-ecostress_orbit.lo: @srclib@/ecostress_orbit.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/libecostress_la-ecostress_orbit.lo -MD -MP -MF @srclib@/$(DEPDIR)/libecostress_la-ecostress_orbit.Tpo -c -o @srclib@/libecostress_la-ecostress_orbit.lo `test -f '@srclib@/ecostress_orbit.cc' || echo '$(srcdir)/'`@srclib@/ecostress_orbit.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/libecostress_la-ecostress_orbit.Tpo @srclib@/$(DEPDIR)/libecostress_la-ecostress_orbit.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/ecostress_orbit.cc' object='@srclib@/libecostress_la-ecostress_orbit.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/libecostress_la-ecostress_orbit.lo `test -f '@srclib@/ecostress_orbit.cc' || echo '$(srcdir)/'`@srclib@/ecostress_orbit.cc
 
 @srclib@/libecostress_la-ecostress_paraxial_transform.lo: @srclib@/ecostress_paraxial_transform.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/libecostress_la-ecostress_paraxial_transform.lo -MD -MP -MF @srclib@/$(DEPDIR)/libecostress_la-ecostress_paraxial_transform.Tpo -c -o @srclib@/libecostress_la-ecostress_paraxial_transform.lo `test -f '@srclib@/ecostress_paraxial_transform.cc' || echo '$(srcdir)/'`@srclib@/ecostress_paraxial_transform.cc
@@ -1838,6 +1874,20 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/ecostress_camera_test.cc' object='@srclib@/ecostress_test_all-ecostress_camera_test.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-ecostress_camera_test.obj `if test -f '@srclib@/ecostress_camera_test.cc'; then $(CYGPATH_W) '@srclib@/ecostress_camera_test.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/ecostress_camera_test.cc'; fi`
+
+@srclib@/ecostress_test_all-ecostress_orbit_test.o: @srclib@/ecostress_orbit_test.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-ecostress_orbit_test.o -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_orbit_test.Tpo -c -o @srclib@/ecostress_test_all-ecostress_orbit_test.o `test -f '@srclib@/ecostress_orbit_test.cc' || echo '$(srcdir)/'`@srclib@/ecostress_orbit_test.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_orbit_test.Tpo @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_orbit_test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/ecostress_orbit_test.cc' object='@srclib@/ecostress_test_all-ecostress_orbit_test.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-ecostress_orbit_test.o `test -f '@srclib@/ecostress_orbit_test.cc' || echo '$(srcdir)/'`@srclib@/ecostress_orbit_test.cc
+
+@srclib@/ecostress_test_all-ecostress_orbit_test.obj: @srclib@/ecostress_orbit_test.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-ecostress_orbit_test.obj -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_orbit_test.Tpo -c -o @srclib@/ecostress_test_all-ecostress_orbit_test.obj `if test -f '@srclib@/ecostress_orbit_test.cc'; then $(CYGPATH_W) '@srclib@/ecostress_orbit_test.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/ecostress_orbit_test.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_orbit_test.Tpo @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_orbit_test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/ecostress_orbit_test.cc' object='@srclib@/ecostress_test_all-ecostress_orbit_test.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/ecostress_test_all-ecostress_orbit_test.obj `if test -f '@srclib@/ecostress_orbit_test.cc'; then $(CYGPATH_W) '@srclib@/ecostress_orbit_test.cc'; else $(CYGPATH_W) '$(srcdir)/@srclib@/ecostress_orbit_test.cc'; fi`
 
 @srclib@/ecostress_test_all-ecostress_paraxial_transform_test.o: @srclib@/ecostress_paraxial_transform_test.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-ecostress_paraxial_transform_test.o -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_paraxial_transform_test.Tpo -c -o @srclib@/ecostress_test_all-ecostress_paraxial_transform_test.o `test -f '@srclib@/ecostress_paraxial_transform_test.cc' || echo '$(srcdir)/'`@srclib@/ecostress_paraxial_transform_test.cc
@@ -2661,6 +2711,7 @@ distclean: distclean-am
 	-rm -f @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_test.Po
 	-rm -f @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_igc_collection_test.Po
 	-rm -f @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_image_ground_connection_test.Po
+	-rm -f @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_orbit_test.Po
 	-rm -f @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_paraxial_transform_test.Po
 	-rm -f @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_rad_apply_test.Po
 	-rm -f @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_rad_average_test.Po
@@ -2676,6 +2727,7 @@ distclean: distclean-am
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_camera.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_igc_collection.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_image_ground_connection.Plo
+	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_orbit.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_paraxial_transform.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_rad_apply.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_rad_average.Plo
@@ -2689,6 +2741,7 @@ distclean: distclean-am
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_dqi_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_igc_collection_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_image_ground_connection_wrap.Plo
+	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_orbit_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_paraxial_transform_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_rad_apply_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_rad_average_wrap.Plo
@@ -2761,6 +2814,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_test.Po
 	-rm -f @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_igc_collection_test.Po
 	-rm -f @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_image_ground_connection_test.Po
+	-rm -f @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_orbit_test.Po
 	-rm -f @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_paraxial_transform_test.Po
 	-rm -f @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_rad_apply_test.Po
 	-rm -f @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_rad_average_test.Po
@@ -2776,6 +2830,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_camera.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_igc_collection.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_image_ground_connection.Plo
+	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_orbit.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_paraxial_transform.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_rad_apply.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_rad_average.Plo
@@ -2789,6 +2844,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_dqi_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_igc_collection_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_image_ground_connection_wrap.Plo
+	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_orbit_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_paraxial_transform_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_rad_apply_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_rad_average_wrap.Plo
