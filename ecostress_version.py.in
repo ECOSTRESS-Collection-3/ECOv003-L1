@@ -7,21 +7,21 @@ import os
 # Note, build_id is just a default version for a stand alone run. If we
 # have a run config file, this gets replaced with the build_id from that
 # run config file
-build_id = "0301"
-pge_version = {"l1a_raw" : "3.01",
-               "l1a_cal" : "3.01",
-               "l1b_rad" : "3.01",
-               "l1b_geo" : "3.01",
+build_id = "0400"
+pge_version = {"l1a_raw" : "4.00",
+               "l1a_cal" : "4.00",
+               "l1b_rad" : "4.00",
+               "l1b_geo" : "4.00",
                }
 
 # For end to end testing, fake having the final 3.00 version. This allows us
 # to avoid needing to update the expected results for each delivery just because
 # of a change in the version metadata
 if 'ECOSTRESS_END_TO_END_TEST' in os.environ:
-    build_id = "0300"
-    pge_version = {"l1a_raw" : "3.00",
-                   "l1a_cal" : "3.00",
-                   "l1b_rad" : "3.00",
-                   "l1b_geo" : "3.00",
+    build_id = "0400"
+    pge_version = {"l1a_raw" : "4.00",
+                   "l1a_cal" : "4.00",
+                   "l1b_rad" : "4.00",
+                   "l1b_geo" : "4.00",
                   }
     
