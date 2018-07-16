@@ -8,3 +8,5 @@ autom4te.cache
 *.lo
 .ipynb_checkpoints
 .tramp_history
+# Directory with initial Hai code. Leave in place, but don't checkin
+ECOSTRESS/
