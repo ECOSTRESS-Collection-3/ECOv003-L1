@@ -8,6 +8,27 @@ BOOST_FIXTURE_TEST_SUITE(ecostress_orbit, GlobalFixture)
 BOOST_AUTO_TEST_CASE(basic_test)
 {
   EcostressOrbit orb(unit_test_data_dir() + "L1A_RAW_ATT_00049_20180709T214305_0400_01.h5");
+  boost::shared_ptr<GeoCal::CartesianFixed> pos;
+  GeoCal::Time tdata_start = GeoCal::Time::parse_time("2018-07-09T21:43:05.015151Z");
+  GeoCal::Time tdata_end = GeoCal::Time::parse_time("2018-07-09T22:51:24.012658Z");
+  GeoCal::Time tgap_start = tdata_start + 74;
+  GeoCal::Time tgap_end = tdata_start + 4025.99751;
+  
+  // Should be able to get orbit data for times a little before and
+  // after the data
+  BOOST_CHECK_NO_THROW(pos=orb.position_cf(tdata_start - 3.0));
+  BOOST_CHECK_NO_THROW(pos=orb.position_cf(tdata_end + 3.0));
+
+  // Should be able to get orbit data in the gap for times near the ends.
+  BOOST_CHECK_NO_THROW(pos=orb.position_cf(tgap_start + 3.0));
+  BOOST_CHECK_NO_THROW(pos=orb.position_cf(tgap_end - 3.0));
+
+  // Should not be able to get data in the middle of the large gap, or
+  // way past our end points
+  BOOST_CHECK_THROW(pos=orb.position_cf(tgap_start + 20), GeoCal::Exception);
+  BOOST_CHECK_THROW(pos=orb.position_cf(tgap_end - 20), GeoCal::Exception);
+  BOOST_CHECK_THROW(pos=orb.position_cf(tdata_start - 20), GeoCal::Exception);
+  BOOST_CHECK_THROW(pos=orb.position_cf(tdata_end + 20), GeoCal::Exception);
 }
 
 BOOST_AUTO_TEST_CASE(serialization)
