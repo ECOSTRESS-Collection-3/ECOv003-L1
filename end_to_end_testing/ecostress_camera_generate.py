@@ -23,7 +23,9 @@ if(True):
     out1 = "cam_paraxial_20180208.xml"
     out2 = "camera_20180208.xml"
     focal_length = 427.5
-    frame_to_sc_q = geocal.Quaternion_double(0,0,0,1)
+    # Not sure about this
+    #frame_to_sc_q = geocal.Quaternion_double(0,0,0,1)
+    frame_to_sc_q = geocal.Quaternion_double(1,0,0,0)
 
 df = pd.read_excel(inp, "Data", header = 0,
                    skiprows = [1,])

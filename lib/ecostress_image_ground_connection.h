@@ -23,9 +23,17 @@ namespace Ecostress {
 class EcostressImageGroundConnection :
     public virtual GeoCal::ImageGroundConnection {
 public:
-  // This is 0 based, so with 1 based this is band 4.
-  enum {REF_BAND = 3 }; 	// Not sure about this, we'll need to
-				// check on this
+  // The y index with the minimum distortion according to the
+  // distortion spread sheet is y index of f. This corresponds to
+  // band 1 (0 based).
+  // Bands are:
+  //  0 - 1.62 micron (SWIR)
+  //  1 - 8.28
+  //  2 - 8.63
+  //  3 - 9.07
+  //  4 - 10.52
+  //  5 - 12.05
+  enum {REF_BAND = 1 };
   EcostressImageGroundConnection
   (const boost::shared_ptr<GeoCal::Orbit>& Orb,
    const boost::shared_ptr<GeoCal::TimeTable>& Tt,

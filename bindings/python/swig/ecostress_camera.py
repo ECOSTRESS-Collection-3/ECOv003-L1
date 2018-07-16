@@ -237,7 +237,7 @@ class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
         """
 
         EcostressCamera::EcostressCamera(double Focal_length=427.6, boost::math::quaternion< double >
-        Frame_to_sc_q=boost::math::quaternion< double >(0, 0, 0, 1))
+        Frame_to_sc_q=boost::math::quaternion< double >(1, 0, 0, 0))
         Constructor.
 
         We've hardcoded things we don't expect to change (e.g., the line and

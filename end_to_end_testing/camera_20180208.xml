@@ -115,7 +115,7 @@
 			</principal_point>
 			<frame_to_sc class_id="8" tracking_level="0" version="0">
 				<q1>
-					<val>0.00000000000000000e+00</val>
+					<val>1.00000000000000000e+00</val>
 					<grad>
 						<size>0</size>
 					</grad>
@@ -133,7 +133,7 @@
 					</grad>
 				</q3>
 				<q4>
-					<val>1.00000000000000000e+00</val>
+					<val>0.00000000000000000e+00</val>
 					<grad>
 						<size>0</size>
 					</grad>
@@ -141,7 +141,7 @@
 			</frame_to_sc>
 			<frame_convention>0</frame_convention>
 			<line_direction>1</line_direction>
-			<sample_direction>1</sample_direction>
+			<sample_direction>0</sample_direction>
 			<parameter_mask class_id="9" tracking_level="0" version="0">
 				<size>18</size>
 				<data>
