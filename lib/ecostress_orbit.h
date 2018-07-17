@@ -42,6 +42,9 @@ public:
     large_gap_(Large_gap),
     pad_(Extrapolation_pad)
   {
+    // Add padding to min and max time.
+    min_tm -= Extrapolation_pad;
+    max_tm += Extrapolation_pad;
   }
   virtual ~EcostressOrbit() {}
 
@@ -61,6 +64,10 @@ public:
   void large_gap(double v) { large_gap_ = v;}
 
   virtual void print(std::ostream& Os) const;
+protected:
+  virtual void interpolate_or_extrapolate_data
+  (GeoCal::Time T, boost::shared_ptr<GeoCal::QuaternionOrbitData>& Q1,
+   boost::shared_ptr<GeoCal::QuaternionOrbitData>& Q2) const;
 private:
   double large_gap_, pad_;
   EcostressOrbit() {}

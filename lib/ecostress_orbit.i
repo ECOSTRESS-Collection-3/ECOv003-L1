@@ -11,7 +11,7 @@
 
 %ecostress_shared_ptr(Ecostress::EcostressOrbit);
 namespace Ecostress {
-class EcostressOrbit : public GeoCal::HdfOrbit<GeoCal::EciTod, GeoCal::TimeAcsCreator> {
+class EcostressOrbit : public GeoCal::HdfOrbit<GeoCal::Eci, GeoCal::TimeJ2000Creator> {
 public:
   EcostressOrbit(const std::string& Fname, double Extrapolation_pad = 5.0,
 		 double Large_gap = 10.0);

@@ -28,8 +28,10 @@ fi
 source ${abs_top_builddir}/script/setup_ecostress.sh
 
 if [ ${log_test} ] ; then
+    echo ${tool_command} ./ecostress_test_all --log_level=test_suite --run_test=${run_test}
     ${tool_command} ./ecostress_test_all --log_level=test_suite --run_test=${run_test}
 else
+    echo ${tool_command} ./ecostress_test_all --show_progress --run_test=${run_test}
     ${tool_command} ./ecostress_test_all --show_progress --run_test=${run_test}
 fi
 

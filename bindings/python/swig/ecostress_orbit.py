@@ -186,7 +186,7 @@ import geocal_swig.orbit
 import geocal_swig.generic_object
 import geocal_swig.observer
 import geocal_swig.with_parameter
-class EcostressOrbit(geocal_swig.hdf_orbit.HdfOrbit_EciTod_TimeAcs):
+class EcostressOrbit(geocal_swig.hdf_orbit.HdfOrbit_Eci_TimeJ2000):
     """
 
     This is the Ecostress orbit (not including any fixes or

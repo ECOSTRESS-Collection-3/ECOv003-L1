@@ -1,6 +1,6 @@
 #include "unit_test_support.h"
 #include "ecostress_orbit.h"
-
+#include "geocal/geodetic.h"
 using namespace Ecostress;
 
 BOOST_FIXTURE_TEST_SUITE(ecostress_orbit, GlobalFixture)
@@ -18,10 +18,39 @@ BOOST_AUTO_TEST_CASE(basic_test)
   // after the data
   BOOST_CHECK_NO_THROW(pos=orb.position_cf(tdata_start - 3.0));
   BOOST_CHECK_NO_THROW(pos=orb.position_cf(tdata_end + 3.0));
-
+  if(false) {
+    GeoCal::Geodetic p0(*orb.position_cf(tdata_start - 3.0));
+    for(double toffset = -3.0; toffset < 3.0 ; toffset += 1.0)
+      std::cerr << toffset << ": "
+		<< GeoCal::Geodetic(*orb.position_cf(tdata_start + toffset))
+		<< " " << GeoCal::distance(p0,
+	        *orb.position_cf(tdata_start + toffset)) << "\n";
+    p0 = GeoCal::Geodetic(*orb.position_cf(tdata_end - 3.0));
+    for(double toffset = -3.0; toffset < 3.0 ; toffset += 1.0)
+      std::cerr << toffset << ": "
+		<< GeoCal::Geodetic(*orb.position_cf(tdata_end + toffset))
+		<< " " << GeoCal::distance(p0,
+	        *orb.position_cf(tdata_end + toffset)) << "\n";
+  }				     
+  
   // Should be able to get orbit data in the gap for times near the ends.
   BOOST_CHECK_NO_THROW(pos=orb.position_cf(tgap_start + 3.0));
   BOOST_CHECK_NO_THROW(pos=orb.position_cf(tgap_end - 3.0));
+
+  if(false) {
+    GeoCal::Geodetic p0(*orb.position_cf(tgap_start - 3.0));
+    for(double toffset = -3.0; toffset < 3.0 ; toffset += 1.0)
+      std::cerr << toffset << ": "
+		<< GeoCal::Geodetic(*orb.position_cf(tgap_start + toffset))
+		<< " " << GeoCal::distance(p0,
+	        *orb.position_cf(tgap_start + toffset)) << "\n";
+    p0 = GeoCal::Geodetic(*orb.position_cf(tgap_end - 3.0));
+    for(double toffset = -3.0; toffset < 3.0 ; toffset += 1.0)
+      std::cerr << toffset << ": "
+		<< GeoCal::Geodetic(*orb.position_cf(tgap_end + toffset))
+		<< " " << GeoCal::distance(p0,
+	        *orb.position_cf(tgap_end + toffset)) << "\n";
+  }				     
 
   // Should not be able to get data in the middle of the large gap, or
   // way past our end points
