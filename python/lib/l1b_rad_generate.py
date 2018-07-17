@@ -15,7 +15,8 @@ class L1bRadGenerate(object):
                  pge_version = "0.30",
                  interpolate_stripe_data = False,
                  seed = 1234,
-                 skip_band_to_band = False):
+                 skip_band_to_band = False,
+                 frac_to_do_interpolation = 0.3):
         '''Create a L1bRadGenerate with the given input files
         and output file name. To actually generate, execute the 'run'
         command.'''
@@ -33,6 +34,9 @@ class L1bRadGenerate(object):
         self.interpolate_stripe_data = interpolate_stripe_data
         self.seed = seed
         self.skip_band_to_band = skip_band_to_band
+        self.total_possible_scan = 0
+        self.missing_scan = 0
+        self.frac_to_do_interpolation = frac_to_do_interpolation
 
     def image(self, band):
         '''Generate L1B_RAD image.
@@ -56,25 +60,36 @@ class L1bRadGenerate(object):
             nlinescan = self.igc.number_line_scan
             radsub = geocal.SubRasterImage(rad, sline, 0, nlinescan,
                                            rad.number_sample)
-            if(not self.skip_band_to_band):
-                tplist = band_to_band_tie_points(self.igc, scan_index, band)
-                m = geocal.QuadraticGeometricModel()
-                m.fit_transformation(tplist)
-                fill_value = FILL_VALUE_NOT_SEEN
-                # Note nearest neighbor preserves fill values
-                rbreg = geocal.GeometricModelImage(radsub, m,
-                       radsub.number_line, radsub.number_sample, fill_value,
-                      geocal.GeometricModelImage.NEAREST_NEIGHBOR)
-                rbreg_avg = EcostressRadAverage(rbreg)
+            d = radsub.read_all()
+            # Skip processing scan if all the data is bad. This allows
+            # handling for short scenes, where we might not have the
+            # L1A_ATT data to calculate band to band.
+            self.total_possible_scan += 1
+            if(np.all(d <= fill_value_threshold)):
+                res[int(sline/2):int((sline+nlinescan)/2),:] = FILL_VALUE_BAD_OR_MISSING
+                self.missing_scan += 1
             else:
-                rbreg_avg = EcostressRadAverage(radsub)
-            res[int(sline/2):int((sline+nlinescan)/2),:] = rbreg_avg.read_all_double()
+                if(not self.skip_band_to_band):
+                    tplist = band_to_band_tie_points(self.igc, scan_index, band)
+                    m = geocal.QuadraticGeometricModel()
+                    m.fit_transformation(tplist)
+                    fill_value = FILL_VALUE_NOT_SEEN
+                    # Note nearest neighbor preserves fill values
+                    rbreg = geocal.GeometricModelImage(radsub, m,
+                      radsub.number_line, radsub.number_sample, fill_value,
+                      geocal.GeometricModelImage.NEAREST_NEIGHBOR)
+                    rbreg_avg = EcostressRadAverage(rbreg)
+                else:
+                    rbreg_avg = EcostressRadAverage(radsub)
+                res[int(sline/2):int((sline+nlinescan)/2),:] = rbreg_avg.read_all_double()
         return res
         
     def run(self):
         '''Do the actual generation of data.'''
         fout = h5py.File(self.output_name, "w")
         # Get all data and DQI first, so we can
+        self.total_possible_scan = 0
+        self.missing_scan = 0
         for b in range(5):
             data = self.image(b+1)
             if(b == 0):
@@ -84,7 +99,16 @@ class L1bRadGenerate(object):
         dqi[dataset == FILL_VALUE_NOT_SEEN] = DQI_NOT_SEEN
         dqi[dataset == FILL_VALUE_STRIPED] = DQI_STRIPE_NOT_INTERPOLATED
         dqi[dataset == FILL_VALUE_BAD_OR_MISSING] = DQI_BAD_OR_MISSING
-        if(self.interpolate_stripe_data):
+        # Only do interpolation if we are directed to,
+        # and we have enough data present (e.g., skip
+        # if too little of the scene actually has imagery)
+        frac_data_present = (self.total_possible_scan - self.missing_scan) / self.total_possible_scan
+        if(self.interpolate_stripe_data and
+           frac_data_present < self.frac_to_do_interpolation):
+            if(self.log is not None):
+                print("INFO:L1bRadGenerate:Skipping interpolation because fraction of scans present is too small (e.g., short scene)",
+                      file=self.log)
+        elif(self.interpolate_stripe_data): 
             inter = EcostressInterpolate(seed = self.seed)
             prediction_matrices, predicted_locations, prediction_errors = inter.interpolate_missing_bands(dataset, dqi, log=self.log)
             dataset[:,:,0] = prediction_matrices[0]
