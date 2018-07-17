@@ -44,17 +44,25 @@ class L1bGeoGenerate(object):
 
     def loc_parallel_func(self, it):
         '''Variation of loc that is easier to use with a multiprocessor pool.'''
-        # Handle number_sample too large here, so we don't have to
-        # have special handling elsewhere
         start_line, number_line = it
-        # Note res here refers to an internal cache array of gc_arr
-        res = self.gc_arr.ground_coor_scan_arr(start_line, number_line)
-        print("Done with [%d, %d]" % (start_line, start_line+res.shape[0]))
-        if(self.log_fname is not None):
-            self.log = open(self.log_fname, "a")
-            print("INFO:L1bGeoGenerate:Done with [%d, %d]" %
-                  (start_line, start_line+res.shape[0]), file = self.log)
-            self.log.flush()
+        try:
+            # Note res here refers to an internal cache array of gc_arr
+            res = self.gc_arr.ground_coor_scan_arr(start_line, number_line)
+            print("Done with [%d, %d]" % (start_line, start_line+res.shape[0]))
+            if(self.log_fname is not None):
+                self.log = open(self.log_fname, "a")
+                print("INFO:L1bGeoGenerate:Done with [%d, %d]" %
+                      (start_line, start_line+res.shape[0]), file = self.log)
+                self.log.flush()
+        except RuntimeError:
+            res = np.empty((number_line, self.igc.image.number_sample, 1, 1, 7))
+            res[:] = FILL_VALUE_BAD_OR_MISSING
+            print("Skipping [%d, %d]" % (start_line, start_line+res.shape[0]))
+            if(self.log_fname is not None):
+                self.log = open(self.log_fname, "a")
+                print("INFO:L1bGeoGenerate:Skipping [%d, %d]" %
+                      (start_line, start_line+res.shape[0]), file = self.log)
+                self.log.flush()
         # Note the copy() here is very important. As an optimization,
         # ground_coor_scan_arr return a reference to an internal cache
         # variable. This array gets overwritten in the next call to

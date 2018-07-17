@@ -228,7 +228,11 @@ blitz::Array<double, 2> GroundCoordinateArray::interpolate
     throw GeoCal::Exception("Lat and Lon need to be the same size");
   for(int i = 0; i < res.rows(); ++i)
     for(int j = 0; j < res.cols(); ++j)
-      res(i,j) = Data.interpolate(Data.coordinate(GeoCal::Geodetic(Lat(i,j), Lon(i,j))));
+      if(Lat(i,j) > fill_value_threshold &&
+	 Lon(i,j) > fill_value_threshold)
+	res(i,j) = Data.interpolate(Data.coordinate(GeoCal::Geodetic(Lat(i,j), Lon(i,j))));
+      else
+	res(i,j) = FILL_VALUE_BAD_OR_MISSING;
   return res;
 }
 //-------------------------------------------------------------------------
