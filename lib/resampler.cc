@@ -78,8 +78,33 @@ void Resampler::init(const blitz::Array<double, 2>& lat,
 {
   blitz::Range ra = blitz::Range::all();
   std::vector<boost::shared_ptr<GroundCoordinate> > ptlist;
-  ptlist.push_back(boost::make_shared<Geodetic>(blitz::min(lat),
-						blitz::min(lon)));
+  double minlat, minlon;
+  bool first = true;
+  for(int i = 0; i < lat.rows(); ++i)
+    for(int j = 0; j < lat.cols(); ++j) {
+      if(lat(i, j) > -1000) {
+	if(first) {
+	  minlat = lat(i,j);
+	  first = false;
+	} else {
+	  minlat = std::min(lat(i,j),minlat);
+	}
+      }
+    }
+  first = true;
+  for(int i = 0; i < lon.rows(); ++i)
+    for(int j = 0; j < lon.cols(); ++j) {
+      if(lon(i, j) > -1000) {
+	if(first) {
+	  minlon = lon(i,j);
+	  first = false;
+	} else {
+	  minlon = std::min(lon(i,j),minlon);
+	}
+      }
+    }
+  
+  ptlist.push_back(boost::make_shared<Geodetic>(minlat, minlon));
   ptlist.push_back(boost::make_shared<Geodetic>(blitz::max(lat),
 						blitz::max(lon)));
   if(Exactly_match_mi)
@@ -127,19 +152,22 @@ void Resampler::resample_field
       int ln, smp;
       ln = data_index(i,j,0);
       smp = data_index(i,j,1);
-      if(d(i,j) > fill_value_threshold) {
-	// Clear out any fill value we may have set
-	if(cnt(ln,smp) == 0)
-	  res(ln,smp) = 0.0;
-	res(ln,smp) += d(i,j);
-	cnt(ln,smp) += 1;
-      } else {
-	// Populate with fill value if we don't already have data
-	if(cnt(ln, smp) == 0) {
-	  if(res(ln, smp) > fill_value_threshold)
-	    res(ln, smp) = d(i,j);
-	  else
-	    res(ln, smp) = std::max(res(ln, smp), d(i,j));
+      if(ln >= 0 && ln < cnt.rows() &&
+	 smp >=0 && smp < cnt.cols()) {
+	if(d(i,j) > fill_value_threshold) {
+	  // Clear out any fill value we may have set
+	  if(cnt(ln,smp) == 0)
+	    res(ln,smp) = 0.0;
+	  res(ln,smp) += d(i,j);
+	  cnt(ln,smp) += 1;
+	} else {
+	  // Populate with fill value if we don't already have data
+	  if(cnt(ln, smp) == 0) {
+	    if(res(ln, smp) > fill_value_threshold)
+	      res(ln, smp) = d(i,j);
+	    else
+	      res(ln, smp) = std::max(res(ln, smp), d(i,j));
+	  }
 	}
       }
     }

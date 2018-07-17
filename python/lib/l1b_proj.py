@@ -13,8 +13,6 @@ class L1bProj(object):
                  log_fname = None, number_subpixel = 2,
                  scratch_fname="initial_lat_lon.dat"):
         '''Project igc and generate a Vicar file fname.'''
-        # We do 2x2 subpixeling. May need to adapt this once we figure
-        # out the size we will use with Landsat data
         self.igccol = igccol
         self.gc_arr = list()
         self.ortho_base = ortho_base
@@ -75,9 +73,16 @@ class L1bProj(object):
         igc_ind, scan_index = it
         igc = self.igccol.image_ground_connection(igc_ind)
         start_line, end_line = igc.time_table.scan_index_to_line(scan_index)
-        t = self.gc_arr[igc_ind].ground_coor_scan_arr(start_line)
+        nlinescan = igc.number_line_scan
+        rad = geocal.SubRasterImage(igc.image, start_line, 0, nlinescan,
+                                    igc.image.number_sample)
+        d = rad.read_all()
         f = self.scratch_file()
-        f[igc_ind, start_line:end_line, :, :] = t[:,:,0,0,0:2]
+        if(np.all(d <= fill_value_threshold)):
+            f[igc_ind, start_line:end_line, :, :] = -1e99
+        else:
+            t = self.gc_arr[igc_ind].ground_coor_scan_arr(start_line)
+            f[igc_ind, start_line:end_line, :, :] = t[:,:,0,0,0:2]
         print("Done with [%d, %d, %d]" % (igc_ind, start_line,end_line))
         if(self.log_fname is not None):
             self.log = open(self.log_fname, "a")
