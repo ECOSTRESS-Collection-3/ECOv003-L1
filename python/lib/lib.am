@@ -17,6 +17,8 @@ ecostresspkgpython_PYTHON+= @srcpythonlib@/pickle_method.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/run_config.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/write_run_config.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/write_standard_metadata.py
+ecostresspkgpython_PYTHON+= @srcpythonlib@/geo_write_standard_metadata.py
+ecostresspkgpython_PYTHON+= @srcpythonlib@/rad_write_standard_metadata.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/exception.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/ecostress_interpolate.py
 

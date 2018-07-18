@@ -278,19 +278,18 @@ try:
                 raise
             print_and_log("SBA/Tiepoint failed to correct orbit data. Continue processing without correction.")
 
-    #TODO Add metadata based on value of correction_done
-    
     # Generate output data
     for i in range(len(radlist)):
         # Generate output
         print_and_log("Doing scene number %d" % scenelist[i])
         l1bgeo = ecostress.L1bGeoGenerate(
-                                igccol_corrected.image_ground_connection(i),
-                                lwm, ofile[i],inlist,is_day[i],
-                                number_line = args.number_line,
-                                run_config = config, log_fname = log_fname,
-                                build_id = build_id,
-                                pge_version = pge_version["l1b_geo"])
+            igccol_corrected.image_ground_connection(i),
+            lwm, ofile[i],inlist,is_day[i],
+            number_line = args.number_line,
+            run_config = config, log_fname = log_fname,
+            build_id = build_id,
+            pge_version = pge_version["l1b_geo"],
+            correction_done = correction_done)
         l1bgeo.run(pool)
     
     # Write out updated orbit data
@@ -301,7 +300,8 @@ try:
             igccol_corrected.image_ground_connection(0).orbit,
             ofile2, tatt, teph, inlist, run_config = config,
             build_id = build_id,
-            pge_version = pge_version["l1b_geo"])
+            pge_version = pge_version["l1b_geo"],
+            correction_done = correction_done)
     l1batt.run()
 
     log = open(log_fname, "a")

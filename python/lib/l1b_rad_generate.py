@@ -2,7 +2,7 @@ import geocal
 from ecostress_swig import *
 import h5py
 import shutil
-from .write_standard_metadata import WriteStandardMetadata
+from .rad_write_standard_metadata import RadWriteStandardMetadata
 from .misc import is_day
 from .ecostress_interpolate import EcostressInterpolate
 import numpy as np
@@ -15,6 +15,7 @@ class L1bRadGenerate(object):
                  pge_version = "0.30",
                  interpolate_stripe_data = False,
                  seed = 1234,
+                 line_order_flipped = False,
                  skip_band_to_band = False,
                  frac_to_do_interpolation = 0.3):
         '''Create a L1bRadGenerate with the given input files
@@ -37,6 +38,7 @@ class L1bRadGenerate(object):
         self.total_possible_scan = 0
         self.missing_scan = 0
         self.frac_to_do_interpolation = frac_to_do_interpolation
+        self.line_order_flipped = line_order_flipped
 
     def image(self, band):
         '''Generate L1B_RAD image.
@@ -164,11 +166,12 @@ Data quality indicator.
                              data = self.l1a_pix["/FPIEencoder/EncoderValue"])
         t.attrs["Description"] = "Mirror encoder value of each focal plane in each scan"
         t.attrs["Units"] = "dimensionless"
-        m = WriteStandardMetadata(fout, product_specfic_group = "L1B_RADMetadata",
+        m = RadWriteStandardMetadata(fout, product_specfic_group = "L1B_RADMetadata",
                                   proc_lev_desc = "Level 1B Radiance Parameters",
                                   pge_name = "L1B_RAD_PGE",
                                   build_id = self.build_id,
                                   pge_version= self.pge_version,
+                                  line_order_flipped=self.line_order_flipped,
                                   local_granule_id = self.local_granule_id)
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)

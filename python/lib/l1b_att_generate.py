@@ -1,6 +1,6 @@
 import geocal
 import h5py
-from .write_standard_metadata import WriteStandardMetadata
+from .geo_write_standard_metadata import GeoWriteStandardMetadata
 from .misc import time_split
 import math
 import numpy as np
@@ -15,7 +15,8 @@ class L1bAttGenerate(object):
                  tatt, teph, inlist,
                  run_config = None, local_granule_id = None,
                  build_id = "0.30",
-                 pge_version = "0.30"):
+                 pge_version = "0.30",
+                 correction_done = True):
         '''Create a L1bAttGenerate with the given ImageGroundConnection
         and output file name. To actually generate, execute the 'run'
         command.
@@ -34,17 +35,19 @@ class L1bAttGenerate(object):
         self.build_id = build_id
         self.pge_version = pge_version
         self.inlist = inlist
+        self.correction_done = correction_done
 
     def run(self):
         '''Do the actual generation of data.'''
         fout = h5py.File(self.output_name, "w")
-        m = WriteStandardMetadata(fout,
+        m = GeoWriteStandardMetadata(fout,
                                   product_specfic_group = "L1GEOMetadata",
                                   proc_lev_desc = "Level 1B Geolocation Parameters",                                  
                                   pge_name="L1B_GEO",
                                   build_id = self.build_id,
                                   orbit_based = True,
                                   pge_version= self.pge_version,
+                                  orbit_corrected=self.correction_done,
                                   local_granule_id = self.local_granule_id)
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)

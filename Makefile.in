@@ -920,6 +920,8 @@ ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
 	@srcpythonlib@/pickle_method.py @srcpythonlib@/run_config.py \
 	@srcpythonlib@/write_run_config.py \
 	@srcpythonlib@/write_standard_metadata.py \
+	@srcpythonlib@/geo_write_standard_metadata.py \
+	@srcpythonlib@/rad_write_standard_metadata.py \
 	@srcpythonlib@/exception.py \
 	@srcpythonlib@/ecostress_interpolate.py \
 	@srcpythonlib@/cython_try.py

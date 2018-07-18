@@ -5,7 +5,7 @@ from .pickle_method import *
 import h5py
 import math
 from multiprocessing import Pool
-from .write_standard_metadata import WriteStandardMetadata
+from .geo_write_standard_metadata import GeoWriteStandardMetadata
 from .misc import time_split
 import numpy as np
 
@@ -18,7 +18,8 @@ class L1bGeoGenerate(object):
                  number_line = -1,
                  local_granule_id = None, log_fname = None,
                  build_id = "0.30",
-                 pge_version = "0.30"):
+                 pge_version = "0.30",
+                 correction_done = True):
         '''Create a L1bGeoGenerate with the given ImageGroundConnection
         and output file name. To actually generate, execute the "run"
         command.
@@ -41,6 +42,7 @@ class L1bGeoGenerate(object):
         self.build_id = build_id
         self.pge_version = pge_version
         self.inlist = inlist
+        self.correction_done = correction_done
 
     def loc_parallel_func(self, it):
         '''Variation of loc that is easier to use with a multiprocessor pool.'''
@@ -112,12 +114,13 @@ class L1bGeoGenerate(object):
         lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac, \
             tlinestart = self.loc(pool)
         fout = h5py.File(self.output_name, "w")
-        m = WriteStandardMetadata(fout,
+        m = GeoWriteStandardMetadata(fout,
                                   product_specfic_group = "L1GEOMetadata",
                                   proc_lev_desc = "Level 1B Geolocation Parameters",                                  
                                   pge_name="L1B_GEO",
                                   build_id = self.build_id,
                                   pge_version= self.pge_version,
+                                  orbit_corrected=self.correction_done,
                                   local_granule_id = self.local_granule_id)
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)
