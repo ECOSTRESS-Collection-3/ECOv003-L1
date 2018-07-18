@@ -3,6 +3,7 @@ import geocal
 import pickle
 from .pickle_method import *
 from multiprocessing import Pool
+import traceback
 
 class L1bTpCollect(object):
     '''This is used to collect tiepoints between the ecostress data and
@@ -22,7 +23,8 @@ class L1bTpCollect(object):
         self.log_fname = log_fname
         self.p = L1bProj(self.igccol, self.proj_fname, self.ref_fname,
                          self.ortho_base, log_fname = self.log_fname,
-                         number_subpixel=proj_number_subpixel)
+                         number_subpixel=proj_number_subpixel,
+                         pass_through_error=True)
         self.tpcollect = geocal.TiePointCollectPicmtch(self.igccol,
                               self.proj_fname, image_index1=0,
                               ref_image_fname=self.ref_fname[0],
@@ -31,32 +33,46 @@ class L1bTpCollect(object):
                               log_file=self.log_file[0],
                               run_dir_name=self.run_dir_name[0])
 
+    def print_and_log(self, s):
+        print(s)
+        if(self.log_fname is not None):
+            self.log = open(self.log_fname, "a")
+            print("INFO:L1bTpCollect:%s" % s, file = self.log)
+            self.log.flush()
+            self.log = None
+
     def tp(self, i):
         '''Get tiepoints for the given scene number'''
-        self.tpcollect.image_index1 = i
-        self.tpcollect.ref_image_fname = self.ref_fname[i]
-        self.tpcollect.log_file = self.log_file[i]
-        self.tpcollect.run_dir_name = self.run_dir_name[i]
-        print("Collecting tp for scene %d" % (i+1))
-        if(self.log_fname is not None):
-            self.log = open(self.log_fname, "a")
-            print("INFO:L1bTpCollect:Collecting tp for scene %d" % (i+1),
-                  file = self.log)
-            self.log.flush()
-        res = self.tpcollect.tie_point_grid(self.num_x, self.num_y)
-        print("Done collecting tp for scene %d" % (i+1))
-        if(self.log_fname is not None):
-            self.log = open(self.log_fname, "a")
-            print("INFO:L1bTpCollect:Done collecting tp for scene %d" % (i+1),
-                  file = self.log)
-            self.log.flush()
+        try:
+            self.tpcollect.image_index1 = i
+            self.tpcollect.ref_image_fname = self.ref_fname[i]
+            self.tpcollect.log_file = self.log_file[i]
+            self.tpcollect.run_dir_name = self.run_dir_name[i]
+            self.print_and_log("Collecting tp for scene %d" % (i+1))
+            res = self.tpcollect.tie_point_grid(self.num_x, self.num_y)
+            self.print_and_log("Done collecting tp for scene %d" % (i+1))
+        except Exception as e:
+            print("Exception occurred while collecting tie-points for scene %d:" % (i+1))
+            traceback.print_exc()
+            print("Skipping tie-points for this scene and continuing processing")
+            if(self.log_fname is not None):
+                self.log = open(self.log_fname, "a")
+                print("INFO:L1bTpCollect:Exception occurred while collecting tie-points for scene %d:" % (i+1), file = self.log)
+                traceback.print_exc(file=log)
+                print("INFO:L1bTpCollect:Skipping tie-points for this scene and continuing processing", file=log)
+                self.log.flush()
+                self.log = None
+            res = []
         return res
     
     def tpcol(self, pool=None):
         '''Return tiepoints collected.'''
         # First project all the data.
-        self.p.proj(pool=pool)
-        it = list(range(self.igccol.number_image))
+        proj_res = self.p.proj(pool=pool)
+        it = []
+        for i in range(self.igccol.number_image):
+            if(proj_res[i]):
+                it.append(i)
         if(pool is None):
             tpcollist = map(self.tp, it)
         else:

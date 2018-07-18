@@ -5,13 +5,15 @@ from .pickle_method import *
 from multiprocessing import Pool
 import numpy as np
 import scipy.ndimage
+import traceback
 class L1bProj(object):
     '''This handles projecting a Igc to the surface, forming a vicar file
     that we can then match against. We can do this in parallel if you
     pass a pool in.'''
     def __init__(self, igccol, fname_list, ref_fname_list, ortho_base,
                  log_fname = None, number_subpixel = 2,
-                 scratch_fname="initial_lat_lon.dat"):
+                 scratch_fname="initial_lat_lon.dat",
+                 pass_through_error=False):
         '''Project igc and generate a Vicar file fname.'''
         self.igccol = igccol
         self.gc_arr = list()
@@ -21,6 +23,7 @@ class L1bProj(object):
         self.log_fname = log_fname
         self.scratch_fname = scratch_fname
         self.number_subpixel = number_subpixel
+        self.pass_through_error = pass_through_error
                                         
         # Want to scale to roughly 60 meters. Much of the landsat data is
         # at higher resolution, but ecostress is close to 70 meter pixel so
@@ -31,6 +34,14 @@ class L1bProj(object):
             self.gc_arr.append(GroundCoordinateArray(
                 self.igccol.image_ground_connection(i)))
 
+    def print_and_log(self, s):
+        print(s)
+        if(self.log_fname is not None):
+            self.log = open(self.log_fname, "a")
+            print("INFO:L1bProj:%s" % s, file = self.log)
+            self.log.flush()
+            self.log = None
+            
     def scratch_file(self, create=False):
         '''Open/Create the scratch file we use in our lat/lon calculation.'''
         mode = "w+" if create else "r+"
@@ -42,36 +53,52 @@ class L1bProj(object):
                          2))
 
     def resample_data(self, igc_ind):
-        mi = self.ortho_base[igc_ind].map_info.scale(self.ortho_scale[igc_ind],
-                                                     self.ortho_scale[igc_ind])
-        f = self.scratch_file()
-        lat = f[igc_ind,:,:,0]
-        lon = f[igc_ind,:,:,1]
-        # This is bilinear interpolation
-        lat = scipy.ndimage.interpolation.zoom(lat, self.number_subpixel,
-                                               order=1)
-        # Detect the dateline. -200 is just to filter out any fill data,
-        # is -180 with a bit of pad
-        if(np.any(lon > 170) and np.any(np.logical_and(lon > -200, lon < -170))):
-            raise RuntimeError("Don't currently handle crossing the date line")
-        lon = scipy.ndimage.interpolation.zoom(lon, self.number_subpixel,
-                                               order=1)
-        # Resample data to project to surface
-        res = Resampler(lat, lon, mi, self.number_subpixel)
-        # Don't need this anymore, and the data is large. So free it
-        lat = None
-        lon = None
-        ras = self.igccol.image_ground_connection(igc_ind).image
-        print("Starting resample for scene %d" % (igc_ind + 1))
-        res.resample_field(self.fname_list[igc_ind], ras, 1.0, "HALF", True)
-        print("Done with resample for scene %d" % (igc_ind + 1))
-        print("Starting reference image for scene %d" % (igc_ind + 1))
-        ortho = self.ortho_base[igc_ind]
-        ortho.create_subset_file(self.ref_fname_list[igc_ind],
-                                 "VICAR",
-                                 Desired_map_info = res.map_info,
-                                 Translate_arg = "-ot Int16")
-        print("Done with reference image for scene %d" % (igc_ind + 1))
+        try:
+            mi = self.ortho_base[igc_ind].map_info.scale(self.ortho_scale[igc_ind],
+                                                    self.ortho_scale[igc_ind])
+            f = self.scratch_file()
+            lat = f[igc_ind,:,:,0]
+            lon = f[igc_ind,:,:,1]
+            # This is bilinear interpolation
+            lat = scipy.ndimage.interpolation.zoom(lat, self.number_subpixel,
+                                                   order=1)
+            # Detect the dateline. -200 is just to filter out any fill data,
+            # is -180 with a bit of pad
+            if(np.any(lon > 170) and np.any(np.logical_and(lon > -200, lon < -170))):
+                raise RuntimeError("Don't currently handle crossing the date line")
+            lon = scipy.ndimage.interpolation.zoom(lon, self.number_subpixel,
+                                                   order=1)
+            # Resample data to project to surface
+            res = Resampler(lat, lon, mi, self.number_subpixel)
+            # Don't need this anymore, and the data is large. So free it
+            lat = None
+            lon = None
+            ras = self.igccol.image_ground_connection(igc_ind).image
+            self.print_and_log("Starting resample for scene %d" % (igc_ind + 1))
+            res.resample_field(self.fname_list[igc_ind], ras, 1.0, "HALF", True)
+            self.print_and_log("Done with resample for scene %d" % (igc_ind + 1))
+            self.print_and_log("Starting reference image for scene %d" % (igc_ind + 1))
+            ortho = self.ortho_base[igc_ind]
+            ortho.create_subset_file(self.ref_fname_list[igc_ind],
+                                     "VICAR",
+                                     Desired_map_info = res.map_info,
+                                     Translate_arg = "-ot Int16")
+            self.print_and_log("Done with reference image for scene %d" % (igc_ind + 1))
+            return True
+        except Exception as e:
+            if(not self.pass_through_error):
+                raise
+            print("Exception occurred while projecting scene %d:" % (igc_ind+1))
+            traceback.print_exc()
+            print("Skipping this scene and continuing processing")
+            if(self.log_fname is not None):
+                self.log = open(self.log_fname, "a")
+                print("INFO:L1bProj:Exception occurred while projecting scene %d:" % (igc_ind+1), file = self.log)
+                traceback.print_exc(file=self.log)
+                print("INFO:L1bProj:Skipping projection for this scene and continuing processing", file=self.log)
+                self.log.flush()
+                self.log = None
+            return False
         
     def proj_scan(self, it):
         igc_ind, scan_index = it
@@ -87,13 +114,7 @@ class L1bProj(object):
         else:
             t = self.gc_arr[igc_ind].ground_coor_scan_arr(start_line)
             f[igc_ind, start_line:end_line, :, :] = t[:,:,0,0,0:2]
-        print("Done with [%d, %d, %d]" % (igc_ind, start_line,end_line))
-        if(self.log_fname is not None):
-            self.log = open(self.log_fname, "a")
-            print("INFO:L1bProj:Done with [%d, %d, %d]" %
-                  (igc_ind, start_line, end_line),
-                  file = self.log)
-            self.log.flush()
+        self.print_and_log("Done with [%d, %d, %d]" % (igc_ind, start_line,end_line))
         return True
 
     def proj(self, pool = None):
@@ -122,7 +143,7 @@ class L1bProj(object):
         # to reduce resample_data memory use somehow. This step is quick
         # enough that this probably isn't much of an actual problem in
         # practice
-        list(map(self.resample_data, it))
+        return list(map(self.resample_data, it))
         #if(pool is None):
         #    list(map(self.resample_data, it))
         #else:
