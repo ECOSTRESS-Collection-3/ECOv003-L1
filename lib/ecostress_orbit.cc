@@ -4,11 +4,25 @@ using namespace Ecostress;
 using namespace GeoCal;
 
 template<class Archive>
+void EcostressOrbit::save(Archive& Ar, const unsigned int version) const
+{
+  // Nothing more to do
+}
+
+template<class Archive>
+void EcostressOrbit::load(Archive& Ar, const unsigned int version)
+{
+  init();
+}
+
+template<class Archive>
 void EcostressOrbit::serialize(Archive & ar, const unsigned int version)
 {
   ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(HdfOrbit_Eci_TimeJ2000)
     & GEOCAL_NVP_(large_gap)
-    & GEOCAL_NVP_(pad);
+    & GEOCAL_NVP_(pad)
+    & GEOCAL_NVP_(pos_off);
+  boost::serialization::split_member(ar, *this, version);
 }
 
 ECOSTRESS_IMPLEMENT(EcostressOrbit);
@@ -22,6 +36,13 @@ void EcostressOrbit::print(std::ostream& Os) const
      << "  Max time:         " << max_time() << "\n"
      << "  Large gap:        " << large_gap() << " s\n"
      << "  Extrapolation pad: " << extrapolation_pad() << " s\n";
+  if(pos_off_.rows() < 3)
+    Os << "  Position offset:   None";
+  else
+    Os << "  Position offset:   ("
+       << pos_off_(0) << ", " 
+       << pos_off_(1) << ", " 
+       << pos_off_(2) << ")\n";
 }
 
 
@@ -71,4 +92,25 @@ void EcostressOrbit::interpolate_or_extrapolate_data
   }
 }
 
+/// See base class for description
+
+boost::shared_ptr<GeoCal::QuaternionOrbitData>
+EcostressOrbit::orbit_data_create(GeoCal::Time T) const
+{
+  boost::shared_ptr<QuaternionOrbitData> od =
+  GeoCal::HdfOrbit<GeoCal::Eci, GeoCal::TimeJ2000Creator>::orbit_data_create(T);
+  if(pos_off_.rows() < 3)
+    return od;
+  ScLookVector slv(pos_off_(0), pos_off_(1), pos_off_(2));
+  boost::array<double, 3> pos_off;
+  if(od->from_cf()) {
+    CartesianFixedLookVector lv = od->cf_look_vector(slv);
+    pos_off = lv.look_vector;
+  } else {
+    CartesianInertialLookVector lv = od->ci_look_vector(slv);
+    pos_off = lv.look_vector;
+  }
+  return boost::make_shared<QuaternionOrbitData>(*od, pos_off,
+			 boost::math::quaternion<double>(1,0,0,0));
+}
 

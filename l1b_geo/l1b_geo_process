@@ -73,8 +73,20 @@ if(False):
 if(args.run_config):
     config = ecostress.RunConfig(args.run_config)
     l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
+else:    
+    config = None
+    l1_osp_dir = os.path.abspath(args.osp_dir)
+
+# Read in additional configuration parameters    
+sys.path.append(l1_osp_dir)
+import l1b_geo_config
+    
+if(args.run_config):
     ncpu = int(config["Process", "NumberCpu"])
-    orb = ecostress.create_orbit_raw(config)
+    orb = ecostress.create_orbit_raw(config,
+                   pos_off=l1b_geo_config.x_offset_iss,
+                   extrapolation_pad=l1b_geo_config.extrapolation_pad,
+                   large_gap=l1b_geo_config.large_gap)
     dem = ecostress.create_dem(config)
     lwm = ecostress.create_lwm(config)
     ortho_base_dir = ecostress.ortho_base_directory(config)
@@ -85,17 +97,13 @@ if(args.run_config):
     build_id = config["PrimaryExecutable", "BuildID"]
     orbfname = os.path.abspath(config["TimeBasedFileGroup", "L1A_RAW_ATT"])
 else:
-    config = None
-    l1_osp_dir = os.path.abspath(args.osp_dir)
     ncpu = args.number_cpu
     dirname = os.path.abspath(args.prod_dir)
     file_version = "01"
     orbfname = os.path.abspath(args.l1a_raw_att)
-    orb = geocal.HdfOrbit_Eci_TimeJ2000(orbfname, "", "Ephemeris/time_j2000",
-                                 "Ephemeris/eci_position",
-                                 "Ephemeris/eci_velocity",
-                                 "Attitude/time_j2000",
-                                 "Attitude/quaternion")
+    orb = ecostress.EcostressOrbit(orbfname, l1b_geo_config.x_offset_iss,
+                                   l1b_geo_config.extrapolation_pad,
+                                   l1b_geo_config.large_gap)
     dem = geocal.SrtmDem(os.environ["ELEV_ROOT"],False,
                   geocal.DatumGeoid96(os.environ["AFIDS_VDEV_DATA"] +
                                "/EGM96_20_x100.HLF"))
@@ -114,10 +122,14 @@ else:
     radlist = [os.path.abspath(f) for f in args.l1b_rad]
 
 
-# Read in additional configuration parameters    
-sys.path.append(l1_osp_dir)
-import l1b_geo_config
-
+# Short function to print and log at the same time
+def print_and_log(s):
+    print(s)
+    log = open(log_fname, "a")
+    print("INFO:L1B_GEO_PGE:%s" % s, file=log)
+    log.flush()
+    log=None
+    
 # Determine bands to match
 
 if(args.landsat_band == -1):
@@ -139,12 +151,8 @@ else:
     eband_day = args.ecostress_band
     eband_night = eband_day
     
-# Include offset between location of ecostress and the ISS orbital coordinates
-# origin.
-orb = geocal.OrbitQuaternionListOffset(orb, l1b_geo_config.x_offset_iss)
-
 if(args.orbit_offset):
-    print("Add in orbit errors %s" % args.orbit_offset)
+    print_and_log("Add in orbit errors %s" % args.orbit_offset)
     # Want this in arcseconds, because this is what OrbitOffsetCorrection
     # takes
     yaw,pitch,roll = [float(i) * 60 * 60 for i in args.orbit_offset.split(",")]
@@ -230,13 +238,7 @@ try:
             ras = geocal.GdalRasterImage("HDF5:\"%s\"://Radiance/radiance_%d" %
                                          (radlist[i], eband - 1))
             ras = geocal.ScaleImage(ras, 100.0)
-        print("Scene %d is %s, matching ecostress band %d to Landsat band %d" % (scenelist[i], "Day" if is_day[i] else "Night", eband, lband))
-        log = open(log_fname, "a")
-        print("INFO:L1B_GEO_PGE:Scene %d is %s, matching ecostress band %d to Landsat band %d" %
-              (scenelist[i], "Day" if is_day[i] else "Night", eband, lband),
-              file=log)
-        log.flush()
-        log = None
+        print_and_log("Scene %d is %s, matching ecostress band %d to Landsat band %d" % (scenelist[i], "Day" if is_day[i] else "Night", eband, lband))
         igccol_initial.add_igc(ecostress.EcostressImageGroundConnection(orb, tt, cam,
                           sm, dem, ras, "Scene %d" % scenelist[i]))
 
@@ -255,26 +257,33 @@ try:
                     num_y=l1b_geo_config.num_y,
                     log_fname=log_fname,
                     proj_number_subpixel=l1b_geo_config.proj_number_subpixel)
+    correction_done = False
+    igccol_corrected = igccol_initial
     if(not l1b_geo_config.skip_sba):
-        tpcol = t.tpcol(pool=pool)
-        geocal.write_shelve("tpcol.xml", tpcol)
-        log = open(log_fname, "a")
-        ecostress.process_run(["sba", "--verbose", "--initial-hold-gcp-fixed",
-                          "--gcp-sigma=50",  "igccol_initial.xml",
-                          "tpcol.xml", "igccol_sba.xml", "tpcol_sba.xml"],
-                         out_fh=log)
-        log.flush()
-        igccol_corrected = geocal.read_shelve("igccol_sba.xml")
-    else:
-        igccol_corrected = igccol_initial
-        
+        try:
+            tpcol = t.tpcol(pool=pool)
+            geocal.write_shelve("tpcol.xml", tpcol)
+            log = open(log_fname, "a")
+            ecostress.process_run(["sba", "--verbose",
+                                   "--initial-hold-gcp-fixed",
+                                   "--gcp-sigma=50",  "igccol_initial.xml",
+                                   "tpcol.xml", "igccol_sba.xml",
+                                   "tpcol_sba.xml"],
+                                  out_fh=log)
+            log.flush()
+            igccol_corrected = geocal.read_shelve("igccol_sba.xml")
+            correction_done = True
+        except Exception as e:
+            if(not l1b_geo_config.continue_on_sba_fail):
+                raise
+            print_and_log("SBA/Tiepoint failed to correct orbit data. Continue processing without correction.")
+
+    #TODO Add metadata based on value of correction_done
+    
     # Generate output data
     for i in range(len(radlist)):
         # Generate output
-        print("Doing scene number %d" % scenelist[i])
-        log = open(log_fname, "a")
-        print("INFO:l1b_geo_process:Doing scene number %d" % scenelist[i], file=log)
-        log.flush()
+        print_and_log("Doing scene number %d" % scenelist[i])
         l1bgeo = ecostress.L1bGeoGenerate(
                                 igccol_corrected.image_ground_connection(i),
                                 lwm, ofile[i],inlist,is_day[i],

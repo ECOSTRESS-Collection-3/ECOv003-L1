@@ -42,9 +42,29 @@ public:
     large_gap_(Large_gap),
     pad_(Extrapolation_pad)
   {
-    // Add padding to min and max time.
-    min_tm -= Extrapolation_pad;
-    max_tm += Extrapolation_pad;
+    init();
+  }
+
+//-------------------------------------------------------------------------
+/// Constructor, read the give file and allow the given amount of
+/// extrapolation pad. Treat gaps in the data > Large_gap as a large
+/// gap. Also has an offset in position like OrbitScCoorOffset.
+//-------------------------------------------------------------------------
+
+  EcostressOrbit(const std::string& Fname,
+		 const blitz::Array<double, 1>& Pos_off,
+		 double Extrapolation_pad = 5.0,
+		 double Large_gap = 10.0)
+    : GeoCal::HdfOrbit<GeoCal::Eci, GeoCal::TimeJ2000Creator>
+    (Fname, "", "Ephemeris/time_j2000", "Ephemeris/eci_position",
+     "Ephemeris/eci_velocity", "Attitude/time_j2000", "Attitude/quaternion"),
+    large_gap_(Large_gap),
+    pad_(Extrapolation_pad),
+    pos_off_(Pos_off.copy())
+  {
+    if(Pos_off.rows() != 3)
+      throw GeoCal::Exception("Pos_off needs to be size 3");
+    init();
   }
   virtual ~EcostressOrbit() {}
 
@@ -65,15 +85,28 @@ public:
 
   virtual void print(std::ostream& Os) const;
 protected:
+  virtual boost::shared_ptr<GeoCal::QuaternionOrbitData>
+  orbit_data_create(GeoCal::Time T) const;
   virtual void interpolate_or_extrapolate_data
   (GeoCal::Time T, boost::shared_ptr<GeoCal::QuaternionOrbitData>& Q1,
    boost::shared_ptr<GeoCal::QuaternionOrbitData>& Q2) const;
 private:
+  void init()
+  {
+    // Add padding to min and max time.
+    min_tm -= pad_;
+    max_tm += pad_;
+  }
   double large_gap_, pad_;
+  blitz::Array<double, 1> pos_off_;
   EcostressOrbit() {}
   friend class boost::serialization::access;
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version);
+  template<class Archive>
+  void save(Archive& Ar, const unsigned int version) const;
+  template<class Archive>
+  void load(Archive& Ar, const unsigned int version);
 };
 }
 

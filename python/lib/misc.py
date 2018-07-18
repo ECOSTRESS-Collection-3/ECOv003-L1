@@ -80,18 +80,17 @@ def setup_spice(config):
     if("ECOSTRESS_USE_AFIDS_ENV" not in os.environ):
         os.environ["SPICEDATA"] = spice_data
         
-def create_orbit_raw(config):
+def create_orbit_raw(config, pos_off=None,
+                     extrapolation_pad = 5, large_gap = 10):
     '''Create orbit from L1A_RAW_ATT file'''
     # Spice is needed to work with the orbit data.
     setup_spice(config)
     orbfname = os.path.abspath(config["TimeBasedFileGroup", "L1A_RAW_ATT"])
-    # Create orbit. We give all the names of the fields, since we don't use the
-    # default names HdfOrbit expects. 
-    orb = geocal.HdfOrbit_Eci_TimeJ2000(orbfname, "", "Ephemeris/time_j2000",
-                                 "Ephemeris/eci_position",
-                                 "Ephemeris/eci_velocity",
-                                 "Attitude/time_j2000",
-                                 "Attitude/quaternion")
+    # Create orbit.
+    if(pos_off):
+        orb = EcostressOrbit(orbfname, pos_off, extrapolation_pad, large_gap)
+    else:
+        orb = EcostressOrbit(orbfname, extrapolation_pad, large_gap)
     return orb
 
 def create_time_table(fname, mirror_rpm, frame_time):

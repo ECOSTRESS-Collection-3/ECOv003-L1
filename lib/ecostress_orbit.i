@@ -15,6 +15,10 @@ class EcostressOrbit : public GeoCal::HdfOrbit<GeoCal::Eci, GeoCal::TimeJ2000Cre
 public:
   EcostressOrbit(const std::string& Fname, double Extrapolation_pad = 5.0,
 		 double Large_gap = 10.0);
+  EcostressOrbit(const std::string& Fname,
+		 const blitz::Array<double, 1>& Pos_off,
+		 double Extrapolation_pad = 5.0,
+		 double Large_gap = 10.0);
   %python_attribute_with_set(large_gap, double);
   %python_attribute_with_set(extrapolation_pad, double);
   %pickle_serialization();

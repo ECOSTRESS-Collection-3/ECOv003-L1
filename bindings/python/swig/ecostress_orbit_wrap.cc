@@ -6653,22 +6653,252 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_new_EcostressOrbit__SWIG_3(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  std::string *arg1 = 0 ;
+  blitz::Array< double,1 > *arg2 = 0 ;
+  double arg3 ;
+  double arg4 ;
+  int res1 = SWIG_OLDOBJ ;
+  blitz::Array< double,1 > a2 ;
+  PythonObject numpy2 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  Ecostress::EcostressOrbit *result = 0 ;
+  
+  if ((nobjs < 4) || (nobjs > 4)) SWIG_fail;
+  {
+    std::string *ptr = (std::string *)0;
+    res1 = SWIG_AsPtr_std_string(swig_obj[0], &ptr);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_EcostressOrbit" "', argument " "1"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_EcostressOrbit" "', argument " "1"" of type '" "std::string const &""'"); 
+    }
+    arg1 = ptr;
+  }
+  {
+    int res = SWIG_ConvertPtr(swig_obj[1], (void**)(&arg2), SWIGTYPE_p_blitz__ArrayT_double_1_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy2.obj = to_numpy<double >(swig_obj[1]);
+      if(!numpy2.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_EcostressOrbit', expecting type  Array<double,1>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy2.obj) !=1) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_EcostressOrbit', expecting type  Array<double,1>");
+        return NULL;
+      }
+      a2.reference(to_blitz_array<double, 1>(numpy2));
+      arg2 = &a2;
+    }
+  }
+  ecode3 = SWIG_AsVal_double(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_EcostressOrbit" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_EcostressOrbit" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  {
+    try {
+      result = (Ecostress::EcostressOrbit *)new Ecostress::EcostressOrbit((std::string const &)*arg1,(blitz::Array< double,1 > const &)*arg2,arg3,arg4);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::EcostressOrbit > *smartresult = result ? new boost::shared_ptr<  Ecostress::EcostressOrbit >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressOrbit_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  if (SWIG_IsNewObj(res1)) delete arg1;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res1)) delete arg1;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_EcostressOrbit__SWIG_4(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  std::string *arg1 = 0 ;
+  blitz::Array< double,1 > *arg2 = 0 ;
+  double arg3 ;
+  int res1 = SWIG_OLDOBJ ;
+  blitz::Array< double,1 > a2 ;
+  PythonObject numpy2 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  Ecostress::EcostressOrbit *result = 0 ;
+  
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  {
+    std::string *ptr = (std::string *)0;
+    res1 = SWIG_AsPtr_std_string(swig_obj[0], &ptr);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_EcostressOrbit" "', argument " "1"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_EcostressOrbit" "', argument " "1"" of type '" "std::string const &""'"); 
+    }
+    arg1 = ptr;
+  }
+  {
+    int res = SWIG_ConvertPtr(swig_obj[1], (void**)(&arg2), SWIGTYPE_p_blitz__ArrayT_double_1_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy2.obj = to_numpy<double >(swig_obj[1]);
+      if(!numpy2.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_EcostressOrbit', expecting type  Array<double,1>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy2.obj) !=1) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_EcostressOrbit', expecting type  Array<double,1>");
+        return NULL;
+      }
+      a2.reference(to_blitz_array<double, 1>(numpy2));
+      arg2 = &a2;
+    }
+  }
+  ecode3 = SWIG_AsVal_double(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_EcostressOrbit" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  {
+    try {
+      result = (Ecostress::EcostressOrbit *)new Ecostress::EcostressOrbit((std::string const &)*arg1,(blitz::Array< double,1 > const &)*arg2,arg3);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::EcostressOrbit > *smartresult = result ? new boost::shared_ptr<  Ecostress::EcostressOrbit >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressOrbit_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  if (SWIG_IsNewObj(res1)) delete arg1;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res1)) delete arg1;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_EcostressOrbit__SWIG_5(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  std::string *arg1 = 0 ;
+  blitz::Array< double,1 > *arg2 = 0 ;
+  int res1 = SWIG_OLDOBJ ;
+  blitz::Array< double,1 > a2 ;
+  PythonObject numpy2 ;
+  Ecostress::EcostressOrbit *result = 0 ;
+  
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    std::string *ptr = (std::string *)0;
+    res1 = SWIG_AsPtr_std_string(swig_obj[0], &ptr);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_EcostressOrbit" "', argument " "1"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_EcostressOrbit" "', argument " "1"" of type '" "std::string const &""'"); 
+    }
+    arg1 = ptr;
+  }
+  {
+    int res = SWIG_ConvertPtr(swig_obj[1], (void**)(&arg2), SWIGTYPE_p_blitz__ArrayT_double_1_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy2.obj = to_numpy<double >(swig_obj[1]);
+      if(!numpy2.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_EcostressOrbit', expecting type  Array<double,1>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy2.obj) !=1) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_EcostressOrbit', expecting type  Array<double,1>");
+        return NULL;
+      }
+      a2.reference(to_blitz_array<double, 1>(numpy2));
+      arg2 = &a2;
+    }
+  }
+  {
+    try {
+      result = (Ecostress::EcostressOrbit *)new Ecostress::EcostressOrbit((std::string const &)*arg1,(blitz::Array< double,1 > const &)*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::EcostressOrbit > *smartresult = result ? new boost::shared_ptr<  Ecostress::EcostressOrbit >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressOrbit_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  if (SWIG_IsNewObj(res1)) delete arg1;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res1)) delete arg1;
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_new_EcostressOrbit(PyObject *self, PyObject *args) {
   Py_ssize_t argc;
-  PyObject *argv[4] = {
+  PyObject *argv[5] = {
     0
   };
   
-  if (!(argc = SWIG_Python_UnpackTuple(args,"new_EcostressOrbit",0,3,argv))) SWIG_fail;
+  if (!(argc = SWIG_Python_UnpackTuple(args,"new_EcostressOrbit",0,4,argv))) SWIG_fail;
   --argc;
   if (argc == 1) {
     return _wrap_new_EcostressOrbit__SWIG_2(self, argc, argv);
   }
   if (argc == 2) {
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_2;
     return _wrap_new_EcostressOrbit__SWIG_1(self, argc, argv);
   }
+check_2:
+  
+  if (argc == 2) {
+    return _wrap_new_EcostressOrbit__SWIG_5(self, argc, argv);
+  }
   if (argc == 3) {
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_4;
     return _wrap_new_EcostressOrbit__SWIG_0(self, argc, argv);
+  }
+check_4:
+  
+  if (argc == 3) {
+    return _wrap_new_EcostressOrbit__SWIG_4(self, argc, argv);
+  }
+  if (argc == 4) {
+    return _wrap_new_EcostressOrbit__SWIG_3(self, argc, argv);
   }
   
 fail:
@@ -6676,7 +6906,10 @@ fail:
     "  Possible C/C++ prototypes are:\n"
     "    Ecostress::EcostressOrbit::EcostressOrbit(std::string const &,double,double)\n"
     "    Ecostress::EcostressOrbit::EcostressOrbit(std::string const &,double)\n"
-    "    Ecostress::EcostressOrbit::EcostressOrbit(std::string const &)\n");
+    "    Ecostress::EcostressOrbit::EcostressOrbit(std::string const &)\n"
+    "    Ecostress::EcostressOrbit::EcostressOrbit(std::string const &,blitz::Array< double,1 > const &,double,double)\n"
+    "    Ecostress::EcostressOrbit::EcostressOrbit(std::string const &,blitz::Array< double,1 > const &,double)\n"
+    "    Ecostress::EcostressOrbit::EcostressOrbit(std::string const &,blitz::Array< double,1 > const &)\n");
   return 0;
 }
 
@@ -6986,12 +7219,13 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_EcostressOrbit", _wrap_new_EcostressOrbit, METH_VARARGS, (char *)"\n"
 		"\n"
-		"Ecostress::EcostressOrbit::EcostressOrbit(const std::string &Fname, double Extrapolation_pad=5.0, double\n"
-		"Large_gap=10.0)\n"
+		"Ecostress::EcostressOrbit::EcostressOrbit(const std::string &Fname, const blitz::Array< double, 1 > &Pos_off,\n"
+		"double Extrapolation_pad=5.0, double Large_gap=10.0)\n"
 		"Constructor, read the give file and allow the given amount of\n"
 		"extrapolation pad.\n"
 		"\n"
-		"Treat gaps in the data > Large_gap as a large gap. \n"
+		"Treat gaps in the data > Large_gap as a large gap. Also has an offset\n"
+		"in position like OrbitScCoorOffset. \n"
 		""},
 	 { (char *)"EcostressOrbit__v_large_gap", _wrap_EcostressOrbit__v_large_gap, METH_VARARGS, (char *)"\n"
 		"\n"
