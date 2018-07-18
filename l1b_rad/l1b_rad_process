@@ -6,6 +6,7 @@ import geocal
 import ecostress
 import os
 import re
+import traceback
 
 # Get version information, in the top directory
 import sys
@@ -106,6 +107,13 @@ try:
     l1brad.run()
     print("L1B_RAD_PGE:INFO-0-[Job Successful]", file=log)
     log.flush()
+except Exception as e:
+    log = open(log_fname, "a")
+    print("L1B_RAD_PGE: Exception thrown:",  file=log)
+    traceback.print_exc(file=log)
+    print("L1B_RAD_PGE:ERROR-2-[Unexpected Error]", file=log)
+    log.flush()
+    raise
 except:
     print("L1B_RAD_PGE:ERROR-2-[Unexpected Error]", file=log)
     log.flush()

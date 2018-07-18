@@ -7,6 +7,7 @@ import os
 import re
 import shutil
 import h5py
+import traceback
 from multiprocessing import Pool
 
 # Get version information, in the top directory
@@ -231,7 +232,7 @@ try:
             ras = geocal.ScaleImage(ras, 100.0)
         print("Scene %d is %s, matching ecostress band %d to Landsat band %d" % (scenelist[i], "Day" if is_day[i] else "Night", eband, lband))
         log = open(log_fname, "a")
-        print("INFO:L1A_GEO_PGE:Scene %d is %s, matching ecostress band %d to Landsat band %d" %
+        print("INFO:L1B_GEO_PGE:Scene %d is %s, matching ecostress band %d to Landsat band %d" %
               (scenelist[i], "Day" if is_day[i] else "Night", eband, lband),
               file=log)
         log.flush()
@@ -295,11 +296,18 @@ try:
     l1batt.run()
 
     log = open(log_fname, "a")
-    print("L1A_GEO_PGE:INFO-0-[Job Successful]", file=log)
+    print("L1B_GEO_PGE:INFO-0-[Job Successful]", file=log)
     log.flush()
+except Exception as e:
+    log = open(log_fname, "a")
+    print("L1B_GEO_PGE: Exception thrown:",  file=log)
+    traceback.print_exc(file=log)
+    print("L1B_GEO_PGE:ERROR-2-[Unexpected Error]", file=log)
+    log.flush()
+    raise
 except:
     log = open(log_fname, "a")
-    print("L1A_GEO_PGE:ERROR-2-[Unexpected Error]", file=log)
+    print("L1B_GEO_PGE:ERROR-2-[Unexpected Error]", file=log)
     log.flush()
     raise
 

@@ -50,6 +50,10 @@ class L1bProj(object):
         # This is bilinear interpolation
         lat = scipy.ndimage.interpolation.zoom(lat, self.number_subpixel,
                                                order=1)
+        # Detect the dateline. -200 is just to filter out any fill data,
+        # is -180 with a bit of pad
+        if(np.any(lon > 170) and np.any(np.logical_and(lon > -200, lon < -170))):
+            raise RuntimeError("Don't currently handle crossing the date line")
         lon = scipy.ndimage.interpolation.zoom(lon, self.number_subpixel,
                                                order=1)
         # Resample data to project to surface

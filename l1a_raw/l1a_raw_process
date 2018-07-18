@@ -6,6 +6,7 @@ import geocal
 import ecostress
 import os
 import re
+import traceback
 
 # Get version information, in the top directory
 import sys

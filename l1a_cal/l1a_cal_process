@@ -6,6 +6,7 @@ import geocal
 import ecostress
 import os
 import re
+import traceback
 
 # Get version information, in the top directory
 import sys
@@ -86,6 +87,13 @@ try:
     log.flush()
 except ecostress.VicarRunException as e:
     print("L1A_CAL_PGE:ERROR-1-[%s]" % e.message, file=log)
+    log.flush()
+    raise
+except Exception as e:
+    log = open(log_fname, "a")
+    print("L1A_CAL_PGE: Exception thrown:",  file=log)
+    traceback.print_exc(file=log)
+    print("L1A_CAL_PGE:ERROR-2-[Unexpected Error]", file=log)
     log.flush()
     raise
 except:
