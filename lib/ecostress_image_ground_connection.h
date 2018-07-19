@@ -24,8 +24,8 @@ class EcostressImageGroundConnection :
     public virtual GeoCal::ImageGroundConnection {
 public:
   // The y index with the minimum distortion according to the
-  // distortion spread sheet is y index of f. This corresponds to
-  // band 1 (0 based).
+  // distortion spread sheet is y index of 4. This corresponds to
+  // band 1 (0 based, 2 for 1 based).
   // Bands are:
   //  0 - 1.62 micron (SWIR)
   //  1 - 8.28

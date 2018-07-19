@@ -8,14 +8,19 @@ namespace Ecostress {
   This is the ecostress camera model.
 
   Right now we model the optical nonlinearity with 
-  EcostressParaxialTransform. This is likely just a place holder that
-  will get replaced with something different when we have the real
-  camera model.
+  EcostressParaxialTransform. 
+
+  Note that to match the field angles from our FPA distortion spread
+  sheet we need to add a scale and offset to the DCS yf value. Not
+  sure what the physical source of this, the CCD may be at an angle
+  relative to the optics, or the optics may be different in X vs. Y
+  direction. In any case, we want to match the actual field angles.
 *******************************************************************/
 
 class EcostressCamera : public GeoCal::QuaternionCamera {
 public:
-  EcostressCamera(double Focal_length = 427.6,
+  EcostressCamera(double Focal_length = 427.6, double Y_scale = 1.0,
+		  double Y_offset = 0,
 		  boost::math::quaternion<double> Frame_to_sc_q =
 		  boost::math::quaternion<double>(1,0,0,0));
   virtual ~EcostressCamera() {}
@@ -39,8 +44,13 @@ public:
 		     const GeoCal::AutoDerivative<double>& Yfp) const;
   /// Convenience function to mask all the parameters we can fit for.
   void mask_all_parameter() { parameter_mask_ = false; }
+  double y_scale() const {return y_scale_;}
+  void y_scale(double V) { y_scale_ = V;}
+  double y_offset() const {return y_offset_;}
+  void y_offset(double V) { y_offset_ = V;}
 private:
   boost::shared_ptr<EcostressParaxialTransform> paraxial_transform_;
+  double y_scale_, y_offset_;
   friend class boost::serialization::access;
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version);
@@ -48,4 +58,5 @@ private:
 }
 
 BOOST_CLASS_EXPORT_KEY(Ecostress::EcostressCamera);
+BOOST_CLASS_VERSION(Ecostress::EcostressCamera, 1)
 #endif

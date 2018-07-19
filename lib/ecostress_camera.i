@@ -15,10 +15,13 @@
 namespace Ecostress {
 class EcostressCamera : public GeoCal::QuaternionCamera {
 public:
-  EcostressCamera(double Focal_length,
+  EcostressCamera(double Focal_length, double Y_scale,
+		  double Y_offset,
 		  boost::math::quaternion<double> Frame_to_sc_q);
   void mask_all_parameter();
   %python_attribute_with_set(paraxial_transform, boost::shared_ptr<EcostressParaxialTransform>);
+  %python_attribute_with_set(y_scale, double);
+  %python_attribute_with_set(y_offset, double);
   %pickle_serialization();
 };
 }

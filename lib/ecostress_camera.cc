@@ -9,6 +9,11 @@ void EcostressCamera::serialize(Archive & ar, const unsigned int version)
 {
   ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(QuaternionCamera)
     & GEOCAL_NVP_(paraxial_transform);
+  // Older version didn't have y_scale and y_offset
+  if(version > 0) {
+    ar & GEOCAL_NVP_(y_scale)
+      & GEOCAL_NVP_(y_offset);
+  }
 }
 
 ECOSTRESS_IMPLEMENT(EcostressCamera);
@@ -18,13 +23,16 @@ ECOSTRESS_IMPLEMENT(EcostressCamera);
 /// (e.g., the line and sample pitch).
 //-----------------------------------------------------------------------
 
-EcostressCamera::EcostressCamera(double Focal_length, boost::math::quaternion<double> Frame_to_sc_q)
+EcostressCamera::EcostressCamera(double Focal_length, double Y_scale,
+				 double Y_offset,
+				 boost::math::quaternion<double> Frame_to_sc_q)
   : QuaternionCamera(Frame_to_sc_q, 256, 1,
 		     40e-3, 40e-3, Focal_length,
 		     GeoCal::FrameCoordinate(128,0.5),
 		     QuaternionCamera::LINE_IS_X,
 		     QuaternionCamera::INCREASE_IS_NEGATIVE,
-		     QuaternionCamera::INCREASE_IS_POSITIVE)
+		     QuaternionCamera::INCREASE_IS_NEGATIVE),
+    y_scale_(Y_scale), y_offset_(Y_offset)
 {
   paraxial_transform_ = boost::make_shared<EcostressParaxialTransform>();
   // This information comes from https://bravo-lib.jpl.nasa.gov/docushare/dsweb/Get/Document-1882647/FPA%20distortion20140522.xlsx
@@ -48,7 +56,7 @@ EcostressCamera::EcostressCamera(double Focal_length, boost::math::quaternion<do
   blitz::Array<int, 1> yindex(6);
   yindex = 2, 4, 5, 7, 6, 3;
   for(int i = 0; i < yindex.rows(); ++i)
-    principal_point_[i] = GeoCal::FrameCoordinate(128, -(yindex(i) - 4.5) * 32);
+    principal_point_[i] = GeoCal::FrameCoordinate(128, (yindex(i) - 4.5) * 32);
 }
 
 /// See base class for description
@@ -72,6 +80,7 @@ void EcostressCamera::dcs_to_focal_plane(int Band,
 
   double xf = (focal_length() / Dcs.R_component_4()) * Dcs.R_component_2();
   double yf = (focal_length() / Dcs.R_component_4()) * Dcs.R_component_3();
+  yf = (yf - y_offset_) / y_scale_;
 
 //-------------------------------------------------------------------------
 // Transform paraxial focal plane coordinate to real focal plane coordinate.
@@ -94,7 +103,8 @@ void EcostressCamera::dcs_to_focal_plane
     (focal_length() / Dcs.R_component_4()) * Dcs.R_component_2();
   GeoCal::AutoDerivative<double> yf = 
     (focal_length() / Dcs.R_component_4()) * Dcs.R_component_3();
-
+  yf = (yf - y_offset_) / y_scale_;
+  
 //-------------------------------------------------------------------------
 // Transform paraxial focal plane coordinate to real focal plane coordinate.
 // Units are millimeters.
@@ -114,6 +124,8 @@ EcostressCamera::focal_plane_to_dcs(int Band, double Xfp, double Yfp) const
   double xf, yf;
   paraxial_transform_->real_to_paraxial(Xfp, Yfp, xf, yf);
 
+  yf = y_scale_ * yf + y_offset_;
+  
 //-------------------------------------------------------------------------
 /// Then to detector coordinates look vector.
 //-------------------------------------------------------------------------
@@ -133,6 +145,8 @@ EcostressCamera::focal_plane_to_dcs
   GeoCal::AutoDerivative<double> xf, yf;
   paraxial_transform_->real_to_paraxial(Xfp, Yfp, xf, yf);
 
+  yf = y_scale_ * yf + y_offset_;
+  
 //-------------------------------------------------------------------------
 /// Then to detector coordinates look vector.
 //-------------------------------------------------------------------------

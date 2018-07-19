@@ -2,10 +2,10 @@
 <!DOCTYPE boost_serialization>
 <boost_serialization signature="serialization::archive" version="13">
 <geocal_object class_id="0" tracking_level="0" version="1">
-	<px class_id="2" class_name="Ecostress::EcostressCamera" tracking_level="1" version="0" object_id="_0">
+	<px class_id="2" class_name="Ecostress::EcostressCamera" tracking_level="1" version="1" object_id="_0">
 		<QuaternionCamera class_id="3" tracking_level="1" version="0" object_id="_1">
 			<focal_length class_id="4" tracking_level="0" version="0">
-				<val>4.27500000000000000e+02</val>
+				<val>4.31367979545548508e+02</val>
 				<grad class_id="5" tracking_level="0" version="0">
 					<size>0</size>
 				</grad>
@@ -36,7 +36,7 @@
 						</grad>
 					</line>
 					<sample>
-						<val>8.00000000000000000e+01</val>
+						<val>-8.00000000000000000e+01</val>
 						<grad>
 							<size>0</size>
 						</grad>
@@ -50,7 +50,7 @@
 						</grad>
 					</line>
 					<sample>
-						<val>1.60000000000000000e+01</val>
+						<val>-1.60000000000000000e+01</val>
 						<grad>
 							<size>0</size>
 						</grad>
@@ -64,7 +64,7 @@
 						</grad>
 					</line>
 					<sample>
-						<val>-1.60000000000000000e+01</val>
+						<val>1.60000000000000000e+01</val>
 						<grad>
 							<size>0</size>
 						</grad>
@@ -78,7 +78,7 @@
 						</grad>
 					</line>
 					<sample>
-						<val>-8.00000000000000000e+01</val>
+						<val>8.00000000000000000e+01</val>
 						<grad>
 							<size>0</size>
 						</grad>
@@ -92,7 +92,7 @@
 						</grad>
 					</line>
 					<sample>
-						<val>-4.80000000000000000e+01</val>
+						<val>4.80000000000000000e+01</val>
 						<grad>
 							<size>0</size>
 						</grad>
@@ -106,7 +106,7 @@
 						</grad>
 					</line>
 					<sample>
-						<val>4.80000000000000000e+01</val>
+						<val>-4.80000000000000000e+01</val>
 						<grad>
 							<size>0</size>
 						</grad>
@@ -141,7 +141,7 @@
 			</frame_to_sc>
 			<frame_convention>0</frame_convention>
 			<line_direction>1</line_direction>
-			<sample_direction>0</sample_direction>
+			<sample_direction>1</sample_direction>
 			<parameter_mask class_id="9" tracking_level="0" version="0">
 				<size>18</size>
 				<data>
@@ -222,6 +222,8 @@
 				</real_to_par>
 			</px>
 		</paraxial_transform>
+		<y_scale>9.21727688549929147e-01</y_scale>
+		<y_offset>-2.57861347421704967e-01</y_offset>
 	</px>
 </geocal_object>
 </boost_serialization>
