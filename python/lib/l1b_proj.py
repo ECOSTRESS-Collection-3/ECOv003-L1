@@ -41,6 +41,18 @@ class L1bProj(object):
             print("INFO:L1bProj:%s" % s, file = self.log)
             self.log.flush()
             self.log = None
+
+    def report_and_log_exception(self, igc_end):
+        print("Exception occurred while projecting scene %d:" % (igc_ind+1))
+        traceback.print_exc()
+        print("Skipping this scene and continuing processing")
+        if(self.log_fname is not None):
+            self.log = open(self.log_fname, "a")
+            print("INFO:L1bProj:Exception occurred while projecting scene %d:" % (igc_ind+1), file = self.log)
+            traceback.print_exc(file=self.log)
+            print("INFO:L1bProj:Skipping projection for this scene and continuing processing", file=self.log)
+            self.log.flush()
+            self.log = None
             
     def scratch_file(self, create=False):
         '''Open/Create the scratch file we use in our lat/lon calculation.'''
@@ -88,16 +100,7 @@ class L1bProj(object):
         except Exception as e:
             if(not self.pass_through_error):
                 raise
-            print("Exception occurred while projecting scene %d:" % (igc_ind+1))
-            traceback.print_exc()
-            print("Skipping this scene and continuing processing")
-            if(self.log_fname is not None):
-                self.log = open(self.log_fname, "a")
-                print("INFO:L1bProj:Exception occurred while projecting scene %d:" % (igc_ind+1), file = self.log)
-                traceback.print_exc(file=self.log)
-                print("INFO:L1bProj:Skipping projection for this scene and continuing processing", file=self.log)
-                self.log.flush()
-                self.log = None
+            self.report_and_log_exception(igc_ind)
             return False
         
     def proj_scan(self, it):

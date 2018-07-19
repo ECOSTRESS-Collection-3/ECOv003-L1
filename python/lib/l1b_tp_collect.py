@@ -41,6 +41,18 @@ class L1bTpCollect(object):
             self.log.flush()
             self.log = None
 
+    def report_and_log_exception(self, i):
+        print("Exception occurred while collecting tie-points for scene %d:" % (i+1))
+        traceback.print_exc()
+        print("Skipping tie-points for this scene and continuing processing")
+        if(self.log_fname is not None):
+            self.log = open(self.log_fname, "a")
+            print("INFO:L1bTpCollect:Exception occurred while collecting tie-points for scene %d:" % (i+1), file = self.log)
+            traceback.print_exc(file=self.log)
+            print("INFO:L1bTpCollect:Skipping tie-points for this scene and continuing processing", file=self.log)
+            self.log.flush()
+            self.log = None
+            
     def tp(self, i):
         '''Get tiepoints for the given scene number'''
         try:
@@ -52,16 +64,7 @@ class L1bTpCollect(object):
             res = self.tpcollect.tie_point_grid(self.num_x, self.num_y)
             self.print_and_log("Done collecting tp for scene %d" % (i+1))
         except Exception as e:
-            print("Exception occurred while collecting tie-points for scene %d:" % (i+1))
-            traceback.print_exc()
-            print("Skipping tie-points for this scene and continuing processing")
-            if(self.log_fname is not None):
-                self.log = open(self.log_fname, "a")
-                print("INFO:L1bTpCollect:Exception occurred while collecting tie-points for scene %d:" % (i+1), file = self.log)
-                traceback.print_exc(file=log)
-                print("INFO:L1bTpCollect:Skipping tie-points for this scene and continuing processing", file=log)
-                self.log.flush()
-                self.log = None
+            self.report_and_log_exception(i)
             res = []
         return res
     

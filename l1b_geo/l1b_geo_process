@@ -129,6 +129,17 @@ def print_and_log(s):
     print("INFO:L1B_GEO_PGE:%s" % s, file=log)
     log.flush()
     log=None
+
+def report_and_log_exception():
+    print("Exception occurred while running SBA/Tiepoint")
+    traceback.print_exc()
+    print("SBA/Tiepoint failed to correct orbit data. Continue processing without correction.")
+    log = open(log_fname, "a")
+    print("INFO:L1B_GEO:Exception occurred while running SBA/Tiepoint", file = log)
+    traceback.print_exc(file=log)
+    print("INFO:L1B_GEO:SBA/Tiepoint failed to correct orbit data. Continue processing without correction.", file=log)
+    log.flush()
+    log = None
     
 # Determine bands to match
 
@@ -276,7 +287,7 @@ try:
         except Exception as e:
             if(not l1b_geo_config.continue_on_sba_fail):
                 raise
-            print_and_log("SBA/Tiepoint failed to correct orbit data. Continue processing without correction.")
+            report_and_log_exception()
 
     # Generate output data
     for i in range(len(radlist)):
