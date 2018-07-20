@@ -1,4 +1,5 @@
 import h5py
+
 import shutil
 import re
 import os
@@ -624,7 +625,7 @@ class L1aRawPixGenerate(object):
       l1a_bp, l1a_bp_met, fname = self.create_file( "L1A_BB", orbit, scene_id,
               Time.time_gps(rst), Time.time_gps(rse), prod=True )
 
-      ' record scene completeness '
+      ' record scan completeness '
       pcomp = float( good_img ) / float( img_cnt )
       #l1a_fp_met.set('AutomaticQualityFlag', '%16.10e' % pcomp)
       if pcomp > .95:
@@ -633,13 +634,29 @@ class L1aRawPixGenerate(object):
         l1a_fp_met.set('AutomaticQualityFlag', '%s' % 'FAIL')
       bcomp = float( good_bb ) / float( bb_cnt )
       #l1a_bp_met.set('AutomaticQualityFlag', '%16.10e' % bcomp)
-      l1a_bp_met.set('AutomaticQualityFlag', '%s' % bcomp)
+      if bcomp > .95:
+        l1a_bp_met.set('AutomaticQualityFlag', '%s' % 'PASS')
+      else:
+        l1a_bp_met.set('AutomaticQualityFlag', '%s' % 'FAIL')
+
       print("====  ", datetime.now(), "  ====")
       print("Orbit %s SCENE %s completed, SCANS=%d (%f) %d/%d GOOD/IMG, (%f) %d/%d GOOD/BB" % ( orb, scene_id, scans, pcomp, good_img, img_cnt, bcomp, good_bb, bb_cnt ))
+
+      l1a_fp_met.write()
+      l1a_bp_met.write()
+
+      pcomp = 100.0 * ( 1.0 - float( good_img ) / float( FPPSC * SCPS ) )
+      l1a_metag = l1a_fp['/L1A_RAW_PIXMetadata']
+      l1a_qamissing = l1a_metag.create_dataset('QAPercentMissingData', data=pcomp, dtype='f4' )
 
       l1a_upg = l1a_fp.create_group("/UncalibratedPixels")
       l1a_ptg = l1a_fp.create_group("/Time")
       l1a_peg = l1a_fp.create_group("/FPIEencoder")
+
+      bcomp = 100.0 * ( 1.0 - bcomp )
+      l1a_metag = l1a_bp['/L1A_BBMetadata']
+      l1a_qamissing = l1a_metag.create_dataset('QAPercentMissingData', data=bcomp, dtype='f4' )
+
       l1a_bpg = l1a_bp.create_group("/BlackBodyPixels")
       l1a_rtg = l1a_bp.create_group("/rtdBlackbodyGradients")
       t = l1a_ptg.create_dataset("line_start_time_j2000", data=pix_time,
@@ -689,8 +706,6 @@ class L1aRawPixGenerate(object):
           r2[i-p0,j] = prc[j]( p7r( bbt[i,0,j] ) )
           r3[i-p0,j] = prh[j]( p7r( bbt[i,1,j] ) )
 
-      l1a_fp_met.write()
-      l1a_bp_met.write()
       l1a_fp.close()
       l1a_bp.close()
     ' end scene loop '
