@@ -231,24 +231,30 @@ class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
     to the optics, or the optics may be different in X vs. Y direction. In
     any case, we want to match the actual field angles.
 
+    We have the flag "line_order_reversed". This virtually reverses the
+    line order of the camera. This is used by l1b_rad to make the image
+    data look "right side up". We account for this by just changing the
+    pixel order of the camera.
+
     C++ includes: ecostress_camera.h 
     """
 
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
 
-    def __init__(self, Focal_length, Y_scale, Y_offset, Frame_to_sc_q):
+    def __init__(self, Focal_length, Y_scale, Y_offset, Frame_to_sc_q, Line_order_reversed=False):
         """
 
         EcostressCamera::EcostressCamera(double Focal_length=427.6, double Y_scale=1.0, double Y_offset=0,
         boost::math::quaternion< double >
-        Frame_to_sc_q=boost::math::quaternion< double >(1, 0, 0, 0))
+        Frame_to_sc_q=boost::math::quaternion< double >(1, 0, 0, 0), bool
+        Line_order_reversed=false)
         Constructor.
 
         We've hardcoded things we don't expect to change (e.g., the line and
         sample pitch). 
         """
-        _ecostress_camera.EcostressCamera_swiginit(self, _ecostress_camera.new_EcostressCamera(Focal_length, Y_scale, Y_offset, Frame_to_sc_q))
+        _ecostress_camera.EcostressCamera_swiginit(self, _ecostress_camera.new_EcostressCamera(Focal_length, Y_scale, Y_offset, Frame_to_sc_q, Line_order_reversed))
 
     def mask_all_parameter(self):
         """
@@ -313,6 +319,24 @@ class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
       self._v_y_offset(value)
 
 
+    def _v_line_order_reversed(self, *args):
+        """
+
+        void Ecostress::EcostressCamera::line_order_reversed(bool V)
+
+        """
+        return _ecostress_camera.EcostressCamera__v_line_order_reversed(self, *args)
+
+
+    @property
+    def line_order_reversed(self):
+        return self._v_line_order_reversed()
+
+    @line_order_reversed.setter
+    def line_order_reversed(self, value):
+      self._v_line_order_reversed(value)
+
+
     def __reduce__(self):
       return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
 
@@ -321,6 +345,7 @@ EcostressCamera.mask_all_parameter = new_instancemethod(_ecostress_camera.Ecostr
 EcostressCamera._v_paraxial_transform = new_instancemethod(_ecostress_camera.EcostressCamera__v_paraxial_transform, None, EcostressCamera)
 EcostressCamera._v_y_scale = new_instancemethod(_ecostress_camera.EcostressCamera__v_y_scale, None, EcostressCamera)
 EcostressCamera._v_y_offset = new_instancemethod(_ecostress_camera.EcostressCamera__v_y_offset, None, EcostressCamera)
+EcostressCamera._v_line_order_reversed = new_instancemethod(_ecostress_camera.EcostressCamera__v_line_order_reversed, None, EcostressCamera)
 EcostressCamera_swigregister = _ecostress_camera.EcostressCamera_swigregister
 EcostressCamera_swigregister(EcostressCamera)
 

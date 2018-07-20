@@ -28,6 +28,16 @@ BOOST_AUTO_TEST_CASE(basic_test)
     od->surface_intersect(*cam, GeoCal::FrameCoordinate(0,1), dem);
   BOOST_CHECK_CLOSE(distance(*gp1, *gp2), 37.486374893129778, 1e-2);
   BOOST_CHECK_CLOSE(distance(*gp1, *gp3), 33.844121108154255, 1e-2);
+  cam->line_order_reversed(true);
+  boost::shared_ptr<GeoCal::CartesianFixed> gp1_2 =
+    od->surface_intersect(*cam, GeoCal::FrameCoordinate(255-0,0), dem);
+  boost::shared_ptr<GeoCal::CartesianFixed> gp2_2 =
+    od->surface_intersect(*cam, GeoCal::FrameCoordinate(255-1,0), dem);
+  boost::shared_ptr<GeoCal::CartesianFixed> gp3_2 =
+    od->surface_intersect(*cam, GeoCal::FrameCoordinate(255-0,1), dem);
+  BOOST_CHECK(distance(*gp1, *gp1_2) < 1e-3);
+  BOOST_CHECK(distance(*gp2, *gp2_2) < 1e-3);
+  BOOST_CHECK(distance(*gp3, *gp3_2) < 1e-3);
 }
 
 BOOST_AUTO_TEST_CASE(compare_spreadsheet)

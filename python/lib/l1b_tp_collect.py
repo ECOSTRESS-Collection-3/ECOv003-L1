@@ -11,7 +11,7 @@ class L1bTpCollect(object):
     def __init__(self, igccol, ortho_base, fftsize=256, magnify=4.0,
                  magmin=2.0, toler=1.5, redo=36, ffthalf=2, seed=562,
                  num_x=10,num_y=10, log_fname = None,
-                 proj_number_subpixel=2):
+                 proj_number_subpixel=2, min_tp_per_scene=20):
         self.igccol = igccol
         self.ortho_base = ortho_base
         self.num_x=num_x
@@ -32,6 +32,7 @@ class L1bTpCollect(object):
                               toler=toler,redo=redo,ffthalf=2,seed=562,
                               log_file=self.log_file[0],
                               run_dir_name=self.run_dir_name[0])
+        self.min_tp_per_scene = min_tp_per_scene
 
     def print_and_log(self, s):
         print(s)
@@ -62,6 +63,11 @@ class L1bTpCollect(object):
             self.tpcollect.run_dir_name = self.run_dir_name[i]
             self.print_and_log("Collecting tp for scene %d" % (i+1))
             res = self.tpcollect.tie_point_grid(self.num_x, self.num_y)
+            if(len(res) < self.min_tp_per_scene):
+                self.print_and_log("Too few tie-point found. Found %d, and require at least %d. Rejecting tie-points for scene %d" % (len(res), self.min_tp_per_scene, i+1))
+                res = []
+            else:
+                self.print_and_log("Found %d tie-points for scene %d" % (len(res), i+1))
             self.print_and_log("Done collecting tp for scene %d" % (i+1))
         except Exception as e:
             self.report_and_log_exception(i)

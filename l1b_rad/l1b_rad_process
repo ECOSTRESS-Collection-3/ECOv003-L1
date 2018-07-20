@@ -54,6 +54,12 @@ sys.path.append(l1_osp_dir)
 import l1b_rad_config
 import l1b_geo_config
 
+# Short function to print and log at the same time
+def print_and_log(s):
+    print(s)
+    print("INFO:L1B_RAD:%s" % s, file=log)
+    log.flush()
+
 # Explicitly list input file
 if(args.run_config):
     l1a_pix = os.path.abspath(config["InputFileGroup", "L1A_PIX"])
@@ -95,9 +101,21 @@ orbit, scene, acquisition_time = ecostress.orbit_from_metadata(l1a_pix)
 ofile = ecostress.ecostress_file_name("L1B_RAD", orbit, scene, acquisition_time,
                             build = build_id,
                             version = file_version)
-
 log_fname = os.path.splitext(ofile)[0] + ".log"
 log = open(log_fname, "w")
+
+# Determine if we should flip lines so data appears right side up.
+line_order_flipped = False
+if(l1b_rad_config.flip_if_needed):
+    t = tt.min_time
+    if(t < orb.min_time):
+        t = orb.min_time
+    line_order_flipped = orb.spacecraft_x_mostly_in_velocity_direction(t)
+if(line_order_flipped):
+    print_and_log("Line order for each scan will be flipped so data appears 'right side' up")
+else:
+    print_and_log("Line order for each scan will not be flipped")
+
 try:
     # Generate output
     l1brad = ecostress.L1bRadGenerate(igc, l1a_pix, l1a_gain, ofile,l1_osp_dir,
@@ -107,6 +125,7 @@ try:
               pge_version = pge_version["l1b_rad"],
               interpolate_stripe_data = l1b_rad_config.interpolate_stripe_data,
               seed = l1b_rad_config.seed,
+              line_order_flipped = line_order_flipped,
               skip_band_to_band = args.skip_band_to_band,
               frac_to_do_interpolation = l1b_rad_config.frac_to_do_interpolation)
     l1brad.run()

@@ -6914,6 +6914,64 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_EcostressOrbit_spacecraft_x_mostly_in_velocity_direction(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressOrbit *arg1 = (Ecostress::EcostressOrbit *) 0 ;
+  GeoCal::Time arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressOrbit const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressOrbit const > *smartarg1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  PyObject *swig_obj[2] ;
+  bool result;
+  
+  if (!SWIG_Python_UnpackTuple(args,"EcostressOrbit_spacecraft_x_mostly_in_velocity_direction",2,2,swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressOrbit_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressOrbit_spacecraft_x_mostly_in_velocity_direction" "', argument " "1"" of type '" "Ecostress::EcostressOrbit const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressOrbit > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressOrbit > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressOrbit * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressOrbit > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressOrbit * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "EcostressOrbit_spacecraft_x_mostly_in_velocity_direction" "', argument " "2"" of type '" "GeoCal::Time""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressOrbit_spacecraft_x_mostly_in_velocity_direction" "', argument " "2"" of type '" "GeoCal::Time""'");
+    } else {
+      arg2 = *(reinterpret_cast< boost::shared_ptr<  GeoCal::Time > * >(argp2)->get());
+      if (newmem & SWIG_CAST_NEW_MEMORY) delete reinterpret_cast< boost::shared_ptr<  GeoCal::Time > * >(argp2);
+    }
+  }
+  {
+    try {
+      result = (bool)((Ecostress::EcostressOrbit const *)arg1)->spacecraft_x_mostly_in_velocity_direction(arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_EcostressOrbit__v_large_gap__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::EcostressOrbit *arg1 = (Ecostress::EcostressOrbit *) 0 ;
@@ -7226,6 +7284,15 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		"Treat gaps in the data > Large_gap as a large gap. Also has an offset\n"
 		"in position like OrbitScCoorOffset. \n"
+		""},
+	 { (char *)"EcostressOrbit_spacecraft_x_mostly_in_velocity_direction", _wrap_EcostressOrbit_spacecraft_x_mostly_in_velocity_direction, METH_VARARGS, (char *)"\n"
+		"\n"
+		"bool EcostressOrbit::spacecraft_x_mostly_in_velocity_direction(GeoCal::Time T) const\n"
+		"Indicate if spacecraft orientation is mostly in the forward direction,\n"
+		"or has the 180 degree yaw used sometimes in maneuvers.\n"
+		"\n"
+		"This controls if the data in l1a_pix looks \"upside down\", if this is\n"
+		"true than it is upside down and l1b_rad should flip this. \n"
 		""},
 	 { (char *)"EcostressOrbit__v_large_gap", _wrap_EcostressOrbit__v_large_gap, METH_VARARGS, (char *)"\n"
 		"\n"

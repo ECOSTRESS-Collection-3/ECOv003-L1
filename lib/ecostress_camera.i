@@ -17,11 +17,13 @@ class EcostressCamera : public GeoCal::QuaternionCamera {
 public:
   EcostressCamera(double Focal_length, double Y_scale,
 		  double Y_offset,
-		  boost::math::quaternion<double> Frame_to_sc_q);
+		  boost::math::quaternion<double> Frame_to_sc_q,
+		  bool Line_order_reversed = false);
   void mask_all_parameter();
   %python_attribute_with_set(paraxial_transform, boost::shared_ptr<EcostressParaxialTransform>);
   %python_attribute_with_set(y_scale, double);
   %python_attribute_with_set(y_offset, double);
+  %python_attribute_with_set(line_order_reversed, bool);
   %pickle_serialization();
 };
 }

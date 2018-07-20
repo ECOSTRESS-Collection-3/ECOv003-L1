@@ -10,10 +10,11 @@ void EcostressCamera::serialize(Archive & ar, const unsigned int version)
   ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(QuaternionCamera)
     & GEOCAL_NVP_(paraxial_transform);
   // Older version didn't have y_scale and y_offset
-  if(version > 0) {
+  if(version > 0)
     ar & GEOCAL_NVP_(y_scale)
       & GEOCAL_NVP_(y_offset);
-  }
+  if(version > 1)
+    ar & GEOCAL_NVP_(line_order_reversed);
 }
 
 ECOSTRESS_IMPLEMENT(EcostressCamera);
@@ -25,14 +26,15 @@ ECOSTRESS_IMPLEMENT(EcostressCamera);
 
 EcostressCamera::EcostressCamera(double Focal_length, double Y_scale,
 				 double Y_offset,
-				 boost::math::quaternion<double> Frame_to_sc_q)
+				 boost::math::quaternion<double> Frame_to_sc_q,
+				 bool Line_order_reversed)
   : QuaternionCamera(Frame_to_sc_q, 256, 1,
 		     40e-3, 40e-3, Focal_length,
 		     GeoCal::FrameCoordinate(128,0.5),
 		     QuaternionCamera::LINE_IS_X,
 		     QuaternionCamera::INCREASE_IS_NEGATIVE,
 		     QuaternionCamera::INCREASE_IS_NEGATIVE),
-    y_scale_(Y_scale), y_offset_(Y_offset)
+    y_scale_(Y_scale), y_offset_(Y_offset), line_order_reversed_(Line_order_reversed)
 {
   paraxial_transform_ = boost::make_shared<EcostressParaxialTransform>();
   // This information comes from https://bravo-lib.jpl.nasa.gov/docushare/dsweb/Get/Document-1882647/FPA%20distortion20140522.xlsx
@@ -155,3 +157,49 @@ EcostressCamera::focal_plane_to_dcs
 }
 
 
+// See base class for description
+GeoCal::FrameCoordinate EcostressCamera::focal_plane_to_fc(int Band, double Xfp,
+						    double Yfp) const
+{
+  GeoCal::FrameCoordinate fc =
+    GeoCal::QuaternionCamera::focal_plane_to_fc(Band, Xfp, Yfp);
+  if(line_order_reversed_)
+    fc.line = (nline_ - 1)  - fc.line;
+  return fc;
+}
+
+// See base class for description
+
+GeoCal::FrameCoordinateWithDerivative EcostressCamera::focal_plane_to_fc
+(int Band, const GeoCal::AutoDerivative<double>& Xfp,
+ const GeoCal::AutoDerivative<double>& Yfp) const
+{
+  GeoCal::FrameCoordinateWithDerivative fc =
+    GeoCal::QuaternionCamera::focal_plane_to_fc(Band, Xfp, Yfp);
+  if(line_order_reversed_)
+    fc.line = (nline_ - 1)  - fc.line;
+  return fc;
+}
+  
+// See base class for description
+
+void EcostressCamera::fc_to_focal_plane
+(const GeoCal::FrameCoordinate& Fc, int Band, double& Xfp, double& Yfp) const
+{
+  GeoCal::FrameCoordinate t(Fc);
+  if(line_order_reversed_)
+    t.line = (nline_ - 1)  - t.line;
+  GeoCal::QuaternionCamera::fc_to_focal_plane(t, Band, Xfp, Yfp);
+}
+
+// See base class for description
+
+void EcostressCamera::fc_to_focal_plane
+(const GeoCal::FrameCoordinateWithDerivative& Fc, int Band,
+ GeoCal::AutoDerivative<double>& Xfp, GeoCal::AutoDerivative<double>& Yfp) const
+{
+  GeoCal::FrameCoordinateWithDerivative t(Fc);
+  if(line_order_reversed_)
+    t.line = (nline_ - 1)  - t.line;
+  GeoCal::QuaternionCamera::fc_to_focal_plane(t, Band, Xfp, Yfp);
+}

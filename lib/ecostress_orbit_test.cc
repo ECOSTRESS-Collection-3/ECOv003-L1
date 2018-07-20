@@ -13,6 +13,8 @@ BOOST_AUTO_TEST_CASE(basic_test)
   GeoCal::Time tdata_end = GeoCal::Time::parse_time("2018-07-09T22:51:24.012658Z");
   GeoCal::Time tgap_start = tdata_start + 74;
   GeoCal::Time tgap_end = tdata_start + 4025.99751;
+
+  BOOST_CHECK(!orb.spacecraft_x_mostly_in_velocity_direction(tdata_start + 3.0));
   
   // Should be able to get orbit data for times a little before and
   // after the data

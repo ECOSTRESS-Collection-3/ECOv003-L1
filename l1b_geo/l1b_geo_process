@@ -29,8 +29,9 @@ Options:
        Print this message
 
   --ecostress-band=d
-       Ecostress band to use. Band 1 is the SWIR band, Band 2 is 8.28 micron
-       and so on. -1 means use the value found in the configuration file
+       Ecostress band to use. Band 1 is 8.28 micron, Band 2 is 8.63
+       and so on. By convention Band 0 is the SWIR band. -1 means 
+       use the value found in the configuration file
        [default: -1]
 
   --force-night
@@ -230,6 +231,13 @@ try:
         if(i == len(radlist) - 1):
             orb.insert_position_time_point(tt.max_time)
             orb.insert_attitude_time_point(tt.max_time)
+        line_order_reversed = False
+        if(h5py.File(radlist[i],"r")["/L1B_RADMetadata/RadScanLineOrder"][()] == "Reverse line order"):
+            line_order_reversed = True
+        if(i == 0):
+            cam.line_order_reversed = line_order_reversed
+        elif(cam.line_order_reversed != line_order_reversed):
+            raise RuntimeError("Currently require that all L1B_RAD given to l1b_geo_process have the same line ordering (/L1B_RADMetadata/RadScanLineOrder")
         if(not args.force_night and
            h5py.File(radlist[i],"r")["StandardMetadata/DayNightFlag"][()] == "Day"):
             is_day.append(True)
@@ -242,12 +250,12 @@ try:
             lband = lband_night
             ortho_base.append(ortho_base_night)
         # Work with the SWIR channel data
-        if(eband ==1):
+        if(eband ==0):
             ras = geocal.GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" %
                                          radlist[i])
         else:
             ras = geocal.GdalRasterImage("HDF5:\"%s\"://Radiance/radiance_%d" %
-                                         (radlist[i], eband - 1))
+                                         (radlist[i], eband))
             ras = geocal.ScaleImage(ras, 100.0)
         print_and_log("Scene %d is %s, matching ecostress band %d to Landsat band %d" % (scenelist[i], "Day" if is_day[i] else "Night", eband, lband))
         igccol_initial.add_igc(ecostress.EcostressImageGroundConnection(orb, tt, cam,
@@ -267,7 +275,8 @@ try:
                     num_x=l1b_geo_config.num_x,
                     num_y=l1b_geo_config.num_y,
                     log_fname=log_fname,
-                    proj_number_subpixel=l1b_geo_config.proj_number_subpixel)
+                    proj_number_subpixel=l1b_geo_config.proj_number_subpixel,
+                    min_tp_per_scene=l1b_geo_config.min_tp_per_scene)
     correction_done = False
     igccol_corrected = igccol_initial
     if(not l1b_geo_config.skip_sba):

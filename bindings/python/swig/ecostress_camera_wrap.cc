@@ -5572,6 +5572,20 @@ SWIG_From_std_string  (const std::string& s)
 }
 
 
+SWIGINTERN int
+SWIG_AsVal_bool (PyObject *obj, bool *val)
+{
+  int r;
+  if (!PyBool_Check(obj))
+    return SWIG_ERROR;
+  r = PyObject_IsTrue(obj);
+  if (r == -1)
+    return SWIG_ERROR;
+  if (val) *val = r ? true : false;
+  return SWIG_OK;
+}
+
+
 
 /* ---------------------------------------------------
  * C++ director class methods
@@ -7106,7 +7120,79 @@ SWIGINTERN PyObject *EcostressParaxialTransform_swiginit(PyObject *SWIGUNUSEDPAR
   return SWIG_Python_InitShadowInstance(args);
 }
 
-SWIGINTERN PyObject *_wrap_new_EcostressCamera(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_EcostressCamera__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  double arg1 ;
+  double arg2 ;
+  double arg3 ;
+  SwigValueWrapper< boost::math::quaternion< double > > arg4 ;
+  bool arg5 ;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  void *argp4 ;
+  int res4 = 0 ;
+  bool val5 ;
+  int ecode5 = 0 ;
+  Ecostress::EcostressCamera *result = 0 ;
+  
+  if ((nobjs < 5) || (nobjs > 5)) SWIG_fail;
+  ecode1 = SWIG_AsVal_double(swig_obj[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_EcostressCamera" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_EcostressCamera" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_EcostressCamera" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  {
+    res4 = SWIG_ConvertPtr(swig_obj[3], &argp4, SWIGTYPE_p_boost__math__quaternionT_double_t,  0  | 0);
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "new_EcostressCamera" "', argument " "4"" of type '" "boost::math::quaternion< double >""'"); 
+    }  
+    if (!argp4) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_EcostressCamera" "', argument " "4"" of type '" "boost::math::quaternion< double >""'");
+    } else {
+      boost::math::quaternion< double > * temp = reinterpret_cast< boost::math::quaternion< double > * >(argp4);
+      arg4 = *temp;
+      if (SWIG_IsNewObj(res4)) delete temp;
+    }
+  }
+  ecode5 = SWIG_AsVal_bool(swig_obj[4], &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_EcostressCamera" "', argument " "5"" of type '" "bool""'");
+  } 
+  arg5 = static_cast< bool >(val5);
+  {
+    try {
+      result = (Ecostress::EcostressCamera *)new Ecostress::EcostressCamera(arg1,arg2,arg3,arg4,arg5);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::EcostressCamera > *smartresult = result ? new boost::shared_ptr<  Ecostress::EcostressCamera >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_EcostressCamera__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   double arg1 ;
   double arg2 ;
@@ -7120,10 +7206,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressCamera(PyObject *SWIGUNUSEDPARM(self), P
   int ecode3 = 0 ;
   void *argp4 ;
   int res4 = 0 ;
-  PyObject *swig_obj[4] ;
   Ecostress::EcostressCamera *result = 0 ;
   
-  if (!SWIG_Python_UnpackTuple(args,"new_EcostressCamera",4,4,swig_obj)) SWIG_fail;
+  if ((nobjs < 4) || (nobjs > 4)) SWIG_fail;
   ecode1 = SWIG_AsVal_double(swig_obj[0], &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_EcostressCamera" "', argument " "1"" of type '" "double""'");
@@ -7168,6 +7253,30 @@ SWIGINTERN PyObject *_wrap_new_EcostressCamera(PyObject *SWIGUNUSEDPARM(self), P
   return resultobj;
 fail:
   return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_EcostressCamera(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[6] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"new_EcostressCamera",0,5,argv))) SWIG_fail;
+  --argc;
+  if (argc == 4) {
+    return _wrap_new_EcostressCamera__SWIG_1(self, argc, argv);
+  }
+  if (argc == 5) {
+    return _wrap_new_EcostressCamera__SWIG_0(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_EcostressCamera'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressCamera::EcostressCamera(double,double,double,boost::math::quaternion< double >,bool)\n"
+    "    Ecostress::EcostressCamera::EcostressCamera(double,double,double,boost::math::quaternion< double >)\n");
+  return 0;
 }
 
 
@@ -7580,6 +7689,121 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_EcostressCamera__v_line_order_reversed__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressCamera *arg1 = (Ecostress::EcostressCamera *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressCamera const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressCamera const > *smartarg1 = 0 ;
+  bool result;
+  
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_line_order_reversed" "', argument " "1"" of type '" "Ecostress::EcostressCamera const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressCamera > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressCamera > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressCamera * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressCamera > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressCamera * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = (bool)((Ecostress::EcostressCamera const *)arg1)->line_order_reversed();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressCamera__v_line_order_reversed__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressCamera *arg1 = (Ecostress::EcostressCamera *) 0 ;
+  bool *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressCamera > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressCamera > *smartarg1 = 0 ;
+  bool temp2 ;
+  bool val2 ;
+  int ecode2 = 0 ;
+  
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_line_order_reversed" "', argument " "1"" of type '" "Ecostress::EcostressCamera *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressCamera * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressCamera * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_bool(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "EcostressCamera__v_line_order_reversed" "', argument " "2"" of type '" "bool""'");
+  } 
+  temp2 = static_cast< bool >(val2);
+  arg2 = &temp2;
+  {
+    try {
+      (arg1)->line_order_reversed((bool const &)*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressCamera__v_line_order_reversed(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[3] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"EcostressCamera__v_line_order_reversed",0,2,argv))) SWIG_fail;
+  --argc;
+  if (argc == 1) {
+    return _wrap_EcostressCamera__v_line_order_reversed__SWIG_0(self, argc, argv);
+  }
+  if (argc == 2) {
+    return _wrap_EcostressCamera__v_line_order_reversed__SWIG_1(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'EcostressCamera__v_line_order_reversed'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressCamera::line_order_reversed() const\n"
+    "    Ecostress::EcostressCamera::line_order_reversed(bool const &)\n");
+  return 0;
+}
+
+
 SWIGINTERN PyObject *_wrap_delete_EcostressCamera(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressCamera *arg1 = (Ecostress::EcostressCamera *) 0 ;
@@ -7666,7 +7890,8 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		"EcostressCamera::EcostressCamera(double Focal_length=427.6, double Y_scale=1.0, double Y_offset=0,\n"
 		"boost::math::quaternion< double >\n"
-		"Frame_to_sc_q=boost::math::quaternion< double >(1, 0, 0, 0))\n"
+		"Frame_to_sc_q=boost::math::quaternion< double >(1, 0, 0, 0), bool\n"
+		"Line_order_reversed=false)\n"
 		"Constructor.\n"
 		"\n"
 		"We've hardcoded things we don't expect to change (e.g., the line and\n"
@@ -7690,6 +7915,11 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"EcostressCamera__v_y_offset", _wrap_EcostressCamera__v_y_offset, METH_VARARGS, (char *)"\n"
 		"\n"
 		"void Ecostress::EcostressCamera::y_offset(double V)\n"
+		"\n"
+		""},
+	 { (char *)"EcostressCamera__v_line_order_reversed", _wrap_EcostressCamera__v_line_order_reversed, METH_VARARGS, (char *)"\n"
+		"\n"
+		"void Ecostress::EcostressCamera::line_order_reversed(bool V)\n"
 		"\n"
 		""},
 	 { (char *)"delete_EcostressCamera", (PyCFunction)_wrap_delete_EcostressCamera, METH_O, (char *)"\n"

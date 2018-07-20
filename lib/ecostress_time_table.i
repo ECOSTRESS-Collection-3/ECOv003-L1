@@ -15,10 +15,12 @@ class EcostressTimeTable : public GeoCal::TimeTable {
 public:
   EcostressTimeTable(GeoCal::Time Tstart, bool Averaging_done = True,
 		     int Num_scan = 44, double Mirror_rpm = 25.4,
-		     double Frame_time = 0.0000321875);
+		     double Frame_time = 0.0000321875,
+		     bool Line_order_reversed = false);
   EcostressTimeTable(const std::vector<GeoCal::Time> Tstart_scan,
 		     bool Averaging_done = True, double Mirror_rpm = 25.4,
-		     double Frame_time = 0.0000321875);
+		     double Frame_time = 0.0000321875,
+		     bool Line_order_reversed = false);
   EcostressTimeTable(const std::string& Fname, double Mirror_rpm = 25.4,
 		     double Frame_time = 0.0000321875);
   EcostressTimeTable(const std::string& Fname, bool Averaging_done,
@@ -28,6 +30,7 @@ public:
     (GeoCal::Time T, const GeoCal::FrameCoordinate& F) const;
   void scan_index_to_line(int Scan_index, int& OUTPUT, int& OUTPUT) const;
   int line_to_scan_index(double Line) const;
+  %python_attribute(line_order_reversed, bool);
   %python_attribute(averaging_done, bool);
   %python_attribute(number_line_scan, int);
   %python_attribute(number_scan, int);

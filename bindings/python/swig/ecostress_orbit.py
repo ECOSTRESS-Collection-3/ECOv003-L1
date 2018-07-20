@@ -231,6 +231,19 @@ class EcostressOrbit(geocal_swig.hdf_orbit.HdfOrbit_Eci_TimeJ2000):
         """
         _ecostress_orbit.EcostressOrbit_swiginit(self, _ecostress_orbit.new_EcostressOrbit(*args))
 
+    def spacecraft_x_mostly_in_velocity_direction(self, T):
+        """
+
+        bool EcostressOrbit::spacecraft_x_mostly_in_velocity_direction(GeoCal::Time T) const
+        Indicate if spacecraft orientation is mostly in the forward direction,
+        or has the 180 degree yaw used sometimes in maneuvers.
+
+        This controls if the data in l1a_pix looks "upside down", if this is
+        true than it is upside down and l1b_rad should flip this. 
+        """
+        return _ecostress_orbit.EcostressOrbit_spacecraft_x_mostly_in_velocity_direction(self, T)
+
+
     def _v_large_gap(self, *args):
         """
 
@@ -271,6 +284,7 @@ class EcostressOrbit(geocal_swig.hdf_orbit.HdfOrbit_Eci_TimeJ2000):
       return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
 
     __swig_destroy__ = _ecostress_orbit.delete_EcostressOrbit
+EcostressOrbit.spacecraft_x_mostly_in_velocity_direction = new_instancemethod(_ecostress_orbit.EcostressOrbit_spacecraft_x_mostly_in_velocity_direction, None, EcostressOrbit)
 EcostressOrbit._v_large_gap = new_instancemethod(_ecostress_orbit.EcostressOrbit__v_large_gap, None, EcostressOrbit)
 EcostressOrbit._v_extrapolation_pad = new_instancemethod(_ecostress_orbit.EcostressOrbit__v_extrapolation_pad, None, EcostressOrbit)
 EcostressOrbit_swigregister = _ecostress_orbit.EcostressOrbit_swigregister

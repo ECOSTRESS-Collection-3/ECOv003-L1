@@ -19,6 +19,7 @@ public:
 		 const blitz::Array<double, 1>& Pos_off,
 		 double Extrapolation_pad = 5.0,
 		 double Large_gap = 10.0);
+  bool spacecraft_x_mostly_in_velocity_direction(GeoCal::Time T) const;
   %python_attribute_with_set(large_gap, double);
   %python_attribute_with_set(extrapolation_pad, double);
   %pickle_serialization();

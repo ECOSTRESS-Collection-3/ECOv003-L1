@@ -83,7 +83,10 @@ class L1bRadGenerate(object):
                     rbreg_avg = EcostressRadAverage(rbreg)
                 else:
                     rbreg_avg = EcostressRadAverage(radsub)
-                res[int(sline/2):int((sline+nlinescan)/2),:] = rbreg_avg.read_all_double()
+                if(self.line_order_flipped):
+                    res[int(sline/2):int((sline+nlinescan)/2),:] = np.flipud(rbreg_avg.read_all_double())
+                else:
+                    res[int(sline/2):int((sline+nlinescan)/2),:] = rbreg_avg.read_all_double()
         return res
         
     def run(self):

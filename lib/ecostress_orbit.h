@@ -68,6 +68,8 @@ public:
   }
   virtual ~EcostressOrbit() {}
 
+  bool spacecraft_x_mostly_in_velocity_direction(GeoCal::Time T) const;
+
 //-------------------------------------------------------------------------
 /// Allow extrapolation up this amount. Given in seconds.
 //-------------------------------------------------------------------------

@@ -114,3 +114,19 @@ EcostressOrbit::orbit_data_create(GeoCal::Time T) const
 			 boost::math::quaternion<double>(1,0,0,0));
 }
 
+//-------------------------------------------------------------------------
+/// Indicate if spacecraft orientation is mostly in the forward
+/// direction, or has the 180 degree yaw used sometimes in
+/// maneuvers. This controls if the data in l1a_pix looks "upside
+/// down", if this is true than it is upside down and l1b_rad should
+/// flip this.
+//-------------------------------------------------------------------------
+
+bool EcostressOrbit::spacecraft_x_mostly_in_velocity_direction
+(GeoCal::Time T) const
+{
+  boost::shared_ptr<OrbitData> od = orbit_data(T);
+  CartesianInertialLookVector clv(od->velocity_ci());
+  ScLookVector slv = od->sc_look_vector(clv);
+  return (slv.look_vector[0] > 0);
+}
