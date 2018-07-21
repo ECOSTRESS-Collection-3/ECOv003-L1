@@ -10,7 +10,7 @@ frame_to_sc_q = geocal.Quaternion_double(0,0,0,1)
 
 def test_basic():
     '''Make sure we can create a camera, and print it out.'''
-    cam = EcostressCamera(focal_length, frame_to_sc_q)
+    cam = EcostressCamera(focal_length, 1.0, 0, frame_to_sc_q)
     print(cam)
 
 def test_camera_use(igc_old, unit_test_data):
@@ -30,7 +30,7 @@ def test_camera_use(igc_old, unit_test_data):
     print(geocal.distance(gp1, gp3))    
 
 def test_serialize(isolated_dir):
-    cam = EcostressCamera(focal_length, frame_to_sc_q)
+    cam = EcostressCamera(focal_length, 1.0, 0, frame_to_sc_q)
     geocal.write_shelve("cam.xml", cam)
     cam2 = geocal.read_shelve("cam.xml")
     print(cam2)

@@ -3,6 +3,7 @@ import tensorflow as tf
 import numpy as np
 import random
 import os
+import math
 from ecostress_swig import *
 
 from tflearn.layers.conv import conv_2d, max_pool_2d
@@ -25,8 +26,9 @@ if("TF_CPP_MIN_LOG_LEVEL" in os.environ and int(os.environ["TF_CPP_MIN_LOG_LEVEL
     tflearn.callbacks.TermLogger.on_batch_end = _on_batch_end
 
 class EcostressInterpolate(object):
-    def __init__(self, training_size = 600000, layer_size_1 = 20,
-                 layer_size_2 = 10, activation_function = 'LeakyReLU',
+    def __init__(self, time_table,
+                 training_size = 600000, layer_size_1 = 35,
+                 layer_size_2 = 17, activation_function = 'LeakyReLU',
                  tensorboard_dir='./tensorboard',
                  seed = 1234):
         '''Initialize data. The directory tensorboard_dir is a scratch 
@@ -40,6 +42,10 @@ class EcostressInterpolate(object):
         self.activation_function = activation_function
         self.tensorboard_dir = tensorboard_dir
         self.seed = seed
+        self.time_table = time_table
+        # We train on self.grid_size x self.grid_size data
+        self.grid_size = 3
+        self.grid_size_half = math.floor(self.grid_size / 2)
         
     def normalize_data(self, datain):
         '''Take a 5400x5400x5 raw array (not normalized with -9999 coding)
@@ -67,17 +73,20 @@ class EcostressInterpolate(object):
     
     def forward_net(self):
         # training a convolutional neural net model
-        convnet = input_data(shape=[None, 3, 3, 3], name='input')
+        convnet = input_data(shape=[None, self.grid_size, self.grid_size, 3],
+                             name='input')
     
         ##  one fully connected layer with 30 neurons
         convnet = fully_connected(convnet, self.layer_size_1,
                                   activation=self.activation_function)
-        convnet = dropout(convnet, 0.8)
+        # Not used in latest version from Hai
+        #convnet = dropout(convnet, 0.8)
     
         ##  one fully connected layer with 30 neurons
         convnet = fully_connected(convnet,  self.layer_size_2,
                                   activation=self.activation_function)
-        convnet = dropout(convnet, 0.8)
+        # Not used in latest version from Hai
+        #convnet = dropout(convnet, 0.8)
     
         ## final output layer (the prediction value)
         convnet = fully_connected(convnet, 1, activation='linear')
@@ -90,34 +99,47 @@ class EcostressInterpolate(object):
         '''dataset should be a 5400x5400x5 array for  bands 1 to 5. 
         Missing_mask should be a 5400x5400 matrix with 1 for missing
         data due to missing scanlines or 2 due to missing packets
-        create a training data set x of size training_sizex3x3x3 and y of 
+        create a training data set x of size training_sizexgsxgsx3 and y of 
         size training_sizex1
         band_number is an argument (integer) of which variable to use 
         as the response. Either 0 or 4.'''
-        training_x = np.zeros( [ self.training_size, 3, 3, 3 ] )
+        training_x = np.zeros( [ self.training_size, self.grid_size, self.grid_size, 3 ] )
         training_y = np.zeros( [ self.training_size, 1 ] )
         counter = 0
         random.seed(self.seed)
         # Probably slow loop, we should come back to speed this up.
         while counter < self.training_size:
-            random_x_ind = random.randint(1, dataset.shape[0] - 2)
-            random_y_ind = random.randint(1, dataset.shape[1] - 2)
+            random_x_ind = random.randint(self.grid_size_half,
+                               dataset.shape[0] - 1 - self.grid_size_half)
+            random_y_ind = random.randint(self.grid_size_half,
+                               dataset.shape[1] - 1 - self.grid_size_half)
+            # Skip this iteration if we are too close to the edge of a scan,
+            # because the scan has a discontinuity in the radiance data
+            # and shouldn't be used for training
+            if(self.time_table.close_to_scan_edge(random_x_ind,
+                                                  self.grid_size_half)):
+                continue
             # skip this iteration if this is a missing scan line
             # (no response data to train on) or missing packets
             if missing_mask[random_x_ind, random_y_ind, band_number] > 0:
                 continue
-            # skipping the layer on the edges due to the 3x3 grid.
-            # Grab the 3x3x3 array centered on the random (x,y) index
-            grid_3x3x3 = dataset[(random_x_ind - 1):(random_x_ind + 2 ),
-                                 (random_y_ind - 1):(random_y_ind + 2 ),
+            # skipping the layer on the edges due to the gsxgs grid.
+            # Grab the gsxgsx3 array centered on the random (x,y) index
+            # (where gs is the grid size, e.g. 3
+            grid_gsxgsx3 = dataset[(random_x_ind - self.grid_size_half):(random_x_ind + 1 + self.grid_size_half ),
+                            (random_y_ind - self.grid_size_half):(random_y_ind + 1 + self.grid_size_half ),
                                  1:4]
             #  also skipping this iteration if there is missing (NaN)
-            # data in any cell of the 3x3x3 array
-            total_nan_in_grid = np.sum(np.isnan(grid_3x3x3))
+            # data in any cell of the gsxgsx3 array
+            total_nan_in_grid = np.sum(np.isnan(grid_gsxgsx3))
             if total_nan_in_grid > 0:
                 continue
-        
-            training_x[counter, :, :, :] = grid_3x3x3
+
+            current_y = dataset[ random_x_ind, random_y_ind, band_number ]
+            if np.isnan( current_y ):
+                continue
+           
+            training_x[counter, :, :, :] = grid_gsxgsx3
             training_y[counter] = dataset[random_x_ind, random_y_ind,
                                           band_number]
         
@@ -129,30 +151,30 @@ class EcostressInterpolate(object):
         '''dataset should be a 5400x5400x5 array for  bands 1 to 5. 
         Missing_mask should be a 5400x5400 matrix with 1 for missing 
         data due to missing scanlines and 2 for missing packets
-        create a dataset (just the Nx3x3x3 matrix for the predictor) 
+        create a dataset (just the Nxgsxgsx3 matrix for the predictor) 
         at the locations where we have missing scanline. To be used 
         for filling in the missing scanline output is the 
-        testing_x (Nx3x3x3), x_colIndex, y_colIndex 
+        testing_x (Nxgsxgsx3), x_colIndex, y_colIndex 
         (for the indices into the matrix)'''
 
         total_missing_elements = np.sum( missing_mask[:,:,band_number]  == DQI_STRIPE_NOT_INTERPOLATED)
-        testing_x = np.zeros([total_missing_elements, 3, 3, 3])
+        testing_x = np.zeros([total_missing_elements, self.grid_size, self.grid_size, 3])
         x_colIndex = [] 
         y_colIndex = []
         counter = 0
-        for row_index in range( 1, dataset.shape[0] - 1 ):
-            for col_index in range( 1, dataset.shape[1] - 1 ):
+        for row_index in range( self.grid_size_half, dataset.shape[0] - self.grid_size_half):
+            for col_index in range(self.grid_size_half, dataset.shape[1] - self.grid_size_half ):
                 if missing_mask[row_index, col_index, band_number] == DQI_STRIPE_NOT_INTERPOLATED:
-                    grid_3x3x3 = dataset[ (row_index - 1):(row_index + 2 ), \
-                                          (col_index - 1):(col_index + 2 ),\
+                    grid_gsxgsx3 = dataset[ (row_index - self.grid_size_half):(row_index + 1 + self.grid_size_half ), \
+                                          (col_index - self.grid_size_half):(col_index + 1 + self.grid_size_half ),\
                                           1:4 ]
-                    total_nan_in_grid = np.sum(np.isnan(grid_3x3x3))
+                    total_nan_in_grid = np.sum(np.isnan(grid_gsxgsx3))
                 
                     ##  skip this observation if there is at least one
-                    ## NaN in the 3x3x3 predictor grid
+                    ## NaN in the gsxgsx3 predictor grid
                     if total_nan_in_grid > 0:
                         continue
-                    testing_x[ counter, :, :, : ] = grid_3x3x3
+                    testing_x[ counter, :, :, : ] = grid_gsxgsx3
                     x_colIndex.append(row_index)
                     y_colIndex.append(col_index)
                     counter= counter + 1            

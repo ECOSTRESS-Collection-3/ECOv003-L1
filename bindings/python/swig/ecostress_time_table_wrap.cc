@@ -7696,6 +7696,136 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_EcostressTimeTable_close_to_scan_edge__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressTimeTable *arg1 = (Ecostress::EcostressTimeTable *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressTimeTable const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressTimeTable const > *smartarg1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  bool result;
+  
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressTimeTable_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressTimeTable_close_to_scan_edge" "', argument " "1"" of type '" "Ecostress::EcostressTimeTable const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressTimeTable * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressTimeTable * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "EcostressTimeTable_close_to_scan_edge" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "EcostressTimeTable_close_to_scan_edge" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  {
+    try {
+      result = (bool)((Ecostress::EcostressTimeTable const *)arg1)->close_to_scan_edge(arg2,arg3);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressTimeTable_close_to_scan_edge__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressTimeTable *arg1 = (Ecostress::EcostressTimeTable *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressTimeTable const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressTimeTable const > *smartarg1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  bool result;
+  
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressTimeTable_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressTimeTable_close_to_scan_edge" "', argument " "1"" of type '" "Ecostress::EcostressTimeTable const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressTimeTable * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressTimeTable > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressTimeTable * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "EcostressTimeTable_close_to_scan_edge" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = (bool)((Ecostress::EcostressTimeTable const *)arg1)->close_to_scan_edge(arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressTimeTable_close_to_scan_edge(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[4] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"EcostressTimeTable_close_to_scan_edge",0,3,argv))) SWIG_fail;
+  --argc;
+  if (argc == 2) {
+    return _wrap_EcostressTimeTable_close_to_scan_edge__SWIG_1(self, argc, argv);
+  }
+  if (argc == 3) {
+    return _wrap_EcostressTimeTable_close_to_scan_edge__SWIG_0(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'EcostressTimeTable_close_to_scan_edge'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressTimeTable::close_to_scan_edge(int,int) const\n"
+    "    Ecostress::EcostressTimeTable::close_to_scan_edge(int) const\n");
+  return 0;
+}
+
+
 SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_averaging_done(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressTimeTable *arg1 = (Ecostress::EcostressTimeTable *) 0 ;
@@ -8052,6 +8182,14 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		"int Ecostress::EcostressTimeTable::line_to_scan_index(double Line) const\n"
 		"Convert line to scan index. \n"
+		""},
+	 { (char *)"EcostressTimeTable_close_to_scan_edge", _wrap_EcostressTimeTable_close_to_scan_edge, METH_VARARGS, (char *)"\n"
+		"\n"
+		"bool Ecostress::EcostressTimeTable::close_to_scan_edge(int Line, int Width=3) const\n"
+		"Test of a particular line is close to the edge of scan line.\n"
+		"\n"
+		"This is used by EcostressInterpolate to avoid training of data that\n"
+		"crosses a scan region, since this data has discontinuities. \n"
 		""},
 	 { (char *)"EcostressTimeTable__v_averaging_done", (PyCFunction)_wrap_EcostressTimeTable__v_averaging_done, METH_O, (char *)"\n"
 		"\n"

@@ -114,7 +114,7 @@ class L1bRadGenerate(object):
                 print("INFO:L1bRadGenerate:Skipping interpolation because fraction of scans present is too small (e.g., short scene)",
                       file=self.log)
         elif(self.interpolate_stripe_data): 
-            inter = EcostressInterpolate(seed = self.seed)
+            inter = EcostressInterpolate(self.igc.time_table, seed = self.seed)
             prediction_matrices, predicted_locations, prediction_errors = inter.interpolate_missing_bands(dataset, dqi, log=self.log)
             dataset[:,:,0] = prediction_matrices[0]
             dataset[:,:,4] = prediction_matrices[1]

@@ -240,6 +240,18 @@ class EcostressTimeTable(geocal_swig.time_table.TimeTable):
         return _ecostress_time_table.EcostressTimeTable_line_to_scan_index(self, Line)
 
 
+    def close_to_scan_edge(self, Line, Width=3):
+        """
+
+        bool Ecostress::EcostressTimeTable::close_to_scan_edge(int Line, int Width=3) const
+        Test of a particular line is close to the edge of scan line.
+
+        This is used by EcostressInterpolate to avoid training of data that
+        crosses a scan region, since this data has discontinuities. 
+        """
+        return _ecostress_time_table.EcostressTimeTable_close_to_scan_edge(self, Line, Width)
+
+
     def _v_averaging_done(self):
         """
 
@@ -336,6 +348,7 @@ class EcostressTimeTable(geocal_swig.time_table.TimeTable):
     __swig_destroy__ = _ecostress_time_table.delete_EcostressTimeTable
 EcostressTimeTable.scan_index_to_line = new_instancemethod(_ecostress_time_table.EcostressTimeTable_scan_index_to_line, None, EcostressTimeTable)
 EcostressTimeTable.line_to_scan_index = new_instancemethod(_ecostress_time_table.EcostressTimeTable_line_to_scan_index, None, EcostressTimeTable)
+EcostressTimeTable.close_to_scan_edge = new_instancemethod(_ecostress_time_table.EcostressTimeTable_close_to_scan_edge, None, EcostressTimeTable)
 EcostressTimeTable._v_averaging_done = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_averaging_done, None, EcostressTimeTable)
 EcostressTimeTable._v_number_line_scan = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_number_line_scan, None, EcostressTimeTable)
 EcostressTimeTable._v_number_scan = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_number_scan, None, EcostressTimeTable)

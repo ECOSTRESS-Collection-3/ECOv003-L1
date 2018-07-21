@@ -88,6 +88,18 @@ public:
 //-------------------------------------------------------------------------
 
   double frame_time() const {return frame_time_;}
+
+//-------------------------------------------------------------------------
+/// Test of a particular line is close to the edge of scan line. This
+/// is used by EcostressInterpolate to avoid training of data that crosses
+/// a scan region, since this data has discontinuities. 
+//-------------------------------------------------------------------------
+ 
+  bool close_to_scan_edge(int Line, int Width=3) const
+  {
+    int i = Line % number_line_scan();
+    return i < Width || i >= (number_line_scan() - Width);
+  }
   
 //-------------------------------------------------------------------------
 /// Image lines that go with a scan. Note this is the normal C
