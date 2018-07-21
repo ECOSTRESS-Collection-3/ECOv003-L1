@@ -61,6 +61,7 @@ class L1bTpCollect(object):
             self.tpcollect.ref_image_fname = self.ref_fname[i]
             self.tpcollect.log_file = self.log_file[i]
             self.tpcollect.run_dir_name = self.run_dir_name[i]
+            tt = self.igccol.image_ground_connection(i).time_table
             self.print_and_log("Collecting tp for scene %d" % (i+1))
             res = self.tpcollect.tie_point_grid(self.num_x, self.num_y)
             if(len(res) < self.min_tp_per_scene):
@@ -72,10 +73,15 @@ class L1bTpCollect(object):
         except Exception as e:
             self.report_and_log_exception(i)
             res = []
-        return res
+        return res, tt.min_time, tt.max_time
     
     def tpcol(self, pool=None):
-        '''Return tiepoints collected.'''
+        '''Return tiepoints collected. We also return the time ranges for the
+           ImageGroundConnection that we got good tiepoint for. This
+           can be used by the calling program to determine such things
+           as the breakpoints on the orbit model
+        '''
+        
         # First project all the data.
         proj_res = self.p.proj(pool=pool)
         it = []
@@ -87,9 +93,12 @@ class L1bTpCollect(object):
         else:
             tpcollist = pool.map(self.tp, it)
         res = geocal.TiePointCollection()
-        for tpcol in tpcollist:
-            res.extend(tpcol)
+        time_range_tp = []
+        for tpcol, tmin, tmax in tpcollist:
+            if(len(tpcol) > 0):
+                res.extend(tpcol)
+                time_range_tp.append([tmin, tmax])
         for i in range(len(res)):
             res[i].id = i+1
-        return res
+        return res, time_range_tp
 
