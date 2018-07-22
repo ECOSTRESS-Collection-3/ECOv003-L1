@@ -30,6 +30,7 @@ class EcostressInterpolate(object):
                  training_size = 600000, layer_size_1 = 35,
                  layer_size_2 = 17, activation_function = 'LeakyReLU',
                  tensorboard_dir='./tensorboard',
+                 grid_size=5,
                  seed = 1234):
         '''Initialize data. The directory tensorboard_dir is a scratch 
         directory, and should be something that we can create/write to.
@@ -44,7 +45,7 @@ class EcostressInterpolate(object):
         self.seed = seed
         self.time_table = time_table
         # We train on self.grid_size x self.grid_size data
-        self.grid_size = 3
+        self.grid_size = grid_size
         self.grid_size_half = math.floor(self.grid_size / 2)
         
     def normalize_data(self, datain):
