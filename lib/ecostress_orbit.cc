@@ -1,5 +1,6 @@
 #include "ecostress_orbit.h"
 #include "ecostress_serialize_support.h"
+#include <boost/make_shared.hpp>
 using namespace Ecostress;
 using namespace GeoCal;
 

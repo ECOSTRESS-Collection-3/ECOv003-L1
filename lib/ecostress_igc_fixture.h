@@ -27,6 +27,8 @@ public:
       (unit_test_data_dir() + "camera.xml");
     std::string orb_fname = test_data_dir() +
     "L1A_RAW_ATT_80005_20150124T204250_0100_01.h5.expected";
+    // This data would result in the camera flipping direction
+    camera->line_order_reversed(true);
     orbit = boost::make_shared<GeoCal::OrbitOffsetCorrection>
       (boost::make_shared<GeoCal::HdfOrbit<GeoCal::Eci,
        GeoCal::TimeJ2000Creator> >
