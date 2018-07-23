@@ -5,6 +5,9 @@ from geocal import *
 from ecostress import *
 
 igc_truth = read_shelve("igccol_truth.xml").image_ground_connection(0)
+# Need to flip this, since l1b_rad changes the order of the generated data
+igc_truth.camera.line_order_reversed = True
+
 igc_initial = read_shelve("l1b_geo_run/igccol_initial.xml").image_ground_connection(0)
 igc_sba = read_shelve("l1b_geo_run/igccol_sba.xml").image_ground_connection(0)
 icin = ImageCoordinate(igc_truth.number_line / 2,

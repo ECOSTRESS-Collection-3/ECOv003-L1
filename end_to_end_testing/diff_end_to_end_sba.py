@@ -8,6 +8,8 @@ import os, sys
 curdir = os.path.abspath(os.path.dirname(sys.argv[0]))
 for i in range(3):
     igc_truth = read_shelve("%s/igccol_truth.xml" % curdir).image_ground_connection(i)
+    # Need to flip this, since l1b_rad changes the order of the generated data
+    igc_truth.camera.line_order_reversed = True
     igc_initial = read_shelve("end_to_end_test_l1b_geo/igccol_initial.xml").image_ground_connection(i)
     igc_sba = read_shelve("end_to_end_test_l1b_geo/igccol_sba.xml").image_ground_connection(i)
     icin_full = ImageCoordinate(igc_truth.number_line / 2,

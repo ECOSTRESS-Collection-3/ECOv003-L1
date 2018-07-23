@@ -87,7 +87,7 @@ def create_orbit_raw(config, pos_off=None,
     setup_spice(config)
     orbfname = os.path.abspath(config["TimeBasedFileGroup", "L1A_RAW_ATT"])
     # Create orbit.
-    if(pos_off):
+    if(pos_off is not None):
         orb = EcostressOrbit(orbfname, pos_off, extrapolation_pad, large_gap)
     else:
         orb = EcostressOrbit(orbfname, extrapolation_pad, large_gap)
