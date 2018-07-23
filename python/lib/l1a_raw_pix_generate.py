@@ -310,9 +310,9 @@ class L1aRawPixGenerate(object):
     if "/hk/bad/hr/time_dpuio" in self.fin and "/hk/bad/hr/time_error_correction" in self.fin:
         tdpuio = self.fin["/hk/bad/hr/time_dpuio"]
         tcorr = self.fin["/hk/bad/hr/time_error_correction"]
-        print("ISS time error correction 0 %d %f" %(tdpuio[0], tcorr[0]))
+        print("ISS %s time error correction %d %f" %(onum, tdpuio[0], tcorr[0]))
     else:
-        print("No ISS time correction in file")
+        print("No ISS %s time correction in file" % onum )
         hkbhrt = 0
         tdpuio = 0
         iss_tcorr = 0
