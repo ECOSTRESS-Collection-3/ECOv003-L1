@@ -1,6 +1,6 @@
 from .misc import *
 from test_support import *
-from geocal import Time
+from geocal import Time, ImageCoordinate, cib01_mapinfo
 
 def test_time_to_file_string():
     '''Test conversion of acquisition time to data and time.'''
@@ -13,6 +13,18 @@ def test_ecostress_file_name():
     t = Time.parse_time("2015-01-24T14:43:18.819553Z")
     assert ecostress_file_name("L1B_RAD", 80001, 1, t) == \
         "ECOSTRESS_L1B_RAD_80001_001_20150124T144318_0100_01.h5"
+
+    
+def test_determine_rotated_map(igc_with_img):
+    mi = cib01_mapinfo(70.0)
+    mi2 = determine_rotated_map(igc_with_img, mi)
+    gc1 = igc_with_img.ground_coordinate(ImageCoordinate(0, igc_with_img.number_sample / 2))
+    gc2 = igc_with_img.ground_coordinate(ImageCoordinate(igc_with_img.number_line - 1, igc_with_img.number_sample / 2))
+    x1, y1 = mi2.coordinate(gc1)
+    x2, y2 = mi2.coordinate(gc2)
+    assert x1 == pytest.approx(x2)
+    assert mi2.resolution_meter == pytest.approx(70.0, abs=1e-2)
+    
     
 
 
