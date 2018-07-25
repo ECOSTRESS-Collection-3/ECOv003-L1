@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE(fill_missing_test)
   blitz::Array<int, 2> ev_missing(sm_original.encoder_value().copy());
   // Test missing part of a line
   ev_missing(42, blitz::Range(0,1000)) = -1;
-  ev_missing(43, blitz::Range(3000,5400)) = -1;
+  ev_missing(43, blitz::Range(3000,5399)) = -1;
   EcostressScanMirror sm_missing_1(ev_missing);
   BOOST_CHECK_CLOSE(sm_missing_1.scan_mirror_angle(42, 0),
 		    sm_original.scan_mirror_angle(42, 0), 1e-2);

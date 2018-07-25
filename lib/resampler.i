@@ -10,6 +10,7 @@
 %base_import(generic_object)
 %import "raster_image.i"
 %import "map_info.i"
+%import "dem.i"
 
 %ecostress_shared_ptr(Ecostress::Resampler);
 namespace Ecostress {
@@ -23,11 +24,19 @@ public:
 	    const blitz::Array<double, 2>& Longitude_interpolated,
 	    const GeoCal::MapInfo& Mi, int Num_sub_pixel = 2,
 	    bool Exactly_match_mi = false);
+  blitz::Array<double, 2> resample_field
+  (const boost::shared_ptr<GeoCal::RasterImage>& Data,
+   double Scale_data=1.0,
+   bool Negative_to_zero=false, double Fill_value = 0.0) const;
   void resample_field(const std::string& Fname,
 		      const boost::shared_ptr<GeoCal::RasterImage>& Data,
 		      double Scale_data=1.0,
 		      const std::string& File_type="REAL",
-		      bool Negative_to_zero=false);
+		      bool Negative_to_zero=false, double Fill_value = 0.0) const;
+  void map_values(const GeoCal::Dem& d,
+		  blitz::Array<double, 2>& OUTPUT,
+		  blitz::Array<double, 2>& OUTPUT,
+		  blitz::Array<double, 2>& OUTPUT) const;
   %python_attribute(map_info, const GeoCal::MapInfo&);
   %python_attribute(number_sub_pixel, int);
   std::string print_to_string() const;

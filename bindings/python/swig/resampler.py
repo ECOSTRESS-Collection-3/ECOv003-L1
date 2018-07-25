@@ -219,7 +219,8 @@ class Resampler(geocal_swig.generic_object.GenericObject):
 
         void Resampler::resample_field(const std::string &Fname, const boost::shared_ptr<
         GeoCal::RasterImage > &Data, double Scale_data=1.0, const std::string
-        &File_type="REAL", bool Negative_to_zero=false)
+        &File_type="REAL", bool Negative_to_zero=false, double
+        Fill_value=0.0) const
         Resample the given data, and write out to a VICAR file with the given
         name.
 
@@ -231,6 +232,19 @@ class Resampler(geocal_swig.generic_object.GenericObject):
         data without large negative fill values (e.g., -9999) 
         """
         return _resampler.Resampler_resample_field(self, *args)
+
+
+    def map_values(self, d):
+        """
+
+        void Resampler::map_values(const GeoCal::Dem &d, blitz::Array< double, 2 > &Lat, blitz::Array<
+        double, 2 > &Lon, blitz::Array< double, 2 > &Height) const
+        Various fields from the map_info.
+
+        This is just all in a function because this is much faster to do in
+        C++ vs. looping in python. 
+        """
+        return _resampler.Resampler_map_values(self, d)
 
 
     def _v_map_info(self):
@@ -266,6 +280,7 @@ class Resampler(geocal_swig.generic_object.GenericObject):
 
     __swig_destroy__ = _resampler.delete_Resampler
 Resampler.resample_field = new_instancemethod(_resampler.Resampler_resample_field, None, Resampler)
+Resampler.map_values = new_instancemethod(_resampler.Resampler_map_values, None, Resampler)
 Resampler._v_map_info = new_instancemethod(_resampler.Resampler__v_map_info, None, Resampler)
 Resampler._v_number_sub_pixel = new_instancemethod(_resampler.Resampler__v_number_sub_pixel, None, Resampler)
 Resampler.__str__ = new_instancemethod(_resampler.Resampler___str__, None, Resampler)

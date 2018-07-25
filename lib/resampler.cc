@@ -77,66 +77,60 @@ void Resampler::init(const blitz::Array<double, 2>& lat,
 		     const GeoCal::MapInfo& Mi, bool Exactly_match_mi)
 {
   blitz::Range ra = blitz::Range::all();
-  std::vector<boost::shared_ptr<GroundCoordinate> > ptlist;
-  double minlat, minlon;
-  bool first = true;
-  for(int i = 0; i < lat.rows(); ++i)
-    for(int j = 0; j < lat.cols(); ++j) {
-      if(lat(i, j) > -1000) {
-	if(first) {
-	  minlat = lat(i,j);
-	  first = false;
-	} else {
-	  minlat = std::min(lat(i,j),minlat);
-	}
-      }
-    }
-  first = true;
-  for(int i = 0; i < lon.rows(); ++i)
-    for(int j = 0; j < lon.cols(); ++j) {
-      if(lon(i, j) > -1000) {
-	if(first) {
-	  minlon = lon(i,j);
-	  first = false;
-	} else {
-	  minlon = std::min(lon(i,j),minlon);
-	}
-      }
-    }
-  
-  ptlist.push_back(boost::make_shared<Geodetic>(minlat, minlon));
-  ptlist.push_back(boost::make_shared<Geodetic>(blitz::max(lat),
-						blitz::max(lon)));
-  if(Exactly_match_mi)
-    mi = Mi;
-  else
-    mi = Mi.cover(ptlist);
-  double latstart, lonstart;
-  double latdelta, londelta;
-  mi.index_to_coordinate(0,0,lonstart,latstart);
-  mi.index_to_coordinate(1,1,londelta,latdelta);
-  latdelta -= latstart;
-  londelta -= lonstart;
+  // As an optimization, we assume the map uses a
+  // GeodeticConverter. We could relax this if needed, at the cost of
+  // some speed. But for now, just assume this and trigger an error if
+  // we don't have this.
+  GeoCal::GeodeticConverter g;
+  if(!Mi.coordinate_converter().is_same(g))
+    throw GeoCal::Exception("Resampler only works with MapInfo that uses a GeodeticConverter");
+
   data_index.resize(lat.rows(), lon.cols(), 2);
-  data_index(ra,ra,0) = blitz::cast<int>(blitz::rint((lat-latstart)/latdelta));
-  data_index(ra,ra,1) = blitz::cast<int>(blitz::rint((lon-lonstart)/londelta));
+  blitz::Array<double, 2> xindex, yindex;
+  Mi.coordinate_to_index(lon, lat, xindex, yindex);
+  data_index(ra,ra,0) = blitz::cast<int>(blitz::rint(yindex));
+  data_index(ra,ra,1) = blitz::cast<int>(blitz::rint(xindex));
+  if(Exactly_match_mi) {
+    mi = Mi;
+    return;
+  }
+  // Determine min and max xindex and yindex, but exclude all points
+  // with lat/lon that are fill values.
+  bool first = true;
+  int minx = 0, miny = 0, maxx = 0, maxy = 0;
+  for(int i = 0; i < lat.rows(); ++i)
+    for(int j = 0; j < lat.cols(); ++j)
+      if(lat(i, j) > -1000 && lon(i, j) > -1000) {
+	if(first) {
+	  minx = data_index(i,j,1);
+	  miny = data_index(i,j,0);
+	  maxx = minx;
+	  maxy = miny;
+	  first = false;
+	}
+	minx = std::min(data_index(i,j,1),minx);
+	maxx = std::max(data_index(i,j,1),maxx);
+	miny = std::min(data_index(i,j,0),miny);
+	maxy = std::max(data_index(i,j,0),maxy);
+      }
+  mi = Mi.subset(minx, miny, maxx - minx + 1, maxy - miny + 1);
+  data_index(ra,ra,0) -= miny;
+  data_index(ra,ra,1) -= minx;
+  // Make sure all the lat/lon fill values have data_index out of
+  // range so we don't use the data.
+  for(int i = 0; i < lat.rows(); ++i)
+    for(int j = 0; j < lat.cols(); ++j)
+      if(lat(i, j) <= -1000 && lon(i, j) <= -1000)
+	data_index(i,j,ra) = -9999;
 }
+
 //-------------------------------------------------------------------------
-/// Resample the given data, and write out to a VICAR file with the
-/// given name.
-///
-/// You can optionally scale the output data, and specify the file
-/// output type to write. This is useful if you want to view float
-/// data in xvd, which works much better with scaled int.
-///
-/// You can optionally map all negative values to zero, useful to view
-/// data without large negative fill values (e.g., -9999)
+/// Resample the given data and return an array of values
 //-------------------------------------------------------------------------
 
-void Resampler::resample_field
-(const std::string& Fname,
- const boost::shared_ptr<GeoCal::RasterImage>& Data,
- double Scale_data, const std::string& File_type, bool Negative_to_zero)
+blitz::Array<double, 2> Resampler::resample_field
+(const boost::shared_ptr<GeoCal::RasterImage>& Data,
+ double Scale_data, bool Negative_to_zero, double Fill_value) const
 {
   // We do replication here since we are counting subpixels. This is
   // particularly important to get the fill values correct.
@@ -171,11 +165,54 @@ void Resampler::resample_field
 	}
       }
     }
-  res = blitz::where(cnt == 0, res, res / cnt * Scale_data);
+  res = blitz::where(cnt == 0, Fill_value, res / cnt * Scale_data);
   if(Negative_to_zero)
     res = blitz::where(res < 0, 0, res);
+  return res;
+}
+
+//-------------------------------------------------------------------------
+/// Resample the given data, and write out to a VICAR file with the
+/// given name.
+///
+/// You can optionally scale the output data, and specify the file
+/// output type to write. This is useful if you want to view float
+/// data in xvd, which works much better with scaled int.
+///
+/// You can optionally map all negative values to zero, useful to view
+/// data without large negative fill values (e.g., -9999)
+//-------------------------------------------------------------------------
+
+void Resampler::resample_field
+(const std::string& Fname,
+ const boost::shared_ptr<GeoCal::RasterImage>& Data,
+ double Scale_data, const std::string& File_type, bool Negative_to_zero,
+ double Fill_value) const
+{
+  blitz::Array<double, 2> res(resample_field(Data, Scale_data, Negative_to_zero,
+					     Fill_value));
   VicarRasterImage f(Fname, mi, File_type);
   f.write(0,0,res);
 }
 
+
+//-------------------------------------------------------------------------
+/// Various fields from the map_info. This is just all in a function
+/// because this is much faster to do in C++ vs. looping in python.
+//-------------------------------------------------------------------------
+
+void Resampler::map_values
+(const GeoCal::Dem& d,
+ blitz::Array<double, 2>& Lat, blitz::Array<double, 2>& Lon,
+ blitz::Array<double, 2>& Height) const
+{
+  Lat.resize(mi.number_y_pixel(), mi.number_x_pixel());
+  Lon.resize(Lat.shape());
+  Height.resize(Lat.shape());
+  for(int i = 0; i < Lat.rows(); ++i)
+    for(int j = 0; j < Lat.cols(); ++j) {
+      boost::shared_ptr<GroundCoordinate> gp = mi.ground_coordinate(i, j, d);
+      gp->lat_lon_height(Lat(i,j), Lon(i,j), Height(i,j));
+    }
+}
 
