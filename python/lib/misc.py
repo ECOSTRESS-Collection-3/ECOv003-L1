@@ -223,7 +223,7 @@ def orbit_from_metadata(fname):
     acquisition_time = geocal.Time.parse_time("%sT%sZ" % (bdate, btime))
     return int(onum), int(sid), acquisition_time
 
-def determine_rotated_map(igc, mi):
+def determine_rotated_map_igc(igc, mi):
     '''Rotate the given MapInfo so that it follows the path of the igc
     (which should be something like the minimum gore). We don't get
     the full coverage right here, but if you then use this in something
@@ -235,6 +235,17 @@ def determine_rotated_map(igc, mi):
     gc1 = igc.ground_coordinate(geocal.ImageCoordinate(0, igc.number_sample / 2))
     gc2 = igc.ground_coordinate(geocal.ImageCoordinate(igc.number_line - 1,
                                                        igc.number_sample / 2))
+    return determine_rotated_map(gc1, gc2, mi)
+
+def determine_rotated_map(gc1, gc2, mi):
+    '''Rotate the given MapInfo so that it follows the path of the igc
+    (which should be something like the minimum gore). We don't get
+    the full coverage right here, but if you then use this in something
+    like Resampler the coverage can be determined. This creates a rotated
+    coordinate system where the center pixel at the start and ending line of
+    the igc have a constant x value and varying y value, with the first line
+    have the larger y value (e.g, if the rotation was 0 and y was latitude, we
+    would have the larger latitude for the first line)'''
     x1, y1 = mi.coordinate(gc1)
     x2, y2 = mi.coordinate(gc2)
     a = math.atan2(x1 - x2, y1 - y2)
@@ -245,7 +256,9 @@ def determine_rotated_map(igc, mi):
     mi2 = geocal.MapInfo(mi.coordinate_converter,
                       np.array([p[0],pm2[0,0],pm2[0,1],p[3],pm2[1,0],pm2[1,1]]),
                       mi.number_x_pixel, mi.number_y_pixel, mi.is_point)
-    mi2 = igc.cover(mi2)
+    # In general, mi2 will cover invalid lat/lon. Just pull in to a reasonable
+    # area, we handling the actual cover later
+    mi2 = mi2.cover([geocal.Geodetic(10,10),geocal.Geodetic(20,20)])
     s = mi.resolution_meter / mi2.resolution_meter
     mi2 = mi2.scale(s, s)
     return mi2
@@ -256,4 +269,4 @@ __all__ = ["create_dem", "ortho_base_directory", "band_to_landsat_band",
            "is_day", "aster_radiance_scale_factor", "ecostress_to_aster_band",
            "ecostress_radiance_scale_factor", "time_to_file_string",
            "time_split", "ecostress_file_name", "process_run",
-           "orbit_from_metadata", "determine_rotated_map"]
+           "orbit_from_metadata", "determine_rotated_map", "determine_rotated_map_igc"]
