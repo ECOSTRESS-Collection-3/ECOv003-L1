@@ -211,7 +211,7 @@ void Resampler::map_values
   Height.resize(Lat.shape());
   for(int i = 0; i < Lat.rows(); ++i)
     for(int j = 0; j < Lat.cols(); ++j) {
-      boost::shared_ptr<GroundCoordinate> gp = mi.ground_coordinate(i, j, d);
+      boost::shared_ptr<GroundCoordinate> gp = mi.ground_coordinate(j, i, d);
       gp->lat_lon_height(Lat(i,j), Lon(i,j), Height(i,j));
     }
 }
