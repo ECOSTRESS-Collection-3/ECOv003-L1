@@ -1,0 +1,38 @@
+#! /usr/bin/env python
+#
+# Create a VRT file that pulls out the Map information
+import geocal
+import subprocess
+import h5py
+
+version = "1.0"
+usage='''Usage:
+  map_export_gdal [options] <input_file> <output_file>
+  map_export_gdal -h | --help
+  map_export_gdal -v | --version
+
+This packages up the 5 radiance bands as 1 GDAL VRT file. We add in the map
+information (which GDAL can't read directly since it doesn't understand our
+format). This is a simple text edit of the VRT file, as far as I know you
+can't do this directly.
+
+Options:
+  -h --help         
+       Print this message
+
+  -v --version      
+       Print program version
+'''
+
+args = geocal.docopt_simple(usage, version=version)
+
+cmd = ["gdalbuildvrt", "-separate", args.output_file]
+cmd.extend("HDF5:\"%s\"://Mapped/radiance_%d" % (args.input_file, b+1)
+           for b in range(5))
+subprocess.run(cmd)
+fin = h5py.File(args.input_file,"r")
+tstring = ",".join("{:.20e}".format(t) for t in fin["Mapped/MapInformation/GeoTransform"][:])
+cmd=["sed", "-i ", "s#</SRS>#</SRS>\\n  <GeoTransform>%s</GeoTransform>\\n  <Metadata>\\n    <MDI key=\"AREA_OR_POINT\">Area</MDI>\\n  </Metadata>#" % tstring, args.output_file]
+print(cmd)
+subprocess.run(cmd)
+

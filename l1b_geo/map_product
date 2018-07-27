@@ -1,0 +1,172 @@
+#! /usr/bin/env python
+#
+# Quick an dirty program for create a L1B_MAP product. This should get replaced
+# with an actual function of l1b_geo_process
+
+import geocal
+import ecostress
+import h5py
+import os
+import math
+import numpy as np
+
+version = "1.0"
+usage='''Usage:
+  map_product [options] <l1b_rad_file> <l1b_geo_file> <output_file>
+  map_product -h | --help
+  map_product -v | --version
+
+This produces a L1B_MAP product, from our quick and dirty code. By default
+we produce a "rotated" product, where up is in the along track direction.
+You can select the --north-up option to instead produce a map with north
+being up. This will generally be larger size file, because the gore will be
+larger.
+
+Options:
+  -h --help         
+       Print this message
+
+  --north-up
+       Select to make a North up map
+
+  --resolution=r
+       Pixel resolution of the output, in meters [default: 70]
+
+  -v --version      
+       Print program version
+'''
+
+args = geocal.docopt_simple(usage, version=version)
+
+lat = geocal.GdalRasterImage("HDF5:\"%s\"://Geolocation/latitude" %
+                             args.l1b_geo_file)
+lon = geocal.GdalRasterImage("HDF5:\"%s\"://Geolocation/longitude" %
+                             args.l1b_geo_file)
+print("Starting Resampler init")
+dem = geocal.SrtmDem(os.environ["ELEV_ROOT"],False,
+                     geocal.DatumGeoid96(os.environ["AFIDS_VDEV_DATA"] +
+                           "/EGM96_20_x100.HLF"))
+if(os.path.exists("/raid27/tllogan/all_lwm_links")):
+    lwm = geocal.SrtmLwmData("/raid27/tllogan/all_lwm_links", False)
+elif(os.path.exists("/project/ancillary/SRTM/srtm_v3_lwm")):
+    lwm = geocal.SrtmLwmData("/project/ancillary/SRTM/srtm_v3_lwm", False)
+else:
+    raise RuntimeError("Can't find land/water mask data")
+mi = geocal.cib01_mapinfo(args.resolution)
+if(not args.north_up):
+    smid = math.floor(lat.number_sample / 2)
+    gc1 = geocal.Geodetic(lat.read_double(0,smid, 1, 1)[0,0],
+                          lon.read_double(0,smid, 1, 1)[0,0])
+    gc2 = geocal.Geodetic(
+        lat.read_double(lat.number_line-1,smid, 1, 1)[0,0],
+        lon.read_double(lon.number_line-1,smid, 1, 1)[0,0])
+    mi = ecostress.determine_rotated_map(gc1, gc2, mi)
+res = ecostress.Resampler(lat, lon, mi, 3, False)
+print("Done with Resampler init")
+fout = h5py.File(args.output_file, "w")
+g = fout.create_group("Mapped")
+g2 = g.create_group("MapInformation")
+g2["README"] = \
+'''We specify the Map Information by giving the Coordinate System
+and a Affine GeoTransform. The Coordinate System is specified as 
+OpeGIS Well Known Text strings(see for example
+https://en.wikipedia.org/wiki/Well-known_text or 
+http://www.gdal.org/gdal_datamodel.html). This is given in the
+CoordinateSystem.
+
+We also specify the Affine GeoTransform (as for example in
+geotiff, see http://geotiff.maptools.org/spec/geotiff2.6.html or
+GDAL, see http://www.gdal.org/gdal_datamodel.html). This is given
+in the GeoTransform.
+
+Note that in addition, we have the latitude and longitude fields in
+the file. This is completely redundant with the map projection information,
+we supply these fields as a convenience for software that expects this
+data. But you can directly calculate latitude and longitude from the map
+information.
+'''
+# Hardcoded for now, this is probably fine since we don't expect to
+# change the coordinate system
+g2["CoordinateSystem"] = \
+'''GEOGCS["WGS 84",
+    DATUM["WGS_1984",
+        SPHEROID["WGS 84",6378137,298.257223563,
+            AUTHORITY["EPSG","7030"]],
+        AUTHORITY["EPSG","6326"]],
+    PRIMEM["Greenwich",0],
+    UNIT["degree",0.0174532925199433],
+    AUTHORITY["EPSG","4326"]]
+'''
+g2.create_dataset("GeoTransform", data=res.map_info.transform, dtype='f8')
+print("Get lat, lon, height")
+lat, lon, height = res.map_values(dem)
+print("Done with lat, lon, height")
+t = g.create_dataset("latitude", data=lat, dtype='f8')
+t.attrs["Units"] = "degrees"
+t = g.create_dataset("longitude", data=lon, dtype='f8')
+t.attrs["Units"] = "degrees"
+t = g.create_dataset("height", data=height, dtype='f4')
+t.attrs["Units"] = "m"
+print("Doing LWM")
+lfrac = ecostress.GroundCoordinateArray.interpolate(lwm, lat, lon) * 100.0
+t = g.create_dataset("land_fraction", data=lfrac, dtype='f4')
+t.attrs["Units"] = "percentage"
+for b in range(1,6):
+    print("Doing band %d" % b)
+    data_in = geocal.GdalRasterImage("HDF5:\"%s\"://Radiance/radiance_%d" % (args.l1b_rad_file, b))
+    data = res.resample_field(data_in, 1.0, False,
+                              ecostress.FILL_VALUE_NOT_SEEN).astype(np.float32)
+    t = g.create_dataset("radiance_%d" % b, data = data, dtype='f4',
+                         fillvalue = ecostress.FILL_VALUE_NOT_SEEN)
+    t.attrs.create("_FillValue", data=ecostress.FILL_VALUE_NOT_SEEN,
+                   dtype=t.dtype)
+    t.attrs["Units"] = "W/m^2/sr/um"
+    print("Doing DQI %d" % b)
+    dqi = np.zeros(data.shape, dtype=np.int8)
+    dqi[data == ecostress.FILL_VALUE_NOT_SEEN] = ecostress.DQI_NOT_SEEN
+    dqi[data == ecostress.FILL_VALUE_STRIPED] = ecostress.DQI_STRIPE_NOT_INTERPOLATED
+    dqi[data == ecostress.FILL_VALUE_BAD_OR_MISSING] = ecostress.DQI_BAD_OR_MISSING
+    # How to handle DQI_INTERPOLATED?
+    t = g.create_dataset("data_quality_%d" % (b),
+                         data = dqi)
+    t.attrs["Description"] = '''
+Data quality indicator. 
+  0 - DQI_GOOD, normal data, nothing wrong with it
+  1 - DQI_INTERPOLATED, data was part of instrument 
+      'stripe', and we have filled this in with 
+      interpolated data (see ATB) 
+  2 - DQI_STRIPE_NOT_INTERPOLATED, data was part of
+      instrument 'stripe' and we could not fill in
+      with interpolated data.
+  3 - DQI_BAD_OR_MISSING, indicates data with a bad 
+      value (e.g., negative DN) or missing packets.
+  4 - DQI_NOT_SEEN, pixels where because of the 
+      difference in time that a sample is seen with 
+      each band, the ISS has moved enough we haven't 
+      seen the pixel. So data is missing, but by
+      instrument design instead of some problem.
+'''
+    t.attrs["Units"] = "dimensionless"
+
+print("Doing SWIR")    
+data_in = geocal.GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" % args.l1b_rad_file)
+data = res.resample_field(data_in, 1.0, False,
+                          ecostress.FILL_VALUE_NOT_SEEN).astype(np.int16)
+t = g.create_dataset("swir_dn",
+                     data = data,
+                     fillvalue = ecostress.FILL_VALUE_NOT_SEEN)
+t.attrs.create("_FillValue", data=ecostress.FILL_VALUE_NOT_SEEN,
+               dtype=t.dtype)
+t.attrs["Units"] = "dimensionless"
+for fld in ["solar_azimuth", "solar_zenith", "view_azimuth", "view_zenith"]:
+    print("Doing %s" % fld)    
+    data_in = geocal.GdalRasterImage("HDF5:\"%s\"://Geolocation/%s" % (args.l1b_geo_file, fld))
+    data = res.resample_field(data_in, 1.0, False, ecostress.FILL_VALUE_NOT_SEEN).astype(np.float32)
+    t = g.create_dataset(fld, data = data, dtype='f4',
+                         fillvalue = ecostress.FILL_VALUE_NOT_SEEN)
+    t.attrs.create("_FillValue", data=ecostress.FILL_VALUE_NOT_SEEN,
+                   dtype=t.dtype)
+    t.attrs["Units"] = "degrees"
+
+# Maps can be generated by
+# \rm map_b?.tif; for i in $(seq 1 5); do gdal_calc.py --type=Float32  -A HDF5:"$(ls ECOSTRESS_L1B_GEO_MAP*_001_*_rotated.h5)"://Mapped/radiance_$i --outfile=map_b$i.tif --calc="A*(A>0)" --NoDataValue=0; gdal_translate -of VICAR map_b$i.tif map_b$i.img; done
