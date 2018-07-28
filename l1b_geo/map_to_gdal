@@ -7,9 +7,9 @@ import h5py
 
 version = "1.0"
 usage='''Usage:
-  map_export_gdal [options] <input_file> <output_file>
-  map_export_gdal -h | --help
-  map_export_gdal -v | --version
+  map_to_gdal [options] <input_file> <output_file>
+  map_to_gdal -h | --help
+  map_to_gdal -v | --version
 
 This packages up the 5 radiance bands as 1 GDAL VRT file. We add in the map
 information (which GDAL can't read directly since it doesn't understand our
@@ -32,7 +32,6 @@ cmd.extend("HDF5:\"%s\"://Mapped/radiance_%d" % (args.input_file, b+1)
 subprocess.run(cmd)
 fin = h5py.File(args.input_file,"r")
 tstring = ",".join("{:.20e}".format(t) for t in fin["Mapped/MapInformation/GeoTransform"][:])
-cmd=["sed", "-i ", "s#</SRS>#</SRS>\\n  <GeoTransform>%s</GeoTransform>\\n  <Metadata>\\n    <MDI key=\"AREA_OR_POINT\">Area</MDI>\\n  </Metadata>#" % tstring, args.output_file]
-print(cmd)
+cmd=["sed", "-i", "s#</SRS>#</SRS>\\n  <GeoTransform>%s</GeoTransform>\\n  <Metadata>\\n    <MDI key=\"AREA_OR_POINT\">Area</MDI>\\n  </Metadata>#" % tstring, args.output_file]
 subprocess.run(cmd)
 
