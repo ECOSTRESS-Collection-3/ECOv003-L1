@@ -15,9 +15,9 @@ def test_ecostress_file_name():
         "ECOSTRESS_L1B_RAD_80001_001_20150124T144318_0100_01.h5"
 
     
-def test_determine_rotated_map(igc_with_img):
+def test_determine_rotated_map_igc(igc_with_img):
     mi = cib01_mapinfo(70.0)
-    mi2 = determine_rotated_map(igc_with_img, mi)
+    mi2 = determine_rotated_map_igc(igc_with_img, mi)
     gc1 = igc_with_img.ground_coordinate(ImageCoordinate(0, igc_with_img.number_sample / 2))
     gc2 = igc_with_img.ground_coordinate(ImageCoordinate(igc_with_img.number_line - 1, igc_with_img.number_sample / 2))
     x1, y1 = mi2.coordinate(gc1)
