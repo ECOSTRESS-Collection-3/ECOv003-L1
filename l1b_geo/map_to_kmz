@@ -51,7 +51,9 @@ with geocal.in_tempdir():
           "stretch map_b%d.img map_b%d_scaled.img 'gauss DNMIN=0 DNMAX=255" % (b, b)])
         cmd_merge.append("map_b%d_scaled.img" % b)
     subprocess.run(cmd_merge)
-    subprocess.run(["gdal_translate", "-of", "VRT", "map_scaled.vrt",
+    subprocess.run(["gdal_translate", "-of", "VRT", "-ot", "Byte",
+                    "-a_nodata", "0",
+                    "map_scaled.vrt",
                     "map_scaled2.vrt"])
     subprocess.run(["gdal_translate", "-of", "KMLSUPEROVERLAY", "map_scaled2.vrt",
                     outfile, "-co", "FORMAT=PNG"])
