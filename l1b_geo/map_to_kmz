@@ -21,9 +21,14 @@ this needs to have north up. If you have the map file, you can pass it in
 using the --map-file. Otherwise, we generate it from the l1b_rad and 
 l1b_geo.
 
-This displays bands 1, 3 and 5 as RGB. We do a Gaussian stretch on all the 
-data - so these aren't actual data values or anything (need map_to_gdal if you
-want to import into QGIS or something like that).
+In addition to the output kmz file, we also produce a thumbnail. This is just
+the lowest resolution file in the kmz image pyramid, but this is useful as
+a simple thumbnail.
+
+This displays bands 2, 3 and 4 as RGB (by default, use --bands to
+change).  We do a Gaussian stretch on all the data - so these aren't
+actual data values or anything (need map_to_gdal if you want to import
+into QGIS or something like that).
 
 Options:
   -h --help         
@@ -87,6 +92,12 @@ try:
     if(args.png):
         cmd.extend(["-co", "FORMAT=PNG"])
     subprocess.run(cmd)
+    thumbnailfile = os.path.splitext(outfile)[0] + "_thumbnail"
+    if(args.png):
+        ext = "png"
+    else:
+        ext = "jpg"
+    subprocess.run("unzip -p %s 0/0/0.%s | cat > %s.%s" % (outfile, ext, thumbnailfile, ext), shell=True)
 finally:
     if(curdir):
         os.chdir(curdir)
