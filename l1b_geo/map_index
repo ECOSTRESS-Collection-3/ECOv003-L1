@@ -66,7 +66,7 @@ def row(fname_in):
 	  <td>%s</td>
 	  <td>%s</td>
 	  <td><img src="%s"></td>
-	  <td><a href="%s">KMZ</a></td>
+	  <td><a type="application/vnd.google-earth.kmz" href="%s">KMZ</a></td>
 	</tr>''' % (orb, scene, tfile, fname), file=fh)
 
 print(head, file=fh)
