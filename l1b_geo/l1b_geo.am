@@ -5,4 +5,5 @@ dist_bin_SCRIPTS += @l1b_geo_src@/l1b_orthobase
 dist_bin_SCRIPTS += @l1b_geo_src@/map_to_gdal
 dist_bin_SCRIPTS += @l1b_geo_src@/map_product
 dist_bin_SCRIPTS += @l1b_geo_src@/map_to_kmz
+dist_bin_SCRIPTS += @l1b_geo_src@/map_index
 
