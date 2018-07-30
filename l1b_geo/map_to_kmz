@@ -95,9 +95,10 @@ try:
     thumbnailfile = os.path.splitext(outfile)[0] + "_thumbnail"
     if(args.jpeg):
         ext = "jpg"
+        subprocess.run("unzip -p %s 0/0/0.%s | cat > %s.%s" % (outfile, ext, thumbnailfile, ext), shell=True)
     else:
         ext = "png"
-    subprocess.run("unzip -p %s 0/0/0.%s | cat > %s.%s" % (outfile, ext, thumbnailfile, ext), shell=True)
+        subprocess.run("unzip -p %s 0/0/0.%s | convert - %s.%s" % (outfile, ext, thumbnailfile, "jpg"), shell=True)
 finally:
     if(curdir):
         os.chdir(curdir)
