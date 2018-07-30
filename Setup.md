@@ -133,6 +133,13 @@ afids_latest rather than the system area:
     pip install -r ~/GeoCal/requirements.txt
     pip install -r ~/ecostress-level1/requirements.txt
 	
+There are GDAL python packages installed in /pkg/afids/afids_latest that we
+want to use in the virtual environment. These aren't super easy to reinstall,
+so we use the version already in afids, but doing a symbolic link:
+    
+	ln -s /pkg/afids/afids_latest/lib/python3.5/site-packages/GDAL-2.0.2-py3.5-linux-x86_64.egg /pkg/afids/afids_python3env_20171219/lib/python3.5/site-packages
+    ln -s /pkg/afids/afids_latest/lib/python3.5/site-packages/easy-install.pth /pkg/afids/afids_python3env_20171219/lib/python3.5/site-packages
+
 *Old text: Note that we can use the intel built verison of tensorflow, which has better
 performance*
 
