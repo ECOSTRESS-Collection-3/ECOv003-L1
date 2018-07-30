@@ -25,7 +25,7 @@ In addition to the output kmz file, we also produce a thumbnail. This is just
 the lowest resolution file in the kmz image pyramid, but this is useful as
 a simple thumbnail.
 
-This displays bands 2, 3 and 4 as RGB (by default, use --bands to
+This displays bands 4, 3 and 1 as RGB (by default, use --bands to
 change).  We do a Gaussian stretch on all the data - so these aren't
 actual data values or anything (need map_to_gdal if you want to import
 into QGIS or something like that).
@@ -36,17 +36,17 @@ Options:
 
   --bands=b
        List of bands to include in the image. Should be 1 or 3 values
-       [default: 2, 3, 4]
+       [default: 4, 3, 1]
 
   --keep-scratch-dir
        Keep the scratch directory we are working in, rather than deleting it.
        This is primarily useful for debugging problems, normally you would 
        want this cleaned up.
 
-  --png
-       Use PNG instead of JPEG in KMZ files. The KMZ file is significantly
-       larger, but PNG has an alpha channel that JPEG doesn't so NODATA 
-       values show up as transparent rather than black
+  --jpeg
+       Use JPEG instead of PNG in KMZ files. The KMZ file is significantly
+       smaller, but PNG has an alpha channel that JPEG doesn't so NODATA 
+       values show up as transparent rather than black with PNG.
 
   -v --version      
        Print program version
@@ -89,14 +89,14 @@ try:
                     "map_scaled2.vrt"])
     cmd = ["gdal_translate", "-of", "KMLSUPEROVERLAY", "map_scaled2.vrt",
            outfile]
-    if(args.png):
+    if(not args.jpeg):
         cmd.extend(["-co", "FORMAT=PNG"])
     subprocess.run(cmd)
     thumbnailfile = os.path.splitext(outfile)[0] + "_thumbnail"
-    if(args.png):
-        ext = "png"
-    else:
+    if(args.jpeg):
         ext = "jpg"
+    else:
+        ext = "png"
     subprocess.run("unzip -p %s 0/0/0.%s | cat > %s.%s" % (outfile, ext, thumbnailfile, ext), shell=True)
 finally:
     if(curdir):
