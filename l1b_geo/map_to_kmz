@@ -25,6 +25,11 @@ Options:
   -h --help         
        Print this message
 
+  --png
+       Use PNG instead of JPEG in KMZ files. The KMZ file is significantly
+       larger, but PNG has an alpha channel that JPEG doesn't so NODATA 
+       values show up as transparent rather than black
+
   -v --version      
        Print program version
 '''
@@ -55,8 +60,11 @@ with geocal.in_tempdir():
                     "-a_nodata", "0",
                     "map_scaled.vrt",
                     "map_scaled2.vrt"])
-    subprocess.run(["gdal_translate", "-of", "KMLSUPEROVERLAY", "map_scaled2.vrt",
-                    outfile, "-co", "FORMAT=PNG"])
+    cmd = ["gdal_translate", "-of", "KMLSUPEROVERLAY", "map_scaled2.vrt",
+           outfile]
+    if(args.png):
+        cmd.extend(["-co", "FORMAT=PNG"])
+    subprocess.run(cmd)
 
 
           
