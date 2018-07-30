@@ -32,6 +32,9 @@ Options:
   --resolution=r
        Pixel resolution of the output, in meters [default: 70]
 
+  --radiance-only
+       Skip all the fields other than radiance.
+
   -v --version      
        Print program version
 '''
@@ -55,11 +58,16 @@ else:
 mi = geocal.cib01_mapinfo(args.resolution)
 if(not args.north_up):
     smid = math.floor(lat.number_sample / 2)
-    gc1 = geocal.Geodetic(lat.read_double(0,smid, 1, 1)[0,0],
-                          lon.read_double(0,smid, 1, 1)[0,0])
+    latv = lat.read_double(0,smid,lat.number_line,1)[:,0]
+    lonv = lon.read_double(0,smid,lon.number_line,1)[:,0]
+    igood = [i for i in range(latv.shape[0]) if
+             (latv[i] > ecostress.fill_value_threshold and
+              lonv[i] > ecostress.fill_value_threshold)]
+    gc1 = geocal.Geodetic(lat.read_double(min(igood),smid, 1, 1)[0,0],
+                          lon.read_double(min(igood),smid, 1, 1)[0,0])
     gc2 = geocal.Geodetic(
-        lat.read_double(lat.number_line-1,smid, 1, 1)[0,0],
-        lon.read_double(lon.number_line-1,smid, 1, 1)[0,0])
+        lat.read_double(max(igood),smid, 1, 1)[0,0],
+        lon.read_double(max(igood),smid, 1, 1)[0,0])
     mi = ecostress.determine_rotated_map(gc1, gc2, mi)
 res = ecostress.Resampler(lat, lon, mi, 3, False)
 print("Done with Resampler init")
@@ -105,12 +113,13 @@ t = g.create_dataset("latitude", data=lat, dtype='f8')
 t.attrs["Units"] = "degrees"
 t = g.create_dataset("longitude", data=lon, dtype='f8')
 t.attrs["Units"] = "degrees"
-t = g.create_dataset("height", data=height, dtype='f4')
-t.attrs["Units"] = "m"
-print("Doing LWM")
-lfrac = ecostress.GroundCoordinateArray.interpolate(lwm, lat, lon) * 100.0
-t = g.create_dataset("land_fraction", data=lfrac, dtype='f4')
-t.attrs["Units"] = "percentage"
+if(not args.radiance_only): 
+    t = g.create_dataset("height", data=height, dtype='f4')
+    t.attrs["Units"] = "m"
+    print("Doing LWM")
+    lfrac = ecostress.GroundCoordinateArray.interpolate(lwm, lat, lon) * 100.0
+    t = g.create_dataset("land_fraction", data=lfrac, dtype='f4')
+    t.attrs["Units"] = "percentage"
 for b in range(1,6):
     print("Doing band %d" % b)
     data_in = geocal.GdalRasterImage("HDF5:\"%s\"://Radiance/radiance_%d" % (args.l1b_rad_file, b))
@@ -121,15 +130,16 @@ for b in range(1,6):
     t.attrs.create("_FillValue", data=ecostress.FILL_VALUE_NOT_SEEN,
                    dtype=t.dtype)
     t.attrs["Units"] = "W/m^2/sr/um"
-    print("Doing DQI %d" % b)
-    dqi = np.zeros(data.shape, dtype=np.int8)
-    dqi[data == ecostress.FILL_VALUE_NOT_SEEN] = ecostress.DQI_NOT_SEEN
-    dqi[data == ecostress.FILL_VALUE_STRIPED] = ecostress.DQI_STRIPE_NOT_INTERPOLATED
-    dqi[data == ecostress.FILL_VALUE_BAD_OR_MISSING] = ecostress.DQI_BAD_OR_MISSING
-    # How to handle DQI_INTERPOLATED?
-    t = g.create_dataset("data_quality_%d" % (b),
-                         data = dqi)
-    t.attrs["Description"] = '''
+    if(not args.radiance_only):
+        print("Doing DQI %d" % b)
+        dqi = np.zeros(data.shape, dtype=np.int8)
+        dqi[data == ecostress.FILL_VALUE_NOT_SEEN] = ecostress.DQI_NOT_SEEN
+        dqi[data == ecostress.FILL_VALUE_STRIPED] = ecostress.DQI_STRIPE_NOT_INTERPOLATED
+        dqi[data == ecostress.FILL_VALUE_BAD_OR_MISSING] = ecostress.DQI_BAD_OR_MISSING
+        # How to handle DQI_INTERPOLATED?
+        t = g.create_dataset("data_quality_%d" % (b),
+                             data = dqi)
+        t.attrs["Description"] = '''
 Data quality indicator. 
   0 - DQI_GOOD, normal data, nothing wrong with it
   1 - DQI_INTERPOLATED, data was part of instrument 
@@ -146,27 +156,28 @@ Data quality indicator.
       seen the pixel. So data is missing, but by
       instrument design instead of some problem.
 '''
-    t.attrs["Units"] = "dimensionless"
+        t.attrs["Units"] = "dimensionless"
 
-print("Doing SWIR")    
-data_in = geocal.GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" % args.l1b_rad_file)
-data = res.resample_field(data_in, 1.0, False,
-                          ecostress.FILL_VALUE_NOT_SEEN).astype(np.int16)
-t = g.create_dataset("swir_dn",
-                     data = data,
-                     fillvalue = ecostress.FILL_VALUE_NOT_SEEN)
-t.attrs.create("_FillValue", data=ecostress.FILL_VALUE_NOT_SEEN,
-               dtype=t.dtype)
-t.attrs["Units"] = "dimensionless"
-for fld in ["solar_azimuth", "solar_zenith", "view_azimuth", "view_zenith"]:
-    print("Doing %s" % fld)    
-    data_in = geocal.GdalRasterImage("HDF5:\"%s\"://Geolocation/%s" % (args.l1b_geo_file, fld))
-    data = res.resample_field(data_in, 1.0, False, ecostress.FILL_VALUE_NOT_SEEN).astype(np.float32)
-    t = g.create_dataset(fld, data = data, dtype='f4',
+if(not args.radiance_only):        
+    print("Doing SWIR")    
+    data_in = geocal.GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" % args.l1b_rad_file)
+    data = res.resample_field(data_in, 1.0, False,
+                              ecostress.FILL_VALUE_NOT_SEEN).astype(np.int16)
+    t = g.create_dataset("swir_dn",
+                         data = data,
                          fillvalue = ecostress.FILL_VALUE_NOT_SEEN)
     t.attrs.create("_FillValue", data=ecostress.FILL_VALUE_NOT_SEEN,
                    dtype=t.dtype)
-    t.attrs["Units"] = "degrees"
+    t.attrs["Units"] = "dimensionless"
+    for fld in ["solar_azimuth", "solar_zenith", "view_azimuth", "view_zenith"]:
+        print("Doing %s" % fld)    
+        data_in = geocal.GdalRasterImage("HDF5:\"%s\"://Geolocation/%s" % (args.l1b_geo_file, fld))
+        data = res.resample_field(data_in, 1.0, False, ecostress.FILL_VALUE_NOT_SEEN).astype(np.float32)
+        t = g.create_dataset(fld, data = data, dtype='f4',
+                             fillvalue = ecostress.FILL_VALUE_NOT_SEEN)
+        t.attrs.create("_FillValue", data=ecostress.FILL_VALUE_NOT_SEEN,
+                       dtype=t.dtype)
+        t.attrs["Units"] = "degrees"
 
 # Maps can be generated by
 # \rm map_b?.tif; for i in $(seq 1 5); do gdal_calc.py --type=Float32  -A HDF5:"$(ls ECOSTRESS_L1B_GEO_MAP*_001_*_rotated.h5)"://Mapped/radiance_$i --outfile=map_b$i.tif --calc="A*(A>0)" --NoDataValue=0; gdal_translate -of VICAR map_b$i.tif map_b$i.img; done
