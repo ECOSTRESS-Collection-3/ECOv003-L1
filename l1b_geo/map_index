@@ -39,6 +39,7 @@ head='''<!DOCTYPE html>
 	<tr>
 	  <th scope="col">Orbit</th>
 	  <th scope="col">Scene</th>
+          <th scope="col">Solar Zenith Angle</th>
 	  <th scope="col">Thumbnail</th>
 	  <th scope="col">KMZ</th>
 	</tr>
@@ -55,6 +56,12 @@ tail='''      </tbody>
 </html>
 '''
 
+def geo_name(fname_in):
+    t = fname.split("_")[5]
+    dirname = "/ops/store/PRODUCTS/L1B_GEO/%s/%s/%s/" % (t[0:4], t[4:6], t[6:8])
+    return dirname + fname.replace("MAP","GEO").replace(".kmz",".h5")
+    
+
 def row(fname_in):
     '''Print a row that describes the given fname'''
     fname = os.path.basename(fname_in)
@@ -65,9 +72,10 @@ def row(fname_in):
     print('''	<tr>
 	  <td>%s</td>
 	  <td>%s</td>
+          <td>%f</td>
 	  <td><img src="%s"></td>
 	  <td><a type="application/vnd.google-earth.kmz" href="%s">KMZ</a></td>
-	</tr>''' % (orb, scene, tfile, fname), file=fh)
+	</tr>''' % (orb, scene, h5py.File(geo_name(fname_in))["/Geolocation/solar_zenith"][5632/2,5400/2], tfile, fname), file=fh)
 
 print(head, file=fh)
 for fname in sorted(glob.glob("%s/ECOSTRESS_L1B_MAP_*.kmz" % args.directory)):
