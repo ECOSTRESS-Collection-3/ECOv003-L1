@@ -1,0 +1,91 @@
+#! /usr/bin/env python
+#
+# Combine KMZ files for multiple scenes into a single KMZ file
+import geocal
+import subprocess
+import h5py
+import os
+import tempfile
+import shutil
+import sys
+
+version = "1.0"
+usage='''Usage:
+  kmz_combine [options] <orbit> <output_file> <scene_file>...
+  kmz_combine -h | --help
+  kmz_combine -v | --version
+
+This combines KMZ files for scenes into one larger KMZ file that contains
+a whole orbit. Note that we parse the scene_file filename to determine the
+scene number, so this should match our normal naming convention.
+
+Options:
+  -h --help         
+       Print this message
+
+  --keep-scratch-dir
+       Keep the scratch directory we are working in, rather than deleting it.
+       This is primarily useful for debugging problems, normally you would 
+       want this cleaned up.
+
+  -v --version      
+       Print program version
+'''
+
+args = geocal.docopt_simple(usage, version=version)
+outfile = os.path.abspath(args.output_file)
+infile = [(os.path.abspath(t), os.path.basename(t).split("_")[4])
+          for t in args.scene_file]
+
+head = '''<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+	<Document>
+	  <name>Ecostress Orbit %s</name>''' % args.orbit
+tail = '''	</Document>
+</kml>'''
+def add_file(scene, fh):
+    print('''	  <NetworkLink>
+	    <Link>
+	      <href>scene%s/doc.kml</href>
+	    </Link>
+	  </NetworkLink>''' % (scene,), file=fh)
+    
+d = tempfile.mkdtemp(dir='./')
+try:
+    curdir = os.getcwd()
+    os.chdir(d)
+    fh = open("doc.kml", "w")
+    
+    print(head, file=fh)
+    for f, scene in infile:
+        geocal.makedirs_p("scene%s" % scene)
+        subprocess.run("cd scene%s && unzip -q %s" % (scene, f), shell=True)
+        add_file(scene, fh)
+    print(tail, file=fh)
+    fh.close()
+    try:
+        os.remove(outfile)
+    except OSError:
+        pass
+    subprocess.run("zip -q -r %s *" % outfile, shell=True)
+    if(os.path.getsize(outfile) > 1e9):
+        print(
+'''Warning, kmz file is larger than 1GB. Google earth doesn't seem 
+able to work with files this large.
+
+Note, you don't get a error in google earth saying "file size too large",
+but the message will be the mysterious "No results - empty KML file". 
+However, the KML file is not actually corrupt, rather an error occurs 
+reading it and it gets reported with this message.
+''', file=sys.stderr)
+finally:
+    if(curdir):
+        os.chdir(curdir)
+    if(not args.keep_scratch_dir):
+        shutil.rmtree(d)
+        
+    
+
+
+          
+
