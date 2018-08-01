@@ -2,6 +2,7 @@
 #
 # Create a KMZ file giving a picture of the MAP data
 import geocal
+import ecostress
 import subprocess
 import h5py
 import os
@@ -81,9 +82,15 @@ try:
                         "map_b%d.tif" % b, "map_b%d.img" %b])
         subprocess.run(["vicarb",
           "stretch map_b%d.img map_b%d_scaled.img 'gauss DNMIN=0 DNMAX=255" % (b, b)])
-        cmd_merge.append("map_b%d_scaled.img" % b)
+        cmd = ["gdal_calc.py", "--type=Int16", "-A", "map_b%d_scaled.img" % b,
+               "-B", "map.vrt", "--B_band=%d" % b,
+               "--outfile=map_b%d_scaled.tif" % b,
+         "--calc=(A*(B>0) + (B > 0) * (B!=%d))" % ecostress.FILL_VALUE_NOT_SEEN,
+               "--NoDataValue=0"]
+        subprocess.run(cmd)
+        cmd_merge.append("map_b%d_scaled.tif" % b)
     subprocess.run(cmd_merge)
-    subprocess.run(["gdal_translate", "-of", "VRT", "-ot", "Byte",
+    subprocess.run(["gdal_translate", "-of", "VRT", "-ot", "Int16",
                     "-a_nodata", "0",
                     "map_scaled.vrt",
                     "map_scaled2.vrt"])
