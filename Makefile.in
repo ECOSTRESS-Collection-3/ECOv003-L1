@@ -820,7 +820,7 @@ dist_bin_SCRIPTS = @l1a_raw_src@/l1a_raw_process \
 	@l1b_geo_src@/l1b_geo_process @l1b_geo_src@/l1b_project \
 	@l1b_geo_src@/l1b_orthobase @l1b_geo_src@/map_to_gdal \
 	@l1b_geo_src@/map_product @l1b_geo_src@/map_to_kmz \
-	@l1b_geo_src@/map_index
+	@l1b_geo_src@/map_index @l1b_geo_src@/kmz_combine
 AM_LDFLAGS = 
 BUILT_SOURCES = complain_if_afids $(am__append_1) $(am__append_2)
 include_HEADERS = 
