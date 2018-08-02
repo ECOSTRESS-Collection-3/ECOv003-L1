@@ -95,9 +95,9 @@ def create_orbit_raw(config, pos_off=None,
         orb = EcostressOrbit(orbfname, extrapolation_pad, large_gap)
     return orb
 
-def create_time_table(fname, mirror_rpm, frame_time):
+def create_time_table(fname, mirror_rpm, frame_time, time_offset=0):
     '''Create the time table using the data from the given input.'''
-    return EcostressTimeTable(fname, mirror_rpm, frame_time)
+    return EcostressTimeTable(fname, mirror_rpm, frame_time, time_offset)
 
 def create_scan_mirror(fname, max_encoder_value, first_encoder_value_0,
                        second_encoder_value_0):

@@ -23,10 +23,11 @@ public:
 		     bool Averaging_done = true, double Mirror_rpm = 25.4,
 		     double Frame_time = 0.0000321875);
   EcostressTimeTable(const std::string& Fname, double Mirror_rpm = 25.4,
-		     double Frame_time = 0.0000321875);
+		     double Frame_time = 0.0000321875,
+		     double Toffset = 0);
   EcostressTimeTable(const std::string& Fname, bool Averaging_done,
 		     double Mirror_rpm = 25.4,
-		     double Frame_time = 0.0000321875);
+		     double Frame_time = 0.0000321875, double Toffset=0);
   virtual ~EcostressTimeTable() {}
 
 //-------------------------------------------------------------------------
@@ -126,7 +127,7 @@ private:
   friend class boost::serialization::access;
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version);
-  void read_file(const std::string& Fname);
+  void read_file(const std::string& Fname, double Toffset);
 };
 }
 

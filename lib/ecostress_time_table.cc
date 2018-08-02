@@ -26,11 +26,12 @@ ECOSTRESS_IMPLEMENT(EcostressTimeTable);
 //-------------------------------------------------------------------------
 
 EcostressTimeTable::EcostressTimeTable(const std::string& Fname,
-				       double Mirror_rpm, double Frame_time)
+				       double Mirror_rpm, double Frame_time,
+				       double Toffset)
   : mirror_rpm_(Mirror_rpm),
     frame_time_(Frame_time)
 {
-  read_file(Fname);
+  read_file(Fname, Toffset);
 }
 
 //-------------------------------------------------------------------------
@@ -46,11 +47,11 @@ EcostressTimeTable::EcostressTimeTable(const std::string& Fname,
 
 EcostressTimeTable::EcostressTimeTable
 (const std::string& Fname, bool Averaging_done,
- double Mirror_rpm, double Frame_time)
+ double Mirror_rpm, double Frame_time, double Toffset)
   : mirror_rpm_(Mirror_rpm),
     frame_time_(Frame_time)
 {
-  read_file(Fname);
+  read_file(Fname, Toffset);
   averaging_done_ = Averaging_done;
 }
 
@@ -58,11 +59,12 @@ EcostressTimeTable::EcostressTimeTable
 /// Read a file to populate the data.
 //-------------------------------------------------------------------------
 
-void EcostressTimeTable::read_file(const std::string& Fname)
+void EcostressTimeTable::read_file(const std::string& Fname, double Toffset)
 {
   GeoCal::HdfFile f(Fname);
   averaging_done_ = f.has_object("/L1B_RADMetadata");
   blitz::Array<double, 1> t = f.read_field<double, 1>("/Time/line_start_time_j2000");
+  t -= Toffset;
   for(int i = 0; i < t.rows(); i += number_line_scan()) {
     // Check for fill data. We need a "reasonable" value even if the
     // time is missing, so we just use the nominal_scan_time().

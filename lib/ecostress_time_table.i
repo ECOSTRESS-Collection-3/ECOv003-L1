@@ -20,10 +20,12 @@ public:
 		     bool Averaging_done = True, double Mirror_rpm = 25.4,
 		     double Frame_time = 0.0000321875);
   EcostressTimeTable(const std::string& Fname, double Mirror_rpm = 25.4,
-		     double Frame_time = 0.0000321875);
+		     double Frame_time = 0.0000321875,
+		     double Toffset = 0);
   EcostressTimeTable(const std::string& Fname, bool Averaging_done,
 		     double Mirror_rpm = 25.4,
-		     double Frame_time = 0.0000321875);
+		     double Frame_time = 0.0000321875,
+		     double Toffset = 0);
   virtual GeoCal::ImageCoordinate image_coordinate
     (GeoCal::Time T, const GeoCal::FrameCoordinate& F) const;
   void scan_index_to_line(int Scan_index, int& OUTPUT, int& OUTPUT) const;
