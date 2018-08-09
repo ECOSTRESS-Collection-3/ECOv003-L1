@@ -310,6 +310,7 @@ class L1aRawPixGenerate(object):
     if "/hk/bad/hr/time_dpuio" in self.fin and "/hk/bad/hr/time_error_correction" in self.fin:
       tdpuio = self.fin["/hk/bad/hr/time_dpuio"]
       tcorr = self.fin["/hk/bad/hr/time_error_correction"]
+      terr = self.fin["/hk/bad/hr/time"]
       if tdpuio.shape[0] > 0 and tcorr.shape[0] > 0:
         print("ISS %s time error correction %d %f" %(onum, tdpuio[0], tcorr[0]))
       else:
@@ -491,7 +492,12 @@ class L1aRawPixGenerate(object):
               break
             line = scan * PPFP
           elif seq==2:  # save and replicate IMG start time
-            pix_time[line:line+PPFP] = Time.time_gps( p0t ).j2000
+            tdx = np.argmax( p0t < terr )
+            if tcorr[tdx] >= 2147483648: tc = p0t - (tcorr[tdx]-4294967296)
+            else: tc = p0t - tcorr[tdx]
+            print("Orbit %s SCENE %d SCAN %d P0T=%f TCORR=%f TDX=%d" %(orb, scene_id, scan, p0t, tcorr[tdx], tdx) )
+            pix_time[line:line+PPFP] = Time.time_gps( tc ).j2000
+            p0t = tc
           print("Found %s LID[%d,%d]=%d PH=%d SCENE=%s SCAN=%d GPS=%f %s"%(ev_names[seq],e0,e1,lev[e0,e1],ph,scene_id,scan,p0t,Time.time_gps(p0t)))
   
           # Copy pixels from PKT
@@ -645,7 +651,7 @@ class L1aRawPixGenerate(object):
         l1a_bp_met.set('AutomaticQualityFlag', '%s' % 'FAIL')
 
       sst = str( datetime.now() )[0:19]
-      print("====  %s  ===" sst )
+      print("====  %s  ===" %sst )
       print("Orbit %s SCENE %s completed, SCANS=%d (%f) %d/%d GOOD/IMG, (%f) %d/%d GOOD/BB" % ( orb, scene_id, scans, pcomp, good_img, img_cnt, bcomp, good_bb, bb_cnt ))
 
       e0, e1, e2 = img.shape
