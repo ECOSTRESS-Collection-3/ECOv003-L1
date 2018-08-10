@@ -662,7 +662,7 @@ class L1aRawPixGenerate(object):
       l1a_fp_met.set('ProductionLocation', 'ECOSTRESS Science Data System')
       l1a_fp_met.set('PlatformLongName', 'International Space Station')
       l1a_fp_met.set('ProcessingLevelDescription', 'L1A Raw Pixels')
-      l1a_fp_met.set('ProductionDateTime', sst )
+      #l1a_fp_met.set('ProductionDateTime', sst ) # given in runconfig file
       l1a_fp_met.set('ShortName', 'L1A_RAW')
       l1a_fp_met.set('SISVersion', '1')
       l1a_fp_met.write()
@@ -674,7 +674,7 @@ class L1aRawPixGenerate(object):
       l1a_bp_met.set('ProductionLocation', 'ECOSTRESS Science Data System')
       l1a_bp_met.set('PlatformLongName', 'International Space Station')
       l1a_bp_met.set('ProcessingLevelDescription', 'L1A Black Body')
-      l1a_bp_met.set('ProductionDateTime', sst )
+      #l1a_bp_met.set('ProductionDateTime', sst ) # given in runconfig file
       l1a_bp_met.set('ShortName', 'L1A_BB')
       l1a_bp_met.set('SISVersion', '1')
       l1a_bp_met.write()
