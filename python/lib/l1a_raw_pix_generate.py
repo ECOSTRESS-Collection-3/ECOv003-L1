@@ -310,6 +310,7 @@ class L1aRawPixGenerate(object):
     if "/hk/bad/hr/time_dpuio" in self.fin and "/hk/bad/hr/time_error_correction" in self.fin:
       tdpuio = self.fin["/hk/bad/hr/time_dpuio"]
       tcorr = self.fin["/hk/bad/hr/time_error_correction"]
+      terr = self.fin["/hk/bad/hr/time"]
       if tdpuio.shape[0] > 0 and tcorr.shape[0] > 0:
         print("ISS %s time error correction %d %f" %(onum, tdpuio[0], tcorr[0]))
       else:
@@ -367,7 +368,8 @@ class L1aRawPixGenerate(object):
         print("Ignoring mismatch orbit number %s, ref=%s scene=%d" %(orb, onum, scene_id) )
         continue
       print("====  ", datetime.now(), "  ====")
-      print("SCENE=%03d START=%s(%f) END=%s(%f)" % ( scene_id, sts, sts.gps, ste, ste.gps) )
+      dt = ste.gps - sts.gps
+      print("SCENE=%03d START=%s(%f) END=%s(%f) DT=%f" % ( scene_id, sts, sts.gps, ste, ste.gps, dt) )
 
       good[:] = 0.0
 
@@ -420,7 +422,7 @@ class L1aRawPixGenerate(object):
             if gpt[e0] > rse:  # packet time past end of scene
               scans = scan
               sse = rst + scans * SCAN_DUR
-              print("** Finish short scene %s SCANS=%d end=%s(%f)" % (scene_id, scans, Time.time_gps(sse), sse ) )
+              print("** Finish orbit %05d short scene %s SCANS=%d end=%s(%f)" % (orbit, scene_id, scans, Time.time_gps(sse), sse ) )
               scan = SCPS  # force finish up current scene
               seq = 3
               cont = 0
@@ -483,14 +485,19 @@ class L1aRawPixGenerate(object):
             sst = p0t
             if scan==0: rst = p0t  # save refined scene start time
             scan = int( ( sst - rst ) / SCAN_DUR + 0.5 )
-            print("Calculated scan=%d SCENE=%s" % (scan, scene_id) )
+            print("Calculated scan=%d SCENE=%s from %s" % (scan, scene_id, str(Time.time_gps(rst)) ))
             if scan >= SCPS:
               print("PKT[%d] Time %f outside of current scene %d Terminating" %( e0, gpt[e0], scene_id ) )
               cont = 0
               break
             line = scan * PPFP
           elif seq==2:  # save and replicate IMG start time
-            pix_time[line:line+PPFP] = Time.time_gps( p0t ).j2000
+            tdx = np.argmax( p0t < terr )
+            if tcorr[tdx] >= 2147483648: tc = p0t - (tcorr[tdx]-4294967296)
+            else: tc = p0t - tcorr[tdx]
+            print("Orbit %s SCENE %d SCAN %d P0T=%f TCORR=%f TDX=%d" %(orb, scene_id, scan, p0t, tcorr[tdx], tdx) )
+            pix_time[line:line+PPFP] = Time.time_gps( tc ).j2000
+            p0t = tc
           print("Found %s LID[%d,%d]=%d PH=%d SCENE=%s SCAN=%d GPS=%f %s"%(ev_names[seq],e0,e1,lev[e0,e1],ph,scene_id,scan,p0t,Time.time_gps(p0t)))
   
           # Copy pixels from PKT
@@ -503,6 +510,7 @@ class L1aRawPixGenerate(object):
             e4 = 0
             if e0 == tot_pkts-1:  # at last packet in file
               dt = PKT_DUR
+              lid1 = e0
             else:
               lid0 = e0; lid1 = e0+1  # correct time
               #lid0 = e0-1; lid1 = e0  # time code error
@@ -521,7 +529,7 @@ class L1aRawPixGenerate(object):
               if fpc < e3:  # jump occurred before end of IMG
 
                 jumps += 1
-                print("*** Orbit %s Scene %d scan %d %s Time jump PKT=%d %f DT=%10.8f OP=%d " %(orb, scene_id, scan, ev_names[seq], e0+1,gpt[e0+1],dt,op), end="")
+                print("*** Orbit %s Scene %d scan %d %s Time jump PKT=%d %s DT=%10.8f OP=%d " %(orb, scene_id, scan, ev_names[seq], lid1,Time.time_gps(gpt[lid1]),dt,op), end="")
 
                 e4 = int( dt/FP_DUR + 0.5 ) - FPPPKT
                 if dt > IMG_DUR - (op1-op)*FP_DUR:  # jump outside of current IMG, go to next scan
@@ -642,10 +650,33 @@ class L1aRawPixGenerate(object):
       else:
         l1a_bp_met.set('AutomaticQualityFlag', '%s' % 'FAIL')
 
-      print("====  ", datetime.now(), "  ====")
+      sst = str( datetime.now() )[0:19]
+      print("====  %s  ===" %sst )
       print("Orbit %s SCENE %s completed, SCANS=%d (%f) %d/%d GOOD/IMG, (%f) %d/%d GOOD/BB" % ( orb, scene_id, scans, pcomp, good_img, img_cnt, bcomp, good_bb, bb_cnt ))
 
+      e0, e1, e2 = img.shape
+      print("Writing file %s size=%d %d %d BANDS=%d" %( pname, e0, e1, e2, BANDS ) )
+      l1a_fp_met.set('ImageLines', img.shape[0])
+      l1a_fp_met.set('ImageLineSpacing', '34.377')
+      l1a_fp_met.set('ImagePixels', img.shape[1])
+      l1a_fp_met.set('ProductionLocation', 'ECOSTRESS Science Data System')
+      l1a_fp_met.set('PlatformLongName', 'International Space Station')
+      l1a_fp_met.set('ProcessingLevelDescription', 'L1A Raw Pixels')
+      #l1a_fp_met.set('ProductionDateTime', sst ) # given in runconfig file
+      l1a_fp_met.set('ShortName', 'L1A_RAW')
+      l1a_fp_met.set('SISVersion', '1')
       l1a_fp_met.write()
+
+      l1a_bp_met.set('ImageLines', cbb.shape[0])
+      l1a_bp_met.set('ImageLineSpacing', '0')
+      l1a_bp_met.set('ImagePixels', cbb.shape[1])
+      l1a_bp_met.set('ImagePixelSpacing', '0')
+      l1a_bp_met.set('ProductionLocation', 'ECOSTRESS Science Data System')
+      l1a_bp_met.set('PlatformLongName', 'International Space Station')
+      l1a_bp_met.set('ProcessingLevelDescription', 'L1A Black Body')
+      #l1a_bp_met.set('ProductionDateTime', sst ) # given in runconfig file
+      l1a_bp_met.set('ShortName', 'L1A_BB')
+      l1a_bp_met.set('SISVersion', '1')
       l1a_bp_met.write()
 
       pcomp = 100.0 * ( 1.0 - float( good_img ) / float( FPPSC * SCPS ) )
@@ -656,7 +687,7 @@ class L1aRawPixGenerate(object):
       l1a_ptg = l1a_fp.create_group("/Time")
       l1a_peg = l1a_fp.create_group("/FPIEencoder")
 
-      bcomp = 100.0 * ( 1.0 - bcomp )
+      bcomp = 100.0 * ( 1.0 - float( good_bb ) / float( BBLEN*2*SCPS ) )
       l1a_metag = l1a_bp['/L1A_BBMetadata']
       l1a_qamissing = l1a_metag.create_dataset('QAPercentMissingData', data=bcomp, dtype='f4' )
 
@@ -668,12 +699,6 @@ class L1aRawPixGenerate(object):
       t.attrs["Units"] = "second"
       t = l1a_peg.create_dataset("EncoderValue", data=ev_buf, dtype="u4" )
 
-      e0, e1, e2 = img.shape
-      print("Writing file %s size=%d %d %d BANDS=%d" %( pname, e0, e1, e2, BANDS ) )
-      l1a_fp_met.set('ImageLines', img[:,:,bo[0]].shape[0])
-      l1a_fp_met.set('ImagePixels', img[:,:,bo[0]].shape[1])
-      l1a_bp_met.set('ImageLines', cbb[:,:,bo[0]].shape[0])
-      l1a_bp_met.set('ImagePixels', cbb[:,:,bo[0]].shape[1])
       for b in range( BANDS ):
         t = l1a_upg.create_dataset("pixel_data_%d" %(b+1),
                                    data=img[:,:,bo[b]],
@@ -720,7 +745,6 @@ class L1aRawPixGenerate(object):
     ' Create refined scene file '
     sss = str( o_start_time )
     ses = str( o_end_time )
-    sst = str( datetime.now() )[0:19]
     sf = "Scene_%05d_%s_%s_%s.txt" % ( orbit, sss[0:4]+sss[5:7]+sss[8:13]+sss[14:16]+sss[17:19], ses[0:4]+ses[5:7]+ses[8:13]+ses[14:16]+ses[17:19], sst[0:4]+sst[5:7]+sst[8:10]+'T'+sst[11:13]+sst[14:16]+sst[17:19])
     sfd = open( sf, "w" )
     for i in range( len(scenes) ): sfd.write( scenes[i] )
