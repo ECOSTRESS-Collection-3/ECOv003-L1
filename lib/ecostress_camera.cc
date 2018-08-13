@@ -102,9 +102,9 @@ void EcostressCamera::dcs_to_focal_plane
 //---------------------------------------------------------
 
   GeoCal::AutoDerivative<double> xf = 
-    (focal_length() / Dcs.R_component_4()) * Dcs.R_component_2();
+    (focal_length_with_derivative() / Dcs.R_component_4()) * Dcs.R_component_2();
   GeoCal::AutoDerivative<double> yf = 
-    (focal_length() / Dcs.R_component_4()) * Dcs.R_component_3();
+    (focal_length_with_derivative() / Dcs.R_component_4()) * Dcs.R_component_3();
   yf = (yf - y_offset_) / y_scale_;
   
 //-------------------------------------------------------------------------
@@ -153,7 +153,7 @@ EcostressCamera::focal_plane_to_dcs
 /// Then to detector coordinates look vector.
 //-------------------------------------------------------------------------
 
-  return boost::math::quaternion<GeoCal::AutoDerivative<double> >(0, xf, yf, focal_length());
+  return boost::math::quaternion<GeoCal::AutoDerivative<double> >(0, xf, yf, focal_length_with_derivative());
 }
 
 
