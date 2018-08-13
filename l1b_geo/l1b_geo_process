@@ -220,7 +220,7 @@ try:
         print("from ecostress import *\n", file=fh)
     for i in range(len(radlist)):
         tt = ecostress.create_time_table(radlist[i], l1b_geo_config.mirror_rpm,
-                                         l1b_geo_config.frame_time)
+                                         l1b_geo_config.frame_time, 0.586276)
         sm = ecostress.create_scan_mirror(radlist[i],
                                           l1b_geo_config.max_encoder_value,
                                           l1b_geo_config.first_encoder_value_0,
@@ -294,7 +294,7 @@ try:
             log = open(log_fname, "a")
             ecostress.process_run(["sba", "--verbose",
                                    "--initial-hold-gcp-fixed",
-                                   "--gcp-sigma=50",  "igccol_initial.xml",
+                                   "--gcp-sigma=1000",  "igccol_initial.xml",
                                    "tpcol.xml", "igccol_sba.xml",
                                    "tpcol_sba.xml"],
                                   out_fh=log)

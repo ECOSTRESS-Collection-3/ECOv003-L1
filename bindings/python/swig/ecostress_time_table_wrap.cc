@@ -7064,6 +7064,69 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_9(PyObject *SWIGUNUSEDPA
   std::string *arg1 = 0 ;
   double arg2 ;
   double arg3 ;
+  double arg4 ;
+  int res1 = SWIG_OLDOBJ ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  Ecostress::EcostressTimeTable *result = 0 ;
+  
+  if ((nobjs < 4) || (nobjs > 4)) SWIG_fail;
+  {
+    std::string *ptr = (std::string *)0;
+    res1 = SWIG_AsPtr_std_string(swig_obj[0], &ptr);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_EcostressTimeTable" "', argument " "1"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_EcostressTimeTable" "', argument " "1"" of type '" "std::string const &""'"); 
+    }
+    arg1 = ptr;
+  }
+  ecode2 = SWIG_AsVal_double(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_EcostressTimeTable" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_EcostressTimeTable" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_EcostressTimeTable" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  {
+    try {
+      result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1,arg2,arg3,arg4);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::EcostressTimeTable > *smartresult = result ? new boost::shared_ptr<  Ecostress::EcostressTimeTable >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressTimeTable_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  if (SWIG_IsNewObj(res1)) delete arg1;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res1)) delete arg1;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_10(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  std::string *arg1 = 0 ;
+  double arg2 ;
+  double arg3 ;
   int res1 = SWIG_OLDOBJ ;
   double val2 ;
   int ecode2 = 0 ;
@@ -7114,7 +7177,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_10(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_11(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   std::string *arg1 = 0 ;
   double arg2 ;
@@ -7161,7 +7224,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_11(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_12(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   std::string *arg1 = 0 ;
   int res1 = SWIG_OLDOBJ ;
@@ -7200,7 +7263,78 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_12(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_13(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  std::string *arg1 = 0 ;
+  bool arg2 ;
+  double arg3 ;
+  double arg4 ;
+  double arg5 ;
+  int res1 = SWIG_OLDOBJ ;
+  bool val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  Ecostress::EcostressTimeTable *result = 0 ;
+  
+  if ((nobjs < 5) || (nobjs > 5)) SWIG_fail;
+  {
+    std::string *ptr = (std::string *)0;
+    res1 = SWIG_AsPtr_std_string(swig_obj[0], &ptr);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_EcostressTimeTable" "', argument " "1"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_EcostressTimeTable" "', argument " "1"" of type '" "std::string const &""'"); 
+    }
+    arg1 = ptr;
+  }
+  ecode2 = SWIG_AsVal_bool(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_EcostressTimeTable" "', argument " "2"" of type '" "bool""'");
+  } 
+  arg2 = static_cast< bool >(val2);
+  ecode3 = SWIG_AsVal_double(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_EcostressTimeTable" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_EcostressTimeTable" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  ecode5 = SWIG_AsVal_double(swig_obj[4], &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_EcostressTimeTable" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  {
+    try {
+      result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1,arg2,arg3,arg4,arg5);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::EcostressTimeTable > *smartresult = result ? new boost::shared_ptr<  Ecostress::EcostressTimeTable >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressTimeTable_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  if (SWIG_IsNewObj(res1)) delete arg1;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res1)) delete arg1;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_14(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   std::string *arg1 = 0 ;
   bool arg2 ;
@@ -7263,7 +7397,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_13(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_15(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   std::string *arg1 = 0 ;
   bool arg2 ;
@@ -7318,7 +7452,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_14(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_16(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   std::string *arg1 = 0 ;
   bool arg2 ;
@@ -7391,7 +7525,7 @@ check_1:
       _v = SWIG_CheckState(res);
     }
     if (!_v) goto check_2;
-    return _wrap_new_EcostressTimeTable__SWIG_11(self, argc, argv);
+    return _wrap_new_EcostressTimeTable__SWIG_12(self, argc, argv);
   }
 check_2:
   
@@ -7430,7 +7564,7 @@ check_4:
       }
     }
     if (!_v) goto check_5;
-    return _wrap_new_EcostressTimeTable__SWIG_14(self, argc, argv);
+    return _wrap_new_EcostressTimeTable__SWIG_16(self, argc, argv);
   }
 check_5:
   
@@ -7448,7 +7582,7 @@ check_5:
       }
     }
     if (!_v) goto check_6;
-    return _wrap_new_EcostressTimeTable__SWIG_10(self, argc, argv);
+    return _wrap_new_EcostressTimeTable__SWIG_11(self, argc, argv);
   }
 check_6:
   
@@ -7494,7 +7628,7 @@ check_8:
       }
     }
     if (!_v) goto check_9;
-    return _wrap_new_EcostressTimeTable__SWIG_13(self, argc, argv);
+    return _wrap_new_EcostressTimeTable__SWIG_15(self, argc, argv);
   }
 check_9:
   
@@ -7512,7 +7646,7 @@ check_9:
       }
     }
     if (!_v) goto check_10;
-    return _wrap_new_EcostressTimeTable__SWIG_9(self, argc, argv);
+    return _wrap_new_EcostressTimeTable__SWIG_10(self, argc, argv);
   }
 check_10:
   
@@ -7524,6 +7658,13 @@ check_10:
     {
       int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t, 0);
       _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_12;
+    {
+      {
+        int res = SWIG_AsVal_bool(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
     }
     if (!_v) goto check_12;
     {
@@ -7544,15 +7685,58 @@ check_12:
       _v = SWIG_CheckState(res);
     }
     if (!_v) goto check_13;
-    return _wrap_new_EcostressTimeTable__SWIG_12(self, argc, argv);
+    {
+      {
+        int res = SWIG_AsVal_bool(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_13;
+    return _wrap_new_EcostressTimeTable__SWIG_14(self, argc, argv);
   }
 check_13:
+  
+  if (argc == 4) {
+    int _v = 0;
+    {
+      int res = SWIG_AsPtr_std_string(argv[0], (std::string**)(0));
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_14;
+    {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_14;
+    return _wrap_new_EcostressTimeTable__SWIG_9(self, argc, argv);
+  }
+check_14:
   
   if (argc == 4) {
     return _wrap_new_EcostressTimeTable__SWIG_5(self, argc, argv);
   }
   if (argc == 5) {
+    int _v = 0;
+    {
+      int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t, 0);
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_16;
+    {
+      {
+        int res = SWIG_AsVal_int(argv[2], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_16;
     return _wrap_new_EcostressTimeTable__SWIG_0(self, argc, argv);
+  }
+check_16:
+  
+  if (argc == 5) {
+    return _wrap_new_EcostressTimeTable__SWIG_13(self, argc, argv);
   }
   
 fail:
@@ -7567,9 +7751,11 @@ fail:
     "    Ecostress::EcostressTimeTable::EcostressTimeTable(std::vector< GeoCal::Time,std::allocator< GeoCal::Time > > const,bool,double)\n"
     "    Ecostress::EcostressTimeTable::EcostressTimeTable(std::vector< GeoCal::Time,std::allocator< GeoCal::Time > > const,bool)\n"
     "    Ecostress::EcostressTimeTable::EcostressTimeTable(std::vector< GeoCal::Time,std::allocator< GeoCal::Time > > const)\n"
+    "    Ecostress::EcostressTimeTable::EcostressTimeTable(std::string const &,double,double,double)\n"
     "    Ecostress::EcostressTimeTable::EcostressTimeTable(std::string const &,double,double)\n"
     "    Ecostress::EcostressTimeTable::EcostressTimeTable(std::string const &,double)\n"
     "    Ecostress::EcostressTimeTable::EcostressTimeTable(std::string const &)\n"
+    "    Ecostress::EcostressTimeTable::EcostressTimeTable(std::string const &,bool,double,double,double)\n"
     "    Ecostress::EcostressTimeTable::EcostressTimeTable(std::string const &,bool,double,double)\n"
     "    Ecostress::EcostressTimeTable::EcostressTimeTable(std::string const &,bool,double)\n"
     "    Ecostress::EcostressTimeTable::EcostressTimeTable(std::string const &,bool)\n");
@@ -8160,7 +8346,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"new_EcostressTimeTable", _wrap_new_EcostressTimeTable, METH_VARARGS, (char *)"\n"
 		"\n"
 		"EcostressTimeTable::EcostressTimeTable(const std::string &Fname, bool Averaging_done, double\n"
-		"Mirror_rpm=25.4, double Frame_time=0.0000321875)\n"
+		"Mirror_rpm=25.4, double Frame_time=0.0000321875, double Toffset=0)\n"
 		"Create a time table by reading the input file.\n"
 		"\n"
 		"The file should be a L1A_PIX or a L1B_RAD file.\n"

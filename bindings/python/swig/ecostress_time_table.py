@@ -207,7 +207,7 @@ class EcostressTimeTable(geocal_swig.time_table.TimeTable):
         """
 
         EcostressTimeTable::EcostressTimeTable(const std::string &Fname, bool Averaging_done, double
-        Mirror_rpm=25.4, double Frame_time=0.0000321875)
+        Mirror_rpm=25.4, double Frame_time=0.0000321875, double Toffset=0)
         Create a time table by reading the input file.
 
         The file should be a L1A_PIX or a L1B_RAD file.
