@@ -61,7 +61,7 @@ EcostressScanMirror::EcostressScanMirror
     max_encoder_value_(Max_encoder_value),
     ev0_(First_encoder_value_at_0),
     ev0_2_(Second_encoder_value_at_0),
-    parameter_mask_(3)
+    parameter_mask_(5)
 {
   for(int i = 0; i < evalue_.rows(); ++i)
     for(int j = 0; j < evalue_.cols(); ++j) {
@@ -92,7 +92,7 @@ EcostressScanMirror::EcostressScanMirror
     max_encoder_value_(Max_encoder_value),
     ev0_(First_encoder_value_at_0),
     ev0_2_(Second_encoder_value_at_0),
-    parameter_mask_(3)
+    parameter_mask_(5)
 {
   blitz::Range ra = blitz::Range::all();
   // Look for scans with some missing data, and fill in. We make sure
@@ -171,36 +171,45 @@ void EcostressScanMirror::print(std::ostream& Os) const
 }
 
 //-----------------------------------------------------------------------
-/// Set parameter. Right now this is Euler epsilon, beta, delta.
+/// Set parameter. Right now this is Euler epsilon, beta, delta,
+/// first_encoder_value_at_0, second_encoder_value_at_0.
 //-----------------------------------------------------------------------
 
 void EcostressScanMirror::parameter(const blitz::Array<double, 1>& Parm)
 {
-  if(Parm.rows() != 3)
+  if(Parm.rows() != 5)
     throw Exception("Wrong sized parameter passed.");
   // euler calls notify_update(), so we don't need to do that.
   euler(Parm(blitz::Range(0,2)));
+  ev0_ = Parm(3);
+  ev0_2_ = Parm(4);
 }
 
 void EcostressScanMirror::parameter_with_derivative(const GeoCal::ArrayAd<double, 1>& Parm)
 {
-  if(Parm.rows() != 3)
+  if(Parm.rows() != 5)
     throw Exception("Wrong sized parameter passed.");
   // euler calls notify_update(), so we don't need to do that.
   euler_with_derivative(Parm(blitz::Range(0,2)));
+  ev0_ = Parm(3);
+  ev0_2_ = Parm(4);
 }
 
 blitz::Array<double, 1> EcostressScanMirror::parameter() const
 {
-  blitz::Array<double, 1> res(3);
+  blitz::Array<double, 1> res(5);
   res(blitz::Range(0,2)) = euler();
+  res(3) = first_encoder_value_at_0();
+  res(4) = second_encoder_value_at_0();
   return res;
 }
 
 GeoCal::ArrayAd<double, 1> EcostressScanMirror::parameter_with_derivative() const
 {
-  blitz::Array<AutoDerivative<double>, 1> res(3);
+  blitz::Array<AutoDerivative<double>, 1> res(5);
   res(blitz::Range(0,2)) = euler_with_derivative();
+  res(3) = first_encoder_value_at_0_with_derivative();
+  res(4) = second_encoder_value_at_0_with_derivative();
   return ArrayAd<double, 1>(res);
 }
 
@@ -210,6 +219,8 @@ std::vector<std::string> EcostressScanMirror::parameter_name() const
   res.push_back("Instrument Euler Epsilon");
   res.push_back("Instrument Euler Beta");
   res.push_back("Instrument Euler Delta");
+  res.push_back("First encoder value at 0");
+  res.push_back("Second encoder value at 0");
   return res;
 }
 

@@ -65,8 +65,12 @@ public:
   %python_attribute_with_set(fit_epsilon, bool);
   %python_attribute_with_set(fit_beta, bool);
   %python_attribute_with_set(fit_delta, bool);
-  %python_attribute(first_encoder_value_at_0, int);
-  %python_attribute(second_encoder_value_at_0, int);
+  %python_attribute_with_set(fit_first_encoder_value_at_0, bool);
+  %python_attribute_with_set(fit_second_encoder_value_at_0, bool);
+  %python_attribute(first_encoder_value_at_0, double);
+  %python_attribute(first_encoder_value_at_0_with_derivative, GeoCal::AutoDerivative<double>);
+  %python_attribute(second_encoder_value_at_0, double);
+  %python_attribute(second_encoder_value_at_0_with_derivative, GeoCal::AutoDerivative<double>);
   %python_attribute(angle_per_encoder_value, double);
   %python_attribute(number_sample, int);
   %python_attribute(number_scan, int);

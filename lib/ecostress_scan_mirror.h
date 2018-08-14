@@ -104,6 +104,20 @@ public:
   bool fit_delta() const { return parameter_mask_(2); }
   void fit_delta(bool V) {parameter_mask_(2) = V;}
 
+//-----------------------------------------------------------------------
+/// Indicate if we fit for first encoder value at 0
+//-----------------------------------------------------------------------
+
+  bool fit_first_encoder_value_at_0() const { return parameter_mask_(3); }
+  void fit_first_encoder_value_at_0(bool V) {parameter_mask_(3) = V;}
+
+//-----------------------------------------------------------------------
+/// Indicate if we fit for second encoder value at 0
+//-----------------------------------------------------------------------
+
+  bool fit_second_encoder_value_at_0() const { return parameter_mask_(4); }
+  void fit_second_encoder_value_at_0(bool V) {parameter_mask_(4) = V;}
+  
 //-------------------------------------------------------------------------
 /// Angle encoder values.
 //-------------------------------------------------------------------------
@@ -235,13 +249,15 @@ public:
 /// Encoder value at 0 angle. This is for the first side of the mirror.
 //-------------------------------------------------------------------------
 
-  int first_encoder_value_at_0() const { return ev0_; }
+  double first_encoder_value_at_0() const { return ev0_.value(); }
+  GeoCal::AutoDerivative<double> first_encoder_value_at_0_with_derivative() const { return ev0_; }
 
 //-------------------------------------------------------------------------
 /// Encoder value at 0 angle. This is for the second side of the mirror.
 //-------------------------------------------------------------------------
 
-  int second_encoder_value_at_0() const { return ev0_2_; }
+  double second_encoder_value_at_0() const { return ev0_2_.value(); }
+  GeoCal::AutoDerivative<double> second_encoder_value_at_0_with_derivative() const { return ev0_2_; }
 
 //-------------------------------------------------------------------------
 /// Calculate angle for a given encoder value.
@@ -258,8 +274,8 @@ public:
   (const GeoCal::AutoDerivative<double>& Evalue) const
   {
     return (Evalue.value() < (max_encoder_value() / 2) ?
-	    Evalue - first_encoder_value_at_0() :
-	    Evalue - second_encoder_value_at_0()) *
+	    Evalue - first_encoder_value_at_0_with_derivative() :
+	    Evalue - second_encoder_value_at_0_with_derivative()) *
       angle_per_encoder_value();
   }
 
@@ -336,7 +352,8 @@ public:
   virtual void print(std::ostream& Os) const;
 private:
   blitz::Array<int, 2> evalue_;
-  int max_encoder_value_, ev0_, ev0_2_;
+  int max_encoder_value_;
+  GeoCal::AutoDerivative<double> ev0_, ev0_2_;
   blitz::Array<bool, 1> parameter_mask_;
 				// Mask of parameters we are fitting for.
   // ** Important, see note below about inst_to_sc_nd_. You can
