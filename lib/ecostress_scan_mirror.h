@@ -3,11 +3,19 @@
 #include "geocal/printable.h"
 #include "geocal/image_coordinate.h"
 #include "geocal/geocal_quaternion.h"
+#include "geocal/geocal_autoderivative_quaternion.h"
 #include "geocal/constant.h"
+#include "geocal/observer.h"
+#include "geocal/with_parameter.h"
 
 namespace Ecostress {
 /****************************************************************//**
-  This is the ecostress can mirror.
+  This is the ecostress scan mirror.
+
+  Because it is a convenient place, we also include the ecostress
+  instrument to spacecraft coordinate transformation (i.e., the
+  alignment of the instrument with the ISS which is nominally an
+  identity transformation).
 
   Note that we have independent values for encoder_value_at_0, one for
   each side of the scan mirror. We would expect this to be exactly 1/2
@@ -29,7 +37,9 @@ namespace Ecostress {
   we can account for it.
 *******************************************************************/
 
-class EcostressScanMirror: public GeoCal::Printable<EcostressScanMirror> {
+class EcostressScanMirror: public GeoCal::Printable<EcostressScanMirror>,
+			   public GeoCal::Observable<EcostressScanMirror>,
+			   public GeoCal::WithParameter {
 public:
   enum { MIN_GOOD_DATA_FOR_REGRESSION = 10 };
   EcostressScanMirror(double Scan_start = -26.488105667851173,
@@ -38,14 +48,61 @@ public:
 		      int Number_scan = 44,
 		      int Max_encoder_value = 1749248,
 		      int First_encoder_value_at_0 = 401443,
-		      int Second_encoder_value_at_0 = 1275903
+		      int Second_encoder_value_at_0 = 1275903,
+		      double Epsilon = 0,
+		      double Beta = 0,
+		      double Delta = 0
 		      );
   EcostressScanMirror(const blitz::Array<int, 2>& Encoder_value,
 		      int Max_encoder_value = 1749248,
 		      int First_encoder_value_at_0 = 401443,
-		      int Second_encoder_value_at_0 = 1275903
+		      int Second_encoder_value_at_0 = 1275903,
+		      double Epsilon = 0,
+		      double Beta = 0,
+		      double Delta = 0
 		      );
   virtual ~EcostressScanMirror() {}
+
+  virtual void add_observer(GeoCal::Observer<EcostressScanMirror>& Obs) 
+  { add_observer_do(Obs, *this);}
+  virtual void remove_observer(GeoCal::Observer<EcostressScanMirror>& Obs) 
+  { remove_observer_do(Obs, *this);}
+
+  virtual blitz::Array<double, 1> parameter() const;
+  virtual void parameter(const blitz::Array<double, 1>& Parm);
+  virtual GeoCal::ArrayAd<double, 1> parameter_with_derivative() const;
+  virtual void parameter_with_derivative
+  (const GeoCal::ArrayAd<double, 1>& Parm);
+  virtual std::vector<std::string> parameter_name() const;
+
+//-----------------------------------------------------------------------
+/// Return the parameter subset mask, where "true" means include the
+/// parameter and "false" means don't.
+//-----------------------------------------------------------------------
+
+  virtual blitz::Array<bool, 1> parameter_mask() const 
+  { return parameter_mask_; }
+
+//-----------------------------------------------------------------------
+/// Indicate if we fit for instrument euler epsilon.
+//-----------------------------------------------------------------------
+
+  bool fit_epsilon() const { return parameter_mask_(0); }
+  void fit_epsilon(bool V) {parameter_mask_(0) = V;}
+
+//-----------------------------------------------------------------------
+/// Indicate if we fit for instrument euler beta.
+//-----------------------------------------------------------------------
+
+  bool fit_beta() const { return parameter_mask_(1); }
+  void fit_beta(bool V) {parameter_mask_(1) = V;}
+
+//-----------------------------------------------------------------------
+/// Indicate if we fit for instrument euler delta.
+//-----------------------------------------------------------------------
+
+  bool fit_delta() const { return parameter_mask_(2); }
+  void fit_delta(bool V) {parameter_mask_(2) = V;}
 
 //-------------------------------------------------------------------------
 /// Angle encoder values.
@@ -53,6 +110,101 @@ public:
 
   const blitz::Array<int, 2>& encoder_value() const {return evalue_;}
 
+//-----------------------------------------------------------------------
+/// Return the equivalent Euler angles epsilon, beta, delta for the
+/// frame_to_sc. These are in radians.
+//-----------------------------------------------------------------------
+
+  blitz::Array<double, 1> euler() const
+  {
+    blitz::Array<double, 1> res(3);
+    GeoCal::quat_to_euler(instrument_to_sc(), res(0), res(1), res(2));
+    return res;
+  }
+
+//-----------------------------------------------------------------------
+/// Return the equivalent Euler angles epsilon, beta, delta for the
+/// frame_to_sc. These are in radians.
+//-----------------------------------------------------------------------
+
+  blitz::Array<GeoCal::AutoDerivative<double>, 1> euler_with_derivative() const
+  {
+    blitz::Array<GeoCal::AutoDerivative<double>, 1> res(3);
+    GeoCal::quat_to_euler(instrument_to_sc_with_derivative(),
+			  res(0), res(1), res(2));
+    return res;
+  }
+
+//-----------------------------------------------------------------------
+/// Update the instrument_to_sc using the given Euler angles epsilon, beta,
+/// data in radians.
+//-----------------------------------------------------------------------
+
+  void euler(const blitz::Array<double, 1>& Euler)
+  {
+    if(Euler.rows() != 3)
+      throw GeoCal::Exception("Ypr must be size 3");
+    instrument_to_sc(GeoCal::quat_rot("zyx", Euler(0), Euler(1), Euler(2)));
+  }
+
+//-----------------------------------------------------------------------
+/// Update the frame_to_sc using the given Euler angles epsilon, beta,
+/// data in radians.
+//-----------------------------------------------------------------------
+
+  void euler_with_derivative(const blitz::Array<GeoCal::AutoDerivative<double>, 1>& Euler)
+  {
+    if(Euler.rows() != 3)
+      throw GeoCal::Exception("Euler must be size 3");
+    instrument_to_sc_with_derivative(GeoCal::quat_rot("zyx", Euler(0), Euler(1), Euler(2)));
+    notify_update();
+  }
+
+  void euler_with_derivative(const GeoCal::ArrayAd<double, 1>& Euler)
+  {
+    if(Euler.rows() != 3)
+      throw GeoCal::Exception("Euler must be size 3");
+    instrument_to_sc_with_derivative(GeoCal::quat_rot("zyx", Euler(0), Euler(1), Euler(2)));
+    notify_update();
+  }
+
+//-----------------------------------------------------------------------
+/// Instrument to spacecraft quaternion.
+//-----------------------------------------------------------------------
+
+  boost::math::quaternion<double> instrument_to_sc() const
+  {return inst_to_sc_nd_;}
+
+//-----------------------------------------------------------------------
+/// Instrument to spacecraft quaternion.
+//-----------------------------------------------------------------------
+
+  boost::math::quaternion<GeoCal::AutoDerivative<double> > 
+  instrument_to_sc_with_derivative() const
+  {return inst_to_sc_;}
+
+//-----------------------------------------------------------------------
+/// Set instrument to spacecraft quaternion.
+//-----------------------------------------------------------------------
+
+  void instrument_to_sc(const boost::math::quaternion<double>& inst_to_sc_q) 
+  {
+    inst_to_sc_ = GeoCal::to_autoderivative(inst_to_sc_q);
+    inst_to_sc_nd_ = inst_to_sc_q;
+    notify_update();
+  }
+
+
+//-----------------------------------------------------------------------
+/// Set instrument to spacecraft quaternion.
+//-----------------------------------------------------------------------
+
+  void instrument_to_sc_with_derivative(const boost::math::quaternion<GeoCal::AutoDerivative<double> >& inst_to_sc_q) 
+  { inst_to_sc_ = inst_to_sc_q;
+    inst_to_sc_nd_ = value(inst_to_sc_);
+    notify_update(); }
+
+  
 //-------------------------------------------------------------------------
 /// Number of samples in scan mirror.
 //-------------------------------------------------------------------------
@@ -172,26 +324,48 @@ public:
 
   boost::math::quaternion<double>
   rotation_quaternion(int Scan_index, double Ic_sample) const
-  { return GeoCal::quat_rot_x(scan_mirror_angle(Scan_index, Ic_sample) *
-			      GeoCal::Constant::deg_to_rad); }
+  { return instrument_to_sc() *
+      GeoCal::quat_rot_x(scan_mirror_angle(Scan_index, Ic_sample) *
+			 GeoCal::Constant::deg_to_rad); }
   boost::math::quaternion<GeoCal::AutoDerivative<double> >
   rotation_quaternion(int Scan_index,
 		     const GeoCal::AutoDerivative<double>& Ic_sample) const
-  { return GeoCal::quat_rot_x(scan_mirror_angle(Scan_index, Ic_sample) *
-			      GeoCal::Constant::deg_to_rad); }
+  { return instrument_to_sc_with_derivative() *
+      GeoCal::quat_rot_x(scan_mirror_angle(Scan_index, Ic_sample) *
+			 GeoCal::Constant::deg_to_rad); }
   virtual void print(std::ostream& Os) const;
 private:
   blitz::Array<int, 2> evalue_;
   int max_encoder_value_, ev0_, ev0_2_;
+  blitz::Array<bool, 1> parameter_mask_;
+				// Mask of parameters we are fitting for.
+  // ** Important, see note below about inst_to_sc_nd_. You can
+  // use the member function inst_to_sc(val) to set both at the same
+  // time if you like ***
+  boost::math::quaternion<GeoCal::AutoDerivative<double> > inst_to_sc_;
+  // Turns out that converting inst_to_sc_ to a version without
+  // derivatives is a bit of a bottle neck in some calculations (e.g.,
+  // Ipi). So we keep a copy of value(inst_to_sc_) so we don't need
+  // to calculate it multiple times.
+  boost::math::quaternion<double> inst_to_sc_nd_;
   void fill_in_scan(int S);
+  virtual void notify_update()
+  {
+    notify_update_do(*this);
+  }
   friend class boost::serialization::access;
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version);
+  template<class Archive>
+  void save(Archive& Ar, const unsigned int version) const;
+  template<class Archive>
+  void load(Archive& Ar, const unsigned int version);
 };
 
 }
 
 BOOST_CLASS_EXPORT_KEY(Ecostress::EcostressScanMirror);
+BOOST_CLASS_VERSION(Ecostress::EcostressScanMirror, 1)
 #endif
   
   

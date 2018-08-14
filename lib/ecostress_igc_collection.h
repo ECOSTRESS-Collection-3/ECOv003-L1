@@ -18,6 +18,7 @@ public:
   (const boost::shared_ptr<EcostressImageGroundConnection>& Igc)
   { igc_list.push_back(Igc);
     if((int) igc_list.size() == 1) {
+      add_object(Igc->scan_mirror());
       add_object(Igc->camera());
       add_object(Igc->orbit());
       add_object(Igc->time_table());

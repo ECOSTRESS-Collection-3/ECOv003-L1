@@ -3453,69 +3453,86 @@ namespace Swig {
 /* -------- TYPES TABLE (BEGIN) -------- */
 
 #define SWIGTYPE_p_Ecostress__EcostressScanMirror swig_types[0]
-#define SWIGTYPE_p_GeoCal__AutoDerivativeRefT_double_t swig_types[1]
-#define SWIGTYPE_p_GeoCal__AutoDerivativeT_double_t swig_types[2]
-#define SWIGTYPE_p_GeoCal__GenericObject swig_types[3]
-#define SWIGTYPE_p_GeoCal__ImageCoordinate swig_types[4]
-#define SWIGTYPE_p_GeoCal__ImageCoordinateWithDerivative swig_types[5]
-#define SWIGTYPE_p_GeoCal__VicarImageCoordinate swig_types[6]
-#define SWIGTYPE_p_allocator_type swig_types[7]
-#define SWIGTYPE_p_blitz__ArrayT_bool_1_t swig_types[8]
-#define SWIGTYPE_p_blitz__ArrayT_bool_2_t swig_types[9]
-#define SWIGTYPE_p_blitz__ArrayT_bool_3_t swig_types[10]
-#define SWIGTYPE_p_blitz__ArrayT_bool_4_t swig_types[11]
-#define SWIGTYPE_p_blitz__ArrayT_bool_5_t swig_types[12]
-#define SWIGTYPE_p_blitz__ArrayT_bool_6_t swig_types[13]
-#define SWIGTYPE_p_blitz__ArrayT_bool_7_t swig_types[14]
-#define SWIGTYPE_p_blitz__ArrayT_bool_8_t swig_types[15]
-#define SWIGTYPE_p_blitz__ArrayT_double_1_t swig_types[16]
-#define SWIGTYPE_p_blitz__ArrayT_double_2_t swig_types[17]
-#define SWIGTYPE_p_blitz__ArrayT_double_3_t swig_types[18]
-#define SWIGTYPE_p_blitz__ArrayT_double_4_t swig_types[19]
-#define SWIGTYPE_p_blitz__ArrayT_double_5_t swig_types[20]
-#define SWIGTYPE_p_blitz__ArrayT_double_6_t swig_types[21]
-#define SWIGTYPE_p_blitz__ArrayT_double_7_t swig_types[22]
-#define SWIGTYPE_p_blitz__ArrayT_double_8_t swig_types[23]
-#define SWIGTYPE_p_blitz__ArrayT_int_1_t swig_types[24]
-#define SWIGTYPE_p_blitz__ArrayT_int_2_t swig_types[25]
-#define SWIGTYPE_p_blitz__ArrayT_int_3_t swig_types[26]
-#define SWIGTYPE_p_blitz__ArrayT_int_4_t swig_types[27]
-#define SWIGTYPE_p_blitz__ArrayT_int_5_t swig_types[28]
-#define SWIGTYPE_p_blitz__ArrayT_int_6_t swig_types[29]
-#define SWIGTYPE_p_blitz__ArrayT_int_7_t swig_types[30]
-#define SWIGTYPE_p_blitz__ArrayT_int_8_t swig_types[31]
-#define SWIGTYPE_p_boost__math__quaternionT_GeoCal__AutoDerivativeT_double_t_t swig_types[32]
-#define SWIGTYPE_p_boost__math__quaternionT_double_t swig_types[33]
-#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t swig_types[34]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t swig_types[35]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t swig_types[36]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GenericObject_t swig_types[37]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t swig_types[38]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageCoordinate_t swig_types[39]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t swig_types[40]
-#define SWIGTYPE_p_char swig_types[41]
-#define SWIGTYPE_p_char_type swig_types[42]
-#define SWIGTYPE_p_difference_type swig_types[43]
-#define SWIGTYPE_p_fmtflags swig_types[44]
-#define SWIGTYPE_p_int_type swig_types[45]
-#define SWIGTYPE_p_iostate swig_types[46]
-#define SWIGTYPE_p_off_type swig_types[47]
-#define SWIGTYPE_p_openmode swig_types[48]
-#define SWIGTYPE_p_pos_type swig_types[49]
-#define SWIGTYPE_p_seekdir swig_types[50]
-#define SWIGTYPE_p_size_t swig_types[51]
-#define SWIGTYPE_p_size_type swig_types[52]
-#define SWIGTYPE_p_state_type swig_types[53]
-#define SWIGTYPE_p_std__basic_iosT_char_std__char_traitsT_char_t_t swig_types[54]
-#define SWIGTYPE_p_std__basic_iostreamT_char_std__char_traitsT_char_t_t swig_types[55]
-#define SWIGTYPE_p_std__basic_istreamT_char_std__char_traitsT_char_t_t swig_types[56]
-#define SWIGTYPE_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t swig_types[57]
-#define SWIGTYPE_p_std__invalid_argument swig_types[58]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[59]
-#define SWIGTYPE_p_traits_type swig_types[60]
-#define SWIGTYPE_p_value_type swig_types[61]
-static swig_type_info *swig_types[63];
-static swig_module_info swig_module = {swig_types, 62, 0, 0, 0, 0};
+#define SWIGTYPE_p_GeoCal__ArrayAdT_double_1_t swig_types[1]
+#define SWIGTYPE_p_GeoCal__ArrayAdT_double_2_t swig_types[2]
+#define SWIGTYPE_p_GeoCal__ArrayAdT_double_3_t swig_types[3]
+#define SWIGTYPE_p_GeoCal__ArrayAdT_double_4_t swig_types[4]
+#define SWIGTYPE_p_GeoCal__AutoDerivativeRefT_double_t swig_types[5]
+#define SWIGTYPE_p_GeoCal__AutoDerivativeT_double_t swig_types[6]
+#define SWIGTYPE_p_GeoCal__GenericObject swig_types[7]
+#define SWIGTYPE_p_GeoCal__ImageCoordinate swig_types[8]
+#define SWIGTYPE_p_GeoCal__ImageCoordinateWithDerivative swig_types[9]
+#define SWIGTYPE_p_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t swig_types[10]
+#define SWIGTYPE_p_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t swig_types[11]
+#define SWIGTYPE_p_GeoCal__VicarImageCoordinate swig_types[12]
+#define SWIGTYPE_p_GeoCal__WithParameter swig_types[13]
+#define SWIGTYPE_p_GeoCal__WithParameterNested swig_types[14]
+#define SWIGTYPE_p_allocator_type swig_types[15]
+#define SWIGTYPE_p_blitz__ArrayT_GeoCal__AutoDerivativeT_double_t_1_t swig_types[16]
+#define SWIGTYPE_p_blitz__ArrayT_bool_1_t swig_types[17]
+#define SWIGTYPE_p_blitz__ArrayT_bool_2_t swig_types[18]
+#define SWIGTYPE_p_blitz__ArrayT_bool_3_t swig_types[19]
+#define SWIGTYPE_p_blitz__ArrayT_bool_4_t swig_types[20]
+#define SWIGTYPE_p_blitz__ArrayT_bool_5_t swig_types[21]
+#define SWIGTYPE_p_blitz__ArrayT_bool_6_t swig_types[22]
+#define SWIGTYPE_p_blitz__ArrayT_bool_7_t swig_types[23]
+#define SWIGTYPE_p_blitz__ArrayT_bool_8_t swig_types[24]
+#define SWIGTYPE_p_blitz__ArrayT_double_1_t swig_types[25]
+#define SWIGTYPE_p_blitz__ArrayT_double_2_t swig_types[26]
+#define SWIGTYPE_p_blitz__ArrayT_double_3_t swig_types[27]
+#define SWIGTYPE_p_blitz__ArrayT_double_4_t swig_types[28]
+#define SWIGTYPE_p_blitz__ArrayT_double_5_t swig_types[29]
+#define SWIGTYPE_p_blitz__ArrayT_double_6_t swig_types[30]
+#define SWIGTYPE_p_blitz__ArrayT_double_7_t swig_types[31]
+#define SWIGTYPE_p_blitz__ArrayT_double_8_t swig_types[32]
+#define SWIGTYPE_p_blitz__ArrayT_int_1_t swig_types[33]
+#define SWIGTYPE_p_blitz__ArrayT_int_2_t swig_types[34]
+#define SWIGTYPE_p_blitz__ArrayT_int_3_t swig_types[35]
+#define SWIGTYPE_p_blitz__ArrayT_int_4_t swig_types[36]
+#define SWIGTYPE_p_blitz__ArrayT_int_5_t swig_types[37]
+#define SWIGTYPE_p_blitz__ArrayT_int_6_t swig_types[38]
+#define SWIGTYPE_p_blitz__ArrayT_int_7_t swig_types[39]
+#define SWIGTYPE_p_blitz__ArrayT_int_8_t swig_types[40]
+#define SWIGTYPE_p_boost__math__quaternionT_GeoCal__AutoDerivativeT_double_t_t swig_types[41]
+#define SWIGTYPE_p_boost__math__quaternionT_double_t swig_types[42]
+#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t swig_types[43]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t swig_types[44]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t swig_types[45]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_3_t_t swig_types[46]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_4_t_t swig_types[47]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t swig_types[48]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t swig_types[49]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GenericObject_t swig_types[50]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t swig_types[51]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageCoordinate_t swig_types[52]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t_t swig_types[53]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_t swig_types[54]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t swig_types[55]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameterNested_t swig_types[56]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameter_t swig_types[57]
+#define SWIGTYPE_p_char swig_types[58]
+#define SWIGTYPE_p_char_type swig_types[59]
+#define SWIGTYPE_p_difference_type swig_types[60]
+#define SWIGTYPE_p_fmtflags swig_types[61]
+#define SWIGTYPE_p_int_type swig_types[62]
+#define SWIGTYPE_p_iostate swig_types[63]
+#define SWIGTYPE_p_off_type swig_types[64]
+#define SWIGTYPE_p_openmode swig_types[65]
+#define SWIGTYPE_p_pos_type swig_types[66]
+#define SWIGTYPE_p_seekdir swig_types[67]
+#define SWIGTYPE_p_size_t swig_types[68]
+#define SWIGTYPE_p_size_type swig_types[69]
+#define SWIGTYPE_p_state_type swig_types[70]
+#define SWIGTYPE_p_std__basic_iosT_char_std__char_traitsT_char_t_t swig_types[71]
+#define SWIGTYPE_p_std__basic_iostreamT_char_std__char_traitsT_char_t_t swig_types[72]
+#define SWIGTYPE_p_std__basic_istreamT_char_std__char_traitsT_char_t_t swig_types[73]
+#define SWIGTYPE_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t swig_types[74]
+#define SWIGTYPE_p_std__invalid_argument swig_types[75]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[76]
+#define SWIGTYPE_p_traits_type swig_types[77]
+#define SWIGTYPE_p_value_type swig_types[78]
+static swig_type_info *swig_types[80];
+static swig_module_info swig_module = {swig_types, 79, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -5459,6 +5476,19 @@ namespace swig {
 #include "ecostress_scan_mirror.h"
 
 
+struct SWIG_null_deleter {
+  void operator() (void const *) const {
+  }
+};
+#define SWIG_NO_NULL_DELETER_0 , SWIG_null_deleter()
+#define SWIG_NO_NULL_DELETER_1
+#define SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW
+#define SWIG_NO_NULL_DELETER_SWIG_POINTER_OWN
+
+
+#define SWIG_NO_NULL_DELETER_SWIG_BUILTIN_INIT
+
+
 SWIGINTERN int
 SWIG_AsVal_int (PyObject * obj, int *val)
 {
@@ -5475,20 +5505,21 @@ SWIG_AsVal_int (PyObject * obj, int *val)
 }
 
 
-struct SWIG_null_deleter {
-  void operator() (void const *) const {
-  }
-};
-#define SWIG_NO_NULL_DELETER_0 , SWIG_null_deleter()
-#define SWIG_NO_NULL_DELETER_1
-#define SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW
-#define SWIG_NO_NULL_DELETER_SWIG_POINTER_OWN
-
-
-#define SWIG_NO_NULL_DELETER_SWIG_BUILTIN_INIT
-
-
   #define SWIG_From_double   PyFloat_FromDouble 
+
+
+SWIGINTERN int
+SWIG_AsVal_bool (PyObject *obj, bool *val)
+{
+  int r;
+  if (!PyBool_Check(obj))
+    return SWIG_ERROR;
+  r = PyObject_IsTrue(obj);
+  if (r == -1)
+    return SWIG_ERROR;
+  if (val) *val = r ? true : false;
+  return SWIG_OK;
+}
 
 
 SWIGINTERN swig_type_info*
@@ -6326,7 +6357,842 @@ SWIGINTERN PyObject *SwigPyIterator_swigregister(PyObject *SWIGUNUSEDPARM(self),
   return SWIG_Py_Void();
 }
 
+SWIGINTERN PyObject *_wrap_delete_ObservableEcostressScanMirror(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GeoCal::Observable< Ecostress::EcostressScanMirror > *arg1 = (GeoCal::Observable< Ecostress::EcostressScanMirror > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< GeoCal::Observable< Ecostress::EcostressScanMirror > > tempshared1 ;
+  boost::shared_ptr< GeoCal::Observable< Ecostress::EcostressScanMirror > > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_ObservableEcostressScanMirror" "', argument " "1"" of type '" "GeoCal::Observable< Ecostress::EcostressScanMirror > *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  GeoCal::Observable<Ecostress::EcostressScanMirror> > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  GeoCal::Observable<Ecostress::EcostressScanMirror> > * >(argp1);
+      arg1 = const_cast< GeoCal::Observable< Ecostress::EcostressScanMirror > * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  GeoCal::Observable<Ecostress::EcostressScanMirror> > * >(argp1);
+      arg1 = const_cast< GeoCal::Observable< Ecostress::EcostressScanMirror > * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      (void)arg1; delete smartarg1;
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ObservableEcostressScanMirror_add_observer_and_keep_reference(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GeoCal::Observable< Ecostress::EcostressScanMirror > *arg1 = (GeoCal::Observable< Ecostress::EcostressScanMirror > *) 0 ;
+  boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< GeoCal::Observable< Ecostress::EcostressScanMirror > > tempshared1 ;
+  boost::shared_ptr< GeoCal::Observable< Ecostress::EcostressScanMirror > > *smartarg1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > tempshared2 ;
+  boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > temp2shared2 ;
+  PyObject *swig_obj[2] ;
+  
+  if (!SWIG_Python_UnpackTuple(args,"ObservableEcostressScanMirror_add_observer_and_keep_reference",2,2,swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ObservableEcostressScanMirror_add_observer_and_keep_reference" "', argument " "1"" of type '" "GeoCal::Observable< Ecostress::EcostressScanMirror > *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  GeoCal::Observable<Ecostress::EcostressScanMirror> > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  GeoCal::Observable<Ecostress::EcostressScanMirror> > * >(argp1);
+      arg1 = const_cast< GeoCal::Observable< Ecostress::EcostressScanMirror > * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  GeoCal::Observable<Ecostress::EcostressScanMirror> > * >(argp1);
+      arg1 = const_cast< GeoCal::Observable< Ecostress::EcostressScanMirror > * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ObservableEcostressScanMirror_add_observer_and_keep_reference" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp2) tempshared2 = *reinterpret_cast< boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > * >(argp2);
+      delete reinterpret_cast< boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > * >(argp2);
+      arg2 = &tempshared2;
+    } else {
+      arg2 = (argp2) ? reinterpret_cast< boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > * >(argp2) : &tempshared2;
+    }
+    // Special handling if this is a director class. In that case, we
+    // don't own the underlying python object. Instead,
+    // we tell python we have a reference to the underlying object, and
+    // when this gets destroyed we decrement the reference to the python
+    // object. 
+    Swig::Director* dp = dynamic_cast<Swig::Director*>(arg2->get());
+    if(dp) {
+      Py_INCREF(dp->swig_get_self());
+      temp2shared2.reset(arg2->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      arg2 = &temp2shared2;
+    }
+  }
+  {
+    try {
+      (arg1)->add_observer_and_keep_reference(*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ObservableEcostressScanMirror_add_observer(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GeoCal::Observable< Ecostress::EcostressScanMirror > *arg1 = (GeoCal::Observable< Ecostress::EcostressScanMirror > *) 0 ;
+  GeoCal::Observer< Ecostress::EcostressScanMirror > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< GeoCal::Observable< Ecostress::EcostressScanMirror > > tempshared1 ;
+  boost::shared_ptr< GeoCal::Observable< Ecostress::EcostressScanMirror > > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > tempshared2 ;
+  PyObject *swig_obj[2] ;
+  
+  if (!SWIG_Python_UnpackTuple(args,"ObservableEcostressScanMirror_add_observer",2,2,swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ObservableEcostressScanMirror_add_observer" "', argument " "1"" of type '" "GeoCal::Observable< Ecostress::EcostressScanMirror > *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  GeoCal::Observable<Ecostress::EcostressScanMirror> > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  GeoCal::Observable<Ecostress::EcostressScanMirror> > * >(argp1);
+      arg1 = const_cast< GeoCal::Observable< Ecostress::EcostressScanMirror > * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  GeoCal::Observable<Ecostress::EcostressScanMirror> > * >(argp1);
+      arg1 = const_cast< GeoCal::Observable< Ecostress::EcostressScanMirror > * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::Observer<Ecostress::EcostressScanMirror> *ptr;
+    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], (void**)(&ptr), SWIGTYPE_p_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t,  0 , &newmem);
+    if (SWIG_IsOK(res2)) {
+      arg2 = ptr;
+    } else {
+      res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_t,  0 , &newmem);
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ObservableEcostressScanMirror_add_observer" "', argument " "2"" of type '" "GeoCal::Observer< Ecostress::EcostressScanMirror > &""'"); 
+      }
+      if (!argp2) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ObservableEcostressScanMirror_add_observer" "', argument " "2"" of type '" "GeoCal::Observer< Ecostress::EcostressScanMirror > &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared2 = *reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp2);
+        delete reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp2);
+        arg2 = const_cast< GeoCal::Observer< Ecostress::EcostressScanMirror > * >(tempshared2.get());
+      } else {
+        arg2 = const_cast< GeoCal::Observer< Ecostress::EcostressScanMirror > * >(reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp2)->get());
+      }
+    }
+  }
+  {
+    try {
+      (arg1)->add_observer(*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ObservableEcostressScanMirror_remove_observer(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GeoCal::Observable< Ecostress::EcostressScanMirror > *arg1 = (GeoCal::Observable< Ecostress::EcostressScanMirror > *) 0 ;
+  GeoCal::Observer< Ecostress::EcostressScanMirror > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< GeoCal::Observable< Ecostress::EcostressScanMirror > > tempshared1 ;
+  boost::shared_ptr< GeoCal::Observable< Ecostress::EcostressScanMirror > > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > tempshared2 ;
+  PyObject *swig_obj[2] ;
+  
+  if (!SWIG_Python_UnpackTuple(args,"ObservableEcostressScanMirror_remove_observer",2,2,swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ObservableEcostressScanMirror_remove_observer" "', argument " "1"" of type '" "GeoCal::Observable< Ecostress::EcostressScanMirror > *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  GeoCal::Observable<Ecostress::EcostressScanMirror> > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  GeoCal::Observable<Ecostress::EcostressScanMirror> > * >(argp1);
+      arg1 = const_cast< GeoCal::Observable< Ecostress::EcostressScanMirror > * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  GeoCal::Observable<Ecostress::EcostressScanMirror> > * >(argp1);
+      arg1 = const_cast< GeoCal::Observable< Ecostress::EcostressScanMirror > * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::Observer<Ecostress::EcostressScanMirror> *ptr;
+    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], (void**)(&ptr), SWIGTYPE_p_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t,  0 , &newmem);
+    if (SWIG_IsOK(res2)) {
+      arg2 = ptr;
+    } else {
+      res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_t,  0 , &newmem);
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ObservableEcostressScanMirror_remove_observer" "', argument " "2"" of type '" "GeoCal::Observer< Ecostress::EcostressScanMirror > &""'"); 
+      }
+      if (!argp2) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ObservableEcostressScanMirror_remove_observer" "', argument " "2"" of type '" "GeoCal::Observer< Ecostress::EcostressScanMirror > &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared2 = *reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp2);
+        delete reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp2);
+        arg2 = const_cast< GeoCal::Observer< Ecostress::EcostressScanMirror > * >(tempshared2.get());
+      } else {
+        arg2 = const_cast< GeoCal::Observer< Ecostress::EcostressScanMirror > * >(reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp2)->get());
+      }
+    }
+  }
+  {
+    try {
+      (arg1)->remove_observer(*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *ObservableEcostressScanMirror_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!SWIG_Python_UnpackTuple(args,(char *)"swigregister", 1, 1,&obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t_t, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_new_ObserverEcostressScanMirror(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GeoCal::Observer< Ecostress::EcostressScanMirror > *result = 0 ;
+  
+  if (!SWIG_Python_UnpackTuple(args,"new_ObserverEcostressScanMirror",0,0,0)) SWIG_fail;
+  {
+    try {
+      result = (GeoCal::Observer< Ecostress::EcostressScanMirror > *)new GeoCal::Observer< Ecostress::EcostressScanMirror >();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > *smartresult = result ? new boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_ObserverEcostressScanMirror(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GeoCal::Observer< Ecostress::EcostressScanMirror > *arg1 = (GeoCal::Observer< Ecostress::EcostressScanMirror > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > tempshared1 ;
+  boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_ObserverEcostressScanMirror" "', argument " "1"" of type '" "GeoCal::Observer< Ecostress::EcostressScanMirror > *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp1);
+      arg1 = const_cast< GeoCal::Observer< Ecostress::EcostressScanMirror > * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp1);
+      arg1 = const_cast< GeoCal::Observer< Ecostress::EcostressScanMirror > * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      (void)arg1; delete smartarg1;
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ObserverEcostressScanMirror_notify_update(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GeoCal::Observer< Ecostress::EcostressScanMirror > *arg1 = (GeoCal::Observer< Ecostress::EcostressScanMirror > *) 0 ;
+  Ecostress::EcostressScanMirror *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > tempshared1 ;
+  boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror const > tempshared2 ;
+  PyObject *swig_obj[2] ;
+  
+  if (!SWIG_Python_UnpackTuple(args,"ObserverEcostressScanMirror_notify_update",2,2,swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ObserverEcostressScanMirror_notify_update" "', argument " "1"" of type '" "GeoCal::Observer< Ecostress::EcostressScanMirror > *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp1);
+      arg1 = const_cast< GeoCal::Observer< Ecostress::EcostressScanMirror > * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp1);
+      arg1 = const_cast< GeoCal::Observer< Ecostress::EcostressScanMirror > * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    Ecostress::EcostressScanMirror *ptr;
+    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], (void**)(&ptr), SWIGTYPE_p_Ecostress__EcostressScanMirror,  0 , &newmem);
+    if (SWIG_IsOK(res2)) {
+      arg2 = ptr;
+    } else {
+      res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t,  0 , &newmem);
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ObserverEcostressScanMirror_notify_update" "', argument " "2"" of type '" "Ecostress::EcostressScanMirror const &""'"); 
+      }
+      if (!argp2) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ObserverEcostressScanMirror_notify_update" "', argument " "2"" of type '" "Ecostress::EcostressScanMirror const &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared2 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp2);
+        delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp2);
+        arg2 = const_cast< Ecostress::EcostressScanMirror * >(tempshared2.get());
+      } else {
+        arg2 = const_cast< Ecostress::EcostressScanMirror * >(reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp2)->get());
+      }
+    }
+  }
+  {
+    try {
+      (arg1)->notify_update((Ecostress::EcostressScanMirror const &)*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ObserverEcostressScanMirror_notify_add(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GeoCal::Observer< Ecostress::EcostressScanMirror > *arg1 = (GeoCal::Observer< Ecostress::EcostressScanMirror > *) 0 ;
+  Ecostress::EcostressScanMirror *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > tempshared1 ;
+  boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror > tempshared2 ;
+  PyObject *swig_obj[2] ;
+  
+  if (!SWIG_Python_UnpackTuple(args,"ObserverEcostressScanMirror_notify_add",2,2,swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ObserverEcostressScanMirror_notify_add" "', argument " "1"" of type '" "GeoCal::Observer< Ecostress::EcostressScanMirror > *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp1);
+      arg1 = const_cast< GeoCal::Observer< Ecostress::EcostressScanMirror > * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp1);
+      arg1 = const_cast< GeoCal::Observer< Ecostress::EcostressScanMirror > * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    Ecostress::EcostressScanMirror *ptr;
+    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], (void**)(&ptr), SWIGTYPE_p_Ecostress__EcostressScanMirror,  0 , &newmem);
+    if (SWIG_IsOK(res2)) {
+      arg2 = ptr;
+    } else {
+      res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t,  0 , &newmem);
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ObserverEcostressScanMirror_notify_add" "', argument " "2"" of type '" "Ecostress::EcostressScanMirror &""'"); 
+      }
+      if (!argp2) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ObserverEcostressScanMirror_notify_add" "', argument " "2"" of type '" "Ecostress::EcostressScanMirror &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared2 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp2);
+        delete reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp2);
+        arg2 = const_cast< Ecostress::EcostressScanMirror * >(tempshared2.get());
+      } else {
+        arg2 = const_cast< Ecostress::EcostressScanMirror * >(reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp2)->get());
+      }
+    }
+  }
+  {
+    try {
+      (arg1)->notify_add(*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ObserverEcostressScanMirror_notify_remove(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GeoCal::Observer< Ecostress::EcostressScanMirror > *arg1 = (GeoCal::Observer< Ecostress::EcostressScanMirror > *) 0 ;
+  Ecostress::EcostressScanMirror *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > tempshared1 ;
+  boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror > tempshared2 ;
+  PyObject *swig_obj[2] ;
+  
+  if (!SWIG_Python_UnpackTuple(args,"ObserverEcostressScanMirror_notify_remove",2,2,swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ObserverEcostressScanMirror_notify_remove" "', argument " "1"" of type '" "GeoCal::Observer< Ecostress::EcostressScanMirror > *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp1);
+      arg1 = const_cast< GeoCal::Observer< Ecostress::EcostressScanMirror > * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  GeoCal::Observer<Ecostress::EcostressScanMirror> > * >(argp1);
+      arg1 = const_cast< GeoCal::Observer< Ecostress::EcostressScanMirror > * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    Ecostress::EcostressScanMirror *ptr;
+    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], (void**)(&ptr), SWIGTYPE_p_Ecostress__EcostressScanMirror,  0 , &newmem);
+    if (SWIG_IsOK(res2)) {
+      arg2 = ptr;
+    } else {
+      res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t,  0 , &newmem);
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ObserverEcostressScanMirror_notify_remove" "', argument " "2"" of type '" "Ecostress::EcostressScanMirror &""'"); 
+      }
+      if (!argp2) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ObserverEcostressScanMirror_notify_remove" "', argument " "2"" of type '" "Ecostress::EcostressScanMirror &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared2 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp2);
+        delete reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp2);
+        arg2 = const_cast< Ecostress::EcostressScanMirror * >(tempshared2.get());
+      } else {
+        arg2 = const_cast< Ecostress::EcostressScanMirror * >(reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp2)->get());
+      }
+    }
+  }
+  {
+    try {
+      (arg1)->notify_remove(*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *ObserverEcostressScanMirror_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!SWIG_Python_UnpackTuple(args,(char *)"swigregister", 1, 1,&obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_t, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *ObserverEcostressScanMirror_swiginit(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  return SWIG_Python_InitShadowInstance(args);
+}
+
 SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  double arg1 ;
+  double arg2 ;
+  int arg3 ;
+  int arg4 ;
+  int arg5 ;
+  int arg6 ;
+  int arg7 ;
+  double arg8 ;
+  double arg9 ;
+  double arg10 ;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  int val5 ;
+  int ecode5 = 0 ;
+  int val6 ;
+  int ecode6 = 0 ;
+  int val7 ;
+  int ecode7 = 0 ;
+  double val8 ;
+  int ecode8 = 0 ;
+  double val9 ;
+  int ecode9 = 0 ;
+  double val10 ;
+  int ecode10 = 0 ;
+  Ecostress::EcostressScanMirror *result = 0 ;
+  
+  if ((nobjs < 10) || (nobjs > 10)) SWIG_fail;
+  ecode1 = SWIG_AsVal_double(swig_obj[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_EcostressScanMirror" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_EcostressScanMirror" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_int(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_EcostressScanMirror" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  ecode4 = SWIG_AsVal_int(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_EcostressScanMirror" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  ecode5 = SWIG_AsVal_int(swig_obj[4], &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_EcostressScanMirror" "', argument " "5"" of type '" "int""'");
+  } 
+  arg5 = static_cast< int >(val5);
+  ecode6 = SWIG_AsVal_int(swig_obj[5], &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "new_EcostressScanMirror" "', argument " "6"" of type '" "int""'");
+  } 
+  arg6 = static_cast< int >(val6);
+  ecode7 = SWIG_AsVal_int(swig_obj[6], &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "new_EcostressScanMirror" "', argument " "7"" of type '" "int""'");
+  } 
+  arg7 = static_cast< int >(val7);
+  ecode8 = SWIG_AsVal_double(swig_obj[7], &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "new_EcostressScanMirror" "', argument " "8"" of type '" "double""'");
+  } 
+  arg8 = static_cast< double >(val8);
+  ecode9 = SWIG_AsVal_double(swig_obj[8], &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "new_EcostressScanMirror" "', argument " "9"" of type '" "double""'");
+  } 
+  arg9 = static_cast< double >(val9);
+  ecode10 = SWIG_AsVal_double(swig_obj[9], &val10);
+  if (!SWIG_IsOK(ecode10)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode10), "in method '" "new_EcostressScanMirror" "', argument " "10"" of type '" "double""'");
+  } 
+  arg10 = static_cast< double >(val10);
+  {
+    try {
+      result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::EcostressScanMirror > *smartresult = result ? new boost::shared_ptr<  Ecostress::EcostressScanMirror >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  double arg1 ;
+  double arg2 ;
+  int arg3 ;
+  int arg4 ;
+  int arg5 ;
+  int arg6 ;
+  int arg7 ;
+  double arg8 ;
+  double arg9 ;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  int val5 ;
+  int ecode5 = 0 ;
+  int val6 ;
+  int ecode6 = 0 ;
+  int val7 ;
+  int ecode7 = 0 ;
+  double val8 ;
+  int ecode8 = 0 ;
+  double val9 ;
+  int ecode9 = 0 ;
+  Ecostress::EcostressScanMirror *result = 0 ;
+  
+  if ((nobjs < 9) || (nobjs > 9)) SWIG_fail;
+  ecode1 = SWIG_AsVal_double(swig_obj[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_EcostressScanMirror" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_EcostressScanMirror" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_int(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_EcostressScanMirror" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  ecode4 = SWIG_AsVal_int(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_EcostressScanMirror" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  ecode5 = SWIG_AsVal_int(swig_obj[4], &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_EcostressScanMirror" "', argument " "5"" of type '" "int""'");
+  } 
+  arg5 = static_cast< int >(val5);
+  ecode6 = SWIG_AsVal_int(swig_obj[5], &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "new_EcostressScanMirror" "', argument " "6"" of type '" "int""'");
+  } 
+  arg6 = static_cast< int >(val6);
+  ecode7 = SWIG_AsVal_int(swig_obj[6], &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "new_EcostressScanMirror" "', argument " "7"" of type '" "int""'");
+  } 
+  arg7 = static_cast< int >(val7);
+  ecode8 = SWIG_AsVal_double(swig_obj[7], &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "new_EcostressScanMirror" "', argument " "8"" of type '" "double""'");
+  } 
+  arg8 = static_cast< double >(val8);
+  ecode9 = SWIG_AsVal_double(swig_obj[8], &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "new_EcostressScanMirror" "', argument " "9"" of type '" "double""'");
+  } 
+  arg9 = static_cast< double >(val9);
+  {
+    try {
+      result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::EcostressScanMirror > *smartresult = result ? new boost::shared_ptr<  Ecostress::EcostressScanMirror >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_2(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  double arg1 ;
+  double arg2 ;
+  int arg3 ;
+  int arg4 ;
+  int arg5 ;
+  int arg6 ;
+  int arg7 ;
+  double arg8 ;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  int val5 ;
+  int ecode5 = 0 ;
+  int val6 ;
+  int ecode6 = 0 ;
+  int val7 ;
+  int ecode7 = 0 ;
+  double val8 ;
+  int ecode8 = 0 ;
+  Ecostress::EcostressScanMirror *result = 0 ;
+  
+  if ((nobjs < 8) || (nobjs > 8)) SWIG_fail;
+  ecode1 = SWIG_AsVal_double(swig_obj[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_EcostressScanMirror" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_EcostressScanMirror" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_int(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_EcostressScanMirror" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  ecode4 = SWIG_AsVal_int(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_EcostressScanMirror" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  ecode5 = SWIG_AsVal_int(swig_obj[4], &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_EcostressScanMirror" "', argument " "5"" of type '" "int""'");
+  } 
+  arg5 = static_cast< int >(val5);
+  ecode6 = SWIG_AsVal_int(swig_obj[5], &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "new_EcostressScanMirror" "', argument " "6"" of type '" "int""'");
+  } 
+  arg6 = static_cast< int >(val6);
+  ecode7 = SWIG_AsVal_int(swig_obj[6], &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "new_EcostressScanMirror" "', argument " "7"" of type '" "int""'");
+  } 
+  arg7 = static_cast< int >(val7);
+  ecode8 = SWIG_AsVal_double(swig_obj[7], &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "new_EcostressScanMirror" "', argument " "8"" of type '" "double""'");
+  } 
+  arg8 = static_cast< double >(val8);
+  {
+    try {
+      result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::EcostressScanMirror > *smartresult = result ? new boost::shared_ptr<  Ecostress::EcostressScanMirror >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_3(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   double arg1 ;
   double arg2 ;
@@ -6406,7 +7272,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_4(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   double arg1 ;
   double arg2 ;
@@ -6478,7 +7344,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_2(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_5(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   double arg1 ;
   double arg2 ;
@@ -6542,7 +7408,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_3(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_6(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   double arg1 ;
   double arg2 ;
@@ -6598,7 +7464,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_4(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_7(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   double arg1 ;
   double arg2 ;
@@ -6646,7 +7512,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_5(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_8(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   double arg1 ;
   double arg2 ;
@@ -6686,7 +7552,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_6(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_9(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   double arg1 ;
   double val1 ;
@@ -6718,7 +7584,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_7(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
+SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_10(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **SWIGUNUSEDPARM(swig_obj)) {
   PyObject *resultobj = 0;
   Ecostress::EcostressScanMirror *result = 0 ;
   
@@ -6742,7 +7608,259 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_8(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_11(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  blitz::Array< int,2 > *arg1 = 0 ;
+  int arg2 ;
+  int arg3 ;
+  int arg4 ;
+  double arg5 ;
+  double arg6 ;
+  double arg7 ;
+  blitz::Array< int,2 > a1 ;
+  PythonObject numpy1 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  double val6 ;
+  int ecode6 = 0 ;
+  double val7 ;
+  int ecode7 = 0 ;
+  Ecostress::EcostressScanMirror *result = 0 ;
+  
+  if ((nobjs < 7) || (nobjs > 7)) SWIG_fail;
+  {
+    int res = SWIG_ConvertPtr(swig_obj[0], (void**)(&arg1), SWIGTYPE_p_blitz__ArrayT_int_2_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy1.obj = to_numpy<int >(swig_obj[0]);
+      if(!numpy1.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_EcostressScanMirror', expecting type  Array<int,2>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy1.obj) !=2) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_EcostressScanMirror', expecting type  Array<int,2>");
+        return NULL;
+      }
+      a1.reference(to_blitz_array<int, 2>(numpy1));
+      arg1 = &a1;
+    }
+  }
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_EcostressScanMirror" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_EcostressScanMirror" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  ecode4 = SWIG_AsVal_int(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_EcostressScanMirror" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  ecode5 = SWIG_AsVal_double(swig_obj[4], &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_EcostressScanMirror" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  ecode6 = SWIG_AsVal_double(swig_obj[5], &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "new_EcostressScanMirror" "', argument " "6"" of type '" "double""'");
+  } 
+  arg6 = static_cast< double >(val6);
+  ecode7 = SWIG_AsVal_double(swig_obj[6], &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "new_EcostressScanMirror" "', argument " "7"" of type '" "double""'");
+  } 
+  arg7 = static_cast< double >(val7);
+  {
+    try {
+      result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror((blitz::Array< int,2 > const &)*arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::EcostressScanMirror > *smartresult = result ? new boost::shared_ptr<  Ecostress::EcostressScanMirror >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_12(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  blitz::Array< int,2 > *arg1 = 0 ;
+  int arg2 ;
+  int arg3 ;
+  int arg4 ;
+  double arg5 ;
+  double arg6 ;
+  blitz::Array< int,2 > a1 ;
+  PythonObject numpy1 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  double val6 ;
+  int ecode6 = 0 ;
+  Ecostress::EcostressScanMirror *result = 0 ;
+  
+  if ((nobjs < 6) || (nobjs > 6)) SWIG_fail;
+  {
+    int res = SWIG_ConvertPtr(swig_obj[0], (void**)(&arg1), SWIGTYPE_p_blitz__ArrayT_int_2_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy1.obj = to_numpy<int >(swig_obj[0]);
+      if(!numpy1.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_EcostressScanMirror', expecting type  Array<int,2>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy1.obj) !=2) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_EcostressScanMirror', expecting type  Array<int,2>");
+        return NULL;
+      }
+      a1.reference(to_blitz_array<int, 2>(numpy1));
+      arg1 = &a1;
+    }
+  }
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_EcostressScanMirror" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_EcostressScanMirror" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  ecode4 = SWIG_AsVal_int(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_EcostressScanMirror" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  ecode5 = SWIG_AsVal_double(swig_obj[4], &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_EcostressScanMirror" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  ecode6 = SWIG_AsVal_double(swig_obj[5], &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "new_EcostressScanMirror" "', argument " "6"" of type '" "double""'");
+  } 
+  arg6 = static_cast< double >(val6);
+  {
+    try {
+      result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror((blitz::Array< int,2 > const &)*arg1,arg2,arg3,arg4,arg5,arg6);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::EcostressScanMirror > *smartresult = result ? new boost::shared_ptr<  Ecostress::EcostressScanMirror >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_13(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  blitz::Array< int,2 > *arg1 = 0 ;
+  int arg2 ;
+  int arg3 ;
+  int arg4 ;
+  double arg5 ;
+  blitz::Array< int,2 > a1 ;
+  PythonObject numpy1 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  Ecostress::EcostressScanMirror *result = 0 ;
+  
+  if ((nobjs < 5) || (nobjs > 5)) SWIG_fail;
+  {
+    int res = SWIG_ConvertPtr(swig_obj[0], (void**)(&arg1), SWIGTYPE_p_blitz__ArrayT_int_2_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy1.obj = to_numpy<int >(swig_obj[0]);
+      if(!numpy1.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_EcostressScanMirror', expecting type  Array<int,2>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy1.obj) !=2) {
+        SWIG_Error(SWIG_TypeError, "in method 'new_EcostressScanMirror', expecting type  Array<int,2>");
+        return NULL;
+      }
+      a1.reference(to_blitz_array<int, 2>(numpy1));
+      arg1 = &a1;
+    }
+  }
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_EcostressScanMirror" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_EcostressScanMirror" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  ecode4 = SWIG_AsVal_int(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_EcostressScanMirror" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  ecode5 = SWIG_AsVal_double(swig_obj[4], &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_EcostressScanMirror" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  {
+    try {
+      result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror((blitz::Array< int,2 > const &)*arg1,arg2,arg3,arg4,arg5);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  Ecostress::EcostressScanMirror > *smartresult = result ? new boost::shared_ptr<  Ecostress::EcostressScanMirror >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_14(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   blitz::Array< int,2 > *arg1 = 0 ;
   int arg2 ;
@@ -6810,7 +7928,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_9(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_15(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   blitz::Array< int,2 > *arg1 = 0 ;
   int arg2 ;
@@ -6870,7 +7988,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_10(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_16(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   blitz::Array< int,2 > *arg1 = 0 ;
   int arg2 ;
@@ -6922,7 +8040,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_11(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_17(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   blitz::Array< int,2 > *arg1 = 0 ;
   blitz::Array< int,2 > a1 ;
@@ -6968,14 +8086,14 @@ fail:
 
 SWIGINTERN PyObject *_wrap_new_EcostressScanMirror(PyObject *self, PyObject *args) {
   Py_ssize_t argc;
-  PyObject *argv[8] = {
+  PyObject *argv[11] = {
     0
   };
   
-  if (!(argc = SWIG_Python_UnpackTuple(args,"new_EcostressScanMirror",0,7,argv))) SWIG_fail;
+  if (!(argc = SWIG_Python_UnpackTuple(args,"new_EcostressScanMirror",0,10,argv))) SWIG_fail;
   --argc;
   if (argc == 0) {
-    return _wrap_new_EcostressScanMirror__SWIG_7(self, argc, argv);
+    return _wrap_new_EcostressScanMirror__SWIG_10(self, argc, argv);
   }
   if (argc == 1) {
     int _v = 0;
@@ -6986,12 +8104,12 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror(PyObject *self, PyObject *arg
       }
     }
     if (!_v) goto check_2;
-    return _wrap_new_EcostressScanMirror__SWIG_6(self, argc, argv);
+    return _wrap_new_EcostressScanMirror__SWIG_9(self, argc, argv);
   }
 check_2:
   
   if (argc == 1) {
-    return _wrap_new_EcostressScanMirror__SWIG_11(self, argc, argv);
+    return _wrap_new_EcostressScanMirror__SWIG_17(self, argc, argv);
   }
   if (argc == 2) {
     int _v = 0;
@@ -7009,12 +8127,12 @@ check_2:
       }
     }
     if (!_v) goto check_4;
-    return _wrap_new_EcostressScanMirror__SWIG_5(self, argc, argv);
+    return _wrap_new_EcostressScanMirror__SWIG_8(self, argc, argv);
   }
 check_4:
   
   if (argc == 2) {
-    return _wrap_new_EcostressScanMirror__SWIG_10(self, argc, argv);
+    return _wrap_new_EcostressScanMirror__SWIG_16(self, argc, argv);
   }
   if (argc == 3) {
     int _v = 0;
@@ -7032,12 +8150,12 @@ check_4:
       }
     }
     if (!_v) goto check_6;
-    return _wrap_new_EcostressScanMirror__SWIG_4(self, argc, argv);
+    return _wrap_new_EcostressScanMirror__SWIG_7(self, argc, argv);
   }
 check_6:
   
   if (argc == 3) {
-    return _wrap_new_EcostressScanMirror__SWIG_9(self, argc, argv);
+    return _wrap_new_EcostressScanMirror__SWIG_15(self, argc, argv);
   }
   if (argc == 4) {
     int _v = 0;
@@ -7055,26 +8173,140 @@ check_6:
       }
     }
     if (!_v) goto check_8;
-    return _wrap_new_EcostressScanMirror__SWIG_3(self, argc, argv);
+    return _wrap_new_EcostressScanMirror__SWIG_6(self, argc, argv);
   }
 check_8:
   
   if (argc == 4) {
-    return _wrap_new_EcostressScanMirror__SWIG_8(self, argc, argv);
+    return _wrap_new_EcostressScanMirror__SWIG_14(self, argc, argv);
   }
   if (argc == 5) {
-    return _wrap_new_EcostressScanMirror__SWIG_2(self, argc, argv);
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_double(argv[0], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_10;
+    {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_10;
+    {
+      {
+        int res = SWIG_AsVal_int(argv[4], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_10;
+    return _wrap_new_EcostressScanMirror__SWIG_5(self, argc, argv);
+  }
+check_10:
+  
+  if (argc == 5) {
+    return _wrap_new_EcostressScanMirror__SWIG_13(self, argc, argv);
   }
   if (argc == 6) {
-    return _wrap_new_EcostressScanMirror__SWIG_1(self, argc, argv);
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_double(argv[0], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_12;
+    {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_12;
+    {
+      {
+        int res = SWIG_AsVal_int(argv[4], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_12;
+    {
+      {
+        int res = SWIG_AsVal_int(argv[5], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_12;
+    return _wrap_new_EcostressScanMirror__SWIG_4(self, argc, argv);
+  }
+check_12:
+  
+  if (argc == 6) {
+    return _wrap_new_EcostressScanMirror__SWIG_12(self, argc, argv);
   }
   if (argc == 7) {
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_double(argv[0], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_14;
+    {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_14;
+    {
+      {
+        int res = SWIG_AsVal_int(argv[4], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_14;
+    {
+      {
+        int res = SWIG_AsVal_int(argv[5], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_14;
+    {
+      {
+        int res = SWIG_AsVal_int(argv[6], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_14;
+    return _wrap_new_EcostressScanMirror__SWIG_3(self, argc, argv);
+  }
+check_14:
+  
+  if (argc == 7) {
+    return _wrap_new_EcostressScanMirror__SWIG_11(self, argc, argv);
+  }
+  if (argc == 8) {
+    return _wrap_new_EcostressScanMirror__SWIG_2(self, argc, argv);
+  }
+  if (argc == 9) {
+    return _wrap_new_EcostressScanMirror__SWIG_1(self, argc, argv);
+  }
+  if (argc == 10) {
     return _wrap_new_EcostressScanMirror__SWIG_0(self, argc, argv);
   }
   
 fail:
   SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_EcostressScanMirror'.\n"
     "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressScanMirror::EcostressScanMirror(double,double,int,int,int,int,int,double,double,double)\n"
+    "    Ecostress::EcostressScanMirror::EcostressScanMirror(double,double,int,int,int,int,int,double,double)\n"
+    "    Ecostress::EcostressScanMirror::EcostressScanMirror(double,double,int,int,int,int,int,double)\n"
     "    Ecostress::EcostressScanMirror::EcostressScanMirror(double,double,int,int,int,int,int)\n"
     "    Ecostress::EcostressScanMirror::EcostressScanMirror(double,double,int,int,int,int)\n"
     "    Ecostress::EcostressScanMirror::EcostressScanMirror(double,double,int,int,int)\n"
@@ -7083,6 +8315,9 @@ fail:
     "    Ecostress::EcostressScanMirror::EcostressScanMirror(double,double)\n"
     "    Ecostress::EcostressScanMirror::EcostressScanMirror(double)\n"
     "    Ecostress::EcostressScanMirror::EcostressScanMirror()\n"
+    "    Ecostress::EcostressScanMirror::EcostressScanMirror(blitz::Array< int,2 > const &,int,int,int,double,double,double)\n"
+    "    Ecostress::EcostressScanMirror::EcostressScanMirror(blitz::Array< int,2 > const &,int,int,int,double,double)\n"
+    "    Ecostress::EcostressScanMirror::EcostressScanMirror(blitz::Array< int,2 > const &,int,int,int,double)\n"
     "    Ecostress::EcostressScanMirror::EcostressScanMirror(blitz::Array< int,2 > const &,int,int,int)\n"
     "    Ecostress::EcostressScanMirror::EcostressScanMirror(blitz::Array< int,2 > const &,int,int)\n"
     "    Ecostress::EcostressScanMirror::EcostressScanMirror(blitz::Array< int,2 > const &,int)\n"
@@ -7797,6 +9032,838 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_instrument_to_sc__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressScanMirror *arg1 = (Ecostress::EcostressScanMirror *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror const > *smartarg1 = 0 ;
+  SwigValueWrapper< boost::math::quaternion< double > > result;
+  
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressScanMirror__v_instrument_to_sc" "', argument " "1"" of type '" "Ecostress::EcostressScanMirror const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = ((Ecostress::EcostressScanMirror const *)arg1)->instrument_to_sc();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new boost::math::quaternion< double >(static_cast< const boost::math::quaternion< double >& >(result))), SWIGTYPE_p_boost__math__quaternionT_double_t, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_instrument_to_sc__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressScanMirror *arg1 = (Ecostress::EcostressScanMirror *) 0 ;
+  boost::math::quaternion< double > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressScanMirror__v_instrument_to_sc" "', argument " "1"" of type '" "Ecostress::EcostressScanMirror *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_boost__math__quaternionT_double_t,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "EcostressScanMirror__v_instrument_to_sc" "', argument " "2"" of type '" "boost::math::quaternion< double > const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressScanMirror__v_instrument_to_sc" "', argument " "2"" of type '" "boost::math::quaternion< double > const &""'"); 
+  }
+  arg2 = reinterpret_cast< boost::math::quaternion< double > * >(argp2);
+  {
+    try {
+      (arg1)->instrument_to_sc((boost::math::quaternion< double > const &)*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_instrument_to_sc(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[3] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"EcostressScanMirror__v_instrument_to_sc",0,2,argv))) SWIG_fail;
+  --argc;
+  if (argc == 1) {
+    return _wrap_EcostressScanMirror__v_instrument_to_sc__SWIG_0(self, argc, argv);
+  }
+  if (argc == 2) {
+    return _wrap_EcostressScanMirror__v_instrument_to_sc__SWIG_1(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'EcostressScanMirror__v_instrument_to_sc'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressScanMirror::instrument_to_sc() const\n"
+    "    Ecostress::EcostressScanMirror::instrument_to_sc(boost::math::quaternion< double > const &)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_instrument_to_sc_with_derivative__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressScanMirror *arg1 = (Ecostress::EcostressScanMirror *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror const > *smartarg1 = 0 ;
+  SwigValueWrapper< boost::math::quaternion< GeoCal::AutoDerivative< double > > > result;
+  
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressScanMirror__v_instrument_to_sc_with_derivative" "', argument " "1"" of type '" "Ecostress::EcostressScanMirror const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = ((Ecostress::EcostressScanMirror const *)arg1)->instrument_to_sc_with_derivative();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new boost::math::quaternion< GeoCal::AutoDerivative< double > >(static_cast< const boost::math::quaternion< GeoCal::AutoDerivative< double > >& >(result))), SWIGTYPE_p_boost__math__quaternionT_GeoCal__AutoDerivativeT_double_t_t, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_instrument_to_sc_with_derivative__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressScanMirror *arg1 = (Ecostress::EcostressScanMirror *) 0 ;
+  boost::math::quaternion< GeoCal::AutoDerivative< double > > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressScanMirror__v_instrument_to_sc_with_derivative" "', argument " "1"" of type '" "Ecostress::EcostressScanMirror *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_boost__math__quaternionT_GeoCal__AutoDerivativeT_double_t_t,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "EcostressScanMirror__v_instrument_to_sc_with_derivative" "', argument " "2"" of type '" "boost::math::quaternion< GeoCal::AutoDerivative< double > > const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressScanMirror__v_instrument_to_sc_with_derivative" "', argument " "2"" of type '" "boost::math::quaternion< GeoCal::AutoDerivative< double > > const &""'"); 
+  }
+  arg2 = reinterpret_cast< boost::math::quaternion< GeoCal::AutoDerivative< double > > * >(argp2);
+  {
+    try {
+      (arg1)->instrument_to_sc_with_derivative((boost::math::quaternion< GeoCal::AutoDerivative< double > > const &)*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_instrument_to_sc_with_derivative(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[3] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"EcostressScanMirror__v_instrument_to_sc_with_derivative",0,2,argv))) SWIG_fail;
+  --argc;
+  if (argc == 1) {
+    return _wrap_EcostressScanMirror__v_instrument_to_sc_with_derivative__SWIG_0(self, argc, argv);
+  }
+  if (argc == 2) {
+    return _wrap_EcostressScanMirror__v_instrument_to_sc_with_derivative__SWIG_1(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'EcostressScanMirror__v_instrument_to_sc_with_derivative'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressScanMirror::instrument_to_sc_with_derivative() const\n"
+    "    Ecostress::EcostressScanMirror::instrument_to_sc_with_derivative(boost::math::quaternion< GeoCal::AutoDerivative< double > > const &)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_euler__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressScanMirror *arg1 = (Ecostress::EcostressScanMirror *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror const > *smartarg1 = 0 ;
+  SwigValueWrapper< blitz::Array< double,1 > > result;
+  
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressScanMirror__v_euler" "', argument " "1"" of type '" "Ecostress::EcostressScanMirror const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = ((Ecostress::EcostressScanMirror const *)arg1)->euler();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    npy_intp dims[1], stride[1];
+    for(int i = 0; i < 1; ++i) {
+      dims[i] = (&result)->extent(i);
+      // Note numpy stride is in terms of bytes, while blitz in in terms
+      // of type T.
+      stride[i] = (&result)->stride(i) * sizeof(double);
+    }
+    resultobj = PyArray_New(&PyArray_Type, 1, dims, type_to_npy<double >(), 
+      stride, (&result)->data(), 0, 0, 0);
+    blitz::Array<double, 1>* t = new blitz::Array<double, 1>(result);
+    PyArray_SetBaseObject((PyArrayObject*)resultobj, 
+      SWIG_NewPointerObj(SWIG_as_voidptr(t), 
+        SWIGTYPE_p_blitz__ArrayT_double_1_t, 					   SWIG_POINTER_NEW | 0 ));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_euler__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressScanMirror *arg1 = (Ecostress::EcostressScanMirror *) 0 ;
+  blitz::Array< double,1 > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror > *smartarg1 = 0 ;
+  blitz::Array< double,1 > a2 ;
+  PythonObject numpy2 ;
+  
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressScanMirror__v_euler" "', argument " "1"" of type '" "Ecostress::EcostressScanMirror *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    int res = SWIG_ConvertPtr(swig_obj[1], (void**)(&arg2), SWIGTYPE_p_blitz__ArrayT_double_1_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy2.obj = to_numpy<double >(swig_obj[1]);
+      if(!numpy2.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'EcostressScanMirror__v_euler', expecting type  Array<double,1>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy2.obj) !=1) {
+        SWIG_Error(SWIG_TypeError, "in method 'EcostressScanMirror__v_euler', expecting type  Array<double,1>");
+        return NULL;
+      }
+      a2.reference(to_blitz_array<double, 1>(numpy2));
+      arg2 = &a2;
+    }
+  }
+  {
+    try {
+      (arg1)->euler((blitz::Array< double,1 > const &)*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_euler(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[3] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"EcostressScanMirror__v_euler",0,2,argv))) SWIG_fail;
+  --argc;
+  if (argc == 1) {
+    return _wrap_EcostressScanMirror__v_euler__SWIG_0(self, argc, argv);
+  }
+  if (argc == 2) {
+    return _wrap_EcostressScanMirror__v_euler__SWIG_1(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'EcostressScanMirror__v_euler'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressScanMirror::euler() const\n"
+    "    Ecostress::EcostressScanMirror::euler(blitz::Array< double,1 > const &)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_euler_with_derivative__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressScanMirror *arg1 = (Ecostress::EcostressScanMirror *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror const > *smartarg1 = 0 ;
+  SwigValueWrapper< blitz::Array< GeoCal::AutoDerivative< double >,1 > > result;
+  
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressScanMirror__v_euler_with_derivative" "', argument " "1"" of type '" "Ecostress::EcostressScanMirror const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = ((Ecostress::EcostressScanMirror const *)arg1)->euler_with_derivative();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new blitz::Array< GeoCal::AutoDerivative< double >,1 >(static_cast< const blitz::Array< GeoCal::AutoDerivative< double >,1 >& >(result))), SWIGTYPE_p_blitz__ArrayT_GeoCal__AutoDerivativeT_double_t_1_t, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_euler_with_derivative__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressScanMirror *arg1 = (Ecostress::EcostressScanMirror *) 0 ;
+  blitz::Array< GeoCal::AutoDerivative< double >,1 > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressScanMirror__v_euler_with_derivative" "', argument " "1"" of type '" "Ecostress::EcostressScanMirror *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_blitz__ArrayT_GeoCal__AutoDerivativeT_double_t_1_t,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "EcostressScanMirror__v_euler_with_derivative" "', argument " "2"" of type '" "blitz::Array< GeoCal::AutoDerivative< double >,1 > const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressScanMirror__v_euler_with_derivative" "', argument " "2"" of type '" "blitz::Array< GeoCal::AutoDerivative< double >,1 > const &""'"); 
+  }
+  arg2 = reinterpret_cast< blitz::Array< GeoCal::AutoDerivative< double >,1 > * >(argp2);
+  {
+    try {
+      (arg1)->euler_with_derivative((blitz::Array< GeoCal::AutoDerivative< double >,1 > const &)*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_euler_with_derivative(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[3] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"EcostressScanMirror__v_euler_with_derivative",0,2,argv))) SWIG_fail;
+  --argc;
+  if (argc == 1) {
+    return _wrap_EcostressScanMirror__v_euler_with_derivative__SWIG_0(self, argc, argv);
+  }
+  if (argc == 2) {
+    return _wrap_EcostressScanMirror__v_euler_with_derivative__SWIG_1(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'EcostressScanMirror__v_euler_with_derivative'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressScanMirror::euler_with_derivative() const\n"
+    "    Ecostress::EcostressScanMirror::euler_with_derivative(blitz::Array< GeoCal::AutoDerivative< double >,1 > const &)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_epsilon__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressScanMirror *arg1 = (Ecostress::EcostressScanMirror *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror const > *smartarg1 = 0 ;
+  bool result;
+  
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressScanMirror__v_fit_epsilon" "', argument " "1"" of type '" "Ecostress::EcostressScanMirror const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = (bool)((Ecostress::EcostressScanMirror const *)arg1)->fit_epsilon();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_epsilon__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressScanMirror *arg1 = (Ecostress::EcostressScanMirror *) 0 ;
+  bool *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror > *smartarg1 = 0 ;
+  bool temp2 ;
+  bool val2 ;
+  int ecode2 = 0 ;
+  
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressScanMirror__v_fit_epsilon" "', argument " "1"" of type '" "Ecostress::EcostressScanMirror *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_bool(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "EcostressScanMirror__v_fit_epsilon" "', argument " "2"" of type '" "bool""'");
+  } 
+  temp2 = static_cast< bool >(val2);
+  arg2 = &temp2;
+  {
+    try {
+      (arg1)->fit_epsilon((bool const &)*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_epsilon(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[3] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"EcostressScanMirror__v_fit_epsilon",0,2,argv))) SWIG_fail;
+  --argc;
+  if (argc == 1) {
+    return _wrap_EcostressScanMirror__v_fit_epsilon__SWIG_0(self, argc, argv);
+  }
+  if (argc == 2) {
+    return _wrap_EcostressScanMirror__v_fit_epsilon__SWIG_1(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'EcostressScanMirror__v_fit_epsilon'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressScanMirror::fit_epsilon() const\n"
+    "    Ecostress::EcostressScanMirror::fit_epsilon(bool const &)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_beta__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressScanMirror *arg1 = (Ecostress::EcostressScanMirror *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror const > *smartarg1 = 0 ;
+  bool result;
+  
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressScanMirror__v_fit_beta" "', argument " "1"" of type '" "Ecostress::EcostressScanMirror const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = (bool)((Ecostress::EcostressScanMirror const *)arg1)->fit_beta();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_beta__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressScanMirror *arg1 = (Ecostress::EcostressScanMirror *) 0 ;
+  bool *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror > *smartarg1 = 0 ;
+  bool temp2 ;
+  bool val2 ;
+  int ecode2 = 0 ;
+  
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressScanMirror__v_fit_beta" "', argument " "1"" of type '" "Ecostress::EcostressScanMirror *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_bool(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "EcostressScanMirror__v_fit_beta" "', argument " "2"" of type '" "bool""'");
+  } 
+  temp2 = static_cast< bool >(val2);
+  arg2 = &temp2;
+  {
+    try {
+      (arg1)->fit_beta((bool const &)*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_beta(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[3] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"EcostressScanMirror__v_fit_beta",0,2,argv))) SWIG_fail;
+  --argc;
+  if (argc == 1) {
+    return _wrap_EcostressScanMirror__v_fit_beta__SWIG_0(self, argc, argv);
+  }
+  if (argc == 2) {
+    return _wrap_EcostressScanMirror__v_fit_beta__SWIG_1(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'EcostressScanMirror__v_fit_beta'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressScanMirror::fit_beta() const\n"
+    "    Ecostress::EcostressScanMirror::fit_beta(bool const &)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_delta__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressScanMirror *arg1 = (Ecostress::EcostressScanMirror *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror const > *smartarg1 = 0 ;
+  bool result;
+  
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressScanMirror__v_fit_delta" "', argument " "1"" of type '" "Ecostress::EcostressScanMirror const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = (bool)((Ecostress::EcostressScanMirror const *)arg1)->fit_delta();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_delta__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressScanMirror *arg1 = (Ecostress::EcostressScanMirror *) 0 ;
+  bool *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressScanMirror > *smartarg1 = 0 ;
+  bool temp2 ;
+  bool val2 ;
+  int ecode2 = 0 ;
+  
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressScanMirror__v_fit_delta" "', argument " "1"" of type '" "Ecostress::EcostressScanMirror *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressScanMirror > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressScanMirror * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_bool(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "EcostressScanMirror__v_fit_delta" "', argument " "2"" of type '" "bool""'");
+  } 
+  temp2 = static_cast< bool >(val2);
+  arg2 = &temp2;
+  {
+    try {
+      (arg1)->fit_delta((bool const &)*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_delta(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[3] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args,"EcostressScanMirror__v_fit_delta",0,2,argv))) SWIG_fail;
+  --argc;
+  if (argc == 1) {
+    return _wrap_EcostressScanMirror__v_fit_delta__SWIG_0(self, argc, argv);
+  }
+  if (argc == 2) {
+    return _wrap_EcostressScanMirror__v_fit_delta__SWIG_1(self, argc, argv);
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'EcostressScanMirror__v_fit_delta'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressScanMirror::fit_delta() const\n"
+    "    Ecostress::EcostressScanMirror::fit_delta(bool const &)\n");
+  return 0;
+}
+
+
 SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_first_encoder_value_at_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressScanMirror *arg1 = (Ecostress::EcostressScanMirror *) 0 ;
@@ -8185,11 +10252,24 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
 	 { (char *)"SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
 	 { (char *)"SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_VARARGS, NULL},
+	 { (char *)"delete_ObservableEcostressScanMirror", (PyCFunction)_wrap_delete_ObservableEcostressScanMirror, METH_O, NULL},
+	 { (char *)"ObservableEcostressScanMirror_add_observer_and_keep_reference", _wrap_ObservableEcostressScanMirror_add_observer_and_keep_reference, METH_VARARGS, NULL},
+	 { (char *)"ObservableEcostressScanMirror_add_observer", _wrap_ObservableEcostressScanMirror_add_observer, METH_VARARGS, NULL},
+	 { (char *)"ObservableEcostressScanMirror_remove_observer", _wrap_ObservableEcostressScanMirror_remove_observer, METH_VARARGS, NULL},
+	 { (char *)"ObservableEcostressScanMirror_swigregister", ObservableEcostressScanMirror_swigregister, METH_VARARGS, NULL},
+	 { (char *)"new_ObserverEcostressScanMirror", (PyCFunction)_wrap_new_ObserverEcostressScanMirror, METH_NOARGS, NULL},
+	 { (char *)"delete_ObserverEcostressScanMirror", (PyCFunction)_wrap_delete_ObserverEcostressScanMirror, METH_O, NULL},
+	 { (char *)"ObserverEcostressScanMirror_notify_update", _wrap_ObserverEcostressScanMirror_notify_update, METH_VARARGS, NULL},
+	 { (char *)"ObserverEcostressScanMirror_notify_add", _wrap_ObserverEcostressScanMirror_notify_add, METH_VARARGS, NULL},
+	 { (char *)"ObserverEcostressScanMirror_notify_remove", _wrap_ObserverEcostressScanMirror_notify_remove, METH_VARARGS, NULL},
+	 { (char *)"ObserverEcostressScanMirror_swigregister", ObserverEcostressScanMirror_swigregister, METH_VARARGS, NULL},
+	 { (char *)"ObserverEcostressScanMirror_swiginit", ObserverEcostressScanMirror_swiginit, METH_VARARGS, NULL},
 	 { (char *)"new_EcostressScanMirror", _wrap_new_EcostressScanMirror, METH_VARARGS, (char *)"\n"
 		"\n"
 		"EcostressScanMirror::EcostressScanMirror(const blitz::Array< int, 2 > &Encoder_value, int\n"
 		"Max_encoder_value=1749248, int First_encoder_value_at_0=401443, int\n"
-		"Second_encoder_value_at_0=1275903)\n"
+		"Second_encoder_value_at_0=1275903, double Epsilon=0, double Beta=0,\n"
+		"double Delta=0)\n"
 		"Constructor, taking the encoder values. We fill in bad data values. \n"
 		""},
 	 { (char *)"EcostressScanMirror_scan_mirror_angle", _wrap_EcostressScanMirror_scan_mirror_angle, METH_VARARGS, (char *)"\n"
@@ -8218,6 +10298,43 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		"GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::encoder_value_interpolate(int Scan_index, const GeoCal::AutoDerivative< double > Ic_sample)\n"
 		"const\n"
+		"\n"
+		""},
+	 { (char *)"EcostressScanMirror__v_instrument_to_sc", _wrap_EcostressScanMirror__v_instrument_to_sc, METH_VARARGS, (char *)"\n"
+		"\n"
+		"void Ecostress::EcostressScanMirror::instrument_to_sc(const boost::math::quaternion< double > &inst_to_sc_q)\n"
+		"Set instrument to spacecraft quaternion. \n"
+		""},
+	 { (char *)"EcostressScanMirror__v_instrument_to_sc_with_derivative", _wrap_EcostressScanMirror__v_instrument_to_sc_with_derivative, METH_VARARGS, (char *)"\n"
+		"\n"
+		"void Ecostress::EcostressScanMirror::instrument_to_sc_with_derivative(const boost::math::quaternion< GeoCal::AutoDerivative< double > >\n"
+		"&inst_to_sc_q)\n"
+		"Set instrument to spacecraft quaternion. \n"
+		""},
+	 { (char *)"EcostressScanMirror__v_euler", _wrap_EcostressScanMirror__v_euler, METH_VARARGS, (char *)"\n"
+		"\n"
+		"void Ecostress::EcostressScanMirror::euler(const blitz::Array< double, 1 > &Euler)\n"
+		"Update the instrument_to_sc using the given Euler angles epsilon,\n"
+		"beta, data in radians. \n"
+		""},
+	 { (char *)"EcostressScanMirror__v_euler_with_derivative", _wrap_EcostressScanMirror__v_euler_with_derivative, METH_VARARGS, (char *)"\n"
+		"\n"
+		"void Ecostress::EcostressScanMirror::euler_with_derivative(const GeoCal::ArrayAd< double, 1 > &Euler)\n"
+		"\n"
+		""},
+	 { (char *)"EcostressScanMirror__v_fit_epsilon", _wrap_EcostressScanMirror__v_fit_epsilon, METH_VARARGS, (char *)"\n"
+		"\n"
+		"void Ecostress::EcostressScanMirror::fit_epsilon(bool V)\n"
+		"\n"
+		""},
+	 { (char *)"EcostressScanMirror__v_fit_beta", _wrap_EcostressScanMirror__v_fit_beta, METH_VARARGS, (char *)"\n"
+		"\n"
+		"void Ecostress::EcostressScanMirror::fit_beta(bool V)\n"
+		"\n"
+		""},
+	 { (char *)"EcostressScanMirror__v_fit_delta", _wrap_EcostressScanMirror__v_fit_delta, METH_VARARGS, (char *)"\n"
+		"\n"
+		"void Ecostress::EcostressScanMirror::fit_delta(bool V)\n"
 		"\n"
 		""},
 	 { (char *)"EcostressScanMirror__v_first_encoder_value_at_0", (PyCFunction)_wrap_EcostressScanMirror__v_first_encoder_value_at_0, METH_O, (char *)"\n"
@@ -8265,38 +10382,20 @@ static PyMethodDef SwigMethods[] = {
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
-static void *_p_std__basic_ostreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_iosT_char_std__char_traitsT_char_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((std::basic_ios< char,std::char_traits< char > > *)  ((std::basic_ostream< char,std::char_traits< char > > *) x));
+static void *_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_tTo_p_boost__shared_ptrT_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::Observable< Ecostress::EcostressScanMirror > >(*(boost::shared_ptr< Ecostress::EcostressScanMirror > *)x);
 }
-static void *_p_std__basic_istreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_iosT_char_std__char_traitsT_char_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((std::basic_ios< char,std::char_traits< char > > *)  ((std::basic_istream< char,std::char_traits< char > > *) x));
+static void *_p_Ecostress__EcostressScanMirrorTo_p_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::Observable< Ecostress::EcostressScanMirror > *)  ((Ecostress::EcostressScanMirror *) x));
 }
-static void *_p_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_iosT_char_std__char_traitsT_char_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((std::basic_ios< char,std::char_traits< char > > *) (std::basic_istream< char > *) ((std::basic_iostream< char,std::char_traits< char > > *) x));
+static void *_p_boost__shared_ptrT_GeoCal__WithParameter_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::WithParameter > *)x);
 }
-static void *_p_GeoCal__ImageCoordinateWithDerivativeTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((GeoCal::GenericObject *)  ((GeoCal::ImageCoordinateWithDerivative *) x));
-}
-static void *_p_Ecostress__EcostressScanMirrorTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((GeoCal::GenericObject *)  ((Ecostress::EcostressScanMirror *) x));
-}
-static void *_p_GeoCal__ImageCoordinateTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((GeoCal::GenericObject *)  ((GeoCal::ImageCoordinate *) x));
-}
-static void *_p_GeoCal__VicarImageCoordinateTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((GeoCal::GenericObject *)  ((GeoCal::VicarImageCoordinate *) x));
-}
-static void *_p_GeoCal__AutoDerivativeT_double_tTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((GeoCal::GenericObject *)  ((GeoCal::AutoDerivative< double > *) x));
-}
-static void *_p_GeoCal__AutoDerivativeRefT_double_tTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((GeoCal::GenericObject *)  ((GeoCal::AutoDerivativeRef< double > *) x));
-}
-static void *_p_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_istreamT_char_std__char_traitsT_char_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((std::basic_istream< char,std::char_traits< char > > *)  ((std::basic_iostream< char,std::char_traits< char > > *) x));
-}
-static void *_p_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((std::basic_ostream< char,std::char_traits< char > > *)  ((std::basic_iostream< char,std::char_traits< char > > *) x));
+static void *_p_boost__shared_ptrT_GeoCal__WithParameterNested_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::WithParameterNested > *)x);
 }
 static void *_p_boost__shared_ptrT_GeoCal__ImageCoordinate_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
     *newmemory = SWIG_CAST_NEW_MEMORY;
@@ -8306,9 +10405,17 @@ static void *_p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_tTo_p_boost__sha
     *newmemory = SWIG_CAST_NEW_MEMORY;
     return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::VicarImageCoordinate > *)x);
 }
+static void *_p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > *)x);
+}
 static void *_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
     *newmemory = SWIG_CAST_NEW_MEMORY;
     return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::AutoDerivative< double > > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::Observable< Ecostress::EcostressScanMirror > > *)x);
 }
 static void *_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
     *newmemory = SWIG_CAST_NEW_MEMORY;
@@ -8322,14 +10429,82 @@ static void *_p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_tTo_p_b
     *newmemory = SWIG_CAST_NEW_MEMORY;
     return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::ImageCoordinateWithDerivative > *)x);
 }
+static void *_p_GeoCal__ObserverT_Ecostress__EcostressScanMirror_tTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::Observer< Ecostress::EcostressScanMirror > *) x));
+}
+static void *_p_GeoCal__ImageCoordinateWithDerivativeTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::ImageCoordinateWithDerivative *) x));
+}
+static void *_p_GeoCal__WithParameterTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::WithParameter *) x));
+}
+static void *_p_GeoCal__WithParameterNestedTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *) (GeoCal::WithParameter *) ((GeoCal::WithParameterNested *) x));
+}
+static void *_p_GeoCal__ObservableT_Ecostress__EcostressScanMirror_tTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::Observable< Ecostress::EcostressScanMirror > *) x));
+}
+static void *_p_Ecostress__EcostressScanMirrorTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *) (GeoCal::Observable< Ecostress::EcostressScanMirror > *) ((Ecostress::EcostressScanMirror *) x));
+}
+static void *_p_GeoCal__ImageCoordinateTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::ImageCoordinate *) x));
+}
+static void *_p_GeoCal__VicarImageCoordinateTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::VicarImageCoordinate *) x));
+}
+static void *_p_GeoCal__AutoDerivativeT_double_tTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::AutoDerivative< double > *) x));
+}
+static void *_p_GeoCal__AutoDerivativeRefT_double_tTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::AutoDerivativeRef< double > *) x));
+}
+static void *_p_std__basic_ostreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_iosT_char_std__char_traitsT_char_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((std::basic_ios< char,std::char_traits< char > > *)  ((std::basic_ostream< char,std::char_traits< char > > *) x));
+}
+static void *_p_std__basic_istreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_iosT_char_std__char_traitsT_char_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((std::basic_ios< char,std::char_traits< char > > *)  ((std::basic_istream< char,std::char_traits< char > > *) x));
+}
+static void *_p_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_iosT_char_std__char_traitsT_char_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((std::basic_ios< char,std::char_traits< char > > *) (std::basic_istream< char > *) ((std::basic_iostream< char,std::char_traits< char > > *) x));
+}
+static void *_p_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((std::basic_ostream< char,std::char_traits< char > > *)  ((std::basic_iostream< char,std::char_traits< char > > *) x));
+}
+static void *_p_std__basic_iostreamT_char_std__char_traitsT_char_t_tTo_p_std__basic_istreamT_char_std__char_traitsT_char_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((std::basic_istream< char,std::char_traits< char > > *)  ((std::basic_iostream< char,std::char_traits< char > > *) x));
+}
+static void *_p_boost__shared_ptrT_GeoCal__WithParameterNested_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::WithParameter >(*(boost::shared_ptr< GeoCal::WithParameterNested > *)x);
+}
+static void *_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::WithParameter >(*(boost::shared_ptr< Ecostress::EcostressScanMirror > *)x);
+}
+static void *_p_GeoCal__WithParameterNestedTo_p_GeoCal__WithParameter(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::WithParameter *)  ((GeoCal::WithParameterNested *) x));
+}
+static void *_p_Ecostress__EcostressScanMirrorTo_p_GeoCal__WithParameter(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::WithParameter *)  ((Ecostress::EcostressScanMirror *) x));
+}
 static swig_type_info _swigt__p_Ecostress__EcostressScanMirror = {"_p_Ecostress__EcostressScanMirror", "Ecostress::EcostressScanMirror *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__ArrayAdT_double_1_t = {"_p_GeoCal__ArrayAdT_double_1_t", "GeoCal::ArrayAd< double,1 > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__ArrayAdT_double_2_t = {"_p_GeoCal__ArrayAdT_double_2_t", "GeoCal::ArrayAd< double,2 > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__ArrayAdT_double_3_t = {"_p_GeoCal__ArrayAdT_double_3_t", "GeoCal::ArrayAd< double,3 > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__ArrayAdT_double_4_t = {"_p_GeoCal__ArrayAdT_double_4_t", "GeoCal::ArrayAd< double,4 > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_GeoCal__AutoDerivativeRefT_double_t = {"_p_GeoCal__AutoDerivativeRefT_double_t", "GeoCal::AutoDerivativeRef< double > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_GeoCal__AutoDerivativeT_double_t = {"_p_GeoCal__AutoDerivativeT_double_t", "GeoCal::AutoDerivative< double > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_GeoCal__GenericObject = {"_p_GeoCal__GenericObject", "GeoCal::GenericObject *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_GeoCal__ImageCoordinate = {"_p_GeoCal__ImageCoordinate", "GeoCal::ImageCoordinate *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_GeoCal__ImageCoordinateWithDerivative = {"_p_GeoCal__ImageCoordinateWithDerivative", "GeoCal::ImageCoordinateWithDerivative *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t = {"_p_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t", "GeoCal::Observable< Ecostress::EcostressScanMirror > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t = {"_p_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t", "GeoCal::Observer< Ecostress::EcostressScanMirror > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_GeoCal__VicarImageCoordinate = {"_p_GeoCal__VicarImageCoordinate", "GeoCal::VicarImageCoordinate *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__WithParameter = {"_p_GeoCal__WithParameter", "GeoCal::WithParameter *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__WithParameterNested = {"_p_GeoCal__WithParameterNested", "GeoCal::WithParameterNested *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_allocator_type = {"_p_allocator_type", "allocator_type *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_blitz__ArrayT_GeoCal__AutoDerivativeT_double_t_1_t = {"_p_blitz__ArrayT_GeoCal__AutoDerivativeT_double_t_1_t", "blitz::Array< GeoCal::AutoDerivative< double >,1 > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_blitz__ArrayT_bool_1_t = {"_p_blitz__ArrayT_bool_1_t", "blitz::Array< bool,1 > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_blitz__ArrayT_bool_2_t = {"_p_blitz__ArrayT_bool_2_t", "blitz::Array< bool,2 > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_blitz__ArrayT_bool_3_t = {"_p_blitz__ArrayT_bool_3_t", "blitz::Array< bool,3 > *", 0, 0, (void*)0, 0};
@@ -8357,12 +10532,20 @@ static swig_type_info _swigt__p_blitz__ArrayT_int_8_t = {"_p_blitz__ArrayT_int_8
 static swig_type_info _swigt__p_boost__math__quaternionT_GeoCal__AutoDerivativeT_double_t_t = {"_p_boost__math__quaternionT_GeoCal__AutoDerivativeT_double_t_t", "boost::math::quaternion< GeoCal::AutoDerivative< double > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__math__quaternionT_double_t = {"_p_boost__math__quaternionT_double_t", "boost::math::quaternion< double > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t = {"_p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t", "boost::shared_ptr< Ecostress::EcostressScanMirror > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t = {"_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t", "boost::shared_ptr< GeoCal::ArrayAd< double,1 > > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t = {"_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t", "boost::shared_ptr< GeoCal::ArrayAd< double,2 > > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_3_t_t = {"_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_3_t_t", "boost::shared_ptr< GeoCal::ArrayAd< double,3 > > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_4_t_t = {"_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_4_t_t", "boost::shared_ptr< GeoCal::ArrayAd< double,4 > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t = {"_p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t", "boost::shared_ptr< GeoCal::AutoDerivativeRef< double > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t = {"_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t", "boost::shared_ptr< GeoCal::AutoDerivative< double > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__GenericObject_t = {"_p_boost__shared_ptrT_GeoCal__GenericObject_t", "boost::shared_ptr< GeoCal::GenericObject > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t = {"_p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t", "boost::shared_ptr< GeoCal::ImageCoordinateWithDerivative > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__ImageCoordinate_t = {"_p_boost__shared_ptrT_GeoCal__ImageCoordinate_t", "boost::shared_ptr< GeoCal::ImageCoordinate > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t_t = {"_p_boost__shared_ptrT_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t_t", "boost::shared_ptr< GeoCal::Observable< Ecostress::EcostressScanMirror > > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_t = {"_p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_t", "boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t = {"_p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t", "boost::shared_ptr< GeoCal::VicarImageCoordinate > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__WithParameterNested_t = {"_p_boost__shared_ptrT_GeoCal__WithParameterNested_t", "boost::shared_ptr< GeoCal::WithParameterNested > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__WithParameter_t = {"_p_boost__shared_ptrT_GeoCal__WithParameter_t", "boost::shared_ptr< GeoCal::WithParameter > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char_type = {"_p_char_type", "char_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_difference_type = {"_p_difference_type", "difference_type *", 0, 0, (void*)0, 0};
@@ -8387,13 +10570,22 @@ static swig_type_info _swigt__p_value_type = {"_p_value_type", "value_type *", 0
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Ecostress__EcostressScanMirror,
+  &_swigt__p_GeoCal__ArrayAdT_double_1_t,
+  &_swigt__p_GeoCal__ArrayAdT_double_2_t,
+  &_swigt__p_GeoCal__ArrayAdT_double_3_t,
+  &_swigt__p_GeoCal__ArrayAdT_double_4_t,
   &_swigt__p_GeoCal__AutoDerivativeRefT_double_t,
   &_swigt__p_GeoCal__AutoDerivativeT_double_t,
   &_swigt__p_GeoCal__GenericObject,
   &_swigt__p_GeoCal__ImageCoordinate,
   &_swigt__p_GeoCal__ImageCoordinateWithDerivative,
+  &_swigt__p_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t,
+  &_swigt__p_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t,
   &_swigt__p_GeoCal__VicarImageCoordinate,
+  &_swigt__p_GeoCal__WithParameter,
+  &_swigt__p_GeoCal__WithParameterNested,
   &_swigt__p_allocator_type,
+  &_swigt__p_blitz__ArrayT_GeoCal__AutoDerivativeT_double_t_1_t,
   &_swigt__p_blitz__ArrayT_bool_1_t,
   &_swigt__p_blitz__ArrayT_bool_2_t,
   &_swigt__p_blitz__ArrayT_bool_3_t,
@@ -8421,12 +10613,20 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_boost__math__quaternionT_GeoCal__AutoDerivativeT_double_t_t,
   &_swigt__p_boost__math__quaternionT_double_t,
   &_swigt__p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_3_t_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_4_t_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__GenericObject_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__ImageCoordinate_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__WithParameterNested_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__WithParameter_t,
   &_swigt__p_char,
   &_swigt__p_char_type,
   &_swigt__p_difference_type,
@@ -8451,13 +10651,22 @@ static swig_type_info *swig_type_initial[] = {
 };
 
 static swig_cast_info _swigc__p_Ecostress__EcostressScanMirror[] = {  {&_swigt__p_Ecostress__EcostressScanMirror, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__ArrayAdT_double_1_t[] = {  {&_swigt__p_GeoCal__ArrayAdT_double_1_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__ArrayAdT_double_2_t[] = {  {&_swigt__p_GeoCal__ArrayAdT_double_2_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__ArrayAdT_double_3_t[] = {  {&_swigt__p_GeoCal__ArrayAdT_double_3_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__ArrayAdT_double_4_t[] = {  {&_swigt__p_GeoCal__ArrayAdT_double_4_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GeoCal__AutoDerivativeRefT_double_t[] = {  {&_swigt__p_GeoCal__AutoDerivativeRefT_double_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GeoCal__AutoDerivativeT_double_t[] = {  {&_swigt__p_GeoCal__AutoDerivativeT_double_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_GeoCal__GenericObject[] = {  {&_swigt__p_GeoCal__ImageCoordinateWithDerivative, _p_GeoCal__ImageCoordinateWithDerivativeTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__AutoDerivativeT_double_t, _p_GeoCal__AutoDerivativeT_double_tTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__AutoDerivativeRefT_double_t, _p_GeoCal__AutoDerivativeRefT_double_tTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_Ecostress__EcostressScanMirror, _p_Ecostress__EcostressScanMirrorTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__ImageCoordinate, _p_GeoCal__ImageCoordinateTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__VicarImageCoordinate, _p_GeoCal__VicarImageCoordinateTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__GenericObject, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__GenericObject[] = {  {&_swigt__p_GeoCal__ImageCoordinateWithDerivative, _p_GeoCal__ImageCoordinateWithDerivativeTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__AutoDerivativeT_double_t, _p_GeoCal__AutoDerivativeT_double_tTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__AutoDerivativeRefT_double_t, _p_GeoCal__AutoDerivativeRefT_double_tTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__WithParameter, _p_GeoCal__WithParameterTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__WithParameterNested, _p_GeoCal__WithParameterNestedTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_Ecostress__EcostressScanMirror, _p_Ecostress__EcostressScanMirrorTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t, _p_GeoCal__ObservableT_Ecostress__EcostressScanMirror_tTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__ImageCoordinate, _p_GeoCal__ImageCoordinateTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__VicarImageCoordinate, _p_GeoCal__VicarImageCoordinateTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__GenericObject, 0, 0, 0},  {&_swigt__p_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t, _p_GeoCal__ObserverT_Ecostress__EcostressScanMirror_tTo_p_GeoCal__GenericObject, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GeoCal__ImageCoordinate[] = {  {&_swigt__p_GeoCal__ImageCoordinate, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GeoCal__ImageCoordinateWithDerivative[] = {  {&_swigt__p_GeoCal__ImageCoordinateWithDerivative, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t[] = {  {&_swigt__p_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t, 0, 0, 0},  {&_swigt__p_Ecostress__EcostressScanMirror, _p_Ecostress__EcostressScanMirrorTo_p_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t[] = {  {&_swigt__p_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GeoCal__VicarImageCoordinate[] = {  {&_swigt__p_GeoCal__VicarImageCoordinate, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__WithParameter[] = {  {&_swigt__p_GeoCal__WithParameter, 0, 0, 0},  {&_swigt__p_GeoCal__WithParameterNested, _p_GeoCal__WithParameterNestedTo_p_GeoCal__WithParameter, 0, 0},  {&_swigt__p_Ecostress__EcostressScanMirror, _p_Ecostress__EcostressScanMirrorTo_p_GeoCal__WithParameter, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__WithParameterNested[] = {  {&_swigt__p_GeoCal__WithParameterNested, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_allocator_type[] = {  {&_swigt__p_allocator_type, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_blitz__ArrayT_GeoCal__AutoDerivativeT_double_t_1_t[] = {  {&_swigt__p_blitz__ArrayT_GeoCal__AutoDerivativeT_double_t_1_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_blitz__ArrayT_bool_1_t[] = {  {&_swigt__p_blitz__ArrayT_bool_1_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_blitz__ArrayT_bool_2_t[] = {  {&_swigt__p_blitz__ArrayT_bool_2_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_blitz__ArrayT_bool_3_t[] = {  {&_swigt__p_blitz__ArrayT_bool_3_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -8485,12 +10694,20 @@ static swig_cast_info _swigc__p_blitz__ArrayT_int_8_t[] = {  {&_swigt__p_blitz__
 static swig_cast_info _swigc__p_boost__math__quaternionT_GeoCal__AutoDerivativeT_double_t_t[] = {  {&_swigt__p_boost__math__quaternionT_GeoCal__AutoDerivativeT_double_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__math__quaternionT_double_t[] = {  {&_swigt__p_boost__math__quaternionT_double_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t[] = {  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_3_t_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_3_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_4_t_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_4_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__GenericObject_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t, _p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t, _p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t, _p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, _p_boost__shared_ptrT_Ecostress__EcostressScanMirror_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t, _p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ImageCoordinate_t, _p_boost__shared_ptrT_GeoCal__ImageCoordinate_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__GenericObject_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t, _p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t, _p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t_t, _p_boost__shared_ptrT_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__WithParameterNested_t, _p_boost__shared_ptrT_GeoCal__WithParameterNested_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t, _p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_t, _p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, _p_boost__shared_ptrT_Ecostress__EcostressScanMirror_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__WithParameter_t, _p_boost__shared_ptrT_GeoCal__WithParameter_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t, _p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ImageCoordinate_t, _p_boost__shared_ptrT_GeoCal__ImageCoordinate_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ImageCoordinate_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ImageCoordinate_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t_t, 0, 0, 0},  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, _p_boost__shared_ptrT_Ecostress__EcostressScanMirror_tTo_p_boost__shared_ptrT_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t_t, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__WithParameterNested_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__WithParameterNested_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__WithParameter_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__WithParameterNested_t, _p_boost__shared_ptrT_GeoCal__WithParameterNested_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0, 0},  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t, _p_boost__shared_ptrT_Ecostress__EcostressScanMirror_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char_type[] = {  {&_swigt__p_char_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_difference_type[] = {  {&_swigt__p_difference_type, 0, 0, 0},{0, 0, 0, 0}};
@@ -8515,13 +10732,22 @@ static swig_cast_info _swigc__p_value_type[] = {  {&_swigt__p_value_type, 0, 0, 
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Ecostress__EcostressScanMirror,
+  _swigc__p_GeoCal__ArrayAdT_double_1_t,
+  _swigc__p_GeoCal__ArrayAdT_double_2_t,
+  _swigc__p_GeoCal__ArrayAdT_double_3_t,
+  _swigc__p_GeoCal__ArrayAdT_double_4_t,
   _swigc__p_GeoCal__AutoDerivativeRefT_double_t,
   _swigc__p_GeoCal__AutoDerivativeT_double_t,
   _swigc__p_GeoCal__GenericObject,
   _swigc__p_GeoCal__ImageCoordinate,
   _swigc__p_GeoCal__ImageCoordinateWithDerivative,
+  _swigc__p_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t,
+  _swigc__p_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t,
   _swigc__p_GeoCal__VicarImageCoordinate,
+  _swigc__p_GeoCal__WithParameter,
+  _swigc__p_GeoCal__WithParameterNested,
   _swigc__p_allocator_type,
+  _swigc__p_blitz__ArrayT_GeoCal__AutoDerivativeT_double_t_1_t,
   _swigc__p_blitz__ArrayT_bool_1_t,
   _swigc__p_blitz__ArrayT_bool_2_t,
   _swigc__p_blitz__ArrayT_bool_3_t,
@@ -8549,12 +10775,20 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_boost__math__quaternionT_GeoCal__AutoDerivativeT_double_t_t,
   _swigc__p_boost__math__quaternionT_double_t,
   _swigc__p_boost__shared_ptrT_Ecostress__EcostressScanMirror_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_3_t_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_4_t_t,
   _swigc__p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t,
   _swigc__p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,
   _swigc__p_boost__shared_ptrT_GeoCal__GenericObject_t,
   _swigc__p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t,
   _swigc__p_boost__shared_ptrT_GeoCal__ImageCoordinate_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__ObservableT_Ecostress__EcostressScanMirror_t_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__ObserverT_Ecostress__EcostressScanMirror_t_t,
   _swigc__p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__WithParameterNested_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__WithParameter_t,
   _swigc__p_char,
   _swigc__p_char_type,
   _swigc__p_difference_type,
@@ -9269,6 +11503,12 @@ SWIG_init(void) {
   SWIG_Python_SetConstant(d, "SHARED_PTR_DISOWN",SWIG_From_int(static_cast< int >(0)));
   
   GeoCal::SwigTypeMapperBase::add(typeid(Ecostress::EcostressScanMirror), boost::make_shared<GeoCal::SwigTypeMapper< Ecostress::EcostressScanMirror > > ("boost::shared_ptr< Ecostress::EcostressScanMirror > *"));
+  
+  
+  GeoCal::SwigTypeMapperBase::add(typeid(GeoCal::Observable<Ecostress::EcostressScanMirror>), boost::make_shared<GeoCal::SwigTypeMapper< GeoCal::Observable<Ecostress::EcostressScanMirror> > > ("boost::shared_ptr< GeoCal::Observable<Ecostress::EcostressScanMirror> > *"));
+  
+  
+  GeoCal::SwigTypeMapperBase::add(typeid(GeoCal::Observer<Ecostress::EcostressScanMirror>), boost::make_shared<GeoCal::SwigTypeMapper< GeoCal::Observer<Ecostress::EcostressScanMirror> > > ("boost::shared_ptr< GeoCal::Observer<Ecostress::EcostressScanMirror> > *"));
   
 #if PY_VERSION_HEX >= 0x03000000
   return m;
