@@ -5,6 +5,7 @@ import random
 import os
 import math
 from ecostress_swig import *
+from distance_to_missing_scanline import *
 
 from tflearn.layers.conv import conv_2d, max_pool_2d
 from tflearn.layers.core import input_data, dropout, fully_connected
@@ -109,6 +110,10 @@ class EcostressInterpolate(object):
         counter = 0
         random.seed(self.seed)
         # Probably slow loop, we should come back to speed this up.
+        
+        # find the index [ between -.5 and 127.5] of where the center of the missing scanline is
+        center_of_missing_scanline = find_center_of_missing_scan( missing_mask )
+        
         while counter < self.training_size:
             random_x_ind = random.randint(self.grid_size_half,
                                dataset.shape[0] - 1 - self.grid_size_half)
@@ -120,6 +125,13 @@ class EcostressInterpolate(object):
             if(self.time_table.close_to_scan_edge(random_x_ind,
                                                   self.grid_size_half)):
                 continue
+            
+            #  skip this iteration if the center of the point (random_x_ind) is not close to the missing scanline
+            #  default definition of 'close' is 20 pixels.
+            is_close_to_missing_scanline  = is_within_x_pixel_of_missing_scanline( random_x_ind, center_of_missing_scanline)
+            if is_close_to_missing_scanline == False:
+                continue
+            
             # skip this iteration if this is a missing scan line
             # (no response data to train on) or missing packets
             if missing_mask[random_x_ind, random_y_ind, band_number] > 0:
