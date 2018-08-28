@@ -224,6 +224,7 @@ try:
 
     log_fname = os.path.splitext(ofile[0])[0] + ".log"
     qa_file = ecostress.L1bGeoQaFile(qa_fname, log_fname)
+    qa_file.input_list(inlist)
     
     # Create igc/tiepoint for all the data
     igccol_initial = ecostress.EcostressIgcCollection()
@@ -319,6 +320,10 @@ try:
             if(not l1b_geo_config.continue_on_sba_fail):
                 raise
             report_and_log_exception()
+
+    qa_file.write_xml("igccol_initial.xml", "tpcol.xml",
+                      "igccol_sba.xml", "tpcol_sba.xml")
+    
 
     # Generate output data
     for i in range(len(radlist)):

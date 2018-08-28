@@ -174,7 +174,10 @@ class WriteStandardMetadata(object):
 
     def copy_new_file(self, hdf_file, local_granule_id):
         '''Copy metadata, applying to a different file'''
+        h = self.hdf_file
+        self.hdf_file = None
         mcopy = copy.deepcopy(self)
+        self.hdf_file = h
         mcopy.hdf_file = hdf_file
         mcopy.local_granule_id = local_granule_id
         return mcopy
