@@ -87,11 +87,18 @@ else:
     
 
 cam = geocal.read_shelve(l1_osp_dir + "/camera.xml")
+# Update focal length. We may put this into the camera.xml file, but for now
+# we track this separately.
+cam.focal_length = l1b_geo_config.camera_focal_length
+
 tt = ecostress.create_time_table(l1a_pix, l1b_geo_config.mirror_rpm,
                                  l1b_geo_config.frame_time)
 sm = ecostress.create_scan_mirror(l1a_pix, l1b_geo_config.max_encoder_value,
                                   l1b_geo_config.first_encoder_value_0,
-                                  l1b_geo_config.second_encoder_value_0)
+                                  l1b_geo_config.second_encoder_value_0,
+                                  l1b_geo_config.instrument_to_sc_euler,
+                                  l1b_geo_config.first_angle_per_encoder_value,
+                                  l1b_geo_config.second_angle_per_encoder_value)
 igc = ecostress.EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
 
 geocal.makedirs_p(dirname)

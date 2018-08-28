@@ -8,12 +8,13 @@ import traceback
 class L1bTpCollect(object):
     '''This is used to collect tiepoints between the ecostress data and
     our Landsat orthobase.'''
-    def __init__(self, igccol, ortho_base, fftsize=256, magnify=4.0,
+    def __init__(self, igccol, ortho_base, qa_file, fftsize=256, magnify=4.0,
                  magmin=2.0, toler=1.5, redo=36, ffthalf=2, seed=562,
                  num_x=10,num_y=10, log_fname = None,
                  proj_number_subpixel=2, min_tp_per_scene=20):
         self.igccol = igccol
         self.ortho_base = ortho_base
+        self.qa_file = qa_file
         self.num_x=num_x
         self.num_y=num_y
         self.proj_fname = ["proj_initial_%d.img" % (i + 1) for i in range(self.igccol.number_image)]
@@ -43,12 +44,12 @@ class L1bTpCollect(object):
             self.log = None
 
     def report_and_log_exception(self, i):
-        print("Exception occurred while collecting tie-points for scene %d:" % (i+1))
+        print("Exception occurred while collecting tie-points for %s:" % self.igccol.title(i))
         traceback.print_exc()
         print("Skipping tie-points for this scene and continuing processing")
         if(self.log_fname is not None):
             self.log = open(self.log_fname, "a")
-            print("INFO:L1bTpCollect:Exception occurred while collecting tie-points for scene %d:" % (i+1), file = self.log)
+            print("INFO:L1bTpCollect:Exception occurred while collecting tie-points for %s:" % self.igccol.title(i), file = self.log)
             traceback.print_exc(file=self.log)
             print("INFO:L1bTpCollect:Skipping tie-points for this scene and continuing processing", file=self.log)
             self.log.flush()
@@ -62,14 +63,19 @@ class L1bTpCollect(object):
             self.tpcollect.log_file = self.log_file[i]
             self.tpcollect.run_dir_name = self.run_dir_name[i]
             tt = self.igccol.image_ground_connection(i).time_table
-            self.print_and_log("Collecting tp for scene %d" % (i+1))
+            self.print_and_log("Collecting tp for %s" % self.igccol.title(i))
             res = self.tpcollect.tie_point_grid(self.num_x, self.num_y)
+            # Try this, and see how it works
+            if(len(res) >= self.min_tp_per_scene):
+                len1 = len(res)
+                res = geocal.outlier_reject_ransac(res, ref_image=geocal.VicarLiteRasterImage(self.ref_fname[i]), igccol = self.igccol, threshold=3)
+                self.print_and_log("Removed %d tie-points using RANSAC for %s" % (len1-len(res), self.igccol.title(i)))
             if(len(res) < self.min_tp_per_scene):
-                self.print_and_log("Too few tie-point found. Found %d, and require at least %d. Rejecting tie-points for scene %d" % (len(res), self.min_tp_per_scene, i+1))
+                self.print_and_log("Too few tie-point found. Found %d, and require at least %d. Rejecting tie-points for %s" % (len(res), self.min_tp_per_scene, self.igccol.title(i)))
                 res = []
             else:
-                self.print_and_log("Found %d tie-points for scene %d" % (len(res), i+1))
-            self.print_and_log("Done collecting tp for scene %d" % (i+1))
+                self.print_and_log("Found %d tie-points for %s" % (len(res), self.igccol.title(i)))
+            self.print_and_log("Done collecting tp for %s" % self.igccol.title(i))
         except Exception as e:
             self.report_and_log_exception(i)
             res = []
@@ -94,6 +100,8 @@ class L1bTpCollect(object):
             tpcollist = pool.map(self.tp, it)
         res = geocal.TiePointCollection()
         time_range_tp = []
+        for i in range(self.igccol.number_image):
+            self.qa_file.add_tp_log(self.igccol.title(i), self.log_file[i])
         for tpcol, tmin, tmax in tpcollist:
             if(len(tpcol) > 0):
                 res.extend(tpcol)

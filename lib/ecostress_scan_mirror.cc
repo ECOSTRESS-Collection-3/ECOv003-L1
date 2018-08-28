@@ -27,6 +27,8 @@ void EcostressScanMirror::serialize(Archive & ar, const unsigned int version)
     & GEOCAL_NVP_(evalue)
     & GEOCAL_NVP_(max_encoder_value) & GEOCAL_NVP_(ev0)
     & GEOCAL_NVP_(ev0_2)
+    & GEOCAL_NVP_(ang_per_ev)
+    & GEOCAL_NVP_(ang_per_ev_2)
     & GEOCAL_NVP_(parameter_mask)
     & GEOCAL_NVP_(inst_to_sc);
   boost::serialization::split_member(ar, *this, version);
@@ -51,17 +53,21 @@ EcostressScanMirror::EcostressScanMirror
  int Number_sample,
  int Number_scan,
  int Max_encoder_value,
- int First_encoder_value_at_0,
- int Second_encoder_value_at_0,
+ double First_encoder_value_at_0,
+ double Second_encoder_value_at_0,
  double Epsilon,
  double Beta,
- double Delta
+ double Delta,
+ double First_angle_per_ev,
+ double Second_angle_per_ev
 )
   : evalue_(Number_scan, Number_sample),
     max_encoder_value_(Max_encoder_value),
     ev0_(First_encoder_value_at_0),
     ev0_2_(Second_encoder_value_at_0),
-    parameter_mask_(5)
+    ang_per_ev_(First_angle_per_ev),
+    ang_per_ev_2_(Second_angle_per_ev),
+    parameter_mask_(7)
 {
   for(int i = 0; i < evalue_.rows(); ++i)
     for(int j = 0; j < evalue_.cols(); ++j) {
@@ -69,7 +75,7 @@ EcostressScanMirror::EcostressScanMirror
 	(Scan_end - Scan_start) / (evalue_.cols() - 1) * j;
       evalue_(i, j) = angle_to_encoder_value(a, i % 2);
     }
-  parameter_mask_ = true;
+  parameter_mask_ = false;
   blitz::Array<double, 1> t(3);
   t = Epsilon, Beta, Delta;
   euler(t);
@@ -82,17 +88,21 @@ EcostressScanMirror::EcostressScanMirror
 EcostressScanMirror::EcostressScanMirror
 (const blitz::Array<int, 2>& Encoder_value,
  int Max_encoder_value,
- int First_encoder_value_at_0,
- int Second_encoder_value_at_0,
+ double First_encoder_value_at_0,
+ double Second_encoder_value_at_0,
  double Epsilon,
  double Beta,
- double Delta
+ double Delta,
+ double First_angle_per_ev,
+ double Second_angle_per_ev
  )
   : evalue_(Encoder_value.copy()),
     max_encoder_value_(Max_encoder_value),
     ev0_(First_encoder_value_at_0),
     ev0_2_(Second_encoder_value_at_0),
-    parameter_mask_(5)
+    ang_per_ev_(First_angle_per_ev),
+    ang_per_ev_2_(Second_angle_per_ev),
+    parameter_mask_(7)
 {
   blitz::Range ra = blitz::Range::all();
   // Look for scans with some missing data, and fill in. We make sure
@@ -129,7 +139,7 @@ EcostressScanMirror::EcostressScanMirror
     if(count(evalue_(i, ra) < 0) > 0)
       evalue_(i, ra) = evalue_(i-2,ra); // -2 to stay on same side of mirror.
   }
-  parameter_mask_ = true;
+  parameter_mask_ = false;
   blitz::Array<double, 1> t(3);
   t = Epsilon, Beta, Delta;
   euler(t);
@@ -162,54 +172,65 @@ void EcostressScanMirror::fill_in_scan(int S)
 void EcostressScanMirror::print(std::ostream& Os) const
 {
   Os << "EcostressScanMirror:\n"
-     << "  Number samples:            " << number_sample() << "\n"
-     << "  Number scan:               " << number_scan() << "\n"
-     << "  Max encoder value:         " << max_encoder_value_ << "\n"
-     << "  First encoder value at 0:  " << ev0_ << "\n"
-     << "  Second encoder value at 0: " << ev0_2_ << "\n"
-     << "  Instrument to spacecraft: " << instrument_to_sc() << "\n";
+     << "  Number samples:                  " << number_sample() << "\n"
+     << "  Number scan:                     " << number_scan() << "\n"
+     << "  Max encoder value:               " << max_encoder_value_ << "\n"
+     << "  First encoder value at 0:        " << ev0_ << "\n"
+     << "  Second encoder value at 0:       " << ev0_2_ << "\n"
+     << "  First angler per encoder value:  " << ang_per_ev_ << "\n"
+     << "  Second angler per encoder value: " << ang_per_ev_2_ << "\n"
+     << "  Instrument to spacecraft:        " << instrument_to_sc() << "\n";
 }
 
 //-----------------------------------------------------------------------
 /// Set parameter. Right now this is Euler epsilon, beta, delta,
-/// first_encoder_value_at_0, second_encoder_value_at_0.
+/// first_encoder_value_at_0, second_encoder_value_at_0,
+/// first_angle_per_encoder_value, second_angle_per_encoder_value.
 //-----------------------------------------------------------------------
 
 void EcostressScanMirror::parameter(const blitz::Array<double, 1>& Parm)
 {
-  if(Parm.rows() != 5)
+  if(Parm.rows() != 7)
     throw Exception("Wrong sized parameter passed.");
   // euler calls notify_update(), so we don't need to do that.
   euler(Parm(blitz::Range(0,2)));
   ev0_ = Parm(3);
   ev0_2_ = Parm(4);
+  ang_per_ev_ = Parm(5);
+  ang_per_ev_2_ = Parm(6);
 }
 
 void EcostressScanMirror::parameter_with_derivative(const GeoCal::ArrayAd<double, 1>& Parm)
 {
-  if(Parm.rows() != 5)
+  if(Parm.rows() != 7)
     throw Exception("Wrong sized parameter passed.");
   // euler calls notify_update(), so we don't need to do that.
   euler_with_derivative(Parm(blitz::Range(0,2)));
   ev0_ = Parm(3);
   ev0_2_ = Parm(4);
+  ang_per_ev_ = Parm(5);
+  ang_per_ev_2_ = Parm(6);
 }
 
 blitz::Array<double, 1> EcostressScanMirror::parameter() const
 {
-  blitz::Array<double, 1> res(5);
+  blitz::Array<double, 1> res(7);
   res(blitz::Range(0,2)) = euler();
   res(3) = first_encoder_value_at_0();
   res(4) = second_encoder_value_at_0();
+  res(5) = first_angle_per_encoder_value();
+  res(6) = second_angle_per_encoder_value();
   return res;
 }
 
 GeoCal::ArrayAd<double, 1> EcostressScanMirror::parameter_with_derivative() const
 {
-  blitz::Array<AutoDerivative<double>, 1> res(5);
+  blitz::Array<AutoDerivative<double>, 1> res(7);
   res(blitz::Range(0,2)) = euler_with_derivative();
   res(3) = first_encoder_value_at_0_with_derivative();
   res(4) = second_encoder_value_at_0_with_derivative();
+  res(5) = first_angle_per_encoder_value_with_derivative();
+  res(6) = second_angle_per_encoder_value_with_derivative();
   return ArrayAd<double, 1>(res);
 }
 
@@ -221,6 +242,8 @@ std::vector<std::string> EcostressScanMirror::parameter_name() const
   res.push_back("Instrument Euler Delta");
   res.push_back("First encoder value at 0");
   res.push_back("Second encoder value at 0");
+  res.push_back("First angle per encoder value");
+  res.push_back("Second angle per encoder value");
   return res;
 }
 

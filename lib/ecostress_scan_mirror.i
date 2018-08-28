@@ -26,18 +26,24 @@ public:
 		      int Number_sample = 5400,
 		      int Number_scan = 44,
 		      int Max_encoder_value = 1749248,
-		      int First_encoder_value_at_0 = 401443,
-		      int Second_encoder_value_at_0 = 1275903,
+		      double First_encoder_value_at_0 = 401443,
+		      double Second_encoder_value_at_0 = 1275903,
 		      double Epsilon = 0,
 		      double Beta = 0,
-		      double Delta = 0);
+		      double Delta = 0,
+		      double First_angle_per_ev = 360.0 / 1749248 * 2,
+		      double Second_angle_per_ev = 360.0 / 1749248 * 2
+		      );
   EcostressScanMirror(const blitz::Array<int, 2>& Encoder_value,
 		      int Max_encoder_value = 1749248,
-		      int First_encoder_value_at_0 = 401443,
-		      int Second_encoder_value_at_0 = 1275903,
+		      double First_encoder_value_at_0 = 401443,
+		      double Second_encoder_value_at_0 = 1275903,
 		      double Epsilon = 0,
 		      double Beta = 0,
-		      double Delta = 0);
+		      double Delta = 0,
+		      double First_angle_per_ev = 360.0 / 1749248 * 2,
+		      double Second_angle_per_ev = 360.0 / 1749248 * 2
+		      );
   virtual void add_observer(GeoCal::Observer<EcostressScanMirror>& Obs);
   virtual void remove_observer(GeoCal::Observer<EcostressScanMirror>& Obs);
   double scan_mirror_angle(int Scan_index, double Ic_sample) const;
@@ -67,11 +73,16 @@ public:
   %python_attribute_with_set(fit_delta, bool);
   %python_attribute_with_set(fit_first_encoder_value_at_0, bool);
   %python_attribute_with_set(fit_second_encoder_value_at_0, bool);
+  %python_attribute_with_set(fit_first_angle_per_encoder_value, bool);
+  %python_attribute_with_set(fit_second_angle_per_encoder_value, bool);
   %python_attribute(first_encoder_value_at_0, double);
   %python_attribute(first_encoder_value_at_0_with_derivative, GeoCal::AutoDerivative<double>);
   %python_attribute(second_encoder_value_at_0, double);
   %python_attribute(second_encoder_value_at_0_with_derivative, GeoCal::AutoDerivative<double>);
-  %python_attribute(angle_per_encoder_value, double);
+  %python_attribute(first_angle_per_encoder_value, double);
+  %python_attribute(second_angle_per_encoder_value, double);
+  %python_attribute(first_angle_per_encoder_value_with_derivative, GeoCal::AutoDerivative<double>);
+  %python_attribute(second_angle_per_encoder_value_with_derivative, GeoCal::AutoDerivative<double>);
   %python_attribute(number_sample, int);
   %python_attribute(number_scan, int);
   %python_attribute(encoder_value, blitz::Array<int, 2>);

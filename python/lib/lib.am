@@ -21,6 +21,7 @@ ecostresspkgpython_PYTHON+= @srcpythonlib@/geo_write_standard_metadata.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/rad_write_standard_metadata.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/exception.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/ecostress_interpolate.py
+ecostresspkgpython_PYTHON+= @srcpythonlib@/l1b_geo_qa_file.py
 
 # Cython code to generate
 ecostresspkgpython_PYTHON+= @srcpythonlib@/cython_try.py

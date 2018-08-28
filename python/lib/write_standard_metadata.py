@@ -2,6 +2,7 @@ import h5py
 import numpy as np
 import os
 import re
+import copy
 
 class WriteStandardMetadata(object):
     '''This writes the standard metadata'''
@@ -171,6 +172,13 @@ class WriteStandardMetadata(object):
         self.data["ProductionLocation"] = \
           run_config["JobIdentification", "ProductionLocation"]
 
+    def copy_new_file(self, hdf_file, local_granule_id):
+        '''Copy metadata, applying to a different file'''
+        mcopy = copy.deepcopy(self)
+        mcopy.hdf_file = hdf_file
+        mcopy.local_granule_id = local_granule_id
+        return mcopy
+    
     def write(self):
         '''Actually write the metadata.'''
         if("StandardMetadata" in self.hdf_file):

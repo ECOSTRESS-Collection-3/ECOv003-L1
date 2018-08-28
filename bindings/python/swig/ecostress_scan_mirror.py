@@ -247,9 +247,10 @@ class EcostressScanMirror(ObservableEcostressScanMirror, geocal_swig.with_parame
         """
 
         EcostressScanMirror::EcostressScanMirror(const blitz::Array< int, 2 > &Encoder_value, int
-        Max_encoder_value=1749248, int First_encoder_value_at_0=401443, int
-        Second_encoder_value_at_0=1275903, double Epsilon=0, double Beta=0,
-        double Delta=0)
+        Max_encoder_value=1749248, double First_encoder_value_at_0=401443,
+        double Second_encoder_value_at_0=1275903, double Epsilon=0, double
+        Beta=0, double Delta=0, double First_angle_per_ev=360.0/1749248 *2,
+        double Second_angle_per_ev=360.0/1749248 *2)
         Constructor, taking the encoder values. We fill in bad data values. 
         """
         _ecostress_scan_mirror.EcostressScanMirror_swiginit(self, _ecostress_scan_mirror.new_EcostressScanMirror(*args))
@@ -466,6 +467,42 @@ class EcostressScanMirror(ObservableEcostressScanMirror, geocal_swig.with_parame
       self._v_fit_second_encoder_value_at_0(value)
 
 
+    def _v_fit_first_angle_per_encoder_value(self, *args):
+        """
+
+        void Ecostress::EcostressScanMirror::fit_first_angle_per_encoder_value(bool V)
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_fit_first_angle_per_encoder_value(self, *args)
+
+
+    @property
+    def fit_first_angle_per_encoder_value(self):
+        return self._v_fit_first_angle_per_encoder_value()
+
+    @fit_first_angle_per_encoder_value.setter
+    def fit_first_angle_per_encoder_value(self, value):
+      self._v_fit_first_angle_per_encoder_value(value)
+
+
+    def _v_fit_second_angle_per_encoder_value(self, *args):
+        """
+
+        void Ecostress::EcostressScanMirror::fit_second_angle_per_encoder_value(bool V)
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_fit_second_angle_per_encoder_value(self, *args)
+
+
+    @property
+    def fit_second_angle_per_encoder_value(self):
+        return self._v_fit_second_angle_per_encoder_value()
+
+    @fit_second_angle_per_encoder_value.setter
+    def fit_second_angle_per_encoder_value(self, value):
+      self._v_fit_second_angle_per_encoder_value(value)
+
+
     def _v_first_encoder_value_at_0(self):
         """
 
@@ -523,18 +560,60 @@ class EcostressScanMirror(ObservableEcostressScanMirror, geocal_swig.with_parame
         return self._v_second_encoder_value_at_0_with_derivative()
 
 
-    def _v_angle_per_encoder_value(self):
+    def _v_first_angle_per_encoder_value(self):
         """
 
-        double Ecostress::EcostressScanMirror::angle_per_encoder_value() const
+        double Ecostress::EcostressScanMirror::first_angle_per_encoder_value() const
         Angle that a single encoder value goes through, in degrees. 
         """
-        return _ecostress_scan_mirror.EcostressScanMirror__v_angle_per_encoder_value(self)
+        return _ecostress_scan_mirror.EcostressScanMirror__v_first_angle_per_encoder_value(self)
 
 
     @property
-    def angle_per_encoder_value(self):
-        return self._v_angle_per_encoder_value()
+    def first_angle_per_encoder_value(self):
+        return self._v_first_angle_per_encoder_value()
+
+
+    def _v_second_angle_per_encoder_value(self):
+        """
+
+        double Ecostress::EcostressScanMirror::second_angle_per_encoder_value() const
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_second_angle_per_encoder_value(self)
+
+
+    @property
+    def second_angle_per_encoder_value(self):
+        return self._v_second_angle_per_encoder_value()
+
+
+    def _v_first_angle_per_encoder_value_with_derivative(self):
+        """
+
+        GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::first_angle_per_encoder_value_with_derivative() const
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_first_angle_per_encoder_value_with_derivative(self)
+
+
+    @property
+    def first_angle_per_encoder_value_with_derivative(self):
+        return self._v_first_angle_per_encoder_value_with_derivative()
+
+
+    def _v_second_angle_per_encoder_value_with_derivative(self):
+        """
+
+        GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::second_angle_per_encoder_value_with_derivative() const
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_second_angle_per_encoder_value_with_derivative(self)
+
+
+    @property
+    def second_angle_per_encoder_value_with_derivative(self):
+        return self._v_second_angle_per_encoder_value_with_derivative()
 
 
     def _v_number_sample(self):
@@ -597,11 +676,16 @@ EcostressScanMirror._v_fit_beta = new_instancemethod(_ecostress_scan_mirror.Ecos
 EcostressScanMirror._v_fit_delta = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_delta, None, EcostressScanMirror)
 EcostressScanMirror._v_fit_first_encoder_value_at_0 = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_first_encoder_value_at_0, None, EcostressScanMirror)
 EcostressScanMirror._v_fit_second_encoder_value_at_0 = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_second_encoder_value_at_0, None, EcostressScanMirror)
+EcostressScanMirror._v_fit_first_angle_per_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_first_angle_per_encoder_value, None, EcostressScanMirror)
+EcostressScanMirror._v_fit_second_angle_per_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_second_angle_per_encoder_value, None, EcostressScanMirror)
 EcostressScanMirror._v_first_encoder_value_at_0 = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_first_encoder_value_at_0, None, EcostressScanMirror)
 EcostressScanMirror._v_first_encoder_value_at_0_with_derivative = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_first_encoder_value_at_0_with_derivative, None, EcostressScanMirror)
 EcostressScanMirror._v_second_encoder_value_at_0 = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_second_encoder_value_at_0, None, EcostressScanMirror)
 EcostressScanMirror._v_second_encoder_value_at_0_with_derivative = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_second_encoder_value_at_0_with_derivative, None, EcostressScanMirror)
-EcostressScanMirror._v_angle_per_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_angle_per_encoder_value, None, EcostressScanMirror)
+EcostressScanMirror._v_first_angle_per_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_first_angle_per_encoder_value, None, EcostressScanMirror)
+EcostressScanMirror._v_second_angle_per_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_second_angle_per_encoder_value, None, EcostressScanMirror)
+EcostressScanMirror._v_first_angle_per_encoder_value_with_derivative = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_first_angle_per_encoder_value_with_derivative, None, EcostressScanMirror)
+EcostressScanMirror._v_second_angle_per_encoder_value_with_derivative = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_second_angle_per_encoder_value_with_derivative, None, EcostressScanMirror)
 EcostressScanMirror._v_number_sample = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_number_sample, None, EcostressScanMirror)
 EcostressScanMirror._v_number_scan = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_number_scan, None, EcostressScanMirror)
 EcostressScanMirror._v_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_encoder_value, None, EcostressScanMirror)

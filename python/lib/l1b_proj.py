@@ -86,16 +86,16 @@ class L1bProj(object):
             lat = None
             lon = None
             ras = self.igccol.image_ground_connection(igc_ind).image
-            self.print_and_log("Starting resample for scene %d" % (igc_ind + 1))
+            self.print_and_log("Starting resample for %s" % self.igccol.title(igc_ind))
             res.resample_field(self.fname_list[igc_ind], ras, 1.0, "HALF", True)
-            self.print_and_log("Done with resample for scene %d" % (igc_ind + 1))
-            self.print_and_log("Starting reference image for scene %d" % (igc_ind + 1))
+            self.print_and_log("Done with resample for %s" % self.igccol.title(igc_ind))
+            self.print_and_log("Starting reference image for %s" % self.igccol.title(igc_ind))
             ortho = self.ortho_base[igc_ind]
             ortho.create_subset_file(self.ref_fname_list[igc_ind],
                                      "VICAR",
                                      Desired_map_info = res.map_info,
                                      Translate_arg = "-ot Int16")
-            self.print_and_log("Done with reference image for scene %d" % (igc_ind + 1))
+            self.print_and_log("Done with reference image for %s" % self.igccol.title(igc_ind))
             return True
         except Exception as e:
             if(not self.pass_through_error):

@@ -12,7 +12,7 @@ class L1bAttGenerate(object):
     Note that despite the name, this is actually both attitude and ephemeris.
     '''
     def __init__(self, l1a_raw_att_fname, orbcorr, output_name,
-                 tatt, teph, inlist,
+                 tatt, teph, inlist, qa_file,
                  run_config = None, local_granule_id = None,
                  build_id = "0.30",
                  pge_version = "0.30",
@@ -36,6 +36,7 @@ class L1bAttGenerate(object):
         self.pge_version = pge_version
         self.inlist = inlist
         self.correction_done = correction_done
+        self.qa_file = qa_file
 
     def run(self):
         '''Do the actual generation of data.'''
@@ -139,5 +140,7 @@ class L1bAttGenerate(object):
         t.attrs["Description"] = "ECI velocity (J2000 Inertial Frame)"
         t.attrs["Units"] = "m/s"
         m.write()
+        self.qa_file.write_standard_metadata(m)
+        
 
 __all__ = ["L1bAttGenerate"]        

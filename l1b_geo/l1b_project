@@ -80,13 +80,19 @@ if(args.map_info):
     mi = geocal.GdalRasterImage(args.map_info).map_info
 else:
     if(os.path.exists("/project/ancillary/LANDSAT")):
-       # eco-scf location
-       mi = geocal.Landsat7Global("/project/ancillary/LANDSAT",
+        # eco-scf location
+        mi = geocal.Landsat7Global("/project/ancillary/LANDSAT",
+                       geocal.Landsat7Global.BAND5).map_info.scale(2,2)
+    elif(os.path.exists("/raid22/band5_VICAR")):
+       # pistol location
+        mi = geocal.Landsat7Global("/raid22",
+                       geocal.Landsat7Global.BAND5).map_info.scale(2,2)
+    elif(os.path.exists("/data/smyth/Landsat/band5_VICAR")):
+        # pistol location 2
+        mi = geocal.Landsat7Global("/data/smyth/Landsat",
                        geocal.Landsat7Global.BAND5).map_info.scale(2,2)
     else:
-       # pistol location
-       mi = geocal.Landsat7Global("/raid22",
-                       geocal.Landsat7Global.BAND5).map_info.scale(2,2)
+        raise RuntimeError("Can't find Landsat global orthobase data")
 
 if(args.resolution > 0):
     resbase = mi.resolution_meter

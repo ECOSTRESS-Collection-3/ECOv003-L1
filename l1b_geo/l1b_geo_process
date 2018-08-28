@@ -116,6 +116,8 @@ else:
         raise RuntimeError("Can't find land/water mask data")
     if(os.path.exists("/raid22/band5_VICAR")):
         ortho_base_dir = "/raid22"
+    elif(os.path.exists("/data/smyth/Landsat/band5_VICAR")):
+        ortho_base_dir = "/data/smyth/Landsat"
     elif(os.path.exists("/project/ancillary/LANDSAT")):
         ortho_base_dir = "/project/ancillary/LANDSAT"
     else:
@@ -182,6 +184,9 @@ orb = geocal.OrbitOffsetCorrection(orb)
 cam = geocal.read_shelve(l1_osp_dir + "/camera.xml")
 # Don't fit any of the camera parameters, hold them all fixed
 cam.mask_all_parameter()
+# Update focal length. We may put this into the camera.xml file, but for now
+# we track this separately.
+cam.focal_length = l1b_geo_config.camera_focal_length
 
 geocal.makedirs_p(dirname)
 os.chdir(dirname)
@@ -193,6 +198,7 @@ radlist = sorted(radlist, key=lambda f : ecostress.orbit_from_metadata(f)[2])
 inlist = [orbfname, *radlist]
 inlist.append(l1_osp_dir + "/l1b_geo_config.py", )
 log_fname = None
+qa_file = None
 try:
     pool = Pool(ncpu)
     # Determine output file names
@@ -211,8 +217,13 @@ try:
                                                    acquisition_time,
                                                    build = build_id, 
                                                    version = file_version)
+            qa_fname = ecostress.ecostress_file_name("L1B_GEO_QA", orbit, None,
+                                                     acquisition_time,
+                                                     build = build_id, 
+                                                     version = file_version)
 
     log_fname = os.path.splitext(ofile[0])[0] + ".log"
+    qa_file = ecostress.L1bGeoQaFile(qa_fname, log_fname)
     
     # Create igc/tiepoint for all the data
     igccol_initial = ecostress.EcostressIgcCollection()
@@ -224,7 +235,10 @@ try:
         sm = ecostress.create_scan_mirror(radlist[i],
                                           l1b_geo_config.max_encoder_value,
                                           l1b_geo_config.first_encoder_value_0,
-                                          l1b_geo_config.second_encoder_value_0)
+                                          l1b_geo_config.second_encoder_value_0,
+                                          l1b_geo_config.instrument_to_sc_euler,
+                                          l1b_geo_config.first_angle_per_encoder_value,
+                                          l1b_geo_config.second_angle_per_encoder_value)
         line_order_reversed = False
         if(h5py.File(radlist[i],"r")["/L1B_RADMetadata/RadScanLineOrder"][()] == "Reverse line order"):
             line_order_reversed = True
@@ -256,7 +270,7 @@ try:
                           sm, dem, ras, "Scene %d" % scenelist[i]))
 
     # Project data to surface
-    t = ecostress.L1bTpCollect(igccol_initial, ortho_base,
+    t = ecostress.L1bTpCollect(igccol_initial, ortho_base, qa_file,
                     fftsize=l1b_geo_config.fftsize,
                     magnify=l1b_geo_config.magnify,
                     magmin=l1b_geo_config.magmin,
@@ -326,25 +340,27 @@ try:
     teph = [geocal.Time.time_j2000(t) for t in fin["Ephemeris/time_j2000"][:]]
     l1batt = ecostress.L1bAttGenerate(orbfname,
             igccol_corrected.image_ground_connection(0).orbit,
-            ofile2, tatt, teph, inlist, run_config = config,
+            ofile2, tatt, teph, inlist, qa_file, run_config = config,
             build_id = build_id,
             pge_version = pge_version["l1b_geo"],
             correction_done = correction_done)
     l1batt.run()
-
     log = open(log_fname, "a")
     print("L1B_GEO_PGE:INFO-0-[Job Successful]", file=log)
     log.flush()
+    qa_file.close()
 except Exception as e:
     log = open(log_fname, "a")
     print("L1B_GEO_PGE: Exception thrown:",  file=log)
     traceback.print_exc(file=log)
     print("L1B_GEO_PGE:ERROR-2-[Unexpected Error]", file=log)
     log.flush()
+    qa_file.close()
     raise
 except:
     log = open(log_fname, "a")
     print("L1B_GEO_PGE:ERROR-2-[Unexpected Error]", file=log)
     log.flush()
+    qa_file.close()
     raise
 

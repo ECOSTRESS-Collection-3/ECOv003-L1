@@ -47,19 +47,23 @@ public:
 		      int Number_sample = 5400,
 		      int Number_scan = 44,
 		      int Max_encoder_value = 1749248,
-		      int First_encoder_value_at_0 = 401443,
-		      int Second_encoder_value_at_0 = 1275903,
+		      double First_encoder_value_at_0 = 401443,
+		      double Second_encoder_value_at_0 = 1275903,
 		      double Epsilon = 0,
 		      double Beta = 0,
-		      double Delta = 0
+		      double Delta = 0,
+		      double First_angle_per_ev = 360.0 / 1749248 * 2,
+		      double Second_angle_per_ev = 360.0 / 1749248 * 2
 		      );
   EcostressScanMirror(const blitz::Array<int, 2>& Encoder_value,
 		      int Max_encoder_value = 1749248,
-		      int First_encoder_value_at_0 = 401443,
-		      int Second_encoder_value_at_0 = 1275903,
+		      double First_encoder_value_at_0 = 401443,
+		      double Second_encoder_value_at_0 = 1275903,
 		      double Epsilon = 0,
 		      double Beta = 0,
-		      double Delta = 0
+		      double Delta = 0,
+		      double First_angle_per_ev = 360.0 / 1749248 * 2,
+		      double Second_angle_per_ev = 360.0 / 1749248 * 2
 		      );
   virtual ~EcostressScanMirror() {}
 
@@ -117,6 +121,20 @@ public:
 
   bool fit_second_encoder_value_at_0() const { return parameter_mask_(4); }
   void fit_second_encoder_value_at_0(bool V) {parameter_mask_(4) = V;}
+  
+//-----------------------------------------------------------------------
+/// Indicate if we fit for first angle per encoder value
+//-----------------------------------------------------------------------
+
+  bool fit_first_angle_per_encoder_value() const { return parameter_mask_(5); }
+  void fit_first_angle_per_encoder_value(bool V) {parameter_mask_(5) = V;}
+
+//-----------------------------------------------------------------------
+/// Indicate if we fit for second angle per encoder value
+//-----------------------------------------------------------------------
+
+  bool fit_second_angle_per_encoder_value() const { return parameter_mask_(6); }
+  void fit_second_angle_per_encoder_value(bool V) {parameter_mask_(6) = V;}
   
 //-------------------------------------------------------------------------
 /// Angle encoder values.
@@ -242,9 +260,16 @@ public:
 /// Angle that a single encoder value goes through, in degrees.
 //-------------------------------------------------------------------------
 
-  double angle_per_encoder_value() const
-  { return 360.0 / max_encoder_value() * 2; }
+  double first_angle_per_encoder_value() const
+  { return ang_per_ev_.value(); }
+  GeoCal::AutoDerivative<double> first_angle_per_encoder_value_with_derivative() const
+  { return ang_per_ev_; }
 
+  double second_angle_per_encoder_value() const
+  { return ang_per_ev_2_.value(); }
+  GeoCal::AutoDerivative<double> second_angle_per_encoder_value_with_derivative() const
+  { return ang_per_ev_2_; }
+  
 //-------------------------------------------------------------------------
 /// Encoder value at 0 angle. This is for the first side of the mirror.
 //-------------------------------------------------------------------------
@@ -266,17 +291,19 @@ public:
   double angle_from_encoder_value(double Evalue) const
   {
     return (Evalue < (max_encoder_value() / 2) ?
-	    Evalue - first_encoder_value_at_0() :
-	    Evalue - second_encoder_value_at_0()) *
-      angle_per_encoder_value();
+	    (Evalue - first_encoder_value_at_0()) *
+	    first_angle_per_encoder_value() :
+	    (Evalue - second_encoder_value_at_0()) *
+	    second_angle_per_encoder_value());
   }
   GeoCal::AutoDerivative<double> angle_from_encoder_value
   (const GeoCal::AutoDerivative<double>& Evalue) const
   {
     return (Evalue.value() < (max_encoder_value() / 2) ?
-	    Evalue - first_encoder_value_at_0_with_derivative() :
-	    Evalue - second_encoder_value_at_0_with_derivative()) *
-      angle_per_encoder_value();
+	    (Evalue - first_encoder_value_at_0_with_derivative()) *
+	    first_angle_per_encoder_value_with_derivative():
+	    (Evalue - second_encoder_value_at_0_with_derivative()) *
+	    second_angle_per_encoder_value_with_derivative());
   }
 
 //-------------------------------------------------------------------------
@@ -285,7 +312,9 @@ public:
 
   int angle_to_encoder_value(double Angle_deg, int Mirror_side) const
   {
-    return (int) floor(Angle_deg / angle_per_encoder_value() + 0.5) +
+    return (int) floor(Angle_deg / (Mirror_side == 0 ?
+				    first_angle_per_encoder_value():
+				    second_angle_per_encoder_value()) + 0.5) +
       (Mirror_side == 0 ? first_encoder_value_at_0() :
        second_encoder_value_at_0());
   }
@@ -354,6 +383,7 @@ private:
   blitz::Array<int, 2> evalue_;
   int max_encoder_value_;
   GeoCal::AutoDerivative<double> ev0_, ev0_2_;
+  GeoCal::AutoDerivative<double> ang_per_ev_, ang_per_ev_2_;
   blitz::Array<bool, 1> parameter_mask_;
 				// Mask of parameters we are fitting for.
   // ** Important, see note below about inst_to_sc_nd_. You can
