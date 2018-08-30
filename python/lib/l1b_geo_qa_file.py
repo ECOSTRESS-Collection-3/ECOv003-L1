@@ -3,6 +3,7 @@ import os
 import gzip
 import numpy as np
 import subprocess
+import geocal
 
 class L1bGeoQaFile(object):
     '''This is the L1bGeoQaFile. We have a separate class just to make it
@@ -53,12 +54,12 @@ class L1bGeoQaFile(object):
             for inf in (igc_initial, tpcol, igc_sba, tpcol_sba):
                 try:
                     data.append(open(inf,"r").read().encode('utf8'))
-                except RuntimeError:
+                except FileNotFoundError:
                     data.append(b"")
                 try:
                     desc.append(subprocess.run(["shelve_show", inf],
                       stdout=subprocess.PIPE, stderr=subprocess.STDOUT).stdout)
-                except RuntimeError:
+                except FileNotFoundError:
                     desc.append(b"")
             g = f.create_group("PythonObject")
             # Note, we compress the data ourselves. While HDF5 supports
@@ -75,6 +76,32 @@ class L1bGeoQaFile(object):
             f.create_dataset("Input File List",
                              data=[i.encode('utf8') for i in inlist],
                              dtype=h5py.special_dtype(vlen=bytes))
+
+    def add_orbit(self, orb):
+        '''Add data about orbit. Note that this requires we use 
+        OrbitOffsetCorrection, it doesn't work otherwise.'''
+        atime, acorr, ptime, pcorr = orb.orbit_correction_parameter()
+        with h5py.File(self.fname, "a") as f:
+            orb_group = f.create_group("Orbit")
+            d = orb_group.create_dataset("Attitude Time Point",
+                                    data=np.array([t.j2000 for t in atime]))
+            d.attrs["Units"] = "s"
+            d = orb_group.create_dataset("Position Time Point",
+                                    data=np.array([t.j2000 for t in ptime]))
+            d.attrs["Units"] = "s"
+            d = orb_group.create_dataset("Attitude Correction",
+                                         data=acorr)
+            d.attrs["Units"] = "arcseconds"
+            d.attrs["Note"] = \
+'''This is the attitude correction, one row per time point. 
+The columns are yaw, pitch, and roll in arceconds.'''
+            d = orb_group.create_dataset("Position Correction",
+                                         data=pcorr)
+            d.attrs["Units"] = "m"
+            d.attrs["Note"] = \
+'''This is the position correction, one row per time point.
+Position is in ECR, in meters. The columns are X, Y, and Z 
+offset.'''
             
     def add_tp_log(self, scene_name, tplogfname):
         '''Add a TP log file'''
@@ -95,18 +122,35 @@ class L1bGeoQaFile(object):
             self.scene_name = [igccol.title(i).encode('utf8') for i in
                                range(igccol.number_image)]
         if(self.tp_stat is None):
-            self.tp_stat = np.zeros((igccol.number_image, 5))
+            self.tp_stat = np.full((igccol.number_image, 5), -9999.0)
         self.tp_stat[image_index, 0] = ntpoint_initial
         self.tp_stat[image_index, 1] = ntpoint_removed
         self.tp_stat[image_index, 2] = ntpoint_final
-        self.tp_stat[image_index, 3] = -9999.0
         if(len(tpcol) > 0):
             df = tpcol.data_frame(igccol,image_index)
             self.tp_stat[image_index, 3] = df.ground_2d_distance.quantile(.68)
+        tpdata = None
+        if(len(tpcol) > 0):
+            tpdata = np.empty((len(tpcol), 5))
+        for i, tp in enumerate(tpcol):
+            ic = tp.image_coordinate(image_index)
+            tpdata[i,0:2] = ic.line, ic.sample
+            tpdata[i,2:6] = geocal.Ecr(tp.ground_location).position
         with h5py.File(self.fname, "a") as f:
             tp_group = f["Tiepoint"]
             s_group = tp_group.create_group(igccol.title(image_index))
+            if(tpdata is not None):
+                d = s_group.create_dataset("Tiepoints", data=tpdata)
+                d.attrs["Note"] = \
+'''This is the list of tiepoints for a scene, after removing blunders.
 
+The first column in image coordinate line, the second column is image
+coordinate sample.
+
+The remaining three columns are the location of the ground coordinate in
+the reference image, in Ecr coordinates (in meters).
+'''
+                
     def add_final_accuracy(self, igccol_corrected, tpcol):
         # Ok if no tiepoints for scene i, this just return nan
         t = np.array([tpcol.data_frame(igccol_corrected, i).ground_2d_distance.quantile(.68)
@@ -139,9 +183,10 @@ class L1bGeoQaFile(object):
             tp_group = f["Tiepoint"]
             tp_group.create_dataset("Scenes", data=self.scene_name,
                                      dtype=h5py.special_dtype(vlen=bytes))
-            dset = tp_group.create_dataset("Tiepoint Count",
-                                            data=self.tp_stat[:,0:3].astype(np.int32))
-            dset.attrs["Note"] = \
+            if(self.tp_stat is not None):
+                dset = tp_group.create_dataset("Tiepoint Count",
+                                               data=self.tp_stat[:,0:3].astype(np.int32))
+                dset.attrs["Note"] = \
 '''First column is the initial number of tie points
 
 Second column is the number of blunders removed
@@ -151,12 +196,13 @@ number of tiepoints (so if < threshold we set this to 0).'''
             ac_group = f["Accuracy Estimate"]
             ac_group.create_dataset("Scenes", data=self.scene_name,
                                      dtype=h5py.special_dtype(vlen=bytes))
-            dset = ac_group.create_dataset("Accuracy Before Correction",
-                                           data=self.tp_stat[:,3])
-            dset.attrs["Units"] = "m"
-            dset = ac_group.create_dataset("Final Accuracy",
-                                           data=self.tp_stat[:,4])
-            dset.attrs["Units"] = "m"
+            if(self.tp_stat is not None):
+                dset = ac_group.create_dataset("Accuracy Before Correction",
+                                               data=self.tp_stat[:,3])
+                dset.attrs["Units"] = "m"
+                dset = ac_group.create_dataset("Final Accuracy",
+                                               data=self.tp_stat[:,4])
+                dset.attrs["Units"] = "m"
     
 
 __all__ = ["L1bGeoQaFile"]

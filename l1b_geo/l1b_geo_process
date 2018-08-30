@@ -286,29 +286,31 @@ try:
                     min_tp_per_scene=l1b_geo_config.min_tp_per_scene)
     correction_done = False
     igccol_corrected = igccol_initial
+    tpcol = None
     if(not l1b_geo_config.skip_sba):
+        tpcol, time_range_tp = t.tpcol(pool=pool)
+        geocal.write_shelve("tpcol.xml", tpcol)
+        # Add breakpoints for the scenes that we got good tiepoints from.
+        # We may well tweak this, but right now we set breakpoints at the
+        # beginning, middle and end of the scene, unless the beginning
+        # is within one scene of another breakpoint.
+        tlast = None
+        for tmin, tmax in time_range_tp:
+            if(tlast is None):
+                orb.insert_position_time_point(tmin)
+            if(tlast is None or tmin - tlast > 52.0):
+                orb.insert_attitude_time_point(tmin)
+            orb.insert_attitude_time_point(tmin + (tmax - tmin) / 2)
+            orb.insert_attitude_time_point(tmax)
+            tlast = tmax
+        if(tlast is not None):
+            orb.insert_position_time_point(tlast)
+        geocal.write_shelve("igccol_initial.xml", igccol_initial)
+
         try:
-            tpcol, time_range_tp = t.tpcol(pool=pool)
-            geocal.write_shelve("tpcol.xml", tpcol)
-            # Add breakpoints for the scenes that we got good tiepoints from.
-            # We may well tweak this, but right now we set breakpoints at the
-            # beginning and end of the scene, unless the beginning is within
-            # one scene of another breakpoint.
-            tlast = None
-            for tmin, tmax in time_range_tp:
-                if(tlast is None):
-                    orb.insert_position_time_point(tmin)
-                if(tlast is None or tmin - tlast > 52.0):
-                    orb.insert_attitude_time_point(tmin)
-                orb.insert_attitude_time_point(tmax)
-                tlast = tmax
-            if(tlast is not None):
-                orb.insert_position_time_point(tlast)
-            geocal.write_shelve("igccol_initial.xml", igccol_initial)
-    
             log = open(log_fname, "a")
             ecostress.process_run(["sba", "--verbose",
-                                   "--initial-hold-gcp-fixed",
+                                   "--hold-gcp-fixed",
                                    "--gcp-sigma=50",  "igccol_initial.xml",
                                    "tpcol.xml", "igccol_sba.xml",
                                    "tpcol_sba.xml"],
@@ -321,7 +323,9 @@ try:
                 raise
             report_and_log_exception()
 
-    qa_file.add_final_accuracy(igccol_corrected, tpcol)
+    if(tpcol):
+        qa_file.add_final_accuracy(igccol_corrected, tpcol)
+    qa_file.add_orbit(igccol_corrected.image_ground_connection(0).orbit)
     qa_file.write_xml("igccol_initial.xml", "tpcol.xml",
                       "igccol_sba.xml", "tpcol_sba.xml")
     
