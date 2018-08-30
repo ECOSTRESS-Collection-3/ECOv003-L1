@@ -107,6 +107,13 @@ class L1bGeoQaFile(object):
             tp_group = f["Tiepoint"]
             s_group = tp_group.create_group(igccol.title(image_index))
 
+    def add_final_accuracy(self, igccol_corrected, tpcol):
+        # Ok if no tiepoints for scene i, this just return nan
+        t = np.array([tpcol.data_frame(igccol_corrected, i).ground_2d_distance.quantile(.68)
+                      for i in range(igccol_corrected.number_image)])
+        t[np.isnan(t)] = -9999
+        self.tp_stat[:,4] = t
+        
     def write_standard_metadata(self, m):
         '''Write out standard metadata for QA file. Since this is almost
         identical to the metadata we have for the l1b_att file, we pass in

@@ -321,6 +321,7 @@ try:
                 raise
             report_and_log_exception()
 
+    qa_file.add_final_accuracy(igccol_corrected, tpcol)
     qa_file.write_xml("igccol_initial.xml", "tpcol.xml",
                       "igccol_sba.xml", "tpcol_sba.xml")
     
