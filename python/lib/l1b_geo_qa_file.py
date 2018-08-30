@@ -10,6 +10,8 @@ class L1bGeoQaFile(object):
     def __init__(self, fname, log_fname, local_granule_id = None):
         self.fname = fname
         self.log_fname = log_fname
+        self.scene_name = None
+        self.tp_stat = None
         if(local_granule_id):
             self.local_granule_id = local_granule_id
         else:
@@ -20,6 +22,8 @@ class L1bGeoQaFile(object):
         fout = h5py.File(fname, "w")
         log_group = fout.create_group("Logs")
         tplog_group = log_group.create_group("Tiepoint Logs")
+        tp_group = fout.create_group("Tiepoint")
+        ac_group = fout.create_group("Accuracy Estimate")
         fout.close()
 
     def write_xml(self, igc_initial, tpcol, igc_sba, tpcol_sba):
@@ -84,11 +88,34 @@ class L1bGeoQaFile(object):
             dset = tplog_group.create_dataset(scene_name, data=log,
                                   dtype=h5py.special_dtype(vlen=bytes))
 
+    def add_tp_single_scene(self, image_index, igccol, tpcol, ntpoint_initial,
+                            ntpoint_removed, ntpoint_final):
+        '''Write out information about the tiepoints we collect for scene.'''
+        if(self.scene_name is None):
+            self.scene_name = [igccol.title(i).encode('utf8') for i in
+                               range(igccol.number_image)]
+        if(self.tp_stat is None):
+            self.tp_stat = np.zeros((igccol.number_image, 5))
+        self.tp_stat[image_index, 0] = ntpoint_initial
+        self.tp_stat[image_index, 1] = ntpoint_removed
+        self.tp_stat[image_index, 2] = ntpoint_final
+        self.tp_stat[image_index, 3] = -9999.0
+        if(len(tpcol) > 0):
+            df = tpcol.data_frame(igccol,image_index)
+            self.tp_stat[image_index, 3] = df.ground_2d_distance.quantile(.68)
+        with h5py.File(self.fname, "a") as f:
+            tp_group = f["Tiepoint"]
+            s_group = tp_group.create_group(igccol.title(image_index))
+
     def write_standard_metadata(self, m):
+        '''Write out standard metadata for QA file. Since this is almost
+        identical to the metadata we have for the l1b_att file, we pass in
+        the metadata for that file and just change a few things before
+        writing it out.'''
         # We copy the metadata, just changing the file we attach this to
         # and the local granule id
         with h5py.File(self.fname, "a") as f:
-            mcopy = m.copy_new_file(f, self.local_granule_id)
+            mcopy = m.copy_new_file(f, self.local_granule_id, "L1B_GEO_QA")
             mcopy.write()
             
     def close(self):
@@ -102,6 +129,28 @@ class L1bGeoQaFile(object):
             log_group = f["Logs"]
             dset = log_group.create_dataset("Overall Log", data=log,
                                 dtype=h5py.special_dtype(vlen=bytes))
+            tp_group = f["Tiepoint"]
+            tp_group.create_dataset("Scenes", data=self.scene_name,
+                                     dtype=h5py.special_dtype(vlen=bytes))
+            dset = tp_group.create_dataset("Tiepoint Count",
+                                            data=self.tp_stat[:,0:3].astype(np.int32))
+            dset.attrs["Note"] = \
+'''First column is the initial number of tie points
+
+Second column is the number of blunders removed
+
+Third column is the number after removing blunders and applying minimum
+number of tiepoints (so if < threshold we set this to 0).'''
+            ac_group = f["Accuracy Estimate"]
+            ac_group.create_dataset("Scenes", data=self.scene_name,
+                                     dtype=h5py.special_dtype(vlen=bytes))
+            dset = ac_group.create_dataset("Accuracy Before Correction",
+                                           data=self.tp_stat[:,3])
+            dset.attrs["Units"] = "m"
+            dset = ac_group.create_dataset("Final Accuracy",
+                                           data=self.tp_stat[:,4])
+            dset.attrs["Units"] = "m"
+    
 
 __all__ = ["L1bGeoQaFile"]
         

@@ -172,7 +172,7 @@ class WriteStandardMetadata(object):
         self.data["ProductionLocation"] = \
           run_config["JobIdentification", "ProductionLocation"]
 
-    def copy_new_file(self, hdf_file, local_granule_id):
+    def copy_new_file(self, hdf_file, local_granule_id, short_name):
         '''Copy metadata, applying to a different file'''
         h = self.hdf_file
         self.hdf_file = None
@@ -180,6 +180,7 @@ class WriteStandardMetadata(object):
         self.hdf_file = h
         mcopy.hdf_file = hdf_file
         mcopy.local_granule_id = local_granule_id
+        mcopy.set("ShortName", short_name)
         return mcopy
     
     def write(self):

@@ -66,9 +66,12 @@ class L1bTpCollect(object):
             self.print_and_log("Collecting tp for %s" % self.igccol.title(i))
             res = self.tpcollect.tie_point_grid(self.num_x, self.num_y)
             # Try this, and see how it works
+            ntpoint_initial = len(res)
+            ntpoint_removed = 0
             if(len(res) >= self.min_tp_per_scene):
                 len1 = len(res)
                 res = geocal.outlier_reject_ransac(res, ref_image=geocal.VicarLiteRasterImage(self.ref_fname[i]), igccol = self.igccol, threshold=3)
+                ntpoint_removed = len1-len(res)
                 self.print_and_log("Removed %d tie-points using RANSAC for %s" % (len1-len(res), self.igccol.title(i)))
             if(len(res) < self.min_tp_per_scene):
                 self.print_and_log("Too few tie-point found. Found %d, and require at least %d. Rejecting tie-points for %s" % (len(res), self.min_tp_per_scene, self.igccol.title(i)))
@@ -79,7 +82,9 @@ class L1bTpCollect(object):
         except Exception as e:
             self.report_and_log_exception(i)
             res = []
-        return res, tt.min_time, tt.max_time
+        ntpoint_final = len(res)
+        return res, tt.min_time, tt.max_time, ntpoint_initial, ntpoint_removed, ntpoint_final
+    
     
     def tpcol(self, pool=None):
         '''Return tiepoints collected. We also return the time ranges for the
@@ -102,7 +107,11 @@ class L1bTpCollect(object):
         time_range_tp = []
         for i in range(self.igccol.number_image):
             self.qa_file.add_tp_log(self.igccol.title(i), self.log_file[i])
-        for tpcol, tmin, tmax in tpcollist:
+        for i in range(self.igccol.number_image):
+            (tpcol, tmin, tmax, ntpoint_initial, ntpoint_removed,
+             ntpoint_final) = tpcollist[i]
+            self.qa_file.add_tp_single_scene(i, self.igccol,
+                tpcol, ntpoint_initial, ntpoint_removed, ntpoint_final)
             if(len(tpcol) > 0):
                 res.extend(tpcol)
                 time_range_tp.append([tmin, tmax])
