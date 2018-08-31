@@ -15,7 +15,8 @@ def test_l1b_geo_generate_kmz(isolated_dir, igc, lwm):
         l1bgeo = pickle.load(f)
 
     l1bgeo_kmz = L1bGeoGenerateKmz(l1bgeo, "l1b_kmz_map.kmz",
-                            local_granule_id = "L1B_KMZ_MAP_80001_001_20151024_020211_0100_01.kmz")
+       local_granule_id = "L1B_KMZ_MAP_80001_001_20151024_020211_0100_01.kmz")
+    l1bgeo_kmz.run()
     
 
 

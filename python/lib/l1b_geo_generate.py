@@ -194,5 +194,7 @@ GEOGCS["WGS 84",
         # sometimes run L1bGeoGenerateMap and L1bGeoGenerateKmz
         m.hdf_file = None
         self.m = m
+        self.lat = lat
+        self.lon = lon
 
 __all__ = ["L1bGeoGenerate"]

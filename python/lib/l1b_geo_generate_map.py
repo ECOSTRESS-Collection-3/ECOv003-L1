@@ -1,6 +1,7 @@
 import geocal
 from ecostress_swig import *
-import subprocess
+import os
+import h5py
 
 class L1bGeoGenerateMap(object):
     '''This generates a L1B Geo map product. Right now we leverage off of
@@ -16,10 +17,15 @@ class L1bGeoGenerateMap(object):
                  local_granule_id = None, log_fname = None):
         self.l1b_geo_generate = l1b_geo_generate
         self.output_name = output_name
-        self.local_granule_id = local_granule_id
+        if(local_granule_id):
+            self.local_granule_id = local_granule_id
+        else:
+            self.local_granule_id = os.path.basename(output_name)
         self.log_fname = log_fname
 
     def run(self):
-        # Note short name is ECO1BMAP
-        subprocess.run(["touch", self.output_name])
+        fout = h5py.File(self.output_name, "w")
+        m = self.l1b_geo_generate.m.copy_new_file(fout,
+                                 self.local_granule_id, "ECO1BMAP")
+        m.write()
         pass

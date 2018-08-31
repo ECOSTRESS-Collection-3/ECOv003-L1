@@ -15,7 +15,9 @@ def test_l1b_geo_generate_map(isolated_dir, igc, lwm):
         l1bgeo = pickle.load(f)
 
     l1bgeo_map = L1bGeoGenerateMap(l1bgeo, "l1b_geo_map.h5",
-                            local_granule_id = "ECOSTRESS_L1B_MAP_80001_001_20151024_020211_0100_01.h5")
+         local_granule_id =
+         "ECOSTRESS_L1B_MAP_80001_001_20151024_020211_0100_01.h5")
+    l1bgeo_map.run()
     
 
 
