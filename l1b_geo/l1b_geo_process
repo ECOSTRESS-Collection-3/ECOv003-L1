@@ -357,7 +357,10 @@ try:
         if(l1b_geo_config.generate_map_product):
             print_and_log("Generating Map Product scene number %d" %
                           scenelist[i])
-            l1bgeo_map = ecostress.L1bGeoGenerateMap(l1bgeo, ofile_map[i])
+            l1bgeo_map = ecostress.L1bGeoGenerateMap(l1bgeo, ofile_map[i],
+                 north_up = l1b_geo_config.north_up,
+                 resolution = l1b_geo_config.map_resolution,
+                 number_subpixel = l1b_geo_config.map_number_subpixel)
             l1bgeo_map.run()
         if(l1b_geo_config.generate_kmz_file):
             print_and_log("Generating KMZ file scene number %d" %
