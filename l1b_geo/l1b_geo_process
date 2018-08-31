@@ -203,6 +203,8 @@ try:
     pool = Pool(ncpu)
     # Determine output file names
     ofile = []
+    ofile_map = []
+    ofile_kmz = []
     is_day = []
     ortho_base = []
     scenelist = []
@@ -211,6 +213,14 @@ try:
         ofile.append(ecostress.ecostress_file_name("L1B_GEO", orbit, scene,
             acquisition_time, build = build_id,
             version = file_version))
+        ofile_map.append(ecostress.ecostress_file_name("L1B_MAP", orbit, scene,
+            acquisition_time, build = build_id,
+            version = file_version))
+        ofile_kmz.append(ecostress.ecostress_file_name("L1B_KMZ_MAP", orbit,
+            scene,
+            acquisition_time, build = build_id,
+            extension=".kmz",                                           
+            version = file_version, intermediate=True))
         scenelist.append(scene)
         if(i == 0):
             ofile2 = ecostress.ecostress_file_name("L1B_ATT", orbit, None,
@@ -220,7 +230,8 @@ try:
             qa_fname = ecostress.ecostress_file_name("L1B_GEO_QA", orbit, None,
                                                      acquisition_time,
                                                      build = build_id, 
-                                                     version = file_version)
+                                                     version = file_version,
+                                                     intermediate=True)
 
     log_fname = os.path.splitext(ofile[0])[0] + ".log"
     qa_file = ecostress.L1bGeoQaFile(qa_fname, log_fname)
@@ -343,6 +354,17 @@ try:
             pge_version = pge_version["l1b_geo"],
             correction_done = correction_done)
         l1bgeo.run(pool)
+        if(l1b_geo_config.generate_map_product):
+            print_and_log("Generating Map Product scene number %d" %
+                          scenelist[i])
+            l1bgeo_map = ecostress.L1bGeoGenerateMap(l1bgeo, ofile_map[i])
+            l1bgeo_map.run()
+        if(l1b_geo_config.generate_kmz_file):
+            print_and_log("Generating KMZ file scene number %d" %
+                          scenelist[i])
+            l1bgeo_kmz = ecostress.L1bGeoGenerateMap(l1bgeo, ofile_kmz[i])
+            l1bgeo_kmz.run()
+            
     
     # Write out updated orbit data
     fin = h5py.File(orbfname, "r")

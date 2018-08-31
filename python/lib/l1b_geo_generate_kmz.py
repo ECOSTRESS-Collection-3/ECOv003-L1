@@ -1,5 +1,6 @@
 import geocal
 from ecostress_swig import *
+import subprocess
 
 class L1bGeoGenerateKmz(object):
     '''This generates a L1B Geo KMZ file. Right now we leverage off of
@@ -18,3 +19,8 @@ class L1bGeoGenerateKmz(object):
         self.local_granule_id = local_granule_id
         self.log_fname = log_fname
         
+    def run(self):
+        # Note short name is L1B_KMZ_MAP, although we don't actually
+        # generate standard metadata
+        subprocess.run(["touch", self.output_name])
+        pass

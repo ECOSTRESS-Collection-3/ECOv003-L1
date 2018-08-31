@@ -14,8 +14,8 @@ def test_l1b_geo_generate_kmz(isolated_dir, igc, lwm):
     with open('/home/smyth/Local/ecostress-level1/python/l1b_geo_generate.pickle', 'rb') as f:
         l1bgeo = pickle.load(f)
 
-    l1bgeo_map = L1bGeoGenerateKmz(l1bgeo, "l1b_geo_map.h5",
-                            local_granule_id = "ECOSTRESS_L1B_GEO_MAP_80001_001_20151024_020211_0100_01.h5")
+    l1bgeo_kmz = L1bGeoGenerateKmz(l1bgeo, "l1b_kmz_map.kmz",
+                            local_granule_id = "L1B_KMZ_MAP_80001_001_20151024_020211_0100_01.kmz")
     
 
 
