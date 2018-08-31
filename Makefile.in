@@ -926,7 +926,10 @@ ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
 	@srcpythonlib@/rad_write_standard_metadata.py \
 	@srcpythonlib@/exception.py \
 	@srcpythonlib@/ecostress_interpolate.py \
-	@srcpythonlib@/l1b_geo_qa_file.py @srcpythonlib@/cython_try.py
+	@srcpythonlib@/l1b_geo_qa_file.py \
+	@srcpythonlib@/l1b_geo_generate_map.py \
+	@srcpythonlib@/l1b_geo_generate_kmz.py \
+	@srcpythonlib@/cython_try.py
 
 # Number of jobs to run at once. Default is to automatically determine this,
 # but you can specify a different number.
