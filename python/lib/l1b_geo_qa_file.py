@@ -107,7 +107,7 @@ offset.'''
         '''Add a TP log file'''
         try:
             log = open(tplogfname, "r").read()
-        except RuntimeError:
+        except FileNotFoundError:
             # Ok if log file isn't found, just given an message
             log = "log file missing"
         with h5py.File(self.fname, "a") as f:
@@ -173,7 +173,7 @@ the reference image, in Ecr coordinates (in meters).
         '''Finishing writing up data, and close file'''
         try:
             log = open(self.log_fname, "r").read()
-        except RuntimeError:
+        except FileNotFoundError:
             # Ok if log file isn't found, just given an message
             log = "log file missing"
         with h5py.File(self.fname, "a") as f:

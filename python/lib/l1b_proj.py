@@ -43,12 +43,12 @@ class L1bProj(object):
             self.log = None
 
     def report_and_log_exception(self, igc_ind):
-        print("Exception occurred while projecting scene %d:" % (igc_ind+1))
+        print("Exception occurred while projecting %s:" % self.igccol.title(igc_ind))
         traceback.print_exc()
         print("Skipping this scene and continuing processing")
         if(self.log_fname is not None):
             self.log = open(self.log_fname, "a")
-            print("INFO:L1bProj:Exception occurred while projecting scene %d:" % (igc_ind+1), file = self.log)
+            print("INFO:L1bProj:Exception occurred while projecting %s:" % self.igccol.title(igc_ind), file = self.log)
             traceback.print_exc(file=self.log)
             print("INFO:L1bProj:Skipping projection for this scene and continuing processing", file=self.log)
             self.log.flush()
@@ -95,6 +95,8 @@ class L1bProj(object):
                                      "VICAR",
                                      Desired_map_info = res.map_info,
                                      Translate_arg = "-ot Int16")
+#                                     Translate_arg = "-ot Int16",
+#                                     Verbose = True)
             self.print_and_log("Done with reference image for %s" % self.igccol.title(igc_ind))
             return True
         except Exception as e:
