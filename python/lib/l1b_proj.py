@@ -42,7 +42,7 @@ class L1bProj(object):
             self.log.flush()
             self.log = None
 
-    def report_and_log_exception(self, igc_end):
+    def report_and_log_exception(self, igc_ind):
         print("Exception occurred while projecting scene %d:" % (igc_ind+1))
         traceback.print_exc()
         print("Skipping this scene and continuing processing")

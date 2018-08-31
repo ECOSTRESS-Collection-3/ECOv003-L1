@@ -4,6 +4,7 @@ import pickle
 from .pickle_method import *
 from multiprocessing import Pool
 import traceback
+import shutil
 
 class L1bTpCollect(object):
     '''This is used to collect tiepoints between the ecostress data and
@@ -62,6 +63,7 @@ class L1bTpCollect(object):
             self.tpcollect.ref_image_fname = self.ref_fname[i]
             self.tpcollect.log_file = self.log_file[i]
             self.tpcollect.run_dir_name = self.run_dir_name[i]
+            shutil.rmtree(self.run_dir_name[i], ignore_errors=True)
             tt = self.igccol.image_ground_connection(i).time_table
             self.print_and_log("Collecting tp for %s" % self.igccol.title(i))
             res = self.tpcollect.tie_point_grid(self.num_x, self.num_y)
@@ -107,14 +109,20 @@ class L1bTpCollect(object):
         time_range_tp = []
         for i in range(self.igccol.number_image):
             self.qa_file.add_tp_log(self.igccol.title(i), self.log_file[i])
+        j = 0
         for i in range(self.igccol.number_image):
-            (tpcol, tmin, tmax, ntpoint_initial, ntpoint_removed,
-             ntpoint_final) = tpcollist[i]
-            self.qa_file.add_tp_single_scene(i, self.igccol,
+            if(proj_res[i]):
+                (tpcol, tmin, tmax, ntpoint_initial, ntpoint_removed,
+                 ntpoint_final) = tpcollist[j]
+                self.qa_file.add_tp_single_scene(i, self.igccol,
                 tpcol, ntpoint_initial, ntpoint_removed, ntpoint_final)
-            if(len(tpcol) > 0):
-                res.extend(tpcol)
-                time_range_tp.append([tmin, tmax])
+                if(len(tpcol) > 0):
+                    res.extend(tpcol)
+                    time_range_tp.append([tmin, tmax])
+                j += 1
+            else:
+                self.qa_file.add_tp_single_scene(i, self.igccol,
+                                                 [], 0, 0, 0)
         for i in range(len(res)):
             res[i].id = i+1
         return res, time_range_tp
