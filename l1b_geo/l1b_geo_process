@@ -9,6 +9,7 @@ import shutil
 import h5py
 import traceback
 from multiprocessing import Pool
+import numpy as np
 
 # Get version information, in the top directory
 import sys
@@ -342,6 +343,7 @@ try:
     
 
     # Generate output data
+    avg_md = np.empty((len(radlist), 2))
     for i in range(len(radlist)):
         # Generate output
         print_and_log("Doing scene number %d" % scenelist[i])
@@ -354,6 +356,8 @@ try:
             pge_version = pge_version["l1b_geo"],
             correction_done = correction_done)
         l1bgeo.run(pool)
+        avg_md[i,0 ] = l1bgeo.avg_sz
+        avg_md[i,1 ] = l1bgeo.oa_lf
         if(l1b_geo_config.generate_map_product):
             print_and_log("Generating Map Product scene number %d" %
                           scenelist[i])
@@ -367,6 +371,7 @@ try:
                           scenelist[i])
             l1bgeo_kmz = ecostress.L1bGeoGenerateMap(l1bgeo, ofile_kmz[i])
             l1bgeo_kmz.run()
+    qa_file.add_average_metadata(avg_md)
             
     
     # Write out updated orbit data

@@ -77,6 +77,18 @@ class L1bGeoQaFile(object):
                              data=[i.encode('utf8') for i in inlist],
                              dtype=h5py.special_dtype(vlen=bytes))
 
+    def add_average_metadata(self, avg_md):
+        '''Add average metadata. First column is average solar zenith angle,
+        second is overall land fraction. We have one row per scene'''
+        with h5py.File(self.fname, "a") as f:
+            d = f.create_dataset("Average Metadata", data=avg_md)
+            d.attrs["Description"] = \
+'''This is the average metadata. We have one row for each scene. 
+
+The first column is the average solar zenith angle, in degrees. The
+second column is the overall land fraction for the scene, as a percentage.'''
+            
+
     def add_orbit(self, orb):
         '''Add data about orbit. Note that this requires we use 
         OrbitOffsetCorrection, it doesn't work otherwise.'''
@@ -92,13 +104,13 @@ class L1bGeoQaFile(object):
             d = orb_group.create_dataset("Attitude Correction",
                                          data=acorr)
             d.attrs["Units"] = "arcseconds"
-            d.attrs["Note"] = \
+            d.attrs["Description"] = \
 '''This is the attitude correction, one row per time point. 
 The columns are yaw, pitch, and roll in arceconds.'''
             d = orb_group.create_dataset("Position Correction",
                                          data=pcorr)
             d.attrs["Units"] = "m"
-            d.attrs["Note"] = \
+            d.attrs["Description"] = \
 '''This is the position correction, one row per time point.
 Position is in ECR, in meters. The columns are X, Y, and Z 
 offset.'''
@@ -141,7 +153,7 @@ offset.'''
             s_group = tp_group.create_group(igccol.title(image_index))
             if(tpdata is not None):
                 d = s_group.create_dataset("Tiepoints", data=tpdata)
-                d.attrs["Note"] = \
+                d.attrs["Description"] = \
 '''This is the list of tiepoints for a scene, after removing blunders.
 
 The first column in image coordinate line, the second column is image
@@ -186,7 +198,7 @@ the reference image, in Ecr coordinates (in meters).
             if(self.tp_stat is not None):
                 dset = tp_group.create_dataset("Tiepoint Count",
                                                data=self.tp_stat[:,0:3].astype(np.int32))
-                dset.attrs["Note"] = \
+                dset.attrs["Description"] = \
 '''First column is the initial number of tie points
 
 Second column is the number of blunders removed

@@ -77,7 +77,9 @@ class L1bGeoGenerate(object):
         vazimuth = res[:,:,0,0,4].copy()
         szenith = res[:,:,0,0,5].copy()
         sazimuth = res[:,:,0,0,6].copy()
-        lfrac = GroundCoordinateArray.interpolate(self.lwm, lat, lon) * 100.0
+        lfrac = GroundCoordinateArray.interpolate(self.lwm, lat, lon)
+        lfrac =  np.where(lfrac <= fill_value_threshold, fill_value_threshold,
+                          lfrac * 100.0)
         tlinestart = np.array([self.igc.pixel_time(geocal.ImageCoordinate(ln, 0)).j2000 for ln in range(start_line, start_line+res.shape[0])])
         return (lat, lon, height, vzenith, vazimuth, szenith, sazimuth,
                 lfrac, tlinestart)
@@ -187,6 +189,15 @@ GEOGCS["WGS 84",
         t.attrs["Description"] = "J2000 time of first pixel in line"
         t.attrs["Units"] = "second"
         m.write()
+        g = fout[m.product_specfic_group]
+        avg_sz = szenith[szenith > fill_value_threshold].mean()
+        oa_lf = lfrac[lfrac > fill_value_threshold].mean()
+        d = g.create_dataset("AverageSolarZenith", data= avg_sz)
+        d.attrs["Units"] = "degrees"
+        d.attrs["Description"] = "Average solar zenith angle for scene"
+        d = g.create_dataset("OverAllLandFraction", data = oa_lf)
+        d.attrs["Units"] = "percentage"
+        d.attrs["Description"] = "Overall land fraction for scene"
         # We stash some of the objects we've used here for use by
         # L1bGeoGenerateMap and L1bGeoGenerateKmz. Right now, we assume
         # this is always run first. We could break this dependency if
@@ -196,5 +207,8 @@ GEOGCS["WGS 84",
         self.m = m
         self.lat = lat
         self.lon = lon
+        self.avg_sz = avg_sz
+        self.oa_lf = oa_lf
+        
 
 __all__ = ["L1bGeoGenerate"]
