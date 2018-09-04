@@ -189,5 +189,14 @@ GEOGCS["WGS 84",
         t.attrs["Description"] = "J2000 time of first pixel in line"
         t.attrs["Units"] = "second"
         m.write()
+        # We stash some of the objects we've used here for use by
+        # L1bGeoGenerateMap and L1bGeoGenerateKmz. Right now, we assume
+        # this is always run first. We could break this dependency if
+        # needed, but at least currently we always run L1bGeoGenerate and
+        # sometimes run L1bGeoGenerateMap and L1bGeoGenerateKmz
+        m.hdf_file = None
+        self.m = m
+        self.lat = lat
+        self.lon = lon
 
 __all__ = ["L1bGeoGenerate"]
