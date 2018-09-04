@@ -77,7 +77,9 @@ class L1bGeoGenerate(object):
         vazimuth = res[:,:,0,0,4].copy()
         szenith = res[:,:,0,0,5].copy()
         sazimuth = res[:,:,0,0,6].copy()
-        lfrac = GroundCoordinateArray.interpolate(self.lwm, lat, lon) * 100.0
+        lfrac = GroundCoordinateArray.interpolate(self.lwm, lat, lon)
+        lfrac =  np.where(lfrac <= fill_value_threshold, fill_value_threshold,
+                          lfrac * 100.0)
         tlinestart = np.array([self.igc.pixel_time(geocal.ImageCoordinate(ln, 0)).j2000 for ln in range(start_line, start_line+res.shape[0])])
         return (lat, lon, height, vzenith, vazimuth, szenith, sazimuth,
                 lfrac, tlinestart)
