@@ -86,3 +86,6 @@ information.
 '''
         g2.create_dataset("GeoTransform", data=res.map_info.transform,
                           dtype='f8')
+
+__all__ = ["L1bGeoGenerateMap"]
+        

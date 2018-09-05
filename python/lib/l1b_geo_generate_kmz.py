@@ -1,3 +1,4 @@
+from .gaussian_stretch import gaussian_stretch
 import geocal
 from ecostress_swig import *
 import os
@@ -42,14 +43,31 @@ class L1bGeoGenerateKmz(object):
         lat = self.l1b_geo_generate.lat
         lon = self.l1b_geo_generate.lon
         res = Resampler(lat, lon, mi, self.number_subpixel, False)
+        cmd_merge = ["gdalbuildvrt", "-q", "-separate", "map_scaled.vrt"]
         for b in self.band_list:
             ras = geocal.GdalRasterImage("HDF5:\"%s\"://Radiance/radiance_%d" %
                                          (self.l1b_rad, b))
-           
-        # scale data by 100, and take fill to 0
-        # Do a gaussian stretch. Make sure fill data goes to 0
-        # Create geotiff output, with no data value of 0. Combine for
-        # map_scaled.vrt, and make sure we have a_nodata of 0
-        # translate using gdal_translate
-        subprocess.run(["touch", self.output_name])
-        pass
+            data = res.resample_field(ras)
+            data_scaled = gaussian_stretch(data)
+            fname = "map_b%d_scaled.img" % b
+            f = geocal.VicarRasterImage(fname, res.map_info)
+            f["NODATA"] = 0.0
+            f.write(0,0,data_scaled)
+            f.close()
+            cmd_merge.append(fname)
+        subprocess.run(cmd_merge)
+        cmd = ["gdal_translate", "-of", "KMLSUPEROVERLAY", "map_scaled.vrt",
+               self.output_name]
+        if(not self.use_jpeg):
+            cmd.extend(["-co", "FORMAT=PNG"])
+        subprocess.run(cmd)
+        thumbnailfile = os.path.splitext(self.output_name)[0] + "_thumbnail"
+        if(self.use_jpeg):
+            ext = "jpg"
+            subprocess.run("unzip -p %s 0/0/0.%s | cat > %s.%s" % (self.output_name, ext, thumbnailfile, ext), shell=True)
+        else:
+            ext = "png"
+            subprocess.run("unzip -p %s 0/0/0.%s | convert - %s.%s" % (self.output_name, ext, thumbnailfile, "jpg"), shell=True)
+
+__all__ = ["L1bGeoGenerateKmz"]
+    

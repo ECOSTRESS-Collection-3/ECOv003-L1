@@ -929,6 +929,7 @@ ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
 	@srcpythonlib@/l1b_geo_qa_file.py \
 	@srcpythonlib@/l1b_geo_generate_map.py \
 	@srcpythonlib@/l1b_geo_generate_kmz.py \
+	@srcpythonlib@/gaussian_stretch.py \
 	@srcpythonlib@/cython_try.py
 
 # Number of jobs to run at once. Default is to automatically determine this,

@@ -24,6 +24,7 @@ ecostresspkgpython_PYTHON+= @srcpythonlib@/ecostress_interpolate.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/l1b_geo_qa_file.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/l1b_geo_generate_map.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/l1b_geo_generate_kmz.py
+ecostresspkgpython_PYTHON+= @srcpythonlib@/gaussian_stretch.py
 
 # Cython code to generate
 ecostresspkgpython_PYTHON+= @srcpythonlib@/cython_try.py
