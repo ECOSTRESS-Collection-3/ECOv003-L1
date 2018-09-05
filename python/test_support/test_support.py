@@ -121,9 +121,13 @@ def test_data():
 @pytest.yield_fixture(scope="function")
 def orb_fname(unit_test_data, test_data):
     yield test_data + "L1A_RAW_ATT_80005_20150124T204250_0100_01.h5.expected"
+
+@pytest.yield_fixture(scope="function")
+def rad_fname(unit_test_data, test_data):
+    yield test_data + "ECOSTRESS_L1B_RAD_80005_001_20150124T204250_0100_01.h5.expected"
     
 @pytest.yield_fixture(scope="function")
-def igc(unit_test_data, test_data, orb_fname):
+def igc(unit_test_data, test_data, orb_fname, rad_fname):
     '''Like igc_old, but a more realistic IGC. This one is already averaged 
     (so 128 rows per scan)'''
     if(not have_swig):
@@ -134,8 +138,6 @@ def igc(unit_test_data, test_data, orb_fname):
                                  "Ephemeris/eci_velocity",
                                  "Attitude/time_j2000",
                                  "Attitude/quaternion")
-    rad_fname = test_data + "ECOSTRESS_L1B_RAD_80005_001_20150124T204250_0100_01.h5.expected"
-
     f = h5py.File(rad_fname, "r")
     tmlist = f["/Time/line_start_time_j2000"][::128]
     # True here means we've already averaged the 256 lines to 128 squarish
@@ -153,10 +155,9 @@ def igc(unit_test_data, test_data, orb_fname):
     yield igc
 
 @pytest.yield_fixture(scope="function")
-def igc_with_img(igc, test_data):
+def igc_with_img(igc, test_data, rad_fname):
     '''Like igc, but also with raster image included'''
     igcwimg = igc
-    rad_fname = test_data + "ECOSTRESS_L1B_RAD_80005_001_20150124T204250_0100_01.h5.expected"
     igcwimg.image = GdalRasterImage('HDF5:"%s"://SWIR/swir_dn' % rad_fname)
     yield igcwimg
     
@@ -169,20 +170,17 @@ def gain_fname(unit_test_data, test_data):
     yield test_data + "L1A_RAD_GAIN_80005_001_20150124T204250_0100_02.h5.expected"
     
 @pytest.yield_fixture(scope="function")
-def igc_hres(unit_test_data, test_data):
+def igc_hres(unit_test_data, test_data, orb_fname, rad_fname):
     '''Like igc_old, but a more realistic IGC. This one is not averaged 
     (so 256 rows per scan)'''
     if(not have_swig):
         raise RuntimeError("You need to install the ecostress swig code first. You can install just this by doing 'make install-swig-python'")
     cam = read_shelve(unit_test_data + "camera.xml")
-    orb_fname = test_data + "L1A_RAW_ATT_80005_20150124T204250_0100_01.h5.expected"
     orb = HdfOrbit_Eci_TimeJ2000(orb_fname, "", "Ephemeris/time_j2000",
                                  "Ephemeris/eci_position",
                                  "Ephemeris/eci_velocity",
                                  "Attitude/time_j2000",
                                  "Attitude/quaternion")
-    rad_fname = test_data + "ECOSTRESS_L1B_RAD_80005_001_20150124T204250_0100_01.h5.expected"
-
     f = h5py.File(rad_fname, "r")
     tmlist = f["/Time/line_start_time_j2000"][::128]
     # False here means we've haven't averaged the 256 lines.
@@ -199,7 +197,7 @@ def igc_hres(unit_test_data, test_data):
     yield igc
     
 @pytest.yield_fixture(scope="function")
-def igc_btob(unit_test_data, test_data):
+def igc_btob(unit_test_data, test_data, orb_fname):
     '''Like igc_hres, but using test data better suited for band to band 
     testing. We have the SWIR band for each of the bands'''
     # This was used initially to test band to band. It isn't worth keeping this
@@ -210,7 +208,6 @@ def igc_btob(unit_test_data, test_data):
     if(not have_swig):
         raise RuntimeError("You need to install the ecostress swig code first. You can install just this by doing 'make install-swig-python'")
     cam = read_shelve(unit_test_data + "camera.xml")
-    orb_fname = test_data + "band_to_band/L1A_RAW_ATT_80005_20150124T204250_0100_01.h5"
     orb = HdfOrbit_Eci_TimeJ2000(orb_fname, "", "Ephemeris/time_j2000",
                                  "Ephemeris/eci_position",
                                  "Ephemeris/eci_velocity",

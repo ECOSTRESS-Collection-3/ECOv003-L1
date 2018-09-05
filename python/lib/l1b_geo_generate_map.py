@@ -19,10 +19,11 @@ class L1bGeoGenerateMap(object):
     map by setting north_up to true. Likewise, default resolution is 70 meters,
     but you can modify this.
     '''
-    def __init__(self, l1b_geo_generate, output_name,
+    def __init__(self, l1b_geo_generate, l1b_rad, output_name,
                  local_granule_id = None, log_fname = None,
                  resolution = 70, north_up = False, number_subpixel = 3):
         self.l1b_geo_generate = l1b_geo_generate
+        self.l1b_rad = l1b_rad
         self.output_name = output_name
         if(local_granule_id):
             self.local_granule_id = local_granule_id

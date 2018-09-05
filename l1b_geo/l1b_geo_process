@@ -361,7 +361,8 @@ try:
         if(l1b_geo_config.generate_map_product):
             print_and_log("Generating Map Product scene number %d" %
                           scenelist[i])
-            l1bgeo_map = ecostress.L1bGeoGenerateMap(l1bgeo, ofile_map[i],
+            l1bgeo_map = ecostress.L1bGeoGenerateMap(l1bgeo, radlist[i],
+                 ofile_map[i],
                  north_up = l1b_geo_config.north_up,
                  resolution = l1b_geo_config.map_resolution,
                  number_subpixel = l1b_geo_config.map_number_subpixel)
@@ -369,7 +370,12 @@ try:
         if(l1b_geo_config.generate_kmz_file):
             print_and_log("Generating KMZ file scene number %d" %
                           scenelist[i])
-            l1bgeo_kmz = ecostress.L1bGeoGenerateMap(l1bgeo, ofile_kmz[i])
+            l1bgeo_kmz = ecostress.L1bGeoGenerateKmz(l1bgeo, radlist[i],
+                 ofile_kmz[i],
+                 band_list=l1b_geo_config.kmz_band_list,
+                 use_jpeg=l1b_geo_config.kmz_use_jpeg,
+                 resolution = l1b_geo_config.kmz_resolution,
+                 number_subpixel = l1b_geo_config.kmz_number_subpixel)
             l1bgeo_kmz.run()
     qa_file.add_average_metadata(avg_md)
             
