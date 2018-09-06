@@ -3,6 +3,8 @@ import geocal
 from ecostress_swig import *
 import os
 import subprocess
+import numpy as np
+import scipy
 
 class L1bGeoGenerateKmz(object):
     '''This generates a L1B Geo KMZ file. Right now we leverage off of
@@ -40,8 +42,10 @@ class L1bGeoGenerateKmz(object):
 
         # Generate map data
         mi = geocal.cib01_mapinfo(self.resolution)
-        lat = self.l1b_geo_generate.lat
-        lon = self.l1b_geo_generate.lon
+        lat = scipy.ndimage.interpolation.zoom(self.l1b_geo_generate.lat,
+                                               self.number_subpixel, order=2)
+        lon = scipy.ndimage.interpolation.zoom(self.l1b_geo_generate.lon,
+                                               self.number_subpixel, order=2)
         res = Resampler(lat, lon, mi, self.number_subpixel, False)
         cmd_merge = ["gdalbuildvrt", "-q", "-separate", "map_scaled.vrt"]
         for b in self.band_list:
@@ -50,10 +54,10 @@ class L1bGeoGenerateKmz(object):
             data = res.resample_field(ras)
             data_scaled = gaussian_stretch(data)
             fname = "map_b%d_scaled.img" % b
-            f = geocal.VicarRasterImage(fname, res.map_info)
-            f["NODATA"] = 0.0
-            f.write(0,0,data_scaled)
-            f.close()
+            d = geocal.mmap_file(fname, res.map_info, nodata=0.0,
+                                 dtype=np.uint8)
+            d[:] = data_scaled
+            d = None
             cmd_merge.append(fname)
         subprocess.run(cmd_merge)
         cmd = ["gdal_translate", "-of", "KMLSUPEROVERLAY", "map_scaled.vrt",
