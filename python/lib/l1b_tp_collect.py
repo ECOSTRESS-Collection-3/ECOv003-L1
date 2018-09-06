@@ -58,6 +58,11 @@ class L1bTpCollect(object):
             
     def tp(self, i):
         '''Get tiepoints for the given scene number'''
+        ntpoint_initial = 0     # Initial value, so an exception below doesn't
+                                # result in "local variable referenced before
+                                # assignment" exception
+        ntpoint_removed = 0
+        ntpoint_final = 0
         try:
             self.tpcollect.image_index1 = i
             self.tpcollect.ref_image_fname = self.ref_fname[i]
