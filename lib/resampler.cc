@@ -125,12 +125,22 @@ void Resampler::init(const blitz::Array<double, 2>& lat,
 }
 
 //-------------------------------------------------------------------------
-/// Resample the given data and return an array of values
+/// Resample the given data and return an array of values.
+///
+/// We can scale the data by the given factor, optionally clip
+/// negative values to 0, and specify the fill_value to use for data
+/// that we don't see.
+///
+/// For some data, averaging the values that hit a grid cell doesn't
+/// actually make sense (e.g., for view angles). You can instead
+/// specify Use_smallest_ic which uses the value for the smallest
+/// line/sample that sees a particular grid cell.
 //-------------------------------------------------------------------------
 
 blitz::Array<double, 2> Resampler::resample_field
 (const boost::shared_ptr<GeoCal::RasterImage>& Data,
- double Scale_data, bool Negative_to_zero, double Fill_value) const
+ double Scale_data, bool Negative_to_zero, double Fill_value,
+ bool Use_smallest_ic) const
 {
   // We do replication here since we are counting subpixels. This is
   // particularly important to get the fill values correct.
@@ -152,8 +162,12 @@ blitz::Array<double, 2> Resampler::resample_field
 	  // Clear out any fill value we may have set
 	  if(cnt(ln,smp) == 0)
 	    res(ln,smp) = 0.0;
-	  res(ln,smp) += d(i,j);
-	  cnt(ln,smp) += 1;
+	  // Add data, unless we already have data there and
+	  // Use_smallest_ic is true
+	  if(!Use_smallest_ic || cnt(ln,smp) == 0) {
+	    res(ln,smp) += d(i,j);
+	    cnt(ln,smp) += 1;
+	  }
 	} else {
 	  // Populate with fill value if we don't already have data
 	  if(cnt(ln, smp) == 0) {

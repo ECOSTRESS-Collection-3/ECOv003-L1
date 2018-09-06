@@ -130,9 +130,21 @@ information.
         t.attrs.create("_FillValue", data=FILL_VALUE_NOT_SEEN,
                        dtype=t.dtype)
         t.attrs["Units"] = "dimensionless"
-        # Solar azimuth, solar zenith, view azimuth, view zenith
-        # Create GDAL VRT file. No specific use for this, but it is
-        # quick to generate and might be useful
+        for fld in ["solar_azimuth", "solar_zenith", "view_azimuth",
+                    "view_zenith"]:
+            self.print_and_log("Doing %s" % fld)    
+            data_in = geocal.GdalRasterImage("HDF5:\"%s\"://Geolocation/%s" % (self.l1b_geo_generate.output_name, fld))
+            data = res.resample_field(data_in, 1.0, False, FILL_VALUE_NOT_SEEN, True).astype(np.float32)
+            t = g.create_dataset(fld, data = data, dtype='f4',
+                                 fillvalue = FILL_VALUE_NOT_SEEN)
+            t.attrs.create("_FillValue", data=FILL_VALUE_NOT_SEEN,
+                           dtype=t.dtype)
+            t.attrs["Units"] = "degrees"
+            t.attrs["Description"] = \
+'''%s field. Note that a ground location is in general seen multiple
+times. It doesn't make sense to average the data like we do for radiance.
+Instead, we give the angle for the ECOSTRESS image coordinate that has the
+smallest line and sample number.''' % fld
         fout.close()
         vrtfile = os.path.splitext(self.output_name)[0] + "_gdal.vrt"
         cmd = ["gdalbuildvrt", "-separate", vrtfile]
@@ -142,6 +154,10 @@ information.
         cmd.append("HDF5:\"%s\"://Mapped/latitude" % self.output_name)
         cmd.append("HDF5:\"%s\"://Mapped/longitude" % self.output_name)
         cmd.append("HDF5:\"%s\"://Mapped/height" % self.output_name)
+        cmd.append("HDF5:\"%s\"://Mapped/solar_azimuth" % self.output_name)
+        cmd.append("HDF5:\"%s\"://Mapped/solar_zenith" % self.output_name)
+        cmd.append("HDF5:\"%s\"://Mapped/view_azimuth" % self.output_name)
+        cmd.append("HDF5:\"%s\"://Mapped/view_zenith" % self.output_name)
         subprocess.run(cmd)
         tstring = ",".join("{:.20e}".format(t) for t in res.map_info.transform)
         cmd=["sed", "-i", "s#</SRS>#</SRS>\\n  <GeoTransform>%s</GeoTransform>\\n  <Metadata>\\n    <MDI key=\"AREA_OR_POINT\">Area</MDI>\\n  </Metadata>#" % tstring, vrtfile]

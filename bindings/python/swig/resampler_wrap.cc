@@ -7283,6 +7283,123 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_0(PyObject *SWIGUNUSED
   double arg3 ;
   bool arg4 ;
   double arg5 ;
+  bool arg6 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::Resampler const > tempshared1 ;
+  boost::shared_ptr< Ecostress::Resampler const > *smartarg1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  boost::shared_ptr< GeoCal::RasterImage > tempshared2 ;
+  boost::shared_ptr< GeoCal::RasterImage > temp2shared2 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  bool val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  bool val6 ;
+  int ecode6 = 0 ;
+  SwigValueWrapper< blitz::Array< double,2 > > result;
+  
+  if ((nobjs < 6) || (nobjs > 6)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
+      arg1 = const_cast< Ecostress::Resampler * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
+      arg1 = const_cast< Ecostress::Resampler * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_resample_field" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp2) tempshared2 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2);
+      delete reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2);
+      arg2 = &tempshared2;
+    } else {
+      arg2 = (argp2) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2) : &tempshared2;
+    }
+    // Special handling if this is a director class. In that case, we
+    // don't own the underlying python object. Instead,
+    // we tell python we have a reference to the underlying object, and
+    // when this gets destroyed we decrement the reference to the python
+    // object. 
+    Swig::Director* dp = dynamic_cast<Swig::Director*>(arg2->get());
+    if(dp) {
+      Py_INCREF(dp->swig_get_self());
+      temp2shared2.reset(arg2->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      arg2 = &temp2shared2;
+    }
+  }
+  ecode3 = SWIG_AsVal_double(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Resampler_resample_field" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_bool(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Resampler_resample_field" "', argument " "4"" of type '" "bool""'");
+  } 
+  arg4 = static_cast< bool >(val4);
+  ecode5 = SWIG_AsVal_double(swig_obj[4], &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Resampler_resample_field" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  ecode6 = SWIG_AsVal_bool(swig_obj[5], &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Resampler_resample_field" "', argument " "6"" of type '" "bool""'");
+  } 
+  arg6 = static_cast< bool >(val6);
+  {
+    try {
+      result = ((Ecostress::Resampler const *)arg1)->resample_field((boost::shared_ptr< GeoCal::RasterImage > const &)*arg2,arg3,arg4,arg5,arg6);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    npy_intp dims[2], stride[2];
+    for(int i = 0; i < 2; ++i) {
+      dims[i] = (&result)->extent(i);
+      // Note numpy stride is in terms of bytes, while blitz in in terms
+      // of type T.
+      stride[i] = (&result)->stride(i) * sizeof(double);
+    }
+    resultobj = PyArray_New(&PyArray_Type, 2, dims, type_to_npy<double >(), 
+      stride, (&result)->data(), 0, 0, 0);
+    blitz::Array<double, 2>* t = new blitz::Array<double, 2>(result);
+    PyArray_SetBaseObject((PyArrayObject*)resultobj, 
+      SWIG_NewPointerObj(SWIG_as_voidptr(t), 
+        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | 0 ));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
+  boost::shared_ptr< GeoCal::RasterImage > *arg2 = 0 ;
+  double arg3 ;
+  bool arg4 ;
+  double arg5 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   boost::shared_ptr< Ecostress::Resampler const > tempshared1 ;
@@ -7385,7 +7502,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_2(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
   boost::shared_ptr< GeoCal::RasterImage > *arg2 = 0 ;
@@ -7486,7 +7603,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_2(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_3(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
   boost::shared_ptr< GeoCal::RasterImage > *arg2 = 0 ;
@@ -7579,7 +7696,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_3(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_4(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
   boost::shared_ptr< GeoCal::RasterImage > *arg2 = 0 ;
@@ -7664,7 +7781,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_4(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_5(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
   std::string *arg2 = 0 ;
@@ -7788,7 +7905,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_5(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_6(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
   std::string *arg2 = 0 ;
@@ -7904,7 +8021,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_6(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_7(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
   std::string *arg2 = 0 ;
@@ -8012,7 +8129,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_7(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_8(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
   std::string *arg2 = 0 ;
@@ -8105,7 +8222,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_8(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_9(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
   std::string *arg2 = 0 ;
@@ -8199,7 +8316,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field(PyObject *self, PyObject *ar
   if (!(argc = SWIG_Python_UnpackTuple(args,"Resampler_resample_field",0,7,argv))) SWIG_fail;
   --argc;
   if (argc == 2) {
-    return _wrap_Resampler_resample_field__SWIG_3(self, argc, argv);
+    return _wrap_Resampler_resample_field__SWIG_4(self, argc, argv);
   }
   if (argc == 3) {
     int _v = 0;
@@ -8215,12 +8332,12 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field(PyObject *self, PyObject *ar
       }
     }
     if (!_v) goto check_2;
-    return _wrap_Resampler_resample_field__SWIG_2(self, argc, argv);
+    return _wrap_Resampler_resample_field__SWIG_3(self, argc, argv);
   }
 check_2:
   
   if (argc == 3) {
-    return _wrap_Resampler_resample_field__SWIG_8(self, argc, argv);
+    return _wrap_Resampler_resample_field__SWIG_9(self, argc, argv);
   }
   if (argc == 4) {
     int _v = 0;
@@ -8243,12 +8360,12 @@ check_2:
       }
     }
     if (!_v) goto check_4;
-    return _wrap_Resampler_resample_field__SWIG_1(self, argc, argv);
+    return _wrap_Resampler_resample_field__SWIG_2(self, argc, argv);
   }
 check_4:
   
   if (argc == 4) {
-    return _wrap_Resampler_resample_field__SWIG_7(self, argc, argv);
+    return _wrap_Resampler_resample_field__SWIG_8(self, argc, argv);
   }
   if (argc == 5) {
     int _v = 0;
@@ -8278,23 +8395,56 @@ check_4:
       }
     }
     if (!_v) goto check_6;
-    return _wrap_Resampler_resample_field__SWIG_0(self, argc, argv);
+    return _wrap_Resampler_resample_field__SWIG_1(self, argc, argv);
   }
 check_6:
   
   if (argc == 5) {
-    return _wrap_Resampler_resample_field__SWIG_6(self, argc, argv);
+    return _wrap_Resampler_resample_field__SWIG_7(self, argc, argv);
   }
   if (argc == 6) {
-    return _wrap_Resampler_resample_field__SWIG_5(self, argc, argv);
+    int _v = 0;
+    {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t, 0);
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_8;
+    {
+      {
+        int res = SWIG_AsVal_double(argv[2], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_8;
+    {
+      {
+        int res = SWIG_AsVal_bool(argv[3], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_8;
+    {
+      {
+        int res = SWIG_AsVal_double(argv[4], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_8;
+    return _wrap_Resampler_resample_field__SWIG_0(self, argc, argv);
+  }
+check_8:
+  
+  if (argc == 6) {
+    return _wrap_Resampler_resample_field__SWIG_6(self, argc, argv);
   }
   if (argc == 7) {
-    return _wrap_Resampler_resample_field__SWIG_4(self, argc, argv);
+    return _wrap_Resampler_resample_field__SWIG_5(self, argc, argv);
   }
   
 fail:
   SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'Resampler_resample_field'.\n"
     "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::Resampler::resample_field(boost::shared_ptr< GeoCal::RasterImage > const &,double,bool,double,bool) const\n"
     "    Ecostress::Resampler::resample_field(boost::shared_ptr< GeoCal::RasterImage > const &,double,bool,double) const\n"
     "    Ecostress::Resampler::resample_field(boost::shared_ptr< GeoCal::RasterImage > const &,double,bool) const\n"
     "    Ecostress::Resampler::resample_field(boost::shared_ptr< GeoCal::RasterImage > const &,double) const\n"
