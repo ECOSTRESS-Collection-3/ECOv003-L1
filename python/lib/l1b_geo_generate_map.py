@@ -3,6 +3,9 @@ from ecostress_swig import *
 from .misc import determine_rotated_map_igc
 import os
 import h5py
+import numpy as np
+import scipy
+import subprocess
 
 class L1bGeoGenerateMap(object):
     '''This generates a L1B Geo map product. Right now we leverage off of
@@ -34,17 +37,28 @@ class L1bGeoGenerateMap(object):
         self.resolution = resolution
         self.number_subpixel = number_subpixel
 
+    def print_and_log(self, s):
+        print(s)
+        if(self.log_fname is not None):
+            self.log = open(self.log_fname, "a")
+            print("INFO:L1bGeoGenerateMap:%s" % s, file = self.log)
+            self.log.flush()
+            self.log = None
+
     def run(self):
         fout = h5py.File(self.output_name, "w")
         m = self.l1b_geo_generate.m.copy_new_file(fout,
                                  self.local_granule_id, "ECO1BMAP")
         m.write()
         mi = geocal.cib01_mapinfo(self.resolution)
-        lat = self.l1b_geo_generate.lat
-        lon = self.l1b_geo_generate.lon
+        lat = scipy.ndimage.interpolation.zoom(self.l1b_geo_generate.lat,
+                                               self.number_subpixel, order=2)
+        lon = scipy.ndimage.interpolation.zoom(self.l1b_geo_generate.lon,
+                                               self.number_subpixel, order=2)
         if(not self.north_up):
             mi = determine_rotated_map_igc(self.l1b_geo_generate.igc, mi)
         res = Resampler(lat, lon, mi, self.number_subpixel, False)
+        self.print_and_log("Done with Resampler init")
         g = fout.create_group("Mapped")
         g2 = g.create_group("MapInformation")
         g2["README"] = \
@@ -86,6 +100,54 @@ information.
 '''
         g2.create_dataset("GeoTransform", data=res.map_info.transform,
                           dtype='f8')
-
+        lat, lon, height = res.map_values(self.l1b_geo_generate.igc.dem)
+        t = g.create_dataset("latitude", data=lat, dtype='f8')
+        t.attrs["Units"] = "degrees"
+        t = g.create_dataset("longitude", data=lon, dtype='f8')
+        t.attrs["Units"] = "degrees"
+        t = g.create_dataset("height", data=height, dtype='f4')
+        t.attrs["Units"] = "m"
+        self.print_and_log("Done with lat, lon, height")
+        # Land fraction
+        for b in range(1,6):
+            self.print_and_log("Doing band %d" % b)
+            data_in = geocal.GdalRasterImage("HDF5:\"%s\"://Radiance/radiance_%d" % (self.l1b_rad, b))
+            data = res.resample_field(data_in, 1.0, False,
+                         FILL_VALUE_NOT_SEEN).astype(np.float32)
+            t = g.create_dataset("radiance_%d" % b, data = data, dtype='f4',
+                                 fillvalue = FILL_VALUE_NOT_SEEN)
+            t.attrs.create("_FillValue", data=FILL_VALUE_NOT_SEEN,
+                           dtype=t.dtype)
+            t.attrs["Units"] = "W/m^2/sr/um"
+            # DQI
+        self.print_and_log("Doing SWIR")    
+        data_in = geocal.GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" % self.l1b_rad)
+        data = res.resample_field(data_in, 1.0, False,
+                                 FILL_VALUE_NOT_SEEN).astype(np.int16)
+        t = g.create_dataset("swir_dn",
+                             data = data,
+                             fillvalue = FILL_VALUE_NOT_SEEN)
+        t.attrs.create("_FillValue", data=FILL_VALUE_NOT_SEEN,
+                       dtype=t.dtype)
+        t.attrs["Units"] = "dimensionless"
+        # Solar azimuth, solar zenith, view azimuth, view zenith
+        # Create GDAL VRT file. No specific use for this, but it is
+        # quick to generate and might be useful
+        fout.close()
+        vrtfile = os.path.splitext(self.output_name)[0] + "_gdal.vrt"
+        cmd = ["gdalbuildvrt", "-separate", vrtfile]
+        cmd.extend("HDF5:\"%s\"://Mapped/radiance_%d" % (self.output_name, b+1)
+                   for b in range(5))
+        cmd.append("HDF5:\"%s\"://Mapped/swir_dn" % self.output_name)
+        cmd.append("HDF5:\"%s\"://Mapped/latitude" % self.output_name)
+        cmd.append("HDF5:\"%s\"://Mapped/longitude" % self.output_name)
+        cmd.append("HDF5:\"%s\"://Mapped/height" % self.output_name)
+        subprocess.run(cmd)
+        tstring = ",".join("{:.20e}".format(t) for t in res.map_info.transform)
+        cmd=["sed", "-i", "s#</SRS>#</SRS>\\n  <GeoTransform>%s</GeoTransform>\\n  <Metadata>\\n    <MDI key=\"AREA_OR_POINT\">Area</MDI>\\n  </Metadata>#" % tstring, vrtfile]
+        subprocess.run(cmd)
+        
+        
+        
 __all__ = ["L1bGeoGenerateMap"]
         
