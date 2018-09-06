@@ -229,9 +229,15 @@ blitz::Array<double, 2> GroundCoordinateArray::interpolate
   for(int i = 0; i < res.rows(); ++i)
     for(int j = 0; j < res.cols(); ++j)
       if(Lat(i,j) > fill_value_threshold &&
-	 Lon(i,j) > fill_value_threshold)
-	res(i,j) = Data.interpolate(Data.coordinate(GeoCal::Geodetic(Lat(i,j), Lon(i,j))));
-      else
+	 Lon(i,j) > fill_value_threshold) {
+	GeoCal::ImageCoordinate ic = Data.coordinate(GeoCal::Geodetic(Lat(i,j), Lon(i,j)));
+	if(ic.line >= 0 && ic.line < Data.number_line() - 1 &&
+	   ic.sample >= 0 && ic.sample < Data.number_sample() - 1) {
+	  res(i,j) = Data.interpolate(ic);
+	} else { 
+	  res(i,j) = FILL_VALUE_BAD_OR_MISSING;
+	}
+      } else
 	res(i,j) = FILL_VALUE_BAD_OR_MISSING;
   return res;
 }
