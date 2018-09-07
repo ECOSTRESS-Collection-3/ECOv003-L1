@@ -8189,6 +8189,49 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_crosses_dateline(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressImageGroundConnection *arg1 = (Ecostress::EcostressImageGroundConnection *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnection const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnection const > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  bool result;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnection_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressImageGroundConnection__v_crosses_dateline" "', argument " "1"" of type '" "Ecostress::EcostressImageGroundConnection const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnection > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnection > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnection * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnection > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnection * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = (bool)((Ecostress::EcostressImageGroundConnection const *)arg1)->crosses_dateline();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_number_line_scan(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressImageGroundConnection *arg1 = (Ecostress::EcostressImageGroundConnection *) 0 ;
@@ -9228,6 +9271,17 @@ static PyMethodDef SwigMethods[] = {
 		"Because it is convenient, you can pass in a band to use if desired,\n"
 		"which can be different than the current value of band(). The default\n"
 		"value of -1 means to use the value of band() and not change this. \n"
+		""},
+	 { (char *)"EcostressImageGroundConnection__v_crosses_dateline", (PyCFunction)_wrap_EcostressImageGroundConnection__v_crosses_dateline, METH_O, (char *)"\n"
+		"\n"
+		"bool EcostressImageGroundConnection::crosses_dateline() const\n"
+		"Detect if we cross the date line.\n"
+		"\n"
+		"Right now, we fail in l1b_geo if we cross the date line, we just don't\n"
+		"handle this. We may even want the detection left in place once we\n"
+		"handle this, since we may need to detect this condition (although we\n"
+		"may also just want to have \"nearly crosses date line\" to handle\n"
+		"corrections that may put us over the edge. \n"
 		""},
 	 { (char *)"EcostressImageGroundConnection__v_number_line_scan", (PyCFunction)_wrap_EcostressImageGroundConnection__v_number_line_scan, METH_O, (char *)"\n"
 		"\n"

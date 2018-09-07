@@ -247,6 +247,26 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
         return _ecostress_image_ground_connection.EcostressImageGroundConnection_image_coordinate_scan_index(self, Gc, Scan_index, Band)
 
 
+    def _v_crosses_dateline(self):
+        """
+
+        bool EcostressImageGroundConnection::crosses_dateline() const
+        Detect if we cross the date line.
+
+        Right now, we fail in l1b_geo if we cross the date line, we just don't
+        handle this. We may even want the detection left in place once we
+        handle this, since we may need to detect this condition (although we
+        may also just want to have "nearly crosses date line" to handle
+        corrections that may put us over the edge. 
+        """
+        return _ecostress_image_ground_connection.EcostressImageGroundConnection__v_crosses_dateline(self)
+
+
+    @property
+    def crosses_dateline(self):
+        return self._v_crosses_dateline()
+
+
     def _v_number_line_scan(self):
         """
 
@@ -396,6 +416,7 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
     __swig_destroy__ = _ecostress_image_ground_connection.delete_EcostressImageGroundConnection
 EcostressImageGroundConnection.orbit_data = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection_orbit_data, None, EcostressImageGroundConnection)
 EcostressImageGroundConnection.image_coordinate_scan_index = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection_image_coordinate_scan_index, None, EcostressImageGroundConnection)
+EcostressImageGroundConnection._v_crosses_dateline = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_crosses_dateline, None, EcostressImageGroundConnection)
 EcostressImageGroundConnection._v_number_line_scan = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_number_line_scan, None, EcostressImageGroundConnection)
 EcostressImageGroundConnection._v_band = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_band, None, EcostressImageGroundConnection)
 EcostressImageGroundConnection._v_resolution = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_resolution, None, EcostressImageGroundConnection)

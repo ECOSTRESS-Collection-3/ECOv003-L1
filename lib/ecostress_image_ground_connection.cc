@@ -508,3 +508,30 @@ EcostressImageGroundConnection::collinearity_residual_jacobian
   return res;
 }
 
+//-------------------------------------------------------------------------
+/// Detect if we cross the date line. Right now, we fail in l1b_geo if
+/// we cross the date line, we just don't handle this. We may even
+/// want the detection left in place once we handle this, since we may
+/// need to detect this condition (although we may also just want to
+/// have "nearly crosses date line" to handle corrections that may put
+/// us over the edge.
+//-------------------------------------------------------------------------
+
+bool EcostressImageGroundConnection::crosses_dateline() const
+{
+  double lon1 = ground_coordinate(GeoCal::ImageCoordinate(0,0))->longitude();
+  double lon2 =
+    ground_coordinate(GeoCal::ImageCoordinate(0,number_sample() - 1))->
+    longitude();
+  double lon3 =
+    ground_coordinate(GeoCal::ImageCoordinate(number_line() - 1,
+					      number_sample() - 1))->
+    longitude();
+  double lon4 =
+    ground_coordinate(GeoCal::ImageCoordinate(number_line() - 1,0))->
+    longitude();
+  bool lon_g170 = (lon1 > 170 || lon2 > 170 || lon3 > 170 || lon4 > 170);
+  bool lon_ln170 = (lon1 < -170 || lon2 < -170 || lon3 < -170 || lon4 < -170);
+  return lon_g170 && lon_ln170;
+}
+

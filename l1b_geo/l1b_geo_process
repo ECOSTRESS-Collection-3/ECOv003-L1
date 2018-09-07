@@ -208,7 +208,10 @@ inlist.append(l1_osp_dir + "/l1b_geo_config.py", )
 log_fname = None
 qa_file = None
 try:
-    pool = Pool(ncpu)
+    if(ncpu > 1):
+        pool = Pool(ncpu)
+    else:
+        pool = None
     # Determine output file names
     ofile = []
     ofile_map = []
@@ -355,40 +358,44 @@ try:
     
 
     # Generate output data
-    avg_md = np.empty((len(radlist), 2))
+    avg_md = np.full((len(radlist), 2), -9999.0)
     for i in range(len(radlist)):
         # Generate output
         print_and_log("Doing scene number %d" % scenelist[i])
-        l1bgeo = ecostress.L1bGeoGenerate(
-            igccol_corrected.image_ground_connection(i),
-            lwm, ofile[i],inlist,is_day[i],
-            number_line = args.number_line,
-            run_config = config, log_fname = log_fname,
-            build_id = build_id,
-            pge_version = pge_version["l1b_geo"],
-            correction_done = correction_done)
-        l1bgeo.run(pool)
-        avg_md[i,0 ] = l1bgeo.avg_sz
-        avg_md[i,1 ] = l1bgeo.oa_lf
-        if(l1b_geo_config.generate_map_product):
-            print_and_log("Generating Map Product scene number %d" %
-                          scenelist[i])
-            l1bgeo_map = ecostress.L1bGeoGenerateMap(l1bgeo, radlist[i],
-                 ofile_map[i],
-                 north_up = l1b_geo_config.north_up,
-                 resolution = l1b_geo_config.map_resolution,
-                 number_subpixel = l1b_geo_config.map_number_subpixel)
-            l1bgeo_map.run()
-        if(l1b_geo_config.generate_kmz_file):
-            print_and_log("Generating KMZ file scene number %d" %
-                          scenelist[i])
-            l1bgeo_kmz = ecostress.L1bGeoGenerateKmz(l1bgeo, radlist[i],
-                 ofile_kmz[i],
-                 band_list=l1b_geo_config.kmz_band_list,
-                 use_jpeg=l1b_geo_config.kmz_use_jpeg,
-                 resolution = l1b_geo_config.kmz_resolution,
-                 number_subpixel = l1b_geo_config.kmz_number_subpixel)
-            l1bgeo_kmz.run()
+        if(igccol_corrected.image_ground_connection(i).crosses_dateline):
+            print_and_log("Scene number %d crosses date line. We don't handle this. Skipping output for this scene" % scenelist[i])
+        else:
+            l1bgeo = ecostress.L1bGeoGenerate(
+                igccol_corrected.image_ground_connection(i),
+                lwm, ofile[i],inlist,is_day[i],
+                number_line = args.number_line,
+                run_config = config, log_fname = log_fname,
+                build_id = build_id,
+                pge_version = pge_version["l1b_geo"],
+                correction_done = correction_done)
+            l1bgeo.run(pool)
+            avg_md[i,0 ] = l1bgeo.avg_sz
+            avg_md[i,1 ] = l1bgeo.oa_lf
+            if(l1b_geo_config.generate_map_product):
+                print_and_log("Generating Map Product scene number %d" %
+                              scenelist[i])
+                l1bgeo_map = ecostress.L1bGeoGenerateMap(l1bgeo, radlist[i],
+                   ofile_map[i],
+                   north_up = l1b_geo_config.north_up,
+                   resolution = l1b_geo_config.map_resolution,
+                   number_subpixel = l1b_geo_config.map_number_subpixel)
+                l1bgeo_map.run()
+            if(l1b_geo_config.generate_kmz_file):
+                print_and_log("Generating KMZ file scene number %d" %
+                              scenelist[i])
+                l1bgeo_kmz = ecostress.L1bGeoGenerateKmz(l1bgeo, radlist[i],
+                   ofile_kmz[i],
+                   band_list=l1b_geo_config.kmz_band_list,
+                   use_jpeg=l1b_geo_config.kmz_use_jpeg,
+                   resolution = l1b_geo_config.kmz_resolution,
+                   number_subpixel = l1b_geo_config.kmz_number_subpixel)
+                l1bgeo_kmz.run()
+        
     qa_file.add_average_metadata(avg_md)
             
     

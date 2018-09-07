@@ -72,7 +72,7 @@ public:
   virtual blitz::Array<double, 2> 
   image_coordinate_jac_parm(const GeoCal::GroundCoordinate& Gc) const;
   virtual void print(std::ostream& Os) const;
-
+  bool crosses_dateline() const;
   virtual int number_line() const { return tt->max_line() + 1; }
   virtual int number_sample() const { return sm->number_sample(); }
   virtual int number_band() const { return cam->number_band(); }

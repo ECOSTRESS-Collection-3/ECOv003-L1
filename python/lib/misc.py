@@ -33,6 +33,8 @@ def ortho_base_directory(config):
         # run config file
         if(os.path.exists("/raid22/band5_VICAR")):
             ortho_base_dir = "/raid22"
+        elif(os.path.exists("/data/smyth/Landsat/band5_VICAR")):
+            ortho_base_dir = "/data/smyth/Landsat"
     return ortho_base_dir
 
 def band_to_landsat_band(lband):

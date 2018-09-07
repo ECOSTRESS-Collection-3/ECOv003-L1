@@ -80,6 +80,10 @@ class L1bProj(object):
             f = self.scratch_file()
             lat = f[igc_ind,:,:,0]
             lon = f[igc_ind,:,:,1]
+            # Handle case where we have no good data
+            if(np.count_nonzero(lat > -1000) == 0):
+                return False
+            
             # This is bilinear interpolation
             lat = scipy.ndimage.interpolation.zoom(lat, self.number_subpixel,
                                                    order=1)
@@ -142,8 +146,12 @@ class L1bProj(object):
         it = []
         for i in range(self.igccol.number_image):
             igc = self.igccol.image_ground_connection(i)
-            for j in range(igc.time_table.number_scan):
-                it.append((i, j))
+            if(igc.crosses_dateline):
+                self.print_and_log("%s crosses the date line. We don't currently handle this, so skipping" % self.igccol.title(i))
+                self.scratch_file()[i,:,:,:] = -9999.0
+            else:
+                for j in range(igc.time_table.number_scan):
+                    it.append((i, j))
         if(pool is None):
             list(map(self.proj_scan, it))
         else:
