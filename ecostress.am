@@ -33,7 +33,7 @@ l1a_cal_run_config_glynn = $(foreach n,001, $(end_to_end_test_data)/ECOSTRESS_L1
 l1b_cal_run_config_glynn = $(foreach n,001, $(end_to_end_test_data)/ECOSTRESS_L1B_RAD_RunConfig_80006_$n.xml)
 l1b_geo_run_config_glynn = $(end_to_end_test_data)/ECOSTRESS_L1B_GEO_RunConfig_20150124T204431.xml
 
-H5DIFF_FLAG=-d 2e-2
+H5DIFF_FLAG=-d 6e-2
 # We skip radiance 1 and 5 because the filling in of the missing data can
 # vary from one run to the next, so no easy way to compare
 H5DIFF_FLAG+= --exclude-path=/Radiance/radiance_1 --exclude-path=/Radiance/radiance_5 --exclude-path=/SWIR/swir_dn 

@@ -893,7 +893,7 @@ l1b_geo_run_config_glynn = $(end_to_end_test_data)/ECOSTRESS_L1B_GEO_RunConfig_2
 # We have larger differences for ephemeris postion, just because numbers are
 # larger (more like up to 0.1 meter). Exclude just so we don't need special
 # handling
-H5DIFF_FLAG = -d 2e-2 --exclude-path=/Radiance/radiance_1 \
+H5DIFF_FLAG = -d 6e-2 --exclude-path=/Radiance/radiance_1 \
 	--exclude-path=/Radiance/radiance_5 \
 	--exclude-path=/SWIR/swir_dn \
 	--exclude-path=/Geolocation/height \
