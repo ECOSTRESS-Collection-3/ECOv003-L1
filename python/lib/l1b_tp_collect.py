@@ -25,6 +25,7 @@ class L1bTpCollect(object):
         self.log_fname = log_fname
         self.p = L1bProj(self.igccol, self.proj_fname, self.ref_fname,
                          self.ortho_base, log_fname = self.log_fname,
+                         qa_file = self.qa_file,
                          number_subpixel=proj_number_subpixel,
                          pass_through_error=True)
         self.tpcollect = geocal.TiePointCollectPicmtch(self.igccol,
@@ -45,14 +46,22 @@ class L1bTpCollect(object):
             self.log = None
 
     def report_and_log_exception(self, i):
+        print("EXCEPTION:*******************************************")
         print("Exception occurred while collecting tie-points for %s:" % self.igccol.title(i))
         traceback.print_exc()
         print("Skipping tie-points for this scene and continuing processing")
+        if(self.qa_file is not None):
+            self.qa_file.encountered_exception = True
+        print("EXCEPTION:*******************************************")
         if(self.log_fname is not None):
             self.log = open(self.log_fname, "a")
+            print("EXCEPTION:*******************************************",
+                  file = self.log)
             print("INFO:L1bTpCollect:Exception occurred while collecting tie-points for %s:" % self.igccol.title(i), file = self.log)
             traceback.print_exc(file=self.log)
             print("INFO:L1bTpCollect:Skipping tie-points for this scene and continuing processing", file=self.log)
+            print("EXCEPTION:*******************************************",
+                  file = self.log)
             self.log.flush()
             self.log = None
             

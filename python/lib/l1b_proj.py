@@ -11,12 +11,13 @@ class L1bProj(object):
     that we can then match against. We can do this in parallel if you
     pass a pool in.'''
     def __init__(self, igccol, fname_list, ref_fname_list, ortho_base,
-                 log_fname = None, number_subpixel = 2,
+                 qa_file = None, log_fname = None, number_subpixel = 2,
                  scratch_fname="initial_lat_lon.dat",
                  pass_through_error=False):
         '''Project igc and generate a Vicar file fname.'''
         self.igccol = igccol
         self.gc_arr = list()
+        self.qa_file = qa_file
         self.ortho_base = ortho_base
         self.ref_fname_list = ref_fname_list
         self.fname_list = fname_list
@@ -43,14 +44,22 @@ class L1bProj(object):
             self.log = None
 
     def report_and_log_exception(self, igc_ind):
+        print("EXCEPTION:*******************************************")
         print("Exception occurred while projecting %s:" % self.igccol.title(igc_ind))
         traceback.print_exc()
         print("Skipping this scene and continuing processing")
+        if(self.qa_file is not None):
+            self.qa_file.encountered_exception = True
+        print("EXCEPTION:*******************************************")
         if(self.log_fname is not None):
             self.log = open(self.log_fname, "a")
+            print("EXCEPTION:*******************************************",
+                  file = self.log)
             print("INFO:L1bProj:Exception occurred while projecting %s:" % self.igccol.title(igc_ind), file = self.log)
             traceback.print_exc(file=self.log)
             print("INFO:L1bProj:Skipping projection for this scene and continuing processing", file=self.log)
+            print("EXCEPTION:*******************************************",
+                  file = self.log)
             self.log.flush()
             self.log = None
             

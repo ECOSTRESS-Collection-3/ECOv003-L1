@@ -135,13 +135,20 @@ def print_and_log(s):
     log=None
 
 def report_and_log_exception():
+    print("EXCEPTION:*******************************************")
     print("Exception occurred while running SBA/Tiepoint")
     traceback.print_exc()
     print("SBA/Tiepoint failed to correct orbit data. Continue processing without correction.")
+    print("EXCEPTION:*******************************************")
+    qa_file.encountered_exception = True
     log = open(log_fname, "a")
+    print("EXCEPTION:*******************************************",
+          file = self.log)
     print("INFO:L1B_GEO:Exception occurred while running SBA/Tiepoint", file = log)
     traceback.print_exc(file=log)
     print("INFO:L1B_GEO:SBA/Tiepoint failed to correct orbit data. Continue processing without correction.", file=log)
+    print("EXCEPTION:*******************************************",
+          file = self.log)
     log.flush()
     log = None
     
@@ -319,21 +326,26 @@ try:
             orb.insert_position_time_point(tlast)
         geocal.write_shelve("igccol_initial.xml", igccol_initial)
 
-        try:
-            log = open(log_fname, "a")
-            ecostress.process_run(["sba", "--verbose",
-                                   "--hold-gcp-fixed",
-                                   "--gcp-sigma=50",  "igccol_initial.xml",
-                                   "tpcol.xml", "igccol_sba.xml",
-                                   "tpcol_sba.xml"],
-                                  out_fh=log)
-            log.flush()
-            igccol_corrected = geocal.read_shelve("igccol_sba.xml")
-            correction_done = True
-        except Exception as e:
-            if(not l1b_geo_config.continue_on_sba_fail):
-                raise
-            report_and_log_exception()
+        if(len(tpcol) == 0):
+            print_and_log("No tie-points, so skipping SBA correction")
+            tpcol = None
+        else:
+            try:
+                log = open(log_fname, "a")
+                ecostress.process_run(["sba", "--verbose",
+                                       "--hold-gcp-fixed",
+                                       "--gcp-sigma=50",  "igccol_initial.xml",
+                                       "tpcol.xml", "igccol_sba.xml",
+                                       "tpcol_sba.xml"],
+                                      out_fh=log)
+                log.flush()
+                igccol_corrected = geocal.read_shelve("igccol_sba.xml")
+                correction_done = True
+            except Exception as e:
+                if(not l1b_geo_config.continue_on_sba_fail):
+                    raise
+                report_and_log_exception()
+
 
     if(tpcol):
         qa_file.add_final_accuracy(igccol_corrected, tpcol)

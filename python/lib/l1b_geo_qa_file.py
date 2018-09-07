@@ -13,6 +13,7 @@ class L1bGeoQaFile(object):
         self.log_fname = log_fname
         self.scene_name = None
         self.tp_stat = None
+        self.encountered_exception = False
         if(local_granule_id):
             self.local_granule_id = local_granule_id
         else:
@@ -192,6 +193,12 @@ the reference image, in Ecr coordinates (in meters).
             log_group = f["Logs"]
             dset = log_group.create_dataset("Overall Log", data=log,
                                 dtype=h5py.special_dtype(vlen=bytes))
+            if(self.encountered_exception):
+                dset = log_group.create_dataset("Encountered Exception",
+                   data="True", dtype=h5py.special_dtype(vlen=bytes))
+            else:
+                dset = log_group.create_dataset("Encountered Exception",
+                   data="False", dtype=h5py.special_dtype(vlen=bytes))
             tp_group = f["Tiepoint"]
             tp_group.create_dataset("Scenes", data=self.scene_name,
                                      dtype=h5py.special_dtype(vlen=bytes))
