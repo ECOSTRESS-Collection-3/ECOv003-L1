@@ -683,6 +683,13 @@ class L1aRawPixGenerate(object):
       l1a_metag = l1a_fp['/L1A_RAW_PIXMetadata']
       l1a_qamissing = l1a_metag.create_dataset('QAPercentMissingData', data=pcomp, dtype='f4' )
 
+      e0 = np.argmax( rst<terr )
+      e1 = np.argmax( rse<terr )
+      if e1 - e0 > 0:
+        l1a_te=l1a_metag.create_dataset('ISS_time', data=terr[e0:e1], dtype='f8')
+        l1a_td=l1a_metag.create_dataset('ISS_time_dpuio', data=tdpuio[e0:e1], dtype='i8')
+        l1a_tc=l1a_metag.create_dataset('ISS_time_error_correction', data=tcorr[e0:e1], dtype='f8')
+      
       l1a_upg = l1a_fp.create_group("/UncalibratedPixels")
       l1a_ptg = l1a_fp.create_group("/Time")
       l1a_peg = l1a_fp.create_group("/FPIEencoder")
@@ -742,9 +749,10 @@ class L1aRawPixGenerate(object):
       print("****  FATAL  ****  No scenes generated  ****")
       return -2
 
-    ' Create refined scene file '
     sss = str( o_start_time )
     ses = str( o_end_time )
+    sst = str( datetime.now() )[0:19]
+    print("Create refined scene file %d %s %s %s" %( len(scenes), sss, ses, sst ) )
     sf = "Scene_%05d_%s_%s_%s.txt" % ( orbit, sss[0:4]+sss[5:7]+sss[8:13]+sss[14:16]+sss[17:19], ses[0:4]+ses[5:7]+ses[8:13]+ses[14:16]+ses[17:19], sst[0:4]+sst[5:7]+sst[8:10]+'T'+sst[11:13]+sst[14:16]+sst[17:19])
     sfd = open( sf, "w" )
     for i in range( len(scenes) ): sfd.write( scenes[i] )
@@ -805,12 +813,14 @@ class L1aRawPixGenerate(object):
     evel.attrs['Units']='m/s'
     attf_met.set('ImageLines', 0)
     attf_met.set('ImagePixels', 0)
+    attf_met.set('SISVersion', '1')
     attf_met.write()
     attf.close()
 
     # Write out a dummy log file
     eng_met.set('ImageLines', 0)
     eng_met.set('ImagePixels', 0)
+    eng_met.set('SISVersion', '1')
     eng_met.write()
     eng.close()
     print("This is a dummy log file", file = self.log)
