@@ -100,7 +100,7 @@ class EcostressInterpolate(object):
     
     def create_training_data(self, dataset, missing_mask, band_number ):
         '''dataset should be a 5400x5400x5 array for  bands 1 to 5. 
-        Missing_mask should be a 5400x5400 matrix with 1 for missing
+        Missing_mask should be a 5400x5400x5 matrix with 1 for missing
         data due to missing scanlines or 2 due to missing packets
         create a training data set x of size training_sizexgsxgsx3 and y of 
         size training_sizex1
@@ -113,7 +113,7 @@ class EcostressInterpolate(object):
         # Probably slow loop, we should come back to speed this up.
         
         # find the index [ between -.5 and 127.5] of where the center of the missing scanline is
-        center_of_missing_scanline = find_center_of_missing_scan( missing_mask )
+        center_of_missing_scanline = find_center_of_missing_scan( missing_mask[:,:,band_number] )
         
         while counter < self.training_size:
             random_x_ind = random.randint(self.grid_size_half,
@@ -163,7 +163,7 @@ class EcostressInterpolate(object):
     
     def create_missing_scan_line_data(self, dataset, missing_mask, band_number ):
         '''dataset should be a 5400x5400x5 array for  bands 1 to 5. 
-        Missing_mask should be a 5400x5400 matrix with 1 for missing 
+        Missing_mask should be a 5400x5400x5 matrix with 1 for missing 
         data due to missing scanlines and 2 for missing packets
         create a dataset (just the Nxgsxgsx3 matrix for the predictor) 
         at the locations where we have missing scanline. To be used 
