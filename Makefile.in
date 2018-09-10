@@ -2993,9 +2993,15 @@ end-to-end-check: installcheck-am
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1b_rad/*.h5
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1B_GEO_PGE $(l1b_geo_run_config)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_ATT*.h5
-	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_GEO*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_GEO_8*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_MAP*.h5
 	source $(prefix)/setup_ecostress.sh && $(PYTHON) $(srcdir)/end_to_end_testing/diff_end_to_end_sba.py
 	source $(prefix)/setup_ecostress.sh && ( seq 3 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOSTRESS_L1B_GEO_80005_00{}_*.h5 end_to_end_test_l1b_rad/ECOSTRESS_L1B_RAD_80005_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
+
+temp:
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_ATT*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_GEO_8*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_MAP*.h5
 
 end-to-end-check-glynn: installcheck-am
 	-rm -r ./end_to_end_test_glynn_l0_input
@@ -3016,8 +3022,14 @@ end-to-end-check-glynn: installcheck-am
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_glynn_l1b_rad/*.h5
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1B_GEO_PGE --ecostress-band=0 $(l1b_geo_run_config_glynn)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_glynn_l1b_geo/*L1B_ATT*.h5
-	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_glynn_l1b_geo/*L1B_GEO*.h5
-	source $(prefix)/setup_ecostress.sh && l1b_project --erdas --all-band end_to_end_test_glynn_l1b_geo/ECOSTRESS_L1B_GEO_*.h5 end_to_end_test_glynn_l1b_rad/ECOSTRESS_L1B_RAD_*.h5 end_to_end_test_glynn_l1b_geo/proj_final
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_glynn_l1b_geo/*L1B_GEO_8*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_glynn_l1b_geo/*L1B_MAP*.h5
+	source $(prefix)/setup_ecostress.sh && l1b_project --erdas --all-band end_to_end_test_glynn_l1b_geo/ECOSTRESS_L1B_GEO_8*.h5 end_to_end_test_glynn_l1b_rad/ECOSTRESS_L1B_RAD_*.h5 end_to_end_test_glynn_l1b_geo/proj_final
+
+temp2:
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_glynn_l1b_geo/*L1B_ATT*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_glynn_l1b_geo/*L1B_GEO_8*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_glynn_l1b_geo/*L1B_MAP*.h5
 
 # Run l1b_rad on its own
 
