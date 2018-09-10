@@ -9,7 +9,7 @@ import pickle
 # on these classes. Once we are done with the development, don't run this
 # as a standard unit test. We'll instead test this by running the full end
 # to end system.
-#@skip
+@skip
 def test_l1b_geo_generate_map(isolated_dir, igc, lwm, rad_fname):
     with open('/home/smyth/Local/ecostress-level1/python/l1b_geo_generate.pickle', 'rb') as f:
         l1bgeo = pickle.load(f)

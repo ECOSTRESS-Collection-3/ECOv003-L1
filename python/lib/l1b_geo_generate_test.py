@@ -18,7 +18,7 @@ def test_l1b_geo_generate(isolated_dir, igc, lwm):
 # on these classes. Once we are done with the development, don't run this
 # as a standard unit test. We'll instead test this by running the full end
 # to end system.
-#@skip
+@skip
 def test_l1b_geo_generate_save(igc, lwm):
     geocal.write_shelve("igc.xml", igc)
     l1bgeo = L1bGeoGenerate(igc, lwm, "l1b_geo.h5", ["fake_input.h5", ], True,
