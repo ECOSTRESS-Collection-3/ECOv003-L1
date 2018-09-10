@@ -7781,6 +7781,92 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_Resampler_resample_dqi(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
+  boost::shared_ptr< GeoCal::RasterImage > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::Resampler const > tempshared1 ;
+  boost::shared_ptr< Ecostress::Resampler const > *smartarg1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  boost::shared_ptr< GeoCal::RasterImage > tempshared2 ;
+  boost::shared_ptr< GeoCal::RasterImage > temp2shared2 ;
+  PyObject *swig_obj[2] ;
+  SwigValueWrapper< blitz::Array< int,2 > > result;
+  
+  if (!SWIG_Python_UnpackTuple(args,"Resampler_resample_dqi",2,2,swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_dqi" "', argument " "1"" of type '" "Ecostress::Resampler const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
+      arg1 = const_cast< Ecostress::Resampler * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
+      arg1 = const_cast< Ecostress::Resampler * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_resample_dqi" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp2) tempshared2 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2);
+      delete reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2);
+      arg2 = &tempshared2;
+    } else {
+      arg2 = (argp2) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2) : &tempshared2;
+    }
+    // Special handling if this is a director class. In that case, we
+    // don't own the underlying python object. Instead,
+    // we tell python we have a reference to the underlying object, and
+    // when this gets destroyed we decrement the reference to the python
+    // object. 
+    Swig::Director* dp = dynamic_cast<Swig::Director*>(arg2->get());
+    if(dp) {
+      Py_INCREF(dp->swig_get_self());
+      temp2shared2.reset(arg2->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      arg2 = &temp2shared2;
+    }
+  }
+  {
+    try {
+      result = ((Ecostress::Resampler const *)arg1)->resample_dqi((boost::shared_ptr< GeoCal::RasterImage > const &)*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    npy_intp dims[2], stride[2];
+    for(int i = 0; i < 2; ++i) {
+      dims[i] = (&result)->extent(i);
+      // Note numpy stride is in terms of bytes, while blitz in in terms
+      // of type T.
+      stride[i] = (&result)->stride(i) * sizeof(int);
+    }
+    resultobj = PyArray_New(&PyArray_Type, 2, dims, type_to_npy<int >(), 
+      stride, (&result)->data(), 0, 0, 0);
+    blitz::Array<int, 2>* t = new blitz::Array<int, 2>(result);
+    PyArray_SetBaseObject((PyArrayObject*)resultobj, 
+      SWIG_NewPointerObj(SWIG_as_voidptr(t), 
+        SWIGTYPE_p_blitz__ArrayT_int_2_t, 					   SWIG_POINTER_NEW | 0 ));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_5(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
@@ -8806,6 +8892,25 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		"The data should already be interpolated (e.g., in python do\n"
 		"scipy.ndimage.interpolation.zoom(t,Num_sub_pixel,order=2) \n"
+		""},
+	 { (char *)"Resampler_resample_dqi", _wrap_Resampler_resample_dqi, METH_VARARGS, (char *)"\n"
+		"\n"
+		"blitz::Array< int, 2 > Resampler::resample_dqi(const boost::shared_ptr< GeoCal::RasterImage > &Data) const\n"
+		"Resample the DQI field.\n"
+		"\n"
+		"The DQI is initially set to DQI_NOT_SEEN. We then go through all the\n"
+		"pixels and use the following logic:\n"
+		"\n"
+		"If we encounter DQI_INTERPOLATED, we set the DQI to this value.\n"
+		"\n"
+		"If we encounter DQI_BAD_OR_MISSING and the DQI is currently\n"
+		"DQI_NOT_SEEN then we set it to DQI_BAD_OR_MISSING.\n"
+		"\n"
+		"If we encounter DQI_STRIPE_NOT_INTERPOLATED and the the DQI is\n"
+		"currently DQI_NOT_SEEN then we set it to DQI_STRIPE_NOT_INTERPOLATED.\n"
+		"\n"
+		"If we encounter DQI_GOOD and the DQI is anything other than\n"
+		"DQI_INTERPOLATED we set it to this value. \n"
 		""},
 	 { (char *)"Resampler_resample_field", _wrap_Resampler_resample_field, METH_VARARGS, (char *)"\n"
 		"\n"

@@ -214,6 +214,29 @@ class Resampler(geocal_swig.generic_object.GenericObject):
         """
         _resampler.Resampler_swiginit(self, _resampler.new_Resampler(*args))
 
+    def resample_dqi(self, Data):
+        """
+
+        blitz::Array< int, 2 > Resampler::resample_dqi(const boost::shared_ptr< GeoCal::RasterImage > &Data) const
+        Resample the DQI field.
+
+        The DQI is initially set to DQI_NOT_SEEN. We then go through all the
+        pixels and use the following logic:
+
+        If we encounter DQI_INTERPOLATED, we set the DQI to this value.
+
+        If we encounter DQI_BAD_OR_MISSING and the DQI is currently
+        DQI_NOT_SEEN then we set it to DQI_BAD_OR_MISSING.
+
+        If we encounter DQI_STRIPE_NOT_INTERPOLATED and the the DQI is
+        currently DQI_NOT_SEEN then we set it to DQI_STRIPE_NOT_INTERPOLATED.
+
+        If we encounter DQI_GOOD and the DQI is anything other than
+        DQI_INTERPOLATED we set it to this value. 
+        """
+        return _resampler.Resampler_resample_dqi(self, Data)
+
+
     def resample_field(self, *args):
         """
 
@@ -279,6 +302,7 @@ class Resampler(geocal_swig.generic_object.GenericObject):
       return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
 
     __swig_destroy__ = _resampler.delete_Resampler
+Resampler.resample_dqi = new_instancemethod(_resampler.Resampler_resample_dqi, None, Resampler)
 Resampler.resample_field = new_instancemethod(_resampler.Resampler_resample_field, None, Resampler)
 Resampler.map_values = new_instancemethod(_resampler.Resampler_map_values, None, Resampler)
 Resampler._v_map_info = new_instancemethod(_resampler.Resampler__v_map_info, None, Resampler)

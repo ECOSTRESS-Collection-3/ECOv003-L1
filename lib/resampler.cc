@@ -186,6 +186,61 @@ blitz::Array<double, 2> Resampler::resample_field
 }
 
 //-------------------------------------------------------------------------
+/// Resample the DQI field.
+///
+/// The DQI is initially set to DQI_NOT_SEEN. We then go through all
+/// the pixels and use the following logic:
+///
+/// 1. If we encounter DQI_INTERPOLATED, we set the DQI to this value.
+/// 2. If we encounter DQI_BAD_OR_MISSING and the DQI is currently
+///     DQI_NOT_SEEN then we set it to DQI_BAD_OR_MISSING.
+/// 3. If we encounter DQI_STRIPE_NOT_INTERPOLATED and the the DQI is
+///    currently DQI_NOT_SEEN then we set it to
+///    DQI_STRIPE_NOT_INTERPOLATED.
+/// 4. If we encounter DQI_GOOD and the DQI is anything other than
+///    DQI_INTERPOLATED we set it to this value.
+//-------------------------------------------------------------------------
+
+blitz::Array<int, 2> Resampler::resample_dqi
+(const boost::shared_ptr<GeoCal::RasterImage>& Data) const
+{
+  // We do replication here since we are counting subpixels. This is
+  // particularly important to get the fill values correct.
+  MagnifyReplicate datamag(Data, nsub);
+  blitz::Array<int, 2> d = datamag.read(0,0, datamag.number_line(),
+					datamag.number_sample());
+  blitz::Array<int, 2> res(mi.number_y_pixel(), mi.number_x_pixel());
+  res = DQI_NOT_SEEN;
+  for(int i = 0; i < data_index.rows(); ++i)
+    for(int j = 0; j < data_index.cols(); ++j) {
+      int ln, smp;
+      ln = data_index(i,j,0);
+      smp = data_index(i,j,1);
+      if(ln >= 0 && ln < res.rows() &&
+	 smp >=0 && smp < res.cols()) {
+// 1. If we encounter DQI_INTERPOLATED, we set the DQI to this value.
+// 2. If we encounter DQI_BAD_OR_MISSING and the DQI is currently
+//     DQI_NOT_SEEN then we set it to DQI_BAD_OR_MISSING.
+// 3. If we encounter DQI_STRIPE_NOT_INTERPOLATED and the the DQI is
+//    currently DQI_NOT_SEEN then we set it to
+//    DQI_STRIPE_NOT_INTERPOLATED.
+// 4. If we encounter DQI_GOOD and the DQI is anything other than
+//    DQI_INTERPOLATED we set it to this value.
+	if(d(i,j) == DQI_INTERPOLATED)
+	  res(ln,smp) = DQI_INTERPOLATED;
+	if(d(i,j) == DQI_BAD_OR_MISSING && res(ln,smp) == DQI_NOT_SEEN)
+	  res(ln,smp) = DQI_BAD_OR_MISSING;
+	if(d(i,j) == DQI_STRIPE_NOT_INTERPOLATED &&
+	   res(ln,smp) == DQI_NOT_SEEN)
+	  res(ln,smp) = DQI_STRIPE_NOT_INTERPOLATED;
+	if(d(i,j) == DQI_GOOD && res(ln,smp) != DQI_INTERPOLATED)
+	  res(ln,smp) = DQI_GOOD;
+      } 
+    }
+  return res;
+}
+
+//-------------------------------------------------------------------------
 /// Resample the given data, and write out to a VICAR file with the
 /// given name.
 ///

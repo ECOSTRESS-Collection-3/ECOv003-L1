@@ -34,6 +34,8 @@ public:
    double Scale_data=1.0,
    bool Negative_to_zero=false, double Fill_value = 0.0,
    bool Use_smallest_ic = false) const;
+  blitz::Array<int, 2> resample_dqi
+  (const boost::shared_ptr<GeoCal::RasterImage>& Data) const;
   void resample_field(const std::string& Fname,
 		      const boost::shared_ptr<GeoCal::RasterImage>& Data,
 		      double Scale_data=1.0,

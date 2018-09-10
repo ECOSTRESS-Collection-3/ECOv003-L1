@@ -119,7 +119,28 @@ information.
             t.attrs.create("_FillValue", data=FILL_VALUE_NOT_SEEN,
                            dtype=t.dtype)
             t.attrs["Units"] = "W/m^2/sr/um"
-            # DQI
+            data_in = geocal.GdalRasterImage("HDF5:\"%s\"://Radiance/data_quality_%d" % (self.l1b_rad, b))
+            data = res.resample_dqi(data_in).astype(np.int8)
+            t = g.create_dataset("data_quality_%d" % b, data = data)
+            t.attrs["Description"] = '''
+Data quality indicator. 
+  0 - DQI_GOOD, normal data, nothing wrong with it
+  1 - DQI_INTERPOLATED, data was part of instrument 
+      'stripe', and we have filled this in with 
+      interpolated data (see ATB) 
+  2 - DQI_STRIPE_NOT_INTERPOLATED, data was part of
+      instrument 'stripe' and we could not fill in
+      with interpolated data.
+  3 - DQI_BAD_OR_MISSING, indicates data with a bad 
+      value (e.g., negative DN) or missing packets.
+  4 - DQI_NOT_SEEN, pixels where because of the 
+      difference in time that a sample is seen with 
+      each band, the ISS has moved enough we haven't 
+      seen the pixel. So data is missing, but by
+      instrument design instead of some problem.
+'''
+            t.attrs["Units"] = "dimensionless"
+
         self.print_and_log("Doing SWIR")    
         data_in = geocal.GdalRasterImage("HDF5:\"%s\"://SWIR/swir_dn" % self.l1b_rad)
         data = res.resample_field(data_in, 1.0, False,
@@ -151,6 +172,11 @@ smallest line and sample number.''' % fld
         cmd.extend("HDF5:\"%s\"://Mapped/radiance_%d" % (self.output_name, b+1)
                    for b in range(5))
         cmd.append("HDF5:\"%s\"://Mapped/swir_dn" % self.output_name)
+        cmd.append("HDF5:\"%s\"://Mapped/data_quality_1" % self.output_name)
+        cmd.append("HDF5:\"%s\"://Mapped/data_quality_2" % self.output_name)
+        cmd.append("HDF5:\"%s\"://Mapped/data_quality_3" % self.output_name)
+        cmd.append("HDF5:\"%s\"://Mapped/data_quality_4" % self.output_name)
+        cmd.append("HDF5:\"%s\"://Mapped/data_quality_5" % self.output_name)
         cmd.append("HDF5:\"%s\"://Mapped/latitude" % self.output_name)
         cmd.append("HDF5:\"%s\"://Mapped/longitude" % self.output_name)
         cmd.append("HDF5:\"%s\"://Mapped/height" % self.output_name)
@@ -162,8 +188,26 @@ smallest line and sample number.''' % fld
         tstring = ",".join("{:.20e}".format(t) for t in res.map_info.transform)
         cmd=["sed", "-i", "s#</SRS>#</SRS>\\n  <GeoTransform>%s</GeoTransform>\\n  <Metadata>\\n    <MDI key=\"AREA_OR_POINT\">Area</MDI>\\n  </Metadata>#" % tstring, vrtfile]
         subprocess.run(cmd)
-        
-        
+        with open(os.path.splitext(self.output_name)[0] + "_gdal_README.txt",
+                  "w") as fh:
+            print("Band 1 - Radiance 1 (8.28 micron)", file=fh)
+            print("Band 2 - Radiance 2 (8.63 micron)", file=fh)
+            print("Band 3 - Radiance 3 (9.07 micron)", file=fh)
+            print("Band 4 - Radiance 4 (10.52 micron)", file=fh)
+            print("Band 5 - Radiance 5 (12.05 micron)", file=fh)
+            print("Band 6 - SWIR DN (1.62 micron)", file=fh)
+            print("Band 7 - Data quality band 1", file=fh)
+            print("Band 8 - Data quality band 2", file=fh)
+            print("Band 9 - Data quality band 3", file=fh)
+            print("Band 10 - Data quality band 4", file=fh)
+            print("Band 11 - Data quality band 5", file=fh)
+            print("Band 12 - Latitude", file=fh)
+            print("Band 13 - Longitude", file=fh)
+            print("Band 14 - Height", file=fh)
+            print("Band 16 - Solar Azimuth", file=fh)
+            print("Band 17 - Solar Zenith", file=fh)
+            print("Band 18 - View Azimuth", file=fh)
+            print("Band 19 - View Zenith", file=fh)
         
 __all__ = ["L1bGeoGenerateMap"]
         
