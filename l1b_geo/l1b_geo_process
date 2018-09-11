@@ -224,8 +224,8 @@ try:
         ofile.append(ecostress.ecostress_file_name("L1B_GEO", orbit, scene,
             acquisition_time, build = build_id,
             version = file_version))
-        ofile_map.append(ecostress.ecostress_file_name("L1B_MAP", orbit, scene,
-            acquisition_time, build = build_id,
+        ofile_map.append(ecostress.ecostress_file_name("L1B_MAP_RAD", orbit,
+            scene, acquisition_time, build = build_id,
             version = file_version))
         ofile_kmz.append(ecostress.ecostress_file_name("L1B_KMZ_MAP", orbit,
             scene,
