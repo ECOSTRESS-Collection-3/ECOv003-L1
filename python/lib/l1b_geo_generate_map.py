@@ -48,7 +48,7 @@ class L1bGeoGenerateMap(object):
     def run(self):
         fout = h5py.File(self.output_name, "w")
         m = self.l1b_geo_generate.m.copy_new_file(fout,
-                                 self.local_granule_id, "ECO1BMAP")
+                                 self.local_granule_id, "ECO1BMAPRAD")
         m.write()
         mi = geocal.cib01_mapinfo(self.resolution)
         lat = scipy.ndimage.interpolation.zoom(self.l1b_geo_generate.lat,
