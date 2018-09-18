@@ -12,7 +12,8 @@ class L1bTpCollect(object):
     def __init__(self, igccol, ortho_base, qa_file, fftsize=256, magnify=4.0,
                  magmin=2.0, toler=1.5, redo=36, ffthalf=2, seed=562,
                  num_x=10,num_y=10, log_fname = None,
-                 proj_number_subpixel=2, min_tp_per_scene=20):
+                 proj_number_subpixel=2, min_tp_per_scene=20,
+                 min_number_good_scan=41):
         self.igccol = igccol
         self.ortho_base = ortho_base
         self.qa_file = qa_file
@@ -26,6 +27,7 @@ class L1bTpCollect(object):
         self.p = L1bProj(self.igccol, self.proj_fname, self.ref_fname,
                          self.ortho_base, log_fname = self.log_fname,
                          qa_file = self.qa_file,
+                         min_number_good_scan=min_number_good_scan,
                          number_subpixel=proj_number_subpixel,
                          pass_through_error=True)
         self.tpcollect = geocal.TiePointCollectPicmtch(self.igccol,

@@ -12,6 +12,7 @@ class L1bProj(object):
     pass a pool in.'''
     def __init__(self, igccol, fname_list, ref_fname_list, ortho_base,
                  qa_file = None, log_fname = None, number_subpixel = 2,
+                 min_number_good_scan = 41,
                  scratch_fname="initial_lat_lon.dat",
                  pass_through_error=False):
         '''Project igc and generate a Vicar file fname.'''
@@ -25,6 +26,7 @@ class L1bProj(object):
         self.scratch_fname = scratch_fname
         self.number_subpixel = number_subpixel
         self.pass_through_error = pass_through_error
+        self.min_number_good_scan = min_number_good_scan
                                         
         # Want to scale to roughly 60 meters. Much of the landsat data is
         # at higher resolution, but ecostress is close to 70 meter pixel so
@@ -146,7 +148,10 @@ class L1bProj(object):
         it = []
         for i in range(self.igccol.number_image):
             igc = self.igccol.image_ground_connection(i)
-            if(igc.crosses_dateline):
+            if(igc.number_good_scan < self.min_number_good_scan):
+                self.print_and_log("%s has only %d good scans. We require a minimum of %d, so skipping" % (self.igccol.title(i), igc.number_good_scan, self.min_number_good_scan))
+                self.scratch_file()[i,:,:,:] = -9999.0
+            elif(igc.crosses_dateline):
                 self.print_and_log("%s crosses the date line. We don't currently handle this, so skipping" % self.igccol.title(i))
                 self.scratch_file()[i,:,:,:] = -9999.0
             else:

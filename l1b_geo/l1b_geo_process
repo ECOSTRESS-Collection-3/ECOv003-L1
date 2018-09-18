@@ -305,7 +305,8 @@ try:
                     num_y=l1b_geo_config.num_y,
                     log_fname=log_fname,
                     proj_number_subpixel=l1b_geo_config.proj_number_subpixel,
-                    min_tp_per_scene=l1b_geo_config.min_tp_per_scene)
+                    min_tp_per_scene=l1b_geo_config.min_tp_per_scene,
+                    min_number_good_scan=l1b_geo_config.min_number_good_scan)
     correction_done = False
     igccol_corrected = igccol_initial
     tpcol = None
@@ -362,7 +363,13 @@ try:
     for i in range(len(radlist)):
         # Generate output
         print_and_log("Doing scene number %d" % scenelist[i])
-        if(igccol_corrected.image_ground_connection(i).crosses_dateline):
+        if(igccol_corrected.image_ground_connection(i).number_good_scan <
+           l1b_geo_config.min_number_good_scan):
+            print_and_log("Scene number %d has only %d good scans. We require a minimum of %d. Skipping output for this scene" %
+           (scenelist[i],
+            igccol_corrected.image_ground_connection(i).number_good_scan,
+            l1b_geo_config.min_number_good_scan))
+        elif(igccol_corrected.image_ground_connection(i).crosses_dateline):
             print_and_log("Scene number %d crosses date line. We don't handle this. Skipping output for this scene" % scenelist[i])
         else:
             l1bgeo = ecostress.L1bGeoGenerate(
