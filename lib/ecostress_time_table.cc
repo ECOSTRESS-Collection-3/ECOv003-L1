@@ -16,6 +16,10 @@ void EcostressTimeTable::serialize(Archive & ar, const unsigned int version)
   // constructor.
   if(version > 0)
     ar & GEOCAL_NVP_(mirror_rpm) & GEOCAL_NVP_(frame_time);
+  // Older version didn't track number_filled_time_. We initialize
+  // this to zero in the default constructor
+  if(version > 1)
+    ar & GEOCAL_NVP_(number_filled_time);
 }
 
 ECOSTRESS_IMPLEMENT(EcostressTimeTable);
@@ -29,7 +33,8 @@ EcostressTimeTable::EcostressTimeTable(const std::string& Fname,
 				       double Mirror_rpm, double Frame_time,
 				       double Toffset)
   : mirror_rpm_(Mirror_rpm),
-    frame_time_(Frame_time)
+    frame_time_(Frame_time),
+    number_filled_time_(0)
 {
   read_file(Fname, Toffset);
 }
@@ -49,7 +54,8 @@ EcostressTimeTable::EcostressTimeTable
 (const std::string& Fname, bool Averaging_done,
  double Mirror_rpm, double Frame_time, double Toffset)
   : mirror_rpm_(Mirror_rpm),
-    frame_time_(Frame_time)
+    frame_time_(Frame_time),
+    number_filled_time_(0)
 {
   read_file(Fname, Toffset);
   averaging_done_ = Averaging_done;
@@ -72,6 +78,7 @@ void EcostressTimeTable::read_file(const std::string& Fname, double Toffset)
       if(i == 0)
 	throw Exception("Don't currently handle fill data at the first line in the image");
       tstart_scan_.push_back(tstart_scan_.back() + nominal_scan_time());
+      ++number_filled_time_;
     } else 
       tstart_scan_.push_back(GeoCal::Time::time_j2000(t(i)));
   }
@@ -87,7 +94,8 @@ EcostressTimeTable::EcostressTimeTable
  double Mirror_rpm, double Frame_time)
   : averaging_done_(Averaging_done),
     mirror_rpm_(Mirror_rpm),
-    frame_time_(Frame_time)
+    frame_time_(Frame_time),
+    number_filled_time_(0)
 {
   for(int i = 0; i < Num_scan; ++i)
     tstart_scan_.push_back(Tstart + i * nominal_scan_time());
@@ -104,7 +112,8 @@ EcostressTimeTable::EcostressTimeTable
 : averaging_done_(Averaging_done),
   tstart_scan_(Tstart_scan),
   mirror_rpm_(Mirror_rpm),
-  frame_time_(Frame_time)
+  frame_time_(Frame_time),
+  number_filled_time_(0)
 {
   // Nothing more to do
 }

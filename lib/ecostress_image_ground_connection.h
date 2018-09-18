@@ -86,6 +86,26 @@ public:
       throw GeoCal::Exception("image_coordinate currently only works with EcostressTimeTable");
     return ett->number_line_scan();
   }
+  int number_scan() const
+  {
+    boost::shared_ptr<EcostressTimeTable> ett
+      (boost::dynamic_pointer_cast<EcostressTimeTable>(time_table()));
+    // We can worry about generalizing this if it ever becomes an
+    // issue, but for now we assume the time table is an EcostressTimeTable.
+    if(!ett)
+      throw GeoCal::Exception("number_scan currently only works with EcostressTimeTable");
+    return ett->number_scan();
+  }
+  int number_good_scan() const
+  {
+    boost::shared_ptr<EcostressTimeTable> ett
+      (boost::dynamic_pointer_cast<EcostressTimeTable>(time_table()));
+    // We can worry about generalizing this if it ever becomes an
+    // issue, but for now we assume the time table is an EcostressTimeTable.
+    if(!ett)
+      throw GeoCal::Exception("number_good_scan currently only works with EcostressTimeTable");
+    return ett->number_good_scan();
+  }
   void image_coordinate_scan_index(const GeoCal::GroundCoordinate& Gc,
 				   int Scan_index,
 				   GeoCal::ImageCoordinate& Ic,

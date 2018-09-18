@@ -44,6 +44,8 @@ public:
    int Band=-1) const;
   %python_attribute(crosses_dateline, bool);
   %python_attribute(number_line_scan, int);
+  %python_attribute(number_scan, int);
+  %python_attribute(number_good_scan, int);
   %python_attribute_with_set(band, int);
   %python_attribute_with_set(resolution, double);
   %python_attribute_with_set(max_height, double);

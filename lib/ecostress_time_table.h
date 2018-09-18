@@ -66,6 +66,19 @@ public:
   int number_scan() const {return (int) tstart_scan_.size(); }
 
 //-------------------------------------------------------------------------
+/// Number of times that we filled in the scan time because it was missing
+//-------------------------------------------------------------------------
+
+  int number_filled_time() const {return number_filled_time_; }
+  
+//-------------------------------------------------------------------------
+/// Number of good scans we have (defined as having a valid
+/// line_start_time_j2000)
+//-------------------------------------------------------------------------
+
+  int number_good_scan() const {return number_scan() - number_filled_time(); }
+  
+//-------------------------------------------------------------------------
 /// Mirror rotation speed, in rotations per minute (nominal, actual
 /// speed may be different).
 //-------------------------------------------------------------------------
@@ -123,7 +136,9 @@ private:
   bool averaging_done_;
   std::vector<GeoCal::Time> tstart_scan_;
   double mirror_rpm_, frame_time_;
-  EcostressTimeTable() : mirror_rpm_(25.4), frame_time_(0.0000321875) { }
+  int number_filled_time_;
+  EcostressTimeTable() : mirror_rpm_(25.4), frame_time_(0.0000321875),
+			 number_filled_time_(0) { }
   friend class boost::serialization::access;
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version);
@@ -132,6 +147,6 @@ private:
 }
 
 BOOST_CLASS_EXPORT_KEY(Ecostress::EcostressTimeTable);
-BOOST_CLASS_VERSION(Ecostress::EcostressTimeTable, 1);
+BOOST_CLASS_VERSION(Ecostress::EcostressTimeTable, 2);
 #endif
 

@@ -33,6 +33,7 @@ public:
   bool close_to_scan_edge(int Line, int Width=3) const;
   %python_attribute(averaging_done, bool);
   %python_attribute(number_line_scan, int);
+  %python_attribute(number_good_scan, int);
   %python_attribute(number_scan, int);
   %python_attribute(mirror_rpm, double);
   %python_attribute(nominal_scan_time, double);
