@@ -327,7 +327,7 @@ class L0BSimulate(object):
 
     hs = l0b_fd.create_group("/hk/status")
     hsmd = l0b_fd.create_group("/hk/status/mode")
-    dp_hsmd = hsmd.create_dataset("dpuio", (enc,), dtype=np.uint32)
+    dp_hsmd = hsmd.create_dataset("dpuio", (enc,), dtype=np.uint8)
     op_hsmd = hsmd.create_dataset("op", (enc,), dtype=np.uint32)
 
     hsmt = l0b_fd.create_group("/hk/status/motor")
@@ -341,9 +341,10 @@ class L0BSimulate(object):
     md_hsmt = hsmt.create_dataset("mode", (enc,), dtype=np.uint32)
     po_hsmt = hsmt.create_dataset("position", (enc,5), dtype=np.uint32)
     ps_hsmt = hsmt.create_dataset("pstate", (enc,), dtype=np.uint8)
-    rt_hsmt = hsmt.create_dataset("rate", (enc,), dtype=np.uint32)
+    rt_hsmt = hsmt.create_dataset("rate", (enc,5), dtype=np.uint32)
     ss_hsmt = hsmt.create_dataset("sun_safe", (enc,), dtype=np.uint32)
-    ti_hsmt = hsmt.create_dataset("time", (enc,), dtype=np.float64)
+    ti_hsmt = hsmt.create_dataset("time", (enc,5), dtype=np.float64)
+    wt_hsmt = hsmt.create_dataset("wait", (enc), dtype=np.uint8)
 
     bbt = hs.create_dataset("temperature", (enc,2,enr), dtype=np.uint16)
     bb_time = hs.create_dataset("time", (enc,), dtype=np.float64)

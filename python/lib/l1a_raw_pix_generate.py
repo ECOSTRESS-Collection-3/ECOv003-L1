@@ -295,7 +295,7 @@ class L1aRawPixGenerate(object):
     att=self.fin["hk/bad/hr/attitude"]
     pos=self.fin["hk/bad/hr/position"]
     vel=self.fin["hk/bad/hr/velocity"]
-    att_fsw=self.fin["hk/bad/hr/time_fsw"]
+    terr=self.fin["hk/bad/hr/time_fsw"]
     att_time=self.fin["hk/bad/hr/time"]
     dp_mode=self.fin["hk/status/mode/dpuio"]
     op_mode=self.fin["hk/status/mode/op"]
@@ -307,20 +307,19 @@ class L1aRawPixGenerate(object):
     bb_time=self.fin["hk/status/time"]
     bb_fsw=self.fin["hk/status/time_fsw"]
 
+    tdpuio = 0
+    tcorr = 0
+    iss_tcorr = 0
     if "/hk/bad/hr/time_dpuio" in self.fin and "/hk/bad/hr/time_error_correction" in self.fin:
       tdpuio = self.fin["/hk/bad/hr/time_dpuio"]
       tcorr = self.fin["/hk/bad/hr/time_error_correction"]
-      terr = self.fin["/hk/bad/hr/time"]
       if tdpuio.shape[0] > 0 and tcorr.shape[0] > 0:
         print("ISS %s time error correction %d %f" %(onum, tdpuio[0], tcorr[0]))
+        iss_tcorr = tcorr.shape[0]
       else:
         print("No ISS %s time correction in file" % onum )
     else:
         print("No ISS %s time correction in file" % onum )
-        hkbhrt = 0
-        tdpuio = 0
-        iss_tcorr = 0
-        iss_tfsw = 0
 
     epc = bb_time.shape[0]
     bbtime = np.zeros( epc, dtype=np.float64 )
@@ -492,12 +491,13 @@ class L1aRawPixGenerate(object):
               break
             line = scan * PPFP
           elif seq==2:  # save and replicate IMG start time
-            tdx = np.argmax( p0t < terr )
-            if tcorr[tdx] >= 2147483648: tc = p0t - (tcorr[tdx]-4294967296)
-            else: tc = p0t - tcorr[tdx]
-            print("Orbit %s SCENE %d SCAN %d P0T=%f TCORR=%f TDX=%d" %(orb, scene_id, scan, p0t, tcorr[tdx], tdx) )
-            pix_time[line:line+PPFP] = Time.time_gps( tc ).j2000
-            p0t = tc
+            if iss_tcorr>0:
+              tdx = np.argmax( p0t < terr )
+              if tcorr[tdx] >= 2147483648: tc = p0t - (tcorr[tdx]-4294967296)
+              else: tc = p0t - tcorr[tdx]
+              print("Orbit %s SCENE %d SCAN %d P0T=%f TCORR=%f TDX=%d" %(orb, scene_id, scan, p0t, tcorr[tdx], tdx) )
+              pix_time[line:line+PPFP] = Time.time_gps( tc ).j2000
+              p0t = tc
           print("Found %s LID[%d,%d]=%d PH=%d SCENE=%s SCAN=%d GPS=%f %s"%(ev_names[seq],e0,e1,lev[e0,e1],ph,scene_id,scan,p0t,Time.time_gps(p0t)))
   
           # Copy pixels from PKT
@@ -683,12 +683,13 @@ class L1aRawPixGenerate(object):
       l1a_metag = l1a_fp['/L1A_RAW_PIXMetadata']
       l1a_qamissing = l1a_metag.create_dataset('QAPercentMissingData', data=pcomp, dtype='f4' )
 
-      e0 = np.argmax( rst<terr )
-      e1 = np.argmax( rse<terr )
-      if e1 - e0 > 0:
-        l1a_te=l1a_metag.create_dataset('ISS_time', data=terr[e0:e1], dtype='f8')
-        l1a_td=l1a_metag.create_dataset('ISS_time_dpuio', data=tdpuio[e0:e1], dtype='i8')
-        l1a_tc=l1a_metag.create_dataset('ISS_time_error_correction', data=tcorr[e0:e1], dtype='f8')
+      if iss_tcorr>0:  #  record ISS time error correction into L1A_RAW file
+        e0 = np.argmax( rst<terr )
+        e1 = np.argmax( rse<terr )
+        if e1 - e0 > 0:
+          l1a_te=l1a_metag.create_dataset('ISS_time', data=terr[e0:e1], dtype='f8')
+          l1a_td=l1a_metag.create_dataset('ISS_time_dpuio', data=tdpuio[e0:e1], dtype='i8')
+          l1a_tc=l1a_metag.create_dataset('ISS_time_error_correction', data=tcorr[e0:e1], dtype='f8')
       
       l1a_upg = l1a_fp.create_group("/UncalibratedPixels")
       l1a_ptg = l1a_fp.create_group("/Time")
