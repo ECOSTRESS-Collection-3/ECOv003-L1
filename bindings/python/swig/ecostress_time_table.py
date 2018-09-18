@@ -282,6 +282,21 @@ class EcostressTimeTable(geocal_swig.time_table.TimeTable):
         return self._v_number_line_scan()
 
 
+    def _v_number_good_scan(self):
+        """
+
+        int Ecostress::EcostressTimeTable::number_good_scan() const
+        Number of good scans we have (defined as having a valid
+        line_start_time_j2000) 
+        """
+        return _ecostress_time_table.EcostressTimeTable__v_number_good_scan(self)
+
+
+    @property
+    def number_good_scan(self):
+        return self._v_number_good_scan()
+
+
     def _v_number_scan(self):
         """
 
@@ -351,6 +366,7 @@ EcostressTimeTable.line_to_scan_index = new_instancemethod(_ecostress_time_table
 EcostressTimeTable.close_to_scan_edge = new_instancemethod(_ecostress_time_table.EcostressTimeTable_close_to_scan_edge, None, EcostressTimeTable)
 EcostressTimeTable._v_averaging_done = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_averaging_done, None, EcostressTimeTable)
 EcostressTimeTable._v_number_line_scan = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_number_line_scan, None, EcostressTimeTable)
+EcostressTimeTable._v_number_good_scan = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_number_good_scan, None, EcostressTimeTable)
 EcostressTimeTable._v_number_scan = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_number_scan, None, EcostressTimeTable)
 EcostressTimeTable._v_mirror_rpm = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_mirror_rpm, None, EcostressTimeTable)
 EcostressTimeTable._v_nominal_scan_time = new_instancemethod(_ecostress_time_table.EcostressTimeTable__v_nominal_scan_time, None, EcostressTimeTable)

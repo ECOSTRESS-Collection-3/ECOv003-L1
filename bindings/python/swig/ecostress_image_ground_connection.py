@@ -281,6 +281,34 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
         return self._v_number_line_scan()
 
 
+    def _v_number_scan(self):
+        """
+
+        int Ecostress::EcostressImageGroundConnection::number_scan() const
+
+        """
+        return _ecostress_image_ground_connection.EcostressImageGroundConnection__v_number_scan(self)
+
+
+    @property
+    def number_scan(self):
+        return self._v_number_scan()
+
+
+    def _v_number_good_scan(self):
+        """
+
+        int Ecostress::EcostressImageGroundConnection::number_good_scan() const
+
+        """
+        return _ecostress_image_ground_connection.EcostressImageGroundConnection__v_number_good_scan(self)
+
+
+    @property
+    def number_good_scan(self):
+        return self._v_number_good_scan()
+
+
     def _v_band(self, *args):
         """
 
@@ -418,6 +446,8 @@ EcostressImageGroundConnection.orbit_data = new_instancemethod(_ecostress_image_
 EcostressImageGroundConnection.image_coordinate_scan_index = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection_image_coordinate_scan_index, None, EcostressImageGroundConnection)
 EcostressImageGroundConnection._v_crosses_dateline = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_crosses_dateline, None, EcostressImageGroundConnection)
 EcostressImageGroundConnection._v_number_line_scan = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_number_line_scan, None, EcostressImageGroundConnection)
+EcostressImageGroundConnection._v_number_scan = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_number_scan, None, EcostressImageGroundConnection)
+EcostressImageGroundConnection._v_number_good_scan = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_number_good_scan, None, EcostressImageGroundConnection)
 EcostressImageGroundConnection._v_band = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_band, None, EcostressImageGroundConnection)
 EcostressImageGroundConnection._v_resolution = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_resolution, None, EcostressImageGroundConnection)
 EcostressImageGroundConnection._v_max_height = new_instancemethod(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_max_height, None, EcostressImageGroundConnection)
