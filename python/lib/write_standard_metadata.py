@@ -180,6 +180,7 @@ class WriteStandardMetadata(object):
         self.hdf_file = h
         mcopy.hdf_file = hdf_file
         mcopy.local_granule_id = local_granule_id
+        mcopy.set('LocalGranuleID', local_granule_id)
         mcopy.set("ShortName", short_name)
         return mcopy
     
