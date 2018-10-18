@@ -1,12 +1,14 @@
 import h5py
-
 import shutil
 import re
 import os
 import numpy as np
 from .write_standard_metadata import WriteStandardMetadata
 from .misc import ecostress_file_name, time_split
+import ecostress
+import geocal
 from geocal import Time
+import sys
 from datetime import datetime
 
 '''
@@ -142,9 +144,9 @@ class L1aRawPixGenerate(object):
                                 build=self.build_id,
                                 version=self.file_version,
                                 intermediate=intermediate)
-    if(primary_file):
-        self.log_fname =  os.path.splitext(fname)[0] + ".log"
-        self.log = open(self.log_fname, "w")
+    #if(primary_file):
+    #    self.log_fname =  os.path.splitext(fname)[0] + ".log"
+    #    self.log = open(self.log_fname, "w")
     fout = h5py.File(fname, "w", driver='core')
     m = WriteStandardMetadata(fout,
         product_specfic_group = prod_type + "Metadata",
@@ -168,6 +170,15 @@ class L1aRawPixGenerate(object):
     ''' Do the actual generation of data.'''
     print("====  Start run ", datetime.now(), "  ====")
     self.log = None
+
+#  setup for locating scene corners
+    sys.path.append(self.osp_dir)
+    import l1b_geo_config
+    datum = os.environ['AFIDS_VDEV_DATA']+'/EGM96_20_x100.HLF'
+    srtm_dir = os.environ['AFIDS_DATA']+'/srtmL2_filled'
+    dem = geocal.SrtmDem(srtm_dir, False, geocal.DatumGeoid96(datum))
+    cam = geocal.read_shelve(self.osp_dir + "/camera.xml")
+    cam.focal_length = l1b_geo_config.camera_focal_length
 
     #  Read the PRT coefficients
     PRT = np.zeros( (17,3), dtype=np.float64 )
@@ -326,6 +337,69 @@ class L1aRawPixGenerate(object):
     bbtime[:] = bb_time[:]
     bbfsw = np.zeros( epc, dtype=np.float64 )
     bbfsw[:] = bb_fsw[:]
+    ' create engineering file and datasets '
+    print("creating ENG file, EPC=%d" % epc )
+    if epc > 0:
+      eng, eng_met, fname = self.create_file( "L1A_ENG", int(onum), None,
+            Time.time_gps(bbtime[0]), Time.time_gps(bbtime[epc-1]),
+                                            primary_file=True )
+    else:
+      eng, eng_met, fname = self.create_file( "L1A_ENG", int(onum), None,
+               o_start_time, o_end_time, primary_file=True )
+    eng_g = eng.create_group("/rtdBlackbodyGradients")
+    rtd295 = eng_g.create_dataset("RTD_295K", shape=(epc,5), dtype='f4')
+    rtd325 = eng_g.create_dataset("RTD_325K", shape=(epc,5), dtype='f4')
+    rtdtime = eng_g.create_dataset("time_j2000", shape=(epc,2), dtype='f8')
+    for i in range(epc):  # Convert DNs to Kelvin with PRT parameters
+      for j in range( 5 ):
+        rtd295[i,j] = prc[j]( p7r( bbt[i,0,j] ) )
+        rtd325[i,j] = prh[j]( p7r( bbt[i,1,j] ) )
+      rtdtime[i,0] = Time.time_gps( bbtime[i] ).j2000  # sample time
+      rtdtime[i,1] = Time.time_gps( bbfsw[i] ).j2000  # hk pkt time
+    rtd295.attrs['Units']='K and XY'
+    rtd325.attrs['Units']='K and XY'
+    eng_met.set('ImageLines', 0)
+    eng_met.set('ImagePixels', 0)
+    eng_met.set('SISVersion', '1')
+    eng_met.write()
+    eng.close()
+
+    ' create raw attitude/ephemeris file and datasets '
+    aqc = att.shape[0]
+    print("creating raw ATT file, AQC=%d" % aqc )
+    if aqc > 0:
+      attf, attf_met, attfname = self.create_file("L1A_RAW_ATT", int(onum), None,
+           Time.time_gps(att_time[0]), Time.time_gps(att_time[aqc-1]),
+                                        prod=False, intermediate=True)
+    else:
+      attf, attf_met, attfname = self.create_file("L1A_RAW_ATT", int(onum), None,
+            o_start_time, o_end_time, prod=False, intermediate=True)
+    att_g = attf.create_group("/Attitude")
+    a2k = att_g.create_dataset("time_j2000", shape=(aqc,), dtype='f8' )
+    q = att_g.create_dataset("quaternion", shape=(aqc,4), dtype='f8' )
+    eph_g = attf.create_group("/Ephemeris")
+    e2k = eph_g.create_dataset("time_j2000", shape=(aqc,), dtype='f8' )
+    epos = eph_g.create_dataset("eci_position", shape=(aqc,3), dtype='f8' )
+    evel = eph_g.create_dataset("eci_velocity", shape=(aqc,3), dtype='f8' )
+    for i in range(aqc):
+      a2k[i] = Time.time_gps( att_time[i] ).j2000 # hk pkt time
+      e2k[i] = Time.time_gps( att_time[i] ).j2000  # hk sample time
+    a2k.attrs['Units']='Seconds'
+    e2k.attrs['Units']='Seconds'
+    q[:,:] = att[:,:]
+    q.attrs['Description']='Attitude quaternion, goes from spacecraft to ECI. The coefficient convention used has the real part in the first column.'
+    q.attrs['Units']='dimensionless'
+    epos[:,:] = pos[:,:] * 0.3048
+    epos.attrs['Description']='ECI position'
+    epos.attrs['Units']='m'
+    evel[:,:] = vel[:,:] * 0.3048
+    evel.attrs['Description']='ECI velocity'
+    evel.attrs['Units']='m/s'
+    attf_met.set('ImageLines', 0)
+    attf_met.set('ImagePixels', 0)
+    attf_met.set('SISVersion', '1')
+    attf_met.write()
+    attf.close()
 
     tot_pkts = bip.shape[0]
     print("Opened L0B file %s, TOT_PKTS=%d" % (self.l0b, tot_pkts ) )
@@ -680,6 +754,7 @@ class L1aRawPixGenerate(object):
       l1a_bp_met.write()
 
       pcomp = 100.0 * ( 1.0 - float( good_img ) / float( FPPSC * SCPS ) )
+      print("Percent missing data=%f" %pcomp )
       l1a_metag = l1a_fp['/L1A_RAW_PIXMetadata']
       l1a_qamissing = l1a_metag.create_dataset('QAPercentMissingData', data=pcomp, dtype='f4' )
 
@@ -744,6 +819,41 @@ class L1aRawPixGenerate(object):
 
       l1a_fp.close()
       l1a_bp.close()
+
+      if pcomp < 50.0:
+#  Generate corner locations
+        print("Getting time table")
+        tt = ecostress.create_time_table(pname,
+                                 l1b_geo_config.mirror_rpm,
+                                 l1b_geo_config.frame_time)
+        print("getting SM")
+        sm = ecostress.create_scan_mirror(pname,
+                                  l1b_geo_config.max_encoder_value,
+                                  l1b_geo_config.first_encoder_value_0,
+                                  l1b_geo_config.second_encoder_value_0,
+                                  l1b_geo_config.instrument_to_sc_euler,
+                                  l1b_geo_config.first_angle_per_encoder_value,
+                                  l1b_geo_config.second_angle_per_encoder_value)
+        print("Getting orbitt")
+        orbitt = ecostress.EcostressOrbit(attfname, l1b_geo_config.x_offset_iss,
+                               l1b_geo_config.extrapolation_pad,
+                               l1b_geo_config.large_gap)
+        print("Getting igc")
+        igc = ecostress.EcostressImageGroundConnection(orbitt, tt, cam, sm, dem, None)
+        print("Getting mi")
+        mi = geocal.cib01_mapinfo()
+        print("Getting mi_fp")
+        mi_fp = igc.cover(mi)
+
+        l1a_fp=h5py.File( pname, 'a')
+        l1a_fp['/StandardMetadata/EastBoundingCoordinate'][()] = mi_fp.lrc_x
+        l1a_fp['/StandardMetadata/SouthBoundingCoordinate'][()] = mi_fp.lrc_y
+        l1a_fp['/StandardMetadata/NorthBoundingCoordinate'][()] = mi_fp.ulc_y
+        l1a_fp['/StandardMetadata/WestBoundingCoordinate'][()] = mi_fp.ulc_x
+        l1a_fp.close()
+    else:
+      print("Scene %s quality too low (%f), not generating footprint" %(scene_id,pcomp))
+
     ' end scene loop '
 
     if len(scenes)==0:
@@ -759,72 +869,8 @@ class L1aRawPixGenerate(object):
     for i in range( len(scenes) ): sfd.write( scenes[i] )
     sfd.close()
 
-    ' create engineering file and datasets '
-    print("creating ENG file, EPC=%d" % epc )
-    if epc > 0:
-      eng, eng_met, fname = self.create_file( "L1A_ENG", orbit, None,
-            Time.time_gps(bbtime[0]), Time.time_gps(bbtime[epc-1]),
-                                            primary_file=True )
-    else:
-      eng, eng_met, fname = self.create_file( "L1A_ENG", orbit, None,
-               o_start_time, o_end_time, primary_file=True )
-    eng_g = eng.create_group("/rtdBlackbodyGradients")
-    rtd295 = eng_g.create_dataset("RTD_295K", shape=(epc,5), dtype='f4')
-    rtd325 = eng_g.create_dataset("RTD_325K", shape=(epc,5), dtype='f4')
-    rtdtime = eng_g.create_dataset("time_j2000", shape=(epc,2), dtype='f8')
-    for i in range(epc):  # Convert DNs to Kelvin with PRT parameters
-      for j in range( 5 ):
-        rtd295[i,j] = prc[j]( p7r( bbt[i,0,j] ) )
-        rtd325[i,j] = prh[j]( p7r( bbt[i,1,j] ) )
-      rtdtime[i,0] = Time.time_gps( bbtime[i] ).j2000  # sample time
-      rtdtime[i,1] = Time.time_gps( bbfsw[i] ).j2000  # hk pkt time
-    rtd295.attrs['Units']='K and XY'
-    rtd325.attrs['Units']='K and XY'
-
-    ' create raw attitude/ephemeris file and datasets '
-    aqc = att.shape[0]
-    print("creating raw ATT file, AQC=%d" % aqc )
-    if aqc > 0:
-      attf, attf_met, fname = self.create_file("L1A_RAW_ATT", orbit, None,
-           Time.time_gps(att_time[0]), Time.time_gps(att_time[aqc-1]),
-                                        prod=False, intermediate=True)
-    else:
-      attf, attf_met, fname = self.create_file("L1A_RAW_ATT", orbit, None,
-            o_start_time, o_end_time, prod=False, intermediate=True)
-    att_g = attf.create_group("/Attitude")
-    a2k = att_g.create_dataset("time_j2000", shape=(aqc,), dtype='f8' )
-    q = att_g.create_dataset("quaternion", shape=(aqc,4), dtype='f8' )
-    eph_g = attf.create_group("/Ephemeris")
-    e2k = eph_g.create_dataset("time_j2000", shape=(aqc,), dtype='f8' )
-    epos = eph_g.create_dataset("eci_position", shape=(aqc,3), dtype='f8' )
-    evel = eph_g.create_dataset("eci_velocity", shape=(aqc,3), dtype='f8' )
-    for i in range(aqc):
-      a2k[i] = Time.time_gps( att_time[i] ).j2000 # hk pkt time
-      e2k[i] = Time.time_gps( att_time[i] ).j2000  # hk sample time
-    a2k.attrs['Units']='Seconds'
-    e2k.attrs['Units']='Seconds'
-    q[:,:] = att[:,:]
-    q.attrs['Description']='Attitude quaternion, goes from spacecraft to ECI. The coefficient convention used has the real part in the first column.'
-    q.attrs['Units']='dimensionless'
-    epos[:,:] = pos[:,:] * 0.3048
-    epos.attrs['Description']='ECI position'
-    epos.attrs['Units']='m'
-    evel[:,:] = vel[:,:] * 0.3048
-    evel.attrs['Description']='ECI velocity'
-    evel.attrs['Units']='m/s'
-    attf_met.set('ImageLines', 0)
-    attf_met.set('ImagePixels', 0)
-    attf_met.set('SISVersion', '1')
-    attf_met.write()
-    attf.close()
-
     # Write out a dummy log file
-    eng_met.set('ImageLines', 0)
-    eng_met.set('ImagePixels', 0)
-    eng_met.set('SISVersion', '1')
-    eng_met.write()
-    eng.close()
-    print("This is a dummy log file", file = self.log)
-    self.log.flush()
+    #print("This is a dummy log file", file = self.log)
+    #self.log.flush()
     print("====  End run ", datetime.now(), "jumps=%d  ====" %jumps )
     return jumps
