@@ -843,16 +843,19 @@ class L1aRawPixGenerate(object):
         print("Getting mi")
         mi = geocal.cib01_mapinfo()
         print("Getting mi_fp")
-        mi_fp = igc.cover(mi)
-
-        l1a_fp=h5py.File( pname, 'a')
-        l1a_fp['/StandardMetadata/EastBoundingCoordinate'][()] = mi_fp.lrc_x
-        l1a_fp['/StandardMetadata/SouthBoundingCoordinate'][()] = mi_fp.lrc_y
-        l1a_fp['/StandardMetadata/NorthBoundingCoordinate'][()] = mi_fp.ulc_y
-        l1a_fp['/StandardMetadata/WestBoundingCoordinate'][()] = mi_fp.ulc_x
-        l1a_fp.close()
+        try:
+          mi_fp = igc.cover(mi)
+          l1a_fp=h5py.File( pname, 'a')
+          l1a_fp['/StandardMetadata/EastBoundingCoordinate'][()] = mi_fp.lrc_x
+          l1a_fp['/StandardMetadata/SouthBoundingCoordinate'][()] = mi_fp.lrc_y
+          l1a_fp['/StandardMetadata/NorthBoundingCoordinate'][()] = mi_fp.ulc_y
+          l1a_fp['/StandardMetadata/WestBoundingCoordinate'][()] = mi_fp.ulc_x
+          l1a_fp.close()
+          print("footprint E=%f S=%f N=%f W=%f" %(mi_fp.lrc_x, mi_fp.lrc_y, mi_fp.ulc_y, mi_fp.ulc_x ))
+        except:
+          print("Exception from igc.cover, no footprint for scene %d" % scene_id )
     else:
-      print("Scene %s quality too low (%f), not generating footprint" %(scene_id,pcomp))
+      print("Scene %s missing too many pixels (%f), not generating footprint" %(scene_id,pcomp))
 
     ' end scene loop '
 
