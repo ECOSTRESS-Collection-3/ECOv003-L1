@@ -845,13 +845,16 @@ class L1aRawPixGenerate(object):
         print("Getting mi_fp")
         try:
           mi_fp = igc.cover(mi)
-          l1a_fp=h5py.File( pname, 'a')
-          l1a_fp['/StandardMetadata/EastBoundingCoordinate'][()] = mi_fp.lrc_x
-          l1a_fp['/StandardMetadata/SouthBoundingCoordinate'][()] = mi_fp.lrc_y
-          l1a_fp['/StandardMetadata/NorthBoundingCoordinate'][()] = mi_fp.ulc_y
-          l1a_fp['/StandardMetadata/WestBoundingCoordinate'][()] = mi_fp.ulc_x
-          l1a_fp.close()
-          print("footprint E=%f S=%f N=%f W=%f" %(mi_fp.lrc_x, mi_fp.lrc_y, mi_fp.ulc_y, mi_fp.ulc_x ))
+          if abs( mi_fp.ulc_x - mi_fp.lrc_x ) < 10.0:
+            l1a_fp=h5py.File( pname, 'a')
+            l1a_fp['/StandardMetadata/EastBoundingCoordinate'][()] = mi_fp.lrc_x
+            l1a_fp['/StandardMetadata/SouthBoundingCoordinate'][()] = mi_fp.lrc_y
+            l1a_fp['/StandardMetadata/NorthBoundingCoordinate'][()] = mi_fp.ulc_y
+            l1a_fp['/StandardMetadata/WestBoundingCoordinate'][()] = mi_fp.ulc_x
+            l1a_fp.close()
+            print("Scene %d footprint E=%f S=%f N=%f W=%f" %(scene_id, mi_fp.lrc_x, mi_fp.lrc_y, mi_fp.ulc_y, mi_fp.ulc_x ))
+          else:
+            print("Scene %d footprint too big E=%f S=%f N=%f W=%f" %(scene_id, mi_fp.lrc_x, mi_fp.lrc_y, mi_fp.ulc_y, mi_fp.ulc_x ))
         except:
           print("Exception from igc.cover, no footprint for scene %d" % scene_id )
     else:
