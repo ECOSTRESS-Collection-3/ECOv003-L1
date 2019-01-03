@@ -435,6 +435,7 @@ class L1aRawPixGenerate(object):
     # iterate through scenes from scene start/stop file
     o_start_time = None
     jumps = 0
+    remain = -1234
     for orbit, scene_id, sts, ste in self.process_scene_file():
       orb = str( "%05d" %orbit )
       if orb != onum:  # process only matching orbit numbers
@@ -484,10 +485,10 @@ class L1aRawPixGenerate(object):
         seq = 0
         gpix[:] = 0
         ph0 = 2
+        ph0_idx = 0
         while seq<3:
           e0 = pkt_idx
           ph = 2  # mirror phase should be 0 or 1
-          '''  *** confirm all sequences come from same phase ***  '''
           while e0 < tot_pkts and ph == 2:  # search for sequence start
             if e0==0: dt = 0
             else: dt = ( float((lev[e0,0] - lev[e0-1,e1])%MAX_FPIE) ) * EV_DUR
@@ -495,7 +496,7 @@ class L1aRawPixGenerate(object):
             if gpt[e0] > rse:  # packet time past end of scene
               scans = scan
               sse = rst + scans * SCAN_DUR
-              print("** Finish orbit %05d short scene %s SCANS=%d end=%s(%f)" % (orbit, scene_id, scans, Time.time_gps(sse), sse ) )
+              print("** Finish orbit %05d short scene %s SCANS=%d end=%s(%f) GPT=%s(%f) at %d" % (orbit, scene_id, scans, Time.time_gps(sse), sse, Time.time_gps(gpt[e0]),gpt[e0],e0 ) )
               scan = SCPS  # force finish up current scene
               seq = 3
               cont = 0
@@ -511,7 +512,6 @@ class L1aRawPixGenerate(object):
 
               seq = 3  # force exit SEQ loop
               break # break out of packets loop
-            '  end discontinuity if block  '
 
             # find start of sequence and mirror phase in PKT
             e1 = 0
@@ -539,58 +539,96 @@ class L1aRawPixGenerate(object):
           pkt_idx = e0
           if cont==0:  break # discont in SEQ seek, break out of SEQ loop
 
-          op0 = ev_codes[3,seq]  # starting output pixel of sequence
-          op1 = ev_codes[3,seq+1]  # ending output pixel of sequence
+        # check phase
+
+          '''
+          if seq==0:  # record reference mirror phase
+            ph0 = ph
+            ph0_idx = e0
+          else:
+            if ph != ph0:
+              print("Phase mismatch EXP=%d[%d] ACT=%d PKT=%d" %(ph0, ph0_idx, ph, e0))
+              e0 = ph0_idx+1  # backup to packet after PH0
+              seq = 0
+              continue  # skip remaining SEQ processing and restart
+          '''
+
+        # Found start of SEQ, copy PKT(s) to output buffers
+
+          op0 = ev_codes[3,seq]  # starting output fp of sequence
+          op1 = ev_codes[3,seq+1]  # ending output fp of sequence
           op = op0  # initialize output FP pointer
 
-          # calculate fswt for first FP in SEQ
-          if e1 == 0:  # use current packet FSWT
-            dt = 0
+          # calculate fswt of first FP in SEQ
+          if e1==0:
             p0t = gpt[e0]
-          else:  # count back from FSWT of next packet
-            if e0 >= tot_pkts-1:  # reached EOF
-              cont = 0
-              break  # get out of SEQ loop
+          else:
             dt = (e1-FPPPKT) * FP_DUR
             p0t = gpt[e0+1] + dt
 
-          if seq==0:  # save scan starting time
-            sst = p0t
-            if scan==0: rst = p0t  # save refined scene start time
-            scan = int( ( sst - rst ) / SCAN_DUR + 0.5 )
-            print("Calculated scan=%d SCENE=%s from %s" % (scan, scene_id, str(Time.time_gps(rst)) ))
-            if scan >= SCPS:
-              print("PKT[%d] Time %f outside of current scene %d Terminating" %( e0, gpt[e0], scene_id ) )
+          # calculate ISS time correction
+          if iss_tcorr>0:
+            tdx = np.argmax( p0t < terr )
+            if tcorr[tdx] >= 2147483648: tc = (tcorr[tdx]-4294967296)
+            else: tc = tcorr[tdx]
+            print("Scene %d scan %d TCORR=%f TDX=%d" %(scene_id, scan, tcorr[tdx], tdx) )
+          else: tc = 0.0
+
+          if seq==2:  # save and replicate IMG start time
+            print("Orbit %s SCENE %d SCAN %d P0T=%f" %(orb,scene_id,scan,p0t))
+            pix_time[line:line+PPFP] = Time.time_gps( p0t-tc ).j2000
+          else:
+            if e0<tot_pkts-1:  # check continuity of HBB or CBB
+              l0 = lev[e0,e1] - int( FP_EV+0.5 )  #  add 1 FP of counts
+              if e1==0:  #  ends in current packet
+                dt = (float((lev[e0,FPPPKT-1] - l0)%MAX_FPIE)) * EV_DUR
+              else:  #  ends in next packet
+                dt = (float((lev[e0+1,e1-1] - l0)%MAX_FPIE)) * EV_DUR
+              adt = abs( dt-PKT_DUR )
+            if adt > PKT_DURT or e0>=tot_pkts-1:
+              print("Scene %d Disco %s, terminating scan %d E0=%d E1=%d DT=%f" %(scene_id,ev_names[seq],scan,e0,e1,dt))
+              pkt_idx = e0+1  # get past current packet
+              scan += 1
               cont = 0
+              seq = 3  # break out of sequence loop to next scan
               break
-            line = scan * PPFP
-          elif seq==2:  # save and replicate IMG start time
-            if iss_tcorr>0:
-              tdx = np.argmax( p0t < terr )
-              if tcorr[tdx] >= 2147483648: tc = p0t - (tcorr[tdx]-4294967296)
-              else: tc = p0t - tcorr[tdx]
-              print("Orbit %s SCENE %d SCAN %d P0T=%f TCORR=%f TDX=%d" %(orb, scene_id, scan, p0t, tcorr[tdx], tdx) )
-              pix_time[line:line+PPFP] = Time.time_gps( tc ).j2000
-              p0t = tc
+            if seq==0:  # save scan start time
+              sst = p0t
+              if scan==0:  # save refined scene start time
+                rst = p0t
+                tc0 = tc
+              scan = int( ( sst - rst ) / SCAN_DUR + 0.5 )
+              print("Calculated scan=%d SCENE=%s SST=%f from %f" % (scan, scene_id, sst, rst ))
+              if scan >= SCPS:
+                print("PKT[%d] Time %f outside of current scene %d Terminating" %( e0, gpt[e0], scene_id ) )
+                cont = 0
+                break
+              line = scan * PPFP
+
           print("Found %s LID[%d,%d]=%d PH=%d SCENE=%s SCAN=%d GPS=%f %s"%(ev_names[seq],e0,e1,lev[e0,e1],ph,scene_id,scan,p0t,Time.time_gps(p0t)))
   
           # Copy pixels from PKT
           p1 = e1
           fpc = FPPPKT - p1  # FPs to copy from first PKT
+          opd = 0
           while op < op1 and e0 < tot_pkts:
             #print("SCENE=%d SCAN=%d E0=%d E1=%d GPS=%f SEQ=%d OP=%d" %(scene_id,scan,e0,e1,gpt[e0], seq, op))
 
-            e3 = op1 - op  # remaining FPs to fill
-            e4 = 0
+            remain = op1 - op  # remaining FPs to fill in current scan
+            opinc = 0
+            #  calculate delta time between packets
             if e0 == tot_pkts-1:  # at last packet in file
               dt = PKT_DUR
               lid1 = e0
+              lid0 = e0-1
             else:
               lid0 = e0; lid1 = e0+1  # correct time
               #lid0 = e0-1; lid1 = e0  # time code error
               dt = gpt[lid1] - gpt[lid0]
-            if p1==0: e2 = (seq-1)%3
-            else: e2 = seq
+            if p1==0: sq = (seq-1)%3
+            else: sq = seq
+
+            '''  check against expected delta T between sequences  '''
             if op>op0 and (dt<0 or abs(dt-PKT_DUR)>PKT_DURT) and seq==2:  # time discontinuity
 
               ldd[:] = (lev[e0,1:] - lev[e0,:FPPPKT-1])%MAX_FPIE  # find FP with EV jump
@@ -600,50 +638,59 @@ class L1aRawPixGenerate(object):
                 else: fpc = FPPPKT
               else: fpc += 1
 
-              if fpc < e3:  # jump occurred before end of IMG
+              if fpc < remain:  # jump occurred before end of IMG
 
                 jumps += 1
                 print("*** Orbit %s Scene %d scan %d %s Time jump PKT=%d %s DT=%10.8f OP=%d " %(orb, scene_id, scan, ev_names[seq], lid1,Time.time_gps(gpt[lid1]),dt,op), end="")
 
-                e4 = int( dt/FP_DUR + 0.5 ) - FPPPKT
                 if dt > IMG_DUR - (op1-op)*FP_DUR:  # jump outside of current IMG, go to next scan
-
                   print("past current IMG sequence", end="")
+                # elif dt > det[sq] or dt<0:  # greater than normal time gap or negative
 
-                elif dt > det[e2] or dt<0:  # greater than normal time gap or negative
+                if e0==tot_pkts - 1:  # at end of data
+                  dev = 0
+                  d2 = 0
+                else:  # check EV continuity to next packet
+                  dev = abs( (lev[lid1,0] - lev[lid0,0]) - FP_EV * FPPPKT )
+                  d2 = abs( (lev[lid1,FPPPKT-1] - lev[lid0,FPPPKT-1]) - FP_EV * FPPPKT )
+                if float(dev) <= FP_EVT and float(d2) <= FP_EVT: opinc=0 # EV continuous
+                else: opinc = int( dt/FP_DUR + 0.5 ) - FPPPKT
 
-                  if e0==tot_pkts - 1:  # at end of data
-                    e2 = 0
-                  else:  # check EV continuity to next packet
-                    e2 = (lev[e0+1,0] - lev[e0,FPPPKT-1])%MAX_FPIE
-                  if float(e2) <= FP_EVT: e4=0 # EV continuous
+                if dt<0: print("Negative time jump", end="")
+                else: print(" ...continuing", end="")
 
-                  if dt<0: print("Negative time jump", end="")
-                  else: print(" ...continuing", end="")
-
-                print(" OPINC=%d  ***" %e4)
-                print("Copying remaining %d FPs of scan %d from PKT %d" % (fpc, scan, e0))
+                print(" OPINC=%d  ***" %opinc)
+                print("Copying remaining %d FPs from PKT [%d,%d] to scan %d at %d" % (fpc, e0, p1, scan, op))
               # End jump detection
 
             for b in range( BANDS ): # transpose new packet to flex_buf
               flex_buf[:,:,b] = np.transpose(bip[e0,:,:,b])
-            if fpc >= e3:
-              fpc = e3  # runt at end of sequence
-              print("Last %s chunk:%d IDX=%d" %(ev_names[seq],e3,e0), end="" )
+
+            if fpc >= remain:
+              fpc = remain  # runt at end of sequence
+              print("Last %s chunk:%d FPC=%d IDX=[%d,%d] OP=%d" %(ev_names[seq],remain,fpc,e0,p1,op), end="")
               if seq==2:
                 sse = gpt[e0-1] + PKT_DUR + fpc*FP_DUR
                 print(" SSE=%f" % sse )
               else:
-                print(" ")
-              if e3==FPPPKT: e3 = 0  # next search in next packet
-            dp = op - op0
-            #print("SEQ=%d LINE=%d OP=%d DP=%d P1=%d FPC=%d E0=%d E3=%d E4=%d" %(seq,line,op,dp,p1,fpc,e0,e3,e4))
+                print(" NULL")
+              if remain==FPPPKT: remain = 0  # next search in next packet
 
+            dp = op - op0
+            #print("SEQ=%d LINE=%d OP=%d DP=%d P1=%d FPC=%d E0=%d REMAIN=%d OPINC=%d" %(seq,line,op,dp,p1,fpc,e0,remain,opinc))
             obuf[seq][line:line+PPFP,dp:dp+fpc,:] = flex_buf[:,p1:p1+fpc,:]
             if seq==2: ev_buf[scan,dp:dp+fpc] = lev[e0,p1:p1+fpc]
             gpix[seq] += fpc
 
-            op = op + e4 + fpc
+            if (e0<tot_pkts-1) and (int(pid[lid1]) - int(pid[lid0])) != 1:  # skip non-consecutive packet ID
+              print("found non-contiguous PKT %d PIDs=%d %d" % ( lid1, pid[lid0], pid[lid1] ) )
+
+              if opinc<0:
+                e0 +=1
+                print("Skipping disco PKT %d ID=%d" %( e0, pid[e0] ) )
+                opinc = 0
+
+            op = op + opinc + fpc
             if op<op0 or op>op1:  # next packet outside of current scan
                cont = 1
                sse = gpt[e0-1] + PKT_DUR + fpc * FP_DUR
@@ -660,13 +707,13 @@ class L1aRawPixGenerate(object):
             pkt_idx = tot_pkts - 1
             sse = gpt[pkt_idx] + PKT_DUR
           else:
-            if op>op0 and e3>0: pkt_idx = e0-1
+            if op>op0 and remain>0: pkt_idx = e0-1
             else: pkt_idx = e0
           if cont==0: break  # drop into scan loop
           seq += 1
         # end seq loop
 
-        print("SCENE=%s SCAN=%d SCANS=%d LINE=%d DT=%f s2k=%f IDX=%d P1=%d OP=%d RSE=%f"%(scene_id,scan,scans,line,dt,pix_time[scans],pkt_idx,e3,op,rse))
+        print("SCENE=%s SCAN=%d SCANS=%d LINE=%d DT=%f s2k=%f IDX=%d REMAIN=%d OP=%d RSE=%f"%(scene_id,scan,scans,line,dt,pix_time[scans],pkt_idx,remain,op,rse))
 
 # cont==0 from:
 # - No SEQ from scene start time
@@ -692,11 +739,11 @@ class L1aRawPixGenerate(object):
       bb_cnt = scans*2*BBLEN
       good_img = good[2]
       img_cnt = scans*FPPSC
-      rse = sse  # refined scene end time
-      if o_start_time is None: o_start_time = Time.time_gps( rst )
+      rse = sse - tc  # refined scene end time
+      if o_start_time is None: o_start_time = Time.time_gps( rst-tc0 )
       o_end_time = Time.time_gps( rse )
       scenes.append("%05d	%03d	%s	%s\n" %( orbit, scene_id,
-        str( Time.time_gps( rst ) )[:26], str( Time.time_gps( rse ) )[:26] ) )
+        str( Time.time_gps( rst-tc0 ) )[:26], str( Time.time_gps( rse ) )[:26] ) )
 
       # copy to output files
 
@@ -704,11 +751,11 @@ class L1aRawPixGenerate(object):
 
       ' create scene file and image pixel, J2K, and FPIE EV groups '
       l1a_fp, l1a_fp_met, pname = self.create_file( "L1A_RAW_PIX", orbit, scene_id,
-         Time.time_gps(rst), Time.time_gps(rse), prod=False, intermediate=True)
+         Time.time_gps(rst-tc0), Time.time_gps(rse), prod=False, intermediate=True)
 
       ' create BB file and BlackBodyPixels group '
       l1a_bp, l1a_bp_met, fname = self.create_file( "L1A_BB", orbit, scene_id,
-              Time.time_gps(rst), Time.time_gps(rse), prod=True )
+              Time.time_gps(rst-tc0), Time.time_gps(rse), prod=True )
 
       ' record scan completeness '
       pcomp = float( good_img ) / float( img_cnt )
@@ -857,8 +904,8 @@ class L1aRawPixGenerate(object):
             print("Scene %d footprint too big E=%f S=%f N=%f W=%f" %(scene_id, mi_fp.lrc_x, mi_fp.lrc_y, mi_fp.ulc_y, mi_fp.ulc_x ))
         except:
           print("Exception from igc.cover, no footprint for scene %d" % scene_id )
-    else:
-      print("Scene %s missing too many pixels (%f), not generating footprint" %(scene_id,pcomp))
+      else:
+        print("Scene %s missing too many pixels (%f), not generating footprint" %(scene_id,pcomp))
 
     ' end scene loop '
 
@@ -878,5 +925,5 @@ class L1aRawPixGenerate(object):
     # Write out a dummy log file
     #print("This is a dummy log file", file = self.log)
     #self.log.flush()
-    print("====  End run ", datetime.now(), "jumps=%d  ====" %jumps )
+    print("====  End Orbit %s" %orb, datetime.now(), "jumps=%d  ====" %jumps )
     return jumps
