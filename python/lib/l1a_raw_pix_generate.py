@@ -275,9 +275,9 @@ class L1aRawPixGenerate(object):
     PKT_EV = FP_DUR*RPM*MAX_FPIE*FPPPKT/60.0 # = 1525.460873 counts/PKT
     IMG_EV = FP_DUR*RPM*MAX_FPIE*FPPSC/60.0 # = 128710.76112 counts/IMG
 
-    det = [(EV_DUR*((ev_codes[0,2]-ev_codes[2,0])%MAX_FPIE)-IMG_DUR)*1.05,  # btw IMG and HBB
-           (EV_DUR*((ev_codes[1,0]-ev_codes[0,0])%MAX_FPIE)-PKT_DUR)*1.05,  # btw HBB and CBB
-           (EV_DUR*((ev_codes[2,0]-ev_codes[1,0])%MAX_FPIE)-PKT_DUR)*1.05]  # btw CBB and IMG
+    det = [EV_DUR*((ev_codes[0,2]-ev_codes[2,0])%MAX_FPIE - (FPPSC-FPPPKT)*FP_EV), # btw IMG and HBB
+           EV_DUR*((ev_codes[1,0]-ev_codes[0,0])%MAX_FPIE),  # btw HBB and CBB
+           EV_DUR*((ev_codes[2,0]-ev_codes[1,0])%MAX_FPIE)]  # btw CBB and IMG
     print("DET: %f %f %f" %( det[0], det[1], det[2] ) )
 
 #  Set up band order
@@ -540,7 +540,6 @@ class L1aRawPixGenerate(object):
           if cont==0:  break # discont in SEQ seek, break out of SEQ loop
 
         # check phase
-
           '''
           if seq==0:  # record reference mirror phase
             ph0 = ph
@@ -553,11 +552,26 @@ class L1aRawPixGenerate(object):
               continue  # skip remaining SEQ processing and restart
           '''
 
-        # Found start of SEQ, copy PKT(s) to output buffers
+        # Found start of SEQ, check continuity of first SEQ PKT
 
-          op0 = ev_codes[3,seq]  # starting output fp of sequence
-          op1 = ev_codes[3,seq+1]  # ending output fp of sequence
-          op = op0  # initialize output FP pointer
+          if e0<tot_pkts-1: lid1 = e0+1
+          else: lid1 = e0
+          lid0 = lid1 - 1
+          if lid0<0: lid0=0
+            
+          l0 = lev[lid0,e1] - int( FP_EV+0.5 )  #  add 1 FP of counts
+          if e1==0:  #  ends in current packet
+            dt = (float((lev[lid0,FPPPKT-1] - l0)%MAX_FPIE)) * EV_DUR
+          else:  #  ends in next packet
+            dt = (float((lev[lid1,e1-1] - l0)%MAX_FPIE)) * EV_DUR
+          adt = abs( dt-PKT_DUR )
+          if adt > PKT_DURT or e0>=tot_pkts-1:
+            print("Scene %d Disco %s, terminating scan %d E0=%d E1=%d DT=%f" %(scene_id,ev_names[seq],scan,e0,e1,dt))
+            pkt_idx = e0+1  # get past current packet
+            scan += 1
+            cont = 0
+            seq = 3  # break out of sequence loop to next scan
+            break
 
           # calculate fswt of first FP in SEQ
           if e1==0:
@@ -565,6 +579,7 @@ class L1aRawPixGenerate(object):
           else:
             dt = (e1-FPPPKT) * FP_DUR
             p0t = gpt[e0+1] + dt
+          dpt = gpt[lid1] - gpt[lid0]
 
           # calculate ISS time correction
           if iss_tcorr>0:
@@ -573,44 +588,33 @@ class L1aRawPixGenerate(object):
             else: tc = tcorr[tdx]
             print("Scene %d scan %d TCORR=%f TDX=%d" %(scene_id, scan, tcorr[tdx], tdx) )
           else: tc = 0.0
+          if seq==0:  # save scan start time
+            sst = p0t
+            if scan==0:  # save refined scene start time
+              rst = p0t
+              tc0 = tc
+            scan = int( ( sst - rst ) / SCAN_DUR + 0.5 )
+            print("Calculated scan=%d SCENE=%s SST=%f from %f" % (scan, scene_id, sst, rst ))
+            if scan >= SCPS:
+              print("PKT[%d] Time %f outside of current scene %d Terminating" %( e0, gpt[e0], scene_id ) )
+              cont = 0
+              break
+            line = scan * PPFP
 
-          if seq==2:  # save and replicate IMG start time
+          elif seq==2:  # save and replicate IMG start time
             print("Orbit %s SCENE %d SCAN %d P0T=%f" %(orb,scene_id,scan,p0t))
             pix_time[line:line+PPFP] = Time.time_gps( p0t-tc ).j2000
-          else:
-            if e0<tot_pkts-1:  # check continuity of HBB or CBB
-              l0 = lev[e0,e1] - int( FP_EV+0.5 )  #  add 1 FP of counts
-              if e1==0:  #  ends in current packet
-                dt = (float((lev[e0,FPPPKT-1] - l0)%MAX_FPIE)) * EV_DUR
-              else:  #  ends in next packet
-                dt = (float((lev[e0+1,e1-1] - l0)%MAX_FPIE)) * EV_DUR
-              adt = abs( dt-PKT_DUR )
-            if adt > PKT_DURT or e0>=tot_pkts-1:
-              print("Scene %d Disco %s, terminating scan %d E0=%d E1=%d DT=%f" %(scene_id,ev_names[seq],scan,e0,e1,dt))
-              pkt_idx = e0+1  # get past current packet
-              scan += 1
-              cont = 0
-              seq = 3  # break out of sequence loop to next scan
-              break
-            if seq==0:  # save scan start time
-              sst = p0t
-              if scan==0:  # save refined scene start time
-                rst = p0t
-                tc0 = tc
-              scan = int( ( sst - rst ) / SCAN_DUR + 0.5 )
-              print("Calculated scan=%d SCENE=%s SST=%f from %f" % (scan, scene_id, sst, rst ))
-              if scan >= SCPS:
-                print("PKT[%d] Time %f outside of current scene %d Terminating" %( e0, gpt[e0], scene_id ) )
-                cont = 0
-                break
-              line = scan * PPFP
 
-          print("Found %s LID[%d,%d]=%d PH=%d SCENE=%s SCAN=%d GPS=%f %s"%(ev_names[seq],e0,e1,lev[e0,e1],ph,scene_id,scan,p0t,Time.time_gps(p0t)))
+          print("Found %s LID[%d,%d]=%d PH=%d SCENE=%s SCAN=%d GPS=%f DPT=%f %s"%(ev_names[seq],e0,e1,lev[e0,e1],ph,scene_id,scan,p0t,dpt,Time.time_gps(p0t)))
   
           # Copy pixels from PKT
           p1 = e1
           fpc = FPPPKT - p1  # FPs to copy from first PKT
-          opd = 0
+
+          op0 = ev_codes[3,seq]  # starting output fp of sequence
+          op1 = ev_codes[3,seq+1]  # ending output fp of sequence
+          op = op0  # initialize output FP pointer
+
           while op < op1 and e0 < tot_pkts:
             #print("SCENE=%d SCAN=%d E0=%d E1=%d GPS=%f SEQ=%d OP=%d" %(scene_id,scan,e0,e1,gpt[e0], seq, op))
 
@@ -619,14 +623,13 @@ class L1aRawPixGenerate(object):
             #  calculate delta time between packets
             if e0 == tot_pkts-1:  # at last packet in file
               dt = PKT_DUR
-              lid1 = e0
-              lid0 = e0-1
+              lid1 = e0; lid0 = e0-1
             else:
               lid0 = e0; lid1 = e0+1  # correct time
               #lid0 = e0-1; lid1 = e0  # time code error
               dt = gpt[lid1] - gpt[lid0]
-            if p1==0: sq = (seq-1)%3
-            else: sq = seq
+            #if p1==0: sq = (seq-1)%3
+            #else: sq = seq
 
             '''  check against expected delta T between sequences  '''
             if op>op0 and (dt<0 or abs(dt-PKT_DUR)>PKT_DURT) and seq==2:  # time discontinuity
@@ -648,12 +651,12 @@ class L1aRawPixGenerate(object):
                 # elif dt > det[sq] or dt<0:  # greater than normal time gap or negative
 
                 if e0==tot_pkts - 1:  # at end of data
-                  dev = 0
-                  d2 = 0
+                  dev = 0.0
+                  d2 = 0.0
                 else:  # check EV continuity to next packet
                   dev = abs( (lev[lid1,0] - lev[lid0,0]) - FP_EV * FPPPKT )
                   d2 = abs( (lev[lid1,FPPPKT-1] - lev[lid0,FPPPKT-1]) - FP_EV * FPPPKT )
-                if float(dev) <= FP_EVT and float(d2) <= FP_EVT: opinc=0 # EV continuous
+                if (op==op0 and d2<=FP_EVT) or (op>=op1-FPPPKT and dev<=FP_EVT) or (dev<=FP_EVT and d2<=FP_EVT): opinc=0 # EV continuous
                 else: opinc = int( dt/FP_DUR + 0.5 ) - FPPPKT
 
                 if dt<0: print("Negative time jump", end="")
@@ -682,7 +685,7 @@ class L1aRawPixGenerate(object):
             if seq==2: ev_buf[scan,dp:dp+fpc] = lev[e0,p1:p1+fpc]
             gpix[seq] += fpc
 
-            if (e0<tot_pkts-1) and (int(pid[lid1]) - int(pid[lid0])) != 1:  # skip non-consecutive packet ID
+            if (e0<tot_pkts-1) and pid[lid1]>1 and (int(pid[lid1]) - int(pid[lid0]))!=1:  # skip non-consecutive packet ID
               print("found non-contiguous PKT %d PIDs=%d %d" % ( lid1, pid[lid0], pid[lid1] ) )
 
               if opinc<0:
