@@ -28,7 +28,7 @@ if("TF_CPP_MIN_LOG_LEVEL" in os.environ and int(os.environ["TF_CPP_MIN_LOG_LEVEL
     tflearn.callbacks.TermLogger.on_batch_end = _on_batch_end
 
 class EcostressInterpolate(object):
-    def __init__(self, time_table,
+    def __init__(self, time_table, band_mode = '5bands',
                  training_size = 600000, layer_size_1 = 35,
                  layer_size_2 = 17, activation_function = 'LeakyReLU',
                  tensorboard_dir='./tensorboard',
@@ -39,6 +39,7 @@ class EcostressInterpolate(object):
         For repeatably results, there is a seed passed in. Set this to
         none if you want to use the current system time (so each run
         is different).'''
+        self.band_mode = band_mode
         self.training_size = training_size
         self.layer_size_1 = layer_size_1
         self.layer_size_2 = layer_size_2
@@ -64,13 +65,28 @@ class EcostressInterpolate(object):
         # mean and std
         self.mu = np.zeros((dat.shape[2],))
         self.sigma = np.zeros((dat.shape[2],))
-        for i in range(self.mu.shape[0]):
+        
+        
+        #  if this is the 5bands mode, then normalize bands 1-5 (0-4 in python indices)
+        #  if 3bands mode, normalize bands 2,4,5 (1, 3, 4 in python indices)
+        #  		also replace bands 1 and 3 with all 0's for the case of 3bands. 
+        if self.band_mode == '5bands':
+        	band_indices = (0,1,2,3,4)
+        else:
+        	band_indices = (1,3,4)
+        	###  replace bands 1 and 3 (0 and 2 in python indices) with 0
+        	dat[:,:,0] = np.zeros( dat[:,:,0].shape )
+        	dat[:,:,2] = np.zeros( dat[:,:,2].shape )
+        	
+        	
+        for i in band_indices:
             self.mu[i] = np.nanmean(dat[:,:,i])
             self.sigma[i] = np.nanstd(dat[:,:,i])
     
         #normalize each layer by the mean and the std (convert to z-score)
-        for i in range(dat.shape[2]):
+        for i in band_indices:
             dat[:,:,i] = ((dat[ :,:,i] - self.mu[i])/ self.sigma[i])
+
 
         return dat
     
@@ -216,12 +232,19 @@ outputs: prediction_matrices:  a list of 2 5325x5325 array containing
         # and fill in mu and sigma with mean and stddev
         dataset_normalized = self.normalize_data(dataset)
     
+        #  if this is the 5bands mode, then do interpolation for bands 1 and 5
+        #  if 3bands mode, do interpolation for band 5 only
+        if self.band_mode == '5bands':
+        	response_indices = [0, 4]
+        else:
+        	response_indices = [4]
+
     
         # outputs
         prediction_matrices = []
         prediction_errors = []
         predicted_locations = []
-        for response_index in (0,4):
+        for response_index in response_indices:
             ##  make the testing dataset
             if(log):
                 print("INFO:EcostressInterpolate:Working on band %d" % (response_index + 1), file=log)
