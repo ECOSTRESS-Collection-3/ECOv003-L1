@@ -84,7 +84,6 @@ HDR_LEN = 284
 PKT_LEN = 98590
 '''
 
-BANDS = 6
 ' number of pixels per focal plane '
 PPFP = 256
 ' number of focal planes per full scan '
@@ -280,10 +279,6 @@ class L1aRawPixGenerate(object):
            EV_DUR*((ev_codes[2,0]-ev_codes[1,0])%MAX_FPIE)]  # btw CBB and IMG
     print("DET: %f %f %f" %( det[0], det[1], det[2] ) )
 
-#  Set up band order
-
-    bo = [5, 3, 2, 0, 1, 4]
-
 #  get orbit number
 
     m=re.search('L0B_(.+?)_',self.l0b)
@@ -318,6 +313,17 @@ class L1aRawPixGenerate(object):
     bb_time=self.fin["hk/status/time"]
     bb_fsw=self.fin["hk/status/time_fsw"]
 
+#  Set up band order
+
+    if bip.shape[3]==6:
+      BANDS = 6
+      bo = [5, 3, 2, 0, 1, 4]
+      BandSpec = [1.6, 8.2, 8.7, 9.0, 10.5, 12.0]
+    else:
+      BANDS = 3
+      bo = [1, 0, 2]
+      BandSpec = [8.7, 10.5, 12.0]
+
     tdpuio = 0
     tcorr = 0
     iss_tcorr = 0
@@ -344,20 +350,38 @@ class L1aRawPixGenerate(object):
             Time.time_gps(bbtime[0]), Time.time_gps(bbtime[epc-1]),
                                             primary_file=True )
     else:
-      eng, eng_met, fname = self.create_file( "L1A_ENG", int(onum), None,
-               o_start_time, o_end_time, primary_file=True )
+      print("No HK time in L0B file")
+      return -4
     eng_g = eng.create_group("/rtdBlackbodyGradients")
     rtd295 = eng_g.create_dataset("RTD_295K", shape=(epc,5), dtype='f4')
+    rtd295.attrs['Units']='K'
+    rtd295.attrs['valid_min']='290'
+    rtd295.attrs['valid_max']='320'
+    rtd295.attrs['fill']='-9999'
     rtd325 = eng_g.create_dataset("RTD_325K", shape=(epc,5), dtype='f4')
+    rtd325.attrs['Units']='K'
+    rtd325.attrs['valid_min']='320'
+    rtd325.attrs['valid_max']='330'
+    rtd325.attrs['fill']='-9999'
     rtdtime = eng_g.create_dataset("time_j2000", shape=(epc,2), dtype='f8')
+    rtdtime.attrs['Units']='seconds'
+    rtdtime.attrs['valid_min']='0'
+    rtdtime.attrs['valid_max']='N/A'
+    rtdtime.attrs['fill']='-9999'
     for i in range(epc):  # Convert DNs to Kelvin with PRT parameters
       for j in range( 5 ):
         rtd295[i,j] = prc[j]( p7r( bbt[i,0,j] ) )
         rtd325[i,j] = prh[j]( p7r( bbt[i,1,j] ) )
       rtdtime[i,0] = Time.time_gps( bbtime[i] ).j2000  # sample time
       rtdtime[i,1] = Time.time_gps( bbfsw[i] ).j2000  # hk pkt time
-    rtd295.attrs['Units']='K and XY'
-    rtd325.attrs['Units']='K and XY'
+    rtd295.attrs['Units']='K'
+    rtd295.attrs['valid_min']='290'
+    rtd295.attrs['valid_max']='300'
+    rtd295.attrs['fill']='N/A'
+    rtd325.attrs['Units']='K'
+    rtd325.attrs['valid_min']='320'
+    rtd325.attrs['valid_max']='330'
+    rtd325.attrs['fill']='N/A'
     eng_met.set('ImageLines', 0)
     eng_met.set('ImagePixels', 0)
     eng_met.set('SISVersion', '1')
@@ -372,8 +396,8 @@ class L1aRawPixGenerate(object):
            Time.time_gps(att_time[0]), Time.time_gps(att_time[aqc-1]),
                                         prod=False, intermediate=True)
     else:
-      attf, attf_met, attfname = self.create_file("L1A_RAW_ATT", int(onum), None,
-            o_start_time, o_end_time, prod=False, intermediate=True)
+      print("No ATT data in L0B file")
+      return -5
     att_g = attf.create_group("/Attitude")
     a2k = att_g.create_dataset("time_j2000", shape=(aqc,), dtype='f8' )
     q = att_g.create_dataset("quaternion", shape=(aqc,4), dtype='f8' )
@@ -803,6 +827,8 @@ class L1aRawPixGenerate(object):
       l1a_bp_met.set('SISVersion', '1')
       l1a_bp_met.write()
 
+# L1A_RAW_PIX metadata
+
       pcomp = 100.0 * ( 1.0 - float( good_img ) / float( FPPSC * SCPS ) )
       print("Percent missing data=%f" %pcomp )
       l1a_metag = l1a_fp['/L1A_RAW_PIXMetadata']
@@ -815,36 +841,62 @@ class L1aRawPixGenerate(object):
           l1a_te=l1a_metag.create_dataset('ISS_time', data=terr[e0:e1], dtype='f8')
           l1a_td=l1a_metag.create_dataset('ISS_time_dpuio', data=tdpuio[e0:e1], dtype='i8')
           l1a_tc=l1a_metag.create_dataset('ISS_time_error_correction', data=tcorr[e0:e1], dtype='f8')
-      
-      l1a_upg = l1a_fp.create_group("/UncalibratedPixels")
+
+# Other L1A_RAW and BB data componente
+
       l1a_ptg = l1a_fp.create_group("/Time")
-      l1a_peg = l1a_fp.create_group("/FPIEencoder")
-
-      bcomp = 100.0 * ( 1.0 - float( good_bb ) / float( BBLEN*2*SCPS ) )
-      l1a_metag = l1a_bp['/L1A_BBMetadata']
-      l1a_qamissing = l1a_metag.create_dataset('QAPercentMissingData', data=bcomp, dtype='f4' )
-
-      l1a_bpg = l1a_bp.create_group("/BlackBodyPixels")
-      l1a_rtg = l1a_bp.create_group("/rtdBlackbodyGradients")
       t = l1a_ptg.create_dataset("line_start_time_j2000", data=pix_time,
                                  dtype="f8" )
       t.attrs["Description"] = "J2000 time of first pixel in line"
       t.attrs["Units"] = "second"
-      t = l1a_peg.create_dataset("EncoderValue", data=ev_buf, dtype="u4" )
 
+      l1a_peg = l1a_fp.create_group("/FPIEencoder")
+      t = l1a_peg.create_dataset("EncoderValue", data=ev_buf, dtype="u4" )
+      t.attrs["Description"] = "FPIE mirror pistion encoder values of each FP"
+      t.attrs["Units"] = "dimensionless"
+      t.attrs['valid_min']='0'
+      t.attrs['valid_max']='1749247'
+      t.attrs['fill']='0xffffffff'
+
+      l1a_upg = l1a_fp.create_group("/UncalibratedPixels")
+      l1a_bpg = l1a_bp.create_group("/BlackBodyPixels")
+      l1a_rtg = l1a_bp.create_group("/rtdBlackbodyGradients")
       for b in range( BANDS ):
         t = l1a_upg.create_dataset("pixel_data_%d" %(b+1),
                                    data=img[:,:,bo[b]],
                                    chunks=(PPFP,FPPSC), dtype="u2" )
         t.attrs['Units']='dimensionless'
+        t.attrs['valid_min']='0'
+        t.attrs['valid_max']='32767'
+        t.attrs['fill']='0xffff'
+
+        if BANDS==6:
+          e0 = np.argmax( img[:,:,bo[b]] != 0xffff )
+          if e0==0 and img[0,0,bo[b]]==0xffff: BandSpec[b] = 0.0
+
         t = l1a_bpg.create_dataset("b%d_blackbody_295" %(b+1),
                                    data=cbb[:,:,bo[b]], chunks=(PPFP,BBLEN),
                                                   dtype="u2")
         t.attrs['Units']='dimensionless'
+        t.attrs['valid_min']='0'
+        t.attrs['valid_max']='32767'
+        t.attrs['fill']='0xffff'
         t = l1a_bpg.create_dataset("b%d_blackbody_325" %(b+1),
                                    data=hbb[:,:,bo[b]], chunks=(PPFP,BBLEN),
                                                   dtype="u2" )
         t.attrs['Units']='dimensionless'
+        t.attrs['valid_min']='0'
+        t.attrs['valid_max']='32767'
+        t.attrs['fill']='0xffff'
+
+      l1a_BandSpec = l1a_metag.create_dataset('BandSpecification', data=BandSpec, dtype='f4' )
+
+# L1A_BB metadata
+
+      bcomp = 100.0 * ( 1.0 - float( good_bb ) / float( BBLEN*2*SCPS ) )
+      l1a_metag = l1a_bp['/L1A_BBMetadata']
+      l1a_qamissing = l1a_metag.create_dataset('QAPercentMissingData', data=bcomp, dtype='f4' )
+      l1a_BandSpec = l1a_metag.create_dataset('BandSpecification', data=BandSpec, dtype='f4' )
 
       # copy RTD temps to BB file
       if epc > 0:
@@ -859,8 +911,20 @@ class L1aRawPixGenerate(object):
       print("Copying RTD for SCENE %d P0=%d P1=%d RST=%f RSE=%f %s" %(scene_id, p0, p1, rst, rse, str(datetime.now())))
       print(" ")
       bt=l1a_rtg.create_dataset("time_j2000", shape=(p1-p0+1,), dtype='f8')
+      bt.attrs['Units']='seconds'
+      bt.attrs['valid_min']='0'
+      bt.attrs['valid_max']='N/A'
+      bt.attrs['fill']='-9999'
       r2=l1a_rtg.create_dataset("RTD_295K", shape=(p1-p0+1,5,), dtype='f4')
+      r2.attrs['Units']='K'
+      r2.attrs['valid_min']='290'
+      r2.attrs['valid_max']='320'
+      r2.attrs['fill']='-9999'
       r3=l1a_rtg.create_dataset("RTD_325K", shape=(p1-p0+1,5,), dtype='f4')
+      r3.attrs['Units']='K'
+      r3.attrs['valid_min']='320'
+      r3.attrs['valid_max']='330'
+      r3.attrs['fill']='-9999'
       for i in range( p0, p1+1 ):
         bt[i-p0] = Time.time_gps( bbtime[i] ).j2000
         for j in range( 5 ):
