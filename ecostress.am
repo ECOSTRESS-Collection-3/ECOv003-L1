@@ -17,7 +17,7 @@ installecostress_SCRIPTS = ecostress_version.py
 # Glynn's test data. end-to-end-check runs 8005, end-to-end-check-glynn
 # runs 80006
 
-export end_to_end_test_data = @testdatadir@
+export end_to_end_test_data = @testdatadir@/latest
 
 l0b_file = $(end_to_end_test_data)/L0B_03663_20190227T094659_0100_01.h5
 scene_file = $(end_to_end_test_data)/Scene_03663_20190227T094659_20190227T110441.txt

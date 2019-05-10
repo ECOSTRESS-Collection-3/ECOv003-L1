@@ -102,18 +102,20 @@ def aster_mosaic_surface_data(aster_mosaic_dir):
                                   VicarLiteFile.READ, 1000, 1000)
              for b in [4, 10, 11, 12, 14, 14]]
     yield sdata
-        
+
+# Changed test data in 6.00. For backwards testing, just use the 5.00
+# version of these files, it is sufficient for testing
 @pytest.yield_fixture(scope="function")
 def test_data():
     '''Determine the directory with the test data.'''
     if("end_to_end_test_data" in os.environ):
-        tdata = os.environ["end_to_end_test_data"] + "/"
+        tdata = os.environ["end_to_end_test_data"] + "/5.00/"
     else:
         # Location on eco-scf
-        tdata = "/project/test/ASTER/EndToEndTest/latest/"
+        tdata = "/project/test/ASTER/EndToEndTest/5.00/"
         if(not os.path.exists(tdata)):
             # Location on pistol
-            tdata="/data/smyth/ecostress-test-data/latest/"
+            tdata="/data/smyth/ecostress-test-data/5.00/"
         if(not os.path.exists(tdata)):
             raise RuntimeError("Can't find location of end to end test data")
     yield tdata

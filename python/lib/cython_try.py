@@ -1,5 +1,5 @@
-from .cython_sample import fib
+#from .cython_sample import fib
 
-def cython_try():
-    print("hi there")
-    print(fib(10))
+#def cython_try():
+#    print("hi there")
+#    print(fib(10))
