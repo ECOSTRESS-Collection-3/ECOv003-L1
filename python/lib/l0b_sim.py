@@ -344,7 +344,7 @@ class L0BSimulate(object):
     rt_hsmt = hsmt.create_dataset("rate", (enc,5), dtype=np.uint32)
     ss_hsmt = hsmt.create_dataset("sun_safe", (enc,), dtype=np.uint32)
     ti_hsmt = hsmt.create_dataset("time", (enc,5), dtype=np.float64)
-    wt_hsmt = hsmt.create_dataset("wait", (enc), dtype=np.uint8)
+    wt_hsmt = hsmt.create_dataset("wait", (enc,), dtype=np.uint8)
 
     bbt = hs.create_dataset("temperature", (enc,2,enr), dtype=np.uint16)
     bb_time = hs.create_dataset("time", (enc,), dtype=np.float64)
@@ -364,8 +364,10 @@ class L0BSimulate(object):
         bbt[i,1,j] = self.kelvin2DN(kh[j,:], r3k[i,j])
         #print("ENC=%d ENR=%d R2K=%f R3K=%f BB2=%d BB3=%d" %(enr,enc,r2k[i,j],r3k[i,j],bbt[i,0,j],bbt[i,1,j]))
 
-    bb_time[:] = att_time[:aqc]  # just copy times from ATT/EPH for now
-    bb_fsw[:] = att_fsw[:epc]
+    eng_time = l1e["/rtdBlackbodyGradients/time_j2000"]
+    for i in range(enc):
+      bb_time[i] = Time.time_j2000(eng_time[i]).gps
+      bb_fsw[i] = Time.time_j2000(eng_time[i,1]).gps
     att_fd.close()
     l1e.close()
     l0b_fd.flush()
