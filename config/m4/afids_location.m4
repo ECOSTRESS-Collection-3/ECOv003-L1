@@ -15,7 +15,7 @@ PKG_CHECK_MODULES([GEOCAL], [geocal])
 PKG_CHECK_VAR([GEOCAL_SWIG_CFLAGS], [geocal], [swig_cflags])
 
 AC_ARG_WITH([test-data],
-AS_HELP_STRING([--with-test-data=DIR], [give directory where end to end test data can be found (optional, default is /project/test/ASTER/EndToEndTest/latest)]), [ ac_test_data_dir="$withval" ], [ ac_test_data_dir="/project/test/ASTER/EndToEndTest/latest" ])
+AS_HELP_STRING([--with-test-data=DIR], [give directory where end to end test data can be found (optional, default is /project/test/ASTER/EndToEndTest/5.00)]), [ ac_test_data_dir="$withval" ], [ ac_test_data_dir="/project/test/ASTER/EndToEndTest/5.00" ])
 AC_SUBST([testdatadir], ["$ac_test_data_dir"])
 
 ])
