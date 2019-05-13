@@ -17,14 +17,14 @@ installecostress_SCRIPTS = ecostress_version.py
 # Glynn's test data. end-to-end-check runs 8005, end-to-end-check-glynn
 # runs 80006
 
-export end_to_end_test_data = @testdatadir@/latest
+export end_to_end_test_data = @testdatadir@
 
-l0b_file = $(end_to_end_test_data)/L0B_03663_20190227T094659_0100_01.h5
-scene_file = $(end_to_end_test_data)/Scene_03663_20190227T094659_20190227T110441.txt
-l1a_raw_run_config = $(end_to_end_test_data)/ECOSTRESS_L1A_RAW_RunConfig_20190227T0946.xml
-l1a_cal_run_config = $(foreach n,001, $(end_to_end_test_data)/ECOSTRESS_L1A_CAL_RunConfig_03663_$n.xml)
-l1b_cal_run_config = $(foreach n,001, $(end_to_end_test_data)/ECOSTRESS_L1B_RAD_RunConfig_03663_$n.xml)
-l1b_geo_run_config = $(end_to_end_test_data)/ECOSTRESS_L1B_GEO_RunConfig_20190227T0946.xml
+l0b_file = $(end_to_end_test_data)/latest/L0B_03663_20190227T094659_0100_01.h5
+scene_file = $(end_to_end_test_data)/latest/Scene_03663_20190227T094659_20190227T110441.txt
+l1a_raw_run_config = $(end_to_end_test_data)/latest/ECOSTRESS_L1A_RAW_RunConfig_20190227T0946.xml
+l1a_cal_run_config = $(foreach n,001, $(end_to_end_test_data)/latest/ECOSTRESS_L1A_CAL_RunConfig_03663_$n.xml)
+l1b_cal_run_config = $(foreach n,001, $(end_to_end_test_data)/latest/ECOSTRESS_L1B_RAD_RunConfig_03663_$n.xml)
+l1b_geo_run_config = $(end_to_end_test_data)/latest/ECOSTRESS_L1B_GEO_RunConfig_20190227T0946.xml
 
 H5DIFF_FLAG=-d 6e-2
 # We skip radiance 1 and 5 because the filling in of the missing data can
@@ -48,32 +48,32 @@ end-to-end-check: installcheck-am
 	-rm -r ./end_to_end_test_l1b_rad
 	-rm -r ./end_to_end_test_l1b_geo
 	-rm ./l1_osp_dir
-	$(LN_S) $(end_to_end_test_data)/l1_osp_dir l1_osp_dir
+	$(LN_S) $(end_to_end_test_data)/latest/l1_osp_dir l1_osp_dir
 	$(MKDIR_P) ./end_to_end_test_l0_input
 	$(LN_S) $(l0b_file) ./end_to_end_test_l0_input
 	$(LN_S) $(scene_file) ./end_to_end_test_l0_input
 	ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1A_RAW_PGE $(l1a_raw_run_config)
-	$(PARALLEL) --gnu "echo {}; $(H5DIFF) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1a_raw/*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1a_raw/*.h5
 	ECOSTRESS_END_TO_END_TEST=t $(PARALLEL) --gnu $(prefix)/L1A_CAL_PGE ::: $(l1a_cal_run_config)
-	$(PARALLEL) --gnu "echo {}; $(H5DIFF) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1a_cal/*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1a_cal/*.h5
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(PARALLEL) --gnu $(prefix)/L1B_RAD_PGE ::: $(l1b_cal_run_config)
-	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1b_rad/*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_rad/*.h5
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1B_GEO_PGE $(l1b_geo_run_config)
-	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_ATT*.h5
-	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_GEO_0*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_ATT*.h5
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_GEO_0*.h5
 	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOSTRESS_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOSTRESS_L1B_RAD_03663_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
 
 # Run l1b_rad on its own
 
 l1b-rad-run: install
 	-rm -r ./l1b_rad_run
-	$(prefix)/L1B_RAD_PGE $(end_to_end_test_data)/ECOSTRESS_L1A_PIX_03663_001_*_0100_02.h5.expected $(end_to_end_test_data)/L1A_RAD_GAIN_03663_001_*_0100_02.h5.expected $(end_to_end_test_data)/L1A_RAW_ATT_03663_*_0100_01.h5.expected $(end_to_end_test_data)/l1_osp_dir ./l1b_rad_run
+	$(prefix)/L1B_RAD_PGE $(end_to_end_test_data)/latest/ECOSTRESS_L1A_PIX_03663_001_*_0100_02.h5.expected $(end_to_end_test_data)/latest/L1A_RAD_GAIN_03663_001_*_0100_02.h5.expected $(end_to_end_test_data)/latest/L1A_RAW_ATT_03663_*_0100_01.h5.expected $(end_to_end_test_data)/latest/l1_osp_dir ./l1b_rad_run
 
 # Run l1b_geo on its own
 
 l1b-geo-run: install
 	-rm -r ./l1b_geo_run
-	$(prefix)/L1B_GEO_PGE $(PROCESS_ARG) --number-cpu=20 $(end_to_end_test_data)/L1A_RAW_ATT_03663_*_0100_01.h5.expected $(end_to_end_test_data)/l1_osp_dir ./l1b_geo_run $(end_to_end_test_data)/ECOSTRESS_L1B_RAD_03663_00*.h5.expected
+	$(prefix)/L1B_GEO_PGE $(PROCESS_ARG) --number-cpu=20 $(end_to_end_test_data)/latest/L1A_RAW_ATT_03663_*_0100_01.h5.expected $(end_to_end_test_data)/latest/l1_osp_dir ./l1b_geo_run $(end_to_end_test_data)/latest/ECOSTRESS_L1B_RAD_03663_00*.h5.expected
 #	source $(prefix)/setup_ecostress.sh && $(PYTHON) $(srcdir)/end_to_end_testing/diff_sba.py
 	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band l1b_geo_run/ECOSTRESS_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOSTRESS_L1B_RAD_03663_00{}_*.h5 l1b_geo_run/proj_final_{}" )
 
