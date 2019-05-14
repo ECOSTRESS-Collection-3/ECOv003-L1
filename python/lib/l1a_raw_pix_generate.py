@@ -355,19 +355,18 @@ class L1aRawPixGenerate(object):
     eng_g = eng.create_group("/rtdBlackbodyGradients")
     rtd295 = eng_g.create_dataset("RTD_295K", shape=(epc,5), dtype='f4')
     rtd295.attrs['Units']='K'
-    rtd295.attrs['valid_min']='290'
-    rtd295.attrs['valid_max']='320'
-    rtd295.attrs['fill']='-9999'
+    rtd295.attrs['valid_min']=290
+    rtd295.attrs['valid_max']=320
+    rtd295.attrs['fill']=-9999
     rtd325 = eng_g.create_dataset("RTD_325K", shape=(epc,5), dtype='f4')
     rtd325.attrs['Units']='K'
-    rtd325.attrs['valid_min']='320'
-    rtd325.attrs['valid_max']='330'
-    rtd325.attrs['fill']='-9999'
+    rtd325.attrs['valid_min']=320
+    rtd325.attrs['valid_max']=330
+    rtd325.attrs['fill']=-9999
     rtdtime = eng_g.create_dataset("time_j2000", shape=(epc,2), dtype='f8')
     rtdtime.attrs['Units']='seconds'
-    rtdtime.attrs['valid_min']='0'
-    rtdtime.attrs['valid_max']='N/A'
-    rtdtime.attrs['fill']='-9999'
+    rtdtime.attrs['valid_min']=0
+    rtdtime.attrs['fill']=-9999
     for i in range(epc):  # Convert DNs to Kelvin with PRT parameters
       for j in range( 5 ):
         rtd295[i,j] = prc[j]( p7r( bbt[i,0,j] ) )
@@ -375,13 +374,11 @@ class L1aRawPixGenerate(object):
       rtdtime[i,0] = Time.time_gps( bbtime[i] ).j2000  # sample time
       rtdtime[i,1] = Time.time_gps( bbfsw[i] ).j2000  # hk pkt time
     rtd295.attrs['Units']='K'
-    rtd295.attrs['valid_min']='290'
-    rtd295.attrs['valid_max']='300'
-    rtd295.attrs['fill']='N/A'
+    rtd295.attrs['valid_min']=290
+    rtd295.attrs['valid_max']=300
     rtd325.attrs['Units']='K'
-    rtd325.attrs['valid_min']='320'
-    rtd325.attrs['valid_max']='330'
-    rtd325.attrs['fill']='N/A'
+    rtd325.attrs['valid_min']=320
+    rtd325.attrs['valid_max']=330
     eng_met.set('ImageLines', 0)
     eng_met.set('ImagePixels', 0)
     eng_met.set('SISVersion', '1')
@@ -833,6 +830,9 @@ class L1aRawPixGenerate(object):
       print("Percent missing data=%f" %pcomp )
       l1a_metag = l1a_fp['/L1A_RAW_PIXMetadata']
       l1a_qamissing = l1a_metag.create_dataset('QAPercentMissingData', data=pcomp, dtype='f4' )
+      l1a_qamissing.attrs['Units']="percentage"
+      l1a_qamissing.attrs['valid_min'] = 0
+      l1a_qamissing.attrs['valid_max'] = 100
 
       if iss_tcorr>0:  #  record ISS time error correction into L1A_RAW file
         e0 = np.argmax( rst<terr )
@@ -854,9 +854,9 @@ class L1aRawPixGenerate(object):
       t = l1a_peg.create_dataset("EncoderValue", data=ev_buf, dtype="u4" )
       t.attrs["Description"] = "FPIE mirror pistion encoder values of each FP"
       t.attrs["Units"] = "dimensionless"
-      t.attrs['valid_min']='0'
-      t.attrs['valid_max']='1749247'
-      t.attrs['fill']='0xffffffff'
+      t.attrs['valid_min']=0
+      t.attrs['valid_max']=1749247
+      t.attrs['fill']=0xffffffff
 
       l1a_upg = l1a_fp.create_group("/UncalibratedPixels")
       l1a_bpg = l1a_bp.create_group("/BlackBodyPixels")
@@ -866,9 +866,9 @@ class L1aRawPixGenerate(object):
                                    data=img[:,:,bo[b]],
                                    chunks=(PPFP,FPPSC), dtype="u2" )
         t.attrs['Units']='dimensionless'
-        t.attrs['valid_min']='0'
-        t.attrs['valid_max']='32767'
-        t.attrs['fill']='0xffff'
+        t.attrs['valid_min']=0
+        t.attrs['valid_max']=32767
+        t.attrs['fill']=0xffff
 
         if BANDS==6:
           e0 = np.argmax( img[:,:,bo[b]] != 0xffff )
@@ -878,25 +878,36 @@ class L1aRawPixGenerate(object):
                                    data=cbb[:,:,bo[b]], chunks=(PPFP,BBLEN),
                                                   dtype="u2")
         t.attrs['Units']='dimensionless'
-        t.attrs['valid_min']='0'
-        t.attrs['valid_max']='32767'
-        t.attrs['fill']='0xffff'
+        t.attrs['valid_min']=0
+        t.attrs['valid_max']=32767
+        t.attrs['fill']=0xffff
         t = l1a_bpg.create_dataset("b%d_blackbody_325" %(b+1),
                                    data=hbb[:,:,bo[b]], chunks=(PPFP,BBLEN),
                                                   dtype="u2" )
         t.attrs['Units']='dimensionless'
-        t.attrs['valid_min']='0'
-        t.attrs['valid_max']='32767'
-        t.attrs['fill']='0xffff'
+        t.attrs['valid_min']=0
+        t.attrs['valid_max']=32767
+        t.attrs['fill']=0xffff
 
       l1a_BandSpec = l1a_metag.create_dataset('BandSpecification', data=BandSpec, dtype='f4' )
+      l1a_BandSpec.attrs["Units"] = "micrometer"
+      l1a_BandSpec.attrs["valid_min"] = 1.6
+      l1a_BandSpec.attrs["valid_max"] = 12.1
+      l1a_BandSpec.attrs["fill"] = 0
 
 # L1A_BB metadata
 
       bcomp = 100.0 * ( 1.0 - float( good_bb ) / float( BBLEN*2*SCPS ) )
       l1a_metag = l1a_bp['/L1A_BBMetadata']
       l1a_qamissing = l1a_metag.create_dataset('QAPercentMissingData', data=bcomp, dtype='f4' )
+      l1a_qamissing.attrs['Units']="percentage"
+      l1a_qamissing.attrs['valid_min'] = 0
+      l1a_qamissing.attrs['valid_max'] = 100
       l1a_BandSpec = l1a_metag.create_dataset('BandSpecification', data=BandSpec, dtype='f4' )
+      l1a_BandSpec.attrs["Units"] = "micrometer"
+      l1a_BandSpec.attrs["valid_min"] = 1.6
+      l1a_BandSpec.attrs["valid_max"] = 12.1
+      l1a_BandSpec.attrs["fill"] = 0
 
       # copy RTD temps to BB file
       if epc > 0:
@@ -912,19 +923,18 @@ class L1aRawPixGenerate(object):
       print(" ")
       bt=l1a_rtg.create_dataset("time_j2000", shape=(p1-p0+1,), dtype='f8')
       bt.attrs['Units']='seconds'
-      bt.attrs['valid_min']='0'
-      bt.attrs['valid_max']='N/A'
-      bt.attrs['fill']='-9999'
+      bt.attrs['valid_min']=0
+      bt.attrs['fill']=-9999
       r2=l1a_rtg.create_dataset("RTD_295K", shape=(p1-p0+1,5,), dtype='f4')
       r2.attrs['Units']='K'
-      r2.attrs['valid_min']='290'
-      r2.attrs['valid_max']='320'
-      r2.attrs['fill']='-9999'
+      r2.attrs['valid_min']=290
+      r2.attrs['valid_max']=320
+      r2.attrs['fill']=-9999
       r3=l1a_rtg.create_dataset("RTD_325K", shape=(p1-p0+1,5,), dtype='f4')
       r3.attrs['Units']='K'
-      r3.attrs['valid_min']='320'
-      r3.attrs['valid_max']='330'
-      r3.attrs['fill']='-9999'
+      r3.attrs['valid_min']=320
+      r3.attrs['valid_max']=330
+      r3.attrs['fill']=-9999
       for i in range( p0, p1+1 ):
         bt[i-p0] = Time.time_gps( bbtime[i] ).j2000
         for j in range( 5 ):

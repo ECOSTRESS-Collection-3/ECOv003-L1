@@ -81,17 +81,26 @@ class L1aPixGenerate(object):
         t = g.create_dataset("b1_image",
                   data=geocal.mmap_file("%s/ImgRadiance/b1_dcc.hlf" % dirname))
         t.attrs["Units"] = "dimensionless"
+        t.attrs["valid_min"] = 0
+        t.attrs["valid_max"] = 32767
         for b in range(2, 7):
             t = g.create_dataset("b%d_image" % b,
                   data=geocal.mmap_file("%s/UncalibratedDN/b%d_image.hlf" %
                                  (dirname, b)))
             t.attrs["Units"] = "dimensionless"
+            t.attrs["valid_min"] = 0
+            t.attrs["valid_max"] = 32767
         g = fout.create_group("BlackbodyTemp")
         for temp in (325, 295):
             t = g.create_dataset("fpa_%d" % temp,
                   data=geocal.mmap_file("%s/BlackbodyTemp/fpa_%d.rel" %
                                  (dirname, temp)))
             t.attrs["Units"] = "K"
+        g["fpa_325"].attrs["valid_min"] = 310
+        g["fpa_325"].attrs["valid_max"] = 330
+        g["fpa_295"].attrs["valid_min"] = 275
+        g["fpa_295"].attrs["valid_max"] = 305
+            
         g = fout.create_group("BlackbodyBandDN")
         for b in range(1, 7):
             for temp in (325, 295):
@@ -99,6 +108,8 @@ class L1aPixGenerate(object):
                   data=geocal.mmap_file("%s/BlackbodyRadiance/b%d_%d.rel" %
                                  (dirname, b, temp)))
                 t.attrs["Units"] = "dimensionless"
+                t.attrs["valid_min"] = 0
+                t.attrs["valid_max"] = 32767
         g = fout_gain.create_group("Gain")
         g2 = fout_gain.create_group("Offset")
         for b in range(1, 6):
@@ -121,6 +132,9 @@ class L1aPixGenerate(object):
                              data = fin["/FPIEencoder/EncoderValue"])
         t.attrs["Description"] = "Mirror encoder value of each focal plane in each scan"
         t.attrs["Units"] = "dimensionless"
+        t.attrs["valid_min"] = 0
+        t.attrs["valid_max"] = 1749247
+        t.attrs["fill"] = 0xffffffff
         qa_precentage_missing = -999
         if("QAPercentMissingData" in fin["L1A_RAW_PIXMetadata"]):
             qa_precentage_missing = fin["L1A_RAW_PIXMetadata/QAPercentMissingData"][()]

@@ -110,8 +110,12 @@ information.
         lat, lon, height = res.map_values(self.l1b_geo_generate.igc.dem)
         t = g.create_dataset("latitude", data=lat, dtype='f8')
         t.attrs["Units"] = "degrees"
+        t.attrs["valid_min"]=-90
+        t.attrs["valid_max"]=90
         t = g.create_dataset("longitude", data=lon, dtype='f8')
         t.attrs["Units"] = "degrees"
+        t.attrs["valid_min"]=-180
+        t.attrs["valid_max"]=180
         t = g.create_dataset("height", data=height, dtype='f4')
         t.attrs["Units"] = "m"
         self.print_and_log("Done with lat, lon, height")
@@ -129,6 +133,8 @@ information.
             data_in = geocal.GdalRasterImage("HDF5:\"%s\"://Radiance/data_quality_%d" % (self.l1b_rad, b))
             data = res.resample_dqi(data_in).astype(np.int8)
             t = g.create_dataset("data_quality_%d" % b, data = data)
+            t.attrs["valid_min"] = 0
+            t.attrs["valid_max"] = 4
             t.attrs["Description"] = '''
 Data quality indicator. 
   0 - DQI_GOOD, normal data, nothing wrong with it
@@ -173,6 +179,14 @@ Data quality indicator.
 times. It doesn't make sense to average the data like we do for radiance.
 Instead, we give the angle for the ECOSTRESS image coordinate that has the
 smallest line and sample number.''' % fld
+        g["solar_azimuth"].attrs["valid_min"] = -180
+        g["solar_azimuth"].attrs["valid_max"] = 180
+        g["view_azimuth"].attrs["valid_min"] = -180
+        g["view_azimuth"].attrs["valid_max"] = 180
+        g["solar_zenith"].attrs["valid_min"] = -90
+        g["solar_zenith"].attrs["valid_max"] = 90
+        g["view_zenith"].attrs["valid_min"] = -90
+        g["view_zenith"].attrs["valid_max"] = 90
         fout.close()
         vrtfile = os.path.splitext(self.output_name)[0] + "_gdal.vrt"
         cmd = ["gdalbuildvrt", "-separate", vrtfile]

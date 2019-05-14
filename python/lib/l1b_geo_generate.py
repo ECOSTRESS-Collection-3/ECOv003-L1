@@ -170,20 +170,35 @@ GEOGCS["WGS 84",
         #t = g.create_dataset("latitude", data=lat, chunks=(250,250), compression="gzip")
         t = g.create_dataset("latitude", data=lat, dtype='f8')
         t.attrs["Units"] = "degrees"
+        t.attrs["valid_min"] = -90
+        t.attrs["valid_max"] = 90
         t = g.create_dataset("longitude", data=lon, dtype='f8')
         t.attrs["Units"] = "degrees"
+        t.attrs["valid_min"] = -180
+        t.attrs["valid_max"] = 180
         t = g.create_dataset("height", data=height, dtype='f4')
         t.attrs["Units"] = "m"
         t = g.create_dataset("land_fraction", data=lfrac, dtype='f4')
         t.attrs["Units"] = "percentage"
+        t.attrs["valid_min"] = 0
+        t.attrs["valid_max"] = 100
+        t.attrs["fill"] = -9999
         t = g.create_dataset("view_zenith", data=vzenith, dtype='f4')
         t.attrs["Units"] = "degrees"
+        t.attrs["valid_min"] = -90
+        t.attrs["valid_max"] = 90
         t = g.create_dataset("view_azimuth", data=vazimuth, dtype='f4')
         t.attrs["Units"] = "degrees"
+        t.attrs["valid_min"] = -180
+        t.attrs["valid_max"] = 180
         t = g.create_dataset("solar_zenith", data=szenith, dtype='f4')
         t.attrs["Units"] = "degrees"
+        t.attrs["valid_min"] = -90
+        t.attrs["valid_max"] = 90
         t = g.create_dataset("solar_azimuth", data=sazimuth, dtype='f4')
         t.attrs["Units"] = "degrees"
+        t.attrs["valid_min"] = -180
+        t.attrs["valid_max"] = 180
         t = g.create_dataset("line_start_time_j2000", data=tlinestart,
                              dtype='f8')
         t.attrs["Description"] = "J2000 time of first pixel in line"
@@ -194,9 +209,13 @@ GEOGCS["WGS 84",
         oa_lf = lfrac[lfrac > fill_value_threshold].mean()
         d = g.create_dataset("AverageSolarZenith", data= avg_sz)
         d.attrs["Units"] = "degrees"
+        d.attrs["valid_min"] = -90
+        d.attrs["valid_max"] = 90
         d.attrs["Description"] = "Average solar zenith angle for scene"
         d = g.create_dataset("OverAllLandFraction", data = oa_lf)
         d.attrs["Units"] = "percentage"
+        d.attrs["valid_min"] = 0
+        d.attrs["valid_max"] = 100
         d.attrs["Description"] = "Overall land fraction for scene"
         # We stash some of the objects we've used here for use by
         # L1bGeoGenerateMap and L1bGeoGenerateKmz. Right now, we assume

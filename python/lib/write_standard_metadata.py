@@ -204,9 +204,16 @@ class WriteStandardMetadata(object):
         pg["AncillaryFiles"] = np.int32(0)
         if(self.qa_precentage_missing is not None):
             pg["QAPercentMissingData"] = np.float32(self.qa_precentage_missing)
+            pg["QAPercentMissingData"].attrs['Units']="percentage"
+            pg["QAPercentMissingData"].attrs['valid_min'] = 0
+            pg["QAPercentMissingData"].attrs['valid_max'] = 100
         if(self.band_specification is not None):
             pg.create_dataset('BandSpecification', data=self.band_specification,
                               dtype=np.float32)
+            pg['BandSpecification'].attrs["Units"] = "micrometer"
+            pg['BandSpecification'].attrs["valid_min"] = 1.6
+            pg['BandSpecification'].attrs["valid_max"] = 12.1
+            pg['BandSpecification'].attrs["fill"] = 0
             
         
 

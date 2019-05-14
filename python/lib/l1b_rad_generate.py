@@ -132,6 +132,8 @@ class L1bRadGenerate(object):
             t.attrs["Units"] = "W/m^2/sr/um"
             t = g.create_dataset("data_quality_%d" % (b + 1),
                                  data = dqi[:,:,b])
+            t.attrs["valid_min"] = 0
+            t.attrs["valid_max"] = 4
             t.attrs["Description"] = '''
 Data quality indicator. 
   0 - DQI_GOOD, normal data, nothing wrong with it
@@ -169,6 +171,9 @@ Data quality indicator.
                              data = self.l1a_pix["/FPIEencoder/EncoderValue"])
         t.attrs["Description"] = "Mirror encoder value of each focal plane in each scan"
         t.attrs["Units"] = "dimensionless"
+        t.attrs["valid_min"] = 0
+        t.attrs["valid_max"] = 1749247
+        t.attrs["fill"] = 0xffffffff
         qa_precentage_missing = -999
         if("QAPercentMissingData" in self.l1a_pix["L1A_PIXMetadata"]):
             qa_precentage_missing = self.l1a_pix["L1A_PIXMetadata/QAPercentMissingData"][()]
