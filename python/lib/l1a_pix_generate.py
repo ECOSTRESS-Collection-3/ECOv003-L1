@@ -121,20 +121,32 @@ class L1aPixGenerate(object):
                              data = fin["/FPIEencoder/EncoderValue"])
         t.attrs["Description"] = "Mirror encoder value of each focal plane in each scan"
         t.attrs["Units"] = "dimensionless"
+        qa_precentage_missing = -999
+        if("QAPercentMissingData" in fin["L1A_RAW_PIXMetadata"]):
+            qa_precentage_missing = fin["L1A_RAW_PIXMetadata/QAPercentMissingData"][()]
+        band_specification = [1.6,8.2,8.7,9.0,10.5,12.0]
+        if('BandSpecification' in fin["L1A_RAW_PIXMetadata"]):
+            band_specification = fin["L1A_RAW_PIXMetadata/BandSpecification"][:]
+            
         m = WriteStandardMetadata(fout,
-                                  product_specfic_group = "L1APIXMetadata",
+                                  product_specfic_group = "L1A_PIXMetadata",
                                   proc_lev_desc = "Level 1A Calibration Parameters",
                                   pge_name="L1A_CAL_PGE",
                                   build_id = self.build_id,
                                   pge_version= self.pge_version,
-                                  local_granule_id = self.local_granule_id)
+                                  local_granule_id = self.local_granule_id,
+                                  qa_precentage_missing = qa_precentage_missing,
+                                  band_specification = band_specification)
         m2 = WriteStandardMetadata(fout_gain,
-                                  product_specfic_group = "L1APIXMetadata",
-                                  proc_lev_desc = "Level 1A Calibration Parameters",
-                                  pge_name="L1A_CAL_PGE",
-                                  build_id = self.build_id,
-                                  pge_version= self.pge_version,
-                                  local_granule_id = self.local_granule_id)
+                                   product_specfic_group = "L1A_PIXMetadata",
+                                   proc_lev_desc = "Level 1A Calibration Parameters",
+                                   pge_name="L1A_CAL_PGE",
+                                   build_id = self.build_id,
+                                   pge_version= self.pge_version,
+                                   local_granule_id = self.local_granule_id,
+                                   qa_precentage_missing = qa_precentage_missing,
+                                   band_specification = band_specification)
+                                   
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)
             m2.process_run_config_metadata(self.run_config)

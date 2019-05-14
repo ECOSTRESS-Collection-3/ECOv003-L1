@@ -169,13 +169,22 @@ Data quality indicator.
                              data = self.l1a_pix["/FPIEencoder/EncoderValue"])
         t.attrs["Description"] = "Mirror encoder value of each focal plane in each scan"
         t.attrs["Units"] = "dimensionless"
+        qa_precentage_missing = -999
+        if("QAPercentMissingData" in self.l1a_pix["L1A_PIXMetadata"]):
+            qa_precentage_missing = self.l1a_pix["L1A_PIXMetadata/QAPercentMissingData"][()]
+        band_specification = [1.6,8.2,8.7,9.0,10.5,12.0]
+        if('BandSpecification' in self.l1a_pix["L1A_PIXMetadata"]):
+            band_specification = self.l1a_pix["L1A_PIXMetadata/BandSpecification"][:]
         m = RadWriteStandardMetadata(fout, product_specfic_group = "L1B_RADMetadata",
-                                  proc_lev_desc = "Level 1B Radiance Parameters",
-                                  pge_name = "L1B_RAD_PGE",
-                                  build_id = self.build_id,
-                                  pge_version= self.pge_version,
-                                  line_order_flipped=self.line_order_flipped,
-                                  local_granule_id = self.local_granule_id)
+                                     proc_lev_desc = "Level 1B Radiance Parameters",
+                                     pge_name = "L1B_RAD_PGE",
+                                     build_id = self.build_id,
+                                     pge_version= self.pge_version,
+                                     line_order_flipped=self.line_order_flipped,
+                                     local_granule_id = self.local_granule_id,
+                                     qa_precentage_missing = qa_precentage_missing,
+                                     band_specification = band_specification
+        )
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)
         m.set("RangeBeginningDate",

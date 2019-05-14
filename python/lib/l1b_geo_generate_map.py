@@ -49,6 +49,13 @@ class L1bGeoGenerateMap(object):
         fout = h5py.File(self.output_name, "w")
         m = self.l1b_geo_generate.m.copy_new_file(fout,
                                  self.local_granule_id, "ECO1BMAPRAD")
+        fin = h5py.File(self.l1b_rad, "r")
+        m.qa_precentage_missing = -999
+        if("QAPercentMissingData" in fin["L1B_RADMetadata"]):
+            m.qa_precentage_missing = fin["L1B_RADMetadata/QAPercentMissingData"][()]
+        m.band_specification = [1.6,8.2,8.7,9.0,10.5,12.0]
+        if('BandSpecification' in fin["L1B_RADMetadata"]):
+            m.band_specification = fin["L1B_RADMetadata/BandSpecification"][:]
         m.write()
         mi = geocal.cib01_mapinfo(self.resolution)
         lat = scipy.ndimage.interpolation.zoom(self.l1b_geo_generate.lat,

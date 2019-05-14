@@ -10,6 +10,8 @@ class WriteStandardMetadata(object):
                  proc_lev_desc = 'Level 1 Geolocation Parameters',
                  pge_name = 'L1B_GEO', local_granule_id = None,
                  build_id = '0.01', pge_version='0.01',
+                 qa_precentage_missing = None,
+                 band_specification = None,
                  orbit_based = False, level0_file = False):
         '''hdf_file should be the h5py.File handler. You can pass the 
         local_granule_id, or if None we assume the filename for the hdf_file is
@@ -81,6 +83,8 @@ class WriteStandardMetadata(object):
         else:
             self.set('SceneID', m.group('scene_id'))
         self.set('ProcessingLevelID', m.group('process_level'))
+        self.qa_precentage_missing = qa_precentage_missing
+        self.band_specification = band_specification
 
     def set_input_pointer(self, flist):
         '''Take a list of file names, and generates the InputPointer from this'''
@@ -198,5 +202,12 @@ class WriteStandardMetadata(object):
         else:
             pg = self.hdf_file.create_group(self.product_specfic_group)
         pg["AncillaryFiles"] = np.int32(0)
+        if(self.qa_precentage_missing is not None):
+            pg["QAPercentMissingData"] = np.float32(self.qa_precentage_missing)
+        if(self.band_specification is not None):
+            pg.create_dataset('BandSpecification', data=self.band_specification,
+                              dtype=np.float32)
+            
+        
 
 __all__ = ["WriteStandardMetadata"]
