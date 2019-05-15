@@ -2,7 +2,7 @@
 !   el1a_bbcal.pdf (Ecostress L1A BlackBody calibration)
 !   An L1A_CAL PGE Program supporting the ECOSTRESS Project
 !***Date/Version:
-!   10MAY2018 Version: 2.01 T.L.Logan (B2-B5 Linearity Correction)
+!   18JAN2019 Version: 3.00 T.L.Logan (Change SWIR Processing)
 !   Written for VICAR with TAE scripting.
 !***Function:
 !   ECOSTRESS L1A Blackbody Radiometric Calibration.
@@ -930,7 +930,7 @@ datetime
 !Call 2pt Proc Module**************************************************
 !Call/Run the 2point DN-to-Radiance proc for each band.
 !2pt DN to Radiance Conversion, 5 TIR bands
-!B1 SWIR is Dark Current subtracted
+!B1 SWIR is NOT radiometrically calibrated
 tush      echo "" >> L1A_CAL_&"suffix".log
 tush      echo "***Calling 2pt Radiance Program" >> L1A_CAL_&"suffix".log
 let       bandn = 0

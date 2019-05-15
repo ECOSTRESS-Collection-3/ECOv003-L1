@@ -5,6 +5,7 @@
 
 %{
 #include "ecostress_rad_apply.h"
+#include "geocal/image_ground_connection.h"
 %}
 %geocal_base_import(calc_raster)
 %ecostress_shared_ptr(Ecostress::EcostressRadApply);

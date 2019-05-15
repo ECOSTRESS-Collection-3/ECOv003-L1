@@ -3,11 +3,11 @@
 !   An L1A_CAL PGE Program supporting the ECOSTRESS Project
 !   Written for VICAR with TAE scripting.
 !***Date/Version:
-!   10MAY2018 Version: 2.01 T.L.Logan (Add B2-B5 non-linearity correction)
+!   18JAN2019 Version: 3.00 T.L.Logan (Change SWIR Processing)
 !***Function:
 !   ECOSTRESS L1A 2point conversion of Blackbody calibration and TIR
 !     image DN to Radiance (watts/m2/sr/um).
-!   TIR Bands 2-6; SWIR image (B1) is Dark Current subtracted.
+!   TIR Bands 2-6; SWIR image (B1) is a Visual Product
 !   This proc is called separately (by el1a_bbcal.pdf) for each Band.
 !***Note: Input missing, fill or bad data are output as code -9999,
 !   Except for stripes, which are output as code -9998.
@@ -49,6 +49,9 @@ local  found  integer  !0=no file; 1=file found
 local  sd     real     !Histogram standard deviation
 local  avg    real     !Histogram mean
 local  count  integer  !Histogram number of elements
+local  I      integer
+local  max    real
+local  min    real
 body
 let      _onfail="goto error1"
 file2tcl  xxjob_fail.img val=found
@@ -193,8 +196,8 @@ end-if
 size      xxgain_&id xxd_&id size=(1,1,11264,5400) oform=real 'noin
 f2        inp=(xxd_&id,mask_&id) out=&"outwat"/b&"band"_gain.rel +
           func="(in1*(in2==1))+((in2==0)*(-9999))+((in2==(-1))*(-9998))" format=real
-write     "MSG: ***Finished Creating Gain/Offsets for Band &band"
-tush       echo "Finished Creating Gain/Offsets for Band &band" >> L1A_CAL_&"suffix".log
+write    "MSG: ***Finished Creating Gain/Offsets for Band &band"
+tush      echo "Finished Creating Gain/Offsets for Band &band" >> L1A_CAL_&"suffix".log
 
 !2-Point Conversion Module*********************************************
 !DN to Radiance two-point conversion: R=a+(b*DN)
@@ -210,7 +213,7 @@ write    "MSG: ***Finished 2pt DN-to-Rad Conversion for Band &band"
 tush      echo "Finished 2pt DN-to-Rad Conversion for Band &band" >> L1A_CAL_&"suffix".log
 if       (debug>0)
 !Remove -9998 (Dropped Lines) from histogram (Set to zero). Retain -9999 (Bad Data).
- f2       &"outwat"/b&"band"_rad.rel xxb_&id func="(in1!=(-9998))*in1"
+ f2      &"outwat"/b&"band"_rad.rel xxb_&id func="(in1!=(-9998))*in1"
  hist     xxb_&id sigma=sd mean=avg count=count 'exclude
  tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1A_CAL_&"suffix".log
 end-if
@@ -232,29 +235,106 @@ write    "MSG: ***Finished Rad-to-Temp Conversion for Band &band"
 tush      echo "Finished Rad-to-Temp Conversion for Band &band" >> L1A_CAL_&"suffix".log
 if       (debug>0)
 !Remove -9998 (Dropped Lines) from histogram (Set to zero). Retain -9999 (Bad Data).
- f2       &"outwat"/b&"band"_temp.hlf xxb_&id func="(in1!=(-9998))*in1"
+ f2      &"outwat"/b&"band"_temp.hlf xxb_&id func="(in1!=(-9998))*in1"
  hist     xxb_&id sigma=sd mean=avg count=count 'exclude
  tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1A_CAL_&"suffix".log
 end-if
 goto      skip3   !Bands 2-6 skip over SWIR processing
 
 jump1>
-!SWIR B1 Dark Current Module*******************************************
-!Subtact Dark Current from SWIR Band1
-!Size Duplicate BB Dark Current FPA to match image size 11264x1 -> 11264x5400
-size      &"outbdn"/dn325b&"band".rel xxdc325_&id size=(1,1,11264,5400) 'noin
-size      &"outbdn"/dn295b&"band".rel xxdc295_&id size=(1,1,11264,5400) 'noin
-!Average Dark Current FPA images
-f2       (xxdc325_&id,xxdc295_&id) xxa_&id func="(in1+in2)/2"
-!Subtract Dark Current from SWIR Image (No Negative values)
-f2       (&"outimg"/b1_image.hlf,xxa_&id) xxe_&id +
-          func="(in1-in2)*((in1-in2)>=0)" format=half
-f2        inp=(xxe_&id,mask_&id) out=&"outwat"/b1_dcc.hlf +
-          func="(in1*(in2==1))+((in2==0)*(-9999))+((in2==(-1))*(-9998))" format=half
-write    "MSG: ***Finished DC Subtraction for Band &band"
-tush      echo "Finished DC Subtraction for Band &band" >> L1A_CAL_&"suffix".log
+!SWIR B1 Viewing Product (Deprecated Counts Correction)****************
+!Process SWIR Band1 into a visual-use product (NO calibration)
+!Using "By-Scan fitg" method: Concatenate scans length-wise (image becomes
+!256lines by 237600samples, then apply fitg to adjust each scanline independently
+!to a guassian mean of 127.5 and convert to byte.
+hist     &"outimg"/b1_image.hlf
+!Split into scans and concat lengthwise
+let       I = -255
+loop
+ let      I = I + 256
+ if      (I > 11263) break
+ insert  &"outimg"/b1_image.hlf xxa_&id size=(&I,1,256,5400) 
+ if      (I = 1)
+  insert  xxa_&id xxc_&id
+ else
+  mss    (xxc_&id,xxa_&id) xxb_&id
+  insert  xxb_&id xxc_&id
+ end-if
+end-loop
+insert    xxc_&id xxb_&id size=(1,1,256,237600)
+if       (debug>0) hist xxb_&id
+if       (debug>0) label-l xxb_&id
+write "***Finished creating SWIR 256x237600 size image"
+
+!Process each SWIR image line separately by fitg
+let       I = 0
+loop
+let       I = I + 1
+if       (I>256) break
+insert    xxb_&id xza_&id size=(&I,1,1,237600)
+fitg      xza_&id xzb_&id 'byte 'gauss mean=127.5 sigma=3.5
+if       (I=1)
+ insert   xzb_&id xzz_&id
+else
+ append  (xzz_&id,xzb_&id) xza_&id
+ insert   xza_&id xzz_&id
+end-if
+end-loop
+if       (debug>0) hist xzz_&id
+write "***Finished SWIR fitg brightness adjustment"
+
+!Re-combine the SWIR image
+let       I = -5399
+loop
+ let      I = I + 5400
+ if      (I > 237599) break
+ insert   xzz_&id xxa_&id size=(1,&I,256,5400) 
+ if      (I = 1)
+  insert  xxa_&id xxc_&id
+ else
+  append (xxc_&id,xxa_&id) xxb_&id
+  insert  xxb_&id xxc_&id
+ end-if
+end-loop
+!Fix label
+label-rem xxc_&id xxb_&id
+label-cre xxb_&id xya_&id nl=11264 ns=5400 'byte
+if       (debug>0) hist xya_&id
+if       (debug>0) label-l xya_&id
+write "***Finished SWIR Image Reconstruction"
+
+!Invert/Complement the SWIR image
+maxmin      xya_&id minival=min maxival=max exclude=0
+let         max=max+1
+f2          xya_&id xyb_&id func="(&max-in1)" 'byte 
+if       (debug>0) hist xyb_&id
+
+!Repair the 4 worst SWIR lines
+repair    xyb_&id xxrep1_&id mode=all badline=(+
+94,195,209,241, 350,451,465,497, 606,707,721,753, 862,963,977,1009, +
+1118,1219,1233,1265, 1374,1475,1489,1521, 1630,1731,1745,1777, +
+1886,1987,2001,2033, 2142,2243,2257,2289, 2398,2499,2513,2545, +
+2654,2755,2769,2801, 2910,3011,3025,3057, 3166,3267,3281,3313, +
+3422,3523,3537,3569, 3678,3779,3793,3825, 3934,4035,4049,4081, +
+4190,4291,4305,4337, 4446,4547,4561,4593, 4702,4803,4817,4849, +
+4958,5059,5073,5105, 5214,5315,5329,5361, 5470,5571,5585,5617) 
+repair    xxrep1_&id xxrep2_&id mode=all badline=(+
+5726,5827,5841,5873, 5982,6083,6097,6129, 6238,6339,6353,6385, +
+6494,6595,6609,6641, 6750,6851,6865,6897, 7006,7107,7121,7153, +
+7262,7363,7377,7409, 7518,7619,7633,7665, 7774,7875,7889,7921, +
+8030,8131,8145,8177, 8286,8387,8401,8433, 8542,8643,8657,8689, +
+8798,8899,8913,8945, 9054,9155,9169,9201, 9310,9411,9425,9457 +
+9566,9667,9681,9713, 9822,9923,9937,9969, 10078,10179,10193,10225, +
+10334,10435,10449,10481, 10590,10691,10705,10737, +
+10846,10947,10961,10993, 11102,11203,11217,11249)
+
+!Create SWIR visual product dcc (deprecated counts correction)
+f2        xxrep2_&id &"outwat"/b1_dcc.hlf func="in1*1" format=half   
+hist     &"outwat"/b1_dcc.hlf
+write    "MSG: ***Finished Repair and Complement for SWIR Band &band"
+tush      echo "Finished Processing for SWIR Band &band" >> L1A_CAL_&"suffix".log
 if       (debug>0)
- hist     &"outwat"/b1_dcc.hlf sigma=sd mean=avg count=count
+ hist    &"outwat"/b1_dcc.hlf sigma=sd mean=avg count=count
  tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1A_CAL_&"suffix".log
 end-if
 

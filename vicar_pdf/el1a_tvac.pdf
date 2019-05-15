@@ -1,5 +1,5 @@
 !tvac verification script: Produce png and text verification files.
-!TLLOGAN: 05APR2018 version 2.00 (Shift Target offset)
+!TLLOGAN: 05APR2018 version 3.00 (no change from 2.00)
 procedure
 parm   dir    string   def="./"
 parm   id     string   def="3000"
