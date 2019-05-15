@@ -41,5 +41,5 @@ binpath="${scriptpath}/bin"
 source "${scriptpath}/setup_ecostress.sh"
 
 # Execute actual process
-"${binpath}/l1a_cal_process" $1
+"${binpath}/l1a_cal_process" $*
 

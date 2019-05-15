@@ -78,12 +78,7 @@ class L1aPixGenerate(object):
         fout_gain = h5py.File(self.output_gain_name, "w")
         # Copy output from vicar into output file.
         g = fout.create_group("UncalibratedDN")
-        t = g.create_dataset("b1_image",
-                  data=geocal.mmap_file("%s/ImgRadiance/b1_dcc.hlf" % dirname))
-        t.attrs["Units"] = "dimensionless"
-        t.attrs["valid_min"] = 0
-        t.attrs["valid_max"] = 32767
-        for b in range(2, 7):
+        for b in range(1, 7):
             t = g.create_dataset("b%d_image" % b,
                   data=geocal.mmap_file("%s/UncalibratedDN/b%d_image.hlf" %
                                  (dirname, b)))
@@ -105,8 +100,8 @@ class L1aPixGenerate(object):
         for b in range(1, 7):
             for temp in (325, 295):
                 t = g.create_dataset("b%d_%d" % (b, temp),
-                  data=geocal.mmap_file("%s/BlackbodyRadiance/b%d_%d.rel" %
-                                 (dirname, b, temp)))
+                  data=geocal.mmap_file("%s/BlackBodyDN/dn%db%d.rel" %
+                                 (dirname, temp, b)))
                 t.attrs["Units"] = "dimensionless"
                 t.attrs["valid_min"] = 0
                 t.attrs["valid_max"] = 32767
@@ -120,6 +115,10 @@ class L1aPixGenerate(object):
                   data=geocal.mmap_file("%s/ImgRadiance/b%d_offset.rel" %
                                  (dirname,b+1)))
             t.attrs["Units"] = "W/m^2/sr/um"
+        g = fout_gain.create_group("SWIR")
+        t = g.create_dataset("b6_dcc",
+                  data=geocal.mmap_file("%s/ImgRadiance/b1_dcc.hlf" % dirname))
+        t.attrs["Units"] = "dimensionless"        
         # Copy over metadata
         fin = h5py.File(self.l1a_raw, "r")
         g = fout.create_group("Time")
@@ -180,7 +179,7 @@ class L1aPixGenerate(object):
               fin["/StandardMetadata/RangeEndingDate"][()])
         m2.set("RangeEndingTime",
               fin["/StandardMetadata/RangeEndingTime"][()])
-        shp = geocal.mmap_file("%s/ImgRadiance/b1_dcc.hlf" % dirname).shape
+        shp = geocal.mmap_file("%s/UncalibratedDN/b1_image.hlf" % dirname).shape
         m.set("ImageLines", shp[0])
         m.set("ImagePixels", shp[1])
         m2.set("ImageLines", shp[0])
