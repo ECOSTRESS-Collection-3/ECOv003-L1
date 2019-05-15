@@ -3,7 +3,7 @@
 !   An L1A_CAL PGE Program supporting the ECOSTRESS Project
 !   Written for VICAR with TAE scripting.
 !***Date/Version:
-!   18JAN2019 Version: 3.00 T.L.Logan (Change SWIR Processing)
+!   09MAY2019 Version: 3.01 T.L.Logan (SWIR update for Direct DownLoad)
 !***Function:
 !   ECOSTRESS L1A 2point conversion of Blackbody calibration and TIR
 !     image DN to Radiance (watts/m2/sr/um).
@@ -102,10 +102,10 @@ qsar      xxa_&id stripes_&id area=(+
           10785,1,16,5400,-1,11041,1,16,5400,-1)
 hist      stripes_&id 'nohi
 !Create Missing or Corrupted Data Binary 0/1 Mask
-if       (band=1)  !B1 (SWIR) 0DN is valid
+if       (band=1)  !SWIR with stripes
  f2      (&"outimg"/b&"band"_image.hlf,stripes_&id) mask_&id +
           func="((in2==1).AND.(in1>=0).AND.(in1<=32000)).OR.((in2==0)*(-1))" !Good DN=1; Bad DN=0; Stripe=-1
-else-if  ((band=2)or(band=6)) !TIR 0DN is not valid
+else-if  ((band=2)or(band=6)) !TIR with stripes
  f2      (&"outimg"/b&"band"_image.hlf,stripes_&id) mask_&id +
           func="((in2==1).AND.(in1>=0).AND.(in1<=32000)).OR.((in2==0)*(-1))" !Good DN=1; Bad DN=0; Stripe=-1
 else
@@ -161,8 +161,8 @@ f2       (&"inprad"/b&"band"_325.rel, +
 !Output size is 11264 lines by 5400 samples; then apply Bad Data Mask 
 size      xxoffs_&id xxd_&id size=(1,1,11264,5400) oform=real 'noin
 
-!Add Non-Linearity Correction wedge to Band1 SWIR Offset
-!See L1A_PCF_UPF.txt (User Parameter File) for parameter information
+!Add Non-Linearity Correction wedge to Band6 (12u)
+!No adjustments for other bands; See L1A_PCF_UPF.txt for parameter information
 if       (band=2)
 gen       xxe_&id nl=11264 ns=5400 ival=&b2ival +
           linc=0.0 sinc=&b2sinc 'real
@@ -247,7 +247,8 @@ jump1>
 !Using "By-Scan fitg" method: Concatenate scans length-wise (image becomes
 !256lines by 237600samples, then apply fitg to adjust each scanline independently
 !to a guassian mean of 127.5 and convert to byte.
-hist     &"outimg"/b1_image.hlf
+hist     &"outimg"/b1_image.hlf sigma=sd mean=avg
+if      (avg>32000) goto jump2
 !Split into scans and concat lengthwise
 let       I = -255
 loop
@@ -328,10 +329,25 @@ repair    xxrep1_&id xxrep2_&id mode=all badline=(+
 10334,10435,10449,10481, 10590,10691,10705,10737, +
 10846,10947,10961,10993, 11102,11203,11217,11249)
 
+
 !Create SWIR visual product dcc (deprecated counts correction)
-f2        xxrep2_&id &"outwat"/b1_dcc.hlf func="in1*1" format=half   
+!Add stripe error code (-9998)
+f2        inp=(xxrep2_&id,mask_&id) out=&"outwat"/b1_dcc.hlf +
+          func="(in1*(in2!=(-1)))+((in2==(-1))*(-9998))" format=half
 hist     &"outwat"/b1_dcc.hlf
 write    "MSG: ***Finished Repair and Complement for SWIR Band &band"
+tush      echo "Finished Processing for SWIR Band &band" >> L1A_CAL_&"suffix".log
+if       (debug>0)
+ hist    &"outwat"/b1_dcc.hlf sigma=sd mean=avg count=count
+ tush     echo "Histogram Mean=&avg SD=&sd Count=&count" >> L1A_CAL_&"suffix".log
+end-if
+goto      skip3
+
+jump2>
+f2        inp=(&"outimg"/b1_image.hlf,mask_&id) out=&"outwat"/b1_dcc.hlf +
+          func="(in1*(in2==1))+((in2==0)*(-9999))+((in2==(-1))*(-9998))" format=half
+hist     &"outwat"/b1_dcc.hlf
+write    "MSG: ***Finished Processing for Missing SWIR Band &band"
 tush      echo "Finished Processing for SWIR Band &band" >> L1A_CAL_&"suffix".log
 if       (debug>0)
  hist    &"outwat"/b1_dcc.hlf sigma=sd mean=avg count=count
