@@ -24,6 +24,7 @@ class L1bRadGenerate(object):
         self.igc = igc
         self.l1a_pix_fname = l1a_pix
         self.l1a_pix = h5py.File(l1a_pix, "r")
+        self.nband = np.count_nonzero(self.l1a_pix["L1A_PIXMetadata/BandSpecification"][:] > 0)
         self.l1a_gain_fname = l1a_gain
         self.output_name = output_name
         self.local_granule_id = local_granule_id
@@ -113,13 +114,21 @@ class L1bRadGenerate(object):
             if(self.log is not None):
                 print("INFO:L1bRadGenerate:Skipping interpolation because fraction of scans present is too small (e.g., short scene)",
                       file=self.log)
-        elif(self.interpolate_stripe_data): 
-            inter = EcostressInterpolate(self.igc.time_table, seed = self.seed)
+        elif(self.interpolate_stripe_data):
+            band_mode = '5bands' if self.nband >= 5 else '3bands'
+            inter = EcostressInterpolate(self.igc.time_table, seed = self.seed,
+                                         band_mode = band_mode)
             prediction_matrices, predicted_locations, prediction_errors = inter.interpolate_missing_bands(dataset, dqi, log=self.log)
-            dataset[:,:,0] = prediction_matrices[0]
-            dataset[:,:,4] = prediction_matrices[1]
-            dqi[:,:,0][predicted_locations[0] == 1] = DQI_INTERPOLATED
-            dqi[:,:,4][predicted_locations[1] == 1] = DQI_INTERPOLATED
+            if(self.nband >= 5):
+                # Only predict band 1 if we have 5 bands of data
+                dataset[:,:,0] = prediction_matrices[0]
+                dqi[:,:,0][predicted_locations[0] == 1] = DQI_INTERPOLATED
+                dataset[:,:,4] = prediction_matrices[1]
+                dqi[:,:,4][predicted_locations[1] == 1] = DQI_INTERPOLATED
+            else:
+                # Else, predict only band 5
+                dataset[:,:,4] = prediction_matrices[0]
+                dqi[:,:,4][predicted_locations[0] == 1] = DQI_INTERPOLATED
         g = fout.create_group("Radiance")
         for b in range(5):
             data = self.image(b+1).astype(np.float32)
