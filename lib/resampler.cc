@@ -152,10 +152,10 @@ blitz::Array<double, 2> Resampler::resample_field
   res = 0.0;
   cnt = 0;
   // d and data_index should be the same size, but check this.
-  if(d.rows() != data_index.rows() ||
-     d.cols() != data_index.cols()) {
+  if(d.rows() < data_index.rows() ||
+     d.cols() < data_index.cols()) {
     Exception e;
-    e << "data_index and magnified data should be the same size\n"
+    e << "data_index should be larger than magnified data\n"
       << "d:          " << d.rows() << " x " << d.cols() << "\n"
       << "data_index: " << data_index.rows() << " x " << data_index.cols()
       << "\n";
