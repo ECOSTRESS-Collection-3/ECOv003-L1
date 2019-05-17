@@ -588,8 +588,923 @@ BlitzArray_int_8.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_in
 BlitzArray_int_8_swigregister = _ecostress_swig_array.BlitzArray_int_8_swigregister
 BlitzArray_int_8_swigregister(BlitzArray_int_8)
 
+class BlitzArray_uint_1(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
 
-__all__ = ["BlitzArray_double_1", "BlitzArray_double_2", "BlitzArray_double_3", "BlitzArray_double_4", "BlitzArray_double_5", "BlitzArray_double_6", "BlitzArray_double_7", "BlitzArray_double_8", "BlitzArray_bool_1", "BlitzArray_bool_2", "BlitzArray_bool_3", "BlitzArray_bool_4", "BlitzArray_bool_5", "BlitzArray_bool_6", "BlitzArray_bool_7", "BlitzArray_bool_8", "BlitzArray_int_1", "BlitzArray_int_2", "BlitzArray_int_3", "BlitzArray_int_4", "BlitzArray_int_5", "BlitzArray_int_6", "BlitzArray_int_7", "BlitzArray_int_8"]
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_uint_1_swiginit(self, _ecostress_swig_array.new_BlitzArray_uint_1(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_uint_1
+BlitzArray_uint_1.data = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_1_data, None, BlitzArray_uint_1)
+BlitzArray_uint_1.size = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_1_size, None, BlitzArray_uint_1)
+BlitzArray_uint_1.read = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_1_read, None, BlitzArray_uint_1)
+BlitzArray_uint_1.write = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_1_write, None, BlitzArray_uint_1)
+BlitzArray_uint_1.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_1_datav, None, BlitzArray_uint_1)
+BlitzArray_uint_1.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_1_shape0, None, BlitzArray_uint_1)
+BlitzArray_uint_1.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_1_shape1, None, BlitzArray_uint_1)
+BlitzArray_uint_1.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_1_shape2, None, BlitzArray_uint_1)
+BlitzArray_uint_1.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_1_shape3, None, BlitzArray_uint_1)
+BlitzArray_uint_1_swigregister = _ecostress_swig_array.BlitzArray_uint_1_swigregister
+BlitzArray_uint_1_swigregister(BlitzArray_uint_1)
+
+class BlitzArray_uint_2(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_uint_2_swiginit(self, _ecostress_swig_array.new_BlitzArray_uint_2(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_uint_2
+BlitzArray_uint_2.data = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_2_data, None, BlitzArray_uint_2)
+BlitzArray_uint_2.size = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_2_size, None, BlitzArray_uint_2)
+BlitzArray_uint_2.read = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_2_read, None, BlitzArray_uint_2)
+BlitzArray_uint_2.write = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_2_write, None, BlitzArray_uint_2)
+BlitzArray_uint_2.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_2_datav, None, BlitzArray_uint_2)
+BlitzArray_uint_2.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_2_shape0, None, BlitzArray_uint_2)
+BlitzArray_uint_2.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_2_shape1, None, BlitzArray_uint_2)
+BlitzArray_uint_2.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_2_shape2, None, BlitzArray_uint_2)
+BlitzArray_uint_2.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_2_shape3, None, BlitzArray_uint_2)
+BlitzArray_uint_2_swigregister = _ecostress_swig_array.BlitzArray_uint_2_swigregister
+BlitzArray_uint_2_swigregister(BlitzArray_uint_2)
+
+class BlitzArray_uint_3(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_uint_3_swiginit(self, _ecostress_swig_array.new_BlitzArray_uint_3(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_uint_3
+BlitzArray_uint_3.data = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_3_data, None, BlitzArray_uint_3)
+BlitzArray_uint_3.size = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_3_size, None, BlitzArray_uint_3)
+BlitzArray_uint_3.read = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_3_read, None, BlitzArray_uint_3)
+BlitzArray_uint_3.write = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_3_write, None, BlitzArray_uint_3)
+BlitzArray_uint_3.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_3_datav, None, BlitzArray_uint_3)
+BlitzArray_uint_3.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_3_shape0, None, BlitzArray_uint_3)
+BlitzArray_uint_3.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_3_shape1, None, BlitzArray_uint_3)
+BlitzArray_uint_3.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_3_shape2, None, BlitzArray_uint_3)
+BlitzArray_uint_3.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_3_shape3, None, BlitzArray_uint_3)
+BlitzArray_uint_3_swigregister = _ecostress_swig_array.BlitzArray_uint_3_swigregister
+BlitzArray_uint_3_swigregister(BlitzArray_uint_3)
+
+class BlitzArray_uint_4(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_uint_4_swiginit(self, _ecostress_swig_array.new_BlitzArray_uint_4(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_uint_4
+BlitzArray_uint_4.data = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_4_data, None, BlitzArray_uint_4)
+BlitzArray_uint_4.size = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_4_size, None, BlitzArray_uint_4)
+BlitzArray_uint_4.read = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_4_read, None, BlitzArray_uint_4)
+BlitzArray_uint_4.write = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_4_write, None, BlitzArray_uint_4)
+BlitzArray_uint_4.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_4_datav, None, BlitzArray_uint_4)
+BlitzArray_uint_4.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_4_shape0, None, BlitzArray_uint_4)
+BlitzArray_uint_4.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_4_shape1, None, BlitzArray_uint_4)
+BlitzArray_uint_4.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_4_shape2, None, BlitzArray_uint_4)
+BlitzArray_uint_4.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_4_shape3, None, BlitzArray_uint_4)
+BlitzArray_uint_4_swigregister = _ecostress_swig_array.BlitzArray_uint_4_swigregister
+BlitzArray_uint_4_swigregister(BlitzArray_uint_4)
+
+class BlitzArray_uint_5(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_uint_5_swiginit(self, _ecostress_swig_array.new_BlitzArray_uint_5(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_uint_5
+BlitzArray_uint_5.data = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_5_data, None, BlitzArray_uint_5)
+BlitzArray_uint_5.size = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_5_size, None, BlitzArray_uint_5)
+BlitzArray_uint_5.read = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_5_read, None, BlitzArray_uint_5)
+BlitzArray_uint_5.write = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_5_write, None, BlitzArray_uint_5)
+BlitzArray_uint_5.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_5_datav, None, BlitzArray_uint_5)
+BlitzArray_uint_5.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_5_shape0, None, BlitzArray_uint_5)
+BlitzArray_uint_5.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_5_shape1, None, BlitzArray_uint_5)
+BlitzArray_uint_5.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_5_shape2, None, BlitzArray_uint_5)
+BlitzArray_uint_5.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_5_shape3, None, BlitzArray_uint_5)
+BlitzArray_uint_5_swigregister = _ecostress_swig_array.BlitzArray_uint_5_swigregister
+BlitzArray_uint_5_swigregister(BlitzArray_uint_5)
+
+class BlitzArray_uint_6(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_uint_6_swiginit(self, _ecostress_swig_array.new_BlitzArray_uint_6(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_uint_6
+BlitzArray_uint_6.data = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_6_data, None, BlitzArray_uint_6)
+BlitzArray_uint_6.size = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_6_size, None, BlitzArray_uint_6)
+BlitzArray_uint_6.read = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_6_read, None, BlitzArray_uint_6)
+BlitzArray_uint_6.write = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_6_write, None, BlitzArray_uint_6)
+BlitzArray_uint_6.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_6_datav, None, BlitzArray_uint_6)
+BlitzArray_uint_6.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_6_shape0, None, BlitzArray_uint_6)
+BlitzArray_uint_6.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_6_shape1, None, BlitzArray_uint_6)
+BlitzArray_uint_6.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_6_shape2, None, BlitzArray_uint_6)
+BlitzArray_uint_6.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_6_shape3, None, BlitzArray_uint_6)
+BlitzArray_uint_6_swigregister = _ecostress_swig_array.BlitzArray_uint_6_swigregister
+BlitzArray_uint_6_swigregister(BlitzArray_uint_6)
+
+class BlitzArray_uint_7(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_uint_7_swiginit(self, _ecostress_swig_array.new_BlitzArray_uint_7(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_uint_7
+BlitzArray_uint_7.data = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_7_data, None, BlitzArray_uint_7)
+BlitzArray_uint_7.size = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_7_size, None, BlitzArray_uint_7)
+BlitzArray_uint_7.read = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_7_read, None, BlitzArray_uint_7)
+BlitzArray_uint_7.write = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_7_write, None, BlitzArray_uint_7)
+BlitzArray_uint_7.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_7_datav, None, BlitzArray_uint_7)
+BlitzArray_uint_7.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_7_shape0, None, BlitzArray_uint_7)
+BlitzArray_uint_7.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_7_shape1, None, BlitzArray_uint_7)
+BlitzArray_uint_7.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_7_shape2, None, BlitzArray_uint_7)
+BlitzArray_uint_7.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_7_shape3, None, BlitzArray_uint_7)
+BlitzArray_uint_7_swigregister = _ecostress_swig_array.BlitzArray_uint_7_swigregister
+BlitzArray_uint_7_swigregister(BlitzArray_uint_7)
+
+class BlitzArray_uint_8(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_uint_8_swiginit(self, _ecostress_swig_array.new_BlitzArray_uint_8(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_uint_8
+BlitzArray_uint_8.data = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_8_data, None, BlitzArray_uint_8)
+BlitzArray_uint_8.size = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_8_size, None, BlitzArray_uint_8)
+BlitzArray_uint_8.read = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_8_read, None, BlitzArray_uint_8)
+BlitzArray_uint_8.write = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_8_write, None, BlitzArray_uint_8)
+BlitzArray_uint_8.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_8_datav, None, BlitzArray_uint_8)
+BlitzArray_uint_8.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_8_shape0, None, BlitzArray_uint_8)
+BlitzArray_uint_8.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_8_shape1, None, BlitzArray_uint_8)
+BlitzArray_uint_8.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_8_shape2, None, BlitzArray_uint_8)
+BlitzArray_uint_8.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_uint_8_shape3, None, BlitzArray_uint_8)
+BlitzArray_uint_8_swigregister = _ecostress_swig_array.BlitzArray_uint_8_swigregister
+BlitzArray_uint_8_swigregister(BlitzArray_uint_8)
+
+class BlitzArray_float_1(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_float_1_swiginit(self, _ecostress_swig_array.new_BlitzArray_float_1(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_float_1
+BlitzArray_float_1.data = new_instancemethod(_ecostress_swig_array.BlitzArray_float_1_data, None, BlitzArray_float_1)
+BlitzArray_float_1.size = new_instancemethod(_ecostress_swig_array.BlitzArray_float_1_size, None, BlitzArray_float_1)
+BlitzArray_float_1.read = new_instancemethod(_ecostress_swig_array.BlitzArray_float_1_read, None, BlitzArray_float_1)
+BlitzArray_float_1.write = new_instancemethod(_ecostress_swig_array.BlitzArray_float_1_write, None, BlitzArray_float_1)
+BlitzArray_float_1.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_float_1_datav, None, BlitzArray_float_1)
+BlitzArray_float_1.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_1_shape0, None, BlitzArray_float_1)
+BlitzArray_float_1.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_1_shape1, None, BlitzArray_float_1)
+BlitzArray_float_1.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_1_shape2, None, BlitzArray_float_1)
+BlitzArray_float_1.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_1_shape3, None, BlitzArray_float_1)
+BlitzArray_float_1_swigregister = _ecostress_swig_array.BlitzArray_float_1_swigregister
+BlitzArray_float_1_swigregister(BlitzArray_float_1)
+
+class BlitzArray_float_2(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_float_2_swiginit(self, _ecostress_swig_array.new_BlitzArray_float_2(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_float_2
+BlitzArray_float_2.data = new_instancemethod(_ecostress_swig_array.BlitzArray_float_2_data, None, BlitzArray_float_2)
+BlitzArray_float_2.size = new_instancemethod(_ecostress_swig_array.BlitzArray_float_2_size, None, BlitzArray_float_2)
+BlitzArray_float_2.read = new_instancemethod(_ecostress_swig_array.BlitzArray_float_2_read, None, BlitzArray_float_2)
+BlitzArray_float_2.write = new_instancemethod(_ecostress_swig_array.BlitzArray_float_2_write, None, BlitzArray_float_2)
+BlitzArray_float_2.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_float_2_datav, None, BlitzArray_float_2)
+BlitzArray_float_2.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_2_shape0, None, BlitzArray_float_2)
+BlitzArray_float_2.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_2_shape1, None, BlitzArray_float_2)
+BlitzArray_float_2.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_2_shape2, None, BlitzArray_float_2)
+BlitzArray_float_2.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_2_shape3, None, BlitzArray_float_2)
+BlitzArray_float_2_swigregister = _ecostress_swig_array.BlitzArray_float_2_swigregister
+BlitzArray_float_2_swigregister(BlitzArray_float_2)
+
+class BlitzArray_float_3(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_float_3_swiginit(self, _ecostress_swig_array.new_BlitzArray_float_3(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_float_3
+BlitzArray_float_3.data = new_instancemethod(_ecostress_swig_array.BlitzArray_float_3_data, None, BlitzArray_float_3)
+BlitzArray_float_3.size = new_instancemethod(_ecostress_swig_array.BlitzArray_float_3_size, None, BlitzArray_float_3)
+BlitzArray_float_3.read = new_instancemethod(_ecostress_swig_array.BlitzArray_float_3_read, None, BlitzArray_float_3)
+BlitzArray_float_3.write = new_instancemethod(_ecostress_swig_array.BlitzArray_float_3_write, None, BlitzArray_float_3)
+BlitzArray_float_3.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_float_3_datav, None, BlitzArray_float_3)
+BlitzArray_float_3.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_3_shape0, None, BlitzArray_float_3)
+BlitzArray_float_3.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_3_shape1, None, BlitzArray_float_3)
+BlitzArray_float_3.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_3_shape2, None, BlitzArray_float_3)
+BlitzArray_float_3.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_3_shape3, None, BlitzArray_float_3)
+BlitzArray_float_3_swigregister = _ecostress_swig_array.BlitzArray_float_3_swigregister
+BlitzArray_float_3_swigregister(BlitzArray_float_3)
+
+class BlitzArray_float_4(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_float_4_swiginit(self, _ecostress_swig_array.new_BlitzArray_float_4(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_float_4
+BlitzArray_float_4.data = new_instancemethod(_ecostress_swig_array.BlitzArray_float_4_data, None, BlitzArray_float_4)
+BlitzArray_float_4.size = new_instancemethod(_ecostress_swig_array.BlitzArray_float_4_size, None, BlitzArray_float_4)
+BlitzArray_float_4.read = new_instancemethod(_ecostress_swig_array.BlitzArray_float_4_read, None, BlitzArray_float_4)
+BlitzArray_float_4.write = new_instancemethod(_ecostress_swig_array.BlitzArray_float_4_write, None, BlitzArray_float_4)
+BlitzArray_float_4.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_float_4_datav, None, BlitzArray_float_4)
+BlitzArray_float_4.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_4_shape0, None, BlitzArray_float_4)
+BlitzArray_float_4.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_4_shape1, None, BlitzArray_float_4)
+BlitzArray_float_4.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_4_shape2, None, BlitzArray_float_4)
+BlitzArray_float_4.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_4_shape3, None, BlitzArray_float_4)
+BlitzArray_float_4_swigregister = _ecostress_swig_array.BlitzArray_float_4_swigregister
+BlitzArray_float_4_swigregister(BlitzArray_float_4)
+
+class BlitzArray_float_5(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_float_5_swiginit(self, _ecostress_swig_array.new_BlitzArray_float_5(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_float_5
+BlitzArray_float_5.data = new_instancemethod(_ecostress_swig_array.BlitzArray_float_5_data, None, BlitzArray_float_5)
+BlitzArray_float_5.size = new_instancemethod(_ecostress_swig_array.BlitzArray_float_5_size, None, BlitzArray_float_5)
+BlitzArray_float_5.read = new_instancemethod(_ecostress_swig_array.BlitzArray_float_5_read, None, BlitzArray_float_5)
+BlitzArray_float_5.write = new_instancemethod(_ecostress_swig_array.BlitzArray_float_5_write, None, BlitzArray_float_5)
+BlitzArray_float_5.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_float_5_datav, None, BlitzArray_float_5)
+BlitzArray_float_5.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_5_shape0, None, BlitzArray_float_5)
+BlitzArray_float_5.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_5_shape1, None, BlitzArray_float_5)
+BlitzArray_float_5.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_5_shape2, None, BlitzArray_float_5)
+BlitzArray_float_5.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_5_shape3, None, BlitzArray_float_5)
+BlitzArray_float_5_swigregister = _ecostress_swig_array.BlitzArray_float_5_swigregister
+BlitzArray_float_5_swigregister(BlitzArray_float_5)
+
+class BlitzArray_float_6(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_float_6_swiginit(self, _ecostress_swig_array.new_BlitzArray_float_6(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_float_6
+BlitzArray_float_6.data = new_instancemethod(_ecostress_swig_array.BlitzArray_float_6_data, None, BlitzArray_float_6)
+BlitzArray_float_6.size = new_instancemethod(_ecostress_swig_array.BlitzArray_float_6_size, None, BlitzArray_float_6)
+BlitzArray_float_6.read = new_instancemethod(_ecostress_swig_array.BlitzArray_float_6_read, None, BlitzArray_float_6)
+BlitzArray_float_6.write = new_instancemethod(_ecostress_swig_array.BlitzArray_float_6_write, None, BlitzArray_float_6)
+BlitzArray_float_6.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_float_6_datav, None, BlitzArray_float_6)
+BlitzArray_float_6.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_6_shape0, None, BlitzArray_float_6)
+BlitzArray_float_6.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_6_shape1, None, BlitzArray_float_6)
+BlitzArray_float_6.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_6_shape2, None, BlitzArray_float_6)
+BlitzArray_float_6.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_6_shape3, None, BlitzArray_float_6)
+BlitzArray_float_6_swigregister = _ecostress_swig_array.BlitzArray_float_6_swigregister
+BlitzArray_float_6_swigregister(BlitzArray_float_6)
+
+class BlitzArray_float_7(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_float_7_swiginit(self, _ecostress_swig_array.new_BlitzArray_float_7(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_float_7
+BlitzArray_float_7.data = new_instancemethod(_ecostress_swig_array.BlitzArray_float_7_data, None, BlitzArray_float_7)
+BlitzArray_float_7.size = new_instancemethod(_ecostress_swig_array.BlitzArray_float_7_size, None, BlitzArray_float_7)
+BlitzArray_float_7.read = new_instancemethod(_ecostress_swig_array.BlitzArray_float_7_read, None, BlitzArray_float_7)
+BlitzArray_float_7.write = new_instancemethod(_ecostress_swig_array.BlitzArray_float_7_write, None, BlitzArray_float_7)
+BlitzArray_float_7.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_float_7_datav, None, BlitzArray_float_7)
+BlitzArray_float_7.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_7_shape0, None, BlitzArray_float_7)
+BlitzArray_float_7.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_7_shape1, None, BlitzArray_float_7)
+BlitzArray_float_7.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_7_shape2, None, BlitzArray_float_7)
+BlitzArray_float_7.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_7_shape3, None, BlitzArray_float_7)
+BlitzArray_float_7_swigregister = _ecostress_swig_array.BlitzArray_float_7_swigregister
+BlitzArray_float_7_swigregister(BlitzArray_float_7)
+
+class BlitzArray_float_8(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_float_8_swiginit(self, _ecostress_swig_array.new_BlitzArray_float_8(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_float_8
+BlitzArray_float_8.data = new_instancemethod(_ecostress_swig_array.BlitzArray_float_8_data, None, BlitzArray_float_8)
+BlitzArray_float_8.size = new_instancemethod(_ecostress_swig_array.BlitzArray_float_8_size, None, BlitzArray_float_8)
+BlitzArray_float_8.read = new_instancemethod(_ecostress_swig_array.BlitzArray_float_8_read, None, BlitzArray_float_8)
+BlitzArray_float_8.write = new_instancemethod(_ecostress_swig_array.BlitzArray_float_8_write, None, BlitzArray_float_8)
+BlitzArray_float_8.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_float_8_datav, None, BlitzArray_float_8)
+BlitzArray_float_8.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_8_shape0, None, BlitzArray_float_8)
+BlitzArray_float_8.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_8_shape1, None, BlitzArray_float_8)
+BlitzArray_float_8.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_8_shape2, None, BlitzArray_float_8)
+BlitzArray_float_8.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_float_8_shape3, None, BlitzArray_float_8)
+BlitzArray_float_8_swigregister = _ecostress_swig_array.BlitzArray_float_8_swigregister
+BlitzArray_float_8_swigregister(BlitzArray_float_8)
+
+class BlitzArray_short_1(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_short_1_swiginit(self, _ecostress_swig_array.new_BlitzArray_short_1(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_short_1
+BlitzArray_short_1.data = new_instancemethod(_ecostress_swig_array.BlitzArray_short_1_data, None, BlitzArray_short_1)
+BlitzArray_short_1.size = new_instancemethod(_ecostress_swig_array.BlitzArray_short_1_size, None, BlitzArray_short_1)
+BlitzArray_short_1.read = new_instancemethod(_ecostress_swig_array.BlitzArray_short_1_read, None, BlitzArray_short_1)
+BlitzArray_short_1.write = new_instancemethod(_ecostress_swig_array.BlitzArray_short_1_write, None, BlitzArray_short_1)
+BlitzArray_short_1.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_short_1_datav, None, BlitzArray_short_1)
+BlitzArray_short_1.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_1_shape0, None, BlitzArray_short_1)
+BlitzArray_short_1.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_1_shape1, None, BlitzArray_short_1)
+BlitzArray_short_1.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_1_shape2, None, BlitzArray_short_1)
+BlitzArray_short_1.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_1_shape3, None, BlitzArray_short_1)
+BlitzArray_short_1_swigregister = _ecostress_swig_array.BlitzArray_short_1_swigregister
+BlitzArray_short_1_swigregister(BlitzArray_short_1)
+
+class BlitzArray_short_2(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_short_2_swiginit(self, _ecostress_swig_array.new_BlitzArray_short_2(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_short_2
+BlitzArray_short_2.data = new_instancemethod(_ecostress_swig_array.BlitzArray_short_2_data, None, BlitzArray_short_2)
+BlitzArray_short_2.size = new_instancemethod(_ecostress_swig_array.BlitzArray_short_2_size, None, BlitzArray_short_2)
+BlitzArray_short_2.read = new_instancemethod(_ecostress_swig_array.BlitzArray_short_2_read, None, BlitzArray_short_2)
+BlitzArray_short_2.write = new_instancemethod(_ecostress_swig_array.BlitzArray_short_2_write, None, BlitzArray_short_2)
+BlitzArray_short_2.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_short_2_datav, None, BlitzArray_short_2)
+BlitzArray_short_2.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_2_shape0, None, BlitzArray_short_2)
+BlitzArray_short_2.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_2_shape1, None, BlitzArray_short_2)
+BlitzArray_short_2.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_2_shape2, None, BlitzArray_short_2)
+BlitzArray_short_2.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_2_shape3, None, BlitzArray_short_2)
+BlitzArray_short_2_swigregister = _ecostress_swig_array.BlitzArray_short_2_swigregister
+BlitzArray_short_2_swigregister(BlitzArray_short_2)
+
+class BlitzArray_short_3(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_short_3_swiginit(self, _ecostress_swig_array.new_BlitzArray_short_3(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_short_3
+BlitzArray_short_3.data = new_instancemethod(_ecostress_swig_array.BlitzArray_short_3_data, None, BlitzArray_short_3)
+BlitzArray_short_3.size = new_instancemethod(_ecostress_swig_array.BlitzArray_short_3_size, None, BlitzArray_short_3)
+BlitzArray_short_3.read = new_instancemethod(_ecostress_swig_array.BlitzArray_short_3_read, None, BlitzArray_short_3)
+BlitzArray_short_3.write = new_instancemethod(_ecostress_swig_array.BlitzArray_short_3_write, None, BlitzArray_short_3)
+BlitzArray_short_3.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_short_3_datav, None, BlitzArray_short_3)
+BlitzArray_short_3.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_3_shape0, None, BlitzArray_short_3)
+BlitzArray_short_3.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_3_shape1, None, BlitzArray_short_3)
+BlitzArray_short_3.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_3_shape2, None, BlitzArray_short_3)
+BlitzArray_short_3.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_3_shape3, None, BlitzArray_short_3)
+BlitzArray_short_3_swigregister = _ecostress_swig_array.BlitzArray_short_3_swigregister
+BlitzArray_short_3_swigregister(BlitzArray_short_3)
+
+class BlitzArray_short_4(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_short_4_swiginit(self, _ecostress_swig_array.new_BlitzArray_short_4(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_short_4
+BlitzArray_short_4.data = new_instancemethod(_ecostress_swig_array.BlitzArray_short_4_data, None, BlitzArray_short_4)
+BlitzArray_short_4.size = new_instancemethod(_ecostress_swig_array.BlitzArray_short_4_size, None, BlitzArray_short_4)
+BlitzArray_short_4.read = new_instancemethod(_ecostress_swig_array.BlitzArray_short_4_read, None, BlitzArray_short_4)
+BlitzArray_short_4.write = new_instancemethod(_ecostress_swig_array.BlitzArray_short_4_write, None, BlitzArray_short_4)
+BlitzArray_short_4.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_short_4_datav, None, BlitzArray_short_4)
+BlitzArray_short_4.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_4_shape0, None, BlitzArray_short_4)
+BlitzArray_short_4.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_4_shape1, None, BlitzArray_short_4)
+BlitzArray_short_4.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_4_shape2, None, BlitzArray_short_4)
+BlitzArray_short_4.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_4_shape3, None, BlitzArray_short_4)
+BlitzArray_short_4_swigregister = _ecostress_swig_array.BlitzArray_short_4_swigregister
+BlitzArray_short_4_swigregister(BlitzArray_short_4)
+
+class BlitzArray_short_5(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_short_5_swiginit(self, _ecostress_swig_array.new_BlitzArray_short_5(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_short_5
+BlitzArray_short_5.data = new_instancemethod(_ecostress_swig_array.BlitzArray_short_5_data, None, BlitzArray_short_5)
+BlitzArray_short_5.size = new_instancemethod(_ecostress_swig_array.BlitzArray_short_5_size, None, BlitzArray_short_5)
+BlitzArray_short_5.read = new_instancemethod(_ecostress_swig_array.BlitzArray_short_5_read, None, BlitzArray_short_5)
+BlitzArray_short_5.write = new_instancemethod(_ecostress_swig_array.BlitzArray_short_5_write, None, BlitzArray_short_5)
+BlitzArray_short_5.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_short_5_datav, None, BlitzArray_short_5)
+BlitzArray_short_5.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_5_shape0, None, BlitzArray_short_5)
+BlitzArray_short_5.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_5_shape1, None, BlitzArray_short_5)
+BlitzArray_short_5.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_5_shape2, None, BlitzArray_short_5)
+BlitzArray_short_5.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_5_shape3, None, BlitzArray_short_5)
+BlitzArray_short_5_swigregister = _ecostress_swig_array.BlitzArray_short_5_swigregister
+BlitzArray_short_5_swigregister(BlitzArray_short_5)
+
+class BlitzArray_short_6(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_short_6_swiginit(self, _ecostress_swig_array.new_BlitzArray_short_6(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_short_6
+BlitzArray_short_6.data = new_instancemethod(_ecostress_swig_array.BlitzArray_short_6_data, None, BlitzArray_short_6)
+BlitzArray_short_6.size = new_instancemethod(_ecostress_swig_array.BlitzArray_short_6_size, None, BlitzArray_short_6)
+BlitzArray_short_6.read = new_instancemethod(_ecostress_swig_array.BlitzArray_short_6_read, None, BlitzArray_short_6)
+BlitzArray_short_6.write = new_instancemethod(_ecostress_swig_array.BlitzArray_short_6_write, None, BlitzArray_short_6)
+BlitzArray_short_6.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_short_6_datav, None, BlitzArray_short_6)
+BlitzArray_short_6.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_6_shape0, None, BlitzArray_short_6)
+BlitzArray_short_6.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_6_shape1, None, BlitzArray_short_6)
+BlitzArray_short_6.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_6_shape2, None, BlitzArray_short_6)
+BlitzArray_short_6.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_6_shape3, None, BlitzArray_short_6)
+BlitzArray_short_6_swigregister = _ecostress_swig_array.BlitzArray_short_6_swigregister
+BlitzArray_short_6_swigregister(BlitzArray_short_6)
+
+class BlitzArray_short_7(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_short_7_swiginit(self, _ecostress_swig_array.new_BlitzArray_short_7(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_short_7
+BlitzArray_short_7.data = new_instancemethod(_ecostress_swig_array.BlitzArray_short_7_data, None, BlitzArray_short_7)
+BlitzArray_short_7.size = new_instancemethod(_ecostress_swig_array.BlitzArray_short_7_size, None, BlitzArray_short_7)
+BlitzArray_short_7.read = new_instancemethod(_ecostress_swig_array.BlitzArray_short_7_read, None, BlitzArray_short_7)
+BlitzArray_short_7.write = new_instancemethod(_ecostress_swig_array.BlitzArray_short_7_write, None, BlitzArray_short_7)
+BlitzArray_short_7.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_short_7_datav, None, BlitzArray_short_7)
+BlitzArray_short_7.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_7_shape0, None, BlitzArray_short_7)
+BlitzArray_short_7.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_7_shape1, None, BlitzArray_short_7)
+BlitzArray_short_7.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_7_shape2, None, BlitzArray_short_7)
+BlitzArray_short_7.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_7_shape3, None, BlitzArray_short_7)
+BlitzArray_short_7_swigregister = _ecostress_swig_array.BlitzArray_short_7_swigregister
+BlitzArray_short_7_swigregister(BlitzArray_short_7)
+
+class BlitzArray_short_8(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_short_8_swiginit(self, _ecostress_swig_array.new_BlitzArray_short_8(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_short_8
+BlitzArray_short_8.data = new_instancemethod(_ecostress_swig_array.BlitzArray_short_8_data, None, BlitzArray_short_8)
+BlitzArray_short_8.size = new_instancemethod(_ecostress_swig_array.BlitzArray_short_8_size, None, BlitzArray_short_8)
+BlitzArray_short_8.read = new_instancemethod(_ecostress_swig_array.BlitzArray_short_8_read, None, BlitzArray_short_8)
+BlitzArray_short_8.write = new_instancemethod(_ecostress_swig_array.BlitzArray_short_8_write, None, BlitzArray_short_8)
+BlitzArray_short_8.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_short_8_datav, None, BlitzArray_short_8)
+BlitzArray_short_8.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_8_shape0, None, BlitzArray_short_8)
+BlitzArray_short_8.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_8_shape1, None, BlitzArray_short_8)
+BlitzArray_short_8.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_8_shape2, None, BlitzArray_short_8)
+BlitzArray_short_8.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_short_8_shape3, None, BlitzArray_short_8)
+BlitzArray_short_8_swigregister = _ecostress_swig_array.BlitzArray_short_8_swigregister
+BlitzArray_short_8_swigregister(BlitzArray_short_8)
+
+class BlitzArray_ushort_1(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_ushort_1_swiginit(self, _ecostress_swig_array.new_BlitzArray_ushort_1(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_ushort_1
+BlitzArray_ushort_1.data = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_1_data, None, BlitzArray_ushort_1)
+BlitzArray_ushort_1.size = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_1_size, None, BlitzArray_ushort_1)
+BlitzArray_ushort_1.read = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_1_read, None, BlitzArray_ushort_1)
+BlitzArray_ushort_1.write = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_1_write, None, BlitzArray_ushort_1)
+BlitzArray_ushort_1.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_1_datav, None, BlitzArray_ushort_1)
+BlitzArray_ushort_1.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_1_shape0, None, BlitzArray_ushort_1)
+BlitzArray_ushort_1.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_1_shape1, None, BlitzArray_ushort_1)
+BlitzArray_ushort_1.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_1_shape2, None, BlitzArray_ushort_1)
+BlitzArray_ushort_1.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_1_shape3, None, BlitzArray_ushort_1)
+BlitzArray_ushort_1_swigregister = _ecostress_swig_array.BlitzArray_ushort_1_swigregister
+BlitzArray_ushort_1_swigregister(BlitzArray_ushort_1)
+
+class BlitzArray_ushort_2(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_ushort_2_swiginit(self, _ecostress_swig_array.new_BlitzArray_ushort_2(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_ushort_2
+BlitzArray_ushort_2.data = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_2_data, None, BlitzArray_ushort_2)
+BlitzArray_ushort_2.size = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_2_size, None, BlitzArray_ushort_2)
+BlitzArray_ushort_2.read = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_2_read, None, BlitzArray_ushort_2)
+BlitzArray_ushort_2.write = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_2_write, None, BlitzArray_ushort_2)
+BlitzArray_ushort_2.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_2_datav, None, BlitzArray_ushort_2)
+BlitzArray_ushort_2.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_2_shape0, None, BlitzArray_ushort_2)
+BlitzArray_ushort_2.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_2_shape1, None, BlitzArray_ushort_2)
+BlitzArray_ushort_2.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_2_shape2, None, BlitzArray_ushort_2)
+BlitzArray_ushort_2.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_2_shape3, None, BlitzArray_ushort_2)
+BlitzArray_ushort_2_swigregister = _ecostress_swig_array.BlitzArray_ushort_2_swigregister
+BlitzArray_ushort_2_swigregister(BlitzArray_ushort_2)
+
+class BlitzArray_ushort_3(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_ushort_3_swiginit(self, _ecostress_swig_array.new_BlitzArray_ushort_3(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_ushort_3
+BlitzArray_ushort_3.data = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_3_data, None, BlitzArray_ushort_3)
+BlitzArray_ushort_3.size = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_3_size, None, BlitzArray_ushort_3)
+BlitzArray_ushort_3.read = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_3_read, None, BlitzArray_ushort_3)
+BlitzArray_ushort_3.write = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_3_write, None, BlitzArray_ushort_3)
+BlitzArray_ushort_3.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_3_datav, None, BlitzArray_ushort_3)
+BlitzArray_ushort_3.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_3_shape0, None, BlitzArray_ushort_3)
+BlitzArray_ushort_3.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_3_shape1, None, BlitzArray_ushort_3)
+BlitzArray_ushort_3.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_3_shape2, None, BlitzArray_ushort_3)
+BlitzArray_ushort_3.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_3_shape3, None, BlitzArray_ushort_3)
+BlitzArray_ushort_3_swigregister = _ecostress_swig_array.BlitzArray_ushort_3_swigregister
+BlitzArray_ushort_3_swigregister(BlitzArray_ushort_3)
+
+class BlitzArray_ushort_4(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_ushort_4_swiginit(self, _ecostress_swig_array.new_BlitzArray_ushort_4(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_ushort_4
+BlitzArray_ushort_4.data = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_4_data, None, BlitzArray_ushort_4)
+BlitzArray_ushort_4.size = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_4_size, None, BlitzArray_ushort_4)
+BlitzArray_ushort_4.read = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_4_read, None, BlitzArray_ushort_4)
+BlitzArray_ushort_4.write = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_4_write, None, BlitzArray_ushort_4)
+BlitzArray_ushort_4.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_4_datav, None, BlitzArray_ushort_4)
+BlitzArray_ushort_4.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_4_shape0, None, BlitzArray_ushort_4)
+BlitzArray_ushort_4.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_4_shape1, None, BlitzArray_ushort_4)
+BlitzArray_ushort_4.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_4_shape2, None, BlitzArray_ushort_4)
+BlitzArray_ushort_4.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_4_shape3, None, BlitzArray_ushort_4)
+BlitzArray_ushort_4_swigregister = _ecostress_swig_array.BlitzArray_ushort_4_swigregister
+BlitzArray_ushort_4_swigregister(BlitzArray_ushort_4)
+
+class BlitzArray_ushort_5(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_ushort_5_swiginit(self, _ecostress_swig_array.new_BlitzArray_ushort_5(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_ushort_5
+BlitzArray_ushort_5.data = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_5_data, None, BlitzArray_ushort_5)
+BlitzArray_ushort_5.size = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_5_size, None, BlitzArray_ushort_5)
+BlitzArray_ushort_5.read = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_5_read, None, BlitzArray_ushort_5)
+BlitzArray_ushort_5.write = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_5_write, None, BlitzArray_ushort_5)
+BlitzArray_ushort_5.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_5_datav, None, BlitzArray_ushort_5)
+BlitzArray_ushort_5.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_5_shape0, None, BlitzArray_ushort_5)
+BlitzArray_ushort_5.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_5_shape1, None, BlitzArray_ushort_5)
+BlitzArray_ushort_5.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_5_shape2, None, BlitzArray_ushort_5)
+BlitzArray_ushort_5.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_5_shape3, None, BlitzArray_ushort_5)
+BlitzArray_ushort_5_swigregister = _ecostress_swig_array.BlitzArray_ushort_5_swigregister
+BlitzArray_ushort_5_swigregister(BlitzArray_ushort_5)
+
+class BlitzArray_ushort_6(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_ushort_6_swiginit(self, _ecostress_swig_array.new_BlitzArray_ushort_6(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_ushort_6
+BlitzArray_ushort_6.data = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_6_data, None, BlitzArray_ushort_6)
+BlitzArray_ushort_6.size = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_6_size, None, BlitzArray_ushort_6)
+BlitzArray_ushort_6.read = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_6_read, None, BlitzArray_ushort_6)
+BlitzArray_ushort_6.write = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_6_write, None, BlitzArray_ushort_6)
+BlitzArray_ushort_6.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_6_datav, None, BlitzArray_ushort_6)
+BlitzArray_ushort_6.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_6_shape0, None, BlitzArray_ushort_6)
+BlitzArray_ushort_6.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_6_shape1, None, BlitzArray_ushort_6)
+BlitzArray_ushort_6.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_6_shape2, None, BlitzArray_ushort_6)
+BlitzArray_ushort_6.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_6_shape3, None, BlitzArray_ushort_6)
+BlitzArray_ushort_6_swigregister = _ecostress_swig_array.BlitzArray_ushort_6_swigregister
+BlitzArray_ushort_6_swigregister(BlitzArray_ushort_6)
+
+class BlitzArray_ushort_7(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_ushort_7_swiginit(self, _ecostress_swig_array.new_BlitzArray_ushort_7(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_ushort_7
+BlitzArray_ushort_7.data = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_7_data, None, BlitzArray_ushort_7)
+BlitzArray_ushort_7.size = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_7_size, None, BlitzArray_ushort_7)
+BlitzArray_ushort_7.read = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_7_read, None, BlitzArray_ushort_7)
+BlitzArray_ushort_7.write = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_7_write, None, BlitzArray_ushort_7)
+BlitzArray_ushort_7.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_7_datav, None, BlitzArray_ushort_7)
+BlitzArray_ushort_7.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_7_shape0, None, BlitzArray_ushort_7)
+BlitzArray_ushort_7.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_7_shape1, None, BlitzArray_ushort_7)
+BlitzArray_ushort_7.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_7_shape2, None, BlitzArray_ushort_7)
+BlitzArray_ushort_7.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_7_shape3, None, BlitzArray_ushort_7)
+BlitzArray_ushort_7_swigregister = _ecostress_swig_array.BlitzArray_ushort_7_swigregister
+BlitzArray_ushort_7_swigregister(BlitzArray_ushort_7)
+
+class BlitzArray_ushort_8(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_ushort_8_swiginit(self, _ecostress_swig_array.new_BlitzArray_ushort_8(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_ushort_8
+BlitzArray_ushort_8.data = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_8_data, None, BlitzArray_ushort_8)
+BlitzArray_ushort_8.size = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_8_size, None, BlitzArray_ushort_8)
+BlitzArray_ushort_8.read = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_8_read, None, BlitzArray_ushort_8)
+BlitzArray_ushort_8.write = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_8_write, None, BlitzArray_ushort_8)
+BlitzArray_ushort_8.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_8_datav, None, BlitzArray_ushort_8)
+BlitzArray_ushort_8.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_8_shape0, None, BlitzArray_ushort_8)
+BlitzArray_ushort_8.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_8_shape1, None, BlitzArray_ushort_8)
+BlitzArray_ushort_8.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_8_shape2, None, BlitzArray_ushort_8)
+BlitzArray_ushort_8.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_ushort_8_shape3, None, BlitzArray_ushort_8)
+BlitzArray_ushort_8_swigregister = _ecostress_swig_array.BlitzArray_ushort_8_swigregister
+BlitzArray_ushort_8_swigregister(BlitzArray_ushort_8)
+
+class BlitzArray_char_1(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_char_1_swiginit(self, _ecostress_swig_array.new_BlitzArray_char_1(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_char_1
+BlitzArray_char_1.data = new_instancemethod(_ecostress_swig_array.BlitzArray_char_1_data, None, BlitzArray_char_1)
+BlitzArray_char_1.size = new_instancemethod(_ecostress_swig_array.BlitzArray_char_1_size, None, BlitzArray_char_1)
+BlitzArray_char_1.read = new_instancemethod(_ecostress_swig_array.BlitzArray_char_1_read, None, BlitzArray_char_1)
+BlitzArray_char_1.write = new_instancemethod(_ecostress_swig_array.BlitzArray_char_1_write, None, BlitzArray_char_1)
+BlitzArray_char_1.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_char_1_datav, None, BlitzArray_char_1)
+BlitzArray_char_1.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_1_shape0, None, BlitzArray_char_1)
+BlitzArray_char_1.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_1_shape1, None, BlitzArray_char_1)
+BlitzArray_char_1.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_1_shape2, None, BlitzArray_char_1)
+BlitzArray_char_1.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_1_shape3, None, BlitzArray_char_1)
+BlitzArray_char_1_swigregister = _ecostress_swig_array.BlitzArray_char_1_swigregister
+BlitzArray_char_1_swigregister(BlitzArray_char_1)
+
+class BlitzArray_char_2(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_char_2_swiginit(self, _ecostress_swig_array.new_BlitzArray_char_2(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_char_2
+BlitzArray_char_2.data = new_instancemethod(_ecostress_swig_array.BlitzArray_char_2_data, None, BlitzArray_char_2)
+BlitzArray_char_2.size = new_instancemethod(_ecostress_swig_array.BlitzArray_char_2_size, None, BlitzArray_char_2)
+BlitzArray_char_2.read = new_instancemethod(_ecostress_swig_array.BlitzArray_char_2_read, None, BlitzArray_char_2)
+BlitzArray_char_2.write = new_instancemethod(_ecostress_swig_array.BlitzArray_char_2_write, None, BlitzArray_char_2)
+BlitzArray_char_2.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_char_2_datav, None, BlitzArray_char_2)
+BlitzArray_char_2.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_2_shape0, None, BlitzArray_char_2)
+BlitzArray_char_2.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_2_shape1, None, BlitzArray_char_2)
+BlitzArray_char_2.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_2_shape2, None, BlitzArray_char_2)
+BlitzArray_char_2.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_2_shape3, None, BlitzArray_char_2)
+BlitzArray_char_2_swigregister = _ecostress_swig_array.BlitzArray_char_2_swigregister
+BlitzArray_char_2_swigregister(BlitzArray_char_2)
+
+class BlitzArray_char_3(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_char_3_swiginit(self, _ecostress_swig_array.new_BlitzArray_char_3(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_char_3
+BlitzArray_char_3.data = new_instancemethod(_ecostress_swig_array.BlitzArray_char_3_data, None, BlitzArray_char_3)
+BlitzArray_char_3.size = new_instancemethod(_ecostress_swig_array.BlitzArray_char_3_size, None, BlitzArray_char_3)
+BlitzArray_char_3.read = new_instancemethod(_ecostress_swig_array.BlitzArray_char_3_read, None, BlitzArray_char_3)
+BlitzArray_char_3.write = new_instancemethod(_ecostress_swig_array.BlitzArray_char_3_write, None, BlitzArray_char_3)
+BlitzArray_char_3.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_char_3_datav, None, BlitzArray_char_3)
+BlitzArray_char_3.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_3_shape0, None, BlitzArray_char_3)
+BlitzArray_char_3.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_3_shape1, None, BlitzArray_char_3)
+BlitzArray_char_3.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_3_shape2, None, BlitzArray_char_3)
+BlitzArray_char_3.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_3_shape3, None, BlitzArray_char_3)
+BlitzArray_char_3_swigregister = _ecostress_swig_array.BlitzArray_char_3_swigregister
+BlitzArray_char_3_swigregister(BlitzArray_char_3)
+
+class BlitzArray_char_4(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_char_4_swiginit(self, _ecostress_swig_array.new_BlitzArray_char_4(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_char_4
+BlitzArray_char_4.data = new_instancemethod(_ecostress_swig_array.BlitzArray_char_4_data, None, BlitzArray_char_4)
+BlitzArray_char_4.size = new_instancemethod(_ecostress_swig_array.BlitzArray_char_4_size, None, BlitzArray_char_4)
+BlitzArray_char_4.read = new_instancemethod(_ecostress_swig_array.BlitzArray_char_4_read, None, BlitzArray_char_4)
+BlitzArray_char_4.write = new_instancemethod(_ecostress_swig_array.BlitzArray_char_4_write, None, BlitzArray_char_4)
+BlitzArray_char_4.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_char_4_datav, None, BlitzArray_char_4)
+BlitzArray_char_4.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_4_shape0, None, BlitzArray_char_4)
+BlitzArray_char_4.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_4_shape1, None, BlitzArray_char_4)
+BlitzArray_char_4.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_4_shape2, None, BlitzArray_char_4)
+BlitzArray_char_4.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_4_shape3, None, BlitzArray_char_4)
+BlitzArray_char_4_swigregister = _ecostress_swig_array.BlitzArray_char_4_swigregister
+BlitzArray_char_4_swigregister(BlitzArray_char_4)
+
+class BlitzArray_char_5(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_char_5_swiginit(self, _ecostress_swig_array.new_BlitzArray_char_5(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_char_5
+BlitzArray_char_5.data = new_instancemethod(_ecostress_swig_array.BlitzArray_char_5_data, None, BlitzArray_char_5)
+BlitzArray_char_5.size = new_instancemethod(_ecostress_swig_array.BlitzArray_char_5_size, None, BlitzArray_char_5)
+BlitzArray_char_5.read = new_instancemethod(_ecostress_swig_array.BlitzArray_char_5_read, None, BlitzArray_char_5)
+BlitzArray_char_5.write = new_instancemethod(_ecostress_swig_array.BlitzArray_char_5_write, None, BlitzArray_char_5)
+BlitzArray_char_5.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_char_5_datav, None, BlitzArray_char_5)
+BlitzArray_char_5.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_5_shape0, None, BlitzArray_char_5)
+BlitzArray_char_5.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_5_shape1, None, BlitzArray_char_5)
+BlitzArray_char_5.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_5_shape2, None, BlitzArray_char_5)
+BlitzArray_char_5.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_5_shape3, None, BlitzArray_char_5)
+BlitzArray_char_5_swigregister = _ecostress_swig_array.BlitzArray_char_5_swigregister
+BlitzArray_char_5_swigregister(BlitzArray_char_5)
+
+class BlitzArray_char_6(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_char_6_swiginit(self, _ecostress_swig_array.new_BlitzArray_char_6(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_char_6
+BlitzArray_char_6.data = new_instancemethod(_ecostress_swig_array.BlitzArray_char_6_data, None, BlitzArray_char_6)
+BlitzArray_char_6.size = new_instancemethod(_ecostress_swig_array.BlitzArray_char_6_size, None, BlitzArray_char_6)
+BlitzArray_char_6.read = new_instancemethod(_ecostress_swig_array.BlitzArray_char_6_read, None, BlitzArray_char_6)
+BlitzArray_char_6.write = new_instancemethod(_ecostress_swig_array.BlitzArray_char_6_write, None, BlitzArray_char_6)
+BlitzArray_char_6.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_char_6_datav, None, BlitzArray_char_6)
+BlitzArray_char_6.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_6_shape0, None, BlitzArray_char_6)
+BlitzArray_char_6.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_6_shape1, None, BlitzArray_char_6)
+BlitzArray_char_6.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_6_shape2, None, BlitzArray_char_6)
+BlitzArray_char_6.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_6_shape3, None, BlitzArray_char_6)
+BlitzArray_char_6_swigregister = _ecostress_swig_array.BlitzArray_char_6_swigregister
+BlitzArray_char_6_swigregister(BlitzArray_char_6)
+
+class BlitzArray_char_7(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_char_7_swiginit(self, _ecostress_swig_array.new_BlitzArray_char_7(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_char_7
+BlitzArray_char_7.data = new_instancemethod(_ecostress_swig_array.BlitzArray_char_7_data, None, BlitzArray_char_7)
+BlitzArray_char_7.size = new_instancemethod(_ecostress_swig_array.BlitzArray_char_7_size, None, BlitzArray_char_7)
+BlitzArray_char_7.read = new_instancemethod(_ecostress_swig_array.BlitzArray_char_7_read, None, BlitzArray_char_7)
+BlitzArray_char_7.write = new_instancemethod(_ecostress_swig_array.BlitzArray_char_7_write, None, BlitzArray_char_7)
+BlitzArray_char_7.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_char_7_datav, None, BlitzArray_char_7)
+BlitzArray_char_7.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_7_shape0, None, BlitzArray_char_7)
+BlitzArray_char_7.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_7_shape1, None, BlitzArray_char_7)
+BlitzArray_char_7.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_7_shape2, None, BlitzArray_char_7)
+BlitzArray_char_7.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_7_shape3, None, BlitzArray_char_7)
+BlitzArray_char_7_swigregister = _ecostress_swig_array.BlitzArray_char_7_swigregister
+BlitzArray_char_7_swigregister(BlitzArray_char_7)
+
+class BlitzArray_char_8(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_char_8_swiginit(self, _ecostress_swig_array.new_BlitzArray_char_8(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_char_8
+BlitzArray_char_8.data = new_instancemethod(_ecostress_swig_array.BlitzArray_char_8_data, None, BlitzArray_char_8)
+BlitzArray_char_8.size = new_instancemethod(_ecostress_swig_array.BlitzArray_char_8_size, None, BlitzArray_char_8)
+BlitzArray_char_8.read = new_instancemethod(_ecostress_swig_array.BlitzArray_char_8_read, None, BlitzArray_char_8)
+BlitzArray_char_8.write = new_instancemethod(_ecostress_swig_array.BlitzArray_char_8_write, None, BlitzArray_char_8)
+BlitzArray_char_8.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_char_8_datav, None, BlitzArray_char_8)
+BlitzArray_char_8.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_8_shape0, None, BlitzArray_char_8)
+BlitzArray_char_8.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_8_shape1, None, BlitzArray_char_8)
+BlitzArray_char_8.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_8_shape2, None, BlitzArray_char_8)
+BlitzArray_char_8.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_char_8_shape3, None, BlitzArray_char_8)
+BlitzArray_char_8_swigregister = _ecostress_swig_array.BlitzArray_char_8_swigregister
+BlitzArray_char_8_swigregister(BlitzArray_char_8)
+
+class BlitzArray_uchar_1(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_uchar_1_swiginit(self, _ecostress_swig_array.new_BlitzArray_uchar_1(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_uchar_1
+BlitzArray_uchar_1.data = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_1_data, None, BlitzArray_uchar_1)
+BlitzArray_uchar_1.size = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_1_size, None, BlitzArray_uchar_1)
+BlitzArray_uchar_1.read = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_1_read, None, BlitzArray_uchar_1)
+BlitzArray_uchar_1.write = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_1_write, None, BlitzArray_uchar_1)
+BlitzArray_uchar_1.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_1_datav, None, BlitzArray_uchar_1)
+BlitzArray_uchar_1.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_1_shape0, None, BlitzArray_uchar_1)
+BlitzArray_uchar_1.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_1_shape1, None, BlitzArray_uchar_1)
+BlitzArray_uchar_1.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_1_shape2, None, BlitzArray_uchar_1)
+BlitzArray_uchar_1.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_1_shape3, None, BlitzArray_uchar_1)
+BlitzArray_uchar_1_swigregister = _ecostress_swig_array.BlitzArray_uchar_1_swigregister
+BlitzArray_uchar_1_swigregister(BlitzArray_uchar_1)
+
+class BlitzArray_uchar_2(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_uchar_2_swiginit(self, _ecostress_swig_array.new_BlitzArray_uchar_2(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_uchar_2
+BlitzArray_uchar_2.data = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_2_data, None, BlitzArray_uchar_2)
+BlitzArray_uchar_2.size = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_2_size, None, BlitzArray_uchar_2)
+BlitzArray_uchar_2.read = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_2_read, None, BlitzArray_uchar_2)
+BlitzArray_uchar_2.write = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_2_write, None, BlitzArray_uchar_2)
+BlitzArray_uchar_2.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_2_datav, None, BlitzArray_uchar_2)
+BlitzArray_uchar_2.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_2_shape0, None, BlitzArray_uchar_2)
+BlitzArray_uchar_2.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_2_shape1, None, BlitzArray_uchar_2)
+BlitzArray_uchar_2.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_2_shape2, None, BlitzArray_uchar_2)
+BlitzArray_uchar_2.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_2_shape3, None, BlitzArray_uchar_2)
+BlitzArray_uchar_2_swigregister = _ecostress_swig_array.BlitzArray_uchar_2_swigregister
+BlitzArray_uchar_2_swigregister(BlitzArray_uchar_2)
+
+class BlitzArray_uchar_3(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_uchar_3_swiginit(self, _ecostress_swig_array.new_BlitzArray_uchar_3(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_uchar_3
+BlitzArray_uchar_3.data = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_3_data, None, BlitzArray_uchar_3)
+BlitzArray_uchar_3.size = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_3_size, None, BlitzArray_uchar_3)
+BlitzArray_uchar_3.read = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_3_read, None, BlitzArray_uchar_3)
+BlitzArray_uchar_3.write = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_3_write, None, BlitzArray_uchar_3)
+BlitzArray_uchar_3.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_3_datav, None, BlitzArray_uchar_3)
+BlitzArray_uchar_3.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_3_shape0, None, BlitzArray_uchar_3)
+BlitzArray_uchar_3.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_3_shape1, None, BlitzArray_uchar_3)
+BlitzArray_uchar_3.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_3_shape2, None, BlitzArray_uchar_3)
+BlitzArray_uchar_3.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_3_shape3, None, BlitzArray_uchar_3)
+BlitzArray_uchar_3_swigregister = _ecostress_swig_array.BlitzArray_uchar_3_swigregister
+BlitzArray_uchar_3_swigregister(BlitzArray_uchar_3)
+
+class BlitzArray_uchar_4(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_uchar_4_swiginit(self, _ecostress_swig_array.new_BlitzArray_uchar_4(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_uchar_4
+BlitzArray_uchar_4.data = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_4_data, None, BlitzArray_uchar_4)
+BlitzArray_uchar_4.size = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_4_size, None, BlitzArray_uchar_4)
+BlitzArray_uchar_4.read = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_4_read, None, BlitzArray_uchar_4)
+BlitzArray_uchar_4.write = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_4_write, None, BlitzArray_uchar_4)
+BlitzArray_uchar_4.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_4_datav, None, BlitzArray_uchar_4)
+BlitzArray_uchar_4.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_4_shape0, None, BlitzArray_uchar_4)
+BlitzArray_uchar_4.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_4_shape1, None, BlitzArray_uchar_4)
+BlitzArray_uchar_4.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_4_shape2, None, BlitzArray_uchar_4)
+BlitzArray_uchar_4.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_4_shape3, None, BlitzArray_uchar_4)
+BlitzArray_uchar_4_swigregister = _ecostress_swig_array.BlitzArray_uchar_4_swigregister
+BlitzArray_uchar_4_swigregister(BlitzArray_uchar_4)
+
+class BlitzArray_uchar_5(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_uchar_5_swiginit(self, _ecostress_swig_array.new_BlitzArray_uchar_5(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_uchar_5
+BlitzArray_uchar_5.data = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_5_data, None, BlitzArray_uchar_5)
+BlitzArray_uchar_5.size = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_5_size, None, BlitzArray_uchar_5)
+BlitzArray_uchar_5.read = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_5_read, None, BlitzArray_uchar_5)
+BlitzArray_uchar_5.write = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_5_write, None, BlitzArray_uchar_5)
+BlitzArray_uchar_5.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_5_datav, None, BlitzArray_uchar_5)
+BlitzArray_uchar_5.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_5_shape0, None, BlitzArray_uchar_5)
+BlitzArray_uchar_5.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_5_shape1, None, BlitzArray_uchar_5)
+BlitzArray_uchar_5.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_5_shape2, None, BlitzArray_uchar_5)
+BlitzArray_uchar_5.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_5_shape3, None, BlitzArray_uchar_5)
+BlitzArray_uchar_5_swigregister = _ecostress_swig_array.BlitzArray_uchar_5_swigregister
+BlitzArray_uchar_5_swigregister(BlitzArray_uchar_5)
+
+class BlitzArray_uchar_6(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_uchar_6_swiginit(self, _ecostress_swig_array.new_BlitzArray_uchar_6(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_uchar_6
+BlitzArray_uchar_6.data = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_6_data, None, BlitzArray_uchar_6)
+BlitzArray_uchar_6.size = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_6_size, None, BlitzArray_uchar_6)
+BlitzArray_uchar_6.read = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_6_read, None, BlitzArray_uchar_6)
+BlitzArray_uchar_6.write = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_6_write, None, BlitzArray_uchar_6)
+BlitzArray_uchar_6.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_6_datav, None, BlitzArray_uchar_6)
+BlitzArray_uchar_6.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_6_shape0, None, BlitzArray_uchar_6)
+BlitzArray_uchar_6.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_6_shape1, None, BlitzArray_uchar_6)
+BlitzArray_uchar_6.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_6_shape2, None, BlitzArray_uchar_6)
+BlitzArray_uchar_6.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_6_shape3, None, BlitzArray_uchar_6)
+BlitzArray_uchar_6_swigregister = _ecostress_swig_array.BlitzArray_uchar_6_swigregister
+BlitzArray_uchar_6_swigregister(BlitzArray_uchar_6)
+
+class BlitzArray_uchar_7(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_uchar_7_swiginit(self, _ecostress_swig_array.new_BlitzArray_uchar_7(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_uchar_7
+BlitzArray_uchar_7.data = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_7_data, None, BlitzArray_uchar_7)
+BlitzArray_uchar_7.size = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_7_size, None, BlitzArray_uchar_7)
+BlitzArray_uchar_7.read = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_7_read, None, BlitzArray_uchar_7)
+BlitzArray_uchar_7.write = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_7_write, None, BlitzArray_uchar_7)
+BlitzArray_uchar_7.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_7_datav, None, BlitzArray_uchar_7)
+BlitzArray_uchar_7.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_7_shape0, None, BlitzArray_uchar_7)
+BlitzArray_uchar_7.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_7_shape1, None, BlitzArray_uchar_7)
+BlitzArray_uchar_7.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_7_shape2, None, BlitzArray_uchar_7)
+BlitzArray_uchar_7.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_7_shape3, None, BlitzArray_uchar_7)
+BlitzArray_uchar_7_swigregister = _ecostress_swig_array.BlitzArray_uchar_7_swigregister
+BlitzArray_uchar_7_swigregister(BlitzArray_uchar_7)
+
+class BlitzArray_uchar_8(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_swig_array.BlitzArray_uchar_8_swiginit(self, _ecostress_swig_array.new_BlitzArray_uchar_8(*args))
+    __swig_destroy__ = _ecostress_swig_array.delete_BlitzArray_uchar_8
+BlitzArray_uchar_8.data = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_8_data, None, BlitzArray_uchar_8)
+BlitzArray_uchar_8.size = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_8_size, None, BlitzArray_uchar_8)
+BlitzArray_uchar_8.read = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_8_read, None, BlitzArray_uchar_8)
+BlitzArray_uchar_8.write = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_8_write, None, BlitzArray_uchar_8)
+BlitzArray_uchar_8.datav = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_8_datav, None, BlitzArray_uchar_8)
+BlitzArray_uchar_8.shape0 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_8_shape0, None, BlitzArray_uchar_8)
+BlitzArray_uchar_8.shape1 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_8_shape1, None, BlitzArray_uchar_8)
+BlitzArray_uchar_8.shape2 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_8_shape2, None, BlitzArray_uchar_8)
+BlitzArray_uchar_8.shape3 = new_instancemethod(_ecostress_swig_array.BlitzArray_uchar_8_shape3, None, BlitzArray_uchar_8)
+BlitzArray_uchar_8_swigregister = _ecostress_swig_array.BlitzArray_uchar_8_swigregister
+BlitzArray_uchar_8_swigregister(BlitzArray_uchar_8)
+
+
+__all__ = []  
+for t in ("double", "bool", "int", "uint", "float", "short", "ushort", "char", "uchar"):
+    for d in range(1,8+1):
+        __all__.append("BlitzArray_%s_%d" % (t, d))
 
 
 

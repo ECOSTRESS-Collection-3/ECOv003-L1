@@ -2996,10 +2996,12 @@ end-to-end-check: installcheck-am
 end-to-end-check-5band:
 	-rm -r ./end_to_end_test_l1a_cal_5band
 	-rm -r ./end_to_end_test_l1b_rad_5band
+	-rm -r ./end_to_end_test_l1b_geo_5band
 	ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1A_CAL_PGE $(end_to_end_test_data)/latest/ECOSTRESS_L1A_BB_03663_015_20190227T101222_0503_01.h5 $(end_to_end_test_data)/latest/L1A_RAW_PIX_03663_015_20190227T101222_0503_01.h5 $(end_to_end_test_data)/latest/l1_osp_dir ./end_to_end_test_l1a_cal_5band
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1a_cal_5band/*.h5
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1B_RAD_PGE ./end_to_end_test_l1a_cal_5band/ECOSTRESS_L1A_PIX*.h5 ./end_to_end_test_l1a_cal_5band/L1A_RAD_GAIN_*.h5  $(end_to_end_test_data)/latest/L1A_RAW_ATT_03663_20190227T094659_0503_01.h5 $(end_to_end_test_data)/latest/l1_osp_dir ./end_to_end_test_l1b_rad_5band
-	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_rad_5band/*.h5
+#	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_rad_5band/*.h5
+	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1B_GEO_PGE $(end_to_end_test_data)/latest/L1A_RAW_ATT_03663_20190227T094659_0503_01.h5 $(end_to_end_test_data)/latest/l1_osp_dir ./end_to_end_test_l1b_geo_5band ./end_to_end_test_l1b_rad_5band/ECOSTRESS_L1B_RAD_*.h5
 
 # Run l1b_rad on its own
 

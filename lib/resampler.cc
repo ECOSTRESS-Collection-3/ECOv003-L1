@@ -151,6 +151,16 @@ blitz::Array<double, 2> Resampler::resample_field
   blitz::Array<int, 2> cnt(res.shape());
   res = 0.0;
   cnt = 0;
+  // d and data_index should be the same size, but check this.
+  if(d.rows() != data_index.rows() ||
+     d.cols() != data_index.cols()) {
+    Exception e;
+    e << "data_index and magnified data should be the same size\n"
+      << "d:          " << d.rows() << " x " << d.cols() << "\n"
+      << "data_index: " << data_index.rows() << " x " << data_index.cols()
+      << "\n";
+    throw e;
+  }
   for(int i = 0; i < data_index.rows(); ++i)
     for(int j = 0; j < data_index.cols(); ++j) {
       int ln, smp;

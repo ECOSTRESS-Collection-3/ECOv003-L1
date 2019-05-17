@@ -5,6 +5,7 @@
 
 %{
 #include "resampler.h"
+#include "geocal/image_ground_connection.h"
 %}
 
 %base_import(generic_object)
