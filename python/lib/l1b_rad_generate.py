@@ -24,7 +24,10 @@ class L1bRadGenerate(object):
         self.igc = igc
         self.l1a_pix_fname = l1a_pix
         self.l1a_pix = h5py.File(l1a_pix, "r")
-        self.nband = np.count_nonzero(self.l1a_pix["L1A_PIXMetadata/BandSpecification"][:] > 0)
+        if('BandSpecification' in self.l1a_pix["L1A_PIXMetadata"]):
+            self.nband = np.count_nonzero(self.l1a_pix["L1A_PIXMetadata/BandSpecification"][:] > 0)
+        else:
+            self.nband - 6
         self.l1a_gain_fname = l1a_gain
         self.output_name = output_name
         self.local_granule_id = local_granule_id
