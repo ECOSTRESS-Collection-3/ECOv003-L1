@@ -106,8 +106,8 @@ class L1aRawPixGenerate(object):
   '''This generates a L1A_RAW_PIX, L1A_BB, L1A_ENG and L1A_RAW_ATT
   files from a L0B input.'''
   def __init__(self, l0b, osp_dir, scene_file, run_config = None,
-               build_id = "0101",
-               pge_version = "0.40", 
+               build_id = "0116",
+               pge_version = "0.50", 
                file_version = "01"):
       '''Create a L1aRawPixGenerate to process the given L0 file. 
       To actually generate, execute the 'run' command.'''
@@ -426,6 +426,28 @@ class L1aRawPixGenerate(object):
     print("Opened L0B file %s, TOT_PKTS=%d" % (self.l0b, tot_pkts ) )
 
     # calculate FSW times of each packet (GPS times)
+
+    if onum >= '04227':
+      print("Correcting for PKT time code error")
+      tc_err = 1
+      '''
+      lids = np.zeros( (tot_pkts,FPPPKT), dtype=np.int32)
+      lids[:,:] = lid[:,:]
+      dev = (lids[:,FPPPKT-1] - lids[:,0]) % MAX_FPIE
+      nfpies = fpie_sync[:] - 1000000*dev[:]/740500
+      fpie_sync = nfpies[:]
+      nfsws = fsw_sync[:]
+      nfsw = fswt[:]
+      for i in range(tot_pkts):
+        if fpie_sync[i] < nfsws[i]:
+          nfsws[i] = nfsws[i] - 1000000
+          nfsw[i] = nfsw[i] - 1
+      fswt = nfsw[:]
+      fsw_sync = nfsws[:]
+      '''
+    else:
+      tc_err = 0
+
     gpt = np.zeros( tot_pkts, dtype=np.float64 )
     gpt[:] = fswt[:] + ( fpie_sync[:] - fsw_sync[:] ) / 1000000.0
 
@@ -457,6 +479,7 @@ class L1aRawPixGenerate(object):
     o_start_time = None
     jumps = 0
     remain = -1234
+    sst0 = 0
     for orbit, scene_id, sts, ste in self.process_scene_file():
       orb = str( "%05d" %orbit )
       if orb != onum:  # process only matching orbit numbers
@@ -595,11 +618,17 @@ class L1aRawPixGenerate(object):
             break
 
           # calculate fswt of first FP in SEQ
-          if e1==0:
-            p0t = gpt[e0]
+          if tc_err == 1:  # use time from previous PKT+FP_DUR
+            dpt = e0 - 1
+            if dpt<0: dpt = 0
+            tc = FP_DUR
           else:
-            dt = (e1-FPPPKT) * FP_DUR
-            p0t = gpt[e0+1] + dt
+            dpt = e0;tc = 0.0
+          if e1==0:  #  Seq starts at beginning of PKT
+            p0t = gpt[e0] - tc * FPPPKT
+          else:  #  count backward from next PKT
+            dt = (FPPPKT-e1) * FP_DUR
+            p0t = gpt[dpt+1] - dt + tc
           dpt = gpt[lid1] - gpt[lid0]
 
           # calculate ISS time correction
@@ -615,7 +644,11 @@ class L1aRawPixGenerate(object):
               rst = p0t
               tc0 = tc
             scan = int( ( sst - rst ) / SCAN_DUR + 0.5 )
-            print("Calculated scan=%d SCENE=%s SST=%f from %f" % (scan, scene_id, sst, rst ))
+            dst = sst - sst0
+            std = dst - SCAN_DUR
+            fpd = std / FP_DUR
+            sst0 = sst
+            print("Calculated scan=%02d SCENE=%s SST=%f RST=%f DST=%f STD=%9f FPD=%9f" % (scan, scene_id, sst, rst, dst, std, fpd ))
             if scan >= SCPS:
               print("PKT[%d] Time %f outside of current scene %d Terminating" %( e0, gpt[e0], scene_id ) )
               cont = 0
@@ -644,10 +677,10 @@ class L1aRawPixGenerate(object):
             #  calculate delta time between packets
             if e0 == tot_pkts-1:  # at last packet in file
               dt = PKT_DUR
-              lid1 = e0; lid0 = e0-1
+              lid0 = e0-1; lid1 = e0
             else:
-              lid0 = e0; lid1 = e0+1  # correct time
-              #lid0 = e0-1; lid1 = e0  # time code error
+              if tc_err == 1:lid0 = e0-1; lid1 = e0  # time code error
+              else: lid0 = e0; lid1 = e0+1  # correct time
               dt = gpt[lid1] - gpt[lid0]
             #if p1==0: sq = (seq-1)%3
             #else: sq = seq
@@ -668,7 +701,7 @@ class L1aRawPixGenerate(object):
                 print("*** Orbit %s Scene %d scan %d %s Time jump PKT=%d %s DT=%10.8f OP=%d " %(orb, scene_id, scan, ev_names[seq], lid1,Time.time_gps(gpt[lid1]),dt,op), end="")
 
                 if dt > IMG_DUR - (op1-op)*FP_DUR:  # jump outside of current IMG, go to next scan
-                  print("past current IMG sequence", end="")
+                  print("past IMG seq", end="")
                 # elif dt > det[sq] or dt<0:  # greater than normal time gap or negative
 
                 if e0==tot_pkts - 1:  # at end of data
