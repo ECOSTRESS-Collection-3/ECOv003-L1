@@ -406,6 +406,7 @@ try:
                    band_list=band_list,
                    use_jpeg=l1b_geo_config.kmz_use_jpeg,
                    resolution = l1b_geo_config.kmz_resolution,
+                   thumbnail_size = l1b_geo_config.kmz_thumbnail_size,
                    number_subpixel = l1b_geo_config.kmz_number_subpixel)
                 l1bgeo_kmz.run()
         

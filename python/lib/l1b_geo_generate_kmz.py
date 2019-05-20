@@ -3,6 +3,8 @@ import geocal
 from ecostress_swig import *
 import os
 import subprocess
+import copy
+import math
 import numpy as np
 import scipy
 
@@ -20,7 +22,11 @@ class L1bGeoGenerateKmz(object):
                  local_granule_id = None, log_fname = None,
                  band_list = [4,3,1],
                  use_jpeg = False,
-                 resolution = 70, number_subpixel = 3):
+                 resolution = 70, number_subpixel = 3,
+                 thumbnail_size = [0,0]):
+        '''Thumbnail size is in pixels, x and y. If one of the
+        sizes is 0 then we hold the aspect ratio to 1. If both are 0, then
+        we use the size of final kmz layer'''
         self.l1b_geo_generate = l1b_geo_generate
         self.l1b_rad = l1b_rad
         self.band_list = band_list
@@ -33,6 +39,7 @@ class L1bGeoGenerateKmz(object):
         else:
             self.local_granule_id = os.path.basename(output_name)
         self.log_fname = log_fname
+        self.thumbnail_size = thumbnail_size
         
     def run(self):
         # Note short name is L1B_KMZ_MAP, although we don't actually
@@ -65,13 +72,19 @@ class L1bGeoGenerateKmz(object):
         if(not self.use_jpeg):
             cmd.extend(["-co", "FORMAT=PNG"])
         subprocess.run(cmd)
-        thumbnailfile = os.path.splitext(self.output_name)[0] + "_thumbnail"
-        if(self.use_jpeg):
-            ext = "jpg"
-            subprocess.run("unzip -p %s 0/0/0.%s | cat > %s.%s" % (self.output_name, ext, thumbnailfile, ext), shell=True)
-        else:
-            ext = "png"
-            subprocess.run("unzip -p %s 0/0/0.%s | convert - %s.%s" % (self.output_name, ext, thumbnailfile, "jpg"), shell=True)
+        thumbnail_file = os.path.splitext(self.output_name)[0] + "_thumbnail.jpg"
+        thumbnail_size = copy.copy(self.thumbnail_size)
+        if(thumbnail_size[0] == 0 and thumbnail_size[1] == 0):
+            nline = geocal.GdalRasterImage("map_scaled.vrt").number_line
+            nsamp = geocal.GdalRasterImage("map_scaled.vrt").number_sample
+            while(nline > 256 or nsamp > 256):
+                thumbnail_size = [nsamp,nline]
+                nline = int(math.floor(nline / 2))
+                nsamp = int(math.floor(nsamp / 2))
+        cmd = ["gdal_translate", "-of", "jpeg", "-outsize",
+               str(thumbnail_size[0]), str(thumbnail_size[1]), "map_scaled.vrt",
+               thumbnail_file]
+        subprocess.run(cmd)
 
 __all__ = ["L1bGeoGenerateKmz"]
     
