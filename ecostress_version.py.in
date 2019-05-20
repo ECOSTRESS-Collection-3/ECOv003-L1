@@ -7,11 +7,11 @@ import os
 # Note, build_id is just a default version for a stand alone run. If we
 # have a run config file, this gets replaced with the build_id from that
 # run config file
-build_id = "0500"
-pge_version = {"l1a_raw" : "5.00",
-               "l1a_cal" : "5.00",
-               "l1b_rad" : "5.00",
-               "l1b_geo" : "5.00",
+build_id = "0600"
+pge_version = {"l1a_raw" : "6.00",
+               "l1a_cal" : "6.00",
+               "l1b_rad" : "6.00",
+               "l1b_geo" : "6.00",
                }
 
 # For end to end testing, fake having the final 3.00 version. This allows us
