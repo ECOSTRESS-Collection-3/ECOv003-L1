@@ -896,7 +896,7 @@ H5DIFF_FLAG = -d 6e-2 --exclude-path=/Radiance/radiance_1 \
 	--exclude-path=/Geolocation/land_fraction \
 	--exclude-path=/Ephemeris/eci_position
 dist_vicarpdf_DATA = @srcpdf@/el1a_2pt.pdf @srcpdf@/el1a_bbcal.pdf \
-	@srcpdf@/el1a_tvac.pdf @srcpdf@/sim_l1a_bb.pdf
+	@srcpdf@/el1a_tvac.pdf
 installecostress_DATA = @srcscript@/setup_ecostress.csh @srcscript@/setup_ecostress.sh
 
 # Cython code to generate
