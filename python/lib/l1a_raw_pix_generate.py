@@ -915,9 +915,9 @@ class L1aRawPixGenerate(object):
         t.attrs['valid_max']='32767'
         t.attrs['fill']='0xffff'
 
-        if BANDS==6:
-          e0 = np.argmax( img[:,:,bo[b]] != 0xffff )
-          if e0==0 and img[0,0,bo[b]]==0xffff: BandSpec[b] = 0.0
+        #if BANDS==6:
+        e0 = np.argmax( img[:,:,bo[b]] != 0xffff )
+        if e0==0 and img[0,0,bo[b]]==0xffff: BandSpec[b] = 0.0
 
         t = l1a_bpg.create_dataset("b%d_blackbody_295" %(b+1),
                                    data=cbb[:,:,bo[b]], chunks=(PPFP,BBLEN),
