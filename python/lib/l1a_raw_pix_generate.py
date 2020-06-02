@@ -292,12 +292,17 @@ class L1aRawPixGenerate(object):
 # open L0B file
     self.fin = h5py.File(self.l0b,"r", driver='core')
     bip=self.fin["flex/bip"]
+    tot_pkts = bip.shape[0]
+    print("Opened L0B file %s, TOT_PKTS=%d" % (self.l0b, tot_pkts ) )
+
+    fpie_sync = np.zeros( tot_pkts, dtype=np.int64 )
+    fsw_sync = np.zeros( tot_pkts, dtype=np.int64 )
     lid=self.fin["flex/id_line"]
     pid=self.fin["flex/id_packet"]
     flex_st=self.fin["flex/state"]
     fswt=self.fin["flex/time_fsw"]
-    fpie_sync=self.fin["flex/time_sync_fpie"]
-    fsw_sync=self.fin["flex/time_sync_fsw"]
+    fpie_sync[:]=self.fin["flex/time_sync_fpie"]
+    fsw_sync[:]=self.fin["flex/time_sync_fsw"]
     att=self.fin["hk/bad/hr/attitude"]
     pos=self.fin["hk/bad/hr/position"]
     vel=self.fin["hk/bad/hr/velocity"]
@@ -355,18 +360,19 @@ class L1aRawPixGenerate(object):
     eng_g = eng.create_group("/rtdBlackbodyGradients")
     rtd295 = eng_g.create_dataset("RTD_295K", shape=(epc,5), dtype='f4')
     rtd295.attrs['Units']='K'
-    rtd295.attrs['valid_min']=290
-    rtd295.attrs['valid_max']=320
-    rtd295.attrs['fill']=-9999
+    rtd295.attrs['valid_min']='290'
+    rtd295.attrs['valid_max']='320'
+    rtd295.attrs['fill']='-9999'
     rtd325 = eng_g.create_dataset("RTD_325K", shape=(epc,5), dtype='f4')
     rtd325.attrs['Units']='K'
-    rtd325.attrs['valid_min']=320
-    rtd325.attrs['valid_max']=330
-    rtd325.attrs['fill']=-9999
+    rtd325.attrs['valid_min']='320'
+    rtd325.attrs['valid_max']='330'
+    rtd325.attrs['fill']='-9999'
     rtdtime = eng_g.create_dataset("time_j2000", shape=(epc,2), dtype='f8')
     rtdtime.attrs['Units']='seconds'
-    rtdtime.attrs['valid_min']=0
-    rtdtime.attrs['fill']=-9999
+    rtdtime.attrs['valid_min']='0'
+    rtdtime.attrs['valid_max']='N/A'
+    rtdtime.attrs['fill']='-9999'
     for i in range(epc):  # Convert DNs to Kelvin with PRT parameters
       for j in range( 5 ):
         rtd295[i,j] = prc[j]( p7r( bbt[i,0,j] ) )
@@ -374,11 +380,13 @@ class L1aRawPixGenerate(object):
       rtdtime[i,0] = Time.time_gps( bbtime[i] ).j2000  # sample time
       rtdtime[i,1] = Time.time_gps( bbfsw[i] ).j2000  # hk pkt time
     rtd295.attrs['Units']='K'
-    rtd295.attrs['valid_min']=290
-    rtd295.attrs['valid_max']=300
+    rtd295.attrs['valid_min']='290'
+    rtd295.attrs['valid_max']='300'
+    rtd295.attrs['fill']='N/A'
     rtd325.attrs['Units']='K'
-    rtd325.attrs['valid_min']=320
-    rtd325.attrs['valid_max']=330
+    rtd325.attrs['valid_min']='320'
+    rtd325.attrs['valid_max']='330'
+    rtd325.attrs['fill']='N/A'
     eng_met.set('ImageLines', 0)
     eng_met.set('ImagePixels', 0)
     eng_met.set('SISVersion', '1')
@@ -422,14 +430,11 @@ class L1aRawPixGenerate(object):
     attf_met.write()
     attf.close()
 
-    tot_pkts = bip.shape[0]
-    print("Opened L0B file %s, TOT_PKTS=%d" % (self.l0b, tot_pkts ) )
-
-    # calculate FSW times of each packet (GPS times)
+    # correct for time code error from new firmware
 
     if onum >= '04227':
       print("Correcting for PKT time code error")
-      tc_err = 1
+      fswtc_err = 1
       '''
       lids = np.zeros( (tot_pkts,FPPPKT), dtype=np.int32)
       lids[:,:] = lid[:,:]
@@ -446,7 +451,10 @@ class L1aRawPixGenerate(object):
       fsw_sync = nfsws[:]
       '''
     else:
-      tc_err = 0
+      fswtc_err = 0
+    fswtc_err = 0  # Correction moved to L0B 2019-05-31
+
+    # calculate FSW times of each packet (GPS times)
 
     gpt = np.zeros( tot_pkts, dtype=np.float64 )
     gpt[:] = fswt[:] + ( fpie_sync[:] - fsw_sync[:] ) / 1000000.0
@@ -571,6 +579,7 @@ class L1aRawPixGenerate(object):
               e0 += 1 # look in next packet
               e1 = 0
           ' End seeking SEQ through packets '
+          print("Out of SEQ seek E0=%d E1=%d" %(e0,e1))
 
           if e0>=tot_pkts: # hit EOF; finish up any existing scans
             print("** Hit EOF ")
@@ -615,20 +624,21 @@ class L1aRawPixGenerate(object):
             scan += 1
             cont = 0
             seq = 3  # break out of sequence loop to next scan
+            op = 0
             break
 
           # calculate fswt of first FP in SEQ
-          if tc_err == 1:  # use time from previous PKT+FP_DUR
+          if fswtc_err == 1:  # use time from previous PKT+FP_DUR
             dpt = e0 - 1
             if dpt<0: dpt = 0
-            tc = FP_DUR
+            fswtc = FP_DUR
           else:
-            dpt = e0;tc = 0.0
+            dpt = e0;fswtc = 0.0
           if e1==0:  #  Seq starts at beginning of PKT
-            p0t = gpt[e0] - tc * FPPPKT
+            p0t = gpt[e0] - fswtc * FPPPKT
           else:  #  count backward from next PKT
             dt = (FPPPKT-e1) * FP_DUR
-            p0t = gpt[dpt+1] - dt + tc
+            p0t = gpt[dpt+1] - dt + fswtc
           dpt = gpt[lid1] - gpt[lid0]
 
           # calculate ISS time correction
@@ -679,7 +689,7 @@ class L1aRawPixGenerate(object):
               dt = PKT_DUR
               lid0 = e0-1; lid1 = e0
             else:
-              if tc_err == 1:lid0 = e0-1; lid1 = e0  # time code error
+              if fswtc_err == 1:lid0 = e0-1; lid1 = e0  # time code error
               else: lid0 = e0; lid1 = e0+1  # correct time
               dt = gpt[lid1] - gpt[lid0]
             #if p1==0: sq = (seq-1)%3
@@ -727,7 +737,7 @@ class L1aRawPixGenerate(object):
               fpc = remain  # runt at end of sequence
               print("Last %s chunk:%d FPC=%d IDX=[%d,%d] OP=%d" %(ev_names[seq],remain,fpc,e0,p1,op), end="")
               if seq==2:
-                sse = gpt[e0-1] + PKT_DUR + fpc*FP_DUR
+                sse = gpt[e0-1] + PKT_DUR + fpc*FP_DUR + FP_DUR
                 print(" SSE=%f" % sse )
               else:
                 print(" NULL")
@@ -750,7 +760,7 @@ class L1aRawPixGenerate(object):
             op = op + opinc + fpc
             if op<op0 or op>op1:  # next packet outside of current scan
                cont = 1
-               sse = gpt[e0-1] + PKT_DUR + fpc * FP_DUR
+               sse = gpt[e0-1] + PKT_DUR + fpc * FP_DUR + FP_DUR
                print("Terminating scan %d in %s at FP %d E0=%d SSE=%f" % (scan,ev_names[seq],op,e0,sse))
                seq = 3  # force exit SEQ loop
                op = 0
@@ -761,8 +771,8 @@ class L1aRawPixGenerate(object):
 
           # end seq copy loop
           if e0>=tot_pkts:
+            sse = gpt[pkt_idx] + PKT_DUR + FP_DUR
             pkt_idx = tot_pkts - 1
-            sse = gpt[pkt_idx] + PKT_DUR
           else:
             if op>op0 and remain>0: pkt_idx = e0-1
             else: pkt_idx = e0
@@ -796,11 +806,14 @@ class L1aRawPixGenerate(object):
       bb_cnt = scans*2*BBLEN
       good_img = good[2]
       img_cnt = scans*FPPSC
-      rse = sse - tc  # refined scene end time
-      if o_start_time is None: o_start_time = Time.time_gps( rst-tc0 )
+      #rse = sse - tc  # refined scene end time
+      rse = sse  # refined scene end time
+      #if o_start_time is None: o_start_time = Time.time_gps( rst-tc0 )
+      if o_start_time is None: o_start_time = Time.time_gps( rst )
       o_end_time = Time.time_gps( rse )
       scenes.append("%05d	%03d	%s	%s\n" %( orbit, scene_id,
-        str( Time.time_gps( rst-tc0 ) )[:26], str( Time.time_gps( rse ) )[:26] ) )
+        str( Time.time_gps( rst ) )[:26], str( Time.time_gps( rse ) )[:26] ) )
+        #str( Time.time_gps( rst-tc0 ) )[:26], str( Time.time_gps( rse ) )[:26] ) )
 
       # copy to output files
 
@@ -808,11 +821,13 @@ class L1aRawPixGenerate(object):
 
       ' create scene file and image pixel, J2K, and FPIE EV groups '
       l1a_fp, l1a_fp_met, pname = self.create_file( "L1A_RAW_PIX", orbit, scene_id,
-         Time.time_gps(rst-tc0), Time.time_gps(rse), prod=False, intermediate=True)
+         Time.time_gps(rst), Time.time_gps(rse), prod=False, intermediate=True)
+         #Time.time_gps(rst-tc0), Time.time_gps(rse), prod=False, intermediate=True)
 
       ' create BB file and BlackBodyPixels group '
       l1a_bp, l1a_bp_met, fname = self.create_file( "L1A_BB", orbit, scene_id,
-              Time.time_gps(rst-tc0), Time.time_gps(rse), prod=True )
+              Time.time_gps(rst), Time.time_gps(rse), prod=True )
+              #Time.time_gps(rst-tc0), Time.time_gps(rse), prod=True )
 
       ' record scan completeness '
       pcomp = float( good_img ) / float( img_cnt )
@@ -863,9 +878,6 @@ class L1aRawPixGenerate(object):
       print("Percent missing data=%f" %pcomp )
       l1a_metag = l1a_fp['/L1A_RAW_PIXMetadata']
       l1a_qamissing = l1a_metag.create_dataset('QAPercentMissingData', data=pcomp, dtype='f4' )
-      l1a_qamissing.attrs['Units']="percentage"
-      l1a_qamissing.attrs['valid_min'] = 0
-      l1a_qamissing.attrs['valid_max'] = 100
 
       if iss_tcorr>0:  #  record ISS time error correction into L1A_RAW file
         e0 = np.argmax( rst<terr )
@@ -887,9 +899,9 @@ class L1aRawPixGenerate(object):
       t = l1a_peg.create_dataset("EncoderValue", data=ev_buf, dtype="u4" )
       t.attrs["Description"] = "FPIE mirror pistion encoder values of each FP"
       t.attrs["Units"] = "dimensionless"
-      t.attrs['valid_min']=0
-      t.attrs['valid_max']=1749247
-      t.attrs['fill']=0xffffffff
+      t.attrs['valid_min']='0'
+      t.attrs['valid_max']='1749247'
+      t.attrs['fill']='0xffffffff'
 
       l1a_upg = l1a_fp.create_group("/UncalibratedPixels")
       l1a_bpg = l1a_bp.create_group("/BlackBodyPixels")
@@ -899,48 +911,37 @@ class L1aRawPixGenerate(object):
                                    data=img[:,:,bo[b]],
                                    chunks=(PPFP,FPPSC), dtype="u2" )
         t.attrs['Units']='dimensionless'
-        t.attrs['valid_min']=0
-        t.attrs['valid_max']=32767
-        t.attrs['fill']=0xffff
+        t.attrs['valid_min']='0'
+        t.attrs['valid_max']='32767'
+        t.attrs['fill']='0xffff'
 
-        if BANDS==6:
-          e0 = np.argmax( img[:,:,bo[b]] != 0xffff )
-          if e0==0 and img[0,0,bo[b]]==0xffff: BandSpec[b] = 0.0
+        #if BANDS==6:
+        e0 = np.argmax( img[:,:,bo[b]] != 0xffff )
+        if e0==0 and img[0,0,bo[b]]==0xffff: BandSpec[b] = 0.0
 
         t = l1a_bpg.create_dataset("b%d_blackbody_295" %(b+1),
                                    data=cbb[:,:,bo[b]], chunks=(PPFP,BBLEN),
                                                   dtype="u2")
         t.attrs['Units']='dimensionless'
-        t.attrs['valid_min']=0
-        t.attrs['valid_max']=32767
-        t.attrs['fill']=0xffff
+        t.attrs['valid_min']='0'
+        t.attrs['valid_max']='32767'
+        t.attrs['fill']='0xffff'
         t = l1a_bpg.create_dataset("b%d_blackbody_325" %(b+1),
                                    data=hbb[:,:,bo[b]], chunks=(PPFP,BBLEN),
                                                   dtype="u2" )
         t.attrs['Units']='dimensionless'
-        t.attrs['valid_min']=0
-        t.attrs['valid_max']=32767
-        t.attrs['fill']=0xffff
+        t.attrs['valid_min']='0'
+        t.attrs['valid_max']='32767'
+        t.attrs['fill']='0xffff'
 
       l1a_BandSpec = l1a_metag.create_dataset('BandSpecification', data=BandSpec, dtype='f4' )
-      l1a_BandSpec.attrs["Units"] = "micrometer"
-      l1a_BandSpec.attrs["valid_min"] = 1.6
-      l1a_BandSpec.attrs["valid_max"] = 12.1
-      l1a_BandSpec.attrs["fill"] = 0
 
 # L1A_BB metadata
 
       bcomp = 100.0 * ( 1.0 - float( good_bb ) / float( BBLEN*2*SCPS ) )
       l1a_metag = l1a_bp['/L1A_BBMetadata']
       l1a_qamissing = l1a_metag.create_dataset('QAPercentMissingData', data=bcomp, dtype='f4' )
-      l1a_qamissing.attrs['Units']="percentage"
-      l1a_qamissing.attrs['valid_min'] = 0
-      l1a_qamissing.attrs['valid_max'] = 100
       l1a_BandSpec = l1a_metag.create_dataset('BandSpecification', data=BandSpec, dtype='f4' )
-      l1a_BandSpec.attrs["Units"] = "micrometer"
-      l1a_BandSpec.attrs["valid_min"] = 1.6
-      l1a_BandSpec.attrs["valid_max"] = 12.1
-      l1a_BandSpec.attrs["fill"] = 0
 
       # copy RTD temps to BB file
       if epc > 0:
@@ -956,18 +957,19 @@ class L1aRawPixGenerate(object):
       print(" ")
       bt=l1a_rtg.create_dataset("time_j2000", shape=(p1-p0+1,), dtype='f8')
       bt.attrs['Units']='seconds'
-      bt.attrs['valid_min']=0
-      bt.attrs['fill']=-9999
+      bt.attrs['valid_min']='0'
+      bt.attrs['valid_max']='N/A'
+      bt.attrs['fill']='-9999'
       r2=l1a_rtg.create_dataset("RTD_295K", shape=(p1-p0+1,5,), dtype='f4')
       r2.attrs['Units']='K'
-      r2.attrs['valid_min']=290
-      r2.attrs['valid_max']=320
-      r2.attrs['fill']=-9999
+      r2.attrs['valid_min']='290'
+      r2.attrs['valid_max']='320'
+      r2.attrs['fill']='-9999'
       r3=l1a_rtg.create_dataset("RTD_325K", shape=(p1-p0+1,5,), dtype='f4')
       r3.attrs['Units']='K'
-      r3.attrs['valid_min']=320
-      r3.attrs['valid_max']=330
-      r3.attrs['fill']=-9999
+      r3.attrs['valid_min']='320'
+      r3.attrs['valid_max']='330'
+      r3.attrs['fill']='-9999'
       for i in range( p0, p1+1 ):
         bt[i-p0] = Time.time_gps( bbtime[i] ).j2000
         for j in range( 5 ):
