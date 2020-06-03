@@ -20,7 +20,7 @@
 # This creates a whl package /tmp/tensorflow_pkg/tensorflow-version-tags.whl
 # We can then grab that wheel, stash it somewhere, and install it using pip
 #
-cythonp
+cython
 xlrd
 tflearn
 # Don't got to tensorflow 2.x, I don't know that something isn't broken by

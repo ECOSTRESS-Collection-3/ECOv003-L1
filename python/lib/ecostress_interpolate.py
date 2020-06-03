@@ -1,5 +1,18 @@
-import tflearn
-import tensorflow as tf
+# This import has an insane amount of chatter. It is also totally
+# inconsistent with how warnings are reported. So we import this,
+# silencing all the warnings
+import warnings
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore",category=DeprecationWarning)
+    import tensorflow as tf
+    from tensorflow.python.util import deprecation
+    import logging
+    logging.getLogger('tensorflow').setLevel(level=logging.ERROR)
+    with deprecation.silence():
+        import tflearn
+        from tflearn.layers.conv import conv_2d, max_pool_2d
+        from tflearn.layers.core import input_data, dropout, fully_connected
+        from tflearn.layers.estimator import regression
 import numpy as np
 import random
 import os
@@ -8,9 +21,6 @@ from ecostress_swig import *
 from .distance_to_missing_scanline import \
     is_within_x_pixel_of_missing_scanline, find_center_of_missing_scan
 
-from tflearn.layers.conv import conv_2d, max_pool_2d
-from tflearn.layers.core import input_data, dropout, fully_connected
-from tflearn.layers.estimator import regression
 
 # Turn off output from tflearn. Not clear how to do this directly, we
 # actually looked into the tflearn to figure out how to do this

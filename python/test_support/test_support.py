@@ -117,8 +117,11 @@ def test_data():
             # Location on pistol
             tdata="/data/smyth/ecostress-test-data/5.00/"
         if(not os.path.exists(tdata)):
-            raise RuntimeError("Can't find location of end to end test data")
-    yield tdata
+            pytest.skip("Don't have ecostress-test-data, so skipping test")
+    if(os.path.exists(tdata)):
+        yield tdata
+    else:
+        pytest.skip("Don't have ecostress-test-data, so skipping test")
 
 @pytest.yield_fixture(scope="function")
 def orb_fname(unit_test_data, test_data):
