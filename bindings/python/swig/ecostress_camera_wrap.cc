@@ -3554,60 +3554,61 @@ namespace Swig {
 #define SWIGTYPE_p_blitz__ArrayT_unsigned_short_6_t swig_types[99]
 #define SWIGTYPE_p_blitz__ArrayT_unsigned_short_7_t swig_types[100]
 #define SWIGTYPE_p_blitz__ArrayT_unsigned_short_8_t swig_types[101]
-#define SWIGTYPE_p_boost__math__quaternionT_double_t swig_types[102]
-#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t swig_types[103]
-#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t swig_types[104]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t swig_types[105]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t swig_types[106]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_3_t_t swig_types[107]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_4_t_t swig_types[108]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t swig_types[109]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t swig_types[110]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Camera_t swig_types[111]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_t swig_types[112]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_t swig_types[113]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_t swig_types[114]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_t swig_types[115]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__DcsLookVector_t swig_types[116]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__FrameCoordinateWithDerivative_t swig_types[117]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__FrameCoordinate_t swig_types[118]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GenericObject_t swig_types[119]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t swig_types[120]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t swig_types[121]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObservableT_GeoCal__Camera_t_t swig_types[122]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Camera_t_t swig_types[123]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__QuaternionCamera_t swig_types[124]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_t swig_types[125]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVector_t swig_types[126]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__SimpleCamera_t swig_types[127]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t swig_types[128]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t swig_types[129]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameterNested_t swig_types[130]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameter_t swig_types[131]
-#define SWIGTYPE_p_char swig_types[132]
-#define SWIGTYPE_p_char_type swig_types[133]
-#define SWIGTYPE_p_difference_type swig_types[134]
-#define SWIGTYPE_p_double swig_types[135]
-#define SWIGTYPE_p_fmtflags swig_types[136]
-#define SWIGTYPE_p_int_type swig_types[137]
-#define SWIGTYPE_p_iostate swig_types[138]
-#define SWIGTYPE_p_off_type swig_types[139]
-#define SWIGTYPE_p_openmode swig_types[140]
-#define SWIGTYPE_p_pos_type swig_types[141]
-#define SWIGTYPE_p_seekdir swig_types[142]
-#define SWIGTYPE_p_size_t swig_types[143]
-#define SWIGTYPE_p_size_type swig_types[144]
-#define SWIGTYPE_p_state_type swig_types[145]
-#define SWIGTYPE_p_std__basic_iosT_char_std__char_traitsT_char_t_t swig_types[146]
-#define SWIGTYPE_p_std__basic_iostreamT_char_std__char_traitsT_char_t_t swig_types[147]
-#define SWIGTYPE_p_std__basic_istreamT_char_std__char_traitsT_char_t_t swig_types[148]
-#define SWIGTYPE_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t swig_types[149]
-#define SWIGTYPE_p_std__invalid_argument swig_types[150]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[151]
-#define SWIGTYPE_p_traits_type swig_types[152]
-#define SWIGTYPE_p_value_type swig_types[153]
-static swig_type_info *swig_types[155];
-static swig_module_info swig_module = {swig_types, 154, 0, 0, 0, 0};
+#define SWIGTYPE_p_blitz__Range swig_types[102]
+#define SWIGTYPE_p_boost__math__quaternionT_double_t swig_types[103]
+#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t swig_types[104]
+#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t swig_types[105]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t swig_types[106]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t swig_types[107]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_3_t_t swig_types[108]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_4_t_t swig_types[109]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t swig_types[110]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t swig_types[111]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Camera_t swig_types[112]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_t swig_types[113]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_t swig_types[114]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_t swig_types[115]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_t swig_types[116]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__DcsLookVector_t swig_types[117]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__FrameCoordinateWithDerivative_t swig_types[118]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__FrameCoordinate_t swig_types[119]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GenericObject_t swig_types[120]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t swig_types[121]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t swig_types[122]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObservableT_GeoCal__Camera_t_t swig_types[123]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Camera_t_t swig_types[124]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__QuaternionCamera_t swig_types[125]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_t swig_types[126]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVector_t swig_types[127]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__SimpleCamera_t swig_types[128]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t swig_types[129]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t swig_types[130]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameterNested_t swig_types[131]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameter_t swig_types[132]
+#define SWIGTYPE_p_char swig_types[133]
+#define SWIGTYPE_p_char_type swig_types[134]
+#define SWIGTYPE_p_difference_type swig_types[135]
+#define SWIGTYPE_p_double swig_types[136]
+#define SWIGTYPE_p_fmtflags swig_types[137]
+#define SWIGTYPE_p_int_type swig_types[138]
+#define SWIGTYPE_p_iostate swig_types[139]
+#define SWIGTYPE_p_off_type swig_types[140]
+#define SWIGTYPE_p_openmode swig_types[141]
+#define SWIGTYPE_p_pos_type swig_types[142]
+#define SWIGTYPE_p_seekdir swig_types[143]
+#define SWIGTYPE_p_size_t swig_types[144]
+#define SWIGTYPE_p_size_type swig_types[145]
+#define SWIGTYPE_p_state_type swig_types[146]
+#define SWIGTYPE_p_std__basic_iosT_char_std__char_traitsT_char_t_t swig_types[147]
+#define SWIGTYPE_p_std__basic_iostreamT_char_std__char_traitsT_char_t_t swig_types[148]
+#define SWIGTYPE_p_std__basic_istreamT_char_std__char_traitsT_char_t_t swig_types[149]
+#define SWIGTYPE_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t swig_types[150]
+#define SWIGTYPE_p_std__invalid_argument swig_types[151]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[152]
+#define SWIGTYPE_p_traits_type swig_types[153]
+#define SWIGTYPE_p_value_type swig_types[154]
+static swig_type_info *swig_types[156];
+static swig_module_info swig_module = {swig_types, 155, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -3727,19 +3728,6 @@ namespace swig {
 
 #include <boost/shared_ptr.hpp>
 #include <boost/rational.hpp>
-
-//--------------------------------------------------------------
-// Helper class for python that holds an object and when deleted
-// decrements the reference to it.
-//--------------------------------------------------------------
-
-class PythonObject {
-public:
-  PythonObject(PyObject* Obj = 0) : obj(Obj) {}
-  ~PythonObject() { Py_XDECREF(obj); }
-  PyObject* obj;
-  operator PyObject*() {return obj;}
-};
 
 
 #include <iostream>
@@ -4250,6 +4238,9 @@ SWIG_AsVal_ptrdiff_t (PyObject * obj, ptrdiff_t *val)
 #include <vector>
 
 
+#define SWIG_MAPPER_NAMESPACE GeoCal
+
+
 // If the object passed in actually a python director, we don't own
 // it. Instead, when the reference count goes to 0 we just decrement
 // our reference to it.
@@ -4280,8 +4271,8 @@ SWIGINTERNINLINE PyObject*
   std::string parse_python_exception();
 
 
-#include "geocal_serialize_function.h"
-#include "geocal_exception.h"
+#include "serialize_function.h"
+#include <stdexcept>
 // This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
 std::string parse_python_exception();
 
@@ -4304,10 +4295,7 @@ inline std::string cpickle_dumps(PyObject* obj)
 					     PyString_FromString("dumps"),
 					     obj, NULL);
   if(PyErr_Occurred()) {
-    GeoCal::Exception e;
-    e << "Python error occurred:\n"
-      << parse_python_exception();
-    throw e;
+    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
   }
   return std::string(PyString_AsString(res));
 }
@@ -4319,10 +4307,7 @@ inline PyObject* cpickle_loads(const std::string& S)
 					     PyString_FromString(S.c_str()), 
 					     NULL);
   if(PyErr_Occurred()) {
-    GeoCal::Exception e;
-    e << "Python error occurred:\n"
-      << parse_python_exception();
-    throw e;
+    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
   }
   return res;
 }
@@ -5365,6 +5350,19 @@ namespace swig
 
 // Don't want to use threads with ruby
 //#undef _REENTRANT
+
+// Forward declaration
+template<typename P_type> class PythonMemoryBlockReference;
+// This is a very evil kludge. We use one of the function names in
+// MemoryBlockReference
+// to sneak in a friend declaration so we can access the internal block_
+// variable. This is because we don't want to edit the actual blitz header.
+#define blockLength() _fake() {return 0;}	 \
+  friend class PythonMemoryBlockReference<T_type>; \
+  sizeType blockLength()
+#include <blitz/memblock.h>
+#undef blockLength
+  
 #include <blitz/array.h>
 #include <blitz/range.h>
 #define PY_ARRAY_UNIQUE_SYMBOL geocal_ARRAY_API
@@ -5376,8 +5374,84 @@ namespace swig
 // We'll have to update this as the numpy API increases
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <numpy/arrayobject.h>
-#include "geocal_exception.h"
 
+//--------------------------------------------------------------
+// Helper class for python that holds an object and when deleted
+// decrements the reference to it.
+//--------------------------------------------------------------
+
+class PythonObject {
+public:
+  PythonObject(PyObject* Obj = 0) : obj(Obj) {}
+  ~PythonObject() { Py_XDECREF(obj); }
+  PyObject* obj;
+  operator PyObject*() {return obj;}
+};
+
+//--------------------------------------------------------------
+/// Special memory block for blitz. This doesn't actually own
+/// the data, rather it owns a reference to a PythonObject that
+/// keeps a reference to the numpy PythonObject so it doesn't
+/// go away on the python side while we are using it on the
+/// C++ side. 
+//--------------------------------------------------------------
+
+template<typename P_type>
+class PythonMemoryBlock : public blitz::MemoryBlock<P_type> {
+public:
+  typedef P_type T_type;
+  PythonMemoryBlock(PyObject* numpy_obj)
+    : blitz::MemoryBlock<P_type>(PyArray_NBYTES((PyArrayObject*) numpy_obj),
+		 (T_type *) PyArray_DATA((PyArrayObject*) numpy_obj)),
+      python_obj(numpy_obj)
+  {
+    Py_XINCREF(python_obj); 
+#ifdef BZ_DEBUG_LOG_ALLOCATIONS
+    std::cout << "PythonMemoryBlock: have reference to numpy object data at " << blitz::MemoryBlock<P_type>::data() << "\n"
+	      << "   numpy python object " << python_obj << "\n"
+	      << "   numpy python object ref count (after incrementing) " << Py_REFCNT(python_obj) <<"\n";
+#endif    
+  }
+  virtual ~PythonMemoryBlock()
+  {
+    // Don't actually want to free real data. Instead, we just
+    // have the python_obj go out of scope to clean up our reference
+    // to it.
+    blitz::MemoryBlock<P_type>::dataBlockAddress() = 0;
+#ifdef BZ_DEBUG_LOG_ALLOCATIONS
+    std::cout << "PythonMemoryBlock: removing reference to numpy object data at " << blitz::MemoryBlock<P_type>::data() << "\n"
+	      << "   numpy python object " << python_obj << "\n"
+	      << "   numpy python object ref count (before decrementing) " << Py_REFCNT(python_obj) <<"\n";
+#endif    
+    Py_XDECREF(python_obj);
+  }
+private:
+  PyObject* python_obj;
+};
+
+//--------------------------------------------------------------
+/// Don't actually need a special MemoryBlockReference, except
+/// that this is the only way to change the block of an existing
+/// MemoryBlockReference (e.g., a blitz::Array). So this briefly
+/// exists, uses itself to change the block, and then disappears.
+//--------------------------------------------------------------
+
+template<typename P_type>
+class PythonMemoryBlockReference : public blitz::MemoryBlockReference<P_type> {
+public:
+  typedef P_type T_type;
+  template<int N_rank>
+  PythonMemoryBlockReference(blitz::Array<T_type, N_rank>& a,
+			   PyObject* numpy_obj)
+    : blitz::MemoryBlockReference<T_type>(0, a.data(),
+					  blitz::neverDeleteData)
+  {
+    blitz::MemoryBlockReference<T_type>::block_ =
+      new PythonMemoryBlock<T_type>(numpy_obj);
+    a.changeBlock(*this);
+  }
+};
+ 
 PyObject* numpy_module();
 PyObject* numpy_dot_float64();
 PyObject* numpy_dot_float32();
@@ -5515,11 +5589,11 @@ template<class T, int D> inline blitz::Array<T, D>
     std::cerr << PyArray_NDIM(numpy) << "\n"
 	      << D << "\n";
     throw 
-      GeoCal::Exception("Dimension of array is not the expected size");
+      std::runtime_error("Dimension of array is not the expected size");
   }
   if(PyArray_TYPE(numpy) != type_to_npy<T>()) {
     throw 
-      GeoCal::Exception("Type of array not the expected type");
+      std::runtime_error("Type of array not the expected type");
   }
   blitz::TinyVector<int, D> shape, stride;
   for(int i = 0; i < D; ++i) {
@@ -5529,11 +5603,15 @@ template<class T, int D> inline blitz::Array<T, D>
     stride(i) = PyArray_STRIDE(numpy, i) / sizeof(T);
     if((int) (stride(i) * sizeof(T)) != (int) PyArray_STRIDE(numpy, i)) {
       throw 
-	GeoCal::Exception("blitz::Array can't handle strides that aren't an even multiple of sizeof(T)");
+	std::runtime_error("blitz::Array can't handle strides that aren't an even multiple of sizeof(T)");
     }
   }
-  return blitz::Array<T, D>((T*)PyArray_DATA(numpy), shape, stride, 
-			    blitz::neverDeleteData);
+  blitz::Array<T, D> a((T*)PyArray_DATA(numpy), shape, stride, 
+		       blitz::neverDeleteData);
+  // Stash a reference to numpy_obj in array, so it doesn't disappear
+  // while the blitz::Array still exists
+  PythonMemoryBlockReference<T> br(a, numpy_obj);
+  return a;
 }
 
 
@@ -5546,7 +5624,7 @@ template<class T, int D> inline boost::array<T, D>
 {
   blitz::Array<T, 1> b = to_blitz_array<T, 1>(numpy);
   if(b.rows() != D)
-     throw GeoCal::Exception("Array not expeced size");
+    throw std::runtime_error("Array not expeced size");
   boost::array<T, D> res;
   for(int i = 0; i < D; ++i)
     res[i]= b(i);
@@ -5555,6 +5633,7 @@ template<class T, int D> inline boost::array<T, D>
 
 
 #include <ios>
+#include <stdexcept>  
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/categories.hpp>
 
@@ -5575,7 +5654,7 @@ public:
   {
     PyObject* res = PyObject_CallMethod(fh, "read", "(i)", (int) n);
     if(res == NULL) {
-      throw GeoCal::Exception("Call to FileHandle read failed");
+      throw std::runtime_error("Call to FileHandle read failed");
     }
     char *rescp = PyBytes_AsString(res);
     std::copy(rescp, rescp + n, s);
@@ -5584,7 +5663,7 @@ public:
   }
   std::streamoff seek(std::streamoff off, std::ios_base::seekdir way)
   {
-    throw GeoCal::Exception("Not implemented");
+    throw std::runtime_error("Not implemented");
   }
   std::streamsize write(const char* s, std::streamsize n)
   {
@@ -5595,7 +5674,7 @@ public:
     PyObject* res = PyObject_CallMethod(fh, "write", "(s#)", s, (int) n);
 #endif    
     if(res == NULL) {
-      throw GeoCal::Exception("Call to FileHandle write failed");
+      throw std::runtime_error("Call to FileHandle write failed");
     } else {
       Py_DECREF(res);
     }
@@ -6609,7 +6688,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_paraxial_to_real__SWIG_0(P
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
@@ -6687,7 +6766,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_paraxial_to_real__SWIG_1(P
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
@@ -6709,7 +6788,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_paraxial_to_real__SWIG_1(P
     } else {
       res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,  0 , &newmem);
       if (!SWIG_IsOK(res2)) {
-        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "2"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "2"" of type '" "GeoCal::AutoDerivative< double > const &""'");
       }
       if (!argp2) {
         SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "2"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
@@ -6734,7 +6813,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_paraxial_to_real__SWIG_1(P
     } else {
       res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,  0 , &newmem);
       if (!SWIG_IsOK(res3)) {
-        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "3"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "3"" of type '" "GeoCal::AutoDerivative< double > const &""'");
       }
       if (!argp3) {
         SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "3"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
@@ -6759,7 +6838,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_paraxial_to_real__SWIG_1(P
     } else {
       res4 = SWIG_ConvertPtrAndOwn(swig_obj[3], &argp4, SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,  0 , &newmem);
       if (!SWIG_IsOK(res4)) {
-        SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "4"" of type '" "GeoCal::AutoDerivative< double > &""'"); 
+        SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "4"" of type '" "GeoCal::AutoDerivative< double > &""'");
       }
       if (!argp4) {
         SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "4"" of type '" "GeoCal::AutoDerivative< double > &""'"); 
@@ -6784,7 +6863,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_paraxial_to_real__SWIG_1(P
     } else {
       res5 = SWIG_ConvertPtrAndOwn(swig_obj[4], &argp5, SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,  0 , &newmem);
       if (!SWIG_IsOK(res5)) {
-        SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "5"" of type '" "GeoCal::AutoDerivative< double > &""'"); 
+        SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "5"" of type '" "GeoCal::AutoDerivative< double > &""'");
       }
       if (!argp5) {
         SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressParaxialTransform_paraxial_to_real" "', argument " "5"" of type '" "GeoCal::AutoDerivative< double > &""'"); 
@@ -6865,7 +6944,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_real_to_paraxial__SWIG_0(P
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
@@ -6943,7 +7022,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_real_to_paraxial__SWIG_1(P
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
@@ -6965,7 +7044,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_real_to_paraxial__SWIG_1(P
     } else {
       res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,  0 , &newmem);
       if (!SWIG_IsOK(res2)) {
-        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "2"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "2"" of type '" "GeoCal::AutoDerivative< double > const &""'");
       }
       if (!argp2) {
         SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "2"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
@@ -6990,7 +7069,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_real_to_paraxial__SWIG_1(P
     } else {
       res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,  0 , &newmem);
       if (!SWIG_IsOK(res3)) {
-        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "3"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "3"" of type '" "GeoCal::AutoDerivative< double > const &""'");
       }
       if (!argp3) {
         SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "3"" of type '" "GeoCal::AutoDerivative< double > const &""'"); 
@@ -7015,7 +7094,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_real_to_paraxial__SWIG_1(P
     } else {
       res4 = SWIG_ConvertPtrAndOwn(swig_obj[3], &argp4, SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,  0 , &newmem);
       if (!SWIG_IsOK(res4)) {
-        SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "4"" of type '" "GeoCal::AutoDerivative< double > &""'"); 
+        SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "4"" of type '" "GeoCal::AutoDerivative< double > &""'");
       }
       if (!argp4) {
         SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "4"" of type '" "GeoCal::AutoDerivative< double > &""'"); 
@@ -7040,7 +7119,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_real_to_paraxial__SWIG_1(P
     } else {
       res5 = SWIG_ConvertPtrAndOwn(swig_obj[4], &argp5, SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,  0 , &newmem);
       if (!SWIG_IsOK(res5)) {
-        SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "5"" of type '" "GeoCal::AutoDerivative< double > &""'"); 
+        SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "5"" of type '" "GeoCal::AutoDerivative< double > &""'");
       }
       if (!argp5) {
         SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "EcostressParaxialTransform_real_to_paraxial" "', argument " "5"" of type '" "GeoCal::AutoDerivative< double > &""'"); 
@@ -7110,7 +7189,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform___str__(PyObject *SWIGUNUS
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform___str__" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform___str__" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
@@ -7153,7 +7232,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform__v_real_to_par(PyObject *S
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform__v_real_to_par" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform__v_real_to_par" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
@@ -7187,7 +7266,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform__v_real_to_par(PyObject *S
     blitz::Array<double, 2>* t = new blitz::Array<double, 2>(*result);
     PyArray_SetBaseObject((PyArrayObject*)resultobj, 
       SWIG_NewPointerObj(SWIG_as_voidptr(t), 
-        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | 0 ));
+        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | SWIG_POINTER_OWN ));
   }
   return resultobj;
 fail:
@@ -7211,7 +7290,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform__v_par_to_real(PyObject *S
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform__v_par_to_real" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressParaxialTransform__v_par_to_real" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressParaxialTransform > * >(argp1);
@@ -7245,7 +7324,7 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform__v_par_to_real(PyObject *S
     blitz::Array<double, 2>* t = new blitz::Array<double, 2>(*result);
     PyArray_SetBaseObject((PyArrayObject*)resultobj, 
       SWIG_NewPointerObj(SWIG_as_voidptr(t), 
-        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | 0 ));
+        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | SWIG_POINTER_OWN ));
   }
   return resultobj;
 fail:
@@ -7268,7 +7347,7 @@ SWIGINTERN PyObject *_wrap_delete_EcostressParaxialTransform(PyObject *SWIGUNUSE
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_EcostressParaxialTransform" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_EcostressParaxialTransform" "', argument " "1"" of type '" "Ecostress::EcostressParaxialTransform *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressParaxialTransform > * >(argp1);
@@ -7481,7 +7560,7 @@ SWIGINTERN PyObject *_wrap_EcostressCamera_mask_all_parameter(PyObject *SWIGUNUS
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera_mask_all_parameter" "', argument " "1"" of type '" "Ecostress::EcostressCamera *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera_mask_all_parameter" "', argument " "1"" of type '" "Ecostress::EcostressCamera *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
@@ -7522,7 +7601,7 @@ SWIGINTERN PyObject *_wrap_EcostressCamera__v_paraxial_transform__SWIG_0(PyObjec
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_paraxial_transform" "', argument " "1"" of type '" "Ecostress::EcostressCamera const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_paraxial_transform" "', argument " "1"" of type '" "Ecostress::EcostressCamera const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressCamera > * >(argp1);
@@ -7569,7 +7648,7 @@ SWIGINTERN PyObject *_wrap_EcostressCamera__v_paraxial_transform__SWIG_1(PyObjec
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_paraxial_transform" "', argument " "1"" of type '" "Ecostress::EcostressCamera *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_paraxial_transform" "', argument " "1"" of type '" "Ecostress::EcostressCamera *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
@@ -7584,7 +7663,7 @@ SWIGINTERN PyObject *_wrap_EcostressCamera__v_paraxial_transform__SWIG_1(PyObjec
     int newmem = 0;
     res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t,  0 , &newmem);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "EcostressCamera__v_paraxial_transform" "', argument " "2"" of type '" "boost::shared_ptr< Ecostress::EcostressParaxialTransform > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "EcostressCamera__v_paraxial_transform" "', argument " "2"" of type '" "boost::shared_ptr< Ecostress::EcostressParaxialTransform > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp2) tempshared2 = *reinterpret_cast< boost::shared_ptr< Ecostress::EcostressParaxialTransform > * >(argp2);
@@ -7593,6 +7672,7 @@ SWIGINTERN PyObject *_wrap_EcostressCamera__v_paraxial_transform__SWIG_1(PyObjec
     } else {
       arg2 = (argp2) ? reinterpret_cast< boost::shared_ptr< Ecostress::EcostressParaxialTransform > * >(argp2) : &tempshared2;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -7659,7 +7739,7 @@ SWIGINTERN PyObject *_wrap_EcostressCamera__v_y_scale__SWIG_0(PyObject *SWIGUNUS
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_y_scale" "', argument " "1"" of type '" "Ecostress::EcostressCamera const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_y_scale" "', argument " "1"" of type '" "Ecostress::EcostressCamera const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressCamera > * >(argp1);
@@ -7703,7 +7783,7 @@ SWIGINTERN PyObject *_wrap_EcostressCamera__v_y_scale__SWIG_1(PyObject *SWIGUNUS
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_y_scale" "', argument " "1"" of type '" "Ecostress::EcostressCamera *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_y_scale" "', argument " "1"" of type '" "Ecostress::EcostressCamera *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
@@ -7774,7 +7854,7 @@ SWIGINTERN PyObject *_wrap_EcostressCamera__v_y_offset__SWIG_0(PyObject *SWIGUNU
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_y_offset" "', argument " "1"" of type '" "Ecostress::EcostressCamera const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_y_offset" "', argument " "1"" of type '" "Ecostress::EcostressCamera const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressCamera > * >(argp1);
@@ -7818,7 +7898,7 @@ SWIGINTERN PyObject *_wrap_EcostressCamera__v_y_offset__SWIG_1(PyObject *SWIGUNU
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_y_offset" "', argument " "1"" of type '" "Ecostress::EcostressCamera *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_y_offset" "', argument " "1"" of type '" "Ecostress::EcostressCamera *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
@@ -7889,7 +7969,7 @@ SWIGINTERN PyObject *_wrap_EcostressCamera__v_line_order_reversed__SWIG_0(PyObje
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_line_order_reversed" "', argument " "1"" of type '" "Ecostress::EcostressCamera const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_line_order_reversed" "', argument " "1"" of type '" "Ecostress::EcostressCamera const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressCamera > * >(argp1);
@@ -7933,7 +8013,7 @@ SWIGINTERN PyObject *_wrap_EcostressCamera__v_line_order_reversed__SWIG_1(PyObje
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_line_order_reversed" "', argument " "1"" of type '" "Ecostress::EcostressCamera *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera__v_line_order_reversed" "', argument " "1"" of type '" "Ecostress::EcostressCamera *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
@@ -8005,7 +8085,7 @@ SWIGINTERN PyObject *_wrap_delete_EcostressCamera(PyObject *SWIGUNUSEDPARM(self)
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_EcostressCamera" "', argument " "1"" of type '" "Ecostress::EcostressCamera *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_EcostressCamera" "', argument " "1"" of type '" "Ecostress::EcostressCamera *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
@@ -8546,6 +8626,7 @@ static swig_type_info _swigt__p_blitz__ArrayT_unsigned_short_5_t = {"_p_blitz__A
 static swig_type_info _swigt__p_blitz__ArrayT_unsigned_short_6_t = {"_p_blitz__ArrayT_unsigned_short_6_t", "blitz::Array< unsigned short,6 > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_blitz__ArrayT_unsigned_short_7_t = {"_p_blitz__ArrayT_unsigned_short_7_t", "blitz::Array< unsigned short,7 > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_blitz__ArrayT_unsigned_short_8_t = {"_p_blitz__ArrayT_unsigned_short_8_t", "blitz::Array< unsigned short,8 > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_blitz__Range = {"_p_blitz__Range", "blitz::Range *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__math__quaternionT_double_t = {"_p_boost__math__quaternionT_double_t", "boost::math::quaternion< double > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_Ecostress__EcostressCamera_t = {"_p_boost__shared_ptrT_Ecostress__EcostressCamera_t", "boost::shared_ptr< Ecostress::EcostressCamera > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t = {"_p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t", "boost::shared_ptr< Ecostress::EcostressParaxialTransform > *", 0, 0, (void*)0, 0};
@@ -8702,6 +8783,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_blitz__ArrayT_unsigned_short_6_t,
   &_swigt__p_blitz__ArrayT_unsigned_short_7_t,
   &_swigt__p_blitz__ArrayT_unsigned_short_8_t,
+  &_swigt__p_blitz__Range,
   &_swigt__p_boost__math__quaternionT_double_t,
   &_swigt__p_boost__shared_ptrT_Ecostress__EcostressCamera_t,
   &_swigt__p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t,
@@ -8858,6 +8940,7 @@ static swig_cast_info _swigc__p_blitz__ArrayT_unsigned_short_5_t[] = {  {&_swigt
 static swig_cast_info _swigc__p_blitz__ArrayT_unsigned_short_6_t[] = {  {&_swigt__p_blitz__ArrayT_unsigned_short_6_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_blitz__ArrayT_unsigned_short_7_t[] = {  {&_swigt__p_blitz__ArrayT_unsigned_short_7_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_blitz__ArrayT_unsigned_short_8_t[] = {  {&_swigt__p_blitz__ArrayT_unsigned_short_8_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_blitz__Range[] = {  {&_swigt__p_blitz__Range, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__math__quaternionT_double_t[] = {  {&_swigt__p_boost__math__quaternionT_double_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_Ecostress__EcostressCamera_t[] = {  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressCamera_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t[] = {  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -9014,6 +9097,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_blitz__ArrayT_unsigned_short_6_t,
   _swigc__p_blitz__ArrayT_unsigned_short_7_t,
   _swigc__p_blitz__ArrayT_unsigned_short_8_t,
+  _swigc__p_blitz__Range,
   _swigc__p_boost__math__quaternionT_double_t,
   _swigc__p_boost__shared_ptrT_Ecostress__EcostressCamera_t,
   _swigc__p_boost__shared_ptrT_Ecostress__EcostressParaxialTransform_t,

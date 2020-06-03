@@ -3587,91 +3587,92 @@ namespace Swig {
 #define SWIGTYPE_p_blitz__ArrayT_unsigned_short_6_t swig_types[132]
 #define SWIGTYPE_p_blitz__ArrayT_unsigned_short_7_t swig_types[133]
 #define SWIGTYPE_p_blitz__ArrayT_unsigned_short_8_t swig_types[134]
-#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t swig_types[135]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t swig_types[136]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t swig_types[137]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_3_t_t swig_types[138]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_4_t_t swig_types[139]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayRasterImage_t swig_types[140]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t swig_types[141]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t swig_types[142]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_t swig_types[143]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianFixedLookVector_t swig_types[144]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianFixed_t swig_types[145]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_t swig_types[146]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_t swig_types[147]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianInertial_t swig_types[148]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CombinedGroundMask_t swig_types[149]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CombinedImageMask_t swig_types[150]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ConvergenceFailure_t swig_types[151]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CoordinateConverter_t swig_types[152]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_t swig_types[153]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__DcsLookVector_t swig_types[154]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Dem_t swig_types[155]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Exception_t swig_types[156]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GenericObject_t swig_types[157]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GeodeticConverter_t swig_types[158]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GeodeticRadian2piConverter_t swig_types[159]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GeodeticRadianConverter_t swig_types[160]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GroundCoordinate_t swig_types[161]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GroundMask_t swig_types[162]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t swig_types[163]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageCoordinate_t swig_types[164]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageGroundConnectionCopy_t swig_types[165]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageGroundConnectionFailed_t swig_types[166]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageGroundConnection_t swig_types[167]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageMask_t swig_types[168]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LnLookVectorWithDerivative_t swig_types[169]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LnLookVector_t swig_types[170]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t swig_types[171]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t swig_types[172]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t swig_types[173]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__MetadataMissing_t swig_types[174]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__NoCoverage_t swig_types[175]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__OffsetImageGroundConnection_t swig_types[176]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__OffsetImageMask_t swig_types[177]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImageMultiBandVariable_t swig_types[178]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImageMultiBand_t swig_types[179]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImageTileIterator_t swig_types[180]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t swig_types[181]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RsmAdjustableParameter_t swig_types[182]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RsmBase_t swig_types[183]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RsmDirectCovariance_t swig_types[184]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RsmIdTiming_t swig_types[185]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RsmId_t swig_types[186]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RsmIndirectCovariance_t swig_types[187]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Rsm_t swig_types[188]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_t swig_types[189]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVector_t swig_types[190]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t swig_types[191]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t swig_types[192]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__VicarException_t swig_types[193]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t swig_types[194]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameterNested_t swig_types[195]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameter_t swig_types[196]
-#define SWIGTYPE_p_char swig_types[197]
-#define SWIGTYPE_p_char_type swig_types[198]
-#define SWIGTYPE_p_difference_type swig_types[199]
-#define SWIGTYPE_p_fmtflags swig_types[200]
-#define SWIGTYPE_p_int_type swig_types[201]
-#define SWIGTYPE_p_iostate swig_types[202]
-#define SWIGTYPE_p_off_type swig_types[203]
-#define SWIGTYPE_p_openmode swig_types[204]
-#define SWIGTYPE_p_pos_type swig_types[205]
-#define SWIGTYPE_p_seekdir swig_types[206]
-#define SWIGTYPE_p_size_t swig_types[207]
-#define SWIGTYPE_p_size_type swig_types[208]
-#define SWIGTYPE_p_state_type swig_types[209]
-#define SWIGTYPE_p_std__basic_iosT_char_std__char_traitsT_char_t_t swig_types[210]
-#define SWIGTYPE_p_std__basic_iostreamT_char_std__char_traitsT_char_t_t swig_types[211]
-#define SWIGTYPE_p_std__basic_istreamT_char_std__char_traitsT_char_t_t swig_types[212]
-#define SWIGTYPE_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t swig_types[213]
-#define SWIGTYPE_p_std__invalid_argument swig_types[214]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[215]
-#define SWIGTYPE_p_traits_type swig_types[216]
-#define SWIGTYPE_p_value_type swig_types[217]
-static swig_type_info *swig_types[219];
-static swig_module_info swig_module = {swig_types, 218, 0, 0, 0, 0};
+#define SWIGTYPE_p_blitz__Range swig_types[135]
+#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t swig_types[136]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t swig_types[137]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t swig_types[138]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_3_t_t swig_types[139]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_4_t_t swig_types[140]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayRasterImage_t swig_types[141]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t swig_types[142]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t swig_types[143]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_t swig_types[144]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianFixedLookVector_t swig_types[145]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianFixed_t swig_types[146]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_t swig_types[147]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_t swig_types[148]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianInertial_t swig_types[149]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CombinedGroundMask_t swig_types[150]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CombinedImageMask_t swig_types[151]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ConvergenceFailure_t swig_types[152]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CoordinateConverter_t swig_types[153]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_t swig_types[154]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__DcsLookVector_t swig_types[155]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Dem_t swig_types[156]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Exception_t swig_types[157]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GenericObject_t swig_types[158]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GeodeticConverter_t swig_types[159]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GeodeticRadian2piConverter_t swig_types[160]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GeodeticRadianConverter_t swig_types[161]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GroundCoordinate_t swig_types[162]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GroundMask_t swig_types[163]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t swig_types[164]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageCoordinate_t swig_types[165]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageGroundConnectionCopy_t swig_types[166]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageGroundConnectionFailed_t swig_types[167]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageGroundConnection_t swig_types[168]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageMask_t swig_types[169]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LnLookVectorWithDerivative_t swig_types[170]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LnLookVector_t swig_types[171]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t swig_types[172]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t swig_types[173]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t swig_types[174]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__MetadataMissing_t swig_types[175]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__NoCoverage_t swig_types[176]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__OffsetImageGroundConnection_t swig_types[177]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__OffsetImageMask_t swig_types[178]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImageMultiBandVariable_t swig_types[179]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImageMultiBand_t swig_types[180]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImageTileIterator_t swig_types[181]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t swig_types[182]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RsmAdjustableParameter_t swig_types[183]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RsmBase_t swig_types[184]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RsmDirectCovariance_t swig_types[185]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RsmIdTiming_t swig_types[186]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RsmId_t swig_types[187]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__RsmIndirectCovariance_t swig_types[188]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Rsm_t swig_types[189]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_t swig_types[190]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVector_t swig_types[191]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t swig_types[192]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t swig_types[193]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__VicarException_t swig_types[194]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t swig_types[195]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameterNested_t swig_types[196]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameter_t swig_types[197]
+#define SWIGTYPE_p_char swig_types[198]
+#define SWIGTYPE_p_char_type swig_types[199]
+#define SWIGTYPE_p_difference_type swig_types[200]
+#define SWIGTYPE_p_fmtflags swig_types[201]
+#define SWIGTYPE_p_int_type swig_types[202]
+#define SWIGTYPE_p_iostate swig_types[203]
+#define SWIGTYPE_p_off_type swig_types[204]
+#define SWIGTYPE_p_openmode swig_types[205]
+#define SWIGTYPE_p_pos_type swig_types[206]
+#define SWIGTYPE_p_seekdir swig_types[207]
+#define SWIGTYPE_p_size_t swig_types[208]
+#define SWIGTYPE_p_size_type swig_types[209]
+#define SWIGTYPE_p_state_type swig_types[210]
+#define SWIGTYPE_p_std__basic_iosT_char_std__char_traitsT_char_t_t swig_types[211]
+#define SWIGTYPE_p_std__basic_iostreamT_char_std__char_traitsT_char_t_t swig_types[212]
+#define SWIGTYPE_p_std__basic_istreamT_char_std__char_traitsT_char_t_t swig_types[213]
+#define SWIGTYPE_p_std__basic_ostreamT_char_std__char_traitsT_char_t_t swig_types[214]
+#define SWIGTYPE_p_std__invalid_argument swig_types[215]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[216]
+#define SWIGTYPE_p_traits_type swig_types[217]
+#define SWIGTYPE_p_value_type swig_types[218]
+static swig_type_info *swig_types[220];
+static swig_module_info swig_module = {swig_types, 219, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -3791,19 +3792,6 @@ namespace swig {
 
 #include <boost/shared_ptr.hpp>
 #include <boost/rational.hpp>
-
-//--------------------------------------------------------------
-// Helper class for python that holds an object and when deleted
-// decrements the reference to it.
-//--------------------------------------------------------------
-
-class PythonObject {
-public:
-  PythonObject(PyObject* Obj = 0) : obj(Obj) {}
-  ~PythonObject() { Py_XDECREF(obj); }
-  PyObject* obj;
-  operator PyObject*() {return obj;}
-};
 
 
 #include <iostream>
@@ -4314,6 +4302,9 @@ SWIG_AsVal_ptrdiff_t (PyObject * obj, ptrdiff_t *val)
 #include <vector>
 
 
+#define SWIG_MAPPER_NAMESPACE GeoCal
+
+
 // If the object passed in actually a python director, we don't own
 // it. Instead, when the reference count goes to 0 we just decrement
 // our reference to it.
@@ -4344,8 +4335,8 @@ SWIGINTERNINLINE PyObject*
   std::string parse_python_exception();
 
 
-#include "geocal_serialize_function.h"
-#include "geocal_exception.h"
+#include "serialize_function.h"
+#include <stdexcept>
 // This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
 std::string parse_python_exception();
 
@@ -4368,10 +4359,7 @@ inline std::string cpickle_dumps(PyObject* obj)
 					     PyString_FromString("dumps"),
 					     obj, NULL);
   if(PyErr_Occurred()) {
-    GeoCal::Exception e;
-    e << "Python error occurred:\n"
-      << parse_python_exception();
-    throw e;
+    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
   }
   return std::string(PyString_AsString(res));
 }
@@ -4383,10 +4371,7 @@ inline PyObject* cpickle_loads(const std::string& S)
 					     PyString_FromString(S.c_str()), 
 					     NULL);
   if(PyErr_Occurred()) {
-    GeoCal::Exception e;
-    e << "Python error occurred:\n"
-      << parse_python_exception();
-    throw e;
+    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
   }
   return res;
 }
@@ -5429,6 +5414,19 @@ namespace swig
 
 // Don't want to use threads with ruby
 //#undef _REENTRANT
+
+// Forward declaration
+template<typename P_type> class PythonMemoryBlockReference;
+// This is a very evil kludge. We use one of the function names in
+// MemoryBlockReference
+// to sneak in a friend declaration so we can access the internal block_
+// variable. This is because we don't want to edit the actual blitz header.
+#define blockLength() _fake() {return 0;}	 \
+  friend class PythonMemoryBlockReference<T_type>; \
+  sizeType blockLength()
+#include <blitz/memblock.h>
+#undef blockLength
+  
 #include <blitz/array.h>
 #include <blitz/range.h>
 #define PY_ARRAY_UNIQUE_SYMBOL geocal_ARRAY_API
@@ -5440,8 +5438,84 @@ namespace swig
 // We'll have to update this as the numpy API increases
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <numpy/arrayobject.h>
-#include "geocal_exception.h"
 
+//--------------------------------------------------------------
+// Helper class for python that holds an object and when deleted
+// decrements the reference to it.
+//--------------------------------------------------------------
+
+class PythonObject {
+public:
+  PythonObject(PyObject* Obj = 0) : obj(Obj) {}
+  ~PythonObject() { Py_XDECREF(obj); }
+  PyObject* obj;
+  operator PyObject*() {return obj;}
+};
+
+//--------------------------------------------------------------
+/// Special memory block for blitz. This doesn't actually own
+/// the data, rather it owns a reference to a PythonObject that
+/// keeps a reference to the numpy PythonObject so it doesn't
+/// go away on the python side while we are using it on the
+/// C++ side. 
+//--------------------------------------------------------------
+
+template<typename P_type>
+class PythonMemoryBlock : public blitz::MemoryBlock<P_type> {
+public:
+  typedef P_type T_type;
+  PythonMemoryBlock(PyObject* numpy_obj)
+    : blitz::MemoryBlock<P_type>(PyArray_NBYTES((PyArrayObject*) numpy_obj),
+		 (T_type *) PyArray_DATA((PyArrayObject*) numpy_obj)),
+      python_obj(numpy_obj)
+  {
+    Py_XINCREF(python_obj); 
+#ifdef BZ_DEBUG_LOG_ALLOCATIONS
+    std::cout << "PythonMemoryBlock: have reference to numpy object data at " << blitz::MemoryBlock<P_type>::data() << "\n"
+	      << "   numpy python object " << python_obj << "\n"
+	      << "   numpy python object ref count (after incrementing) " << Py_REFCNT(python_obj) <<"\n";
+#endif    
+  }
+  virtual ~PythonMemoryBlock()
+  {
+    // Don't actually want to free real data. Instead, we just
+    // have the python_obj go out of scope to clean up our reference
+    // to it.
+    blitz::MemoryBlock<P_type>::dataBlockAddress() = 0;
+#ifdef BZ_DEBUG_LOG_ALLOCATIONS
+    std::cout << "PythonMemoryBlock: removing reference to numpy object data at " << blitz::MemoryBlock<P_type>::data() << "\n"
+	      << "   numpy python object " << python_obj << "\n"
+	      << "   numpy python object ref count (before decrementing) " << Py_REFCNT(python_obj) <<"\n";
+#endif    
+    Py_XDECREF(python_obj);
+  }
+private:
+  PyObject* python_obj;
+};
+
+//--------------------------------------------------------------
+/// Don't actually need a special MemoryBlockReference, except
+/// that this is the only way to change the block of an existing
+/// MemoryBlockReference (e.g., a blitz::Array). So this briefly
+/// exists, uses itself to change the block, and then disappears.
+//--------------------------------------------------------------
+
+template<typename P_type>
+class PythonMemoryBlockReference : public blitz::MemoryBlockReference<P_type> {
+public:
+  typedef P_type T_type;
+  template<int N_rank>
+  PythonMemoryBlockReference(blitz::Array<T_type, N_rank>& a,
+			   PyObject* numpy_obj)
+    : blitz::MemoryBlockReference<T_type>(0, a.data(),
+					  blitz::neverDeleteData)
+  {
+    blitz::MemoryBlockReference<T_type>::block_ =
+      new PythonMemoryBlock<T_type>(numpy_obj);
+    a.changeBlock(*this);
+  }
+};
+ 
 PyObject* numpy_module();
 PyObject* numpy_dot_float64();
 PyObject* numpy_dot_float32();
@@ -5579,11 +5653,11 @@ template<class T, int D> inline blitz::Array<T, D>
     std::cerr << PyArray_NDIM(numpy) << "\n"
 	      << D << "\n";
     throw 
-      GeoCal::Exception("Dimension of array is not the expected size");
+      std::runtime_error("Dimension of array is not the expected size");
   }
   if(PyArray_TYPE(numpy) != type_to_npy<T>()) {
     throw 
-      GeoCal::Exception("Type of array not the expected type");
+      std::runtime_error("Type of array not the expected type");
   }
   blitz::TinyVector<int, D> shape, stride;
   for(int i = 0; i < D; ++i) {
@@ -5593,11 +5667,15 @@ template<class T, int D> inline blitz::Array<T, D>
     stride(i) = PyArray_STRIDE(numpy, i) / sizeof(T);
     if((int) (stride(i) * sizeof(T)) != (int) PyArray_STRIDE(numpy, i)) {
       throw 
-	GeoCal::Exception("blitz::Array can't handle strides that aren't an even multiple of sizeof(T)");
+	std::runtime_error("blitz::Array can't handle strides that aren't an even multiple of sizeof(T)");
     }
   }
-  return blitz::Array<T, D>((T*)PyArray_DATA(numpy), shape, stride, 
-			    blitz::neverDeleteData);
+  blitz::Array<T, D> a((T*)PyArray_DATA(numpy), shape, stride, 
+		       blitz::neverDeleteData);
+  // Stash a reference to numpy_obj in array, so it doesn't disappear
+  // while the blitz::Array still exists
+  PythonMemoryBlockReference<T> br(a, numpy_obj);
+  return a;
 }
 
 
@@ -5610,7 +5688,7 @@ template<class T, int D> inline boost::array<T, D>
 {
   blitz::Array<T, 1> b = to_blitz_array<T, 1>(numpy);
   if(b.rows() != D)
-     throw GeoCal::Exception("Array not expeced size");
+    throw std::runtime_error("Array not expeced size");
   boost::array<T, D> res;
   for(int i = 0; i < D; ++i)
     res[i]= b(i);
@@ -5619,6 +5697,7 @@ template<class T, int D> inline boost::array<T, D>
 
 
 #include <ios>
+#include <stdexcept>  
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/categories.hpp>
 
@@ -5639,7 +5718,7 @@ public:
   {
     PyObject* res = PyObject_CallMethod(fh, "read", "(i)", (int) n);
     if(res == NULL) {
-      throw GeoCal::Exception("Call to FileHandle read failed");
+      throw std::runtime_error("Call to FileHandle read failed");
     }
     char *rescp = PyBytes_AsString(res);
     std::copy(rescp, rescp + n, s);
@@ -5648,7 +5727,7 @@ public:
   }
   std::streamoff seek(std::streamoff off, std::ios_base::seekdir way)
   {
-    throw GeoCal::Exception("Not implemented");
+    throw std::runtime_error("Not implemented");
   }
   std::streamsize write(const char* s, std::streamsize n)
   {
@@ -5659,7 +5738,7 @@ public:
     PyObject* res = PyObject_CallMethod(fh, "write", "(s#)", s, (int) n);
 #endif    
     if(res == NULL) {
-      throw GeoCal::Exception("Call to FileHandle write failed");
+      throw std::runtime_error("Call to FileHandle write failed");
     } else {
       Py_DECREF(res);
     }
@@ -6805,7 +6884,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Resampler" "', argument " "1"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Resampler" "', argument " "1"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp1) tempshared1 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp1);
@@ -6814,6 +6893,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     } else {
       arg1 = (argp1) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp1) : &tempshared1;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -6830,7 +6910,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     int newmem = 0;
     res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_Resampler" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_Resampler" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp2) tempshared2 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2);
@@ -6839,6 +6919,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     } else {
       arg2 = (argp2) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2) : &tempshared2;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -6862,7 +6943,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     } else {
       res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t,  0 , &newmem);
       if (!SWIG_IsOK(res3)) {
-        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'");
       }
       if (!argp3) {
         SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
@@ -6931,7 +7012,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Resampler" "', argument " "1"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Resampler" "', argument " "1"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp1) tempshared1 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp1);
@@ -6940,6 +7021,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     } else {
       arg1 = (argp1) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp1) : &tempshared1;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -6956,7 +7038,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     int newmem = 0;
     res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_Resampler" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_Resampler" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp2) tempshared2 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2);
@@ -6965,6 +7047,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     } else {
       arg2 = (argp2) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2) : &tempshared2;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -6988,7 +7071,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     } else {
       res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t,  0 , &newmem);
       if (!SWIG_IsOK(res3)) {
-        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'");
       }
       if (!argp3) {
         SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
@@ -7049,7 +7132,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Resampler" "', argument " "1"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Resampler" "', argument " "1"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp1) tempshared1 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp1);
@@ -7058,6 +7141,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
     } else {
       arg1 = (argp1) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp1) : &tempshared1;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -7074,7 +7158,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
     int newmem = 0;
     res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_Resampler" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_Resampler" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp2) tempshared2 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2);
@@ -7083,6 +7167,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
     } else {
       arg2 = (argp2) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2) : &tempshared2;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -7106,7 +7191,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
     } else {
       res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t,  0 , &newmem);
       if (!SWIG_IsOK(res3)) {
-        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'");
       }
       if (!argp3) {
         SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
@@ -7205,7 +7290,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_3(PyObject *SWIGUNUSEDPARM(self),
     } else {
       res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t,  0 , &newmem);
       if (!SWIG_IsOK(res3)) {
-        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'");
       }
       if (!argp3) {
         SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
@@ -7311,7 +7396,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_4(PyObject *SWIGUNUSEDPARM(self),
     } else {
       res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t,  0 , &newmem);
       if (!SWIG_IsOK(res3)) {
-        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'");
       }
       if (!argp3) {
         SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
@@ -7409,7 +7494,7 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_5(PyObject *SWIGUNUSEDPARM(self),
     } else {
       res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t,  0 , &newmem);
       if (!SWIG_IsOK(res3)) {
-        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'");
       }
       if (!argp3) {
         SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Resampler" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
@@ -7552,7 +7637,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_0(PyObject *SWIGUNUSED
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
@@ -7567,7 +7652,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_0(PyObject *SWIGUNUSED
     int newmem = 0;
     res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_resample_field" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_resample_field" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp2) tempshared2 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2);
@@ -7576,6 +7661,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_0(PyObject *SWIGUNUSED
     } else {
       arg2 = (argp2) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2) : &tempshared2;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -7618,6 +7704,9 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_0(PyObject *SWIGUNUSED
     }
   }
   {
+    // Treat as pointer for the purposes of the macro
+    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
       dims[i] = (&result)->extent(i);
@@ -7625,12 +7714,16 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_0(PyObject *SWIGUNUSED
       // of type T.
       stride[i] = (&result)->stride(i) * sizeof(double);
     }
+    
+    // Create new numpy object using Numpy C API
     resultobj = PyArray_New(&PyArray_Type, 2, dims, type_to_npy<double >(), 
       stride, (&result)->data(), 0, 0, 0);
-    blitz::Array<double, 2>* t = new blitz::Array<double, 2>(result);
-    PyArray_SetBaseObject((PyArrayObject*)resultobj, 
+    blitz::Array<double, 2>* t = new blitz::Array<double, 2>(*(&result));
+    // Stash pointer to original blitz array as detailed above
+    PyArray_SetBaseObject((PyArrayObject*) resultobj, 
       SWIG_NewPointerObj(SWIG_as_voidptr(t), 
-        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | 0 ));
+        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | SWIG_POINTER_OWN ));
+    /*@SWIG@*/;
   }
   return resultobj;
 fail:
@@ -7666,7 +7759,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_1(PyObject *SWIGUNUSED
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
@@ -7681,7 +7774,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_1(PyObject *SWIGUNUSED
     int newmem = 0;
     res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_resample_field" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_resample_field" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp2) tempshared2 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2);
@@ -7690,6 +7783,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_1(PyObject *SWIGUNUSED
     } else {
       arg2 = (argp2) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2) : &tempshared2;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -7727,6 +7821,9 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_1(PyObject *SWIGUNUSED
     }
   }
   {
+    // Treat as pointer for the purposes of the macro
+    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
       dims[i] = (&result)->extent(i);
@@ -7734,12 +7831,16 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_1(PyObject *SWIGUNUSED
       // of type T.
       stride[i] = (&result)->stride(i) * sizeof(double);
     }
+    
+    // Create new numpy object using Numpy C API
     resultobj = PyArray_New(&PyArray_Type, 2, dims, type_to_npy<double >(), 
       stride, (&result)->data(), 0, 0, 0);
-    blitz::Array<double, 2>* t = new blitz::Array<double, 2>(result);
-    PyArray_SetBaseObject((PyArrayObject*)resultobj, 
+    blitz::Array<double, 2>* t = new blitz::Array<double, 2>(*(&result));
+    // Stash pointer to original blitz array as detailed above
+    PyArray_SetBaseObject((PyArrayObject*) resultobj, 
       SWIG_NewPointerObj(SWIG_as_voidptr(t), 
-        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | 0 ));
+        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | SWIG_POINTER_OWN ));
+    /*@SWIG@*/;
   }
   return resultobj;
 fail:
@@ -7772,7 +7873,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_2(PyObject *SWIGUNUSED
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
@@ -7787,7 +7888,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_2(PyObject *SWIGUNUSED
     int newmem = 0;
     res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_resample_field" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_resample_field" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp2) tempshared2 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2);
@@ -7796,6 +7897,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_2(PyObject *SWIGUNUSED
     } else {
       arg2 = (argp2) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2) : &tempshared2;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -7828,6 +7930,9 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_2(PyObject *SWIGUNUSED
     }
   }
   {
+    // Treat as pointer for the purposes of the macro
+    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
       dims[i] = (&result)->extent(i);
@@ -7835,12 +7940,16 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_2(PyObject *SWIGUNUSED
       // of type T.
       stride[i] = (&result)->stride(i) * sizeof(double);
     }
+    
+    // Create new numpy object using Numpy C API
     resultobj = PyArray_New(&PyArray_Type, 2, dims, type_to_npy<double >(), 
       stride, (&result)->data(), 0, 0, 0);
-    blitz::Array<double, 2>* t = new blitz::Array<double, 2>(result);
-    PyArray_SetBaseObject((PyArrayObject*)resultobj, 
+    blitz::Array<double, 2>* t = new blitz::Array<double, 2>(*(&result));
+    // Stash pointer to original blitz array as detailed above
+    PyArray_SetBaseObject((PyArrayObject*) resultobj, 
       SWIG_NewPointerObj(SWIG_as_voidptr(t), 
-        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | 0 ));
+        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | SWIG_POINTER_OWN ));
+    /*@SWIG@*/;
   }
   return resultobj;
 fail:
@@ -7870,7 +7979,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_3(PyObject *SWIGUNUSED
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
@@ -7885,7 +7994,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_3(PyObject *SWIGUNUSED
     int newmem = 0;
     res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_resample_field" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_resample_field" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp2) tempshared2 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2);
@@ -7894,6 +8003,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_3(PyObject *SWIGUNUSED
     } else {
       arg2 = (argp2) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2) : &tempshared2;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -7921,6 +8031,9 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_3(PyObject *SWIGUNUSED
     }
   }
   {
+    // Treat as pointer for the purposes of the macro
+    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
       dims[i] = (&result)->extent(i);
@@ -7928,12 +8041,16 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_3(PyObject *SWIGUNUSED
       // of type T.
       stride[i] = (&result)->stride(i) * sizeof(double);
     }
+    
+    // Create new numpy object using Numpy C API
     resultobj = PyArray_New(&PyArray_Type, 2, dims, type_to_npy<double >(), 
       stride, (&result)->data(), 0, 0, 0);
-    blitz::Array<double, 2>* t = new blitz::Array<double, 2>(result);
-    PyArray_SetBaseObject((PyArrayObject*)resultobj, 
+    blitz::Array<double, 2>* t = new blitz::Array<double, 2>(*(&result));
+    // Stash pointer to original blitz array as detailed above
+    PyArray_SetBaseObject((PyArrayObject*) resultobj, 
       SWIG_NewPointerObj(SWIG_as_voidptr(t), 
-        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | 0 ));
+        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | SWIG_POINTER_OWN ));
+    /*@SWIG@*/;
   }
   return resultobj;
 fail:
@@ -7960,7 +8077,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_4(PyObject *SWIGUNUSED
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
@@ -7975,7 +8092,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_4(PyObject *SWIGUNUSED
     int newmem = 0;
     res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_resample_field" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_resample_field" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp2) tempshared2 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2);
@@ -7984,6 +8101,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_4(PyObject *SWIGUNUSED
     } else {
       arg2 = (argp2) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2) : &tempshared2;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -8006,6 +8124,9 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_4(PyObject *SWIGUNUSED
     }
   }
   {
+    // Treat as pointer for the purposes of the macro
+    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
       dims[i] = (&result)->extent(i);
@@ -8013,12 +8134,16 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_4(PyObject *SWIGUNUSED
       // of type T.
       stride[i] = (&result)->stride(i) * sizeof(double);
     }
+    
+    // Create new numpy object using Numpy C API
     resultobj = PyArray_New(&PyArray_Type, 2, dims, type_to_npy<double >(), 
       stride, (&result)->data(), 0, 0, 0);
-    blitz::Array<double, 2>* t = new blitz::Array<double, 2>(result);
-    PyArray_SetBaseObject((PyArrayObject*)resultobj, 
+    blitz::Array<double, 2>* t = new blitz::Array<double, 2>(*(&result));
+    // Stash pointer to original blitz array as detailed above
+    PyArray_SetBaseObject((PyArrayObject*) resultobj, 
       SWIG_NewPointerObj(SWIG_as_voidptr(t), 
-        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | 0 ));
+        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | SWIG_POINTER_OWN ));
+    /*@SWIG@*/;
   }
   return resultobj;
 fail:
@@ -8046,7 +8171,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_dqi(PyObject *SWIGUNUSEDPARM(self)
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_dqi" "', argument " "1"" of type '" "Ecostress::Resampler const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_dqi" "', argument " "1"" of type '" "Ecostress::Resampler const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
@@ -8061,7 +8186,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_dqi(PyObject *SWIGUNUSEDPARM(self)
     int newmem = 0;
     res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_resample_dqi" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_resample_dqi" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp2) tempshared2 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2);
@@ -8070,6 +8195,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_dqi(PyObject *SWIGUNUSEDPARM(self)
     } else {
       arg2 = (argp2) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2) : &tempshared2;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -8092,6 +8218,9 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_dqi(PyObject *SWIGUNUSEDPARM(self)
     }
   }
   {
+    // Treat as pointer for the purposes of the macro
+    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
       dims[i] = (&result)->extent(i);
@@ -8099,12 +8228,16 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_dqi(PyObject *SWIGUNUSEDPARM(self)
       // of type T.
       stride[i] = (&result)->stride(i) * sizeof(int);
     }
+    
+    // Create new numpy object using Numpy C API
     resultobj = PyArray_New(&PyArray_Type, 2, dims, type_to_npy<int >(), 
       stride, (&result)->data(), 0, 0, 0);
-    blitz::Array<int, 2>* t = new blitz::Array<int, 2>(result);
-    PyArray_SetBaseObject((PyArrayObject*)resultobj, 
+    blitz::Array<int, 2>* t = new blitz::Array<int, 2>(*(&result));
+    // Stash pointer to original blitz array as detailed above
+    PyArray_SetBaseObject((PyArrayObject*) resultobj, 
       SWIG_NewPointerObj(SWIG_as_voidptr(t), 
-        SWIGTYPE_p_blitz__ArrayT_int_2_t, 					   SWIG_POINTER_NEW | 0 ));
+        SWIGTYPE_p_blitz__ArrayT_int_2_t, 					   SWIG_POINTER_NEW | SWIG_POINTER_OWN ));
+    /*@SWIG@*/;
   }
   return resultobj;
 fail:
@@ -8143,7 +8276,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_5(PyObject *SWIGUNUSED
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
@@ -8169,7 +8302,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_5(PyObject *SWIGUNUSED
     int newmem = 0;
     res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Resampler_resample_field" "', argument " "3"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Resampler_resample_field" "', argument " "3"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp3) tempshared3 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3);
@@ -8178,6 +8311,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_5(PyObject *SWIGUNUSED
     } else {
       arg3 = (argp3) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3) : &tempshared3;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -8264,7 +8398,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_6(PyObject *SWIGUNUSED
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
@@ -8290,7 +8424,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_6(PyObject *SWIGUNUSED
     int newmem = 0;
     res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Resampler_resample_field" "', argument " "3"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Resampler_resample_field" "', argument " "3"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp3) tempshared3 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3);
@@ -8299,6 +8433,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_6(PyObject *SWIGUNUSED
     } else {
       arg3 = (argp3) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3) : &tempshared3;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -8377,7 +8512,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_7(PyObject *SWIGUNUSED
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
@@ -8403,7 +8538,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_7(PyObject *SWIGUNUSED
     int newmem = 0;
     res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Resampler_resample_field" "', argument " "3"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Resampler_resample_field" "', argument " "3"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp3) tempshared3 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3);
@@ -8412,6 +8547,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_7(PyObject *SWIGUNUSED
     } else {
       arg3 = (argp3) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3) : &tempshared3;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -8483,7 +8619,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_8(PyObject *SWIGUNUSED
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
@@ -8509,7 +8645,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_8(PyObject *SWIGUNUSED
     int newmem = 0;
     res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Resampler_resample_field" "', argument " "3"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Resampler_resample_field" "', argument " "3"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp3) tempshared3 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3);
@@ -8518,6 +8654,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_8(PyObject *SWIGUNUSED
     } else {
       arg3 = (argp3) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3) : &tempshared3;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -8573,7 +8710,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_9(PyObject *SWIGUNUSED
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_resample_field" "', argument " "1"" of type '" "Ecostress::Resampler const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
@@ -8599,7 +8736,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_9(PyObject *SWIGUNUSED
     int newmem = 0;
     res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Resampler_resample_field" "', argument " "3"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Resampler_resample_field" "', argument " "3"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       if (argp3) tempshared3 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3);
@@ -8608,6 +8745,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_9(PyObject *SWIGUNUSED
     } else {
       arg3 = (argp3) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp3) : &tempshared3;
     }
+    // Added mms
     // Special handling if this is a director class. In that case, we
     // don't own the underlying python object. Instead,
     // we tell python we have a reference to the underlying object, and
@@ -8822,7 +8960,7 @@ SWIGINTERN PyObject *_wrap_Resampler_map_values(PyObject *SWIGUNUSEDPARM(self), 
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_map_values" "', argument " "1"" of type '" "Ecostress::Resampler const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_map_values" "', argument " "1"" of type '" "Ecostress::Resampler const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
@@ -8844,7 +8982,7 @@ SWIGINTERN PyObject *_wrap_Resampler_map_values(PyObject *SWIGUNUSEDPARM(self), 
     } else {
       res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__Dem_t,  0 , &newmem);
       if (!SWIG_IsOK(res2)) {
-        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_map_values" "', argument " "2"" of type '" "GeoCal::Dem const &""'"); 
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_map_values" "', argument " "2"" of type '" "GeoCal::Dem const &""'");
       }
       if (!argp2) {
         SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Resampler_map_values" "', argument " "2"" of type '" "GeoCal::Dem const &""'"); 
@@ -8869,6 +9007,9 @@ SWIGINTERN PyObject *_wrap_Resampler_map_values(PyObject *SWIGUNUSEDPARM(self), 
   }
   resultobj = SWIG_Py_Void();
   {
+    PyObject *res;
+    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
       dims[i] = arg3->extent(i);
@@ -8876,15 +9017,22 @@ SWIGINTERN PyObject *_wrap_Resampler_map_values(PyObject *SWIGUNUSEDPARM(self), 
       // of type T.
       stride[i] = arg3->stride(i) * sizeof(double);
     }
-    PyObject *res = PyArray_New(&PyArray_Type, 2, dims, type_to_npy<double >(), 
+    
+    // Create new numpy object using Numpy C API
+    res = PyArray_New(&PyArray_Type, 2, dims, type_to_npy<double >(), 
       stride, arg3->data(), 0, 0, 0);
     blitz::Array<double, 2>* t = new blitz::Array<double, 2>(*arg3);
-    PyArray_SetBaseObject((PyArrayObject*)res, 
+    // Stash pointer to original blitz array as detailed above
+    PyArray_SetBaseObject((PyArrayObject*) res, 
       SWIG_NewPointerObj(SWIG_as_voidptr(t), 
-        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | 0 ));
+        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | SWIG_POINTER_OWN ));
+    /*@SWIG@*/;
     resultobj = SWIG_Python_AppendOutput(resultobj, res);
   }
   {
+    PyObject *res;
+    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
       dims[i] = arg4->extent(i);
@@ -8892,15 +9040,22 @@ SWIGINTERN PyObject *_wrap_Resampler_map_values(PyObject *SWIGUNUSEDPARM(self), 
       // of type T.
       stride[i] = arg4->stride(i) * sizeof(double);
     }
-    PyObject *res = PyArray_New(&PyArray_Type, 2, dims, type_to_npy<double >(), 
+    
+    // Create new numpy object using Numpy C API
+    res = PyArray_New(&PyArray_Type, 2, dims, type_to_npy<double >(), 
       stride, arg4->data(), 0, 0, 0);
     blitz::Array<double, 2>* t = new blitz::Array<double, 2>(*arg4);
-    PyArray_SetBaseObject((PyArrayObject*)res, 
+    // Stash pointer to original blitz array as detailed above
+    PyArray_SetBaseObject((PyArrayObject*) res, 
       SWIG_NewPointerObj(SWIG_as_voidptr(t), 
-        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | 0 ));
+        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | SWIG_POINTER_OWN ));
+    /*@SWIG@*/;
     resultobj = SWIG_Python_AppendOutput(resultobj, res);
   }
   {
+    PyObject *res;
+    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
       dims[i] = arg5->extent(i);
@@ -8908,12 +9063,16 @@ SWIGINTERN PyObject *_wrap_Resampler_map_values(PyObject *SWIGUNUSEDPARM(self), 
       // of type T.
       stride[i] = arg5->stride(i) * sizeof(double);
     }
-    PyObject *res = PyArray_New(&PyArray_Type, 2, dims, type_to_npy<double >(), 
+    
+    // Create new numpy object using Numpy C API
+    res = PyArray_New(&PyArray_Type, 2, dims, type_to_npy<double >(), 
       stride, arg5->data(), 0, 0, 0);
     blitz::Array<double, 2>* t = new blitz::Array<double, 2>(*arg5);
-    PyArray_SetBaseObject((PyArrayObject*)res, 
+    // Stash pointer to original blitz array as detailed above
+    PyArray_SetBaseObject((PyArrayObject*) res, 
       SWIG_NewPointerObj(SWIG_as_voidptr(t), 
-        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | 0 ));
+        SWIGTYPE_p_blitz__ArrayT_double_2_t, 					   SWIG_POINTER_NEW | SWIG_POINTER_OWN ));
+    /*@SWIG@*/;
     resultobj = SWIG_Python_AppendOutput(resultobj, res);
   }
   return resultobj;
@@ -8938,7 +9097,7 @@ SWIGINTERN PyObject *_wrap_Resampler__v_map_info(PyObject *SWIGUNUSEDPARM(self),
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler__v_map_info" "', argument " "1"" of type '" "Ecostress::Resampler const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler__v_map_info" "', argument " "1"" of type '" "Ecostress::Resampler const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
@@ -8984,7 +9143,7 @@ SWIGINTERN PyObject *_wrap_Resampler__v_number_sub_pixel(PyObject *SWIGUNUSEDPAR
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler__v_number_sub_pixel" "', argument " "1"" of type '" "Ecostress::Resampler const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler__v_number_sub_pixel" "', argument " "1"" of type '" "Ecostress::Resampler const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
@@ -9027,7 +9186,7 @@ SWIGINTERN PyObject *_wrap_Resampler___str__(PyObject *SWIGUNUSEDPARM(self), PyO
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler___str__" "', argument " "1"" of type '" "Ecostress::Resampler const *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler___str__" "', argument " "1"" of type '" "Ecostress::Resampler const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
@@ -9069,7 +9228,7 @@ SWIGINTERN PyObject *_wrap_delete_Resampler(PyObject *SWIGUNUSEDPARM(self), PyOb
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Resampler" "', argument " "1"" of type '" "Ecostress::Resampler *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Resampler" "', argument " "1"" of type '" "Ecostress::Resampler *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::Resampler > * >(argp1);
@@ -9979,6 +10138,7 @@ static swig_type_info _swigt__p_blitz__ArrayT_unsigned_short_5_t = {"_p_blitz__A
 static swig_type_info _swigt__p_blitz__ArrayT_unsigned_short_6_t = {"_p_blitz__ArrayT_unsigned_short_6_t", "blitz::Array< unsigned short,6 > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_blitz__ArrayT_unsigned_short_7_t = {"_p_blitz__ArrayT_unsigned_short_7_t", "blitz::Array< unsigned short,7 > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_blitz__ArrayT_unsigned_short_8_t = {"_p_blitz__ArrayT_unsigned_short_8_t", "blitz::Array< unsigned short,8 > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_blitz__Range = {"_p_blitz__Range", "blitz::Range *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_Ecostress__Resampler_t = {"_p_boost__shared_ptrT_Ecostress__Resampler_t", "boost::shared_ptr< Ecostress::Resampler > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t = {"_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t", "boost::shared_ptr< GeoCal::ArrayAd< double,1 > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t = {"_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t", "boost::shared_ptr< GeoCal::ArrayAd< double,2 > > *", 0, 0, (void*)0, 0};
@@ -10199,6 +10359,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_blitz__ArrayT_unsigned_short_6_t,
   &_swigt__p_blitz__ArrayT_unsigned_short_7_t,
   &_swigt__p_blitz__ArrayT_unsigned_short_8_t,
+  &_swigt__p_blitz__Range,
   &_swigt__p_boost__shared_ptrT_Ecostress__Resampler_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t,
@@ -10419,6 +10580,7 @@ static swig_cast_info _swigc__p_blitz__ArrayT_unsigned_short_5_t[] = {  {&_swigt
 static swig_cast_info _swigc__p_blitz__ArrayT_unsigned_short_6_t[] = {  {&_swigt__p_blitz__ArrayT_unsigned_short_6_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_blitz__ArrayT_unsigned_short_7_t[] = {  {&_swigt__p_blitz__ArrayT_unsigned_short_7_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_blitz__ArrayT_unsigned_short_8_t[] = {  {&_swigt__p_blitz__ArrayT_unsigned_short_8_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_blitz__Range[] = {  {&_swigt__p_blitz__Range, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_Ecostress__Resampler_t[] = {  {&_swigt__p_boost__shared_ptrT_Ecostress__Resampler_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -10639,6 +10801,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_blitz__ArrayT_unsigned_short_6_t,
   _swigc__p_blitz__ArrayT_unsigned_short_7_t,
   _swigc__p_blitz__ArrayT_unsigned_short_8_t,
+  _swigc__p_blitz__Range,
   _swigc__p_boost__shared_ptrT_Ecostress__Resampler_t,
   _swigc__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t,
   _swigc__p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t,

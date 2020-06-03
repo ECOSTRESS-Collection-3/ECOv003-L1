@@ -1,27 +1,29 @@
 # We require all the packages geocal requires (see requirements.txt for that
 # package), plus stuff listed in this file.
 #
-# Note that at least on pistol, tflearn and tensorflow give an illegal
-# instruction if we build using wheel. So likely want to use the
-# --no-binary :all: to force a local build
-cython
+# The recent tensorflow (past 1.5) get an illegal instruction if
+# you do a pip install. Turns out the software is built to require
+# AVX instructions. No easy way to do this on pistol. But it is on
+# rifle, so we can just use that machine
+# Check with "grep flags /proc/cpuinfo | grep avx"
+#
+# Unfortunately, the newer version of tensoflow pip packages require much
+# newer version of gcc. So we need to build ourselves.
+# Need to match bazel version with tensorflow
+# (see https://www.tensorflow.org/install/source).
+# We built on rifle. bazel 0.24.1 (from https://github.com/bazelbuild/bazel/releases/download/0.24.1/bazel-0.24.1-linux-x86_64)
+# Install as "bazel" in path"
+# tensorflow 1.14
+# ./configure (accept all the defaults)
+# bazel build --config=opt //tensorflow/tools/pip_package:build_pip_package
+# ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+# This creates a whl package /tmp/tensorflow_pkg/tensorflow-version-tags.whl
+# We can then grab that wheel, stash it somewhere, and install it using pip
+#
+cythonp
 xlrd
 tflearn
-# On pistol, Installed
-# all the dependencies
-# pip install --no-binary :all: tflearn absl-py astor bleach==1.5.0 gast grpcio html5lib==0.9999999 markdown protobuf werkzeug wheel
-# pip install --upgrade --force-reinstall --no-binary :all: numpy
-# Note that tensorflow 1.6 has an illegal instruction (see https://github.com/tensorflow/tensorflow/issues/17411). We can work around this by forcing the
-# version to use as 1.5.0
-#
-# For ecostress, we can use the intel built version of this (we'll need to
-# test to make sure this works). See https://software.intel.com/en-us/articles/intel-optimized-tensorflow-wheel-now-available
-# We do this with:
-# pip install https://anaconda.org/intel/tensorflow/1.6.0/download/tensorflow-1.6.0-cp35-cp35m-linux_x86_64.whl
-# On pistol, this version has an illegal instruction
-#
-# Turns out on eco-tb1 this has really terrible peformance, it completely sucks
-# up the machine and has really bad performance. Not sure why this is so
-# crappy, but looks like we are much better off using tensorflow==1.5.0 ther
-# also
-tensorflow==1.5.0
+# Don't got to tensorflow 2.x, I don't know that something isn't broken by
+# this. Note the complicated directions above for getting this wheel. Can
+# then just install it "pip install <the wheel>"
+tensorflow==1.14.0

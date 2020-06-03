@@ -232,10 +232,7 @@ def igc_btob(unit_test_data, test_data, orb_fname):
     igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
     yield igc
 
-slow = pytest.mark.skipif(
-    not pytest.config.getoption("--run-slow"),
-    reason="need --run-slow option to run"
-)
+slow = pytest.mark.slow
 
 # Short hand for marking as unconditional skipping. Good for tests we
 # don't normally run, but might want to comment out for a specific debugging

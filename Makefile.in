@@ -136,6 +136,7 @@ am__aclocal_m4_deps = $(top_srcdir)/config/m4/ac_check_found.m4 \
 	$(top_srcdir)/config/m4/ac_python_sphinx.m4 \
 	$(top_srcdir)/config/m4/afids_location.m4 \
 	$(top_srcdir)/config/m4/afids_python.m4 \
+	$(top_srcdir)/config/m4/ax_cxx_compile_stdcxx.m4 \
 	$(top_srcdir)/config/m4/ax_python_module.m4 \
 	$(top_srcdir)/config/m4/ecostress_common.m4 \
 	$(top_srcdir)/config/m4/ecostress_source_directory.m4 \
@@ -661,6 +662,7 @@ GREP = @GREP@
 H5DIFF = @H5DIFF@
 HAVE_CSH = @HAVE_CSH@
 HAVE_CXX = @HAVE_CXX@
+HAVE_CXX11 = @HAVE_CXX11@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@

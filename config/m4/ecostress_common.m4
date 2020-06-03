@@ -54,6 +54,13 @@ AM_PROG_CC_C_O
 AC_ENABLE_DEBUG
 
 #=================================================================
+# GeoCal now requires C++11, so we'll go ahead and require that
+# here also.
+#=================================================================
+
+AX_CXX_COMPILE_STDCXX([11], [ext], [mandatory])
+
+#=================================================================
 # Test if we are using GCC compiler. Some flags get set in the 
 # Makefile that should only be set for GCC.
 #=================================================================

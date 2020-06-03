@@ -1,7 +1,8 @@
 #ifndef UNIT_TEST_SUPPORT_H
 #define UNIT_TEST_SUPPORT_H
 #include "global_fixture.h"
-#include "geocal/geocal_serialize_function.h"
+#define SWIG_MAPPER_NAMESPACE GeoCal
+#include "geocal/serialize_function.h"
 #include <boost/test/unit_test.hpp>
 #include <boost/test/floating_point_comparison.hpp>
 #include <boost/make_shared.hpp>
