@@ -5,6 +5,8 @@
 CYTHON_FLAGS=--cplus -3
 
 EXTRA_DIST += $(CYTHON_SRC)
+EXTRA_DIST += @pythonswigsrc@/cython_init.tmpl
+EXTRA_DIST += @pythonswigsrc@/swig_wrap.tmpl
 
 # Noe that this is a little more complicated than maybe we need. Cython
 # will by default create a library file per module. However, we inheritted

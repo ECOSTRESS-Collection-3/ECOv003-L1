@@ -48,3 +48,11 @@ create-ecostress-dependency-repo:
 	docker container stop $$(cat docker_run.id)
 
 # source /opt/afids/setup_afids_env.sh
+
+EXTRA_DIST+= docker/README
+EXTRA_DIST+= docker/afids-docker/Dockerfile
+EXTRA_DIST+= docker/ecostress-dependency-repo/ecostress-dependency.repo
+EXTRA_DIST+= docker/ecostress-dependency-repo/ecostress-python-package.spec
+# Leave out repo and package because of the size. We can reevaluate that
+# if needed
+EXTRA_DIST+= docker/ecostress-dependency-docker/Dockerfile

@@ -54,6 +54,7 @@ ecostressinc_HEADERS+= @srclib@/simulated_radiance.h
 libecostress_la_SOURCES+= @srclib@/simulated_radiance.cc
 
 # Files that contain SWIG wrapper information.
+ecostressswiginc_HEADERS+= @srclib@/ecostress_common.i
 SWIG_SRC += @swigsrc@/ecostress_swig_array_wrap.cc
 ecostressswiginc_HEADERS+= @srclib@/ecostress_swig_array.i
 SWIG_SRC += @swigsrc@/ecostress_dqi_wrap.cc

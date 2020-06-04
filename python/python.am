@@ -14,7 +14,9 @@ python-check: script/setup_ecostress.sh
 
 CHECK_HOOK+= python-check
 
+EXTRA_DIST+= @srcpython@/pytest.ini
+EXTRA_DIST+= @srcpython@/conftest.py
+EXTRA_DIST+= @srcpython@/ecostress/__init__.py
+EXTRA_DIST+= @srcpython@/ecostress/README
+
 include python/lib/lib.am
-
-
-

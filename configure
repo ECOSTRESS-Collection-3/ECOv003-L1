@@ -655,6 +655,7 @@ swigsrc
 pythonswigsrc
 pythonsrccython
 srccython
+testsupportsrc
 srcpythonlib
 srclib
 srcpdf
@@ -19676,6 +19677,8 @@ srcpdf=vicar_pdf
 srclib=lib
 
 srcpythonlib=${srcpython}/lib
+
+testsupportsrc=${srcpython}/test_support
 
 srccython=bindings/python/cython
 

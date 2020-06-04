@@ -5,6 +5,11 @@
 TENSORFLOW_VERSION = 1.14.0
 BAZEL_VERSION = 0.24.1
 
+EXTRA_DIST+= thirdparty/README
+# Don't put the wheel in the dist file. It is really pretty big. We can
+# reevaluate that if needed, but for now skip
+# EXTRA_DIST+= thirdparty/tensorflow-1.14.0-cp37-cp37m-linux_x86_64.whl
+
 tensorflow-$(TENSORFLOW_VERSION).tar.gz:
 	curl -L -o $@ https://github.com/tensorflow/tensorflow/archive/v$(TENSORFLOW_VERSION).tar.gz
 

@@ -5,6 +5,15 @@ dist_installecostress_SCRIPTS =
 SWIG_FLAG =
 installecostress_SCRIPTS = ecostress_version.py
 
+EXTRA_DIST+= README.md requirements.txt Setup.md
+EXTRA_DIST+= end_to_end_testing
+EXTRA_DIST+= coreg_test
+EXTRA_DIST+= config/doxygen.cfg
+EXTRA_DIST+= config/doc_footer.html
+EXTRA_DIST+= config/create_python_init.py
+EXTRA_DIST+= config/doxy2swig.py
+EXTRA_DIST+= config/doxygen_single.cfg
+
 # End to end test. This should be run after install
 # (so like an installcheck, but we run this separate because
 # it potentially takes a while to run).

@@ -8,6 +8,8 @@ include l1b_geo/l1b_geo.am
 include vicar_pdf/vicar_pdf.am
 include script/script.am
 include python/python.am
+include python/lib/lib.am
+include python/test_support/test_support.am
 include bindings/python/python.am
 include lib/lib.am
 include unit_test_data/unit_test_data.am

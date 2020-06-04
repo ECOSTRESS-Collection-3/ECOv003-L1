@@ -1,0 +1,2 @@
+EXTRA_DIST+= @testsupportsrc@/test_support.py
+EXTRA_DIST+= @testsupportsrc@/__init__.py
