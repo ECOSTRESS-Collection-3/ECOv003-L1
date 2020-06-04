@@ -1,0 +1,13 @@
+This contains docker files for building a docker container with
+ecostress-level1 in it.
+
+There are build rules for doing this. We have three stages, the idea being
+that stage 1 and 2 are much more stable and only occasionally need to be
+updated. stage 3 is the actual ecostress-level1, and needs to be updated
+when we need a ecostress-level1 update.
+
+1. Stage 1 is ecostress/afids. This contains a centos7 system plus an install
+   of afids. This requires the afids install DVD iso - this is available
+   from the Cartlab (on pistol). Because of the size, we don't include the
+   iso in this git repository. Put the iso in the afids-docker directory
+   before building afids-image.

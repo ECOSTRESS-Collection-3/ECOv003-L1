@@ -10,3 +10,5 @@ autom4te.cache
 .tramp_history
 # Directory with initial Hai code. Leave in place, but don't checkin
 ECOSTRESS/
+# iso used to build afids image, don't check in
+*.iso

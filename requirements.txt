@@ -1,29 +1,11 @@
 # We require all the packages geocal requires (see requirements.txt for that
 # package), plus stuff listed in this file.
 #
-# The recent tensorflow (past 1.5) get an illegal instruction if
-# you do a pip install. Turns out the software is built to require
-# AVX instructions. No easy way to do this on pistol. But it is on
-# rifle, so we can just use that machine
-# Check with "grep flags /proc/cpuinfo | grep avx"
-#
-# Unfortunately, the newer version of tensoflow pip packages require much
-# newer version of gcc. So we need to build ourselves.
-# Need to match bazel version with tensorflow
-# (see https://www.tensorflow.org/install/source).
-# We built on rifle. bazel 0.24.1 (from https://github.com/bazelbuild/bazel/releases/download/0.24.1/bazel-0.24.1-linux-x86_64)
-# Install as "bazel" in path"
-# tensorflow 1.14
-# ./configure (accept all the defaults)
-# bazel build --config=opt //tensorflow/tools/pip_package:build_pip_package
-# ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-# This creates a whl package /tmp/tensorflow_pkg/tensorflow-version-tags.whl
-# We can then grab that wheel, stash it somewhere, and install it using pip
-#
+# We need to build our own copy of tensorflow, see thirdparty/README
+# for a discussion of this. We have make file rules for building this.
 cython
 xlrd
 tflearn
 # Don't got to tensorflow 2.x, I don't know that something isn't broken by
-# this. Note the complicated directions above for getting this wheel. Can
-# then just install it "pip install <the wheel>"
+# this. We need to build our own copy, then do a "pip install <the wheel>"
 tensorflow==1.14.0
