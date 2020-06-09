@@ -1,0 +1,29 @@
+#! /usr/bin/env python
+#
+# Get basic information about L1B_GEO from QA product
+
+import os
+import re
+import h5py
+
+qa_file_by_orb = {}
+for root, dir, files in os.walk("/ops/store/PRODUCTS/L1B_GEO_QA"):
+    for f in files:
+        m = re.match(r'^L1B_GEO_QA_(\d{5})_.*_0501_(\d\d).h5$', f)
+        if(m):
+            orb = m.group(1)
+            ver = int(m.group(2))
+            if(orb in qa_file_by_orb):
+                oldfile, oldver = qa_file_by_orb[orb]
+                if(ver > oldver):
+                    qa_file_by_orb[orb] = (root + "/" + f, ver)
+            else:
+                qa_file_by_orb[orb] = (root + "/" + f, ver)
+for orb in sorted(qa_file_by_orb.keys()):
+    f = h5py.File(qa_file_by_orb[orb][0], "r")
+    corr = f["/L1GEOMetadata/OrbitCorrectionPerformed"][()]
+    nscene = f["Tiepoint/Scenes"].shape[0]
+    excep = f["/Logs/Encountered Exception"][()].decode("utf-8")
+    print("%s %s %d %s" % (orb, corr, nscene, excep))
+
+

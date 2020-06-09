@@ -1,3 +1,4 @@
 dist_installecostress_SCRIPTS += @l1b_rad_src@/L1B_RAD_PGE
 dist_bin_SCRIPTS += @l1b_rad_src@/l1b_rad_process
+dist_bin_SCRIPTS += @l1b_rad_src@/disp_l1rad
 EXTRA_DIST+= @l1b_rad_src@/README.md

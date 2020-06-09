@@ -1,0 +1,36 @@
+#! /usr/bin/env python
+#
+# Short program for display L1B data, since I'm often doing this by hand
+
+import geocal
+import subprocess
+import tempfile
+
+version = "1.0"
+usage='''Usage:
+  disp_l1rad [options] <l1b_rad_file> [<band>]
+  disp_l1rad -h | --help
+  disp_l1rad -v | --version
+
+Short program for display L1B data, since I'm often doing this by hand.
+
+Options:
+  -h --help         
+       Print this message
+
+  -v --version      
+       Print program version
+'''
+
+args = geocal.docopt_simple(usage, version=version)
+print(args.l1b_rad_file)
+
+band = args.band
+if(not band):
+    band = 4
+
+with tempfile.TemporaryDirectory() as tmpdirname:
+    subprocess.run('gdal_calc.py --type=Float32  -A HDF5:"%s"://Radiance/radiance_%d --outfile=%s/dat.tif --calc="100.0*A*(A>0)" --NoDataValue=0' % (args.l1b_rad_file, band, tmpdirname), shell=True, check=True)
+    subprocess.run("gdal_translate -ot Int16 -of VICAR %s/dat.tif %s/dat.img" % (tmpdirname, tmpdirname), shell=True, check=True)
+    subprocess.run(["xvd", "%s/dat.img" % tmpdirname])
+    
