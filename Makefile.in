@@ -3131,7 +3131,7 @@ ecostress-dependency-image:
 	docker build $(EXTRA_DOCKER_FLAG) -t ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) $(abs_srcdir)/docker/ecostress-dependency-docker
 	rm -r $(abs_srcdir)/docker/ecostress-dependency-docker/ecostress-dependency-repo
 ecostress-image:
-#	$(MAKE) dist
+	$(MAKE) dist
 # Use the default locations of various datasets. 
 	docker run -t -d --cidfile=docker_run.id \
            --mount type=bind,src=$(abs_builddir)/,dst=/media/work_dir \
@@ -3149,22 +3149,12 @@ ecostress-image:
 	docker commit $$(cat docker_run.id) ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION)
 	docker container stop $$(cat docker_run.id)
 
-# yum install parallel make -y
-# mkdir -p /root/.parallel
-# touch /root/.parallel/will-cite
-# Creation geocal.sh
-# Remove cython
-
-#	docker container stop $$(cat docker_run.id)
-# 
-# cd /root && tar -xf /media/work_dir/ecostress-level1-6.02.tar.gz
-# cd ecostress-level1-6.02 && ./configure --prefix=/opt/ecostress
-
 # To record the exact version of packages we install for python, we
 # capture these as RPMs. That way we can install the same set of packages
 # each time in an image. Not sure that recording this as a package rather
 # than just a docker image is worth the extra work, but it isn't a lot
-# and for now at least we'll do this.
+# of work and for now at least we'll do this.
+#
 # Note if you run this interactivately to debug something, you can
 # connect to the container with docker exec -it $(cat docker_run.id) bash
 #
