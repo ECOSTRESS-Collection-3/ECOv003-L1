@@ -33,6 +33,9 @@ ecostress-dependency-image:
 # end to end test data. We actually get this passed
 # in through the run xml file, so when the image is run for "real" it is
 # a problem of PCS to determine all this and just pass it to the PGEs
+#
+# We use the --login to the /etc/profile.d files are read, in particular the
+# setup of afids.
 landsat_dir = /project/ancillary/LANDSAT
 srtm_dir = /project/ancillary/SRTM
 datum_dir = /pkg/afids/afids_latest/data/vdev
@@ -50,7 +53,12 @@ ecostress-image:
            --mount type=bind,src=$(end_to_end_dir),dst=$(end_to_end_dir) \
            ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) \
            /bin/bash
-	docker exec $$(cat docker_run.id) bash -c "cd /root && tar -xf /media/work_dir/$(PACKAGE)-$(VERSION).tar.gz"
+	docker exec $$(cat docker_run.id) bash --login -c "cd /root && tar -xf /media/work_dir/$(PACKAGE)-$(VERSION).tar.gz"
+	docker exec $$(cat docker_run.id) bash --login -c "cd /root/$(PACKAGE)-$(VERSION) && ./configure --with-afids=/opt/afids --with-geocal=/opt/afids --prefix=/opt/ecostress && make -j 12 all && make install && make -j 12 check"
+# Add end to end check
+# Add links to executable
+	docker commit $$(cat docker_run.id) ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION)
+	docker container stop $$(cat docker_run.id)
 
 # yum install parallel make -y
 # mkdir -p /root/.parallel
