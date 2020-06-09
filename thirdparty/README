@@ -2,6 +2,11 @@ Tensorflow pip package unfortunately requires a much never gcc (9.2 I think).
 Not clear why they just assume everybody has installed and is using that,
 but for ecostress we are using the standard centos 4.8.5 version.
 
+Also, Tensorflow uses the AVX extensions for CPUs. That is generally available,
+but older CPUs might not have it. Can search for support with
+
+   cat /proc/cpuinfo | grep avx
+
 This requires us to build our own copy of this library, which we have
 make rules for. This doesn't need to be done regularly, we just check the
 wheel file we generate in and can use it. But if you need to update (e.g.,

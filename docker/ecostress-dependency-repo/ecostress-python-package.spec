@@ -11,6 +11,9 @@ Requires: python3-afids python-package
 
 # Turn off the brp-python-bytecompile script, this fails on centos7
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
+# Turn off stripping of libraries. For some reason this break PIL
+# see https://github.com/spotify/dh-virtualenv/issues/273
+%global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-strip.*$!!g')
 # For some reason the libraries from Pillow get tracked as a requirment,
 # but not something that python-package supplies. Not sure why the
 # disconnect, but filter these
