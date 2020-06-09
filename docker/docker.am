@@ -2,6 +2,11 @@ AFIDS_DVD_DATE = 10-21-2019
 AFIDS_FULL_VERSION = 1.28
 TENSORFLOW_WHEEL = tensorflow-1.14.0-cp37-cp37m-linux_x86_64.whl
 ECOSTRESS_DEPENDENCY_VERSION = 1.0
+# Most of the time the image version number will be the same as the
+# version defined in configure.ac, but there might be instances where
+# we want something different (e.g., we are creating a test image while
+# we are working on a new delivery)
+ECOSTRESS_IMAGE_VERSION = $(VERSION)
 
 # We pull this out, because --squash is still experimental and not available
 # everywhere. You can set this to a blank string to turn this off if needed.
@@ -18,7 +23,46 @@ ecostress-dependency-image:
 	docker build $(EXTRA_DOCKER_FLAG) -t ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) $(abs_srcdir)/docker/ecostress-dependency-docker
 	rm -r $(abs_srcdir)/docker/ecostress-dependency-docker/ecostress-dependency-repo
 
-# yum install 
+# We normally want to use a Dockerfile to build an image. But in this case
+# we want to run our tests before creating an image, which require a number
+# of datasets. We want to mount rather than copy, and there is no way to
+# do that with Dockerfile. So we instead create a container, build in there,
+# and then save the results as an image.
+
+# Various directories that are mounted. This is what is used in our canned
+# end to end test data. We actually get this passed
+# in through the run xml file, so when the image is run for "real" it is
+# a problem of PCS to determine all this and just pass it to the PGEs
+landsat_dir = /project/ancillary/LANDSAT
+srtm_dir = /project/ancillary/SRTM
+datum_dir = /pkg/afids/afids_latest/data/vdev
+spice_dir = /pkg/afids/afids_latest/data/cspice
+end_to_end_dir = /project/test/ASTER/EndToEndTest
+ecostress-image:
+#	$(MAKE) dist
+# Use the default locations of various datasets. 
+	docker run -t -d --cidfile=docker_run.id \
+           --mount type=bind,src=$(abs_builddir)/,dst=/media/work_dir \
+           --mount type=bind,src=$(landsat_dir),dst=$(landsat_dir) \
+           --mount type=bind,src=$(srtm_dir),dst=$(srtm_dir) \
+           --mount type=bind,src=$(datum_dir),dst=$(datum_dir) \
+           --mount type=bind,src=$(spice_dir),dst=$(spice_dir) \
+           --mount type=bind,src=$(end_to_end_dir),dst=$(end_to_end_dir) \
+           ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) \
+           /bin/bash
+	docker exec $$(cat docker_run.id) bash -c "cd /root && tar -xf /media/work_dir/$(PACKAGE)-$(VERSION).tar.gz"
+
+# yum install parallel make -y
+# mkdir -p /root/.parallel
+# touch /root/.parallel/will-cite
+# Creation geocal.sh
+# Remove cython
+
+#	docker container stop $$(cat docker_run.id)
+# 
+# cd /root && tar -xf /media/work_dir/ecostress-level1-6.02.tar.gz
+# cd ecostress-level1-6.02 && ./configure --prefix=/opt/ecostress
+
 
 # To record the exact version of packages we install for python, we
 # capture these as RPMs. That way we can install the same set of packages
@@ -40,14 +84,14 @@ create-ecostress-dependency-repo:
 	chmod a+w ecostress-dependency-repo
 	cp $(srcdir)/docker/ecostress-dependency-repo/ecostress-python-package.spec ecostress-dependency-repo
 	cp $(abs_srcdir)/thirdparty/$(TENSORFLOW_WHEEL) ecostress-dependency-repo
-	docker run -t -d --cidfile=docker_run.id --mount type=bind,src=$(abs_builddir)/ecostress-dependency-repo,dst=/media/ecostress-dependency-repo ecostress/afids:$(AFIDS_FULL_VERSION) /bin/bash
+	docker run -t -d --cidfile=docker_run.id \
+           --mount type=bind,src=$(abs_builddir)/ecostress-dependency-repo,dst=/media/ecostress-dependency-repo \
+           ecostress/afids:$(AFIDS_FULL_VERSION) /bin/bash
 	docker exec $$(cat docker_run.id) bash -c "yum install rpm-build createrepo gcc-gfortran gcc gcc-c++ -y"
 	docker exec $$(cat docker_run.id) bash -c "export PATH=/opt/afids_support/bin:$${PATH} && export LD_LIBRARY_PATH=/opt/afids_support/lib:/opt/afids_support/lib64:$${LD_LIBRARY_PATH} && mkdir -p /root/rpmbuild/SOURCES && cp /media/ecostress-dependency-repo/$(TENSORFLOW_WHEEL) /root/rpmbuild/SOURCES && rpmbuild -ba /media/ecostress-dependency-repo/ecostress-python-package.spec && mv /root/rpmbuild/RPMS/x86_64/ecostress-python-package*.x86_64.rpm /media/ecostress-dependency-repo && cd /media/ecostress-dependency-repo && createrepo . && chmod a+w -R repodata"
 	rm $(builddir)/ecostress-dependency-repo/$(TENSORFLOW_WHEEL)
 	cp -fr $(builddir)/ecostress-dependency-repo/* $(srcdir)/docker/ecostress-dependency-repo
 	docker container stop $$(cat docker_run.id)
-
-# source /opt/afids/setup_afids_env.sh
 
 EXTRA_DIST+= docker/README
 EXTRA_DIST+= docker/afids-docker/Dockerfile

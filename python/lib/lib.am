@@ -27,16 +27,17 @@ ecostresspkgpython_PYTHON+= @srcpythonlib@/l1b_geo_generate_kmz.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/gaussian_stretch.py
 ecostresspkgpython_PYTHON+= @srcpythonlib@/distance_to_missing_scanline.py
 
+# We never did anything with this, so drop this for now
 # Cython code to generate
-ecostresspkgpython_PYTHON+= @srcpythonlib@/cython_try.py
-CYTHON_SRC+= @srccython@/cython_sample.cc
-EXTRA_DIST+= @srcpythonlib@/cython_sample.pyx
-CYTHON_SRC+= @srccython@/cython_sample2.cc
-EXTRA_DIST+= @srcpythonlib@/cython_sample2.pyx
+#ecostresspkgpython_PYTHON+= @srcpythonlib@/cython_try.py
+#CYTHON_SRC+= @srccython@/cython_sample.cc
+#EXTRA_DIST+= @srcpythonlib@/cython_sample.pyx
+#CYTHON_SRC+= @srccython@/cython_sample2.cc
+#EXTRA_DIST+= @srcpythonlib@/cython_sample2.pyx
+#EXTRA_DIST+= @srcpythonlib@/cython_sample_test.py
 
 EXTRA_DIST+= @srcpythonlib@/band_to_band_test.py
 EXTRA_DIST+= @srcpythonlib@/coordinate_system_test.py
-EXTRA_DIST+= @srcpythonlib@/cython_sample_test.py
 EXTRA_DIST+= @srcpythonlib@/ecostress_camera_test.py
 EXTRA_DIST+= @srcpythonlib@/ecostress_interpolate_test.py
 EXTRA_DIST+= @srcpythonlib@/ev_codes.txt

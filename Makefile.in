@@ -193,37 +193,20 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(ecostresspkgpythondir)" \
-	"$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgpythonswigdir)" \
-	"$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" \
-	"$(DESTDIR)$(installecostressdir)" \
+am__installdirs = "$(DESTDIR)$(libdir)" \
+	"$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(bindir)" \
+	"$(DESTDIR)$(bindir)" "$(DESTDIR)$(installecostressdir)" \
 	"$(DESTDIR)$(installecostressdir)" \
 	"$(DESTDIR)$(ecostresspkgpythondir)" \
 	"$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(vicarpdfdir)" \
 	"$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(pkgconfigdir)" \
 	"$(DESTDIR)$(ecostressincdir)" \
 	"$(DESTDIR)$(ecostressswigincdir)" "$(DESTDIR)$(includedir)"
-LTLIBRARIES = $(ecostresspkgpython_LTLIBRARIES) $(lib_LTLIBRARIES) \
-	$(noinst_LTLIBRARIES) $(pkgpythonswig_LTLIBRARIES)
-_ecostress_level1_la_LIBADD =
-am__dirstamp = $(am__leading_dot)dirstamp
-am__objects_1 = @srccython@/_ecostress_level1_la-cython_sample.lo \
-	@srccython@/_ecostress_level1_la-cython_sample2.lo \
-	@srccython@/_ecostress_level1_la-cython_sample.lo \
-	@srccython@/_ecostress_level1_la-cython_sample2.lo
-am__ecostress_level1_la_OBJECTS = $(am__objects_1) \
-	@srccython@/_ecostress_level1_la-cython_init.lo
-_ecostress_level1_la_OBJECTS = $(am__ecostress_level1_la_OBJECTS)
-AM_V_lt = $(am__v_lt_@AM_V@)
-am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
-am__v_lt_0 = --silent
-am__v_lt_1 = 
-_ecostress_level1_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
-	$(_ecostress_level1_la_CXXFLAGS) $(CXXFLAGS) \
-	$(_ecostress_level1_la_LDFLAGS) $(LDFLAGS) -o $@
+LTLIBRARIES = $(lib_LTLIBRARIES) $(noinst_LTLIBRARIES) \
+	$(pkgpythonswig_LTLIBRARIES)
 _swig_wrap_la_DEPENDENCIES = libecostress.la
-am__objects_2 = @swigsrc@/_swig_wrap_la-ecostress_swig_array_wrap.lo \
+am__dirstamp = $(am__leading_dot)dirstamp
+am__objects_1 = @swigsrc@/_swig_wrap_la-ecostress_swig_array_wrap.lo \
 	@swigsrc@/_swig_wrap_la-ecostress_dqi_wrap.lo \
 	@swigsrc@/_swig_wrap_la-ecostress_camera_wrap.lo \
 	@swigsrc@/_swig_wrap_la-ecostress_orbit_wrap.lo \
@@ -238,10 +221,14 @@ am__objects_2 = @swigsrc@/_swig_wrap_la-ecostress_swig_array_wrap.lo \
 	@swigsrc@/_swig_wrap_la-ecostress_band_to_band_wrap.lo \
 	@swigsrc@/_swig_wrap_la-ground_coordinate_array_wrap.lo \
 	@swigsrc@/_swig_wrap_la-simulated_radiance_wrap.lo
-am__objects_3 = $(am__objects_2)
-am__swig_wrap_la_OBJECTS = $(am__objects_3) \
+am__objects_2 = $(am__objects_1)
+am__swig_wrap_la_OBJECTS = $(am__objects_2) \
 	@swigsrc@/_swig_wrap_la-swig_wrap.lo
 _swig_wrap_la_OBJECTS = $(am__swig_wrap_la_OBJECTS)
+AM_V_lt = $(am__v_lt_@AM_V@)
+am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+am__v_lt_0 = --silent
+am__v_lt_1 = 
 _swig_wrap_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) $(_swig_wrap_la_LDFLAGS) \
@@ -325,10 +312,9 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(_ecostress_level1_la_SOURCES) $(_swig_wrap_la_SOURCES) \
-	$(libecostress_la_SOURCES) $(ecostress_test_all_SOURCES)
-DIST_SOURCES = $(_ecostress_level1_la_SOURCES) \
-	$(_swig_wrap_la_SOURCES) $(libecostress_la_SOURCES) \
+SOURCES = $(_swig_wrap_la_SOURCES) $(libecostress_la_SOURCES) \
+	$(ecostress_test_all_SOURCES)
+DIST_SOURCES = $(_swig_wrap_la_SOURCES) $(libecostress_la_SOURCES) \
 	$(ecostress_test_all_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
@@ -787,9 +773,25 @@ AM_LDFLAGS =
 BUILT_SOURCES = complain_if_afids $(am__append_1) $(am__append_2)
 include_HEADERS = 
 
-# Test files
+# We never did anything with this, so drop this for now
+# Cython code to generate
+#ecostresspkgpython_PYTHON+= @srcpythonlib@/cython_try.py
+#CYTHON_SRC+= @srccython@/cython_sample.cc
+#EXTRA_DIST+= @srcpythonlib@/cython_sample.pyx
+#CYTHON_SRC+= @srccython@/cython_sample2.cc
+#EXTRA_DIST+= @srcpythonlib@/cython_sample2.pyx
+#EXTRA_DIST+= @srcpythonlib@/cython_sample_test.py
 
-# source /opt/afids/setup_afids_env.sh
+# We never did anything with this, so drop this for now
+# Cython code to generate
+#ecostresspkgpython_PYTHON+= @srcpythonlib@/cython_try.py
+#CYTHON_SRC+= @srccython@/cython_sample.cc
+#EXTRA_DIST+= @srcpythonlib@/cython_sample.pyx
+#CYTHON_SRC+= @srccython@/cython_sample2.cc
+#EXTRA_DIST+= @srcpythonlib@/cython_sample2.pyx
+#EXTRA_DIST+= @srcpythonlib@/cython_sample_test.py
+
+# Test files
 # Leave out repo and package because of the size. We can reevaluate that
 # if needed
 EXTRA_DIST = README.md requirements.txt Setup.md end_to_end_testing \
@@ -799,11 +801,8 @@ EXTRA_DIST = README.md requirements.txt Setup.md end_to_end_testing \
 	@l1a_raw_src@/l1a_raw_pix_generate.py @l1b_rad_src@/README.md \
 	@srcpdf@/README @srcpython@/pytest.ini @srcpython@/conftest.py \
 	@srcpython@/ecostress/__init__.py @srcpython@/ecostress/README \
-	@srcpythonlib@/cython_sample.pyx \
-	@srcpythonlib@/cython_sample2.pyx \
 	@srcpythonlib@/band_to_band_test.py \
 	@srcpythonlib@/coordinate_system_test.py \
-	@srcpythonlib@/cython_sample_test.py \
 	@srcpythonlib@/ecostress_camera_test.py \
 	@srcpythonlib@/ecostress_interpolate_test.py \
 	@srcpythonlib@/ev_codes.txt \
@@ -832,11 +831,8 @@ EXTRA_DIST = README.md requirements.txt Setup.md end_to_end_testing \
 	@srcpythonlib@/run_config_test.py \
 	@srcpythonlib@/write_run_config_test.py \
 	@srcpythonlib@/write_standard_metadata_test.py \
-	@srcpythonlib@/cython_sample.pyx \
-	@srcpythonlib@/cython_sample2.pyx \
 	@srcpythonlib@/band_to_band_test.py \
 	@srcpythonlib@/coordinate_system_test.py \
-	@srcpythonlib@/cython_sample_test.py \
 	@srcpythonlib@/ecostress_camera_test.py \
 	@srcpythonlib@/ecostress_interpolate_test.py \
 	@srcpythonlib@/ev_codes.txt \
@@ -880,9 +876,7 @@ EXTRA_DIST = README.md requirements.txt Setup.md end_to_end_testing \
 	docker/ecostress-dependency-repo/ecostress-dependency.repo \
 	docker/ecostress-dependency-repo/ecostress-python-package.spec \
 	docker/ecostress-dependency-docker/Dockerfile
-CYTHON_SRC = @srccython@/cython_sample.cc \
-	@srccython@/cython_sample2.cc @srccython@/cython_sample.cc \
-	@srccython@/cython_sample2.cc
+CYTHON_SRC = 
 pkgconfig_DATA = 
 AM_CPPFLAGS = -I$(srcdir)/@srclib@
 
@@ -943,10 +937,6 @@ H5DIFF_FLAG = -d 6e-2 --exclude-path=/Radiance/radiance_1 \
 dist_vicarpdf_DATA = @srcpdf@/el1a_2pt.pdf @srcpdf@/el1a_bbcal.pdf \
 	@srcpdf@/el1a_tvac.pdf
 installecostress_DATA = @srcscript@/setup_ecostress.csh @srcscript@/setup_ecostress.sh
-
-# Cython code to generate
-
-# Cython code to generate
 ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
 	@srcpythonlib@/coordinate_system.py \
 	@srcpythonlib@/l1b_att_generate.py @srcpythonlib@/l0b_sim.py \
@@ -972,7 +962,6 @@ ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
 	@srcpythonlib@/l1b_geo_generate_kmz.py \
 	@srcpythonlib@/gaussian_stretch.py \
 	@srcpythonlib@/distance_to_missing_scanline.py \
-	@srcpythonlib@/cython_try.py \
 	@srcpythonlib@/coordinate_system.py \
 	@srcpythonlib@/l1b_att_generate.py @srcpythonlib@/l0b_sim.py \
 	@srcpythonlib@/l1a_raw_pix_simulate.py \
@@ -996,8 +985,7 @@ ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
 	@srcpythonlib@/l1b_geo_generate_map.py \
 	@srcpythonlib@/l1b_geo_generate_kmz.py \
 	@srcpythonlib@/gaussian_stretch.py \
-	@srcpythonlib@/distance_to_missing_scanline.py \
-	@srcpythonlib@/cython_try.py
+	@srcpythonlib@/distance_to_missing_scanline.py
 
 # Number of jobs to run at once. Default is to automatically determine this,
 # but you can specify a different number.
@@ -1007,19 +995,6 @@ PYTEST_FLAGS = -q -n $(PYTEST_NJOB) --basetemp=./pytest_tmp
 
 # Will want to move this to automake
 CYTHON_FLAGS = --cplus -3
-
-# Noe that this is a little more complicated than maybe we need. Cython
-# will by default create a library file per module. However, we inheritted
-# all this from swig development where we combine everything into one library.
-# Go ahead and do the same thing for cython, we can always change this if
-# needed in the future
-ecostresspkgpython_LTLIBRARIES = _ecostress_level1.la
-_ecostress_level1_la_CPPFLAGS = $(PYTHON_CPPFLAGS) \
-	$(PYTHON_NUMPY_CPPFLAGS) $(GEOCAL_CFLAGS) $(AM_CPPFLAGS)
-_ecostress_level1_la_CXXFLAGS = $(AM_CXXFLAGS)
-_ecostress_level1_la_LDFLAGS = -module -avoid-version
-_ecostress_level1_la_SOURCES = $(CYTHON_SRC) \
-	@srccython@/cython_init.cc
 pkgpythonswigdir = $(prefix)/@pythondir@/ecostress_swig
 pkgpythonswig_PYTHON = @pythonswigsrc@/__init__.py $(patsubst \
 	%_wrap.cc, %.py, $(INCLUDE_SWIG_SRC))
@@ -1134,11 +1109,32 @@ AFIDS_DVD_DATE = 10-21-2019
 AFIDS_FULL_VERSION = 1.28
 TENSORFLOW_WHEEL = tensorflow-1.14.0-cp37-cp37m-linux_x86_64.whl
 ECOSTRESS_DEPENDENCY_VERSION = 1.0
+# Most of the time the image version number will be the same as the
+# version defined in configure.ac, but there might be instances where
+# we want something different (e.g., we are creating a test image while
+# we are working on a new delivery)
+ECOSTRESS_IMAGE_VERSION = $(VERSION)
 
 # We pull this out, because --squash is still experimental and not available
 # everywhere. You can set this to a blank string to turn this off if needed.
 # Images will be larger, but this might not matter.
 EXTRA_DOCKER_FLAG = --squash
+
+# We normally want to use a Dockerfile to build an image. But in this case
+# we want to run our tests before creating an image, which require a number
+# of datasets. We want to mount rather than copy, and there is no way to
+# do that with Dockerfile. So we instead create a container, build in there,
+# and then save the results as an image.
+
+# Various directories that are mounted. This is what is used in our canned
+# end to end test data. We actually get this passed
+# in through the run xml file, so when the image is run for "real" it is
+# a problem of PCS to determine all this and just pass it to the PGEs
+landsat_dir = /project/ancillary/LANDSAT
+srtm_dir = /project/ancillary/SRTM
+datum_dir = /pkg/afids/afids_latest/data/vdev
+spice_dir = /pkg/afids/afids_latest/data/cspice
+end_to_end_dir = /project/test/ASTER/EndToEndTest
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -1186,41 +1182,6 @@ lib/global_fixture_default.cc: $(top_builddir)/config.status $(top_srcdir)/lib/g
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 ecostress_version.py: $(top_builddir)/config.status $(srcdir)/ecostress_version.py.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-
-install-ecostresspkgpythonLTLIBRARIES: $(ecostresspkgpython_LTLIBRARIES)
-	@$(NORMAL_INSTALL)
-	@list='$(ecostresspkgpython_LTLIBRARIES)'; test -n "$(ecostresspkgpythondir)" || list=; \
-	list2=; for p in $$list; do \
-	  if test -f $$p; then \
-	    list2="$$list2 $$p"; \
-	  else :; fi; \
-	done; \
-	test -z "$$list2" || { \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(ecostresspkgpythondir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(ecostresspkgpythondir)" || exit 1; \
-	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 '$(DESTDIR)$(ecostresspkgpythondir)'"; \
-	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 "$(DESTDIR)$(ecostresspkgpythondir)"; \
-	}
-
-uninstall-ecostresspkgpythonLTLIBRARIES:
-	@$(NORMAL_UNINSTALL)
-	@list='$(ecostresspkgpython_LTLIBRARIES)'; test -n "$(ecostresspkgpythondir)" || list=; \
-	for p in $$list; do \
-	  $(am__strip_dir) \
-	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f '$(DESTDIR)$(ecostresspkgpythondir)/$$f'"; \
-	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f "$(DESTDIR)$(ecostresspkgpythondir)/$$f"; \
-	done
-
-clean-ecostresspkgpythonLTLIBRARIES:
-	-test -z "$(ecostresspkgpython_LTLIBRARIES)" || rm -f $(ecostresspkgpython_LTLIBRARIES)
-	@list='$(ecostresspkgpython_LTLIBRARIES)'; \
-	locs=`for p in $$list; do echo $$p; done | \
-	      sed 's|^[^/]*$$|.|; s|/[^/]*$$||; s|$$|/so_locations|' | \
-	      sort -u`; \
-	test -z "$$locs" || { \
-	  echo rm -f $${locs}; \
-	  rm -f $${locs}; \
-	}
 
 install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
@@ -1302,24 +1263,6 @@ clean-pkgpythonswigLTLIBRARIES:
 	  echo rm -f $${locs}; \
 	  rm -f $${locs}; \
 	}
-@srccython@/$(am__dirstamp):
-	@$(MKDIR_P) @srccython@
-	@: > @srccython@/$(am__dirstamp)
-@srccython@/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) @srccython@/$(DEPDIR)
-	@: > @srccython@/$(DEPDIR)/$(am__dirstamp)
-@srccython@/_ecostress_level1_la-cython_sample.lo:  \
-	@srccython@/$(am__dirstamp) \
-	@srccython@/$(DEPDIR)/$(am__dirstamp)
-@srccython@/_ecostress_level1_la-cython_sample2.lo:  \
-	@srccython@/$(am__dirstamp) \
-	@srccython@/$(DEPDIR)/$(am__dirstamp)
-@srccython@/_ecostress_level1_la-cython_init.lo:  \
-	@srccython@/$(am__dirstamp) \
-	@srccython@/$(DEPDIR)/$(am__dirstamp)
-
-_ecostress_level1.la: $(_ecostress_level1_la_OBJECTS) $(_ecostress_level1_la_DEPENDENCIES) $(EXTRA__ecostress_level1_la_DEPENDENCIES) 
-	$(AM_V_CXXLD)$(_ecostress_level1_la_LINK) -rpath $(ecostresspkgpythondir) $(_ecostress_level1_la_OBJECTS) $(_ecostress_level1_la_LIBADD) $(LIBS)
 @swigsrc@/$(am__dirstamp):
 	@$(MKDIR_P) @swigsrc@
 	@: > @swigsrc@/$(am__dirstamp)
@@ -1596,8 +1539,6 @@ uninstall-installecostressSCRIPTS:
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
-	-rm -f @srccython@/*.$(OBJEXT)
-	-rm -f @srccython@/*.lo
 	-rm -f @srclib@/*.$(OBJEXT)
 	-rm -f @srclib@/*.lo
 	-rm -f @swigsrc@/*.$(OBJEXT)
@@ -1606,9 +1547,6 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@@srccython@/$(DEPDIR)/_ecostress_level1_la-cython_init.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@@srccython@/$(DEPDIR)/_ecostress_level1_la-cython_sample.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@@srccython@/$(DEPDIR)/_ecostress_level1_la-cython_sample2.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_igc_collection_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/ecostress_test_all-ecostress_image_ground_connection_test.Po@am__quote@
@@ -1677,27 +1615,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
-
-@srccython@/_ecostress_level1_la-cython_sample.lo: @srccython@/cython_sample.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_ecostress_level1_la_CPPFLAGS) $(CPPFLAGS) $(_ecostress_level1_la_CXXFLAGS) $(CXXFLAGS) -MT @srccython@/_ecostress_level1_la-cython_sample.lo -MD -MP -MF @srccython@/$(DEPDIR)/_ecostress_level1_la-cython_sample.Tpo -c -o @srccython@/_ecostress_level1_la-cython_sample.lo `test -f '@srccython@/cython_sample.cc' || echo '$(srcdir)/'`@srccython@/cython_sample.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srccython@/$(DEPDIR)/_ecostress_level1_la-cython_sample.Tpo @srccython@/$(DEPDIR)/_ecostress_level1_la-cython_sample.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srccython@/cython_sample.cc' object='@srccython@/_ecostress_level1_la-cython_sample.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_ecostress_level1_la_CPPFLAGS) $(CPPFLAGS) $(_ecostress_level1_la_CXXFLAGS) $(CXXFLAGS) -c -o @srccython@/_ecostress_level1_la-cython_sample.lo `test -f '@srccython@/cython_sample.cc' || echo '$(srcdir)/'`@srccython@/cython_sample.cc
-
-@srccython@/_ecostress_level1_la-cython_sample2.lo: @srccython@/cython_sample2.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_ecostress_level1_la_CPPFLAGS) $(CPPFLAGS) $(_ecostress_level1_la_CXXFLAGS) $(CXXFLAGS) -MT @srccython@/_ecostress_level1_la-cython_sample2.lo -MD -MP -MF @srccython@/$(DEPDIR)/_ecostress_level1_la-cython_sample2.Tpo -c -o @srccython@/_ecostress_level1_la-cython_sample2.lo `test -f '@srccython@/cython_sample2.cc' || echo '$(srcdir)/'`@srccython@/cython_sample2.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srccython@/$(DEPDIR)/_ecostress_level1_la-cython_sample2.Tpo @srccython@/$(DEPDIR)/_ecostress_level1_la-cython_sample2.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srccython@/cython_sample2.cc' object='@srccython@/_ecostress_level1_la-cython_sample2.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_ecostress_level1_la_CPPFLAGS) $(CPPFLAGS) $(_ecostress_level1_la_CXXFLAGS) $(CXXFLAGS) -c -o @srccython@/_ecostress_level1_la-cython_sample2.lo `test -f '@srccython@/cython_sample2.cc' || echo '$(srcdir)/'`@srccython@/cython_sample2.cc
-
-@srccython@/_ecostress_level1_la-cython_init.lo: @srccython@/cython_init.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_ecostress_level1_la_CPPFLAGS) $(CPPFLAGS) $(_ecostress_level1_la_CXXFLAGS) $(CXXFLAGS) -MT @srccython@/_ecostress_level1_la-cython_init.lo -MD -MP -MF @srccython@/$(DEPDIR)/_ecostress_level1_la-cython_init.Tpo -c -o @srccython@/_ecostress_level1_la-cython_init.lo `test -f '@srccython@/cython_init.cc' || echo '$(srcdir)/'`@srccython@/cython_init.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srccython@/$(DEPDIR)/_ecostress_level1_la-cython_init.Tpo @srccython@/$(DEPDIR)/_ecostress_level1_la-cython_init.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srccython@/cython_init.cc' object='@srccython@/_ecostress_level1_la-cython_init.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_ecostress_level1_la_CPPFLAGS) $(CPPFLAGS) $(_ecostress_level1_la_CXXFLAGS) $(CXXFLAGS) -c -o @srccython@/_ecostress_level1_la-cython_init.lo `test -f '@srccython@/cython_init.cc' || echo '$(srcdir)/'`@srccython@/cython_init.cc
 
 @swigsrc@/_swig_wrap_la-ecostress_swig_array_wrap.lo: @swigsrc@/ecostress_swig_array_wrap.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -MT @swigsrc@/_swig_wrap_la-ecostress_swig_array_wrap.lo -MD -MP -MF @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_swig_array_wrap.Tpo -c -o @swigsrc@/_swig_wrap_la-ecostress_swig_array_wrap.lo `test -f '@swigsrc@/ecostress_swig_array_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/ecostress_swig_array_wrap.cc
@@ -2117,7 +2034,6 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
-	-rm -rf @srccython@/.libs @srccython@/_libs
 	-rm -rf @srclib@/.libs @srclib@/_libs
 	-rm -rf @swigsrc@/.libs @swigsrc@/_libs
 
@@ -2741,7 +2657,7 @@ all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(SCRIPTS) $(DATA) \
 install-binPROGRAMS: install-libLTLIBRARIES
 
 installdirs:
-	for dir in "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(vicarpdfdir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(ecostressincdir)" "$(DESTDIR)$(ecostressswigincdir)" "$(DESTDIR)$(includedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(vicarpdfdir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(ecostressincdir)" "$(DESTDIR)$(ecostressswigincdir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -2774,8 +2690,6 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
-	-rm -f @srccython@/$(DEPDIR)/$(am__dirstamp)
-	-rm -f @srccython@/$(am__dirstamp)
 	-rm -f @srclib@/$(DEPDIR)/$(am__dirstamp)
 	-rm -f @srclib@/$(am__dirstamp)
 	-rm -f @swigsrc@/$(DEPDIR)/$(am__dirstamp)
@@ -2787,15 +2701,14 @@ maintainer-clean-generic:
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
-clean-am: clean-binPROGRAMS clean-checkPROGRAMS \
-	clean-ecostresspkgpythonLTLIBRARIES clean-generic \
+clean-am: clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
 	clean-libLTLIBRARIES clean-libtool clean-local \
 	clean-noinstLTLIBRARIES clean-pkgpythonswigLTLIBRARIES \
 	mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf @srccython@/$(DEPDIR) @srclib@/$(DEPDIR) @swigsrc@/$(DEPDIR)
+	-rm -rf @srclib@/$(DEPDIR) @swigsrc@/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-libtool distclean-tags
@@ -2814,7 +2727,6 @@ info-am:
 
 install-data-am: install-dist_installecostressSCRIPTS \
 	install-dist_vicarpdfDATA install-ecostressincHEADERS \
-	install-ecostresspkgpythonLTLIBRARIES \
 	install-ecostresspkgpythonPYTHON \
 	install-ecostressswigincHEADERS install-includeHEADERS \
 	install-installecostressDATA install-installecostressSCRIPTS \
@@ -2852,7 +2764,7 @@ installcheck-am: installcheck-local
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf @srccython@/$(DEPDIR) @srclib@/$(DEPDIR) @swigsrc@/$(DEPDIR)
+	-rm -rf @srclib@/$(DEPDIR) @swigsrc@/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -2872,7 +2784,6 @@ ps-am:
 uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	uninstall-dist_installecostressSCRIPTS \
 	uninstall-dist_vicarpdfDATA uninstall-ecostressincHEADERS \
-	uninstall-ecostresspkgpythonLTLIBRARIES \
 	uninstall-ecostresspkgpythonPYTHON \
 	uninstall-ecostressswigincHEADERS uninstall-includeHEADERS \
 	uninstall-installecostressDATA \
@@ -2886,8 +2797,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--refresh check check-TESTS \
 	check-am check-local clean clean-binPROGRAMS \
-	clean-checkPROGRAMS clean-cscope \
-	clean-ecostresspkgpythonLTLIBRARIES clean-generic \
+	clean-checkPROGRAMS clean-cscope clean-generic \
 	clean-libLTLIBRARIES clean-libtool clean-local \
 	clean-noinstLTLIBRARIES clean-pkgpythonswigLTLIBRARIES cscope \
 	cscopelist-am ctags ctags-am dist dist-all dist-bzip2 \
@@ -2899,7 +2809,6 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	install-data-am install-data-hook install-dist_binSCRIPTS \
 	install-dist_installecostressSCRIPTS install-dist_vicarpdfDATA \
 	install-dvi install-dvi-am install-ecostressincHEADERS \
-	install-ecostresspkgpythonLTLIBRARIES \
 	install-ecostresspkgpythonPYTHON \
 	install-ecostressswigincHEADERS install-exec install-exec-am \
 	install-html install-html-am install-includeHEADERS \
@@ -2915,7 +2824,6 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	uninstall-am uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	uninstall-dist_installecostressSCRIPTS \
 	uninstall-dist_vicarpdfDATA uninstall-ecostressincHEADERS \
-	uninstall-ecostresspkgpythonLTLIBRARIES \
 	uninstall-ecostresspkgpythonPYTHON \
 	uninstall-ecostressswigincHEADERS uninstall-hook \
 	uninstall-includeHEADERS uninstall-installecostressDATA \
@@ -3020,6 +2928,21 @@ python-check: script/setup_ecostress.sh
 vpath %.pyx $(srcdir)/@srcpythonlib@
 # Allow searchs for .pyx files in this directory
 vpath %.pyx $(srcdir)/@srcpythonlib@
+
+# Noe that this is a little more complicated than maybe we need. Cython
+# will by default create a library file per module. However, we inheritted
+# all this from swig development where we combine everything into one library.
+# Go ahead and do the same thing for cython, we can always change this if
+# needed in the future
+#ecostresspkgpython_LTLIBRARIES = _ecostress_level1.la
+
+#_ecostress_level1_la_CPPFLAGS = $(PYTHON_CPPFLAGS) $(PYTHON_NUMPY_CPPFLAGS) 
+#_ecostress_level1_la_CPPFLAGS+= $(GEOCAL_CFLAGS) $(AM_CPPFLAGS)
+#_ecostress_level1_la_CXXFLAGS = $(AM_CXXFLAGS)
+#_ecostress_level1_la_LDFLAGS = -module -avoid-version
+# Never did anything with this, so drop for now
+#_ecostress_level1_la_SOURCES = $(CYTHON_SRC)
+#_ecostress_level1_la_SOURCES+= @srccython@/cython_init.cc
 
 # Only generate these files in maintainer mode, otherwise consider them
 # as input.
@@ -3140,8 +3063,30 @@ ecostress-dependency-image:
 	cp -r $(abs_srcdir)/docker/ecostress-dependency-repo/ $(abs_srcdir)/docker/ecostress-dependency-docker
 	docker build $(EXTRA_DOCKER_FLAG) -t ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) $(abs_srcdir)/docker/ecostress-dependency-docker
 	rm -r $(abs_srcdir)/docker/ecostress-dependency-docker/ecostress-dependency-repo
+ecostress-image:
+#	$(MAKE) dist
+# Use the default locations of various datasets. 
+	docker run -t -d --cidfile=docker_run.id \
+           --mount type=bind,src=$(abs_builddir)/,dst=/media/work_dir \
+           --mount type=bind,src=$(landsat_dir),dst=$(landsat_dir) \
+           --mount type=bind,src=$(srtm_dir),dst=$(srtm_dir) \
+           --mount type=bind,src=$(datum_dir),dst=$(datum_dir) \
+           --mount type=bind,src=$(spice_dir),dst=$(spice_dir) \
+           --mount type=bind,src=$(end_to_end_dir),dst=$(end_to_end_dir) \
+           ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) \
+           /bin/bash
+	docker exec $$(cat docker_run.id) bash -c "cd /root && tar -xf /media/work_dir/$(PACKAGE)-$(VERSION).tar.gz"
 
-# yum install 
+# yum install parallel make -y
+# mkdir -p /root/.parallel
+# touch /root/.parallel/will-cite
+# Creation geocal.sh
+# Remove cython
+
+#	docker container stop $$(cat docker_run.id)
+# 
+# cd /root && tar -xf /media/work_dir/ecostress-level1-6.02.tar.gz
+# cd ecostress-level1-6.02 && ./configure --prefix=/opt/ecostress
 
 # To record the exact version of packages we install for python, we
 # capture these as RPMs. That way we can install the same set of packages
@@ -3163,7 +3108,9 @@ create-ecostress-dependency-repo:
 	chmod a+w ecostress-dependency-repo
 	cp $(srcdir)/docker/ecostress-dependency-repo/ecostress-python-package.spec ecostress-dependency-repo
 	cp $(abs_srcdir)/thirdparty/$(TENSORFLOW_WHEEL) ecostress-dependency-repo
-	docker run -t -d --cidfile=docker_run.id --mount type=bind,src=$(abs_builddir)/ecostress-dependency-repo,dst=/media/ecostress-dependency-repo ecostress/afids:$(AFIDS_FULL_VERSION) /bin/bash
+	docker run -t -d --cidfile=docker_run.id \
+           --mount type=bind,src=$(abs_builddir)/ecostress-dependency-repo,dst=/media/ecostress-dependency-repo \
+           ecostress/afids:$(AFIDS_FULL_VERSION) /bin/bash
 	docker exec $$(cat docker_run.id) bash -c "yum install rpm-build createrepo gcc-gfortran gcc gcc-c++ -y"
 	docker exec $$(cat docker_run.id) bash -c "export PATH=/opt/afids_support/bin:$${PATH} && export LD_LIBRARY_PATH=/opt/afids_support/lib:/opt/afids_support/lib64:$${LD_LIBRARY_PATH} && mkdir -p /root/rpmbuild/SOURCES && cp /media/ecostress-dependency-repo/$(TENSORFLOW_WHEEL) /root/rpmbuild/SOURCES && rpmbuild -ba /media/ecostress-dependency-repo/ecostress-python-package.spec && mv /root/rpmbuild/RPMS/x86_64/ecostress-python-package*.x86_64.rpm /media/ecostress-dependency-repo && cd /media/ecostress-dependency-repo && createrepo . && chmod a+w -R repodata"
 	rm $(builddir)/ecostress-dependency-repo/$(TENSORFLOW_WHEEL)

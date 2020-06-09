@@ -13,14 +13,16 @@ EXTRA_DIST += @pythonswigsrc@/swig_wrap.tmpl
 # all this from swig development where we combine everything into one library.
 # Go ahead and do the same thing for cython, we can always change this if
 # needed in the future
-ecostresspkgpython_LTLIBRARIES = _ecostress_level1.la
+#ecostresspkgpython_LTLIBRARIES = _ecostress_level1.la
 
-_ecostress_level1_la_CPPFLAGS = $(PYTHON_CPPFLAGS) $(PYTHON_NUMPY_CPPFLAGS) 
-_ecostress_level1_la_CPPFLAGS+= $(GEOCAL_CFLAGS) $(AM_CPPFLAGS)
-_ecostress_level1_la_CXXFLAGS = $(AM_CXXFLAGS)
-_ecostress_level1_la_LDFLAGS = -module -avoid-version
-_ecostress_level1_la_SOURCES = $(CYTHON_SRC)
-_ecostress_level1_la_SOURCES+= @srccython@/cython_init.cc
+#_ecostress_level1_la_CPPFLAGS = $(PYTHON_CPPFLAGS) $(PYTHON_NUMPY_CPPFLAGS) 
+#_ecostress_level1_la_CPPFLAGS+= $(GEOCAL_CFLAGS) $(AM_CPPFLAGS)
+#_ecostress_level1_la_CXXFLAGS = $(AM_CXXFLAGS)
+#_ecostress_level1_la_LDFLAGS = -module -avoid-version
+# Never did anything with this, so drop for now
+#_ecostress_level1_la_SOURCES = $(CYTHON_SRC)
+#_ecostress_level1_la_SOURCES+= @srccython@/cython_init.cc
+
 
 # Only generate these files in maintainer mode, otherwise consider them
 # as input.
