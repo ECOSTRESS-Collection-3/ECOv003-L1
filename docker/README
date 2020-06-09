@@ -11,3 +11,7 @@ when we need a ecostress-level1 update.
    from the Cartlab (on pistol). Because of the size, we don't include the
    iso in this git repository. Put the iso in the afids-docker directory
    before building afids-image.
+2. Stage 2 is ecostress/ecostress-dependency. This contains stage 1, plus
+   all the ecostress dependencies (e.g., the python packages).
+3. Stage 3 is ecostress/ecostress-level1. This is the level 1 software, built
+   against ecostress/ecostress-dependency.
