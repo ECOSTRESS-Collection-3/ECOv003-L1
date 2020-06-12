@@ -1101,7 +1101,9 @@ ECOSTRESS_IMAGE_VERSION = $(VERSION)
 # We pull this out, because --squash is still experimental and not available
 # everywhere. You can set this to a blank string to turn this off if needed.
 # Images will be larger, but this might not matter.
-EXTRA_DOCKER_FLAG = --squash
+# Normally want no-chache. If we are rebuilding things, something changed
+# and we want to build everything
+EXTRA_DOCKER_FLAG = --squash --no-cache
 
 # We normally want to use a Dockerfile to build an image. But in this case
 # we want to run our tests before creating an image, which require a number

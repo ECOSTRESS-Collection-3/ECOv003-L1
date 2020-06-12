@@ -12,6 +12,9 @@ ECOSTRESS_IMAGE_VERSION = $(VERSION)
 # everywhere. You can set this to a blank string to turn this off if needed.
 # Images will be larger, but this might not matter.
 EXTRA_DOCKER_FLAG= --squash
+# Normally want no-chache. If we are rebuilding things, something changed
+# and we want to build everything
+EXTRA_DOCKER_FLAG+= --no-cache
 
 afids-image: docker/afids-docker/afids-$(AFIDS_DVD_DATE).iso
 	-rm $(abs_srcdir)/docker/afids-docker/afids.iso
