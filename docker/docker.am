@@ -95,6 +95,8 @@ EXTRA_DIST+= docker/README
 EXTRA_DIST+= docker/afids-docker/Dockerfile
 EXTRA_DIST+= docker/ecostress-dependency-repo/ecostress-dependency.repo
 EXTRA_DIST+= docker/ecostress-dependency-repo/ecostress-python-package.spec
-# Leave out repo and package because of the size. We can reevaluate that
+# Leave out repodata and package because of the size. We can reevaluate that
 # if needed
+# EXTRA_DIST+= docker/ecostress-dependency-repo/ecostress-python-package-1.0-1.el7.x86_64.rpm
+# EXTRA_DIST+= docker/ecostress-dependency-repo/repodata
 EXTRA_DIST+= docker/ecostress-dependency-docker/Dockerfile

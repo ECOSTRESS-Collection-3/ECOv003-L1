@@ -827,8 +827,10 @@ include_HEADERS =
 #EXTRA_DIST+= @srcpythonlib@/cython_sample_test.py
 
 # Test files
-# Leave out repo and package because of the size. We can reevaluate that
+# Leave out repodata and package because of the size. We can reevaluate that
 # if needed
+# EXTRA_DIST+= docker/ecostress-dependency-repo/ecostress-python-package-1.0-1.el7.x86_64.rpm
+# EXTRA_DIST+= docker/ecostress-dependency-repo/repodata
 EXTRA_DIST = README.md requirements.txt Setup.md end_to_end_testing \
 	coreg_test config/doxygen.cfg config/doc_footer.html \
 	config/create_python_init.py config/doxy2swig.py \
