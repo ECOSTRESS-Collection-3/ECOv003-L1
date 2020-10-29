@@ -15,6 +15,12 @@ ECOSTRESS_COMMON
 AFIDS_LOCATION
 
 #=================================================================
+# As a convenience, recognize pistol/rifle. The location of test directories
+# is different than on ecostress
+#=================================================================
+
+AM_CONDITIONAL([CARTLAB_MACHINE], [test  -e /raid22])
+
 # Find h5diff
 AC_PATH_PROG([H5DIFF], [h5diff], "", [$PATH$PATH_SEPARATOR${ac_afids_dir}/bin])
 if test -z "$H5DIFF"; then

@@ -37,29 +37,42 @@ ecostress-dependency-image:
 # in through the run xml file, so when the image is run for "real" it is
 # a problem of PCS to determine all this and just pass it to the PGEs
 #
-# We use the --login to the /etc/profile.d files are read, in particular the
+# We use the --login so the /etc/profile.d files are read, in particular the
 # setup of afids.
+
+if CARTLAB_MACHINE
+# Locations on pistol/rifle
+landsat_dir = /raid22
+srtm_dir = /raid25/SRTM_2014_update
+datum_dir = /opt/afids/data/vdev
+spice_dir = /pkg/afids/afids_latest/data/cspice
+end_to_end_dir = /data/smyth/ecostress-test-data
+else
+# Locations on ECOSTRESS
 landsat_dir = /project/ancillary/LANDSAT
 srtm_dir = /project/ancillary/SRTM
 datum_dir = /pkg/afids/afids_latest/data/vdev
-spice_dir = /pkg/afids/afids_latest/data/cspice
+spice_dir = /pkg/afids/afids_latest/data/cspicea
 end_to_end_dir = /project/test/ASTER/EndToEndTest
+endif
+
 ecostress-image:
 	$(MAKE) dist
 # Use the default locations of various datasets. 
 	docker run -t -d --cidfile=docker_run.id \
            --mount type=bind,src=$(abs_builddir)/,dst=/media/work_dir \
-           --mount type=bind,src=$(landsat_dir),dst=$(landsat_dir) \
-           --mount type=bind,src=$(srtm_dir),dst=$(srtm_dir) \
-           --mount type=bind,src=$(datum_dir),dst=$(datum_dir) \
-           --mount type=bind,src=$(spice_dir),dst=$(spice_dir) \
-           --mount type=bind,src=$(end_to_end_dir),dst=$(end_to_end_dir) \
+           --mount type=bind,src=$(landsat_dir),dst=/project/ancillary/LANDSAT \
+           --mount type=bind,src=$(srtm_dir),dst=/project/ancillary/SRTM \
+           --mount type=bind,src=$(datum_dir),dst=/pkg/afids/afids_latest/data/vdev \
+           --mount type=bind,src=$(spice_dir),dst=/pkg/afids/afids_latest/data/cspice \
+           --mount type=bind,src=$(end_to_end_dir),dst=/project/test/ASTER/EndToEndTest \
            ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) \
            /bin/bash
 	docker exec $$(cat docker_run.id) bash --login -c "cd /root && tar -xf /media/work_dir/$(PACKAGE)-$(VERSION).tar.gz"
 	docker exec $$(cat docker_run.id) bash --login -c "cd /root/$(PACKAGE)-$(VERSION) && ./configure --with-afids=/opt/afids --with-geocal=/opt/afids --prefix=/opt/ecostress && make -j 12 all && make install && make -j 12 check"
-# Add end to end check
-# Add links to executable
+	docker exec $$(cat docker_run.id) bash --login -c "rm -f /etc/profile.d/geocal.sh && cp /opt/ecostress/setup_ecostress.* /etc/profile.d"
+	docker exec $$(cat docker_run.id) bash --login -c "mkdir /root/end-to-end-test && cd /root/end-to-end-test && mkdir end_to_end_test_l0_input && ln -s /project/test/ASTER/EndToEndTest/6.00/L0B_03663_20190227T094659_0100_01.h5 /project/test/ASTER/EndToEndTest/6.00/Scene_03663_20190227T094659_20190227T110441.txt end_to_end_test_l0_input && ln -s /project/test/ASTER/EndToEndTest/6.00/l1_osp_dir l1_osp_dir && export ECOSTRESS_END_TO_END_TEST=t && l1a_raw_process /project/test/ASTER/EndToEndTest/6.00/ECOSTRESS_L1A_RAW_RunConfig_20190227T0946.xml && l1a_cal_process /project/test/ASTER/EndToEndTest/6.00/ECOSTRESS_L1A_CAL_RunConfig_03663_001.xml && l1b_rad_process /project/test/ASTER/EndToEndTest/6.00/ECOSTRESS_L1B_RAD_RunConfig_03663_001.xml && l1b_geo_process /project/test/ASTER/EndToEndTest/6.00/ECOSTRESS_L1B_GEO_RunConfig_20190227T0946.xml && parallel --gnu \"echo {}; h5diff -d 4e-2 --exclude-path=/Radiance/radiance_1 --exclude-path=/Radiance/radiance_5 --exclude-path=/SWIR/swir_dn --exclude-path=/Geolocation/height --exclude-path=/Geolocation/view_azimuth --exclude-path=/Geolocation/view_zenith --exclude-path=/Geolocation/land_fraction --exclude-path=/Ephemeris/eci_position /project/test/ASTER/EndToEndTest/6.00/{/}.expected\" ::: ./end_to_end_test_l1a_raw/*.h5 ./end_to_end_test_l1a_cal/*.h5 ./end_to_end_test_l1b_rad/*.h5 ./end_to_end_test_l1b_geo/ECOSTRESS_L1B_ATT*.h5 ./end_to_end_test_l1b_geo/ECOSTRESS_L1B_GEO*.h5 && echo \"Successful run\""
+	docker exec $$(cat docker_run.id) bask --login -c "rm -fr /root/end-to-end-test /root/ecostress*"
 	docker commit $$(cat docker_run.id) ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION)
 	docker container stop $$(cat docker_run.id)
 
@@ -95,6 +108,7 @@ create-ecostress-dependency-repo:
 	docker container stop $$(cat docker_run.id)
 
 EXTRA_DIST+= docker/README
+EXTRA_DIST+= docker/BuildDocker_directions.txt
 EXTRA_DIST+= docker/afids-docker/Dockerfile
 EXTRA_DIST+= docker/ecostress-dependency-repo/ecostress-dependency.repo
 EXTRA_DIST+= docker/ecostress-dependency-repo/ecostress-python-package.spec
