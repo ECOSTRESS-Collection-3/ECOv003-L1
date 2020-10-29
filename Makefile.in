@@ -3158,7 +3158,7 @@ ecostress-image:
 	docker exec $$(cat docker_run.id) bash --login -c "cd /root && tar -xf /media/work_dir/$(PACKAGE)-$(VERSION).tar.gz"
 	docker exec $$(cat docker_run.id) bash --login -c "cd /root/$(PACKAGE)-$(VERSION) && ./configure --with-afids=/opt/afids --with-geocal=/opt/afids --prefix=/opt/ecostress && make -j 12 all && make install && make -j 12 check"
 	docker exec $$(cat docker_run.id) bash --login -c "rm -f /etc/profile.d/geocal.sh && cp /opt/ecostress/setup_ecostress.* /etc/profile.d"
-	docker exec $$(cat docker_run.id) bash --login -c "ln -s /opt/ecostress/L1*_PGE /usr/bin"
+	docker exec $$(cat docker_run.id) bash --login -c "ln -s /opt/ecostress/L1*_PGE /opt/ecostress/setup_ecostress.* /usr/bin"
 	docker exec $$(cat docker_run.id) bash --login -c "rm -fr /root/ecostress*"
 	docker commit $$(cat docker_run.id) ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION)
 	docker container stop $$(cat docker_run.id)
