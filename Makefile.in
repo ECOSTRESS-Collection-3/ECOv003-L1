@@ -1133,6 +1133,7 @@ EXTRA_DOCKER_FLAG = --squash --no-cache
 @CARTLAB_MACHINE_TRUE@spice_dir = /pkg/afids/afids_latest/data/cspice
 @CARTLAB_MACHINE_FALSE@end_to_end_dir = /project/test/ASTER/EndToEndTest
 @CARTLAB_MACHINE_TRUE@end_to_end_dir = /data/smyth/ecostress-test-data
+docker_end_to_end_test_data = /project/test/ASTER/EndToEndTest/latest
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -3144,7 +3145,6 @@ ecostress-dependency-image:
 	cp -r $(abs_srcdir)/docker/ecostress-dependency-repo/ $(abs_srcdir)/docker/ecostress-dependency-docker
 	docker build $(EXTRA_DOCKER_FLAG) -t ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) $(abs_srcdir)/docker/ecostress-dependency-docker
 	rm -r $(abs_srcdir)/docker/ecostress-dependency-docker/ecostress-dependency-repo
-
 ecostress-image:
 	$(MAKE) dist
 # Use the default locations of various datasets. 
@@ -3160,7 +3160,7 @@ ecostress-image:
 	docker exec $$(cat docker_run.id) bash --login -c "cd /root && tar -xf /media/work_dir/$(PACKAGE)-$(VERSION).tar.gz"
 	docker exec $$(cat docker_run.id) bash --login -c "cd /root/$(PACKAGE)-$(VERSION) && ./configure --with-afids=/opt/afids --with-geocal=/opt/afids --prefix=/opt/ecostress && make -j 12 all && make install && make -j 12 check"
 	docker exec $$(cat docker_run.id) bash --login -c "rm -f /etc/profile.d/geocal.sh && cp /opt/ecostress/setup_ecostress.* /etc/profile.d"
-	docker exec $$(cat docker_run.id) bash --login -c "mkdir /root/end-to-end-test && cd /root/end-to-end-test && mkdir end_to_end_test_l0_input && ln -s /project/test/ASTER/EndToEndTest/6.00/L0B_03663_20190227T094659_0100_01.h5 /project/test/ASTER/EndToEndTest/6.00/Scene_03663_20190227T094659_20190227T110441.txt end_to_end_test_l0_input && ln -s /project/test/ASTER/EndToEndTest/6.00/l1_osp_dir l1_osp_dir && export ECOSTRESS_END_TO_END_TEST=t && l1a_raw_process /project/test/ASTER/EndToEndTest/6.00/ECOSTRESS_L1A_RAW_RunConfig_20190227T0946.xml && l1a_cal_process /project/test/ASTER/EndToEndTest/6.00/ECOSTRESS_L1A_CAL_RunConfig_03663_001.xml && l1b_rad_process /project/test/ASTER/EndToEndTest/6.00/ECOSTRESS_L1B_RAD_RunConfig_03663_001.xml && l1b_geo_process /project/test/ASTER/EndToEndTest/6.00/ECOSTRESS_L1B_GEO_RunConfig_20190227T0946.xml && parallel --gnu \"echo {}; h5diff -d 4e-2 --exclude-path=/Radiance/radiance_1 --exclude-path=/Radiance/radiance_5 --exclude-path=/SWIR/swir_dn --exclude-path=/Geolocation/height --exclude-path=/Geolocation/view_azimuth --exclude-path=/Geolocation/view_zenith --exclude-path=/Geolocation/land_fraction --exclude-path=/Ephemeris/eci_position /project/test/ASTER/EndToEndTest/6.00/{/}.expected\" ::: ./end_to_end_test_l1a_raw/*.h5 ./end_to_end_test_l1a_cal/*.h5 ./end_to_end_test_l1b_rad/*.h5 ./end_to_end_test_l1b_geo/ECOSTRESS_L1B_ATT*.h5 ./end_to_end_test_l1b_geo/ECOSTRESS_L1B_GEO*.h5 && echo \"Successful run\""
+	docker exec $$(cat docker_run.id) bash --login -c "mkdir /root/end-to-end-test && cd /root/end-to-end-test && mkdir end_to_end_test_l0_input && ln -s $(docker_end_to_end_test_data)/L0B_03663_20190227T094659_0100_01.h5 $(docker_end_to_end_test_data)/Scene_03663_20190227T094659_20190227T110441.txt end_to_end_test_l0_input && ln -s $(docker_end_to_end_test_data)/l1_osp_dir l1_osp_dir && export ECOSTRESS_END_TO_END_TEST=t &&  && H5DIFF_FLAG=\"-d 4e-2 --exclude-path=/Radiance/radiance_1 --exclude-path=/Radiance/radiance_5 --exclude-path=/SWIR/swir_dn --exclude-path=/Geolocation/height --exclude-path=/Geolocation/view_azimuth --exclude-path=/Geolocation/view_zenith --exclude-path=/Geolocation/land_fraction --exclude-path=/Ephemeris/eci_position\" && l1a_raw_process $(docker_end_to_end_test_data)/ECOSTRESS_L1A_RAW_RunConfig_20190227T0946.xml && l1a_cal_process $(docker_end_to_end_test_data)/ECOSTRESS_L1A_CAL_RunConfig_03663_001.xml && l1b_rad_process $(docker_end_to_end_test_data)/ECOSTRESS_L1B_RAD_RunConfig_03663_001.xml && l1b_geo_process $(docker_end_to_end_test_data)/ECOSTRESS_L1B_GEO_RunConfig_20190227T0946.xml && parallel --gnu \"echo {}; h5diff $(H5DIFF_FLAG) {} $(docker_end_to_end_test_data)/{/}.expected\" ::: ./end_to_end_test_l1a_raw/*.h5 ./end_to_end_test_l1a_cal/*.h5 ./end_to_end_test_l1b_rad/*.h5 ./end_to_end_test_l1b_geo/ECOSTRESS_L1B_ATT*.h5 ./end_to_end_test_l1b_geo/ECOSTRESS_L1B_GEO*.h5 && echo \"Successful run\""
 	docker exec $$(cat docker_run.id) bask --login -c "rm -fr /root/end-to-end-test /root/ecostress*"
 	docker commit $$(cat docker_run.id) ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION)
 	docker container stop $$(cat docker_run.id)
