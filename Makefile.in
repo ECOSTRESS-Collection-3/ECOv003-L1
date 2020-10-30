@@ -835,9 +835,9 @@ EXTRA_DIST = README.md requirements.txt Setup.md end_to_end_testing \
 	coreg_test config/doxygen.cfg config/doc_footer.html \
 	config/create_python_init.py config/doxy2swig.py \
 	config/doxygen_single.cfg @l1a_raw_src@/l0b_sim.py \
-	@l1a_raw_src@/l1a_raw_pix_generate.py @l1b_rad_src@/README.md \
-	@srcpdf@/README @srcpython@/pytest.ini @srcpython@/conftest.py \
-	@srcpython@/ecostress/__init__.py @srcpython@/ecostress/README \
+	@l1b_rad_src@/README.md @srcpdf@/README @srcpython@/pytest.ini \
+	@srcpython@/conftest.py @srcpython@/ecostress/__init__.py \
+	@srcpython@/ecostress/README \
 	@srcpythonlib@/band_to_band_test.py \
 	@srcpythonlib@/coordinate_system_test.py \
 	@srcpythonlib@/ecostress_camera_test.py \
@@ -2965,7 +2965,7 @@ end-to-end-check: installcheck-am
 	$(MKDIR_P) ./end_to_end_test_l0_input
 	$(LN_S) $(l0b_file) ./end_to_end_test_l0_input
 	$(LN_S) $(scene_file) ./end_to_end_test_l0_input
-	ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1A_RAW_PGE $(l1a_raw_run_config)
+	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1A_RAW_PGE $(l1a_raw_run_config)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1a_raw/*.h5
 	ECOSTRESS_END_TO_END_TEST=t $(PARALLEL) --gnu $(prefix)/L1A_CAL_PGE ::: $(l1a_cal_run_config)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1a_cal/*.h5
@@ -3158,7 +3158,7 @@ ecostress-image:
 	docker exec $$(cat docker_run.id) bash --login -c "cd /root && tar -xf /media/work_dir/$(PACKAGE)-$(VERSION).tar.gz"
 	docker exec $$(cat docker_run.id) bash --login -c "cd /root/$(PACKAGE)-$(VERSION) && ./configure --with-afids=/opt/afids --with-geocal=/opt/afids --prefix=/opt/ecostress && make -j 12 all && make install && make -j 12 check"
 	docker exec $$(cat docker_run.id) bash --login -c "rm -f /etc/profile.d/geocal.sh && cp /opt/ecostress/setup_ecostress.* /etc/profile.d"
-	docker exec $$(cat docker_run.id) bash --login -c "ln -s /opt/ecostress/L1*_PGE /opt/ecostress/setup_ecostress.* /usr/bin"
+#	docker exec $$(cat docker_run.id) bash --login -c "ln -s /opt/ecostress/L1*_PGE /opt/ecostress/setup_ecostress.* /usr/bin"
 	docker exec $$(cat docker_run.id) bash --login -c "rm -fr /root/ecostress*"
 	docker commit $$(cat docker_run.id) ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION)
 	docker container stop $$(cat docker_run.id)
