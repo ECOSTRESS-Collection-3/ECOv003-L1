@@ -45,13 +45,15 @@ ecostress-dependency-image:
 if CARTLAB_MACHINE
 # Locations on pistol/rifle
 landsat_dir = /raid22
-srtm_dir = /raid25/SRTM_2014_update
+srtm_dir = /raid25/SRTM_2014_update/srtm_v3_dem_L2
+srtm_lwm_dir = /raid25/SRTM_2014_update/srtm_v3_lwm
 spice_dir = /pkg/afids/afids_latest/data/cspice
 end_to_end_dir = /data/smyth/ecostress-test-data
 else
 # Locations on ECOSTRESS
 landsat_dir = /project/ancillary/LANDSAT
-srtm_dir = /project/ancillary/SRTM
+srtm_dir = /project/ancillary/SRTM/srtm_v3_dem_L2
+srtm_lwm_dir = /project/ancillary/SRTM/srtm_v3_lwm
 spice_dir = /pkg/afids/afids_latest/data/cspice
 end_to_end_dir = /project/test/ASTER/EndToEndTest
 endif
@@ -63,7 +65,7 @@ ecostress-image:
            --mount type=bind,src=$(abs_builddir)/,dst=/media/work_dir \
            --mount type=bind,src=$(srtm_dir),dst=/srtm \
            --mount type=bind,src=$(end_to_end_dir),dst=/project/test/ASTER/EndToEndTest \
-           --mount type=bind,src=$(srtm_dir)/srtm_v3_lwm,dst=/project/ancillary/SRTM/srtm_v3_lwm \
+           --mount type=bind,src=$(srtm_lwm_dir),dst=/project/ancillary/SRTM/srtm_v3_lwm \
            ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) \
            /bin/bash
 	docker exec $$(cat docker_run.id) bash --login -c "cd /root && tar -xf /media/work_dir/$(PACKAGE)-$(VERSION).tar.gz"
