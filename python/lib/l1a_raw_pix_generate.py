@@ -2,6 +2,7 @@ import h5py
 import shutil
 import re
 import os
+import glob
 import numpy as np
 from .write_standard_metadata import WriteStandardMetadata
 from .misc import ecostress_file_name, time_split
@@ -10,6 +11,7 @@ import geocal
 from geocal import Time
 import sys
 from datetime import datetime
+from datetime import timedelta
 
 '''
 By packets:
@@ -67,9 +69,6 @@ kh3 = PRT_467_T( P7_R(raw.AnalogsTemp_BB_HOT_3) )
 kh4 = PRT_468_T( P7_R(raw.AnalogsTemp_BB_HOT_4) )
 kh5 = PRT_469_T( P7_R(raw.AnalogsTemp_BB_HOT_5) )
 
-'''
-
-'''
 ' short word offsets into FPIE packet array '
 
 ' packet primary header '
@@ -105,13 +104,14 @@ LPS = PPFP * SCPS
 class L1aRawPixGenerate(object):
   '''This generates a L1A_RAW_PIX, L1A_BB, L1A_ENG and L1A_RAW_ATT
   files from a L0B input.'''
-  def __init__(self, l0b, osp_dir, scene_file, run_config = None,
+  def __init__(self, l0b, obst_dir, osp_dir, scene_file, run_config = None,
                build_id = "0116",
                pge_version = "0.50", 
                file_version = "01"):
       '''Create a L1aRawPixGenerate to process the given L0 file. 
       To actually generate, execute the 'run' command.'''
       self.l0b = l0b
+      self.obst_dir = obst_dir
       self.osp_dir = osp_dir
       self.scene_file = scene_file
       self.run_config = run_config
@@ -163,6 +163,53 @@ class L1aRawPixGenerate(object):
     m.set("RangeEndingTime", tm)
     m.set_input_pointer([self.l0b, self.scene_file])
     return fout, m, fname
+
+  def detect_obst( self, sts, ste ):
+    # look for dolar array obstruction on scene using start/end times
+    # and solar array obstruction reports from HOSC
+
+      ys = str( sts )[0:4]
+      path=self.obst_dir
+      obst_files=path+"ECO*Obst."+ys
+      print('STS=%s STE=%s' %( str(sts), str(ste) ) )
+      print('OBSTFILES=%s' %obst_files )
+      fov_obst = "NO"
+      for file_name in glob.glob(obst_files):
+        fn = os.path.basename( file_name )
+        pre,doy1,doy2,post,year=re.split('\_|\.',fn)
+        d1 = year + '::' + doy1
+        yr = int(year)
+        if int( doy2 ) < int( doy1 ) : yr = yr + 1
+        year2 = str(yr)
+        d2 = year2 + '::' + doy2
+        t1 = Time.parse_time( d1 )
+        t2 = Time.parse_time( d2 )
+        ## print("ObstFile dates=%s %s" %( d1, d2 ) )
+        if ste<t1 : break  #  time codes beyond scene end
+        if sts>t2 :  #  time codes before scene start
+          continue
+        print('Found file %s' %file_name )
+        with open( file_name, 'r' ) as ifd:
+          for lbuf in ifd:
+            if 'OBSTRUCTED' not in lbuf:  #  Look for "OBSTRUCTED"
+              continue
+            a,b,c,doy1,t1,d,doy2,t2 = re.split(' |\,|\/', lbuf )
+            #print("OBST lbuf %s %s %s" %(lbuf,t1,t2))
+            d1 = year + '::' + doy1 + ' ' + t1
+            d2 = year2 + '::' + doy2 + ' ' + t2[0:8]
+            t1=Time.parse_time( d1 )
+            t2=Time.parse_time( d2 )
+            if ste<t1 : break  #  time codes beyond scene end
+            if sts>t2 :  #  time codes before scene start
+              continue
+            print("Found OBST times %s %s" %( t1, t2 ) )
+            print("Found OBST scene %s %s" %( sts, ste ) )
+            fov_obst = "YES"
+            break
+        print("Close file %s" %file_name )
+        ifd.close()
+        if fov_obst != "NO" : break
+      return fov_obst
 
   def run(self):
 
@@ -394,6 +441,7 @@ class L1aRawPixGenerate(object):
     eng_met.set('ImageLines', 0)
     eng_met.set('ImagePixels', 0)
     eng_met.set('SISVersion', '1')
+    #eng_met.set('FieldOfViewObstruction', fov_obst) # need code arrangement
     eng_met.write()
     eng.close()
 
@@ -431,6 +479,7 @@ class L1aRawPixGenerate(object):
     attf_met.set('ImageLines', 0)
     attf_met.set('ImagePixels', 0)
     attf_met.set('SISVersion', '1')
+    #attf_met.set('FieldOfViewObstruction', fov_obst) # need code arrangement
     attf_met.write()
     attf.close()
 
@@ -500,6 +549,9 @@ class L1aRawPixGenerate(object):
       print("====  ", datetime.now(), "  ====")
       dt = ste.gps - sts.gps
       print("SCENE=%03d START=%s(%f) END=%s(%f) DT=%f" % ( scene_id, sts, sts.gps, ste, ste.gps, dt) )
+
+      # detect field of view obstruction
+      fov_obst = self.detect_obst( sts, ste )
 
       good[:] = 0.0
 
@@ -862,6 +914,7 @@ class L1aRawPixGenerate(object):
       #l1a_fp_met.set('ProductionDateTime', sst ) # given in runconfig file
       l1a_fp_met.set('ShortName', 'L1A_RAW')
       l1a_fp_met.set('SISVersion', '1')
+      l1a_fp_met.set('FieldOfViewObstruction', fov_obst)
       l1a_fp_met.write()
 
       l1a_bp_met.set('ImageLines', cbb.shape[0])
@@ -874,6 +927,7 @@ class L1aRawPixGenerate(object):
       #l1a_bp_met.set('ProductionDateTime', sst ) # given in runconfig file
       l1a_bp_met.set('ShortName', 'L1A_BB')
       l1a_bp_met.set('SISVersion', '1')
+      l1a_bp_met.set('FieldOfViewObstruction', fov_obst)
       l1a_bp_met.write()
 
 # L1A_RAW_PIX metadata
@@ -925,14 +979,14 @@ class L1aRawPixGenerate(object):
 
         t = l1a_bpg.create_dataset("b%d_blackbody_295" %(b+1),
                                    data=cbb[:,:,bo[b]], chunks=(PPFP,BBLEN),
-                                                  dtype="u2")
+                                                  dtype="u2", compression="gzip" )
         t.attrs['Units']='dimensionless'
         t.attrs['valid_min']='0'
         t.attrs['valid_max']='32767'
         t.attrs['fill']='0xffff'
         t = l1a_bpg.create_dataset("b%d_blackbody_325" %(b+1),
                                    data=hbb[:,:,bo[b]], chunks=(PPFP,BBLEN),
-                                                  dtype="u2" )
+                                                  dtype="u2", compression="gzip" )
         t.attrs['Units']='dimensionless'
         t.attrs['valid_min']='0'
         t.attrs['valid_max']='32767'
@@ -980,6 +1034,10 @@ class L1aRawPixGenerate(object):
           r2[i-p0,j] = prc[j]( p7r( bbt[i,0,j] ) )
           r3[i-p0,j] = prh[j]( p7r( bbt[i,1,j] ) )
 
+#  Check FOV obstruction
+
+      
+
       l1a_fp.close()
       l1a_bp.close()
 
@@ -997,7 +1055,7 @@ class L1aRawPixGenerate(object):
                                   l1b_geo_config.instrument_to_sc_euler,
                                   l1b_geo_config.first_angle_per_encoder_value,
                                   l1b_geo_config.second_angle_per_encoder_value)
-        print("Getting orbit")
+        print("Getting orbitt")
         orbitt = ecostress.EcostressOrbit(attfname, l1b_geo_config.x_offset_iss,
                                l1b_geo_config.extrapolation_pad,
                                l1b_geo_config.large_gap)
