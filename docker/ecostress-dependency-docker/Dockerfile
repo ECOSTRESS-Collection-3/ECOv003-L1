@@ -13,7 +13,7 @@ RUN cp /media/ecostress-dependency-repo/ecostress-dependency.repo /etc/yum.repos
 RUN yum install --enablerepo=ecostress-dependency ecostress-python-package -y
 # Update the location of the larger datasets. These aren't actually used when
 # running, but the unit tests etc. expect these to point to the right locations
-RUN rm /opt/afids/data/srtmL2_filled && ln -s /project/ancillary/SRTM/srtm_v3_dem_L2 /opt/afids/data/srtmL2_filled
+RUN rm /opt/afids/data/srtmL2_filled && ln -s /srtm /opt/afids/data/srtmL2_filled
 RUN rm -r /media/ecostress-dependency-repo
 
 

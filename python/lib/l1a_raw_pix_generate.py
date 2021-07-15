@@ -173,9 +173,13 @@ class L1aRawPixGenerate(object):
 #  setup for locating scene corners
     sys.path.append(self.osp_dir)
     import l1b_geo_config
-    datum = os.environ['AFIDS_VDEV_DATA']+'/EGM96_20_x100.HLF'
-    srtm_dir = os.environ['AFIDS_DATA']+'/srtmL2_filled'
-    dem = geocal.SrtmDem(srtm_dir, False, geocal.DatumGeoid96(datum))
+    if(self.run_config is not None):
+      dem = ecostress.create_dem(self.run_config)
+      ecostress.setup_spice(self.run_config)
+    else:
+      datum = os.environ['AFIDS_VDEV_DATA']+'/EGM96_20_x100.HLF'
+      srtm_dir = os.environ['AFIDS_DATA']+'/srtmL2_filled'
+      dem = geocal.SrtmDem(srtm_dir, False, geocal.DatumGeoid96(datum))
     cam = geocal.read_shelve(self.osp_dir + "/camera.xml")
     cam.focal_length = l1b_geo_config.camera_focal_length
 
@@ -993,7 +997,7 @@ class L1aRawPixGenerate(object):
                                   l1b_geo_config.instrument_to_sc_euler,
                                   l1b_geo_config.first_angle_per_encoder_value,
                                   l1b_geo_config.second_angle_per_encoder_value)
-        print("Getting orbitt")
+        print("Getting orbit")
         orbitt = ecostress.EcostressOrbit(attfname, l1b_geo_config.x_offset_iss,
                                l1b_geo_config.extrapolation_pad,
                                l1b_geo_config.large_gap)

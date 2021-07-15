@@ -225,10 +225,10 @@ def orbit_from_metadata(fname):
     '''Read the standard metadata from the given file to return the orbit,
     scene, and acquisition_time for the given file.'''
     fin = h5py.File(fname, "r")
-    onum = fin["/StandardMetadata/StartOrbitNumber"].value
-    sid = fin["/StandardMetadata/SceneID"].value
-    bdate = fin["/StandardMetadata/RangeBeginningDate"].value
-    btime = fin["/StandardMetadata/RangeBeginningTime"].value
+    onum = fin["/StandardMetadata/StartOrbitNumber"][()]
+    sid = fin["/StandardMetadata/SceneID"][()]
+    bdate = fin["/StandardMetadata/RangeBeginningDate"][()]
+    btime = fin["/StandardMetadata/RangeBeginningTime"][()]
     acquisition_time = geocal.Time.parse_time("%sT%sZ" % (bdate, btime))
     return int(onum), int(sid), acquisition_time
 

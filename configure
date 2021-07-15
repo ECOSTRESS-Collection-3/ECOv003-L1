@@ -696,6 +696,8 @@ PYTHON_VERSION
 PYTHON
 PARALLEL
 H5DIFF
+CARTLAB_MACHINE_FALSE
+CARTLAB_MACHINE_TRUE
 testdatadir
 GEOCAL_SWIG_CFLAGS
 GEOCAL_LIBS
@@ -17918,6 +17920,19 @@ testdatadir="$ac_test_data_dir"
 
 
 #=================================================================
+# As a convenience, recognize pistol/rifle. The location of test directories
+# is different than on ecostress
+#=================================================================
+
+ if test  -e /raid22; then
+  CARTLAB_MACHINE_TRUE=
+  CARTLAB_MACHINE_FALSE='#'
+else
+  CARTLAB_MACHINE_TRUE='#'
+  CARTLAB_MACHINE_FALSE=
+fi
+
+
 # Find h5diff
 # Extract the first word of "h5diff", so it can be a program name with args.
 set dummy h5diff; ac_word=$2
@@ -20135,6 +20150,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${HAVE_GCC_TRUE}" && test -z "${HAVE_GCC_FALSE}"; then
   as_fn_error $? "conditional \"HAVE_GCC\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${CARTLAB_MACHINE_TRUE}" && test -z "${CARTLAB_MACHINE_FALSE}"; then
+  as_fn_error $? "conditional \"CARTLAB_MACHINE\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${HAVE_SPHINX_TRUE}" && test -z "${HAVE_SPHINX_FALSE}"; then

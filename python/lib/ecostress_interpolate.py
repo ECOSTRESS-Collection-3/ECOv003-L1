@@ -4,6 +4,7 @@
 import warnings
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore",category=DeprecationWarning)
+    warnings.filterwarnings("ignore",category=FutureWarning)
     import tensorflow as tf
     from tensorflow.python.util import deprecation
     import logging

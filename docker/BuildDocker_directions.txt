@@ -1,0 +1,36 @@
+Note the commands are in docker/docker.am. We run using make, just for
+convenience. If you are experimenting, you can just run the commands directly.
+
+1. First, just set up a normal ecostress build.
+
+   Something like:
+
+   ../../ecostress-level1/configure --prefix=/home/smyth/Local/ecostress-build/install --enable-maintainer-mode --with-afids=/opt/afids --with-geocal=/home/smyth/Local/geocal-build/install --with-test-data=/home/smyth/Local/ecostress-test-data
+
+2. Copy in the afids latest iso (this is too big to include in the ecostress
+   git repository).
+
+   pushd ../../ecostress-level1/docker/afids-docker
+   cp /data/smyth/afids-repository-centos7/afids-06-12-2020.iso
+   popd
+
+3. make afids-image
+   This is a centos7 system plus and install of afids
+   This builds the image ecostress/afids:1.28
+
+4. make ecostress-dependency-image
+    This starts with ecostress/afids and adds ecostress specific dependencies
+    This builds the image ecostress/ecostress-dependency:1.0
+
+5. make ecostress-image
+    This build ecostress and runs the end to end test
+
+   Note if you need to run this interactivately to debug something, you can
+   connect to the container with
+
+   docker exec -it `cat docker_run.id` bash --login
+   
+   If you need to clean up a failed run, you should do
+   
+   docker container stop `cat docker_run.id`
+   rm docker_run.i

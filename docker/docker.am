@@ -1,4 +1,4 @@
-AFIDS_DVD_DATE = 10-21-2019
+AFIDS_DVD_DATE = 06-12-2020
 AFIDS_FULL_VERSION = 1.28
 TENSORFLOW_WHEEL = tensorflow-1.14.0-cp37-cp37m-linux_x86_64.whl
 ECOSTRESS_DEPENDENCY_VERSION = 1.0
@@ -12,6 +12,9 @@ ECOSTRESS_IMAGE_VERSION = $(VERSION)
 # everywhere. You can set this to a blank string to turn this off if needed.
 # Images will be larger, but this might not matter.
 EXTRA_DOCKER_FLAG= --squash
+# Normally want no-chache. If we are rebuilding things, something changed
+# and we want to build everything
+EXTRA_DOCKER_FLAG+= --no-cache
 
 afids-image: docker/afids-docker/afids-$(AFIDS_DVD_DATE).iso
 	-rm $(abs_srcdir)/docker/afids-docker/afids.iso
@@ -28,35 +31,48 @@ ecostress-dependency-image:
 # of datasets. We want to mount rather than copy, and there is no way to
 # do that with Dockerfile. So we instead create a container, build in there,
 # and then save the results as an image.
-
-# Various directories that are mounted. This is what is used in our canned
-# end to end test data. We actually get this passed
-# in through the run xml file, so when the image is run for "real" it is
-# a problem of PCS to determine all this and just pass it to the PGEs
 #
-# We use the --login to the /etc/profile.d files are read, in particular the
+# We don't run the end to end check, that is done separately after we
+# have built the system
+#
+# We use the --login so the /etc/profile.d files are read, in particular the
 # setup of afids.
+
+# We only actually use the srtm_dir and end_to_end_dir, but list the
+# others here in case we want to run the end to end check in the
+# future. The end_to_end_dir is used just for the ecostress units tests,
+# we don't need this generally when we run.
+if CARTLAB_MACHINE
+# Locations on pistol/rifle
+landsat_dir = /raid22
+srtm_dir = /raid25/SRTM_2014_update/srtm_v3_dem_L2
+srtm_lwm_dir = /raid25/SRTM_2014_update/srtm_v3_lwm
+spice_dir = /pkg/afids/afids_latest/data/cspice
+end_to_end_dir = /data/smyth/ecostress-test-data
+else
+# Locations on ECOSTRESS
 landsat_dir = /project/ancillary/LANDSAT
-srtm_dir = /project/ancillary/SRTM
-datum_dir = /pkg/afids/afids_latest/data/vdev
+srtm_dir = /project/ancillary/SRTM/srtm_v3_dem_L2
+srtm_lwm_dir = /project/ancillary/SRTM/srtm_v3_lwm
 spice_dir = /pkg/afids/afids_latest/data/cspice
 end_to_end_dir = /project/test/ASTER/EndToEndTest
+endif
+
 ecostress-image:
 	$(MAKE) dist
 # Use the default locations of various datasets. 
 	docker run -t -d --cidfile=docker_run.id \
            --mount type=bind,src=$(abs_builddir)/,dst=/media/work_dir \
-           --mount type=bind,src=$(landsat_dir),dst=$(landsat_dir) \
-           --mount type=bind,src=$(srtm_dir),dst=$(srtm_dir) \
-           --mount type=bind,src=$(datum_dir),dst=$(datum_dir) \
-           --mount type=bind,src=$(spice_dir),dst=$(spice_dir) \
-           --mount type=bind,src=$(end_to_end_dir),dst=$(end_to_end_dir) \
+           --mount type=bind,src=$(srtm_dir),dst=/srtm \
+           --mount type=bind,src=$(end_to_end_dir),dst=/project/test/ASTER/EndToEndTest \
+           --mount type=bind,src=$(srtm_lwm_dir),dst=/project/ancillary/SRTM/srtm_v3_lwm \
            ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) \
            /bin/bash
 	docker exec $$(cat docker_run.id) bash --login -c "cd /root && tar -xf /media/work_dir/$(PACKAGE)-$(VERSION).tar.gz"
 	docker exec $$(cat docker_run.id) bash --login -c "cd /root/$(PACKAGE)-$(VERSION) && ./configure --with-afids=/opt/afids --with-geocal=/opt/afids --prefix=/opt/ecostress && make -j 12 all && make install && make -j 12 check"
-# Add end to end check
-# Add links to executable
+	docker exec $$(cat docker_run.id) bash --login -c "rm -f /etc/profile.d/geocal.sh && cp /opt/ecostress/setup_ecostress.* /etc/profile.d"
+#	docker exec $$(cat docker_run.id) bash --login -c "ln -s /opt/ecostress/L1*_PGE /opt/ecostress/setup_ecostress.* /usr/bin"
+	docker exec $$(cat docker_run.id) bash --login -c "rm -fr /root/ecostress*"
 	docker commit $$(cat docker_run.id) ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION)
 	docker container stop $$(cat docker_run.id)
 
@@ -92,9 +108,12 @@ create-ecostress-dependency-repo:
 	docker container stop $$(cat docker_run.id)
 
 EXTRA_DIST+= docker/README
+EXTRA_DIST+= docker/BuildDocker_directions.txt
 EXTRA_DIST+= docker/afids-docker/Dockerfile
 EXTRA_DIST+= docker/ecostress-dependency-repo/ecostress-dependency.repo
 EXTRA_DIST+= docker/ecostress-dependency-repo/ecostress-python-package.spec
-# Leave out repo and package because of the size. We can reevaluate that
+# Leave out repodata and package because of the size. We can reevaluate that
 # if needed
+# EXTRA_DIST+= docker/ecostress-dependency-repo/ecostress-python-package-1.0-1.el7.x86_64.rpm
+# EXTRA_DIST+= docker/ecostress-dependency-repo/repodata
 EXTRA_DIST+= docker/ecostress-dependency-docker/Dockerfile

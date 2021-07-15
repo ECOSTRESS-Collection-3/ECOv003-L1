@@ -827,15 +827,17 @@ include_HEADERS =
 #EXTRA_DIST+= @srcpythonlib@/cython_sample_test.py
 
 # Test files
-# Leave out repo and package because of the size. We can reevaluate that
+# Leave out repodata and package because of the size. We can reevaluate that
 # if needed
+# EXTRA_DIST+= docker/ecostress-dependency-repo/ecostress-python-package-1.0-1.el7.x86_64.rpm
+# EXTRA_DIST+= docker/ecostress-dependency-repo/repodata
 EXTRA_DIST = README.md requirements.txt Setup.md end_to_end_testing \
 	coreg_test config/doxygen.cfg config/doc_footer.html \
 	config/create_python_init.py config/doxy2swig.py \
 	config/doxygen_single.cfg @l1a_raw_src@/l0b_sim.py \
-	@l1a_raw_src@/l1a_raw_pix_generate.py @l1b_rad_src@/README.md \
-	@srcpdf@/README @srcpython@/pytest.ini @srcpython@/conftest.py \
-	@srcpython@/ecostress/__init__.py @srcpython@/ecostress/README \
+	@l1b_rad_src@/README.md @srcpdf@/README @srcpython@/pytest.ini \
+	@srcpython@/conftest.py @srcpython@/ecostress/__init__.py \
+	@srcpython@/ecostress/README \
 	@srcpythonlib@/band_to_band_test.py \
 	@srcpythonlib@/coordinate_system_test.py \
 	@srcpythonlib@/ecostress_camera_test.py \
@@ -877,7 +879,9 @@ EXTRA_DIST = README.md requirements.txt Setup.md end_to_end_testing \
 	@unittestdata@/SMAP_L1B_TB_SPS_RunConfig_20150228T224642376.xml \
 	@unittestdata@/Scene_problem.txt \
 	@unittestdata@/L1A_RAW_ATT_00049_20180709T214305_0400_01.h5 \
-	thirdparty/README docker/README docker/afids-docker/Dockerfile \
+	thirdparty/README docker/README \
+	docker/BuildDocker_directions.txt \
+	docker/afids-docker/Dockerfile \
 	docker/ecostress-dependency-repo/ecostress-dependency.repo \
 	docker/ecostress-dependency-repo/ecostress-python-package.spec \
 	docker/ecostress-dependency-docker/Dockerfile
@@ -1086,7 +1090,7 @@ ecostress_test_all_CPPFLAGS = $(AM_CPPFLAGS) $(GEOCAL_CFLAGS)
 # a different version of bazel
 TENSORFLOW_VERSION = 1.14.0
 BAZEL_VERSION = 0.24.1
-AFIDS_DVD_DATE = 10-21-2019
+AFIDS_DVD_DATE = 06-12-2020
 AFIDS_FULL_VERSION = 1.28
 TENSORFLOW_WHEEL = tensorflow-1.14.0-cp37-cp37m-linux_x86_64.whl
 ECOSTRESS_DEPENDENCY_VERSION = 1.0
@@ -1099,26 +1103,38 @@ ECOSTRESS_IMAGE_VERSION = $(VERSION)
 # We pull this out, because --squash is still experimental and not available
 # everywhere. You can set this to a blank string to turn this off if needed.
 # Images will be larger, but this might not matter.
-EXTRA_DOCKER_FLAG = --squash
+# Normally want no-chache. If we are rebuilding things, something changed
+# and we want to build everything
+EXTRA_DOCKER_FLAG = --squash --no-cache
+# Locations on ECOSTRESS
+@CARTLAB_MACHINE_FALSE@landsat_dir = /project/ancillary/LANDSAT
 
 # We normally want to use a Dockerfile to build an image. But in this case
 # we want to run our tests before creating an image, which require a number
 # of datasets. We want to mount rather than copy, and there is no way to
 # do that with Dockerfile. So we instead create a container, build in there,
 # and then save the results as an image.
-
-# Various directories that are mounted. This is what is used in our canned
-# end to end test data. We actually get this passed
-# in through the run xml file, so when the image is run for "real" it is
-# a problem of PCS to determine all this and just pass it to the PGEs
 #
-# We use the --login to the /etc/profile.d files are read, in particular the
+# We don't run the end to end check, that is done separately after we
+# have built the system
+#
+# We use the --login so the /etc/profile.d files are read, in particular the
 # setup of afids.
-landsat_dir = /project/ancillary/LANDSAT
-srtm_dir = /project/ancillary/SRTM
-datum_dir = /pkg/afids/afids_latest/data/vdev
-spice_dir = /pkg/afids/afids_latest/data/cspice
-end_to_end_dir = /project/test/ASTER/EndToEndTest
+
+# We only actually use the srtm_dir and end_to_end_dir, but list the
+# others here in case we want to run the end to end check in the
+# future. The end_to_end_dir is used just for the ecostress units tests,
+# we don't need this generally when we run.
+# Locations on pistol/rifle
+@CARTLAB_MACHINE_TRUE@landsat_dir = /raid22
+@CARTLAB_MACHINE_FALSE@srtm_dir = /project/ancillary/SRTM/srtm_v3_dem_L2
+@CARTLAB_MACHINE_TRUE@srtm_dir = /raid25/SRTM_2014_update/srtm_v3_dem_L2
+@CARTLAB_MACHINE_FALSE@srtm_lwm_dir = /project/ancillary/SRTM/srtm_v3_lwm
+@CARTLAB_MACHINE_TRUE@srtm_lwm_dir = /raid25/SRTM_2014_update/srtm_v3_lwm
+@CARTLAB_MACHINE_FALSE@spice_dir = /pkg/afids/afids_latest/data/cspice
+@CARTLAB_MACHINE_TRUE@spice_dir = /pkg/afids/afids_latest/data/cspice
+@CARTLAB_MACHINE_FALSE@end_to_end_dir = /project/test/ASTER/EndToEndTest
+@CARTLAB_MACHINE_TRUE@end_to_end_dir = /data/smyth/ecostress-test-data
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -2951,7 +2967,7 @@ end-to-end-check: installcheck-am
 	$(MKDIR_P) ./end_to_end_test_l0_input
 	$(LN_S) $(l0b_file) ./end_to_end_test_l0_input
 	$(LN_S) $(scene_file) ./end_to_end_test_l0_input
-	ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1A_RAW_PGE $(l1a_raw_run_config)
+	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1A_RAW_PGE $(l1a_raw_run_config)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1a_raw/*.h5
 	ECOSTRESS_END_TO_END_TEST=t $(PARALLEL) --gnu $(prefix)/L1A_CAL_PGE ::: $(l1a_cal_run_config)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1a_cal/*.h5
@@ -3130,22 +3146,22 @@ ecostress-dependency-image:
 	cp -r $(abs_srcdir)/docker/ecostress-dependency-repo/ $(abs_srcdir)/docker/ecostress-dependency-docker
 	docker build $(EXTRA_DOCKER_FLAG) -t ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) $(abs_srcdir)/docker/ecostress-dependency-docker
 	rm -r $(abs_srcdir)/docker/ecostress-dependency-docker/ecostress-dependency-repo
+
 ecostress-image:
 	$(MAKE) dist
 # Use the default locations of various datasets. 
 	docker run -t -d --cidfile=docker_run.id \
            --mount type=bind,src=$(abs_builddir)/,dst=/media/work_dir \
-           --mount type=bind,src=$(landsat_dir),dst=$(landsat_dir) \
-           --mount type=bind,src=$(srtm_dir),dst=$(srtm_dir) \
-           --mount type=bind,src=$(datum_dir),dst=$(datum_dir) \
-           --mount type=bind,src=$(spice_dir),dst=$(spice_dir) \
-           --mount type=bind,src=$(end_to_end_dir),dst=$(end_to_end_dir) \
+           --mount type=bind,src=$(srtm_dir),dst=/srtm \
+           --mount type=bind,src=$(end_to_end_dir),dst=/project/test/ASTER/EndToEndTest \
+           --mount type=bind,src=$(srtm_lwm_dir),dst=/project/ancillary/SRTM/srtm_v3_lwm \
            ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) \
            /bin/bash
 	docker exec $$(cat docker_run.id) bash --login -c "cd /root && tar -xf /media/work_dir/$(PACKAGE)-$(VERSION).tar.gz"
 	docker exec $$(cat docker_run.id) bash --login -c "cd /root/$(PACKAGE)-$(VERSION) && ./configure --with-afids=/opt/afids --with-geocal=/opt/afids --prefix=/opt/ecostress && make -j 12 all && make install && make -j 12 check"
-# Add end to end check
-# Add links to executable
+	docker exec $$(cat docker_run.id) bash --login -c "rm -f /etc/profile.d/geocal.sh && cp /opt/ecostress/setup_ecostress.* /etc/profile.d"
+#	docker exec $$(cat docker_run.id) bash --login -c "ln -s /opt/ecostress/L1*_PGE /opt/ecostress/setup_ecostress.* /usr/bin"
+	docker exec $$(cat docker_run.id) bash --login -c "rm -fr /root/ecostress*"
 	docker commit $$(cat docker_run.id) ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION)
 	docker container stop $$(cat docker_run.id)
 
