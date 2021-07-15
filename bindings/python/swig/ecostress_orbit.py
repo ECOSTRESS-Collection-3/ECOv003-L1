@@ -181,6 +181,7 @@ def _new_from_set(cls, version, *args):
     return inst
 
 import geocal_swig.hdf_orbit
+import geocal_swig.orbit_array
 import geocal_swig.orbit_quaternion_list
 import geocal_swig.orbit
 import geocal_swig.generic_object
