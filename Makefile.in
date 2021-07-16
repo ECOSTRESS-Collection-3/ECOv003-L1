@@ -3127,11 +3127,16 @@ bazel:
 	curl -L -o $@ https://github.com/bazelbuild/bazel/releases/download/$(BAZEL_VERSION)/bazel-$(BAZEL_VERSION)-linux-x86_64
 	chmod +x $@
 
+# Note numpy 1.19.3 which we now use with AFIDS breaks this. See
+# https://github.com/tensorflow/tensorflow/issues/40688 and
+# https://github.com/tensorflow/tensorflow/issues/34197
+# with the given patch we seem to have fixed this
 tensorflow-wheel: tensorflow-$(TENSORFLOW_VERSION).tar.gz bazel
 	-rm -r tensorflow-$(TENSORFLOW_VERSION)
 	tar -xf $<
 	PATH=$(abs_builddir):$${PATH} which bazel && \
           cd tensorflow-$(TENSORFLOW_VERSION) && \
+          patch -p1 < $(abs_srcdir)/thirdparty/tensorflow-1.14.0.patch && \
           ( yes "" | ./configure ) && \
           $(abs_builddir)/bazel build -c opt \
              //tensorflow/tools/pip_package:build_pip_package && \
