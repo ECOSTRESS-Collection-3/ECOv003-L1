@@ -879,8 +879,8 @@ EXTRA_DIST = README.md requirements.txt Setup.md end_to_end_testing \
 	@unittestdata@/SMAP_L1B_TB_SPS_RunConfig_20150228T224642376.xml \
 	@unittestdata@/Scene_problem.txt \
 	@unittestdata@/L1A_RAW_ATT_00049_20180709T214305_0400_01.h5 \
-	thirdparty/README docker/README \
-	docker/BuildDocker_directions.txt \
+	thirdparty/README thirdparty/tensorflow-1.14.0.patch \
+	docker/README docker/BuildDocker_directions.txt \
 	docker/afids-docker/Dockerfile \
 	docker/ecostress-dependency-repo/ecostress-dependency.repo \
 	docker/ecostress-dependency-repo/ecostress-python-package.spec \
@@ -3116,9 +3116,12 @@ ecostress-check-am: ecostress_test_all
 vpath %.cc $(srcdir)/@srclib@
 vpath %.h $(srcdir)/@srclib@
 vpath %.i $(srcdir)/@srclib@
+
 # Don't put the wheel in the dist file. It is really pretty big. We can
-# reevaluate that if needed, but for now skip
+# reevaluate that if needed, but for now skip. We do have this checked
+# into git using the lfs though
 # EXTRA_DIST+= thirdparty/tensorflow-1.14.0-cp37-cp37m-linux_x86_64.whl
+# EXTRA_DIST+= thirdparty/tensorflow-1.14.0-cp39-cp39m-linux_x86_64.whl
 
 tensorflow-$(TENSORFLOW_VERSION).tar.gz:
 	curl -L -o $@ https://github.com/tensorflow/tensorflow/archive/v$(TENSORFLOW_VERSION).tar.gz
@@ -3131,7 +3134,7 @@ bazel:
 # https://github.com/tensorflow/tensorflow/issues/40688 and
 # https://github.com/tensorflow/tensorflow/issues/34197
 # with the given patch we seem to have fixed this
-tensorflow-wheel: tensorflow-$(TENSORFLOW_VERSION).tar.gz bazel
+tensorflow-wheel: tensorflow-$(TENSORFLOW_VERSION).tar.gz bazel thirdparty/tensorflow-1.14.0.patch
 	-rm -r tensorflow-$(TENSORFLOW_VERSION)
 	tar -xf $<
 	PATH=$(abs_builddir):$${PATH} which bazel && \

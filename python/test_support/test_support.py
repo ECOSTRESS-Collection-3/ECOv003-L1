@@ -12,7 +12,7 @@ try:
 except ImportError:
     have_swig = False
     
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def isolated_dir(tmpdir):
     '''This is a fixture that creates a temporary directory, and uses this
     while running a unit tests. Useful for tests that write out a test file
@@ -33,7 +33,7 @@ def isolated_dir(tmpdir):
     finally:
         os.chdir(curdir)
 
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def vicar_path():
     '''Add vicar_pdf to TAE_PATH'''
     original_tae_path = os.environ["TAE_PATH"]
@@ -41,18 +41,18 @@ def vicar_path():
     yield
     os.environ["TAE_PATH"] = original_tae_path
     
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def unit_test_data():
     '''Return the unit test directory'''
     yield os.path.abspath(os.path.dirname(__file__) + "/../../unit_test_data") + "/"
 
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def old_test_data():
     '''This is likely to go away, but right now we depend on some older
     test data'''
     yield os.path.abspath(os.path.dirname(__file__) + "/../../end_to_end_testing") + "/"
 
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def igc_old(old_test_data):
     '''This gives a ImageGroundConnection we can use for testing with.'''
     orb = read_shelve(old_test_data + "orbit_old.xml")
@@ -65,7 +65,7 @@ def igc_old(old_test_data):
     dem = SrtmDem("",False)
     yield IpiImageGroundConnection(ipi, dem, None)
 
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def lwm():
     '''Determine location of SRTM LWM and initialize object for that.'''
     if(os.path.exists("/raid25/SRTM_2014_update/srtm_v3_lwm")):
@@ -76,7 +76,7 @@ def lwm():
         raise RuntimeError("Couldn't find SRTM LWM")
     yield SrtmLwmData(srtm_lwm_dir,False)
 
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def aster_mosaic_dir():
     dir = "/project/ancillary/ASTER/CAMosaic/"
     if(not os.path.exists(dir)):
@@ -86,7 +86,7 @@ def aster_mosaic_dir():
         raise RuntimeError("Can't find location of aster mosaic")
     yield dir
 
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def ortho():
     dir = "/project/ancillary/LANDSAT"
     if(not os.path.exists(dir)):
@@ -96,7 +96,7 @@ def ortho():
         raise RuntimeError("Can't find location of ortho base")
     return Landsat7Global(dir, Landsat7Global.BAND5)
 
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def aster_mosaic_surface_data(aster_mosaic_dir):
     sdata = [VicarLiteRasterImage(aster_mosaic_dir + "calnorm_b%d.img" % b, 1,
                                   VicarLiteFile.READ, 1000, 1000)
@@ -105,7 +105,7 @@ def aster_mosaic_surface_data(aster_mosaic_dir):
 
 # Changed test data in 6.00. For backwards testing, just use the 5.00
 # version of these files, it is sufficient for testing
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def test_data():
     '''Determine the directory with the test data.'''
     if("end_to_end_test_data" in os.environ):
@@ -123,15 +123,15 @@ def test_data():
     else:
         pytest.skip("Don't have ecostress-test-data, so skipping test")
 
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def orb_fname(unit_test_data, test_data):
     yield test_data + "L1A_RAW_ATT_80005_20150124T204250_0100_01.h5.expected"
 
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def rad_fname(unit_test_data, test_data):
     yield test_data + "ECOSTRESS_L1B_RAD_80005_001_20150124T204250_0100_01.h5.expected"
     
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def igc(unit_test_data, test_data, orb_fname, rad_fname):
     '''Like igc_old, but a more realistic IGC. This one is already averaged 
     (so 128 rows per scan)'''
@@ -159,22 +159,22 @@ def igc(unit_test_data, test_data, orb_fname, rad_fname):
     igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
     yield igc
 
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def igc_with_img(igc, test_data, rad_fname):
     '''Like igc, but also with raster image included'''
     igcwimg = igc
     igcwimg.image = GdalRasterImage('HDF5:"%s"://SWIR/swir_dn' % rad_fname)
     yield igcwimg
     
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def dn_fname(unit_test_data, test_data):
     yield test_data + "ECOSTRESS_L1A_PIX_80005_001_20150124T204250_0100_02.h5.expected"
 
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def gain_fname(unit_test_data, test_data):
     yield test_data + "L1A_RAD_GAIN_80005_001_20150124T204250_0100_02.h5.expected"
     
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def igc_hres(unit_test_data, test_data, orb_fname, rad_fname):
     '''Like igc_old, but a more realistic IGC. This one is not averaged 
     (so 256 rows per scan)'''
@@ -201,7 +201,7 @@ def igc_hres(unit_test_data, test_data, orb_fname, rad_fname):
     igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
     yield igc
     
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def igc_btob(unit_test_data, test_data, orb_fname):
     '''Like igc_hres, but using test data better suited for band to band 
     testing. We have the SWIR band for each of the bands'''
