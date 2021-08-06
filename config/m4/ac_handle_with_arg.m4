@@ -67,3 +67,35 @@ if test "$6" != "do_not_use"; then
     ])
 fi
 ])
+
+# Variation where if the user doesn't give anything we default to no
+AC_DEFUN([AC_HANDLE_WITH_ARG_DEFAULT_NO],[
+[have_][$1]="no"
+[build_][$1]="no"
+[build_needed][$1]="no"
+[want_][$1]="no"
+if test "$6" != "do_not_use"; then
+  AC_ARG_WITH([$2],
+        AS_HELP_STRING([--with-][$2][@<:@=DIR@:>@], [use ][$3][ (default is no) - it is possible to specify the root directory for ][$3][ (optional).]m4_bmatch([$4],[can_build], [ You can also specify "build" if you want to build your own local copy. See also THIRDPARTY variable described below.])),
+        [
+    if test "$withval" = "no"; then
+        [want_][$1]="no"
+    elif test "$withval" = "yes"; then
+        [want_][$1]="yes"
+        [ac_][$1][_path]=""
+    elif test "$withval" = "build"; then
+        if test "$4" != "can_build"; then
+            AC_MSG_ERROR([The "build" option is not supported in this particular package for --with-][$2])
+        fi
+        [want_][$1]="yes"
+        [build_][$1]="yes"
+        [ac_][$1][_path]="\${prefix}"
+    else
+        [want_][$1]="yes"
+        [ac_][$1][_path]="$withval"
+    fi
+    ],
+    [
+    [want_][$1]="no"])
+fi
+])

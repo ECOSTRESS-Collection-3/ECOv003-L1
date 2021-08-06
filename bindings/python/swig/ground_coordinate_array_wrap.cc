@@ -7356,7 +7356,7 @@ SWIGINTERN PyObject *_wrap_GroundCoordinateArray_ground_coor_arr(PyObject *SWIGU
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/opt/afids/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    /*@SWIG:/groups/algorithm/smyth/anaconda-env/envs/geocal-latest/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[5], stride[5];
     for(int i = 0; i < 5; ++i) {
@@ -7434,7 +7434,7 @@ SWIGINTERN PyObject *_wrap_GroundCoordinateArray_ground_coor_scan_arr__SWIG_0(Py
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/opt/afids/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    /*@SWIG:/groups/algorithm/smyth/anaconda-env/envs/geocal-latest/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[5], stride[5];
     for(int i = 0; i < 5; ++i) {
@@ -7504,7 +7504,7 @@ SWIGINTERN PyObject *_wrap_GroundCoordinateArray_ground_coor_scan_arr__SWIG_1(Py
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/opt/afids/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    /*@SWIG:/groups/algorithm/smyth/anaconda-env/envs/geocal-latest/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[5], stride[5];
     for(int i = 0; i < 5; ++i) {
@@ -8498,7 +8498,7 @@ SWIGINTERN PyObject *_wrap_GroundCoordinateArray_interpolate(PyObject *SWIGUNUSE
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/opt/afids/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    /*@SWIG:/groups/algorithm/smyth/anaconda-env/envs/geocal-latest/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -8692,18 +8692,22 @@ static PyMethodDef SwigMethods[] = {
 		""},
 	 { (char *)"GroundCoordinateArray_cover", _wrap_GroundCoordinateArray_cover, METH_VARARGS, (char *)"\n"
 		"\n"
-		"GeoCal::MapInfo GroundCoordinateArray::cover(const GeoCal::MapInfo &Mi) const\n"
+		"GeoCal::MapInfo GroundCoordinateArray::cover(double Resolution=70.0) const\n"
+		"Calculate the map info to cover the ground projection of the Igc.\n"
+		"\n"
+		"This is like what the python program igc_project calculates, but it is\n"
+		"more convenient to have this in C++ here. The Resolution is in meters.\n"
 		"\n"
 		""},
 	 { (char *)"GroundCoordinateArray_raster_cover", _wrap_GroundCoordinateArray_raster_cover, METH_VARARGS, (char *)"\n"
 		"\n"
-		"boost::shared_ptr< GeoCal::MemoryRasterImage > GroundCoordinateArray::raster_cover(const GeoCal::MapInfo &Mi) const\n"
+		"boost::shared_ptr< GeoCal::MemoryRasterImage > GroundCoordinateArray::raster_cover(double Resolution=70.0) const\n"
 		"Create a MemoryRasterImage that matches cover(), and fill it in with 0\n"
 		"fill data. \n"
 		""},
 	 { (char *)"GroundCoordinateArray_raster_cover_vicar", _wrap_GroundCoordinateArray_raster_cover_vicar, METH_VARARGS, (char *)"\n"
 		"\n"
-		"boost::shared_ptr< GeoCal::VicarLiteRasterImage > GroundCoordinateArray::raster_cover_vicar(const std::string &Fname, const GeoCal::MapInfo &Mi) const\n"
+		"boost::shared_ptr< GeoCal::VicarLiteRasterImage > GroundCoordinateArray::raster_cover_vicar(const std::string &Fname, double Resolution=70.0) const\n"
 		"Create a VicarLiteRasterImage that matches cover(), and fill it in\n"
 		"with 0 fill data. \n"
 		""},

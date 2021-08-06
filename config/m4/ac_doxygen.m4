@@ -43,6 +43,9 @@ if test "x$want_doxygen" = "xyes"; then
             else
               doxygen_search_path=$THIRDPARTY/bin:$PATH
             fi
+	    if test "x$CONDA_PREFIX" != x ; then
+              doxygen_search_path=$CONDA_PREFIX/bin:$doxygen_search_path
+	    fi
             AC_PATH_PROG([DOXYGEN], [doxygen], [], [$doxygen_search_path])
 	    if test -n "$DOXYGEN" ; then
               succeeded=yes

@@ -71,6 +71,9 @@ AC_DEFUN([AC_PROG_SWIG],[
         else
            swig_search_path=$THIRDPARTY/bin:$PATH
         fi
+	if test "x$CONDA_PREFIX" != x ; then
+           swig_search_path=$CONDA_PREFIX/bin:$swig_search_path
+	fi
         AC_PATH_PROG([SWIG],[swig], [], [$swig_search_path])
         if test -z "$SWIG" ; then
                 AC_MSG_WARN([cannot find 'swig' program. You should look at http://www.swig.org])

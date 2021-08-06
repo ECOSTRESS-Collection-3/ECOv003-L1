@@ -246,21 +246,30 @@ class EcostressScanMirror(ObservableEcostressScanMirror, geocal_swig.with_parame
     def __init__(self, *args):
         """
 
-        EcostressScanMirror::EcostressScanMirror(const blitz::Array< int, 2 > &Encoder_value, int
-        Max_encoder_value=1749248, double First_encoder_value_at_0=401443,
-        double Second_encoder_value_at_0=1275903, double Epsilon=0, double
-        Beta=0, double Delta=0, double First_angle_per_ev=360.0/1749248 *2,
-        double Second_angle_per_ev=360.0/1749248 *2)
-        Constructor, taking the encoder values. We fill in bad data values. 
+        EcostressScanMirror::EcostressScanMirror(double Scan_start=-26.488105667851173, double
+        Scan_end=26.488105667851173, int Number_sample=5400, int
+        Number_scan=44, int Max_encoder_value=1749248, double
+        First_encoder_value_at_0=401443, double
+        Second_encoder_value_at_0=1275903, double Epsilon=0, double Beta=0,
+        double Delta=0, double First_angle_per_ev=360.0/1749248 *2, double
+        Second_angle_per_ev=360.0/1749248 *2)
+        Constructor.
+
+        The scan angles are in degrees (seems more convenient than the normal
+        radians we use for angles).
+
+        This uses the data to generate encoder values, useful for simulations.
+
+        Note that the default values here match the test data found in
+        ecostress-test-data 
         """
         _ecostress_scan_mirror.EcostressScanMirror_swiginit(self, _ecostress_scan_mirror.new_EcostressScanMirror(*args))
 
     def scan_mirror_angle(self, *args):
         """
 
-        GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::scan_mirror_angle(int Scan_index, const GeoCal::AutoDerivative< double > &Ic_sample)
-        const
-
+        double Ecostress::EcostressScanMirror::scan_mirror_angle(int Scan_index, double Ic_sample) const
+        Scan mirror angle, in degrees. 
         """
         return _ecostress_scan_mirror.EcostressScanMirror_scan_mirror_angle(self, *args)
 
@@ -268,9 +277,9 @@ class EcostressScanMirror(ObservableEcostressScanMirror, geocal_swig.with_parame
     def rotation_quaternion(self, *args):
         """
 
-        boost::math::quaternion<GeoCal::AutoDerivative<double> > Ecostress::EcostressScanMirror::rotation_quaternion(int Scan_index, const GeoCal::AutoDerivative< double > &Ic_sample)
-        const
-
+        boost::math::quaternion<double> Ecostress::EcostressScanMirror::rotation_quaternion(int Scan_index, double Ic_sample) const
+        Rotation matrix that take the view vector for the Camera and takes it
+        to the space craft coordinate system. 
         """
         return _ecostress_scan_mirror.EcostressScanMirror_rotation_quaternion(self, *args)
 
@@ -278,8 +287,8 @@ class EcostressScanMirror(ObservableEcostressScanMirror, geocal_swig.with_parame
     def angle_from_encoder_value(self, *args):
         """
 
-        GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::angle_from_encoder_value(const GeoCal::AutoDerivative< double > &Evalue) const
-
+        double Ecostress::EcostressScanMirror::angle_from_encoder_value(double Evalue) const
+        Calculate angle for a given encoder value. 
         """
         return _ecostress_scan_mirror.EcostressScanMirror_angle_from_encoder_value(self, *args)
 
@@ -296,9 +305,9 @@ class EcostressScanMirror(ObservableEcostressScanMirror, geocal_swig.with_parame
     def encoder_value_interpolate(self, *args):
         """
 
-        GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::encoder_value_interpolate(int Scan_index, const GeoCal::AutoDerivative< double > Ic_sample)
-        const
-
+        double Ecostress::EcostressScanMirror::encoder_value_interpolate(int Scan_index, double Ic_sample) const
+        Determine EV from Scan_index and Ic_sample,
+        interpolating/extrapolating if needed. 
         """
         return _ecostress_scan_mirror.EcostressScanMirror_encoder_value_interpolate(self, *args)
 

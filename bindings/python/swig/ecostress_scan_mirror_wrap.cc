@@ -10202,7 +10202,7 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_euler__SWIG_0(PyObject *SWIGUN
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/opt/afids/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    /*@SWIG:/groups/algorithm/smyth/anaconda-env/envs/geocal-latest/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[1], stride[1];
     for(int i = 0; i < 1; ++i) {
@@ -11713,7 +11713,7 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_encoder_value(PyObject *SWIGUN
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/opt/afids/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    /*@SWIG:/groups/algorithm/smyth/anaconda-env/envs/geocal-latest/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -11869,29 +11869,38 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"ObserverEcostressScanMirror_swiginit", ObserverEcostressScanMirror_swiginit, METH_VARARGS, NULL},
 	 { (char *)"new_EcostressScanMirror", _wrap_new_EcostressScanMirror, METH_VARARGS, (char *)"\n"
 		"\n"
-		"EcostressScanMirror::EcostressScanMirror(const blitz::Array< int, 2 > &Encoder_value, int\n"
-		"Max_encoder_value=1749248, double First_encoder_value_at_0=401443,\n"
-		"double Second_encoder_value_at_0=1275903, double Epsilon=0, double\n"
-		"Beta=0, double Delta=0, double First_angle_per_ev=360.0/1749248 *2,\n"
-		"double Second_angle_per_ev=360.0/1749248 *2)\n"
-		"Constructor, taking the encoder values. We fill in bad data values. \n"
+		"EcostressScanMirror::EcostressScanMirror(double Scan_start=-26.488105667851173, double\n"
+		"Scan_end=26.488105667851173, int Number_sample=5400, int\n"
+		"Number_scan=44, int Max_encoder_value=1749248, double\n"
+		"First_encoder_value_at_0=401443, double\n"
+		"Second_encoder_value_at_0=1275903, double Epsilon=0, double Beta=0,\n"
+		"double Delta=0, double First_angle_per_ev=360.0/1749248 *2, double\n"
+		"Second_angle_per_ev=360.0/1749248 *2)\n"
+		"Constructor.\n"
+		"\n"
+		"The scan angles are in degrees (seems more convenient than the normal\n"
+		"radians we use for angles).\n"
+		"\n"
+		"This uses the data to generate encoder values, useful for simulations.\n"
+		"\n"
+		"Note that the default values here match the test data found in\n"
+		"ecostress-test-data \n"
 		""},
 	 { (char *)"EcostressScanMirror_scan_mirror_angle", _wrap_EcostressScanMirror_scan_mirror_angle, METH_VARARGS, (char *)"\n"
 		"\n"
-		"GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::scan_mirror_angle(int Scan_index, const GeoCal::AutoDerivative< double > &Ic_sample)\n"
-		"const\n"
-		"\n"
+		"double Ecostress::EcostressScanMirror::scan_mirror_angle(int Scan_index, double Ic_sample) const\n"
+		"Scan mirror angle, in degrees. \n"
 		""},
 	 { (char *)"EcostressScanMirror_rotation_quaternion", _wrap_EcostressScanMirror_rotation_quaternion, METH_VARARGS, (char *)"\n"
 		"\n"
-		"boost::math::quaternion<GeoCal::AutoDerivative<double> > Ecostress::EcostressScanMirror::rotation_quaternion(int Scan_index, const GeoCal::AutoDerivative< double > &Ic_sample)\n"
-		"const\n"
-		"\n"
+		"boost::math::quaternion<double> Ecostress::EcostressScanMirror::rotation_quaternion(int Scan_index, double Ic_sample) const\n"
+		"Rotation matrix that take the view vector for the Camera and takes it\n"
+		"to the space craft coordinate system. \n"
 		""},
 	 { (char *)"EcostressScanMirror_angle_from_encoder_value", _wrap_EcostressScanMirror_angle_from_encoder_value, METH_VARARGS, (char *)"\n"
 		"\n"
-		"GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::angle_from_encoder_value(const GeoCal::AutoDerivative< double > &Evalue) const\n"
-		"\n"
+		"double Ecostress::EcostressScanMirror::angle_from_encoder_value(double Evalue) const\n"
+		"Calculate angle for a given encoder value. \n"
 		""},
 	 { (char *)"EcostressScanMirror_angle_to_encoder_value", _wrap_EcostressScanMirror_angle_to_encoder_value, METH_VARARGS, (char *)"\n"
 		"\n"
@@ -11900,9 +11909,9 @@ static PyMethodDef SwigMethods[] = {
 		""},
 	 { (char *)"EcostressScanMirror_encoder_value_interpolate", _wrap_EcostressScanMirror_encoder_value_interpolate, METH_VARARGS, (char *)"\n"
 		"\n"
-		"GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::encoder_value_interpolate(int Scan_index, const GeoCal::AutoDerivative< double > Ic_sample)\n"
-		"const\n"
-		"\n"
+		"double Ecostress::EcostressScanMirror::encoder_value_interpolate(int Scan_index, double Ic_sample) const\n"
+		"Determine EV from Scan_index and Ic_sample,\n"
+		"interpolating/extrapolating if needed. \n"
 		""},
 	 { (char *)"EcostressScanMirror__v_instrument_to_sc", _wrap_EcostressScanMirror__v_instrument_to_sc, METH_VARARGS, (char *)"\n"
 		"\n"

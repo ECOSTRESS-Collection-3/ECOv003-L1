@@ -676,12 +676,12 @@ build_python
 PYTEST
 SPHINXBUILD
 PYTHON_LDFLAGS
-pythonpath
 PYTHON_CONFIG
 HAVE_PYTEST_FALSE
 HAVE_PYTEST_TRUE
 HAVE_SPHINX_FALSE
 HAVE_SPHINX_TRUE
+PYTHON_LDPATH
 platpythondir
 PYTHON_NUMPY_CPPFLAGS
 PYTHON_CPPFLAGS
@@ -16918,7 +16918,10 @@ if test "${enable_debug+set}" = set; then :
   enableval=$enable_debug; if test "$enableval" = yes; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-  if test "$GCC" = yes; then
+  if test "x$CONDA_PREFIX" != x; then
+    CXXFLAGS="$DEBUG_CXXFLAGS"
+    CFLAGS="$DEBUG_CFLAGS"
+  elif test "$GCC" = yes; then
     CXXFLAGS="-ggdb -DBZ_DEBUG -fbounds-check"
     CFLAGS="-ggdb -fbounds-check"
 # There are some legitimate uses of mve in p1 that appear to violate the
@@ -17793,8 +17796,8 @@ geocaldir="$ac_geocal_dir"
 PKG_CONFIG_PATH=$ac_geocal_dir/lib/pkgconfig:$PKG_CONFIG_PATH
 
 pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GEOCAL" >&5
-$as_echo_n "checking for GEOCAL... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for geocal" >&5
+$as_echo_n "checking for geocal... " >&6; }
 
 if test -n "$GEOCAL_CFLAGS"; then
     pkg_cv_GEOCAL_CFLAGS="$GEOCAL_CFLAGS"
@@ -17834,7 +17837,7 @@ fi
 
 
 if test $pkg_failed = yes; then
-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 
 if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
@@ -17861,7 +17864,7 @@ Alternatively, you may set the environment variables GEOCAL_CFLAGS
 and GEOCAL_LIBS to avoid the need to call pkg-config.
 See the pkg-config man page for more details." "$LINENO" 5
 elif test $pkg_failed = untried; then
-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
@@ -18034,6 +18037,8 @@ fi
 original_ld_library_path="${LD_LIBRARY_PATH}"
 export LD_LIBRARY_PATH="${afidsdir}/lib64:${afidsdir}/lib:${LD_LIBRARY_PATH}"
 
+# Guard against running twice
+if test "x$done_python" = "x"; then
 
 have_python="no"
 build_python="no"
@@ -18078,7 +18083,6 @@ else
 fi
 
 fi
-
 
 if test "x$want_python" = "xyes"; then
    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for python" >&5
@@ -18293,8 +18297,8 @@ $as_echo "$am_cv_python_pyexecdir" >&6; }
 
 
      # Will need to update this if we change the version we are building
-     python_inc_path=python3.5m
-     python_lib_path=python3.5
+     python_inc_path=python3.9m
+     python_lib_path=python3.9
      PYTHON=`pwd`"/external/python_wrap.sh"
      PYTHON_CPPFLAGS="-I\${prefix}/include/${python_inc_path}"
      PYTHON_NUMPY_CPPFLAGS="-I\${prefix}/lib/${python_lib_path}/site-packages/numpy/core/include"
@@ -18307,6 +18311,8 @@ $as_echo "$am_cv_python_pyexecdir" >&6; }
 
      SPHINXBUILD="\${prefix}/bin/sphinx-build"
      PYTEST="\${prefix}/bin/py.test"
+     PYTHON_LDPATH=""
+
       if true; then
   HAVE_SPHINX_TRUE=
   HAVE_SPHINX_FALSE='#'
@@ -18325,12 +18331,18 @@ fi
 
    else
      if test "required" == "required"; then
+        if test "x$PYTHON" = "x" -a "x$ac_python_path" != "x"; then
+            PYTHON=$ac_python_path
+	fi
 
 
 if test "x$THIRDPARTY" = x ; then
    python_search_path=$PATH
 else
    python_search_path=$THIRDPARTY/bin:$PATH
+fi
+if test "x$CONDA_PREFIX" != x ; then
+   python_search_path=$CONDA_PREFIX/bin:$python_search_path
 fi
 # Extract the first word of "python[$PYTHON_VERSION]", so it can be a program name with args.
 set dummy python$PYTHON_VERSION; ac_word=$2
@@ -18449,32 +18461,35 @@ fi
 #
 # if the macro parameter ``version'' is set, honour it
 #
-if test -n ">= '2.6.1'"; then
-   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for a version of Python >= '2.6.1'" >&5
-$as_echo_n "checking for a version of Python >= '2.6.1'... " >&6; }
+if test -n ">= '3.4.0'" -a "x$PYTHON" != "x"; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for a version of Python >= '3.4.0'" >&5
+$as_echo_n "checking for a version of Python >= '3.4.0'... " >&6; }
    ac_supports_python_ver=`LD_LIBRARY_PATH=$PYTHON_PREFIX/lib:$PYTHON_PREFIX/lib64:$LD_LIBRARY_PATH $PYTHON -c "import sys; \
 	ver = sys.version.split ()[0]; \
-	print (ver >= '2.6.1')"`
+	print (ver >= '3.4.0')"`
    if test "$ac_supports_python_ver" = "True"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
    else
       { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-      as_fn_error $? "this package requires Python >= '2.6.1'.
+      as_fn_error $? "this package requires Python >= '3.4.0'.
 If you have it installed, but it isn't the default Python
 interpreter in your system path, please pass the PYTHON_VERSION
 variable to configure. See \`\`configure --help'' for reference.
 " "$LINENO" 5
+      PYTHON=""
       PYTHON_VERSION=""
    fi
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking Checking for python-config" >&5
+if test "x$PYTHON" != "x"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking Checking for python-config" >&5
 $as_echo_n "checking Checking for python-config... " >&6; }
-if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}python-config", so it can be a program name with args.
-set dummy ${ac_tool_prefix}python-config; ac_word=$2
+  ac_python_config_name=`LD_LIBRARY_PATH=$PYTHON_PREFIX/lib:$PYTHON_PREFIX/lib64:$LD_LIBRARY_PATH $PYTHON -c 'import sys; import os; print("%s-config" % os.path.basename(os.path.realpath(sys.executable)))'`
+  if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}$ac_python_config_name", so it can be a program name with args.
+set dummy ${ac_tool_prefix}$ac_python_config_name; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_PYTHON_CONFIG+:} false; then :
@@ -18516,8 +18531,8 @@ fi
 fi
 if test -z "$ac_cv_path_PYTHON_CONFIG"; then
   ac_pt_PYTHON_CONFIG=$PYTHON_CONFIG
-  # Extract the first word of "python-config", so it can be a program name with args.
-set dummy python-config; ac_word=$2
+  # Extract the first word of "$ac_python_config_name", so it can be a program name with args.
+set dummy $ac_python_config_name; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_ac_pt_PYTHON_CONFIG+:} false; then :
@@ -18570,37 +18585,41 @@ else
   PYTHON_CONFIG="$ac_cv_path_PYTHON_CONFIG"
 fi
 
-if test -n "$PYTHON_CONFIG" ; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+  if test -n "$PYTHON_CONFIG" ; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+  else
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
+  fi
+
+  if test -z "$PYTHON_CONFIG" ; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: no python-config found." >&5
+$as_echo "$as_me: WARNING: no python-config found." >&2;}
+    PYTHON=""
+  fi
 fi
 
-if test -z "$PYTHON_CONFIG" ; then
-  as_fn_error $? "no python-config found." "$LINENO" 5
-fi
+if test "x$PYTHON" != "x"; then
+  PYTHON_CPPFLAGS="$("$PYTHON_CONFIG" --includes)"
+  PYTHON_LDFLAGS="$("$PYTHON_CONFIG" --ldflags)"
 
-PYTHON_CPPFLAGS="$("$PYTHON_CONFIG" --includes)"
-PYTHON_LDFLAGS="$("$PYTHON_CONFIG" --ldflags)"
-
-ac_save_CPPFLAGS="$CPPFLAGS"
-ac_save_LIBS="$LIBS"
-CPPFLAGS="$LIBS $PYTHON_CPPFLAGS"
-LIBS="$LIBS $PYTHON_LIBS"
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking Checking if python-config results are accurate" >&5
+  ac_save_CPPFLAGS="$CPPFLAGS"
+  ac_save_LIBS="$LIBS"
+  CPPFLAGS="$LIBS $PYTHON_CPPFLAGS"
+  LIBS="$LIBS $PYTHON_LIBS"
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking Checking if python-config results are accurate" >&5
 $as_echo_n "checking Checking if python-config results are accurate... " >&6; }
-ac_ext=c
+  ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-  #include <Python.h>
+    #include <Python.h>
 int
 main ()
 {
@@ -18613,171 +18632,224 @@ _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-   as_fn_error $? "$PYTHON_CONFIG output is not usable" "$LINENO" 5
+     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $PYTHON_CONFIG output is not usable" >&5
+$as_echo "$as_me: WARNING: $PYTHON_CONFIG output is not usable" >&2;}
+     PYTHON=""
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
-ac_ext=c
+  ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
-CPPFLAGS="$ac_save_CPPFLAGS"
-LIBS="$ac_save_LIBS"
+  CPPFLAGS="$ac_save_CPPFLAGS"
+  LIBS="$ac_save_LIBS"
 
 
 
 
-
-
+fi
 
 	old_ld_library_path="$LD_LIBRARY_PATH"
-	export LD_LIBRARY_PATH=$PYTHON_PREFIX/lib:$PYTHON_PREFIX/lib64:$LD_LIBRARY_PATH
+	PYTHON_LDPATH=$PYTHON_PREFIX/lib:$PYTHON_PREFIX/lib64:
+	export LD_LIBRARY_PATH=$PYTHON_LDPATH$LD_LIBRARY_PATH
 
-    if test -z $PYTHON;
-    then
-        PYTHON="python"
-    fi
-    PYTHON_NAME=`basename $PYTHON`
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking $PYTHON_NAME module: numpy" >&5
+    if test "x$PYTHON" != "x"; then
+      PYTHON_NAME=`basename $PYTHON`
+      { $as_echo "$as_me:${as_lineno-$LINENO}: checking $PYTHON_NAME module: numpy" >&5
 $as_echo_n "checking $PYTHON_NAME module: numpy... " >&6; }
-	$PYTHON -c "import numpy; from distutils.version import LooseVersion; assert(LooseVersion(numpy.version.version) >= LooseVersion('1.7.0'))" 2>/dev/null
-	if test $? -eq 0;
-	then
+          if test -n "numpy.version.version"
+	  then
+   	     $PYTHON -c "import numpy; from distutils.version import LooseVersion; assert(LooseVersion(numpy.version.version) >= LooseVersion('1.7.0'))" 2>/dev/null
+	  else
+   	     $PYTHON -c "import numpy" 2>/dev/null
+	  fi
+	  if test $? -eq 0;
+	  then
 		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-	else
+  	  else
 		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-		as_fn_error $? "failed to find required module numpy with version >= 1.7.0" "$LINENO" 5
-		exit 1
-	fi
-
-
-    if test -z $PYTHON;
-    then
-        PYTHON="python"
+		if test "required" = "required"; then
+                  if test -n "1.7.0"; then
+		    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: failed to find required module numpy with version >= 1.7.0" >&5
+$as_echo "$as_me: WARNING: failed to find required module numpy with version >= 1.7.0" >&2;}
+		  else
+		     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: failed to find required module numpy" >&5
+$as_echo "$as_me: WARNING: failed to find required module numpy" >&2;}
+		  fi
+		  PYTHON=""
+		fi
+	  fi
     fi
-    PYTHON_NAME=`basename $PYTHON`
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking $PYTHON_NAME module: scipy" >&5
+
+
+    if test "x$PYTHON" != "x"; then
+      PYTHON_NAME=`basename $PYTHON`
+      { $as_echo "$as_me:${as_lineno-$LINENO}: checking $PYTHON_NAME module: scipy" >&5
 $as_echo_n "checking $PYTHON_NAME module: scipy... " >&6; }
-	$PYTHON -c "import scipy; from distutils.version import LooseVersion; assert(LooseVersion(scipy.version.version) >= LooseVersion('0.10.1'))" 2>/dev/null
-	if test $? -eq 0;
-	then
+          if test -n "scipy.version.version"
+	  then
+   	     $PYTHON -c "import scipy; from distutils.version import LooseVersion; assert(LooseVersion(scipy.version.version) >= LooseVersion('0.10.1'))" 2>/dev/null
+	  else
+   	     $PYTHON -c "import scipy" 2>/dev/null
+	  fi
+	  if test $? -eq 0;
+	  then
 		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-	else
+  	  else
 		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-		as_fn_error $? "failed to find required module scipy with version >= 0.10.1" "$LINENO" 5
-		exit 1
-	fi
-
-
-    if test -z $PYTHON;
-    then
-        PYTHON="python"
+		if test "required" = "required"; then
+                  if test -n "0.10.1"; then
+		    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: failed to find required module scipy with version >= 0.10.1" >&5
+$as_echo "$as_me: WARNING: failed to find required module scipy with version >= 0.10.1" >&2;}
+		  else
+		     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: failed to find required module scipy" >&5
+$as_echo "$as_me: WARNING: failed to find required module scipy" >&2;}
+		  fi
+		  PYTHON=""
+		fi
+	  fi
     fi
-    PYTHON_NAME=`basename $PYTHON`
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking $PYTHON_NAME module: matplotlib" >&5
+
+
+    if test "x$PYTHON" != "x"; then
+      PYTHON_NAME=`basename $PYTHON`
+      { $as_echo "$as_me:${as_lineno-$LINENO}: checking $PYTHON_NAME module: matplotlib" >&5
 $as_echo_n "checking $PYTHON_NAME module: matplotlib... " >&6; }
-	$PYTHON -c "import matplotlib; from distutils.version import LooseVersion; assert(LooseVersion(matplotlib.__version__) >= LooseVersion('1.0.1'))" 2>/dev/null
-	if test $? -eq 0;
-	then
+          if test -n "matplotlib.__version__"
+	  then
+   	     $PYTHON -c "import matplotlib; from distutils.version import LooseVersion; assert(LooseVersion(matplotlib.__version__) >= LooseVersion('1.0.1'))" 2>/dev/null
+	  else
+   	     $PYTHON -c "import matplotlib" 2>/dev/null
+	  fi
+	  if test $? -eq 0;
+	  then
 		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-	else
+  	  else
 		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-		as_fn_error $? "failed to find required module matplotlib with version >= 1.0.1" "$LINENO" 5
-		exit 1
-	fi
-
-
-    if test -z $PYTHON;
-    then
-        PYTHON="python"
+		if test "required" = "required"; then
+                  if test -n "1.0.1"; then
+		    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: failed to find required module matplotlib with version >= 1.0.1" >&5
+$as_echo "$as_me: WARNING: failed to find required module matplotlib with version >= 1.0.1" >&2;}
+		  else
+		     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: failed to find required module matplotlib" >&5
+$as_echo "$as_me: WARNING: failed to find required module matplotlib" >&2;}
+		  fi
+		  PYTHON=""
+		fi
+	  fi
     fi
-    PYTHON_NAME=`basename $PYTHON`
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking $PYTHON_NAME module: h5py" >&5
+
+
+
+    if test "x$PYTHON" != "x"; then
+      PYTHON_NAME=`basename $PYTHON`
+      { $as_echo "$as_me:${as_lineno-$LINENO}: checking $PYTHON_NAME module: h5py" >&5
 $as_echo_n "checking $PYTHON_NAME module: h5py... " >&6; }
-	$PYTHON -c "import h5py" 2>/dev/null
-	if test $? -eq 0;
-	then
+          if test -n ""
+	  then
+   	     $PYTHON -c "import h5py; from distutils.version import LooseVersion; assert(LooseVersion() >= LooseVersion(''))" 2>/dev/null
+	  else
+   	     $PYTHON -c "import h5py" 2>/dev/null
+	  fi
+	  if test $? -eq 0;
+	  then
 		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-		eval HAVE_PYMOD_H5PY=yes
-	else
+  	  else
 		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-		eval HAVE_PYMOD_H5PY=no
-		#
-		if test -n "1"
-		then
-			as_fn_error $? "failed to find required module h5py" "$LINENO" 5
-			exit 1
+		if test "not_required" = "required"; then
+                  if test -n ""; then
+		    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: failed to find required module h5py with version >= " >&5
+$as_echo "$as_me: WARNING: failed to find required module h5py with version >= " >&2;}
+		  else
+		     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: failed to find required module h5py" >&5
+$as_echo "$as_me: WARNING: failed to find required module h5py" >&2;}
+		  fi
+		  PYTHON=""
 		fi
-	fi
-
-
-    if test -z $PYTHON;
-    then
-        PYTHON="python"
+	  fi
     fi
-    PYTHON_NAME=`basename $PYTHON`
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking $PYTHON_NAME module: sphinx" >&5
+
+
+    if test "x$PYTHON" != "x"; then
+      PYTHON_NAME=`basename $PYTHON`
+      { $as_echo "$as_me:${as_lineno-$LINENO}: checking $PYTHON_NAME module: sphinx" >&5
 $as_echo_n "checking $PYTHON_NAME module: sphinx... " >&6; }
-	$PYTHON -c "import sphinx" 2>/dev/null
-	if test $? -eq 0;
-	then
+          if test -n ""
+	  then
+   	     $PYTHON -c "import sphinx; from distutils.version import LooseVersion; assert(LooseVersion() >= LooseVersion(''))" 2>/dev/null
+	  else
+   	     $PYTHON -c "import sphinx" 2>/dev/null
+	  fi
+	  if test $? -eq 0;
+	  then
 		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-		eval HAVE_PYMOD_SPHINX=yes
-	else
+  	  else
 		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-		eval HAVE_PYMOD_SPHINX=no
-		#
-		if test -n "1"
-		then
-			as_fn_error $? "failed to find required module sphinx" "$LINENO" 5
-			exit 1
+		if test "required" = "required"; then
+                  if test -n ""; then
+		    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: failed to find required module sphinx with version >= " >&5
+$as_echo "$as_me: WARNING: failed to find required module sphinx with version >= " >&2;}
+		  else
+		     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: failed to find required module sphinx" >&5
+$as_echo "$as_me: WARNING: failed to find required module sphinx" >&2;}
+		  fi
+		  PYTHON=""
 		fi
-	fi
-
-
-    if test -z $PYTHON;
-    then
-        PYTHON="python"
+	  fi
     fi
-    PYTHON_NAME=`basename $PYTHON`
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking $PYTHON_NAME module: sqlite3" >&5
+
+
+    if test "x$PYTHON" != "x"; then
+      PYTHON_NAME=`basename $PYTHON`
+      { $as_echo "$as_me:${as_lineno-$LINENO}: checking $PYTHON_NAME module: sqlite3" >&5
 $as_echo_n "checking $PYTHON_NAME module: sqlite3... " >&6; }
-	$PYTHON -c "import sqlite3" 2>/dev/null
-	if test $? -eq 0;
-	then
+          if test -n ""
+	  then
+   	     $PYTHON -c "import sqlite3; from distutils.version import LooseVersion; assert(LooseVersion() >= LooseVersion(''))" 2>/dev/null
+	  else
+   	     $PYTHON -c "import sqlite3" 2>/dev/null
+	  fi
+	  if test $? -eq 0;
+	  then
 		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-		eval HAVE_PYMOD_SQLITE3=yes
-	else
+  	  else
 		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-		eval HAVE_PYMOD_SQLITE3=no
-		#
-		if test -n "1"
-		then
-			as_fn_error $? "failed to find required module sqlite3" "$LINENO" 5
-			exit 1
+		if test "required" = "required"; then
+                  if test -n ""; then
+		    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: failed to find required module sqlite3 with version >= " >&5
+$as_echo "$as_me: WARNING: failed to find required module sqlite3 with version >= " >&2;}
+		  else
+		     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: failed to find required module sqlite3" >&5
+$as_echo "$as_me: WARNING: failed to find required module sqlite3" >&2;}
+		  fi
+		  PYTHON=""
 		fi
-	fi
+	  fi
+    fi
 
-        pythondir=`$PYTHON -c "from distutils.sysconfig import *; print(get_python_lib(False,False,''))"`
-        platpythondir=`$PYTHON -c "from distutils.sysconfig import *; print(get_python_lib(True,False,''))"`
-        PYTHON_NUMPY_CPPFLAGS=`$PYTHON -c "from numpy.distutils.misc_util import *; print('-I' + ' -I'.join(get_numpy_include_dirs()))"`
+	if test "x$PYTHON" != "x"; then
+          pythondir=`$PYTHON -c "from distutils.sysconfig import *; print(get_python_lib(False,False,''))"`
+          platpythondir=`$PYTHON -c "from distutils.sysconfig import *; print(get_python_lib(True,False,''))"`
+          PYTHON_NUMPY_CPPFLAGS=`$PYTHON -c "from numpy.distutils.misc_util import *; print('-I' + ' -I'.join(get_numpy_include_dirs()))"`
+	fi
 	LD_LIBRARY_PATH=$old_ld_library_path
 
 
@@ -18905,22 +18977,32 @@ else
 fi
 
 
-        if test -z "$PYTEST" ; then
-           as_fn_error $? "required program py.test not found" "$LINENO" 5
-           exit 1
+        if test "x$have_pytest" != "xyes" ; then
+           { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: required program py.test not found" >&5
+$as_echo "$as_me: WARNING: required program py.test not found" >&2;}
+           PYTHON=""
         fi
-        pkgpythondir=\${prefix}/\${pythondir}/$PACKAGE
+        if test "x$PYTHON" != "x"; then
+          pkgpythondir=\${prefix}/\${pythondir}/$PACKAGE
 
 
-        succeeded=yes
-        have_python=yes
+
+          succeeded=yes
+          have_python=yes
+	fi
     else
+        if test "x$PYTHON" = "x" -a "x$ac_python_path" != "x"; then
+            PYTHON=$ac_python_path
+	fi
 
 
 if test "x$THIRDPARTY" = x ; then
    python_search_path=$PATH
 else
    python_search_path=$THIRDPARTY/bin:$PATH
+fi
+if test "x$CONDA_PREFIX" != x ; then
+   python_search_path=$CONDA_PREFIX/bin:$python_search_path
 fi
 # Extract the first word of "python[$PYTHON_VERSION]", so it can be a program name with args.
 set dummy python$PYTHON_VERSION; ac_word=$2
@@ -19039,32 +19121,35 @@ fi
 #
 # if the macro parameter ``version'' is set, honour it
 #
-if test -n ">= '2.6.1'"; then
-   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for a version of Python >= '2.6.1'" >&5
-$as_echo_n "checking for a version of Python >= '2.6.1'... " >&6; }
+if test -n ">= '3.4.0'" -a "x$PYTHON" != "x"; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for a version of Python >= '3.4.0'" >&5
+$as_echo_n "checking for a version of Python >= '3.4.0'... " >&6; }
    ac_supports_python_ver=`LD_LIBRARY_PATH=$PYTHON_PREFIX/lib:$PYTHON_PREFIX/lib64:$LD_LIBRARY_PATH $PYTHON -c "import sys; \
 	ver = sys.version.split ()[0]; \
-	print (ver >= '2.6.1')"`
+	print (ver >= '3.4.0')"`
    if test "$ac_supports_python_ver" = "True"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
    else
       { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-      as_fn_error $? "this package requires Python >= '2.6.1'.
+      as_fn_error $? "this package requires Python >= '3.4.0'.
 If you have it installed, but it isn't the default Python
 interpreter in your system path, please pass the PYTHON_VERSION
 variable to configure. See \`\`configure --help'' for reference.
 " "$LINENO" 5
+      PYTHON=""
       PYTHON_VERSION=""
    fi
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking Checking for python-config" >&5
+if test "x$PYTHON" != "x"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking Checking for python-config" >&5
 $as_echo_n "checking Checking for python-config... " >&6; }
-if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}python-config", so it can be a program name with args.
-set dummy ${ac_tool_prefix}python-config; ac_word=$2
+  ac_python_config_name=`LD_LIBRARY_PATH=$PYTHON_PREFIX/lib:$PYTHON_PREFIX/lib64:$LD_LIBRARY_PATH $PYTHON -c 'import sys; import os; print("%s-config" % os.path.basename(os.path.realpath(sys.executable)))'`
+  if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}$ac_python_config_name", so it can be a program name with args.
+set dummy ${ac_tool_prefix}$ac_python_config_name; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_PYTHON_CONFIG+:} false; then :
@@ -19106,8 +19191,8 @@ fi
 fi
 if test -z "$ac_cv_path_PYTHON_CONFIG"; then
   ac_pt_PYTHON_CONFIG=$PYTHON_CONFIG
-  # Extract the first word of "python-config", so it can be a program name with args.
-set dummy python-config; ac_word=$2
+  # Extract the first word of "$ac_python_config_name", so it can be a program name with args.
+set dummy $ac_python_config_name; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_ac_pt_PYTHON_CONFIG+:} false; then :
@@ -19160,37 +19245,41 @@ else
   PYTHON_CONFIG="$ac_cv_path_PYTHON_CONFIG"
 fi
 
-if test -n "$PYTHON_CONFIG" ; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+  if test -n "$PYTHON_CONFIG" ; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+  else
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
+  fi
+
+  if test -z "$PYTHON_CONFIG" ; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: no python-config found." >&5
+$as_echo "$as_me: WARNING: no python-config found." >&2;}
+    PYTHON=""
+  fi
 fi
 
-if test -z "$PYTHON_CONFIG" ; then
-  as_fn_error $? "no python-config found." "$LINENO" 5
-fi
+if test "x$PYTHON" != "x"; then
+  PYTHON_CPPFLAGS="$("$PYTHON_CONFIG" --includes)"
+  PYTHON_LDFLAGS="$("$PYTHON_CONFIG" --ldflags)"
 
-PYTHON_CPPFLAGS="$("$PYTHON_CONFIG" --includes)"
-PYTHON_LDFLAGS="$("$PYTHON_CONFIG" --ldflags)"
-
-ac_save_CPPFLAGS="$CPPFLAGS"
-ac_save_LIBS="$LIBS"
-CPPFLAGS="$LIBS $PYTHON_CPPFLAGS"
-LIBS="$LIBS $PYTHON_LIBS"
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking Checking if python-config results are accurate" >&5
+  ac_save_CPPFLAGS="$CPPFLAGS"
+  ac_save_LIBS="$LIBS"
+  CPPFLAGS="$LIBS $PYTHON_CPPFLAGS"
+  LIBS="$LIBS $PYTHON_LIBS"
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking Checking if python-config results are accurate" >&5
 $as_echo_n "checking Checking if python-config results are accurate... " >&6; }
-ac_ext=c
+  ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-  #include <Python.h>
+    #include <Python.h>
 int
 main ()
 {
@@ -19203,32 +19292,34 @@ _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-   as_fn_error $? "$PYTHON_CONFIG output is not usable" "$LINENO" 5
+     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $PYTHON_CONFIG output is not usable" >&5
+$as_echo "$as_me: WARNING: $PYTHON_CONFIG output is not usable" >&2;}
+     PYTHON=""
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
-ac_ext=c
+  ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
-CPPFLAGS="$ac_save_CPPFLAGS"
-LIBS="$ac_save_LIBS"
+  CPPFLAGS="$ac_save_CPPFLAGS"
+  LIBS="$ac_save_LIBS"
 
 
 
 
+fi
 
+        if test "x$PYTHON" != "x"; then
+           pythondir=`$PYTHON -c "from distutils.sysconfig import *; print(get_python_lib(False,False,''))"`
+           platpythondir=`$PYTHON -c "from distutils.sysconfig import *; print(get_python_lib(True,False,''))"`
 
-
-        pythondir=`$PYTHON -c "from distutils.sysconfig import *; print(get_python_lib(False,False,''))"`
-        platpythondir=`$PYTHON -c "from distutils.sysconfig import *; print(get_python_lib(True,False,''))"`
-
-	 if false; then
+   	    if false; then
   HAVE_SPHINX_TRUE=
   HAVE_SPHINX_FALSE='#'
 else
@@ -19236,7 +19327,7 @@ else
   HAVE_SPHINX_FALSE=
 fi
 
-         if false; then
+            if false; then
   HAVE_PYTEST_TRUE=
   HAVE_PYTEST_FALSE='#'
 else
@@ -19244,8 +19335,9 @@ else
   HAVE_PYTEST_FALSE=
 fi
 
-        succeeded=yes
-        have_python=no
+           succeeded=yes
+           have_python=no
+	fi
     fi
    fi
 fi
@@ -19460,15 +19552,17 @@ $as_echo "$am_cv_python_pyexecdir" >&6; }
 
 
      # Will need to update this if we change the version we are building
-     python_inc_path=python3.5m
-     python_lib_path=python3.5
+     python_inc_path=python3.9m
+     python_lib_path=python3.9
      PYTHON=`pwd`"/external/python_wrap.sh"
      PYTHON_CPPFLAGS="-I\${prefix}/include/${python_inc_path}"
      PYTHON_NUMPY_CPPFLAGS="-I\${prefix}/lib/${python_lib_path}/site-packages/numpy/core/include"
+     PYTHON_LDPATH="\${prefix}/lib:\${prefix}/lib64:"
      pythondir="lib/${python_lib_path}/site-packages"
      platpythondir="lib/${python_lib_path}/site-packages"
      succeeded=yes
      have_python=yes
+
 
 
 
@@ -19512,6 +19606,8 @@ library. " "$LINENO" 5
 fi
 
 
+done_python="yes"
+fi
 
 LD_LIBRARY_PATH="${original_ld_library_path}"
 
@@ -19579,6 +19675,9 @@ $as_echo_n "checking for Doxygen... " >&6; }
             else
               doxygen_search_path=$THIRDPARTY/bin:$PATH
             fi
+	    if test "x$CONDA_PREFIX" != x ; then
+              doxygen_search_path=$CONDA_PREFIX/bin:$doxygen_search_path
+	    fi
             # Extract the first word of "doxygen", so it can be a program name with args.
 set dummy doxygen; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -19732,6 +19831,9 @@ fi
         else
            swig_search_path=$THIRDPARTY/bin:$PATH
         fi
+	if test "x$CONDA_PREFIX" != x ; then
+           swig_search_path=$CONDA_PREFIX/bin:$swig_search_path
+	fi
         # Extract the first word of "swig", so it can be a program name with args.
 set dummy swig; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -21683,7 +21785,9 @@ $as_echo X/"$am_mf" |
     { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
 as_fn_error $? "Something went wrong bootstrapping makefile fragments
-    for automatic dependency tracking.  Try re-running configure with the
+    for automatic dependency tracking.  If GNU make was not used, consider
+    re-running the configure script with MAKE=\"gmake\" (or whatever is
+    necessary).  You can also try re-running configure with the
     '--disable-dependency-tracking' option to at least be able to build
     the package (albeit without support for automatic dependency tracking).
 See \`config.log' for more details" "$LINENO" 5; }

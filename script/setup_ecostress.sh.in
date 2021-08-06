@@ -5,7 +5,12 @@ if [ -z "$ECOSTRESSTOP" ]; then
 fi
 
 export AFIDSPYTHONTOP=@geocaldir@
-source @afidsdir@/setup_afids_env.sh
+# Allow afids to be missing. This is just a work around for being able
+# to install most of ecostress with conda. We can't run L1A_CAL with this
+# missing, but we can do everything else.
+if test -f "@afidsdir@/setup_afids_env.sh"; then
+    source @afidsdir@/setup_afids_env.sh
+fi
 export TAE_PATH=${ECOSTRESSTOP}/vicar_pdf:${TAE_PATH}
 # Strip off afids site packages, we want to use the packages in the virtual
 # environment instead
