@@ -43,6 +43,7 @@ if(False):
 if(args.run_config) :
     config = ecostress.RunConfig(args.run_config)
     l0b = os.path.abspath(config["InputFileGroup", "L0B"])
+    obst_dir = config["InputFileGroup", "ObstDir"]
     scene_file = os.path.abspath(config["StaticAncillaryFileGroup", "Scene"])
     osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
     prod_dir = os.path.abspath(config["ProductPathGroup", "ProductPath"])
@@ -52,18 +53,19 @@ if(args.run_config) :
 else:
     config = None
     l0b = os.path.abspath(args.l0b)
+    obst_dir = os.path.abspath(args.obst_path)
     scene_file = os.path.abspath(args.scene_file)
     osp_dir = os.path.abspath(args.osp_dir)
     prod_dir = os.path.abspath(args.prod_dir)
     shortname = "L1a_Raw"
     file_version = "01"
 
-print("L1A_RAW_PROCESS L0B=%s SCENE_FILE=%s PROD_DIR=%s OSP_DIR=%s SHORT=%s" % (l0b, scene_file, prod_dir, osp_dir, shortname ) )
+print("L1A_RAW_PROCESS BID-%s VV=%s L0B=%s SCENE_FILE=%s PROD_DIR=%s OSP_DIR=%s SHORT=%s" % (build_id, file_version, l0b, scene_file, prod_dir, osp_dir, shortname ) )
 
 geocal.makedirs_p(prod_dir)
 os.chdir(prod_dir)
 
-l1arawpix = ecostress.L1aRawPixGenerate(l0b, osp_dir, scene_file,
+l1arawpix = ecostress.L1aRawPixGenerate(l0b, obst_dir, osp_dir, scene_file,
                               build_id = build_id,
                               pge_version = pge_version["l1a_raw"],
                               run_config = config,

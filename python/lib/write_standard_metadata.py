@@ -159,6 +159,7 @@ class WriteStandardMetadata(object):
 ["StartOrbitNumber", "String"],
 ["StopOrbitNumber", "String"],
 ["WestBoundingCoordinate", "Float64"],
+["FieldOfViewObstruction", "String"],
             ]
 
     def clear_old(self, g):
@@ -214,7 +215,4 @@ class WriteStandardMetadata(object):
             pg['BandSpecification'].attrs["valid_min"] = 1.6
             pg['BandSpecification'].attrs["valid_max"] = 12.1
             pg['BandSpecification'].attrs["fill"] = 0
-            
-        
 
-__all__ = ["WriteStandardMetadata"]
