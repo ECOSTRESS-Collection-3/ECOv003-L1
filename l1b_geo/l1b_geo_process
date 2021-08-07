@@ -380,6 +380,7 @@ try:
             l1bgeo = ecostress.L1bGeoGenerate(
                 igccol_corrected.image_ground_connection(i),
                 lwm, ofile[i],inlist,is_day[i],
+                field_of_view_obscured = h5py.File(radlist[i],"r")["/StandardMetadata/FieldOfViewObstruction"][()],
                 number_line = args.number_line,
                 run_config = config, log_fname = log_fname,
                 build_id = build_id,
@@ -428,6 +429,8 @@ try:
     print("L1B_GEO_PGE:INFO-0-[Job Successful]", file=log)
     log.flush()
     qa_file.close()
+    if(pool):
+        pool.close()
 except Exception as e:
     log = open(log_fname, "a")
     print("L1B_GEO_PGE: Exception thrown:",  file=log)

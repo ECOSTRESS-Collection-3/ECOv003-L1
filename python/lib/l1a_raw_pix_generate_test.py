@@ -5,18 +5,20 @@ import os
 @slow
 def test_l1a_raw_pix_generate(isolated_dir, test_data):
     l0b = test_data + "ECOSTRESS_L0B_20150124T204251_20150124T204533_0100_01.h5"
+    obst_dir = test_data + "obst_dir"
     l1_osp_dir = test_data + "l1_osp_dir"
     scene_file = test_data + "Scene_80005_20150124T204251_20150124T204533.txt"
-    l1arawpix = L1aRawPixGenerate(l0b, l1_osp_dir, scene_file)
+    l1arawpix = L1aRawPixGenerate(l0b, obst_dir, l1_osp_dir, scene_file)
     l1arawpix.run()
 
 def test_process_scene_file(test_data):
     '''Process the scene file that we generated, and make sure everything is
     ok'''
     l0b = test_data + "ECOSTRESS_L0B_20150124T204251_20150124T204533_0100_01.h5"
+    obst_dir = test_data + "obst_dir"
     l1_osp_dir = test_data + "l1_osp_dir"
     scene_file = test_data + "Scene_80005_20150124T204251_20150124T204533.txt"
-    l1arawpix = L1aRawPixGenerate(l0b, l1_osp_dir, scene_file)
+    l1arawpix = L1aRawPixGenerate(l0b, obst_dir, l1_osp_dir, scene_file)
     t = l1arawpix.process_scene_file()
     assert t[0][0] == 80005
     assert t[1][0] == 80005
@@ -34,9 +36,10 @@ def test_process_scene_file(test_data):
 def test_process_scene_file2(test_data, unit_test_data):
     '''Look at what was a problem scene file uncovered in the V0.30 testing'''
     l0b = test_data + "ECOSTRESS_L0B_20150124T204251_20150124T204533_0100_01.h5"
+    obst_dir = test_data + "obst_dir"
     l1_osp_dir = test_data + "l1_osp_dir"
     scene_file = unit_test_data + "Scene_problem.txt"
-    l1arawpix = L1aRawPixGenerate(l0b, l1_osp_dir, scene_file)
+    l1arawpix = L1aRawPixGenerate(l0b, obst_dir, l1_osp_dir, scene_file)
     t = l1arawpix.process_scene_file()
     assert t[0][0] == 80005
     assert t[1][0] == 80005

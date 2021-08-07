@@ -212,6 +212,8 @@ Data quality indicator.
               self.l1a_pix["/StandardMetadata/RangeEndingDate"][()])
         m.set("RangeEndingTime",
               self.l1a_pix["/StandardMetadata/RangeEndingTime"][()])
+        m.set("FieldOfViewObstruction",
+              self.l1a_pix["/StandardMetadata/FieldOfViewObstruction"][()])
         m.set("ImageLines", data_swir.shape[0])
         m.set("ImagePixels", data_swir.shape[1])
         m.set("DayNightFlag", "Day" if is_day(self.igc) else "Night")

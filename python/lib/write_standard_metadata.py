@@ -80,6 +80,7 @@ class WriteStandardMetadata(object):
         self.set('StopOrbitNumber', m.group('orbit'))
         if(orbit_based):
             self.set('SceneID', "NA")
+            self.set("FieldOfViewObstruction", "NA")
         else:
             self.set('SceneID', m.group('scene_id'))
         self.set('ProcessingLevelID', m.group('process_level'))

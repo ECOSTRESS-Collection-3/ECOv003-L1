@@ -13,6 +13,7 @@ class L1bGeoGenerate(object):
     '''This generate a L1B geo output file from a given ImageGroundConnection.
     '''
     def __init__(self, igc, lwm, output_name, inlist, is_day,
+                 field_of_view_obscured = "NO",
                  run_config = None,
                  start_line = 0,
                  number_line = -1,
@@ -32,6 +33,7 @@ class L1bGeoGenerate(object):
         self.gc_arr = GroundCoordinateArray(self.igc, True)
         self.lwm = lwm
         self.is_day = is_day
+        self.field_of_view_obscured = field_of_view_obscured
         self.output_name = output_name
         self.start_line = start_line
         self.number_line = number_line
@@ -130,6 +132,7 @@ class L1bGeoGenerate(object):
         m.set("EastBoundingCoordinate", lon[lon > -998].max())
         m.set("SouthBoundingCoordinate", lat[lat > -998].min())
         m.set("NorthBoundingCoordinate", lat[lat > -998].max())
+        m.set("FieldOfViewObstruction", self.field_of_view_obscured)
         m.set("ImageLines", lat.shape[0])
         m.set("ImagePixels", lat.shape[1])
         dt, tm = time_split(self.igc.time_table.min_time)
