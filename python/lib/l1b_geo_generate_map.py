@@ -108,15 +108,15 @@ information.
         g2.create_dataset("GeoTransform", data=res.map_info.transform,
                           dtype='f8')
         lat, lon, height = res.map_values(self.l1b_geo_generate.igc.dem)
-        t = g.create_dataset("latitude", data=lat, dtype='f8')
+        t = g.create_dataset("latitude", data=lat, dtype='f8', compression="gzip")
         t.attrs["Units"] = "degrees"
         t.attrs["valid_min"]=-90
         t.attrs["valid_max"]=90
-        t = g.create_dataset("longitude", data=lon, dtype='f8')
+        t = g.create_dataset("longitude", data=lon, dtype='f8', compression="gzip")
         t.attrs["Units"] = "degrees"
         t.attrs["valid_min"]=-180
         t.attrs["valid_max"]=180
-        t = g.create_dataset("height", data=height, dtype='f4')
+        t = g.create_dataset("height", data=height, dtype='f4', compression="gzip")
         t.attrs["Units"] = "m"
         self.print_and_log("Done with lat, lon, height")
         # Land fraction
@@ -126,13 +126,13 @@ information.
             data = res.resample_field(data_in, 1.0, False,
                          FILL_VALUE_NOT_SEEN).astype(np.float32)
             t = g.create_dataset("radiance_%d" % b, data = data, dtype='f4',
-                                 fillvalue = FILL_VALUE_NOT_SEEN)
+                                 fillvalue = FILL_VALUE_NOT_SEEN, compression="gzip")
             t.attrs.create("_FillValue", data=FILL_VALUE_NOT_SEEN,
                            dtype=t.dtype)
             t.attrs["Units"] = "W/m^2/sr/um"
             data_in = geocal.GdalRasterImage("HDF5:\"%s\"://Radiance/data_quality_%d" % (self.l1b_rad, b))
             data = res.resample_dqi(data_in).astype(np.int8)
-            t = g.create_dataset("data_quality_%d" % b, data = data)
+            t = g.create_dataset("data_quality_%d" % b, data = data, compression="gzip")
             t.attrs["valid_min"] = 0
             t.attrs["valid_max"] = 4
             t.attrs["Description"] = '''
@@ -160,7 +160,7 @@ Data quality indicator.
                                  FILL_VALUE_NOT_SEEN).astype(np.int16)
         t = g.create_dataset("swir_dn",
                              data = data,
-                             fillvalue = FILL_VALUE_NOT_SEEN)
+                             fillvalue = FILL_VALUE_NOT_SEEN, compression="gzip")
         t.attrs.create("_FillValue", data=FILL_VALUE_NOT_SEEN,
                        dtype=t.dtype)
         t.attrs["Units"] = "dimensionless"
@@ -170,7 +170,7 @@ Data quality indicator.
             data_in = geocal.GdalRasterImage("HDF5:\"%s\"://Geolocation/%s" % (self.l1b_geo_generate.output_name, fld))
             data = res.resample_field(data_in, 1.0, False, FILL_VALUE_NOT_SEEN, True).astype(np.float32)
             t = g.create_dataset(fld, data = data, dtype='f4',
-                                 fillvalue = FILL_VALUE_NOT_SEEN)
+                                 fillvalue = FILL_VALUE_NOT_SEEN, compression="gzip")
             t.attrs.create("_FillValue", data=FILL_VALUE_NOT_SEEN,
                            dtype=t.dtype)
             t.attrs["Units"] = "degrees"

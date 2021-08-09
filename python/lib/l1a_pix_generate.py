@@ -81,7 +81,7 @@ class L1aPixGenerate(object):
         for b in range(1, 7):
             t = g.create_dataset("b%d_image" % b,
                   data=geocal.mmap_file("%s/UncalibratedDN/b%d_image.hlf" %
-                                 (dirname, b)))
+                                        (dirname, b)), compression="gzip")
             t.attrs["Units"] = "dimensionless"
             t.attrs["valid_min"] = 0
             t.attrs["valid_max"] = 32767
@@ -89,7 +89,7 @@ class L1aPixGenerate(object):
         for temp in (325, 295):
             t = g.create_dataset("fpa_%d" % temp,
                   data=geocal.mmap_file("%s/BlackbodyTemp/fpa_%d.rel" %
-                                 (dirname, temp)))
+                                 (dirname, temp)), compression="gzip")
             t.attrs["Units"] = "K"
         g["fpa_325"].attrs["valid_min"] = 310
         g["fpa_325"].attrs["valid_max"] = 330
@@ -101,7 +101,7 @@ class L1aPixGenerate(object):
             for temp in (325, 295):
                 t = g.create_dataset("b%d_%d" % (b, temp),
                   data=geocal.mmap_file("%s/BlackBodyDN/dn%db%d.rel" %
-                                 (dirname, temp, b)))
+                                 (dirname, temp, b)), compression="gzip")
                 t.attrs["Units"] = "dimensionless"
                 t.attrs["valid_min"] = 0
                 t.attrs["valid_max"] = 32767
@@ -109,15 +109,17 @@ class L1aPixGenerate(object):
         g2 = fout_gain.create_group("Offset")
         for b in range(1, 6):
             t = g.create_dataset("b%d_gain" % b,
-                  data=geocal.mmap_file("%s/ImgRadiance/b%d_gain.rel" % (dirname, b+1)))
+                  data=geocal.mmap_file("%s/ImgRadiance/b%d_gain.rel" % (dirname, b+1)),
+                                 compression="gzip")
             t.attrs["Units"] = "W/m^2/sr/um"
             t = g2.create_dataset("b%d_offset" % b,
                   data=geocal.mmap_file("%s/ImgRadiance/b%d_offset.rel" %
-                                 (dirname,b+1)))
+                                 (dirname,b+1)), compression="gzip")
             t.attrs["Units"] = "W/m^2/sr/um"
         g = fout_gain.create_group("SWIR")
         t = g.create_dataset("b6_dcc",
-                  data=geocal.mmap_file("%s/ImgRadiance/b1_dcc.hlf" % dirname))
+                  data=geocal.mmap_file("%s/ImgRadiance/b1_dcc.hlf" % dirname),
+                             compression="gzip")
         t.attrs["Units"] = "dimensionless"        
         # Copy over metadata
         fin = h5py.File(self.l1a_raw, "r")

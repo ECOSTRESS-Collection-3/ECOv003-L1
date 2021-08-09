@@ -138,12 +138,13 @@ class L1bRadGenerate(object):
             t = g.create_dataset("radiance_%d" % (b + 1),
                                  data = dataset[:,:,b],
                                  dtype='f4',
-                                 fillvalue = FILL_VALUE_BAD_OR_MISSING)
+                                 fillvalue = FILL_VALUE_BAD_OR_MISSING,
+                                 compression="gzip")
             t.attrs.create("_FillValue", data=FILL_VALUE_BAD_OR_MISSING,
                            dtype=t.dtype)
             t.attrs["Units"] = "W/m^2/sr/um"
             t = g.create_dataset("data_quality_%d" % (b + 1),
-                                 data = dqi[:,:,b])
+                                 data = dqi[:,:,b], compression="gzip")
             t.attrs["valid_min"] = 0
             t.attrs["valid_max"] = 4
             t.attrs["Description"] = '''
@@ -169,7 +170,8 @@ Data quality indicator.
         data_swir = self.image(0).astype(np.int16)
         t = g.create_dataset("swir_dn",
                              data = data_swir,
-                             fillvalue = FILL_VALUE_BAD_OR_MISSING)
+                             fillvalue = FILL_VALUE_BAD_OR_MISSING,
+                             compression="gzip")
         t.attrs.create("_FillValue", data=FILL_VALUE_BAD_OR_MISSING,
                        dtype=t.dtype)
         t.attrs["Units"] = "dimensionless"

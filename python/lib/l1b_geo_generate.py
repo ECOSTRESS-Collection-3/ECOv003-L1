@@ -171,34 +171,34 @@ GEOGCS["WGS 84",
         # Compression doesn't seem to do a lot, so leave turned off. We can always
         # turn this on if needed.
         #t = g.create_dataset("latitude", data=lat, chunks=(250,250), compression="gzip")
-        t = g.create_dataset("latitude", data=lat, dtype='f8')
+        t = g.create_dataset("latitude", data=lat, dtype='f8', compression="gzip")
         t.attrs["Units"] = "degrees"
         t.attrs["valid_min"] = -90
         t.attrs["valid_max"] = 90
-        t = g.create_dataset("longitude", data=lon, dtype='f8')
+        t = g.create_dataset("longitude", data=lon, dtype='f8', compression="gzip")
         t.attrs["Units"] = "degrees"
         t.attrs["valid_min"] = -180
         t.attrs["valid_max"] = 180
-        t = g.create_dataset("height", data=height, dtype='f4')
+        t = g.create_dataset("height", data=height, dtype='f4', compression="gzip")
         t.attrs["Units"] = "m"
-        t = g.create_dataset("land_fraction", data=lfrac, dtype='f4')
+        t = g.create_dataset("land_fraction", data=lfrac, dtype='f4', compression="gzip")
         t.attrs["Units"] = "percentage"
         t.attrs["valid_min"] = 0
         t.attrs["valid_max"] = 100
         t.attrs["fill"] = -9999
-        t = g.create_dataset("view_zenith", data=vzenith, dtype='f4')
+        t = g.create_dataset("view_zenith", data=vzenith, dtype='f4', compression="gzip")
         t.attrs["Units"] = "degrees"
         t.attrs["valid_min"] = -90
         t.attrs["valid_max"] = 90
-        t = g.create_dataset("view_azimuth", data=vazimuth, dtype='f4')
+        t = g.create_dataset("view_azimuth", data=vazimuth, dtype='f4', compression="gzip")
         t.attrs["Units"] = "degrees"
         t.attrs["valid_min"] = -180
         t.attrs["valid_max"] = 180
-        t = g.create_dataset("solar_zenith", data=szenith, dtype='f4')
+        t = g.create_dataset("solar_zenith", data=szenith, dtype='f4', compression="gzip")
         t.attrs["Units"] = "degrees"
         t.attrs["valid_min"] = -90
         t.attrs["valid_max"] = 90
-        t = g.create_dataset("solar_azimuth", data=sazimuth, dtype='f4')
+        t = g.create_dataset("solar_azimuth", data=sazimuth, dtype='f4', compression="gzip")
         t.attrs["Units"] = "degrees"
         t.attrs["valid_min"] = -180
         t.attrs["valid_max"] = 180

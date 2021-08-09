@@ -967,7 +967,8 @@ class L1aRawPixGenerate(object):
       for b in range( BANDS ):
         t = l1a_upg.create_dataset("pixel_data_%d" %(b+1),
                                    data=img[:,:,bo[b]],
-                                   chunks=(PPFP,FPPSC), dtype="u2" )
+                                   chunks=(PPFP,FPPSC), dtype="u2",
+                                   compression="gzip")
         t.attrs['Units']='dimensionless'
         t.attrs['valid_min']='0'
         t.attrs['valid_max']='32767'
