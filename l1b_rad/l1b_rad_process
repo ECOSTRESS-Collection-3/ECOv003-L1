@@ -134,6 +134,7 @@ try:
               seed = l1b_rad_config.seed,
               line_order_flipped = line_order_flipped,
               skip_band_to_band = args.skip_band_to_band,
+              cal_correction=l1b_rad_config.gain_offset_correction(orbit),
               frac_to_do_interpolation = l1b_rad_config.frac_to_do_interpolation)
     l1brad.run()
     print("L1B_RAD_PGE:INFO-0-[Job Successful]", file=log)

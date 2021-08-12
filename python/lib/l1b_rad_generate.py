@@ -10,6 +10,7 @@ import numpy as np
 class L1bRadGenerate(object):
     '''This generates a L1B rad file from the given L1A_PIX file.'''
     def __init__(self, igc, l1a_pix, l1a_gain, output_name,l1_osp_dir,
+                 cal_correction,
                  local_granule_id = None,
                  run_config = None, log = None, build_id = "0.30",
                  pge_version = "0.30",
@@ -43,6 +44,7 @@ class L1bRadGenerate(object):
         self.missing_scan = 0
         self.frac_to_do_interpolation = frac_to_do_interpolation
         self.line_order_flipped = line_order_flipped
+        self.cal_correction = cal_correction
 
     def image(self, band):
         '''Generate L1B_RAD image.
@@ -91,6 +93,13 @@ class L1bRadGenerate(object):
                     res[int(sline/2):int((sline+nlinescan)/2),:] = np.flipud(rbreg_avg.read_all_double())
                 else:
                     res[int(sline/2):int((sline+nlinescan)/2),:] = rbreg_avg.read_all_double()
+        # We don't actually correct SWIR.
+        # self.cal_correction is 2 x band, where first entry is gain and second
+        # if offset
+        if(band != 0):
+            res = np.where(res <= fill_value_threshold, res,
+                           self.cal_correction[0,band-1] * res +
+                           self.cal_correction[1, band-1])
         return res
         
     def run(self):
@@ -202,7 +211,8 @@ Data quality indicator.
                                      line_order_flipped=self.line_order_flipped,
                                      local_granule_id = self.local_granule_id,
                                      qa_precentage_missing = qa_precentage_missing,
-                                     band_specification = band_specification
+                                     band_specification = band_specification,
+                                     cal_correction = self.cal_correction
         )
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)
