@@ -17,6 +17,7 @@ class WriteStandardMetadata(object):
         local_granule_id, or if None we assume the filename for the hdf_file is
         the local_granule_id'''
         self.hdf_file = hdf_file
+        self.orbit_based = orbit_based
         self.product_specfic_group = product_specfic_group
         if(local_granule_id is None):
             local_granule_id = os.path.basename(hdf_file.filename)

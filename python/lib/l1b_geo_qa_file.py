@@ -135,7 +135,7 @@ offset.'''
             self.scene_name = [igccol.title(i).encode('utf8') for i in
                                range(igccol.number_image)]
         if(self.tp_stat is None):
-            self.tp_stat = np.full((igccol.number_image, 5), -9999.0)
+            self.tp_stat = np.full((igccol.number_image, 8), -9999.0)
         self.tp_stat[image_index, 0] = ntpoint_initial
         self.tp_stat[image_index, 1] = ntpoint_removed
         self.tp_stat[image_index, 2] = ntpoint_final
@@ -164,12 +164,26 @@ The remaining three columns are the location of the ground coordinate in
 the reference image, in Ecr coordinates (in meters).
 '''
                 
-    def add_final_accuracy(self, igccol_corrected, tpcol):
+    def add_final_accuracy(self, igccol_corrected, tpcol, tcor_before,
+                           tcor_after, geo_qa):
         # Ok if no tiepoints for scene i, this just return nan
         t = np.array([tpcol.data_frame(igccol_corrected, i).ground_2d_distance.quantile(.68)
                       for i in range(igccol_corrected.number_image)])
         t[np.isnan(t)] = -9999
         self.tp_stat[:,4] = t
+        self.tp_stat[:,5] = tcor_before
+        self.tp_stat[:,6] = tcor_after
+        for i in range(self.tp_stat.shape[0]):
+            if(geo_qa[i] == "Best"):
+                self.tp_stat[i,7] = 0
+            elif(geo_qa[i] == "Good"):
+                self.tp_stat[i,7] = 1
+            elif(geo_qa[i] == "Suspect"):
+                self.tp_stat[i,7] = 2
+            elif(geo_qa[i] == "No match"):
+                self.tp_stat[i,7] = 3
+            else:
+                self.tp_stat[i,7] = -9999
         
     def write_standard_metadata(self, m):
         '''Write out standard metadata for QA file. Since this is almost
@@ -222,7 +236,15 @@ number of tiepoints (so if < threshold we set this to 0).'''
                 dset = ac_group.create_dataset("Final Accuracy",
                                                data=self.tp_stat[:,4])
                 dset.attrs["Units"] = "m"
-    
+                dset = ac_group.create_dataset("Delta time correction before scene",
+                                               data=self.tp_stat[:,5])
+                dset.attrs["Units"] = "s"
+                dset = ac_group.create_dataset("Delta time correction after scene",
+                                               data=self.tp_stat[:,6])
+                dset.attrs["Units"] = "s"
+                dset = ac_group.create_dataset("Geolocation accuracy QA flag",
+                                               data=self.tp_stat[:,7])
+                dset.attrs["Description"] = "0 - Best/n1 - Good/n2 - Suspect/n3 - No match/n-9999 - Unknown"
 
 __all__ = ["L1bGeoQaFile"]
         

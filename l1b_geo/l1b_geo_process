@@ -351,12 +351,33 @@ try:
                 report_and_log_exception()
 
 
+    # Collect information on the time of the correction before and after
+    # a scene
+    tcorr_before= []
+    tcorr_after= []
+    geo_qa = []
+    for i in range(len(radlist)):
+        tt = igccol_corrected.image_ground_connection(i).time_table
+        t = tt.min_time + (tt.max_time - tt.min_time)
+        t1 = -9999
+        t2 = -9999
+        if(correction_done):
+            tb, ta = igccol_corrected.nearest_attitude_time_point(t)
+            if(tb < geocal.Time.max_valid_time - 1):
+                t1 = t - tb
+            if(ta < geocal.Time.max_valid_time - 1):
+                t2 = t - ta
+        tcorr_before.append(t1)
+        tcorr_after.append(t2)
+        geo_qa.append("No match")
+
+    # Write out QA data
     if(tpcol):
-        qa_file.add_final_accuracy(igccol_corrected, tpcol)
+        qa_file.add_final_accuracy(igccol_corrected, tpcol, tcorr_before,
+                                   tcorr_after, geo_qa)
     qa_file.add_orbit(igccol_corrected.image_ground_connection(0).orbit)
     qa_file.write_xml("igccol_initial.xml", "tpcol.xml",
                       "igccol_sba.xml", "tpcol_sba.xml")
-    
 
     # Generate output data
     avg_md = np.full((len(radlist), 2), -9999.0)
@@ -385,7 +406,10 @@ try:
                 run_config = config, log_fname = log_fname,
                 build_id = build_id,
                 pge_version = pge_version["l1b_geo"],
-                correction_done = correction_done)
+                correction_done = correction_done,
+                tcorr_before = tcorr_before[i],
+                tcorr_after = tcorr_after[i],
+                geolocation_accuracy_qa = geo_qa[i])
             l1bgeo.run(pool)
             avg_md[i,0 ] = l1bgeo.avg_sz
             avg_md[i,1 ] = l1bgeo.oa_lf

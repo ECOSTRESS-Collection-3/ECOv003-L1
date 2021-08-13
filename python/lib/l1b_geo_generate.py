@@ -20,7 +20,10 @@ class L1bGeoGenerate(object):
                  local_granule_id = None, log_fname = None,
                  build_id = "0.30",
                  pge_version = "0.30",
-                 correction_done = True):
+                 correction_done = True,
+                 tcorr_before = -9999,
+                 tcorr_after = -9999,
+                 geolocation_accuracy_qa = "No match"):
         '''Create a L1bGeoGenerate with the given ImageGroundConnection
         and output file name. To actually generate, execute the "run"
         command.
@@ -45,6 +48,9 @@ class L1bGeoGenerate(object):
         self.pge_version = pge_version
         self.inlist = inlist
         self.correction_done = correction_done
+        self.tcorr_before = tcorr_before
+        self.tcorr_after = tcorr_after
+        self.geolocation_accuracy_qa = geolocation_accuracy_qa
 
     def loc_parallel_func(self, it):
         '''Variation of loc that is easier to use with a multiprocessor pool.'''
@@ -125,6 +131,9 @@ class L1bGeoGenerate(object):
                                   build_id = self.build_id,
                                   pge_version= self.pge_version,
                                   orbit_corrected=self.correction_done,
+                                  tcorr_before = self.tcorr_before,
+                                  tcorr_after = self.tcorr_after,
+                                  geolocation_accuracy_qa = self.geolocation_accuracy_qa,
                                   local_granule_id = self.local_granule_id)
         if(self.run_config is not None):
             m.process_run_config_metadata(self.run_config)
