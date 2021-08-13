@@ -12,6 +12,47 @@ BOOST_AUTO_TEST_CASE(basic_test)
   boost::shared_ptr<EcostressIgcCollection> igccol = boost::make_shared<EcostressIgcCollection>();
   igccol->add_igc(igc);
   BOOST_CHECK_EQUAL(igccol->number_image(), 1);
+  boost::shared_ptr<GeoCal::Time> tbefore, tafter;
+  // The test data has just 2 attitude time points, so we bracket the
+  // times with these.
+  GeoCal::Time t1 = orbit->attitude_time_point()[0];
+  GeoCal::Time t2 = orbit->attitude_time_point()[1];
+
+  // Matching t1, should have both values t1
+  igccol->nearest_attitude_time_point(boost::make_shared<GeoCal::Time>(t1),
+				      tbefore, tafter);
+  BOOST_CHECK(fabs(*tbefore - t1) < 1e-3);
+  BOOST_CHECK(fabs(*tafter - t1) < 1e-3);
+
+  // Past t1, should have t1, t2
+  igccol->nearest_attitude_time_point(boost::make_shared<GeoCal::Time>(t1+1),
+				      tbefore, tafter);
+  BOOST_CHECK(fabs(*tbefore - t1) < 1e-3);
+  BOOST_CHECK(fabs(*tafter - t2) < 1e-3);
+
+  // Before start of corrections, should have max_valid_time, t1
+  igccol->nearest_attitude_time_point(boost::make_shared<GeoCal::Time>(t1-1),
+				      tbefore, tafter);
+  BOOST_CHECK(fabs(*tbefore - GeoCal::Time::max_valid_time) < 1e-3);
+  BOOST_CHECK(fabs(*tafter - t1) < 1e-3);
+
+  // Matching t2, should have t2, t2
+  igccol->nearest_attitude_time_point(boost::make_shared<GeoCal::Time>(t2),
+				      tbefore, tafter);
+  BOOST_CHECK(fabs(*tbefore - t2) < 1e-3);
+  BOOST_CHECK(fabs(*tafter - t2) < 1e-3);
+
+  // /before t2, should have t1, t2
+  igccol->nearest_attitude_time_point(boost::make_shared<GeoCal::Time>(t2-1),
+				      tbefore, tafter);
+  BOOST_CHECK(fabs(*tbefore - t1) < 1e-3);
+  BOOST_CHECK(fabs(*tafter - t2) < 1e-3);
+
+  // After end of corrections, should have t2, max_valid_time
+  igccol->nearest_attitude_time_point(boost::make_shared<GeoCal::Time>(t2+1),
+				      tbefore, tafter);
+  BOOST_CHECK(fabs(*tbefore - t2) < 1e-3);
+  BOOST_CHECK(fabs(*tafter - GeoCal::Time::max_valid_time) < 1e-3);
 }
 
 

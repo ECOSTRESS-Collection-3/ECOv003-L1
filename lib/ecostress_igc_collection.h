@@ -24,6 +24,9 @@ public:
       add_object(Igc->time_table());
     }
   }
+  void nearest_attitude_time_point(const boost::shared_ptr<GeoCal::Time>& T,
+				   boost::shared_ptr<GeoCal::Time>& Tbefore,
+				   boost::shared_ptr<GeoCal::Time>& Tafter) const;
   virtual void print(std::ostream& Os) const;
 private:
   friend class boost::serialization::access;

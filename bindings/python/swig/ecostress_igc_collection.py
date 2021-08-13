@@ -216,11 +216,27 @@ class EcostressIgcCollection(geocal_swig.igc_array.IgcArray):
         return _ecostress_igc_collection.EcostressIgcCollection_add_igc(self, Igc)
 
 
+    def nearest_attitude_time_point(self, T):
+        """
+
+        void EcostressIgcCollection::nearest_attitude_time_point(const boost::shared_ptr< GeoCal::Time > &T, boost::shared_ptr<
+        GeoCal::Time > &Tbefore, boost::shared_ptr< GeoCal::Time > &Tafter)
+        const
+        Return the nearest attitude correction time point, so Tbefore <= T <=
+        Tafter.
+
+        Note that Tbefore or Tafter will be returned as Time::max_valid_time()
+        if there isn't a before/after time. 
+        """
+        return _ecostress_igc_collection.EcostressIgcCollection_nearest_attitude_time_point(self, T)
+
+
     def __reduce__(self):
       return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
 
     __swig_destroy__ = _ecostress_igc_collection.delete_EcostressIgcCollection
 EcostressIgcCollection.add_igc = new_instancemethod(_ecostress_igc_collection.EcostressIgcCollection_add_igc, None, EcostressIgcCollection)
+EcostressIgcCollection.nearest_attitude_time_point = new_instancemethod(_ecostress_igc_collection.EcostressIgcCollection_nearest_attitude_time_point, None, EcostressIgcCollection)
 EcostressIgcCollection_swigregister = _ecostress_igc_collection.EcostressIgcCollection_swigregister
 EcostressIgcCollection_swigregister(EcostressIgcCollection)
 
