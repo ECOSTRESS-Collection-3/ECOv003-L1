@@ -30,13 +30,59 @@ class L1bTpCollect(object):
                          min_number_good_scan=min_number_good_scan,
                          number_subpixel=proj_number_subpixel,
                          pass_through_error=True)
-        self.tpcollect = geocal.TiePointCollectPicmtch(self.igccol,
+        # Tom has empirically come up with a set of things to try to
+        # get a better matching results. We go ahead and collect these
+        # into a series of trials, trying each in turn if the previous
+        # one doesn't get enough matches.
+        #
+        # Note the log and run directory gets updated before use, so it
+        # is ok they have the same name here (these are just placeholders)
+        self.tpcollect = []
+        # Original try
+        self.tpcollect.append(geocal.TiePointCollectPicmtch(self.igccol,
                               self.proj_fname, image_index1=0,
                               ref_image_fname=self.ref_fname[0],
                               fftsize=fftsize, magnify=magnify, magmin=magmin,
                               toler=toler,redo=redo,ffthalf=2,seed=562,
                               log_file=self.log_file[0],
-                              run_dir_name=self.run_dir_name[0])
+                              run_dir_name=self.run_dir_name[0]))
+        # Increase mag, and change seed
+        self.tpcollect.append(geocal.TiePointCollectPicmtch(self.igccol,
+                              self.proj_fname, image_index1=0,
+                              ref_image_fname=self.ref_fname[0],
+                              fftsize=fftsize, magnify=magnify+0.5,
+                              magmin=magmin,
+                              toler=toler,redo=redo,ffthalf=2,seed=19364793,
+                              log_file=self.log_file[0],
+                              run_dir_name=self.run_dir_name[0]))
+        # Decrease mag, increase tolerance, change seed
+        self.tpcollect.append(geocal.TiePointCollectPicmtch(self.igccol,
+                              self.proj_fname, image_index1=0,
+                              ref_image_fname=self.ref_fname[0],
+                              fftsize=fftsize, magnify=magnify-0.5,
+                              magmin=magmin,
+                              toler=toler+1.0,redo=redo,ffthalf=2,seed=578,
+                              log_file=self.log_file[0],
+                              run_dir_name=self.run_dir_name[0]))
+        # Decrease mag, increase tolerance, change seed
+        self.tpcollect.append(geocal.TiePointCollectPicmtch(self.igccol,
+                              self.proj_fname, image_index1=0,
+                              ref_image_fname=self.ref_fname[0],
+                              fftsize=fftsize, magnify=magnify-1.0,
+                              magmin=magmin,
+                              toler=toler+1.0,redo=redo,ffthalf=2,seed=700,
+                              log_file=self.log_file[0],
+                              run_dir_name=self.run_dir_name[0]))
+        # Increase mag, increase tolerance, change seed
+        self.tpcollect.append(geocal.TiePointCollectPicmtch(self.igccol,
+                              self.proj_fname, image_index1=0,
+                              ref_image_fname=self.ref_fname[0],
+                              fftsize=fftsize, magnify=magnify+2.5,
+                              magmin=magmin,
+                              toler=toler+3.0,redo=redo,ffthalf=2,seed=800,
+                              log_file=self.log_file[0],
+                              run_dir_name=self.run_dir_name[0]))
+
         self.min_tp_per_scene = min_tp_per_scene
 
     def print_and_log(self, s):
@@ -75,22 +121,26 @@ class L1bTpCollect(object):
         ntpoint_removed = 0
         ntpoint_final = 0
         try:
-            self.tpcollect.image_index1 = i
-            self.tpcollect.ref_image_fname = self.ref_fname[i]
-            self.tpcollect.log_file = self.log_file[i]
-            self.tpcollect.run_dir_name = self.run_dir_name[i]
-            shutil.rmtree(self.run_dir_name[i], ignore_errors=True)
             tt = self.igccol.image_ground_connection(i).time_table
-            self.print_and_log("Collecting tp for %s" % self.igccol.title(i))
-            res = self.tpcollect.tie_point_grid(self.num_x, self.num_y)
-            # Try this, and see how it works
-            ntpoint_initial = len(res)
-            ntpoint_removed = 0
-            if(len(res) >= self.min_tp_per_scene):
-                len1 = len(res)
-                res = geocal.outlier_reject_ransac(res, ref_image=geocal.VicarLiteRasterImage(self.ref_fname[i]), igccol = self.igccol, threshold=3)
-                ntpoint_removed = len1-len(res)
-                self.print_and_log("Removed %d tie-points using RANSAC for %s" % (len1-len(res), self.igccol.title(i)))
+            for i2, tpcol in enumerate(self.tpcollect):
+                tpcol.image_index1 = i
+                tpcol.ref_image_fname = self.ref_fname[i]
+                tpcol.log_file = self.log_file[i] + "_%d" %i2
+                tpcol.run_dir_name = self.run_dir_name[i] + "_%d" % i2
+                shutil.rmtree(tpcol.run_dir_name, ignore_errors=True)
+                self.print_and_log("Collecting tp for %s try %d" %
+                                   (self.igccol.title(i), i2+1))
+                res = tpcol.tie_point_grid(self.num_x, self.num_y)
+                # Try this, and see how it works
+                ntpoint_initial = len(res)
+                ntpoint_removed = 0
+                if(len(res) >= self.min_tp_per_scene):
+                    len1 = len(res)
+                    res = geocal.outlier_reject_ransac(res, ref_image=geocal.VicarLiteRasterImage(self.ref_fname[i]), igccol = self.igccol, threshold=3)
+                    ntpoint_removed = len1-len(res)
+                    self.print_and_log("Removed %d tie-points using RANSAC for %s" % (len1-len(res), self.igccol.title(i)))
+                if(len(res) >= self.min_tp_per_scene):
+                    break
             if(len(res) < self.min_tp_per_scene):
                 self.print_and_log("Too few tie-point found. Found %d, and require at least %d. Rejecting tie-points for %s" % (len(res), self.min_tp_per_scene, self.igccol.title(i)))
                 res = []
