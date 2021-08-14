@@ -398,10 +398,16 @@ try:
         elif(igccol_corrected.image_ground_connection(i).crosses_dateline):
             print_and_log("Scene number %d crosses date line. We don't handle this. Skipping output for this scene" % scenelist[i])
         else:
+            # Short term allow this to fail, just so we can process old data
+            # which didn't have FieldOfViewObstruction (added in B7)
+            try:
+                field_of_view_obscured = h5py.File(radlist[i],"r")["/StandardMetadata/FieldOfViewObstruction"][()]
+            except KeyError:
+                field_of_view_obscured = "NO"
             l1bgeo = ecostress.L1bGeoGenerate(
                 igccol_corrected.image_ground_connection(i),
                 lwm, ofile[i],inlist,is_day[i],
-                field_of_view_obscured = h5py.File(radlist[i],"r")["/StandardMetadata/FieldOfViewObstruction"][()],
+                field_of_view_obscured = field_of_view_obscured,
                 number_line = args.number_line,
                 run_config = config, log_fname = log_fname,
                 build_id = build_id,

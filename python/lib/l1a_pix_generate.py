@@ -173,8 +173,13 @@ class L1aPixGenerate(object):
               fin["/StandardMetadata/RangeEndingDate"][()])
         m.set("RangeEndingTime",
               fin["/StandardMetadata/RangeEndingTime"][()])
-        m.set("FieldOfViewObstruction",
-              fin["/StandardMetadata/FieldOfViewObstruction"][()])
+        # Short term allow this to fail, just so we can process old data
+        # which didn't have FieldOfViewObstruction (added in B7)
+        try:
+            m.set("FieldOfViewObstruction",
+                  fin["/StandardMetadata/FieldOfViewObstruction"][()])
+        except KeyError:
+            pass
         m2.set("RangeBeginningDate",
               fin["/StandardMetadata/RangeBeginningDate"][()])
         m2.set("RangeBeginningTime",
@@ -183,8 +188,13 @@ class L1aPixGenerate(object):
               fin["/StandardMetadata/RangeEndingDate"][()])
         m2.set("RangeEndingTime",
               fin["/StandardMetadata/RangeEndingTime"][()])
-        m2.set("FieldOfViewObstruction",
-               fin["/StandardMetadata/FieldOfViewObstruction"][()])
+        # Short term allow this to fail, just so we can process old data
+        # which didn't have FieldOfViewObstruction (added in B7)
+        try:
+            m2.set("FieldOfViewObstruction",
+                   fin["/StandardMetadata/FieldOfViewObstruction"][()])
+        except KeyError:
+            pass
         shp = geocal.mmap_file("%s/UncalibratedDN/b1_image.hlf" % dirname).shape
         m.set("ImageLines", shp[0])
         m.set("ImagePixels", shp[1])
