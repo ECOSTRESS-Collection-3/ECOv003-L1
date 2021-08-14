@@ -180,7 +180,7 @@ the reference image, in Ecr coordinates (in meters).
                 self.tp_stat[i,7] = 1
             elif(geo_qa[i] == "Suspect"):
                 self.tp_stat[i,7] = 2
-            elif(geo_qa[i] == "No match"):
+            elif(geo_qa[i] == "Poor"):
                 self.tp_stat[i,7] = 3
             else:
                 self.tp_stat[i,7] = -9999
@@ -244,7 +244,15 @@ number of tiepoints (so if < threshold we set this to 0).'''
                 dset.attrs["Units"] = "s"
                 dset = ac_group.create_dataset("Geolocation accuracy QA flag",
                                                data=self.tp_stat[:,7])
-                dset.attrs["Description"] = "0 - Best/n1 - Good/n2 - Suspect/n3 - No match/n-9999 - Unknown"
+                dset.attrs["Description"] = \
+'''0: Best - Image matching was performed for this scene, expect 
+       good geolocation accuracy.
+1: Good - Image matching was performed on a nearby scene, and correction 
+       has been interpolated/extrapolated. Expect good geolocation accuracy.
+2: Suspect - Matched somewhere in the orbit. Expect better geolocation 
+       than orbits w/o image matching, but may still have large errors.
+3: Poor - No matches in the orbit. Expect largest geolocation errors.
+9999: Unknown value'''
 
 __all__ = ["L1bGeoQaFile"]
         

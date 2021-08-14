@@ -23,7 +23,7 @@ class L1bGeoGenerate(object):
                  correction_done = True,
                  tcorr_before = -9999,
                  tcorr_after = -9999,
-                 geolocation_accuracy_qa = "No match"):
+                 geolocation_accuracy_qa = "Poor"):
         '''Create a L1bGeoGenerate with the given ImageGroundConnection
         and output file name. To actually generate, execute the "run"
         command.

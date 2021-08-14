@@ -96,6 +96,7 @@ if test "x$PYTHON" != "x"; then
   CPPFLAGS="$ac_save_CPPFLAGS"
   LIBS="$ac_save_LIBS"
 
+  AC_SUBST([pythonpath])
   AC_SUBST([PYTHON_VERSION])
   AC_SUBST([PYTHON_CPPFLAGS])
   AC_SUBST([PYTHON_LDFLAGS])
