@@ -221,14 +221,31 @@ def process_run(exec_cmd, out_fh = None, quiet = False):
                                             output=stdout)
     return stdout
 
+def as_string(t):
+    '''Handle a variable that is either a bytes or a string, returning
+    a string.
+    
+    This is to handle a change in h5py at about version 3 or so (see 
+    https://docs.h5py.org/en/latest/whatsnew/3.0.html). Things that
+    use to return as str will now return as bytes.  Fortunately assignment
+    takes either a bytes or a str without complaint, so this difference only
+    matters if we doing something with a string.
+
+    Note that h5py > 3.0 has a new asstr() type which returns a string 
+    (basically it like adding a ".decode('utf-8')". But for now we don't want to
+    depend on h5py > 3.0, we want to support both h5py 2 and 3.'''
+    if(hasattr(t,'decode')):
+        return t.decode('utf-8')
+    return t
+
 def orbit_from_metadata(fname):
     '''Read the standard metadata from the given file to return the orbit,
     scene, and acquisition_time for the given file.'''
     fin = h5py.File(fname, "r")
     onum = fin["/StandardMetadata/StartOrbitNumber"][()]
     sid = fin["/StandardMetadata/SceneID"][()]
-    bdate = fin["/StandardMetadata/RangeBeginningDate"][()]
-    btime = fin["/StandardMetadata/RangeBeginningTime"][()]
+    bdate = as_string(fin["/StandardMetadata/RangeBeginningDate"][()])
+    btime = as_string(fin["/StandardMetadata/RangeBeginningTime"][()])
     acquisition_time = geocal.Time.parse_time("%sT%sZ" % (bdate, btime))
     return int(onum), int(sid), acquisition_time
 
@@ -273,7 +290,7 @@ def determine_rotated_map(gc1, gc2, mi):
     return mi2
 
 __all__ = ["create_dem", "ortho_base_directory", "band_to_landsat_band",
-           "create_lwm", "setup_spice",
+           "create_lwm", "setup_spice", "as_string",
            "create_orbit_raw", "create_time_table", "create_scan_mirror",
            "is_day", "aster_radiance_scale_factor", "ecostress_to_aster_band",
            "ecostress_radiance_scale_factor", "time_to_file_string",

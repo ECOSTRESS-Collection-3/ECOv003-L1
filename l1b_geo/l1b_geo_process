@@ -263,14 +263,14 @@ try:
                                           l1b_geo_config.first_angle_per_encoder_value,
                                           l1b_geo_config.second_angle_per_encoder_value)
         line_order_reversed = False
-        if(h5py.File(radlist[i],"r")["/L1B_RADMetadata/RadScanLineOrder"][()] == "Reverse line order"):
+        if(ecostress.as_string(h5py.File(radlist[i],"r")["/L1B_RADMetadata/RadScanLineOrder"][()]) == "Reverse line order"):
             line_order_reversed = True
         if(i == 0):
             cam.line_order_reversed = line_order_reversed
         elif(cam.line_order_reversed != line_order_reversed):
             raise RuntimeError("Currently require that all L1B_RAD given to l1b_geo_process have the same line ordering (/L1B_RADMetadata/RadScanLineOrder")
         if(not args.force_night and
-           h5py.File(radlist[i],"r")["StandardMetadata/DayNightFlag"][()] == "Day"):
+           ecostress.as_string(h5py.File(radlist[i],"r")["StandardMetadata/DayNightFlag"][()]) == "Day"):
             is_day.append(True)
             eband = eband_day
             lband = lband_day

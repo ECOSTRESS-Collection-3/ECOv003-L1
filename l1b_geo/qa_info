@@ -5,6 +5,7 @@
 import os
 import re
 import h5py
+import ecostress
 
 qa_file_by_orb = {}
 for root, dir, files in os.walk("/ops/store/PRODUCTS/L1B_GEO_QA"):
@@ -21,7 +22,7 @@ for root, dir, files in os.walk("/ops/store/PRODUCTS/L1B_GEO_QA"):
                 qa_file_by_orb[orb] = (root + "/" + f, ver)
 for orb in sorted(qa_file_by_orb.keys()):
     f = h5py.File(qa_file_by_orb[orb][0], "r")
-    corr = f["/L1GEOMetadata/OrbitCorrectionPerformed"][()]
+    corr = ecostress.as_string(f["/L1GEOMetadata/OrbitCorrectionPerformed"][()])
     nscene = f["Tiepoint/Scenes"].shape[0]
     excep = f["/Logs/Encountered Exception"][()].decode("utf-8")
     print("%s %s %d %s" % (orb, corr, nscene, excep))
