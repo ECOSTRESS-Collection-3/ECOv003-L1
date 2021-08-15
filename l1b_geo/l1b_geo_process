@@ -366,10 +366,11 @@ try:
             if(tb < geocal.Time.max_valid_time - 1):
                 t1 = t - tb
             if(ta < geocal.Time.max_valid_time - 1):
-                t2 = t - ta
+                t2 = ta - t
         tcorr_before.append(t1)
         tcorr_after.append(t2)
         geo_qa.append(l1b_geo_config.geocal_accuracy_qa(t1, t2))
+        print_and_log("Scene %d geolocation accuracy QA: %s" %(i+1, geo_qa[-1]))
 
     # Write out QA data
     if(tpcol):
