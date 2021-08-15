@@ -1090,10 +1090,10 @@ ecostress_test_all_CPPFLAGS = $(AM_CPPFLAGS) $(GEOCAL_CFLAGS)
 # a different version of bazel
 TENSORFLOW_VERSION = 1.14.0
 BAZEL_VERSION = 0.24.1
-AFIDS_DVD_DATE = 06-12-2020
-AFIDS_FULL_VERSION = 1.28
-TENSORFLOW_WHEEL = tensorflow-1.14.0-cp37-cp37m-linux_x86_64.whl
-ECOSTRESS_DEPENDENCY_VERSION = 1.0
+AFIDS_DVD_DATE = 04-12-2021
+AFIDS_FULL_VERSION = 1.29
+TENSORFLOW_WHEEL = tensorflow-1.14.0-cp39-cp39-linux_x86_64.whl
+ECOSTRESS_DEPENDENCY_VERSION = 7.00
 # Most of the time the image version number will be the same as the
 # version defined in configure.ac, but there might be instances where
 # we want something different (e.g., we are creating a test image while
@@ -3150,6 +3150,9 @@ afids-image: docker/afids-docker/afids-$(AFIDS_DVD_DATE).iso
 	ln -s ./$(notdir $<) $(abs_srcdir)/docker/afids-docker/afids.iso
 	docker build $(EXTRA_DOCKER_FLAG) -t ecostress/afids:$(AFIDS_FULL_VERSION) $(abs_srcdir)/docker/afids-docker
 
+# Make sure to run "make create-ecostress-dependency-repo" if you haven't done so
+# already. Need to do when we update afids-image, or if we want a newer set
+# of the python packages
 ecostress-dependency-image:
 	cp -r $(abs_srcdir)/docker/ecostress-dependency-repo/ $(abs_srcdir)/docker/ecostress-dependency-docker
 	docker build $(EXTRA_DOCKER_FLAG) -t ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) $(abs_srcdir)/docker/ecostress-dependency-docker
