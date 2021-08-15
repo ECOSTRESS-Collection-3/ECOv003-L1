@@ -1,9 +1,10 @@
-FROM ecostress/afids:1.28
+FROM ecostress/afids:1.29
 
 MAINTAINER Mike Smyth Mike.M.Smyth@jpl.nasa.gov
 
 # Packages we need
 RUN yum install gcc gcc-c++ gsl-devel parallel make libjpeg-devel libpng-devel expat-devel sqlite-devel openssl-devel fftw-devel -y
+RUN yum install atlas-devel bzip2-devel curl-devel expat-devel fftw-devel fontconfig-devel freetype-devel gd-afids glibc-devel gmp-devel gsl-devel libX11-devel libXpm-devel libffi-devel libjpeg-turbo-devel libpng-devel libtiff-devel ncurses-devel openmotif-devel openssl-devel readline-devel suitesparse-devel tcl-devel tk-devel xz-devel zlib-devel -y
 RUN mkdir -p /root/.parallel && touch /root/.parallel/will-cite
 # Always point to geocal stuff. I *think* this is ok, we can
 # reevaluate this if needed in the future

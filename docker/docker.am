@@ -45,13 +45,16 @@ ecostress-dependency-image:
 # others here in case we want to run the end to end check in the
 # future. The end_to_end_dir is used just for the ecostress units tests,
 # we don't need this generally when we run.
+#
+# If you have a failed run, you can do a "docker attach $(cat docker_run.id)"
+# to get into the running docker instance.
 if CARTLAB_MACHINE
 # Locations on pistol/rifle
 landsat_dir = /raid22
 srtm_dir = /raid25/SRTM_2014_update/srtm_v3_dem_L2
 srtm_lwm_dir = /raid25/SRTM_2014_update/srtm_v3_lwm
 spice_dir = /pkg/afids/afids_latest/data/cspice
-end_to_end_dir = /data/smyth/ecostress-test-data
+end_to_end_dir = /home/smyth/Local/ecostress-test-data
 else
 # Locations on ECOSTRESS
 landsat_dir = /project/ancillary/LANDSAT
@@ -79,6 +82,9 @@ ecostress-image:
 	docker commit $$(cat docker_run.id) ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION)
 	docker container stop $$(cat docker_run.id)
 
+# When we have an ecostress image we want to save, run this
+ecostress-image-save:
+	docker save ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION) | pigz > ecostress-level1-docker-$(ECOSTRESS_IMAGE_VERSION).tar.gz
 
 # To record the exact version of packages we install for python, we
 # capture these as RPMs. That way we can install the same set of packages

@@ -15,3 +15,11 @@ when we need a ecostress-level1 update.
    all the ecostress dependencies (e.g., the python packages).
 3. Stage 3 is ecostress/ecostress-level1. This is the level 1 software, built
    against ecostress/ecostress-dependency.
+
+Sample set of commands:
+
+make afids-image
+make create-ecostress-dependency-repo
+make ecostress-dependency-image
+make ecostress-image
+make ecostress-image-save
