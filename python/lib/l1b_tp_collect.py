@@ -5,6 +5,7 @@ from .pickle_method import *
 from multiprocessing import Pool
 import traceback
 import shutil
+import os
 
 class L1bTpCollect(object):
     '''This is used to collect tiepoints between the ecostress data and
@@ -141,17 +142,18 @@ class L1bTpCollect(object):
                     self.print_and_log("Removed %d tie-points using RANSAC for %s" % (len1-len(res), self.igccol.title(i)))
                 if(len(res) >= self.min_tp_per_scene):
                     break
+            number_match_try = i2 + 1
             if(len(res) < self.min_tp_per_scene):
                 self.print_and_log("Too few tie-point found. Found %d, and require at least %d. Rejecting tie-points for %s" % (len(res), self.min_tp_per_scene, self.igccol.title(i)))
                 res = []
             else:
-                self.print_and_log("Found %d tie-points for %s" % (len(res), self.igccol.title(i)))
+                self.print_and_log("Found %d tie-points for %s try %d" % (len(res), self.igccol.title(i), number_match_try))
             self.print_and_log("Done collecting tp for %s" % self.igccol.title(i))
         except Exception as e:
             self.report_and_log_exception(i)
             res = []
         ntpoint_final = len(res)
-        return res, tt.min_time, tt.max_time, ntpoint_initial, ntpoint_removed, ntpoint_final
+        return res, tt.min_time, tt.max_time, ntpoint_initial, ntpoint_removed, ntpoint_final, number_match_try
     
     
     def tpcol(self, pool=None):
@@ -174,21 +176,25 @@ class L1bTpCollect(object):
         res = geocal.TiePointCollection()
         time_range_tp = []
         for i in range(self.igccol.number_image):
-            self.qa_file.add_tp_log(self.igccol.title(i), self.log_file[i])
+            for i2 in range(len(self.tpcollect)):
+                lf = self.log_file[i] + "_%d" %i2
+                if(os.path.exists(lf)):
+                    self.qa_file.add_tp_log(self.igccol.title(i) + "_%d" % i2, lf)
         j = 0
         for i in range(self.igccol.number_image):
             if(proj_res[i]):
                 (tpcol, tmin, tmax, ntpoint_initial, ntpoint_removed,
-                 ntpoint_final) = tpcollist[j]
+                 ntpoint_final, number_match_try) = tpcollist[j]
                 self.qa_file.add_tp_single_scene(i, self.igccol,
-                tpcol, ntpoint_initial, ntpoint_removed, ntpoint_final)
+                        tpcol, ntpoint_initial, ntpoint_removed, ntpoint_final,
+                        number_match_try)
                 if(len(tpcol) > 0):
                     res.extend(tpcol)
                     time_range_tp.append([tmin, tmax])
                 j += 1
             else:
                 self.qa_file.add_tp_single_scene(i, self.igccol,
-                                                 [], 0, 0, 0)
+                                                 [], 0, 0, 0, 0)
         for i in range(len(res)):
             res[i].id = i+1
         return res, time_range_tp

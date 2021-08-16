@@ -129,19 +129,20 @@ offset.'''
                                   dtype=h5py.special_dtype(vlen=bytes))
 
     def add_tp_single_scene(self, image_index, igccol, tpcol, ntpoint_initial,
-                            ntpoint_removed, ntpoint_final):
+                            ntpoint_removed, ntpoint_final, number_match_try):
         '''Write out information about the tiepoints we collect for scene.'''
         if(self.scene_name is None):
             self.scene_name = [igccol.title(i).encode('utf8') for i in
                                range(igccol.number_image)]
         if(self.tp_stat is None):
-            self.tp_stat = np.full((igccol.number_image, 8), -9999.0)
+            self.tp_stat = np.full((igccol.number_image, 9), -9999.0)
         self.tp_stat[image_index, 0] = ntpoint_initial
         self.tp_stat[image_index, 1] = ntpoint_removed
         self.tp_stat[image_index, 2] = ntpoint_final
+        self.tp_stat[image_index, 3] = number_match_try
         if(len(tpcol) > 0):
             df = tpcol.data_frame(igccol,image_index)
-            self.tp_stat[image_index, 3] = df.ground_2d_distance.quantile(.68)
+            self.tp_stat[image_index, 4] = df.ground_2d_distance.quantile(.68)
         tpdata = None
         if(len(tpcol) > 0):
             tpdata = np.empty((len(tpcol), 5))
@@ -170,20 +171,20 @@ the reference image, in Ecr coordinates (in meters).
         t = np.array([tpcol.data_frame(igccol_corrected, i).ground_2d_distance.quantile(.68)
                       for i in range(igccol_corrected.number_image)])
         t[np.isnan(t)] = -9999
-        self.tp_stat[:,4] = t
-        self.tp_stat[:,5] = tcor_before
-        self.tp_stat[:,6] = tcor_after
+        self.tp_stat[:,5] = t
+        self.tp_stat[:,6] = tcor_before
+        self.tp_stat[:,7] = tcor_after
         for i in range(self.tp_stat.shape[0]):
             if(geo_qa[i] == "Best"):
-                self.tp_stat[i,7] = 0
+                self.tp_stat[i,8] = 0
             elif(geo_qa[i] == "Good"):
-                self.tp_stat[i,7] = 1
+                self.tp_stat[i,8] = 1
             elif(geo_qa[i] == "Suspect"):
-                self.tp_stat[i,7] = 2
+                self.tp_stat[i,8] = 2
             elif(geo_qa[i] == "Poor"):
-                self.tp_stat[i,7] = 3
+                self.tp_stat[i,8] = 3
             else:
-                self.tp_stat[i,7] = -9999
+                self.tp_stat[i,8] = -9999
         
     def write_standard_metadata(self, m):
         '''Write out standard metadata for QA file. Since this is almost
@@ -218,32 +219,34 @@ the reference image, in Ecr coordinates (in meters).
                                      dtype=h5py.special_dtype(vlen=bytes))
             if(self.tp_stat is not None):
                 dset = tp_group.create_dataset("Tiepoint Count",
-                                               data=self.tp_stat[:,0:3].astype(np.int32))
+                                               data=self.tp_stat[:,0:4].astype(np.int32))
                 dset.attrs["Description"] = \
 '''First column is the initial number of tie points
 
 Second column is the number of blunders removed
 
 Third column is the number after removing blunders and applying minimum
-number of tiepoints (so if < threshold we set this to 0).'''
+number of tiepoints (so if < threshold we set this to 0).
+
+Fourth column is the number to image matching tries we did.'''
             ac_group = f["Accuracy Estimate"]
             ac_group.create_dataset("Scenes", data=self.scene_name,
                                      dtype=h5py.special_dtype(vlen=bytes))
             if(self.tp_stat is not None):
                 dset = ac_group.create_dataset("Accuracy Before Correction",
-                                               data=self.tp_stat[:,3])
-                dset.attrs["Units"] = "m"
-                dset = ac_group.create_dataset("Final Accuracy",
                                                data=self.tp_stat[:,4])
                 dset.attrs["Units"] = "m"
-                dset = ac_group.create_dataset("Delta time correction before scene",
+                dset = ac_group.create_dataset("Final Accuracy",
                                                data=self.tp_stat[:,5])
-                dset.attrs["Units"] = "s"
-                dset = ac_group.create_dataset("Delta time correction after scene",
+                dset.attrs["Units"] = "m"
+                dset = ac_group.create_dataset("Delta time correction before scene",
                                                data=self.tp_stat[:,6])
                 dset.attrs["Units"] = "s"
-                dset = ac_group.create_dataset("Geolocation accuracy QA flag",
+                dset = ac_group.create_dataset("Delta time correction after scene",
                                                data=self.tp_stat[:,7])
+                dset.attrs["Units"] = "s"
+                dset = ac_group.create_dataset("Geolocation accuracy QA flag",
+                                               data=self.tp_stat[:,8])
                 dset.attrs["Description"] = \
 '''0: Best - Image matching was performed for this scene, expect 
        good geolocation accuracy.

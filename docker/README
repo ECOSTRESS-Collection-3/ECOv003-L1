@@ -22,4 +22,6 @@ make afids-image
 make create-ecostress-dependency-repo
 make ecostress-dependency-image
 make ecostress-image
+make ecostress-image-end-to-end-check
 make ecostress-image-save
+

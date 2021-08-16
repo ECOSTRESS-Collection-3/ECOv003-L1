@@ -82,6 +82,15 @@ ecostress-image:
 	docker commit $$(cat docker_run.id) ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION)
 	docker container stop $$(cat docker_run.id)
 
+ecostress-image-end-to-end-check:
+	docker run -t --workdir /root \
+           --mount type=bind,src=$(srtm_dir),dst=/srtm \
+           --mount type=bind,src=$(landsat_dir),dst=/landsat \
+           --mount type=bind,src=$(end_to_end_dir),dst=/project/test/ASTER/EndToEndTest \
+           --mount type=bind,src=$(srtm_lwm_dir),dst=/project/ancillary/SRTM/srtm_v3_lwm \
+           ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION) \
+           /project/test/ASTER/EndToEndTest/latest/end_to_end.sh
+
 # When we have an ecostress image we want to save, run this
 ecostress-image-save:
 	docker save ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION) | pigz > ecostress-level1-docker-$(ECOSTRESS_IMAGE_VERSION).tar.gz
