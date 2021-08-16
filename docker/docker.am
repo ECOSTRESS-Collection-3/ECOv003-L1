@@ -89,7 +89,7 @@ ecostress-image-end-to-end-check:
            --mount type=bind,src=$(end_to_end_dir),dst=/project/test/ASTER/EndToEndTest \
            --mount type=bind,src=$(srtm_lwm_dir),dst=/project/ancillary/SRTM/srtm_v3_lwm \
            ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION) \
-           /project/test/ASTER/EndToEndTest/latest/end_to_end.sh
+           /bin/bash --login -c /project/test/ASTER/EndToEndTest/latest/end_to_end.sh
 
 # When we have an ecostress image we want to save, run this
 ecostress-image-save:
