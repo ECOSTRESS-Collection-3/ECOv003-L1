@@ -30,7 +30,7 @@ class GeoWriteStandardMetadata(WriteStandardMetadata):
         if(not self.orbit_based):
             pg["GeolocationAccuracyQA"] = self.geolocation_accuracy_qa
             pg["DeltaTimeOfCorrectionBeforeScene"] = self.tcorr_before
-            pg["DeltaTimeOfCorrectionAfterScene"] = self.tcorr_before
+            pg["DeltaTimeOfCorrectionAfterScene"] = self.tcorr_after
             pg["GeolocationAccuracyQAExplanation"] = \
 '''Best - Image matching was performed for this scene, expect 
        good geolocation accuracy.
