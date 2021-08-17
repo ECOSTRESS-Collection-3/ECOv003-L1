@@ -95,6 +95,15 @@ ecostress-image-end-to-end-check:
 ecostress-image-save:
 	docker save ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION) | pigz > ecostress-level1-docker-$(ECOSTRESS_IMAGE_VERSION).tar.gz
 
+ecostress-image-delivery:
+	@echo "Note that this will ask for you username and password."
+	@echo "this is the normal LDAP username and password we use for"
+	@echo "many JPL logins. The username should already be in the"
+	@echo "right group to have write privileges to the artifactory"
+	docker tag ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION) cae-artifactory.jpl.nasa.gov:16001/gov/nasa/jpl/ecostress/sds/pge/pge-eco-level-1:$(ECOSTRESS_IMAGE_VERSION)
+	docker login cae-artifactory.jpl.nasa.gov:16001
+	docker push cae-artifactory.jpl.nasa.gov:16001/gov/nasa/jpl/ecostress/sds/pge/pge-eco-level-1:$(ECOSTRESS_IMAGE_VERSION)
+
 # To record the exact version of packages we install for python, we
 # capture these as RPMs. That way we can install the same set of packages
 # each time in an image. Not sure that recording this as a package rather

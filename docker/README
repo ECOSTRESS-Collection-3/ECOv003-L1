@@ -23,5 +23,6 @@ make create-ecostress-dependency-repo
 make ecostress-dependency-image
 make ecostress-image
 make ecostress-image-end-to-end-check
-make ecostress-image-save
-
+# make ecostress-image-save - Create a .tar.gz file, not necessary for delivery
+# but might be useful
+make ecostress-image-deliver
