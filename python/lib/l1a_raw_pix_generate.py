@@ -311,11 +311,13 @@ class L1aRawPixGenerate(object):
     MPER = 60.0/RPM # mirror period = 2.3622047 sec / rev
     SCAN_DUR = MPER/2.0 # half-mirror rotation = 1.1811024 sec
     FP_ANG = FP_DUR*RPM*6.0 # FP angle = .0047175926 deg / FP
+    '''
     FOV = FP_DUR*RPM*6.0*FPPSC # field of view = 25.475000 deg / scan
     ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.00020580272 deg/count
     ANG1 = FOV / 2.0
     ANG0 = -ANG1
     ANG2 = float( int( (ANG1 + FP_ANG*float(BBLEN*2))*1000.0 ) )/1000.0
+    '''
     # FPIE mirror encoder - 50.95 degree swath width
     # covered by 25.475 degree of mirror scan.  Mirror
     # is 2-sided, so every other scan is 180 degrees apart
@@ -323,7 +325,7 @@ class L1aRawPixGenerate(object):
     FP_EV = FP_DUR*RPM*MAX_FPIE/60.0 # = 23.84375 counts/FP
     FP_EVT = FP_EV*1.1  # FP EV count tolerance
     PKT_EV = FP_DUR*RPM*MAX_FPIE*FPPPKT/60.0 # = 1525.460873 counts/PKT
-    IMG_EV = FP_DUR*RPM*MAX_FPIE*FPPSC/60.0 # = 128710.76112 counts/IMG
+    #IMG_EV = FP_DUR*RPM*MAX_FPIE*FPPSC/60.0 # = 128710.76112 counts/IMG
 
     det = [EV_DUR*((ev_codes[0,2]-ev_codes[2,0])%MAX_FPIE - (FPPSC-FPPPKT)*FP_EV), # btw IMG and HBB
            EV_DUR*((ev_codes[1,0]-ev_codes[0,0])%MAX_FPIE),  # btw HBB and CBB
@@ -936,6 +938,9 @@ class L1aRawPixGenerate(object):
       print("Percent missing data=%f" %pcomp )
       l1a_metag = l1a_fp['/L1A_RAW_PIXMetadata']
       l1a_qamissing = l1a_metag.create_dataset('QAPercentMissingData', data=pcomp, dtype='f4' )
+      l1a_qamissing.attrs['Units']="percentage"
+      l1a_qamissing.attrs['valid_min'] = 0
+      l1a_qamissing.attrs['valid_max'] = 100
 
       if iss_tcorr>0:  #  record ISS time error correction into L1A_RAW file
         e0 = np.argmax( rst<terr )
@@ -967,8 +972,8 @@ class L1aRawPixGenerate(object):
       for b in range( BANDS ):
         t = l1a_upg.create_dataset("pixel_data_%d" %(b+1),
                                    data=img[:,:,bo[b]],
-                                   chunks=(PPFP,FPPSC), dtype="u2",
-                                   compression="gzip")
+                                   chunks=(PPFP,FPPSC), dtype="u2" )
+#  not compressing a non-delivered product to save a little time
         t.attrs['Units']='dimensionless'
         t.attrs['valid_min']='0'
         t.attrs['valid_max']='32767'
@@ -994,13 +999,24 @@ class L1aRawPixGenerate(object):
         t.attrs['fill']='0xffff'
 
       l1a_BandSpec = l1a_metag.create_dataset('BandSpecification', data=BandSpec, dtype='f4' )
+      l1a_BandSpec.attrs["Units"] = "micrometer"
+      l1a_BandSpec.attrs["valid_min"] = 1.6
+      l1a_BandSpec.attrs["valid_max"] = 12.1
+      l1a_BandSpec.attrs["fill"] = 0
 
 # L1A_BB metadata
 
       bcomp = 100.0 * ( 1.0 - float( good_bb ) / float( BBLEN*2*SCPS ) )
       l1a_metag = l1a_bp['/L1A_BBMetadata']
       l1a_qamissing = l1a_metag.create_dataset('QAPercentMissingData', data=bcomp, dtype='f4' )
+      l1a_qamissing.attrs['Units']="percentage"
+      l1a_qamissing.attrs['valid_min'] = 0
+      l1a_qamissing.attrs['valid_max'] = 100
       l1a_BandSpec = l1a_metag.create_dataset('BandSpecification', data=BandSpec, dtype='f4' )
+      l1a_BandSpec.attrs["Units"] = "micrometer"
+      l1a_BandSpec.attrs["valid_min"] = 1.6
+      l1a_BandSpec.attrs["valid_max"] = 12.1
+      l1a_BandSpec.attrs["fill"] = 0
 
       # copy RTD temps to BB file
       if epc > 0:
@@ -1036,8 +1052,6 @@ class L1aRawPixGenerate(object):
           r3[i-p0,j] = prh[j]( p7r( bbt[i,1,j] ) )
 
 #  Check FOV obstruction
-
-      
 
       l1a_fp.close()
       l1a_bp.close()
