@@ -16,6 +16,7 @@ class L1aPixGenerate(object):
                  local_granule_id = None,
                  run_config = None, log = None,
                  quiet = False, build_id = "0.30",
+                 collection_label = "ECOSTRESS",
                  pge_version = "0.30",
                  file_version = "01"):
         '''Create a L1aPixGenerate with the given input files
@@ -30,6 +31,7 @@ class L1aPixGenerate(object):
         self.run_config = run_config
         self.log = log
         self.quiet = quiet
+        self.collection_label = collection_label
         self.build_id = build_id
         self.pge_version = pge_version
         self.file_version = file_version
@@ -147,6 +149,7 @@ class L1aPixGenerate(object):
                                   product_specfic_group = "L1A_PIXMetadata",
                                   proc_lev_desc = "Level 1A Calibration Parameters",
                                   pge_name="L1A_CAL_PGE",
+                                  collection_label = self.collection_label,
                                   build_id = self.build_id,
                                   pge_version= self.pge_version,
                                   local_granule_id = self.local_granule_id,
@@ -156,6 +159,7 @@ class L1aPixGenerate(object):
                                    product_specfic_group = "L1A_PIXMetadata",
                                    proc_lev_desc = "Level 1A Calibration Parameters",
                                    pge_name="L1A_CAL_PGE",
+                                   collection_label = self.collection_label,
                                    build_id = self.build_id,
                                    pge_version= self.pge_version,
                                    local_granule_id = self.local_granule_id,

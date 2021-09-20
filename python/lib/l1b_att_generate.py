@@ -15,6 +15,7 @@ class L1bAttGenerate(object):
                  tatt, teph, inlist, qa_file,
                  run_config = None, local_granule_id = None,
                  build_id = "0.30",
+                 collection_label = "ECOSTRESS",
                  pge_version = "0.30",
                  correction_done = True):
         '''Create a L1bAttGenerate with the given ImageGroundConnection
@@ -32,6 +33,7 @@ class L1bAttGenerate(object):
         self.teph = teph
         self.run_config = run_config
         self.local_granule_id = local_granule_id
+        self.collection_label = collection_label
         self.build_id = build_id
         self.pge_version = pge_version
         self.inlist = inlist
@@ -45,6 +47,7 @@ class L1bAttGenerate(object):
                                   product_specfic_group = "L1GEOMetadata",
                                   proc_lev_desc = "Level 1B Geolocation Parameters",                                  
                                   pge_name="L1B_GEO",
+                                  collection_label = self.collection_label,
                                   build_id = self.build_id,
                                   orbit_based = True,
                                   pge_version= self.pge_version,

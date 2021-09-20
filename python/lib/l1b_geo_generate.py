@@ -18,6 +18,7 @@ class L1bGeoGenerate(object):
                  start_line = 0,
                  number_line = -1,
                  local_granule_id = None, log_fname = None,
+                 collection_label = "ECOSTRESS",
                  build_id = "0.30",
                  pge_version = "0.30",
                  correction_done = True,
@@ -44,6 +45,7 @@ class L1bGeoGenerate(object):
         self.local_granule_id = local_granule_id
         self.log_fname = log_fname
         self.log = None
+        self.collection_label = collection_label
         self.build_id = build_id
         self.pge_version = pge_version
         self.inlist = inlist
@@ -128,6 +130,7 @@ class L1bGeoGenerate(object):
                                   product_specfic_group = "L1GEOMetadata",
                                   proc_lev_desc = "Level 1B Geolocation Parameters",                                  
                                   pge_name="L1B_GEO",
+                                  collection_label = self.collection_label,
                                   build_id = self.build_id,
                                   pge_version= self.pge_version,
                                   orbit_corrected=self.correction_done,
