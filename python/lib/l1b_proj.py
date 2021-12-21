@@ -6,6 +6,8 @@ from multiprocessing import Pool
 import numpy as np
 import scipy.ndimage
 import traceback
+import os
+
 class L1bProj(object):
     '''This handles projecting a Igc to the surface, forming a vicar file
     that we can then match against. We can do this in parallel if you
@@ -14,7 +16,7 @@ class L1bProj(object):
                  qa_file = None, log_fname = None, number_subpixel = 2,
                  min_number_good_scan = 41,
                  scratch_fname="initial_lat_lon.dat",
-                 pass_through_error=False):
+                 pass_through_error=False, separate_file_per_scan = False):
         '''Project igc and generate a Vicar file fname.'''
         self.igccol = igccol
         self.gc_arr = list()
@@ -24,6 +26,7 @@ class L1bProj(object):
         self.fname_list = fname_list
         self.log_fname = log_fname
         self.scratch_fname = scratch_fname
+        self.separate_file_per_scan = separate_file_per_scan
         self.number_subpixel = number_subpixel
         self.pass_through_error = pass_through_error
         self.min_number_good_scan = min_number_good_scan
@@ -97,11 +100,28 @@ class L1bProj(object):
                                                    order=1)
             # Resample data to project to surface
             res = Resampler(lat, lon, mi, self.number_subpixel)
+            ras = self.igccol.image_ground_connection(igc_ind).image
+            self.print_and_log("Starting resample for %s" % self.igccol.title(igc_ind))
+            if(self.separate_file_per_scan):
+                igc = self.igccol.image_ground_connection(igc_ind)
+                nlscan = igc.number_line_scan 
+                print(lat.shape)
+                for i in range(igc.number_scan):
+                    s = slice(i*nlscan*self.number_subpixel,
+                              (i+1)*nlscan*self.number_subpixel)
+                    res_sub = Resampler(lat[s,:],
+                                        lon[s,:],
+                                        res.map_info,
+                                        self.number_subpixel, True)
+                    ras_sub = geocal.SubRasterImage(ras, i*nlscan, 0,
+                                                    nlscan, ras.number_sample)
+                    ras = self.igccol.image_ground_connection(igc_ind).image
+                    b, ext = os.path.splitext(self.fname_list[igc_ind])
+                    fn = b + "_%02d" % i + ext
+                    res_sub.resample_field(fn, ras_sub, 1.0, "HALF", True)
             # Don't need this anymore, and the data is large. So free it
             lat = None
             lon = None
-            ras = self.igccol.image_ground_connection(igc_ind).image
-            self.print_and_log("Starting resample for %s" % self.igccol.title(igc_ind))
             res.resample_field(self.fname_list[igc_ind], ras, 1.0, "HALF", True)
             self.print_and_log("Done with resample for %s" % self.igccol.title(igc_ind))
             self.print_and_log("Starting reference image for %s" % self.igccol.title(igc_ind))

@@ -16,4 +16,13 @@ def test_l1b_proj(isolated_dir, igc_with_img):
     pool = Pool(20)
     p.proj(pool=pool)
 
+def test_l1b_scan_proj(isolated_dir, igc_with_img):
+    ortho = [Landsat7Global("/raid22", Landsat7Global.BAND5)]
+    igccol = IgcArray([], False)
+    igccol.add_igc(igc_with_img)
+    p = L1bProj(igccol, ["proj1.img"],
+                ["ref1.img"], ortho, separate_file_per_scan=True)
+    pool = Pool(20)
+    p.proj(pool=pool)
+    
     
