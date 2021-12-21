@@ -7409,26 +7409,29 @@ static PyMethodDef SwigMethods[] = {
 		""},
 	 { (char *)"EcostressParaxialTransform_paraxial_to_real", _wrap_EcostressParaxialTransform_paraxial_to_real, METH_VARARGS, (char *)"\n"
 		"\n"
-		"void EcostressParaxialTransform::paraxial_to_real(double Paraxial_x, double Paraxial_y, double &Real_x, double &Real_y)\n"
-		"const\n"
-		"Convert pariaxial to real coordinates. \n"
+		"void Ecostress::EcostressParaxialTransform::paraxial_to_real(const GeoCal::AutoDerivative< double > &Paraxial_x, const\n"
+		"GeoCal::AutoDerivative< double > &Paraxial_y, GeoCal::AutoDerivative<\n"
+		"double > &Real_x, GeoCal::AutoDerivative< double > &Real_y) const\n"
+		"\n"
 		""},
 	 { (char *)"EcostressParaxialTransform_real_to_paraxial", _wrap_EcostressParaxialTransform_real_to_paraxial, METH_VARARGS, (char *)"\n"
 		"\n"
-		"void EcostressParaxialTransform::real_to_paraxial(double Real_x, double Real_y, double &Paraxial_x, double &Paraxial_y)\n"
+		"void Ecostress::EcostressParaxialTransform::real_to_paraxial(const GeoCal::AutoDerivative< double > &Real_x, const\n"
+		"GeoCal::AutoDerivative< double > &Real_y, GeoCal::AutoDerivative<\n"
+		"double > &Paraxial_x, GeoCal::AutoDerivative< double > &Paraxial_y)\n"
 		"const\n"
-		"Convert real to pariaxial coordinates. \n"
+		"\n"
 		""},
 	 { (char *)"EcostressParaxialTransform___str__", (PyCFunction)_wrap_EcostressParaxialTransform___str__, METH_O, NULL},
 	 { (char *)"EcostressParaxialTransform__v_real_to_par", (PyCFunction)_wrap_EcostressParaxialTransform__v_real_to_par, METH_O, (char *)"\n"
 		"\n"
-		"const blitz::Array<double, 2>& Ecostress::EcostressParaxialTransform::real_to_par() const\n"
-		"Polynomial from real to paraxial. \n"
+		"blitz::Array<double, 2>& Ecostress::EcostressParaxialTransform::real_to_par()\n"
+		"\n"
 		""},
 	 { (char *)"EcostressParaxialTransform__v_par_to_real", (PyCFunction)_wrap_EcostressParaxialTransform__v_par_to_real, METH_O, (char *)"\n"
 		"\n"
-		"const blitz::Array<double, 2>& Ecostress::EcostressParaxialTransform::par_to_real() const\n"
-		"Polynomial from paraxial to real. \n"
+		"blitz::Array<double, 2>& Ecostress::EcostressParaxialTransform::par_to_real()\n"
+		"\n"
 		""},
 	 { (char *)"delete_EcostressParaxialTransform", (PyCFunction)_wrap_delete_EcostressParaxialTransform, METH_O, (char *)"\n"
 		"\n"

@@ -7612,12 +7612,13 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_EcostressOrbit", _wrap_new_EcostressOrbit, METH_VARARGS, (char *)"\n"
 		"\n"
-		"Ecostress::EcostressOrbit::EcostressOrbit(const std::string &Fname, double Extrapolation_pad=5.0, double\n"
-		"Large_gap=10.0)\n"
+		"Ecostress::EcostressOrbit::EcostressOrbit(const std::string &Fname, const blitz::Array< double, 1 > &Pos_off,\n"
+		"double Extrapolation_pad=5.0, double Large_gap=10.0)\n"
 		"Constructor, read the give file and allow the given amount of\n"
 		"extrapolation pad.\n"
 		"\n"
-		"Treat gaps in the data > Large_gap as a large gap. \n"
+		"Treat gaps in the data > Large_gap as a large gap. Also has an offset\n"
+		"in position like OrbitScCoorOffset. \n"
 		""},
 	 { (char *)"EcostressOrbit_spacecraft_x_mostly_in_velocity_direction", _wrap_EcostressOrbit_spacecraft_x_mostly_in_velocity_direction, METH_VARARGS, (char *)"\n"
 		"\n"

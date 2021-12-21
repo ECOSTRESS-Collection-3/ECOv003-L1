@@ -290,11 +290,7 @@ class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
     def cover(self, *args):
         """
 
-        GeoCal::MapInfo GroundCoordinateArray::cover(double Resolution=70.0) const
-        Calculate the map info to cover the ground projection of the Igc.
-
-        This is like what the python program igc_project calculates, but it is
-        more convenient to have this in C++ here. The Resolution is in meters.
+        GeoCal::MapInfo GroundCoordinateArray::cover(const GeoCal::MapInfo &Mi) const
 
         """
         return _ground_coordinate_array.GroundCoordinateArray_cover(self, *args)
@@ -303,7 +299,7 @@ class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
     def raster_cover(self, *args):
         """
 
-        boost::shared_ptr< GeoCal::MemoryRasterImage > GroundCoordinateArray::raster_cover(double Resolution=70.0) const
+        boost::shared_ptr< GeoCal::MemoryRasterImage > GroundCoordinateArray::raster_cover(const GeoCal::MapInfo &Mi) const
         Create a MemoryRasterImage that matches cover(), and fill it in with 0
         fill data. 
         """
@@ -313,7 +309,7 @@ class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
     def raster_cover_vicar(self, *args):
         """
 
-        boost::shared_ptr< GeoCal::VicarLiteRasterImage > GroundCoordinateArray::raster_cover_vicar(const std::string &Fname, double Resolution=70.0) const
+        boost::shared_ptr< GeoCal::VicarLiteRasterImage > GroundCoordinateArray::raster_cover_vicar(const std::string &Fname, const GeoCal::MapInfo &Mi) const
         Create a VicarLiteRasterImage that matches cover(), and fill it in
         with 0 fill data. 
         """

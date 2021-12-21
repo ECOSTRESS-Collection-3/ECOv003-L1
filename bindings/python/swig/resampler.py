@@ -205,28 +205,14 @@ class Resampler(geocal_swig.generic_object.GenericObject):
     def __init__(self, *args):
         """
 
-        Resampler::Resampler(const boost::shared_ptr< GeoCal::RasterImage > &Latitude, const
-        boost::shared_ptr< GeoCal::RasterImage > &Longitude, const
+        Resampler::Resampler(const blitz::Array< double, 2 > &Latitude_interpolated, const
+        blitz::Array< double, 2 > &Longitude_interpolated, const
         GeoCal::MapInfo &Mi, int Num_sub_pixel=2, bool Exactly_match_mi=false)
-        Constructor.
+        Alternative constructor where we get the lat/lon from something other
+        than a file.
 
-        This takes the latitude and longitude fields as RasterImage (we could
-        have taken the L1B_GEO file name, but taking RasterImage seems a
-        little more general). We take the MapInfo that we will resample to
-        (you can get that from something like mi =
-        Landsat7Global("/raid22",Landsat7Global.BAND5).map_info.scale(2,2)
-        in python).
-
-        We make sure the mapinfo covers the latitude/longitude range
-
-        We also pass in the number of subpixels to calculate, so for example
-        to work with 60 m landsat like map projection you'd want this to be 2.
-
-        By default, we only use Mi to determine the pixel resolution, and we
-        make sure the output covers the full latitude/longitude range. You can
-        optionally specify that we exactly match the passed in Mi, regardless
-        of the actually coverage of the lat/lon. This is useful if we are
-        producing output files to compare against some existing file. 
+        The data should already be interpolated (e.g., in python do
+        scipy.ndimage.interpolation.zoom(t,Num_sub_pixel,order=2) 
         """
         _resampler.Resampler_swiginit(self, _resampler.new_Resampler(*args))
 

@@ -221,9 +221,10 @@ class EcostressParaxialTransform(geocal_swig.generic_object.GenericObject):
     def paraxial_to_real(self, *args):
         """
 
-        void EcostressParaxialTransform::paraxial_to_real(double Paraxial_x, double Paraxial_y, double &Real_x, double &Real_y)
-        const
-        Convert pariaxial to real coordinates. 
+        void Ecostress::EcostressParaxialTransform::paraxial_to_real(const GeoCal::AutoDerivative< double > &Paraxial_x, const
+        GeoCal::AutoDerivative< double > &Paraxial_y, GeoCal::AutoDerivative<
+        double > &Real_x, GeoCal::AutoDerivative< double > &Real_y) const
+
         """
         return _ecostress_paraxial_transform.EcostressParaxialTransform_paraxial_to_real(self, *args)
 
@@ -231,9 +232,11 @@ class EcostressParaxialTransform(geocal_swig.generic_object.GenericObject):
     def real_to_paraxial(self, *args):
         """
 
-        void EcostressParaxialTransform::real_to_paraxial(double Real_x, double Real_y, double &Paraxial_x, double &Paraxial_y)
+        void Ecostress::EcostressParaxialTransform::real_to_paraxial(const GeoCal::AutoDerivative< double > &Real_x, const
+        GeoCal::AutoDerivative< double > &Real_y, GeoCal::AutoDerivative<
+        double > &Paraxial_x, GeoCal::AutoDerivative< double > &Paraxial_y)
         const
-        Convert real to pariaxial coordinates. 
+
         """
         return _ecostress_paraxial_transform.EcostressParaxialTransform_real_to_paraxial(self, *args)
 
@@ -241,8 +244,8 @@ class EcostressParaxialTransform(geocal_swig.generic_object.GenericObject):
     def _v_real_to_par(self):
         """
 
-        const blitz::Array<double, 2>& Ecostress::EcostressParaxialTransform::real_to_par() const
-        Polynomial from real to paraxial. 
+        blitz::Array<double, 2>& Ecostress::EcostressParaxialTransform::real_to_par()
+
         """
         return _ecostress_paraxial_transform.EcostressParaxialTransform__v_real_to_par(self)
 
@@ -255,8 +258,8 @@ class EcostressParaxialTransform(geocal_swig.generic_object.GenericObject):
     def _v_par_to_real(self):
         """
 
-        const blitz::Array<double, 2>& Ecostress::EcostressParaxialTransform::par_to_real() const
-        Polynomial from paraxial to real. 
+        blitz::Array<double, 2>& Ecostress::EcostressParaxialTransform::par_to_real()
+
         """
         return _ecostress_paraxial_transform.EcostressParaxialTransform__v_par_to_real(self)
 

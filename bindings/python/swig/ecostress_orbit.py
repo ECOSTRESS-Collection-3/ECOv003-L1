@@ -222,12 +222,13 @@ class EcostressOrbit(geocal_swig.hdf_orbit.HdfOrbit_Eci_TimeJ2000):
     def __init__(self, *args):
         """
 
-        Ecostress::EcostressOrbit::EcostressOrbit(const std::string &Fname, double Extrapolation_pad=5.0, double
-        Large_gap=10.0)
+        Ecostress::EcostressOrbit::EcostressOrbit(const std::string &Fname, const blitz::Array< double, 1 > &Pos_off,
+        double Extrapolation_pad=5.0, double Large_gap=10.0)
         Constructor, read the give file and allow the given amount of
         extrapolation pad.
 
-        Treat gaps in the data > Large_gap as a large gap. 
+        Treat gaps in the data > Large_gap as a large gap. Also has an offset
+        in position like OrbitScCoorOffset. 
         """
         _ecostress_orbit.EcostressOrbit_swiginit(self, _ecostress_orbit.new_EcostressOrbit(*args))
 

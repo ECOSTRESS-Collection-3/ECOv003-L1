@@ -246,30 +246,23 @@ class EcostressScanMirror(ObservableEcostressScanMirror, geocal_swig.with_parame
     def __init__(self, *args):
         """
 
-        EcostressScanMirror::EcostressScanMirror(double Scan_start=-26.488105667851173, double
-        Scan_end=26.488105667851173, int Number_sample=5400, int
-        Number_scan=44, int Max_encoder_value=1749248, double
-        First_encoder_value_at_0=401443, double
-        Second_encoder_value_at_0=1275903, double Epsilon=0, double Beta=0,
-        double Delta=0, double First_angle_per_ev=360.0/1749248 *2, double
-        Second_angle_per_ev=360.0/1749248 *2)
-        Constructor.
-
-        The scan angles are in degrees (seems more convenient than the normal
-        radians we use for angles).
-
-        This uses the data to generate encoder values, useful for simulations.
-
-        Note that the default values here match the test data found in
-        ecostress-test-data 
+        EcostressScanMirror::EcostressScanMirror(const blitz::Array< int, 2 > &Encoder_value, int
+        Max_encoder_value=1749248, double First_encoder_value_at_0=401443,
+        double Second_encoder_value_at_0=1275903, double Epsilon=0, double
+        Beta=0, double Delta=0, double First_angle_per_ev=360.0/1749248 *2,
+        double Second_angle_per_ev=360.0/1749248 *2, double Yaw=0, double
+        Roll=0, double Pitch=0, double Yaw_2=0, double Roll_2=0, double
+        Pitch_2=0)
+        Constructor, taking the encoder values. We fill in bad data values. 
         """
         _ecostress_scan_mirror.EcostressScanMirror_swiginit(self, _ecostress_scan_mirror.new_EcostressScanMirror(*args))
 
     def scan_mirror_angle(self, *args):
         """
 
-        double Ecostress::EcostressScanMirror::scan_mirror_angle(int Scan_index, double Ic_sample) const
-        Scan mirror angle, in degrees. 
+        GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::scan_mirror_angle(int Scan_index, const GeoCal::AutoDerivative< double > &Ic_sample)
+        const
+
         """
         return _ecostress_scan_mirror.EcostressScanMirror_scan_mirror_angle(self, *args)
 
@@ -277,18 +270,38 @@ class EcostressScanMirror(ObservableEcostressScanMirror, geocal_swig.with_parame
     def rotation_quaternion(self, *args):
         """
 
-        boost::math::quaternion<double> Ecostress::EcostressScanMirror::rotation_quaternion(int Scan_index, double Ic_sample) const
-        Rotation matrix that take the view vector for the Camera and takes it
-        to the space craft coordinate system. 
+        boost::math::quaternion<GeoCal::AutoDerivative<double> > Ecostress::EcostressScanMirror::rotation_quaternion(int Scan_index, const GeoCal::AutoDerivative< double > &Ic_sample)
+        const
+
         """
         return _ecostress_scan_mirror.EcostressScanMirror_rotation_quaternion(self, *args)
+
+
+    def camera_to_mirror_with_derivative(self, Scan_index):
+        """
+
+        boost::math::quaternion<GeoCal::AutoDerivative<double> > Ecostress::EcostressScanMirror::camera_to_mirror_with_derivative(int Scan_index) const
+        Camera to mirror quaternion. 
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror_camera_to_mirror_with_derivative(self, Scan_index)
+
+
+    def camera_to_mirror(self, *args):
+        """
+
+        void Ecostress::EcostressScanMirror::camera_to_mirror(const boost::math::quaternion< GeoCal::AutoDerivative< double > >
+        &cam_to_mirror_q, const boost::math::quaternion<
+        GeoCal::AutoDerivative< double > > &cam_to_mirror_2_q)
+        Set camera to mirror quaternion, for both sides of the mirror. 
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror_camera_to_mirror(self, *args)
 
 
     def angle_from_encoder_value(self, *args):
         """
 
-        double Ecostress::EcostressScanMirror::angle_from_encoder_value(double Evalue) const
-        Calculate angle for a given encoder value. 
+        GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::angle_from_encoder_value(const GeoCal::AutoDerivative< double > &Evalue) const
+
         """
         return _ecostress_scan_mirror.EcostressScanMirror_angle_from_encoder_value(self, *args)
 
@@ -305,9 +318,9 @@ class EcostressScanMirror(ObservableEcostressScanMirror, geocal_swig.with_parame
     def encoder_value_interpolate(self, *args):
         """
 
-        double Ecostress::EcostressScanMirror::encoder_value_interpolate(int Scan_index, double Ic_sample) const
-        Determine EV from Scan_index and Ic_sample,
-        interpolating/extrapolating if needed. 
+        GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::encoder_value_interpolate(int Scan_index, const GeoCal::AutoDerivative< double > Ic_sample)
+        const
+
         """
         return _ecostress_scan_mirror.EcostressScanMirror_encoder_value_interpolate(self, *args)
 
@@ -386,6 +399,43 @@ class EcostressScanMirror(ObservableEcostressScanMirror, geocal_swig.with_parame
       self._v_euler_with_derivative(value)
 
 
+    def _v_mirror_ypr(self, *args):
+        """
+
+        void Ecostress::EcostressScanMirror::mirror_ypr(const blitz::Array< double, 1 > &Ypr)
+        Update the camera_to_mirror_ using the given Yaw, Pitch, Roll for both
+        sides of the mirror, in radians. 
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_mirror_ypr(self, *args)
+
+
+    @property
+    def mirror_ypr(self):
+        return self._v_mirror_ypr()
+
+    @mirror_ypr.setter
+    def mirror_ypr(self, value):
+      self._v_mirror_ypr(value)
+
+
+    def _v_mirror_ypr_with_derivative(self, *args):
+        """
+
+        void Ecostress::EcostressScanMirror::mirror_ypr_with_derivative(const GeoCal::ArrayAd< double, 1 > &Ypr)
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_mirror_ypr_with_derivative(self, *args)
+
+
+    @property
+    def mirror_ypr_with_derivative(self):
+        return self._v_mirror_ypr_with_derivative()
+
+    @mirror_ypr_with_derivative.setter
+    def mirror_ypr_with_derivative(self, value):
+      self._v_mirror_ypr_with_derivative(value)
+
+
     def _v_fit_epsilon(self, *args):
         """
 
@@ -438,6 +488,114 @@ class EcostressScanMirror(ObservableEcostressScanMirror, geocal_swig.with_parame
     @fit_delta.setter
     def fit_delta(self, value):
       self._v_fit_delta(value)
+
+
+    def _v_fit_camera_to_mirror_yaw(self, *args):
+        """
+
+        void Ecostress::EcostressScanMirror::fit_camera_to_mirror_yaw(bool V)
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_fit_camera_to_mirror_yaw(self, *args)
+
+
+    @property
+    def fit_camera_to_mirror_yaw(self):
+        return self._v_fit_camera_to_mirror_yaw()
+
+    @fit_camera_to_mirror_yaw.setter
+    def fit_camera_to_mirror_yaw(self, value):
+      self._v_fit_camera_to_mirror_yaw(value)
+
+
+    def _v_fit_camera_to_mirror_pitch(self, *args):
+        """
+
+        void Ecostress::EcostressScanMirror::fit_camera_to_mirror_pitch(bool V)
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_fit_camera_to_mirror_pitch(self, *args)
+
+
+    @property
+    def fit_camera_to_mirror_pitch(self):
+        return self._v_fit_camera_to_mirror_pitch()
+
+    @fit_camera_to_mirror_pitch.setter
+    def fit_camera_to_mirror_pitch(self, value):
+      self._v_fit_camera_to_mirror_pitch(value)
+
+
+    def _v_fit_camera_to_mirror_roll(self, *args):
+        """
+
+        void Ecostress::EcostressScanMirror::fit_camera_to_mirror_roll(bool V)
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_fit_camera_to_mirror_roll(self, *args)
+
+
+    @property
+    def fit_camera_to_mirror_roll(self):
+        return self._v_fit_camera_to_mirror_roll()
+
+    @fit_camera_to_mirror_roll.setter
+    def fit_camera_to_mirror_roll(self, value):
+      self._v_fit_camera_to_mirror_roll(value)
+
+
+    def _v_fit_camera_to_mirror_2_yaw(self, *args):
+        """
+
+        void Ecostress::EcostressScanMirror::fit_camera_to_mirror_2_yaw(bool V)
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_fit_camera_to_mirror_2_yaw(self, *args)
+
+
+    @property
+    def fit_camera_to_mirror_2_yaw(self):
+        return self._v_fit_camera_to_mirror_2_yaw()
+
+    @fit_camera_to_mirror_2_yaw.setter
+    def fit_camera_to_mirror_2_yaw(self, value):
+      self._v_fit_camera_to_mirror_2_yaw(value)
+
+
+    def _v_fit_camera_to_mirror_2_pitch(self, *args):
+        """
+
+        void Ecostress::EcostressScanMirror::fit_camera_to_mirror_2_pitch(bool V)
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_fit_camera_to_mirror_2_pitch(self, *args)
+
+
+    @property
+    def fit_camera_to_mirror_2_pitch(self):
+        return self._v_fit_camera_to_mirror_2_pitch()
+
+    @fit_camera_to_mirror_2_pitch.setter
+    def fit_camera_to_mirror_2_pitch(self, value):
+      self._v_fit_camera_to_mirror_2_pitch(value)
+
+
+    def _v_fit_camera_to_mirror_2_roll(self, *args):
+        """
+
+        void Ecostress::EcostressScanMirror::fit_camera_to_mirror_2_roll(bool V)
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_fit_camera_to_mirror_2_roll(self, *args)
+
+
+    @property
+    def fit_camera_to_mirror_2_roll(self):
+        return self._v_fit_camera_to_mirror_2_roll()
+
+    @fit_camera_to_mirror_2_roll.setter
+    def fit_camera_to_mirror_2_roll(self, value):
+      self._v_fit_camera_to_mirror_2_roll(value)
 
 
     def _v_fit_first_encoder_value_at_0(self, *args):
@@ -667,12 +825,41 @@ class EcostressScanMirror(ObservableEcostressScanMirror, geocal_swig.with_parame
         return self._v_encoder_value()
 
 
+    def _v_max_encoder_value(self):
+        """
+
+        int Ecostress::EcostressScanMirror::max_encoder_value() const
+        Maximum encoder value.
+
+        Note that we go through 2 360 degree rotation because of the set up of
+        the mirrors. 
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_max_encoder_value(self)
+
+
+    @property
+    def max_encoder_value(self):
+        return self._v_max_encoder_value()
+
+
+    def mirror_side(self, Scan_index):
+        """
+
+        int Ecostress::EcostressScanMirror::mirror_side(int Scan_index) const
+        Return mirror side for given scan index (0 for first or 1 for second)
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror_mirror_side(self, Scan_index)
+
+
     def __reduce__(self):
       return _new_from_serialization, (geocal_swig.serialize_write_binary(self),)
 
     __swig_destroy__ = _ecostress_scan_mirror.delete_EcostressScanMirror
 EcostressScanMirror.scan_mirror_angle = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror_scan_mirror_angle, None, EcostressScanMirror)
 EcostressScanMirror.rotation_quaternion = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror_rotation_quaternion, None, EcostressScanMirror)
+EcostressScanMirror.camera_to_mirror_with_derivative = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror_camera_to_mirror_with_derivative, None, EcostressScanMirror)
+EcostressScanMirror.camera_to_mirror = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror_camera_to_mirror, None, EcostressScanMirror)
 EcostressScanMirror.angle_from_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror_angle_from_encoder_value, None, EcostressScanMirror)
 EcostressScanMirror.angle_to_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror_angle_to_encoder_value, None, EcostressScanMirror)
 EcostressScanMirror.encoder_value_interpolate = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror_encoder_value_interpolate, None, EcostressScanMirror)
@@ -680,9 +867,17 @@ EcostressScanMirror._v_instrument_to_sc = new_instancemethod(_ecostress_scan_mir
 EcostressScanMirror._v_instrument_to_sc_with_derivative = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_instrument_to_sc_with_derivative, None, EcostressScanMirror)
 EcostressScanMirror._v_euler = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_euler, None, EcostressScanMirror)
 EcostressScanMirror._v_euler_with_derivative = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_euler_with_derivative, None, EcostressScanMirror)
+EcostressScanMirror._v_mirror_ypr = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_mirror_ypr, None, EcostressScanMirror)
+EcostressScanMirror._v_mirror_ypr_with_derivative = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_mirror_ypr_with_derivative, None, EcostressScanMirror)
 EcostressScanMirror._v_fit_epsilon = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_epsilon, None, EcostressScanMirror)
 EcostressScanMirror._v_fit_beta = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_beta, None, EcostressScanMirror)
 EcostressScanMirror._v_fit_delta = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_delta, None, EcostressScanMirror)
+EcostressScanMirror._v_fit_camera_to_mirror_yaw = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_camera_to_mirror_yaw, None, EcostressScanMirror)
+EcostressScanMirror._v_fit_camera_to_mirror_pitch = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_camera_to_mirror_pitch, None, EcostressScanMirror)
+EcostressScanMirror._v_fit_camera_to_mirror_roll = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_camera_to_mirror_roll, None, EcostressScanMirror)
+EcostressScanMirror._v_fit_camera_to_mirror_2_yaw = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_camera_to_mirror_2_yaw, None, EcostressScanMirror)
+EcostressScanMirror._v_fit_camera_to_mirror_2_pitch = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_camera_to_mirror_2_pitch, None, EcostressScanMirror)
+EcostressScanMirror._v_fit_camera_to_mirror_2_roll = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_camera_to_mirror_2_roll, None, EcostressScanMirror)
 EcostressScanMirror._v_fit_first_encoder_value_at_0 = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_first_encoder_value_at_0, None, EcostressScanMirror)
 EcostressScanMirror._v_fit_second_encoder_value_at_0 = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_second_encoder_value_at_0, None, EcostressScanMirror)
 EcostressScanMirror._v_fit_first_angle_per_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_first_angle_per_encoder_value, None, EcostressScanMirror)
@@ -698,6 +893,8 @@ EcostressScanMirror._v_second_angle_per_encoder_value_with_derivative = new_inst
 EcostressScanMirror._v_number_sample = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_number_sample, None, EcostressScanMirror)
 EcostressScanMirror._v_number_scan = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_number_scan, None, EcostressScanMirror)
 EcostressScanMirror._v_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_encoder_value, None, EcostressScanMirror)
+EcostressScanMirror._v_max_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_max_encoder_value, None, EcostressScanMirror)
+EcostressScanMirror.mirror_side = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror_mirror_side, None, EcostressScanMirror)
 EcostressScanMirror.__str__ = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror___str__, None, EcostressScanMirror)
 EcostressScanMirror_swigregister = _ecostress_scan_mirror.EcostressScanMirror_swigregister
 EcostressScanMirror_swigregister(EcostressScanMirror)
