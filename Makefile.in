@@ -832,7 +832,7 @@ include_HEADERS =
 # EXTRA_DIST+= docker/ecostress-dependency-repo/ecostress-python-package-1.0-1.el7.x86_64.rpm
 # EXTRA_DIST+= docker/ecostress-dependency-repo/repodata
 EXTRA_DIST = README.md requirements.txt Setup.md end_to_end_testing \
-	coreg_test config/doxygen.cfg config/doc_footer.html \
+	tools coreg_test config/doxygen.cfg config/doc_footer.html \
 	config/create_python_init.py config/doxy2swig.py \
 	config/doxygen_single.cfg @l1a_raw_src@/l0b_sim.py \
 	@l1b_rad_src@/README.md @srcpdf@/README @srcpython@/pytest.ini \
