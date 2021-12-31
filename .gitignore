@@ -12,3 +12,5 @@ autom4te.cache
 ECOSTRESS/
 # iso used to build afids image, don't check in
 *.iso
+# Pickle files generated in tools directory.
+summary_geo_qa_pandas.pkl

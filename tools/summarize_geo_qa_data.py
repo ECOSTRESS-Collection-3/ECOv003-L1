@@ -62,11 +62,11 @@ df = pd.DataFrame(data, columns = ["orbnum",
                                    "initial_tiepoint",
                                    "blunder_removed",
                                    "final_tiepoint"])
-df.to_pickle("summary_pandas.pkl")
+df.to_pickle("summary_geo_qa_pandas.pkl")
 # Can get a set with good tiepoints by:
 # import pandas as pd
 # import pandasql as pds
-# df = pd.read_pickle("summary_pandas.pkl")
+# df = pd.read_pickle("summary_geo_qa_pandas.pkl")
 # t = pds.PandaSQL(persist=True)
 # t("select * from df where final_tiepoint = 326")
 
