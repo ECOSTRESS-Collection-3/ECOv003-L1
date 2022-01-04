@@ -101,17 +101,29 @@ if(parameter_update is not None):
                  columns = ["line", "sample", "line_diff", "sample_diff"])
     
 
-df_original.plot(x="sample", y="sample_diff", kind="scatter")
+ax = df_original.plot(x="sample", y="sample_diff", kind="scatter",
+                      label="Initial", color="b")
+if(df_update is not None):
+    df_update.plot(x="sample", y="sample_diff", kind="scatter",
+                   label="Updated", color="g", ax=ax)
 plt.xlabel("Sample")
 plt.ylabel("Sample Diff")
 plt.title(f"{igc.title} overlap sample diff")
+plt.legend()
+    
 plt.savefig("%05d_%03d_sample_diff.png" %
             (int(args.orbit_num), int(args.scene)),
             bbox_inches='tight', dpi=300)
-df_original.plot(x="sample", y="line_diff", kind="scatter")
+ax = df_original.plot(x="sample", y="line_diff", kind="scatter",
+                      label="Initial", color="b")
+if(df_update is not None):
+    df_update.plot(x="sample", y="line_diff", kind="scatter",
+                   label="Updated", color="g", ax=ax)
 plt.xlabel("Sample")
 plt.ylabel("Line Diff")
 plt.title(f"{igc.title} overlap line diff")
+plt.legend()
+    
 plt.savefig("%05d_%03d_line_diff.png" %
             (int(args.orbit_num), int(args.scene)),
             bbox_inches='tight', dpi=300)
