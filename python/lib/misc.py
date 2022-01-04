@@ -46,6 +46,8 @@ def create_igc(rad_fname, orb_fname, l1_osp_dir=None, dem = None, title=""):
     The DEM can be passed in, but if it isn't then we use the default 
     locations for everything (e.g, read ELEV_ROOT environment variable).'''
     if(l1_osp_dir is None):
+        if("L1_OSP_DIR" not in os.environ):
+            raise RuntimeError("Need to either set L1_OSP_DIR environment variable, or pass the directory in.")
         l1_osp_dir = os.environ["L1_OSP_DIR"]
     sys.path.append(l1_osp_dir)
     try:
