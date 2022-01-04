@@ -863,7 +863,9 @@ EXTRA_DIST = README.md requirements.txt Setup.md end_to_end_testing \
 	@srcpythonlib@/l1b_rad_generate_test.py \
 	@srcpythonlib@/l1b_rad_simulate.py \
 	@srcpythonlib@/l1b_rad_simulate_test.py \
-	@srcpythonlib@/misc_test.py @srcpythonlib@/prt_coef.txt \
+	@srcpythonlib@/misc_test.py \
+	@srcpythonlib@/ecostress_igc_extension_test.py \
+	@srcpythonlib@/prt_coef.txt \
 	@srcpythonlib@/rad_write_standard_metadata_test.py \
 	@srcpythonlib@/run_config_test.py \
 	@srcpythonlib@/write_run_config_test.py \
@@ -959,6 +961,7 @@ ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
 	@srcpythonlib@/l1b_rad_generate.py \
 	@srcpythonlib@/l1b_geo_generate.py @srcpythonlib@/l1b_proj.py \
 	@srcpythonlib@/l1b_tp_collect.py @srcpythonlib@/misc.py \
+	@srcpythonlib@/ecostress_igc_extension.py \
 	@srcpythonlib@/pickle_method.py @srcpythonlib@/run_config.py \
 	@srcpythonlib@/write_run_config.py \
 	@srcpythonlib@/write_standard_metadata.py \
