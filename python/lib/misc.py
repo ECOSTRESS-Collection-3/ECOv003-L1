@@ -9,13 +9,24 @@ import math
 import glob
 import numpy as np
 from ecostress_swig import *
+import pickle
+
+orb_to_date = None
+
+def orb_to_path(orbnum):
+    global orb_to_date
+    if(orb_to_date is None):
+        orb_to_date = pickle.load(open("/project/sandbox/smyth/orbit_to_date.pkl", "rb"))
+    if int(orbnum) not in orb_to_date:
+        raise RuntimeError(f"Orbit {orbnum} not found. Do you need to run orbit_to_date.py?")
+    return orb_to_date[int(orbnum)]
 
 def find_radiance_file(orbnum, scene):
     '''Simple function to find a radiance file by orbit number and scene.
     Note that this is a pretty simplistic function, and doesn't handle things
     like multiple versions etc. But I need to simple functionality often
     enough that it is worth havings.'''
-    f = glob.glob("/ops/store*/PRODUCTS/L1B_RAD/*/*/*/ECOSTRESS_L1B_RAD_%05d_%03d_*.h5" % (int(orbnum), int(scene)))
+    f = glob.glob(f"/ops/store*/PRODUCTS/L1B_RAD/{orb_to_path(orbnum)}/ECOSTRESS_L1B_RAD_%05d_%03d_*.h5" % (int(orbnum), int(scene)))
     if(len(f) == 0):
         raise RuntimeError(f"Radiance file for {orbnum}, scene {scene} not found")
     if(len(f) > 1):
@@ -31,9 +42,9 @@ def find_orbit_file(orbnum, raw_att = False):
     By default this finds the corrected orbit (ECOSTRESS_L1B_ATT), but you can
     optionally request a raw file before correction (L1A_RAW_ATT)'''
     if(raw_att):
-        f = glob.glob("/ops/store*/PRODUCTS/L1A_RAW_ATT/*/*/*/L1A_RAW_ATT_%05d_*.h5" % int(orbnum))
+        f = glob.glob(f"/ops/store*/PRODUCTS/L1A_RAW_ATT/{orb_to_path(orbnum)}/L1A_RAW_ATT_%05d_*.h5" % int(orbnum))
     else:
-        f = glob.glob("/ops/store*/PRODUCTS/L1B_ATT/*/*/*/ECOSTRESS_L1B_ATT_%05d_*.h5" % int(orbnum))
+        f = glob.glob(f"/ops/store*/PRODUCTS/L1B_ATT/{orb_to_path(orbnum)}/ECOSTRESS_L1B_ATT_%05d_*.h5" % int(orbnum))
     if(len(f) == 0):
         raise RuntimeError(f"Orbit file for {orbnum} not found")
     if(len(f) > 1):
