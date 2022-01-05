@@ -15,9 +15,11 @@ for i in glob.glob("/ops/store*/PRODUCTS/L1A_RAW_ATT"):
         for f in files:
             if fnmatch.fnmatch(f, 'L1A_RAW_ATT_*.h5'):
                 fh = h5py.File(os.path.join(dirpath, f))
-                dt = fh["/StandardMetadata/RangeBeginningDate"][()]
-                dt = dt.decode('utf-8').replace("-", "/")
+                dt1 = fh["/StandardMetadata/RangeBeginningDate"][()]
+                dt1 = dt1.decode('utf-8').replace("-", "/")
+                dt2 = fh["/StandardMetadata/RangeEndingDate"][()]
+                dt2 = dt2.decode('utf-8').replace("-", "/")
                 orb = int(fh["/StandardMetadata/StartOrbitNumber"][()])
                 print(f"Doing orbit {orb}")
-                orb_to_date[orb] = dt
+                orb_to_date[orb] = [dt1, dt2]
 pickle.dump(orb_to_date, open("/project/sandbox/smyth/orbit_to_date.pkl", "wb"))
