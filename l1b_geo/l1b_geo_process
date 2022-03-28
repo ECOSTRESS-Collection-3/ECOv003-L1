@@ -268,6 +268,15 @@ try:
                                           l1b_geo_config.instrument_to_sc_euler,
                                           l1b_geo_config.first_angle_per_encoder_value,
                                           l1b_geo_config.second_angle_per_encoder_value)
+        # This will likely go away
+        p = sm.parameter.copy()
+        p[3:9] = [l1b_geo_config.camera_to_mirror_yaw,
+                  l1b_geo_config.camera_to_mirror_pitch,
+                  l1b_geo_config.camera_to_mirror_roll,
+                  l1b_geo_config.camera_to_mirror_yaw2,                   
+                  l1b_geo_config.camera_to_mirror_pitch2,                   
+                  l1b_geo_config.camera_to_mirror_roll2]
+        sm.parameter = p
         line_order_reversed = False
         if(ecostress.as_string(h5py.File(radlist[i],"r")["/L1B_RADMetadata/RadScanLineOrder"][()]) == "Reverse line order"):
             line_order_reversed = True

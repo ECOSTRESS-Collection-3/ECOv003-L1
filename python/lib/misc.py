@@ -123,14 +123,18 @@ def create_dem(config):
     return dem
 
 def ortho_base_directory(config):
-    '''Create the ortho base. Don't exactly know
-    how this will work once we are integrated in with SDS, but for now
-    just use the placeholder function and grab the information from a
-    few hardcoded places we check.'''
-    if(os.path.exists("/raid22/band5_VICAR")):
-        ortho_base_dir = "/raid22"
-    else:
-        raise RuntimeError("Don't know where the orthobase is.")
+    '''Create the ortho base. In production, take the directory passed in
+    from the configuration file. But for testing, if ECOSTRESS_USE_AFIDS_ENV
+    is defined then look for the location of this on pistol'''
+    ortho_base_dir = os.path.abspath(config["StaticAncillaryFileGroup",
+                                            "OrthoBase"])
+    if("ECOSTRESS_USE_AFIDS_ENV" in os.environ):
+        # Location on pistol, use if found, otherwise use setting in
+        # run config file
+        if(os.path.exists("/raid22/band5_VICAR")):
+            ortho_base_dir = "/raid22"
+        elif(os.path.exists("/data/smyth/Landsat/band5_VICAR")):
+            ortho_base_dir = "/data/smyth/Landsat"    
     return ortho_base_dir
 
 def band_to_landsat_band(lband):
