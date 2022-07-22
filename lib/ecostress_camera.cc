@@ -15,6 +15,9 @@ void EcostressCamera::serialize(Archive & ar, const unsigned int version)
       & GEOCAL_NVP_(y_offset);
   if(version > 1)
     ar & GEOCAL_NVP_(line_order_reversed);
+  // Note we purposely don't save are retrieve the dcs offset, we
+  // think of that as being something outside of this object. See
+  // the discussion for the function dcs_offset
 }
 
 ECOSTRESS_IMPLEMENT(EcostressCamera);
@@ -34,7 +37,8 @@ EcostressCamera::EcostressCamera(double Focal_length, double Y_scale,
 		     QuaternionCamera::LINE_IS_X,
 		     QuaternionCamera::INCREASE_IS_NEGATIVE,
 		     QuaternionCamera::INCREASE_IS_NEGATIVE),
-    y_scale_(Y_scale), y_offset_(Y_offset), line_order_reversed_(Line_order_reversed)
+    y_scale_(Y_scale), y_offset_(Y_offset), line_order_reversed_(Line_order_reversed),
+    dcs_x_offset(0), dcs_y_offset(0)
 {
   paraxial_transform_ = boost::make_shared<EcostressParaxialTransform>();
   // This information comes from https://bravo-lib.jpl.nasa.gov/docushare/dsweb/Get/Document-1882647/FPA%20distortion20140522.xlsx
@@ -82,6 +86,8 @@ void EcostressCamera::dcs_to_focal_plane(int Band,
 
   double xf = (focal_length() / Dcs.R_component_4()) * Dcs.R_component_2();
   double yf = (focal_length() / Dcs.R_component_4()) * Dcs.R_component_3();
+  xf += dcs_x_offset;
+  yf += dcs_y_offset;
   yf = (yf - y_offset_) / y_scale_;
 
 //-------------------------------------------------------------------------
@@ -105,6 +111,8 @@ void EcostressCamera::dcs_to_focal_plane
     (focal_length_with_derivative() / Dcs.R_component_4()) * Dcs.R_component_2();
   GeoCal::AutoDerivative<double> yf = 
     (focal_length_with_derivative() / Dcs.R_component_4()) * Dcs.R_component_3();
+  xf += dcs_x_offset;
+  yf += dcs_y_offset;
   yf = (yf - y_offset_) / y_scale_;
   
 //-------------------------------------------------------------------------
@@ -127,6 +135,8 @@ EcostressCamera::focal_plane_to_dcs(int Band, double Xfp, double Yfp) const
   paraxial_transform_->real_to_paraxial(Xfp, Yfp, xf, yf);
 
   yf = y_scale_ * yf + y_offset_;
+  xf -= dcs_x_offset;
+  yf -= dcs_y_offset;
   
 //-------------------------------------------------------------------------
 /// Then to detector coordinates look vector.
@@ -148,6 +158,9 @@ EcostressCamera::focal_plane_to_dcs
   paraxial_transform_->real_to_paraxial(Xfp, Yfp, xf, yf);
 
   yf = y_scale_ * yf + y_offset_;
+  
+  xf -= dcs_x_offset;
+  yf -= dcs_y_offset;
   
 //-------------------------------------------------------------------------
 /// Then to detector coordinates look vector.

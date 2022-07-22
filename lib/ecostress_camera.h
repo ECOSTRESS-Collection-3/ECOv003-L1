@@ -59,6 +59,27 @@ public:
   (const GeoCal::FrameCoordinateWithDerivative& Fc, int Band,
    GeoCal::AutoDerivative<double>& Xfp,
    GeoCal::AutoDerivative<double>& Yfp) const;
+
+//-----------------------------------------------------------------------
+/// Set the DCS offset to use.
+/// Note this is really kind of a klunky design. This wasn't something
+/// originally put into the camera model, and these parameters depend
+/// on the scan mirror angle. So we expose these parameters and the
+/// EcostressImageGroundConnection handles the plumbing for this. 
+/// Se don't really consider these as parameters for this particular
+/// object, but rather as external values we have access to.
+/// If we have a follow on to ECOSTRESS it would be good to rework
+/// this design, what we really want is something that isn't really a camera
+/// model but rather a combination of the camera and the scan mirror.
+/// So we'll live with this awkward interface to shoehorn this into the
+/// existing code.
+//-----------------------------------------------------------------------
+  
+  void dcs_offset(double Dcs_x_offset, double Dcs_y_offset)
+  {
+    dcs_x_offset = Dcs_x_offset;
+    dcs_y_offset = Dcs_y_offset;
+  }
   /// Convenience function to mask all the parameters we can fit for.
   void mask_all_parameter() { parameter_mask_ = false; }
   double y_scale() const {return y_scale_;}
@@ -71,6 +92,7 @@ private:
   boost::shared_ptr<EcostressParaxialTransform> paraxial_transform_;
   double y_scale_, y_offset_;
   bool line_order_reversed_;
+  double dcs_x_offset, dcs_y_offset;
   friend class boost::serialization::access;
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version);

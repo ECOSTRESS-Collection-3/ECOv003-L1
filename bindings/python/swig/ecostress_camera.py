@@ -265,6 +265,26 @@ class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
         return _ecostress_camera.EcostressCamera_mask_all_parameter(self)
 
 
+    def dcs_offset(self, Dcs_x_offset, Dcs_y_offset):
+        """
+
+        void Ecostress::EcostressCamera::dcs_offset(double Dcs_x_offset, double Dcs_y_offset)
+        Set the DCS offset to use.
+
+        Note this is really kind of a klunky design. This wasn't something
+        originally put into the camera model, and these parameters depend on
+        the scan mirror angle. So we expose these parameters and the
+        EcostressImageGroundConnection handles the plumbing for this. Se don't
+        really consider these as parameters for this particular object, but
+        rather as external values we have access to. If we have a follow on to
+        ECOSTRESS it would be good to rework this design, what we really want
+        is something that isn't really a camera model but rather a combination
+        of the camera and the scan mirror. So we'll live with this awkward
+        interface to shoehorn this into the existing code. 
+        """
+        return _ecostress_camera.EcostressCamera_dcs_offset(self, Dcs_x_offset, Dcs_y_offset)
+
+
     def _v_paraxial_transform(self, *args):
         """
 
@@ -342,6 +362,7 @@ class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
 
     __swig_destroy__ = _ecostress_camera.delete_EcostressCamera
 EcostressCamera.mask_all_parameter = new_instancemethod(_ecostress_camera.EcostressCamera_mask_all_parameter, None, EcostressCamera)
+EcostressCamera.dcs_offset = new_instancemethod(_ecostress_camera.EcostressCamera_dcs_offset, None, EcostressCamera)
 EcostressCamera._v_paraxial_transform = new_instancemethod(_ecostress_camera.EcostressCamera__v_paraxial_transform, None, EcostressCamera)
 EcostressCamera._v_y_scale = new_instancemethod(_ecostress_camera.EcostressCamera__v_y_scale, None, EcostressCamera)
 EcostressCamera._v_y_offset = new_instancemethod(_ecostress_camera.EcostressCamera__v_y_offset, None, EcostressCamera)

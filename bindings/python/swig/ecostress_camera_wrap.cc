@@ -7649,6 +7649,63 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_EcostressCamera_dcs_offset(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressCamera *arg1 = (Ecostress::EcostressCamera *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressCamera > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressCamera > *smartarg1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  PyObject *swig_obj[3] ;
+  
+  if (!SWIG_Python_UnpackTuple(args,"EcostressCamera_dcs_offset",3,3,swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressCamera_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressCamera_dcs_offset" "', argument " "1"" of type '" "Ecostress::EcostressCamera *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressCamera * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressCamera > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressCamera * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_double(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "EcostressCamera_dcs_offset" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "EcostressCamera_dcs_offset" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  {
+    try {
+      (arg1)->dcs_offset(arg2,arg3);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_EcostressCamera__v_paraxial_transform__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::EcostressCamera *arg1 = (Ecostress::EcostressCamera *) 0 ;
@@ -8229,6 +8286,22 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		"void Ecostress::EcostressCamera::mask_all_parameter()\n"
 		"Convenience function to mask all the parameters we can fit for. \n"
+		""},
+	 { (char *)"EcostressCamera_dcs_offset", _wrap_EcostressCamera_dcs_offset, METH_VARARGS, (char *)"\n"
+		"\n"
+		"void Ecostress::EcostressCamera::dcs_offset(double Dcs_x_offset, double Dcs_y_offset)\n"
+		"Set the DCS offset to use.\n"
+		"\n"
+		"Note this is really kind of a klunky design. This wasn't something\n"
+		"originally put into the camera model, and these parameters depend on\n"
+		"the scan mirror angle. So we expose these parameters and the\n"
+		"EcostressImageGroundConnection handles the plumbing for this. Se don't\n"
+		"really consider these as parameters for this particular object, but\n"
+		"rather as external values we have access to. If we have a follow on to\n"
+		"ECOSTRESS it would be good to rework this design, what we really want\n"
+		"is something that isn't really a camera model but rather a combination\n"
+		"of the camera and the scan mirror. So we'll live with this awkward\n"
+		"interface to shoehorn this into the existing code. \n"
 		""},
 	 { (char *)"EcostressCamera__v_paraxial_transform", _wrap_EcostressCamera__v_paraxial_transform, METH_VARARGS, (char *)"\n"
 		"\n"
