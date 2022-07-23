@@ -59,23 +59,25 @@ if(args.fit):
     # Not sure about set here to fit for. We'll probably need to play
     # with this
     igc.camera.mask_all_parameter()
-    igc.scan_mirror.fit_second_angle_per_encoder_value = True
-    igc.scan_mirror.fit_second_encoder_value_at_0 = True
-    igc.scan_mirror.fit_camera_to_mirror_yaw = True
-    igc.scan_mirror.fit_camera_to_mirror_2_yaw = True
-    igc.scan_mirror.fit_camera_to_mirror_pitch = True
-    igc.scan_mirror.fit_camera_to_mirror_2_pitch = True
-    igc.scan_mirror.fit_camera_to_mirror_roll = True
-    igc.scan_mirror.fit_camera_to_mirror_2_roll = True
-    igc.camera.fit_focal_length = True
-    igc.camera.fit_principal_point_line(True, 1)
-    igc.camera.fit_principal_point_sample(True, 1)
+    #igc.scan_mirror.fit_second_angle_per_encoder_value = True
+    #igc.scan_mirror.fit_second_encoder_value_at_0 = True
+    #igc.scan_mirror.fit_camera_to_mirror_yaw = True
+    #igc.scan_mirror.fit_camera_to_mirror_2_yaw = True
+    #igc.scan_mirror.fit_camera_to_mirror_pitch = True
+    #igc.scan_mirror.fit_camera_to_mirror_2_pitch = True
+    #igc.scan_mirror.fit_camera_to_mirror_roll = True
+    #igc.scan_mirror.fit_camera_to_mirror_2_roll = True
+    #igc.camera.fit_focal_length = True
+    #igc.camera.fit_principal_point_line(True, 1)
+    #igc.camera.fit_principal_point_sample(True, 1)
+    igc.scan_mirror.fit_boresight_x_offset = True
+    igc.scan_mirror.fit_boresight_y_offset = True
     x0 = igccol.parameter_subset
     print("Initial values")
     for i in range(len(igccol.parameter_subset)):
         print("  ", igccol.parameter_name_subset[i], ": ",
               igccol.parameter_subset[i])
-    r = scipy.optimize.least_squares(residual, x0, args=(igccol,mpts))
+    r = scipy.optimize.least_squares(residual, x0, args=(igccol,mpts), loss='soft_l1')
     print(r)
     print("Fitted values")
     for i in range(len(igccol.parameter_subset)):
