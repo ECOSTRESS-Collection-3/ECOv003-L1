@@ -8,7 +8,7 @@
 %}
 %geocal_base_import(image_ground_connection)
 %import "orbit.i"
-%import "camera.i"
+%import "ecostress_camera.i"
 %import "time_table.i"
 %import "ecostress_scan_mirror.i"
 %import "dem.i"
@@ -22,7 +22,7 @@ public:
   EcostressImageGroundConnection
   (const boost::shared_ptr<GeoCal::Orbit>& Orb,
    const boost::shared_ptr<GeoCal::TimeTable>& Tt,
-   const boost::shared_ptr<GeoCal::Camera>& Cam,
+   const boost::shared_ptr<EcostressCamera>& Cam,
    const boost::shared_ptr<EcostressScanMirror>& Scan_mirror,
    const boost::shared_ptr<GeoCal::Dem>& D,
    const boost::shared_ptr<GeoCal::RasterImage>& Img,
@@ -34,10 +34,12 @@ public:
   virtual GeoCal::ImageCoordinate image_coordinate
   (const GeoCal::GroundCoordinate& Gc) const;
   boost::shared_ptr<GeoCal::QuaternionOrbitData> orbit_data
-  (const GeoCal::Time& T, double Ic_line, double Ic_sample) const;
+  (const GeoCal::Time& T, double Ic_line, double Ic_sample,
+   double& OUTPUT, double& OUTPUT) const;
   boost::shared_ptr<GeoCal::QuaternionOrbitData> orbit_data
   (const GeoCal::TimeWithDerivative& T, double Ic_line,
-   const GeoCal::AutoDerivative<double>& Ic_sample) const;
+   const GeoCal::AutoDerivative<double>& Ic_sample,
+   double& OUTPUT, double& OUTPUT) const;
   void image_coordinate_scan_index
   (const GeoCal::GroundCoordinate& Gc,
    int Scan_index, GeoCal::ImageCoordinate& OUTPUT, bool& OUTPUT,
@@ -51,7 +53,7 @@ public:
   %python_attribute_with_set(max_height, double);
   %python_attribute_with_set(orbit, boost::shared_ptr<GeoCal::Orbit>);
   %python_attribute_with_set(time_table,boost::shared_ptr<GeoCal::TimeTable>);
-  %python_attribute_with_set(camera,boost::shared_ptr<GeoCal::Camera>);
+  %python_attribute_with_set(camera,boost::shared_ptr<EcostressCamera>);
   %python_attribute_with_set(scan_mirror,
 			     boost::shared_ptr<EcostressScanMirror>);
   %pickle_serialization();

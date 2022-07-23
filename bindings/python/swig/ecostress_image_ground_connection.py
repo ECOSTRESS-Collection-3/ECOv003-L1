@@ -185,6 +185,7 @@ import geocal_swig.generic_object
 import geocal_swig.with_parameter
 import geocal_swig.geocal_exception
 import geocal_swig.observer
+import geocal_swig.quaternion_camera
 class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGroundConnection):
     """
 
@@ -210,7 +211,7 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
 
         EcostressImageGroundConnection::EcostressImageGroundConnection(const boost::shared_ptr< GeoCal::Orbit > &Orb, const
         boost::shared_ptr< GeoCal::TimeTable > &Tt, const boost::shared_ptr<
-        GeoCal::Camera > &Cam, const boost::shared_ptr< EcostressScanMirror >
+        EcostressCamera > &Cam, const boost::shared_ptr< EcostressScanMirror >
         &Scan_mirror, const boost::shared_ptr< GeoCal::Dem > &D, const
         boost::shared_ptr< GeoCal::RasterImage > &Img, const std::string
         &Title="", double Resolution=30, int Band=REF_BAND, double
@@ -223,7 +224,8 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
         """
 
         boost::shared_ptr< GeoCal::QuaternionOrbitData > EcostressImageGroundConnection::orbit_data(const GeoCal::TimeWithDerivative &T, double Ic_line, const
-        GeoCal::AutoDerivative< double > &Ic_sample) const
+        GeoCal::AutoDerivative< double > &Ic_sample, double &Dcs_x_offset,
+        double &Dcs_y_offset) const
 
         """
         return _ecostress_image_ground_connection.EcostressImageGroundConnection_orbit_data(self, *args)
@@ -405,7 +407,7 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
     def _v_camera(self, *args):
         """
 
-        void Ecostress::EcostressImageGroundConnection::camera(const boost::shared_ptr< GeoCal::Camera > &Cam)
+        void Ecostress::EcostressImageGroundConnection::camera(const boost::shared_ptr< EcostressCamera > &Cam)
         Set Camera we are using. 
         """
         return _ecostress_image_ground_connection.EcostressImageGroundConnection__v_camera(self, *args)

@@ -252,7 +252,7 @@ class EcostressScanMirror(ObservableEcostressScanMirror, geocal_swig.with_parame
         Beta=0, double Delta=0, double First_angle_per_ev=360.0/1749248 *2,
         double Second_angle_per_ev=360.0/1749248 *2, double Yaw=0, double
         Roll=0, double Pitch=0, double Yaw_2=0, double Roll_2=0, double
-        Pitch_2=0)
+        Pitch_2=0, double Boresight_x_offset=0, double Boresight_y_offset=0)
         Constructor, taking the encoder values. We fill in bad data values. 
         """
         _ecostress_scan_mirror.EcostressScanMirror_swiginit(self, _ecostress_scan_mirror.new_EcostressScanMirror(*args))
@@ -670,6 +670,42 @@ class EcostressScanMirror(ObservableEcostressScanMirror, geocal_swig.with_parame
       self._v_fit_second_angle_per_encoder_value(value)
 
 
+    def _v_fit_boresight_x_offset(self, *args):
+        """
+
+        void Ecostress::EcostressScanMirror::fit_boresight_x_offset(bool V)
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_fit_boresight_x_offset(self, *args)
+
+
+    @property
+    def fit_boresight_x_offset(self):
+        return self._v_fit_boresight_x_offset()
+
+    @fit_boresight_x_offset.setter
+    def fit_boresight_x_offset(self, value):
+      self._v_fit_boresight_x_offset(value)
+
+
+    def _v_fit_boresight_y_offset(self, *args):
+        """
+
+        void Ecostress::EcostressScanMirror::fit_boresight_y_offset(bool V)
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_fit_boresight_y_offset(self, *args)
+
+
+    @property
+    def fit_boresight_y_offset(self):
+        return self._v_fit_boresight_y_offset()
+
+    @fit_boresight_y_offset.setter
+    def fit_boresight_y_offset(self, value):
+      self._v_fit_boresight_y_offset(value)
+
+
     def _v_first_encoder_value_at_0(self):
         """
 
@@ -783,6 +819,62 @@ class EcostressScanMirror(ObservableEcostressScanMirror, geocal_swig.with_parame
         return self._v_second_angle_per_encoder_value_with_derivative()
 
 
+    def _v_boresight_x_offset(self):
+        """
+
+        double Ecostress::EcostressScanMirror::boresight_x_offset() const
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_boresight_x_offset(self)
+
+
+    @property
+    def boresight_x_offset(self):
+        return self._v_boresight_x_offset()
+
+
+    def _v_boresight_y_offset(self):
+        """
+
+        double Ecostress::EcostressScanMirror::boresight_y_offset() const
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_boresight_y_offset(self)
+
+
+    @property
+    def boresight_y_offset(self):
+        return self._v_boresight_y_offset()
+
+
+    def _v_boresight_x_offset_with_derivative(self):
+        """
+
+        GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::boresight_x_offset_with_derivative() const
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_boresight_x_offset_with_derivative(self)
+
+
+    @property
+    def boresight_x_offset_with_derivative(self):
+        return self._v_boresight_x_offset_with_derivative()
+
+
+    def _v_boresight_y_offset_with_derivative(self):
+        """
+
+        GeoCal::AutoDerivative<double> Ecostress::EcostressScanMirror::boresight_y_offset_with_derivative() const
+
+        """
+        return _ecostress_scan_mirror.EcostressScanMirror__v_boresight_y_offset_with_derivative(self)
+
+
+    @property
+    def boresight_y_offset_with_derivative(self):
+        return self._v_boresight_y_offset_with_derivative()
+
+
     def _v_number_sample(self):
         """
 
@@ -882,6 +974,8 @@ EcostressScanMirror._v_fit_first_encoder_value_at_0 = new_instancemethod(_ecostr
 EcostressScanMirror._v_fit_second_encoder_value_at_0 = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_second_encoder_value_at_0, None, EcostressScanMirror)
 EcostressScanMirror._v_fit_first_angle_per_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_first_angle_per_encoder_value, None, EcostressScanMirror)
 EcostressScanMirror._v_fit_second_angle_per_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_second_angle_per_encoder_value, None, EcostressScanMirror)
+EcostressScanMirror._v_fit_boresight_x_offset = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_boresight_x_offset, None, EcostressScanMirror)
+EcostressScanMirror._v_fit_boresight_y_offset = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_fit_boresight_y_offset, None, EcostressScanMirror)
 EcostressScanMirror._v_first_encoder_value_at_0 = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_first_encoder_value_at_0, None, EcostressScanMirror)
 EcostressScanMirror._v_first_encoder_value_at_0_with_derivative = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_first_encoder_value_at_0_with_derivative, None, EcostressScanMirror)
 EcostressScanMirror._v_second_encoder_value_at_0 = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_second_encoder_value_at_0, None, EcostressScanMirror)
@@ -890,6 +984,10 @@ EcostressScanMirror._v_first_angle_per_encoder_value = new_instancemethod(_ecost
 EcostressScanMirror._v_second_angle_per_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_second_angle_per_encoder_value, None, EcostressScanMirror)
 EcostressScanMirror._v_first_angle_per_encoder_value_with_derivative = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_first_angle_per_encoder_value_with_derivative, None, EcostressScanMirror)
 EcostressScanMirror._v_second_angle_per_encoder_value_with_derivative = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_second_angle_per_encoder_value_with_derivative, None, EcostressScanMirror)
+EcostressScanMirror._v_boresight_x_offset = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_boresight_x_offset, None, EcostressScanMirror)
+EcostressScanMirror._v_boresight_y_offset = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_boresight_y_offset, None, EcostressScanMirror)
+EcostressScanMirror._v_boresight_x_offset_with_derivative = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_boresight_x_offset_with_derivative, None, EcostressScanMirror)
+EcostressScanMirror._v_boresight_y_offset_with_derivative = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_boresight_y_offset_with_derivative, None, EcostressScanMirror)
 EcostressScanMirror._v_number_sample = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_number_sample, None, EcostressScanMirror)
 EcostressScanMirror._v_number_scan = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_number_scan, None, EcostressScanMirror)
 EcostressScanMirror._v_encoder_value = new_instancemethod(_ecostress_scan_mirror.EcostressScanMirror__v_encoder_value, None, EcostressScanMirror)

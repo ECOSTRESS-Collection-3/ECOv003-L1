@@ -73,9 +73,12 @@ public:
 /// model but rather a combination of the camera and the scan mirror.
 /// So we'll live with this awkward interface to shoehorn this into the
 /// existing code.
+/// We also treat this as const, the usage in
+/// EcostressImageGroundConnection is such that we always reset this
+/// to 0.  
 //-----------------------------------------------------------------------
   
-  void dcs_offset(double Dcs_x_offset, double Dcs_y_offset)
+  void dcs_offset(double Dcs_x_offset, double Dcs_y_offset) const
   {
     dcs_x_offset = Dcs_x_offset;
     dcs_y_offset = Dcs_y_offset;
@@ -92,7 +95,7 @@ private:
   boost::shared_ptr<EcostressParaxialTransform> paraxial_transform_;
   double y_scale_, y_offset_;
   bool line_order_reversed_;
-  double dcs_x_offset, dcs_y_offset;
+  mutable double dcs_x_offset, dcs_y_offset;
   friend class boost::serialization::access;
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version);

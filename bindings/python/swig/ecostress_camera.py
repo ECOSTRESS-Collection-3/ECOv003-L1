@@ -268,7 +268,7 @@ class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
     def dcs_offset(self, Dcs_x_offset, Dcs_y_offset):
         """
 
-        void Ecostress::EcostressCamera::dcs_offset(double Dcs_x_offset, double Dcs_y_offset)
+        void Ecostress::EcostressCamera::dcs_offset(double Dcs_x_offset, double Dcs_y_offset) const
         Set the DCS offset to use.
 
         Note this is really kind of a klunky design. This wasn't something
@@ -280,7 +280,9 @@ class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
         ECOSTRESS it would be good to rework this design, what we really want
         is something that isn't really a camera model but rather a combination
         of the camera and the scan mirror. So we'll live with this awkward
-        interface to shoehorn this into the existing code. 
+        interface to shoehorn this into the existing code. We also treat this
+        as const, the usage in EcostressImageGroundConnection is such that we
+        always reset this to 0. 
         """
         return _ecostress_camera.EcostressCamera_dcs_offset(self, Dcs_x_offset, Dcs_y_offset)
 

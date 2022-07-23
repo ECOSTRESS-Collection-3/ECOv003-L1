@@ -186,6 +186,7 @@ import geocal_swig.generic_object
 import geocal_swig.with_parameter
 import geocal_swig.geocal_exception
 import geocal_swig.observer
+import geocal_swig.quaternion_camera
 class EcostressIgcCollection(geocal_swig.igc_array.IgcArray):
     """
 

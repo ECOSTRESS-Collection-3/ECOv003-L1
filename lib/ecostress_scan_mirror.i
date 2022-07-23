@@ -38,7 +38,9 @@ public:
 		      double Pitch = 0,
 		      double Yaw_2 = 0,
 		      double Roll_2 = 0,
-		      double Pitch_2 = 0
+		      double Pitch_2 = 0,
+		      double Boresight_x_offset = 0,
+		      double Boresight_y_offset = 0
 		      );
   EcostressScanMirror(const blitz::Array<int, 2>& Encoder_value,
 		      int Max_encoder_value = 1749248,
@@ -54,7 +56,9 @@ public:
 		      double Pitch = 0,
 		      double Yaw_2 = 0,
 		      double Roll_2 = 0,
-		      double Pitch_2 = 0
+		      double Pitch_2 = 0,
+		      double Boresight_x_offset = 0,
+		      double Boresight_y_offset = 0
 		      );
   virtual void add_observer(GeoCal::Observer<EcostressScanMirror>& Obs);
   virtual void remove_observer(GeoCal::Observer<EcostressScanMirror>& Obs);
@@ -107,6 +111,8 @@ public:
   %python_attribute_with_set(fit_second_encoder_value_at_0, bool);
   %python_attribute_with_set(fit_first_angle_per_encoder_value, bool);
   %python_attribute_with_set(fit_second_angle_per_encoder_value, bool);
+  %python_attribute_with_set(fit_boresight_x_offset, bool);
+  %python_attribute_with_set(fit_boresight_y_offset, bool);
   %python_attribute(first_encoder_value_at_0, double);
   %python_attribute(first_encoder_value_at_0_with_derivative, GeoCal::AutoDerivative<double>);
   %python_attribute(second_encoder_value_at_0, double);
@@ -115,6 +121,10 @@ public:
   %python_attribute(second_angle_per_encoder_value, double);
   %python_attribute(first_angle_per_encoder_value_with_derivative, GeoCal::AutoDerivative<double>);
   %python_attribute(second_angle_per_encoder_value_with_derivative, GeoCal::AutoDerivative<double>);
+  %python_attribute(boresight_x_offset, double);
+  %python_attribute(boresight_y_offset, double);
+  %python_attribute(boresight_x_offset_with_derivative, GeoCal::AutoDerivative<double>);
+  %python_attribute(boresight_y_offset_with_derivative, GeoCal::AutoDerivative<double>);
   %python_attribute(number_sample, int);
   %python_attribute(number_scan, int);
   %python_attribute(encoder_value, blitz::Array<int, 2>);

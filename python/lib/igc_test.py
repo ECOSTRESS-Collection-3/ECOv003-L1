@@ -12,8 +12,8 @@ def test_plot(igc_hres):
     slon = []
     for i in range(0, 513, 256):
         tm, fc = igc_hres.time_table.time(ImageCoordinate(i,0))
-        slat.append(igc_hres.orbit_data(tm, i, 0).position_cf.latitude)
-        slon.append(igc_hres.orbit_data(tm, i, 0).position_cf.longitude)
+        slat.append(igc_hres.orbit_data(tm, i, 0)[0].position_cf.latitude)
+        slon.append(igc_hres.orbit_data(tm, i, 0)[0].position_cf.longitude)
     alat = []
     alon = []
     blat = []
@@ -52,8 +52,8 @@ def test_plot2(igc_hres):
     slon = []
     for i in range(0, 513, 256):
         tm, fc = igc_hres.time_table.time(ImageCoordinate(i,0))
-        slat.append(igc_hres.orbit_data(tm, i, 0).position_cf.latitude)
-        slon.append(igc_hres.orbit_data(tm, i, 0).position_cf.longitude)
+        slat.append(igc_hres.orbit_data(tm, i, 0)[0].position_cf.latitude)
+        slon.append(igc_hres.orbit_data(tm, i, 0)[0].position_cf.longitude)
     alat = []
     alon = []
     blat = []

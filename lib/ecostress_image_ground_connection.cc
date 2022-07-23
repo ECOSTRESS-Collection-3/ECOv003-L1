@@ -94,7 +94,13 @@ EcostressImageGroundConnection::SampleFunc::fc_at_sol() const
 {
   double sample =
     tt->image_coordinate(tsol, GeoCal::FrameCoordinate(0,0)).sample;
-  return igc.orbit_data(tsol, scan_index * tt->number_line_scan(), sample)->frame_coordinate(gp, *igc.camera(), igc.band());
+  double dcs_x_offset, dcs_y_offset;
+  auto od = igc.orbit_data(tsol, scan_index * tt->number_line_scan(), sample,
+			   dcs_x_offset, dcs_y_offset);
+  igc.dcs_offset(dcs_x_offset, dcs_y_offset);
+  auto r = od->frame_coordinate(gp, *igc.camera(), igc.band());
+  igc.dcs_offset(0,0);
+  return r;
 }
 
 //-------------------------------------------------------------------------
@@ -106,7 +112,13 @@ EcostressImageGroundConnection::SampleFuncWithDerivative::fc_at_sol() const
 {
   GeoCal::AutoDerivative<double> sample =
     tt->image_coordinate_with_derivative(tsol, GeoCal::FrameCoordinateWithDerivative(0,0)).sample;
-  return igc.orbit_data(tsol, scan_index * tt->number_line_scan(), sample)->frame_coordinate_with_derivative(gp, *igc.camera(), igc.band());
+  double dcs_x_offset, dcs_y_offset;
+  auto od = igc.orbit_data(tsol, scan_index * tt->number_line_scan(), sample,
+			   dcs_x_offset, dcs_y_offset);
+  igc.dcs_offset(dcs_x_offset, dcs_y_offset);
+  auto r = od->frame_coordinate_with_derivative(gp, *igc.camera(), igc.band());
+  igc.dcs_offset(0, 0);
+  return r;
 }
 
 //-------------------------------------------------------------------------
@@ -167,7 +179,14 @@ double EcostressImageGroundConnection::SampleFunc::operator()
   double sample =
     tt->image_coordinate(epoch + Toffset,
 			 GeoCal::FrameCoordinate(0,0)).sample;
-  return igc.orbit_data(epoch + Toffset, scan_index * tt->number_line_scan(), sample)->frame_coordinate(gp, *igc.camera(), igc.band()).sample;
+  double dcs_x_offset, dcs_y_offset;
+  auto od = igc.orbit_data(epoch + Toffset,
+			   scan_index * tt->number_line_scan(), sample,
+			   dcs_x_offset, dcs_y_offset);
+  igc.dcs_offset(dcs_x_offset, dcs_y_offset);
+  auto r = od->frame_coordinate(gp, *igc.camera(), igc.band()).sample;
+  igc.dcs_offset(0, 0);
+  return r;
 }
 
 //-------------------------------------------------------------------------
@@ -180,7 +199,14 @@ double EcostressImageGroundConnection::SampleFuncWithDerivative::operator()
   double sample =
     tt->image_coordinate(epoch + Toffset,
 			 GeoCal::FrameCoordinate(0,0)).sample;
-  return igc.orbit_data(epoch + Toffset, scan_index * tt->number_line_scan(), sample)->frame_coordinate(gp, *igc.camera(), igc.band()).sample;
+  double dcs_x_offset, dcs_y_offset;
+  auto od = igc.orbit_data(epoch + Toffset,
+			   scan_index * tt->number_line_scan(), sample,
+			   dcs_x_offset, dcs_y_offset);
+  igc.dcs_offset(dcs_x_offset, dcs_y_offset);
+  double res = od->frame_coordinate(gp, *igc.camera(), igc.band()).sample;
+  igc.dcs_offset(0,0);
+  return res;
 }
 
 //-------------------------------------------------------------------------
@@ -206,7 +232,12 @@ EcostressImageGroundConnection::SampleFuncWithDerivative::f_with_derivative
     tt->image_coordinate_with_derivative
     (GeoCal::TimeWithDerivative(epoch) + Toffset,
      GeoCal::FrameCoordinateWithDerivative(0,0)).sample;
-  return igc.orbit_data(GeoCal::TimeWithDerivative(epoch) + Toffset, scan_index * tt->number_line_scan(), sample)->frame_coordinate_with_derivative(gp, *igc.camera(), igc.band()).sample;
+  double dcs_x_offset, dcs_y_offset;
+  auto od = igc.orbit_data(GeoCal::TimeWithDerivative(epoch) + Toffset, scan_index * tt->number_line_scan(), sample, dcs_x_offset, dcs_y_offset);
+  igc.dcs_offset(dcs_x_offset, dcs_y_offset);
+  auto r = od->frame_coordinate_with_derivative(gp, *igc.camera(), igc.band()).sample;
+  igc.dcs_offset(0,0);
+  return r; 
 }
 
 //-------------------------------------------------------------------------
@@ -216,7 +247,7 @@ EcostressImageGroundConnection::SampleFuncWithDerivative::f_with_derivative
 EcostressImageGroundConnection::EcostressImageGroundConnection
 (const boost::shared_ptr<GeoCal::Orbit>& Orb,
  const boost::shared_ptr<GeoCal::TimeTable>& Tt,
- const boost::shared_ptr<GeoCal::Camera>& Cam,
+ const boost::shared_ptr<EcostressCamera>& Cam,
  const boost::shared_ptr<EcostressScanMirror>& Scan_mirror,
  const boost::shared_ptr<GeoCal::Dem>& D,
  const boost::shared_ptr<GeoCal::RasterImage>& Img,
@@ -246,7 +277,12 @@ EcostressImageGroundConnection::ground_coordinate_dem
   GeoCal::Time t;
   GeoCal::FrameCoordinate fc;
   tt->time(Ic, t, fc);
-  return orbit_data(t, Ic.line, Ic.sample)->surface_intersect(*cam, fc, D, res, b, max_h);
+  double dcs_x_offset, dcs_y_offset;
+  auto od = orbit_data(t, Ic.line, Ic.sample, dcs_x_offset, dcs_y_offset);
+  dcs_offset(dcs_x_offset, dcs_y_offset);
+  auto r = od->surface_intersect(*cam, fc, D, res, b, max_h);
+  dcs_offset(0,0);
+  return r;
 }
 
 // See base class for description
@@ -258,17 +294,24 @@ EcostressImageGroundConnection::ground_coordinate_approx_height
   GeoCal::Time t;
   GeoCal::FrameCoordinate fc;
   tt->time(Ic, t, fc);
-  return orbit_data(t, Ic.line, Ic.sample)->reference_surface_intersect_approximate(*cam, fc, b, H);
+  double dcs_x_offset, dcs_y_offset;
+  auto od = orbit_data(t, Ic.line, Ic.sample, dcs_x_offset, dcs_y_offset);
+  dcs_offset(dcs_x_offset, dcs_y_offset);
+  auto r = od->reference_surface_intersect_approximate(*cam, fc, b, H);
+  dcs_offset(0, 0);
+  return r;
 }
 
 //-----------------------------------------------------------------------
 /// Return orbit data for the given time, which has the scan mirror angle
-/// applied to it.
+/// applied to it. Because it is closely related, also return the
+/// calculated dcs_offset
 //-----------------------------------------------------------------------
 
 boost::shared_ptr<GeoCal::QuaternionOrbitData>
 EcostressImageGroundConnection::orbit_data
-(const GeoCal::Time& T, double Ic_line, double Ic_sample) const
+(const GeoCal::Time& T, double Ic_line, double Ic_sample,
+ double& Dcs_x_offset, double& Dcs_y_offset) const
 {
   boost::shared_ptr<GeoCal::QuaternionOrbitData> od =
    boost::dynamic_pointer_cast<GeoCal::QuaternionOrbitData>(orb->orbit_data(T));
@@ -280,14 +323,17 @@ EcostressImageGroundConnection::orbit_data
     throw GeoCal::Exception("orbit_data currently only works with EcostressTimeTable");
   boost::shared_ptr<GeoCal::QuaternionOrbitData> res =
     boost::make_shared<GeoCal::QuaternionOrbitData>(*od);
-  res->sc_to_ci(od->sc_to_ci() * sm->rotation_quaternion(ett->line_to_scan_index(Ic_line), Ic_sample));
+  int scan_index = ett->line_to_scan_index(Ic_line);
+  res->sc_to_ci(od->sc_to_ci() * sm->rotation_quaternion(scan_index, Ic_sample));
+  sm->dcs_offset(scan_index, Ic_sample, Dcs_x_offset, Dcs_y_offset);
   return res;
 }
 
 boost::shared_ptr<GeoCal::QuaternionOrbitData>
 EcostressImageGroundConnection::orbit_data
 (const GeoCal::TimeWithDerivative& T, double Ic_line,
- const GeoCal::AutoDerivative<double>& Ic_sample) const
+ const GeoCal::AutoDerivative<double>& Ic_sample, double& Dcs_x_offset,
+ double & Dcs_y_offset) const
 {
   boost::shared_ptr<GeoCal::QuaternionOrbitData> od =
    boost::dynamic_pointer_cast<GeoCal::QuaternionOrbitData>(orb->orbit_data(T));
@@ -299,7 +345,9 @@ EcostressImageGroundConnection::orbit_data
     throw GeoCal::Exception("orbit_data currently only works with EcostressTimeTable");
   boost::shared_ptr<GeoCal::QuaternionOrbitData> res =
     boost::make_shared<GeoCal::QuaternionOrbitData>(*od);
-  res->sc_to_ci_with_derivative(od->sc_to_ci_with_derivative() * sm->rotation_quaternion(ett->line_to_scan_index(Ic_line), Ic_sample));
+  int scan_index = ett->line_to_scan_index(Ic_line);
+  res->sc_to_ci_with_derivative(od->sc_to_ci_with_derivative() * sm->rotation_quaternion(scan_index, Ic_sample));
+  sm->dcs_offset(scan_index, Ic_sample.value(), Dcs_x_offset, Dcs_y_offset);
   return res;
 }
 
@@ -461,8 +509,12 @@ EcostressImageGroundConnection::collinearity_residual
   GeoCal::Time t;
   GeoCal::FrameCoordinate fc_actual;
   tt->time(Ic_actual, t, fc_actual);
-  GeoCal::FrameCoordinate fc_predict = orbit_data(t, Ic_actual.line,
-    Ic_actual.sample)->frame_coordinate(Gc, *cam, b);
+  double dcs_x_offset, dcs_y_offset;
+  auto od = orbit_data(t, Ic_actual.line, Ic_actual.sample,
+		       dcs_x_offset, dcs_y_offset);
+  dcs_offset(dcs_x_offset, dcs_y_offset);
+  GeoCal::FrameCoordinate fc_predict = od->frame_coordinate(Gc, *cam, b);
+  dcs_offset(0, 0);
   blitz::Array<double, 1> res(2);
   res(0) = fc_predict.line - fc_actual.line;
   res(1) = fc_predict.sample - fc_actual.sample;
@@ -478,9 +530,13 @@ EcostressImageGroundConnection::collinearity_residual_jacobian
   GeoCal::FrameCoordinateWithDerivative fc_actual;
   GeoCal::ImageCoordinateWithDerivative ica(Ic_actual.line, Ic_actual.sample);
   tt->time_with_derivative(ica, t, fc_actual);
+  double dcs_x_offset, dcs_y_offset;
+  auto od = orbit_data(t, Ic_actual.line, ica.sample,
+		       dcs_x_offset, dcs_y_offset);
+  dcs_offset(dcs_x_offset, dcs_y_offset);
   GeoCal::FrameCoordinateWithDerivative fc_predict =
-    orbit_data(t, Ic_actual.line, ica.sample)->
-    frame_coordinate_with_derivative(Gc, *cam, b);
+    od->frame_coordinate_with_derivative(Gc, *cam, b);
+  dcs_offset(0, 0);
   blitz::Array<double, 2> res(2, fc_predict.line.number_variable() + 3);
   res(0, blitz::Range(0, res.cols() - 4)) = 
     (fc_predict.line - fc_actual.line).gradient();
@@ -488,7 +544,8 @@ EcostressImageGroundConnection::collinearity_residual_jacobian
     (fc_predict.sample - fc_actual.sample).gradient();
 
   // Part of jacobian for cf coordinates.
-  boost::shared_ptr<GeoCal::OrbitData> od = orbit_data(t.value(), Ic_actual.line, Ic_actual.sample);
+  od = orbit_data(t.value(), Ic_actual.line, Ic_actual.sample,
+		  dcs_x_offset, dcs_y_offset);
   boost::shared_ptr<GeoCal::CartesianFixed> p1 = od->position_cf();
   boost::shared_ptr<GeoCal::CartesianFixed> p2 = Gc.convert_to_cf();
   GeoCal::CartesianFixedLookVectorWithDerivative lv;
@@ -497,12 +554,14 @@ EcostressImageGroundConnection::collinearity_residual_jacobian
     lv.look_vector[i] = p - p1->position[i];
   }
   GeoCal::ScLookVectorWithDerivative sl = od->sc_look_vector(lv);
-  boost::shared_ptr<GeoCal::Camera> c = cam;
+  auto c = cam;
+  c->dcs_offset(dcs_x_offset, dcs_y_offset);
   GeoCal::ArrayAd<double, 1> poriginal = c->parameter_with_derivative();
   c->parameter_with_derivative(c->parameter());
   GeoCal::FrameCoordinateWithDerivative fc_gc =
     c->frame_coordinate_with_derivative(sl, b);
   c->parameter_with_derivative(poriginal);
+  c->dcs_offset(0, 0);
   res(0, blitz::Range(res.cols() - 3, blitz::toEnd)) = fc_gc.line.gradient();
   res(1, blitz::Range(res.cols() - 3, blitz::toEnd)) = fc_gc.sample.gradient();
   return res;

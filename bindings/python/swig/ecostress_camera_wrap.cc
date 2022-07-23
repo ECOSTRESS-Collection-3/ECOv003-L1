@@ -8289,7 +8289,7 @@ static PyMethodDef SwigMethods[] = {
 		""},
 	 { (char *)"EcostressCamera_dcs_offset", _wrap_EcostressCamera_dcs_offset, METH_VARARGS, (char *)"\n"
 		"\n"
-		"void Ecostress::EcostressCamera::dcs_offset(double Dcs_x_offset, double Dcs_y_offset)\n"
+		"void Ecostress::EcostressCamera::dcs_offset(double Dcs_x_offset, double Dcs_y_offset) const\n"
 		"Set the DCS offset to use.\n"
 		"\n"
 		"Note this is really kind of a klunky design. This wasn't something\n"
@@ -8301,7 +8301,9 @@ static PyMethodDef SwigMethods[] = {
 		"ECOSTRESS it would be good to rework this design, what we really want\n"
 		"is something that isn't really a camera model but rather a combination\n"
 		"of the camera and the scan mirror. So we'll live with this awkward\n"
-		"interface to shoehorn this into the existing code. \n"
+		"interface to shoehorn this into the existing code. We also treat this\n"
+		"as const, the usage in EcostressImageGroundConnection is such that we\n"
+		"always reset this to 0. \n"
 		""},
 	 { (char *)"EcostressCamera__v_paraxial_transform", _wrap_EcostressCamera__v_paraxial_transform, METH_VARARGS, (char *)"\n"
 		"\n"

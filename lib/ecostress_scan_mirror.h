@@ -59,7 +59,9 @@ public:
 		      double Pitch = 0,
 		      double Yaw_2 = 0,
 		      double Roll_2 = 0,
-		      double Pitch_2 = 0
+		      double Pitch_2 = 0,
+		      double Boresight_x_offset = 0,
+		      double Boresight_y_offset = 0
 		      );
   EcostressScanMirror(const blitz::Array<int, 2>& Encoder_value,
 		      int Max_encoder_value = 1749248,
@@ -75,7 +77,9 @@ public:
 		      double Pitch = 0,
 		      double Yaw_2 = 0,
 		      double Roll_2 = 0,
-		      double Pitch_2 = 0
+		      double Pitch_2 = 0,
+		      double Boresight_x_offset = 0,
+		      double Boresight_y_offset = 0
 		      );
   virtual ~EcostressScanMirror() {}
 
@@ -189,6 +193,20 @@ public:
 
   bool fit_second_angle_per_encoder_value() const { return parameter_mask_(12); }
   void fit_second_angle_per_encoder_value(bool V) {parameter_mask_(12) = V;}
+
+//-----------------------------------------------------------------------
+/// Indicate if we fit for the boresight X offset.
+//-----------------------------------------------------------------------
+
+  bool fit_boresight_x_offset() const { return parameter_mask_(13); }
+  void fit_boresight_x_offset(bool V) {parameter_mask_(13) = V;}
+
+//-----------------------------------------------------------------------
+/// Indicate if we fit for the boresight Y offset.
+//-----------------------------------------------------------------------
+
+  bool fit_boresight_y_offset() const { return parameter_mask_(14); }
+  void fit_boresight_y_offset(bool V) {parameter_mask_(14) = V;}
   
 //-------------------------------------------------------------------------
 /// Angle encoder values.
@@ -442,6 +460,16 @@ public:
   { return ang_per_ev_2_.value(); }
   GeoCal::AutoDerivative<double> second_angle_per_encoder_value_with_derivative() const
   { return ang_per_ev_2_; }
+
+  double boresight_x_offset() const
+  { return boresight_x_offset_.value(); }
+  GeoCal::AutoDerivative<double> boresight_x_offset_with_derivative() const
+  { return boresight_x_offset_; }
+
+  double boresight_y_offset() const
+  { return boresight_y_offset_.value(); }
+  GeoCal::AutoDerivative<double> boresight_y_offset_with_derivative() const
+  { return boresight_y_offset_; }
   
 //-------------------------------------------------------------------------
 /// Encoder value at 0 angle. This is for the first side of the mirror.
@@ -534,7 +562,20 @@ public:
   GeoCal::AutoDerivative<double> scan_mirror_angle
   (int Scan_index, const GeoCal::AutoDerivative<double>& Ic_sample) const
   { return angle_from_encoder_value(encoder_value_interpolate(Scan_index, Ic_sample));}
-  
+
+//-------------------------------------------------------------------------
+/// Offset in the DCS frame
+//-------------------------------------------------------------------------
+
+  void dcs_offset(int Scan_index, double Ic_sample, double& Dcs_x_offset,
+		  double& Dcs_y_offset) const
+  {
+    Dcs_x_offset = boresight_x_offset();
+    Dcs_y_offset = boresight_y_offset() *
+      cos(scan_mirror_angle(Scan_index, Ic_sample) *
+	  GeoCal::Constant::deg_to_rad);
+  }
+    
 //-------------------------------------------------------------------------
 /// Rotation matrix that take the view vector for the Camera and takes
 /// it to the space craft coordinate system.
@@ -574,6 +615,7 @@ private:
   // to calculate it multiple times.
   boost::math::quaternion<double> inst_to_sc_nd_, camera_to_mirror_nd_,
     camera_to_mirror_2_nd_;
+  GeoCal::AutoDerivative<double> boresight_x_offset_, boresight_y_offset_;
   void fill_in_scan(int S);
   virtual void notify_update()
   {
@@ -591,7 +633,7 @@ private:
 }
 
 BOOST_CLASS_EXPORT_KEY(Ecostress::EcostressScanMirror);
-BOOST_CLASS_VERSION(Ecostress::EcostressScanMirror, 2)
+BOOST_CLASS_VERSION(Ecostress::EcostressScanMirror, 3)
 #endif
   
   
