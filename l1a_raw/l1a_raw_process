@@ -49,6 +49,7 @@ if(args.run_config) :
     prod_dir = os.path.abspath(config["ProductPathGroup", "ProductPath"])
     shortname =  config["ProductPathGroup","ShortName"]
     file_version = config["ProductPathGroup", "ProductCounter"]
+    collection_label = config["ProductPathGroup", "CollectionLabel"]
     build_id = config["PrimaryExecutable", "BuildID"]
 else:
     config = None
@@ -66,6 +67,7 @@ geocal.makedirs_p(prod_dir)
 os.chdir(prod_dir)
 
 l1arawpix = ecostress.L1aRawPixGenerate(l0b, obst_dir, osp_dir, scene_file,
+                              collection_label = collection_label,
                               build_id = build_id,
                               pge_version = pge_version["l1a_raw"],
                               run_config = config,

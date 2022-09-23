@@ -13,6 +13,7 @@ class L1bRadGenerate(object):
                  cal_correction,
                  local_granule_id = None,
                  run_config = None, log = None, build_id = "0.30",
+                 collection_label = "ECOSTRESS",
                  pge_version = "0.30",
                  interpolate_stripe_data = False,
                  seed = 1234,
@@ -35,6 +36,7 @@ class L1bRadGenerate(object):
         self.l1_osp_dir = l1_osp_dir
         self.run_config = run_config
         self.log = log
+        self.collection_label = collection_label
         self.build_id = build_id
         self.pge_version = pge_version
         self.interpolate_stripe_data = interpolate_stripe_data
@@ -206,6 +208,7 @@ Data quality indicator.
         m = RadWriteStandardMetadata(fout, product_specfic_group = "L1B_RADMetadata",
                                      proc_lev_desc = "Level 1B Radiance Parameters",
                                      pge_name = "L1B_RAD_PGE",
+                                     collection_label = self.collection_label,
                                      build_id = self.build_id,
                                      pge_version= self.pge_version,
                                      line_order_flipped=self.line_order_flipped,

@@ -2979,7 +2979,7 @@ end-to-end-check: installcheck-am
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1B_GEO_PGE $(l1b_geo_run_config)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_ATT*.h5
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_GEO_0*.h5
-	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOSTRESS_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOSTRESS_L1B_RAD_03663_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
+	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOv002_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv002_L1B_RAD_03663_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
 
 # Run l1a_cal and l1b_rad using 5 band data. These are the only PGEs that
 # change with 3 vs 5 bands, so we only run these two only. The data is
@@ -3006,7 +3006,7 @@ l1b-geo-run: install
 	-rm -r ./l1b_geo_run
 	$(prefix)/L1B_GEO_PGE $(PROCESS_ARG) --number-cpu=20 $(end_to_end_test_data)/latest/L1A_RAW_ATT_03663_*_0100_01.h5.expected $(end_to_end_test_data)/latest/l1_osp_dir ./l1b_geo_run $(end_to_end_test_data)/latest/ECOSTRESS_L1B_RAD_03663_00*.h5.expected
 #	source $(prefix)/setup_ecostress.sh && $(PYTHON) $(srcdir)/end_to_end_testing/diff_sba.py
-#	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band l1b_geo_run/ECOSTRESS_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOSTRESS_L1B_RAD_03663_00{}_*.h5 l1b_geo_run/proj_final_{}" )
+#	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band l1b_geo_run/ECOv002_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv002_L1B_RAD_03663_00{}_*.h5 l1b_geo_run/proj_final_{}" )
 
 # Shortcut for just running py.test.
 python-check: script/setup_ecostress.sh

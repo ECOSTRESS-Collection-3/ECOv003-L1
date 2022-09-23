@@ -105,6 +105,7 @@ class L1aRawPixGenerate(object):
   '''This generates a L1A_RAW_PIX, L1A_BB, L1A_ENG and L1A_RAW_ATT
   files from a L0B input.'''
   def __init__(self, l0b, obst_dir, osp_dir, scene_file, run_config = None,
+               collection_label = "ECOSTRESS",
                build_id = "0116",
                pge_version = "0.50", 
                file_version = "01"):
@@ -115,9 +116,11 @@ class L1aRawPixGenerate(object):
       self.osp_dir = osp_dir
       self.scene_file = scene_file
       self.run_config = run_config
+      self.collection_label = collection_label
       self.build_id = build_id
       self.pge_version = pge_version
       self.file_version = file_version
+      self.collection_label = collection_label
 
   def process_scene_file(self):
     '''Process the scene file, returning the orbit, scene id, start, 
@@ -140,6 +143,7 @@ class L1aRawPixGenerate(object):
     the file handle and metadata handle.'''
 
     fname = ecostress_file_name(prod_type, orbit, scene, start_time,
+                                collection_label = self.collection_label,
                                 build=self.build_id,
                                 version=self.file_version,
                                 intermediate=intermediate)
@@ -151,6 +155,7 @@ class L1aRawPixGenerate(object):
         product_specfic_group = prod_type + "Metadata",
         proc_lev_desc = 'Level 1A Raw Parameters',
         pge_name="L1A_RAW_PIX", local_granule_id=fname,
+        collection_label = self.collection_label,                      
         build_id = self.build_id, pge_version= self.pge_version,
         orbit_based = (scene is None))
     if(self.run_config is not None):

@@ -9,6 +9,7 @@ class WriteStandardMetadata(object):
     def __init__(self, hdf_file, product_specfic_group = "L1GEOMetadata",
                  proc_lev_desc = 'Level 1 Geolocation Parameters',
                  pge_name = 'L1B_GEO', local_granule_id = None,
+                 collection_label = "ECOSTRESS",
                  build_id = '0.01', pge_version='0.01',
                  qa_precentage_missing = None,
                  band_specification = None,
@@ -39,7 +40,6 @@ class WriteStandardMetadata(object):
         self.set('AncillaryInputPointer', product_specfic_group)
         self.set('AutomaticQualityFlag', 'PASS')
         self.set('CampaignShortName', 'Primary')
-        self.set('CollectionLabel', '')
         self.set('DataFormatType', 'NCSAHDF5')
         # How do we determine these?
         self.set('HDFVersionID', '1.8.16')
@@ -63,6 +63,7 @@ class WriteStandardMetadata(object):
         self.set('SISName', "Level 1 Product Specification Document (JPL D-94634)")
         self.set('SISVersion', "Preliminary")
         self.set('BuildID', build_id)
+        self.set('CollectionLabel', collection_label)
         self.set('PGEVersion', pge_version)
         self.set('LocalGranuleID', local_granule_id)
         # For now parse the local granule id to get some of the metadata.
@@ -71,9 +72,9 @@ class WriteStandardMetadata(object):
             # Can't set the next bit, so skip it
             return
         elif(orbit_based):
-            m = re.match(r'(ECOSTRESS_)?(?P<process_level>\w+)_(\w+)_(?P<orbit>\d{5})_', local_granule_id)
+            m = re.match(r'(ECO[^_]*_)?(?P<process_level>\w+)_(\w+)_(?P<orbit>\d{5})_', local_granule_id)
         else:
-            m = re.match(r'(ECOSTRESS_)?(?P<process_level>\w+)_(\w+)_(?P<orbit>\d{5})_(?P<scene_id>\d{3})', local_granule_id)
+            m = re.match(r'(ECO[^_]*_)?(?P<process_level>\w+)_(\w+)_(?P<orbit>\d{5})_(?P<scene_id>\d{3})', local_granule_id)
         if(not m):
             raise RuntimeError("Unrecognized local granule id '%s'" % 
                                local_granule_id)

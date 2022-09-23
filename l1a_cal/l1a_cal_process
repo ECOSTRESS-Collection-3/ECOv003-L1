@@ -50,6 +50,7 @@ if(args.run_config):
     l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
     dirname = config["ProductPathGroup", "ProductPath"]
     file_version = config["ProductPathGroup", "ProductCounter"]
+    collection_label = config["ProductPathGroup", "CollectionLabel"]
     build_id = config["PrimaryExecutable", "BuildID"]
 else:
     config = None
@@ -66,9 +67,11 @@ os.chdir(dirname)
 
 orbit, scene, acquisition_time = ecostress.orbit_from_metadata(l1a_raw_pix)
 ofile = ecostress.ecostress_file_name("L1A_PIX", orbit, scene, acquisition_time,
+                            collection_label = collection_label,
                             build = build_id, version = file_version)
 ofile_gain = ecostress.ecostress_file_name("L1A_RAD_GAIN", orbit, scene,
                                  acquisition_time,
+                                 collection_label = collection_label,
                                  build = build_id, version = file_version,
                                  intermediate = True)
 log_fname = os.path.splitext(ofile)[0] + ".log"
@@ -78,6 +81,7 @@ try:
     l1apix = ecostress.L1aPixGenerate(l1a_bb, l1a_raw_pix, l1_osp_dir,
                             ofile, ofile_gain,
                             log=log, quiet=quiet, run_config=config,
+                            collection_label = collection_label,
                             build_id=build_id,
                             pge_version=pge_version["l1a_cal"],
                             file_version=file_version)

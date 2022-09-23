@@ -97,6 +97,7 @@ if(args.run_config):
     dirname = config["ProductPathGroup", "ProductPath"]
     file_version = config["ProductPathGroup", "ProductCounter"]
     build_id = config["PrimaryExecutable", "BuildID"]
+    collection_label = config["ProductPathGroup", "CollectionLabel"]
     orbfname = os.path.abspath(config["TimeBasedFileGroup", "L1A_RAW_ATT"])
 else:
     ncpu = args.number_cpu
@@ -223,23 +224,28 @@ try:
         orbit, scene, acquisition_time = ecostress.orbit_from_metadata(radlist[i])
         ofile.append(ecostress.ecostress_file_name("L1B_GEO", orbit, scene,
             acquisition_time, build = build_id,
+            collection_label = collection_label,
             version = file_version))
         ofile_map.append(ecostress.ecostress_file_name("L1B_MAP_RAD", orbit,
             scene, acquisition_time, build = build_id,
+            collection_label = collection_label,
             version = file_version))
         ofile_kmz.append(ecostress.ecostress_file_name("L1B_KMZ_MAP", orbit,
             scene,
             acquisition_time, build = build_id,
+            collection_label = collection_label,
             extension=".kmz",                                           
             version = file_version, intermediate=True))
         scenelist.append(scene)
         if(i == 0):
             ofile2 = ecostress.ecostress_file_name("L1B_ATT", orbit, None,
                                                    acquisition_time,
+                                                   collection_label = collection_label,
                                                    build = build_id, 
                                                    version = file_version)
             qa_fname = ecostress.ecostress_file_name("L1B_GEO_QA", orbit, None,
                                                      acquisition_time,
+                                                     collection_label = collection_label,
                                                      build = build_id, 
                                                      version = file_version,
                                                      intermediate=True)
@@ -411,6 +417,7 @@ try:
                 field_of_view_obscured = field_of_view_obscured,
                 number_line = args.number_line,
                 run_config = config, log_fname = log_fname,
+                collection_label = collection_label,
                 build_id = build_id,
                 pge_version = pge_version["l1b_geo"],
                 correction_done = correction_done,
@@ -452,6 +459,7 @@ try:
     l1batt = ecostress.L1bAttGenerate(orbfname,
             igccol_corrected.image_ground_connection(0).orbit,
             ofile2, tatt, teph, inlist, qa_file, run_config = config,
+            collection_label = collection_label,                           
             build_id = build_id,
             pge_version = pge_version["l1b_geo"],
             correction_done = correction_done)

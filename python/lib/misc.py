@@ -164,13 +164,14 @@ def time_split(t):
     
 def ecostress_file_name(product_type, orbit, scene, acquisition_time,
                         end_time = None,
+                        collection_label = "ECOSTRESS",
                         build = "0100", version = "01", extension=".h5",
                         intermediate=False):
     '''Create an ecostress file name from the given components.'''
     if(intermediate):
         front=""
     else:
-        front="ECOSTRESS_"
+        front=collection_label + "_"
     if(product_type == "L0B"):
         return "%s%s_%05d_%s_%s_%s%s" % \
             (front, product_type, orbit, time_to_file_string(acquisition_time),

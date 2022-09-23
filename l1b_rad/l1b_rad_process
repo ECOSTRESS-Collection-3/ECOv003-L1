@@ -67,6 +67,7 @@ if(args.run_config):
     dirname = config["ProductPathGroup", "ProductPath"]
     file_version = config["ProductPathGroup", "ProductCounter"]
     build_id = config["PrimaryExecutable", "BuildID"]
+    collection_label = config["ProductPathGroup", "CollectionLabel"]
     orb = ecostress.create_orbit_raw(config,
                    pos_off=l1b_geo_config.x_offset_iss,
                    extrapolation_pad=l1b_geo_config.extrapolation_pad,
@@ -106,6 +107,7 @@ os.chdir(dirname)
 
 orbit, scene, acquisition_time = ecostress.orbit_from_metadata(l1a_pix)
 ofile = ecostress.ecostress_file_name("L1B_RAD", orbit, scene, acquisition_time,
+                            collection_label = collection_label,
                             build = build_id,
                             version = file_version)
 log_fname = os.path.splitext(ofile)[0] + ".log"
@@ -128,6 +130,7 @@ try:
     l1brad = ecostress.L1bRadGenerate(igc, l1a_pix, l1a_gain, ofile,l1_osp_dir,
               run_config = config,
               log = log,
+              collection_label = collection_label,                        
               build_id = build_id,
               pge_version = pge_version["l1b_rad"],
               interpolate_stripe_data = l1b_rad_config.interpolate_stripe_data,
