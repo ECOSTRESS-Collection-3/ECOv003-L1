@@ -1,7 +1,7 @@
 AFIDS_DVD_DATE = 04-12-2021
 AFIDS_FULL_VERSION = 1.29
 TENSORFLOW_WHEEL = tensorflow-1.14.0-cp39-cp39-linux_x86_64.whl
-ECOSTRESS_DEPENDENCY_VERSION = 7.00
+ECOSTRESS_DEPENDENCY_VERSION = 7.10
 # Most of the time the image version number will be the same as the
 # version defined in configure.ac, but there might be instances where
 # we want something different (e.g., we are creating a test image while
@@ -26,7 +26,7 @@ afids-image: docker/afids-docker/afids-$(AFIDS_DVD_DATE).iso
 # of the python packages
 ecostress-dependency-image:
 	cp -r $(abs_srcdir)/docker/ecostress-dependency-repo/ $(abs_srcdir)/docker/ecostress-dependency-docker
-	docker build $(EXTRA_DOCKER_FLAG) -t ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) $(abs_srcdir)/docker/ecostress-dependency-docker
+	docker build $(EXTRA_DOCKER_FLAG) --cap-add SYS_ADMIN -t ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) $(abs_srcdir)/docker/ecostress-dependency-docker
 	rm -r $(abs_srcdir)/docker/ecostress-dependency-docker/ecostress-dependency-repo
 
 # We normally want to use a Dockerfile to build an image. But in this case
@@ -64,17 +64,39 @@ spice_dir = /pkg/afids/afids_latest/data/cspice
 end_to_end_dir = /project/test/ASTER/EndToEndTest
 endif
 
+# Don't run this very often, but if we need to update the tensorflow
+# wheel we can run this. Note that this is a bit of a chicken and egg,
+# we use the existing ecostress-dependency-image, but once we update
+# tensorflow we need to go back and update ecostress-dependency-image. We
+# could probably break this, but we only rarely need to run this.
+# After running this, rerun create-ecostress-dependency-repo and
+# ecostress-dependency-image
+tensorflow-wheel-build:
+	$(MAKE) dist
+# Use the default locations of various datasets. 
+	docker run -t -d --cidfile=docker_run.id \
+           -v $(abs_builddir)/:/media/work_dir:Z \
+           -v $(srtm_dir):/srtm \
+           -v $(end_to_end_dir):/project/test/ASTER/EndToEndTest:Z \
+           -v $(srtm_lwm_dir):/project/ancillary/SRTM/srtm_v3_lwm \
+           ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) \
+           /bin/bash
+	docker exec $$(cat docker_run.id) bash --login -c "cd /root && tar --no-same-owner -xf /media/work_dir/$(PACKAGE)-$(VERSION).tar.gz"
+	docker exec $$(cat docker_run.id) bash --login -c "yum install -y which patch"
+	docker exec $$(cat docker_run.id) bash --login -c "cd /root/$(PACKAGE)-$(VERSION) && ./configure --with-afids=/opt/afids --with-geocal=/opt/afids --prefix=/opt/ecostress && make tensorflow-wheel && cp /root/ecostress-level1-7.10/thirdparty/tensorflow*.whl /media/work_dir"
+	docker container stop $$(cat docker_run.id)
+
 ecostress-image:
 	$(MAKE) dist
 # Use the default locations of various datasets. 
 	docker run -t -d --cidfile=docker_run.id \
-           --mount type=bind,src=$(abs_builddir)/,dst=/media/work_dir \
-           --mount type=bind,src=$(srtm_dir),dst=/srtm \
-           --mount type=bind,src=$(end_to_end_dir),dst=/project/test/ASTER/EndToEndTest \
-           --mount type=bind,src=$(srtm_lwm_dir),dst=/project/ancillary/SRTM/srtm_v3_lwm \
+           -v $(abs_builddir)/:/media/work_dir:Z \
+           -v $(srtm_dir):/srtm \
+           -v $(end_to_end_dir):/project/test/ASTER/EndToEndTest:Z \
+           -v $(srtm_lwm_dir):/project/ancillary/SRTM/srtm_v3_lwm \
            ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) \
            /bin/bash
-	docker exec $$(cat docker_run.id) bash --login -c "cd /root && tar -xf /media/work_dir/$(PACKAGE)-$(VERSION).tar.gz"
+	docker exec $$(cat docker_run.id) bash --login -c "cd /root && tar --no-same-owner -xf /media/work_dir/$(PACKAGE)-$(VERSION).tar.gz"
 	docker exec $$(cat docker_run.id) bash --login -c "cd /root/$(PACKAGE)-$(VERSION) && ./configure --with-afids=/opt/afids --with-geocal=/opt/afids --prefix=/opt/ecostress && make -j 12 all && make install && make -j 12 check"
 	docker exec $$(cat docker_run.id) bash --login -c "rm -f /etc/profile.d/geocal.sh && cp /opt/ecostress/setup_ecostress.* /etc/profile.d"
 #	docker exec $$(cat docker_run.id) bash --login -c "ln -s /opt/ecostress/L1*_PGE /opt/ecostress/setup_ecostress.* /usr/bin"
@@ -84,10 +106,10 @@ ecostress-image:
 
 ecostress-image-end-to-end-check:
 	docker run -t --workdir /root \
-           --mount type=bind,src=$(srtm_dir),dst=/srtm \
-           --mount type=bind,src=$(landsat_dir),dst=/landsat \
-           --mount type=bind,src=$(end_to_end_dir),dst=/project/test/ASTER/EndToEndTest \
-           --mount type=bind,src=$(srtm_lwm_dir),dst=/project/ancillary/SRTM/srtm_v3_lwm \
+           -v $(srtm_dir):/srtm \
+	   -v $(end_to_end_dir):/project/test/ASTER/EndToEndTest:Z \
+           -v $(srtm_lwm_dir):/project/ancillary/SRTM/srtm_v3_lwm \
+           -v $(landsat_dir):/landsat \
            ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION) \
            /bin/bash --login -c /project/test/ASTER/EndToEndTest/latest/end_to_end.sh
 
@@ -126,7 +148,7 @@ create-ecostress-dependency-repo:
 	cp $(srcdir)/docker/ecostress-dependency-repo/ecostress-python-package.spec ecostress-dependency-repo
 	cp $(abs_srcdir)/thirdparty/$(TENSORFLOW_WHEEL) ecostress-dependency-repo
 	docker run -t -d --cidfile=docker_run.id \
-           --mount type=bind,src=$(abs_builddir)/ecostress-dependency-repo,dst=/media/ecostress-dependency-repo \
+           -v $(abs_builddir)/ecostress-dependency-repo:/media/ecostress-dependency-repo:Z \
            ecostress/afids:$(AFIDS_FULL_VERSION) /bin/bash
 	docker exec $$(cat docker_run.id) bash -c "yum install rpm-build createrepo gcc-gfortran gcc gcc-c++ -y"
 	docker exec $$(cat docker_run.id) bash -c "export PATH=/opt/afids_support/bin:$${PATH} && export LD_LIBRARY_PATH=/opt/afids_support/lib:/opt/afids_support/lib64:$${LD_LIBRARY_PATH} && mkdir -p /root/rpmbuild/SOURCES && cp /media/ecostress-dependency-repo/$(TENSORFLOW_WHEEL) /root/rpmbuild/SOURCES && rpmbuild -ba /media/ecostress-dependency-repo/ecostress-python-package.spec && mv /root/rpmbuild/RPMS/x86_64/ecostress-python-package*.x86_64.rpm /media/ecostress-dependency-repo && cd /media/ecostress-dependency-repo && createrepo . && chmod a+w -R repodata"

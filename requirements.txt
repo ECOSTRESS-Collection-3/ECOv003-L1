@@ -9,3 +9,5 @@ tflearn
 # Don't got to tensorflow 2.x, I don't know that something isn't broken by
 # this. We need to build our own copy, then do a "pip install <the wheel>"
 tensorflow==1.14.0
+# tensorflow requires an older version of protobuf
+protobuf<=3.21

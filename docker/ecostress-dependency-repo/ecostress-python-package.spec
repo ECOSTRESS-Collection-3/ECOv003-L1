@@ -35,6 +35,10 @@ rm -rf $RPM_BUILD_ROOT
 export PYTHONPATH=$RPM_BUILD_ROOT/opt/afids_support/lib/python3.9/site-packages
 pip install --root=$RPM_BUILD_ROOT $RPM_SOURCE_DIR/tensorflow-1.14.0-cp39-cp39-linux_x86_64.whl
 pip install --root=$RPM_BUILD_ROOT cython xlrd tflearn
+# tensorflow requires an older version of protobuf
+pip install --root=$RPM_BUILD_ROOT "protobuf<=3.21"
+# Conflicts with stuff already installed by afids
+rm -rf $RPM_BUILD_ROOT/opt/afids_support/lib/python3.9/site-packages/markupsafe
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -71,7 +75,7 @@ rm -rf $RPM_BUILD_ROOT
 /opt/afids_support/lib/python3.9/site-packages/pasta/
 /opt/afids_support/lib/python3.9/site-packages/google_pasta-*.dist-info/
 /opt/afids_support/lib/python3.9/site-packages/protobuf-*/
-/opt/afids_support/lib/python3.9/site-packages/protobuf-*-nspkg.pth
+/opt/afids_support/lib/python3.9/site-packages/protobuf-3.20.3-py3.9-nspkg.pth
 /opt/afids_support/lib/python3.9/site-packages/tensorboard/
 /opt/afids_support/lib/python3.9/site-packages/tensorboard-*.dist-info/
 /opt/afids_support/lib/python3.9/site-packages/tensorflow/
@@ -79,7 +83,6 @@ rm -rf $RPM_BUILD_ROOT
 /opt/afids_support/lib/python3.9/site-packages/tensorflow_estimator/
 /opt/afids_support/lib/python3.9/site-packages/tensorflow_estimator-*.dist-info/
 /opt/afids_support/lib/python3.9/site-packages/termcolor-*.dist-info/
-/opt/afids_support/lib/python3.9/site-packages/termcolor.py
 /opt/afids_support/lib/python3.9/site-packages/tflearn/
 /opt/afids_support/lib/python3.9/site-packages/tflearn-*.dist-info/
 /opt/afids_support/lib/python3.9/site-packages/werkzeug/
@@ -87,7 +90,13 @@ rm -rf $RPM_BUILD_ROOT
 /opt/afids_support/lib/python3.9/site-packages/wrapt-*.dist-info/
 /opt/afids_support/lib/python3.9/site-packages/xlrd/
 /opt/afids_support/lib/python3.9/site-packages/xlrd-*.dist-info/
-
+/opt/afids_support/lib/python3.9/site-packages/MarkupSafe-2.1.1.dist-info/*
+/opt/afids_support/lib/python3.9/site-packages/importlib_metadata-5.0.0.dist-info/*
+/opt/afids_support/lib/python3.9/site-packages/importlib_metadata/*
+/opt/afids_support/lib/python3.9/site-packages/termcolor/*
+/opt/afids_support/lib/python3.9/site-packages/zipp-3.8.1.dist-info/*
+/opt/afids_support/lib/python3.9/site-packages/zipp.py
+   
 %changelog
 * Sun Aug 15 2021 Smyth <smyth@macsmyth> - 2.0-1.el%{rhel}
 - Update for afids version 1.29
