@@ -105,6 +105,7 @@ class L1aRawPixGenerate(object):
   '''This generates a L1A_RAW_PIX, L1A_BB, L1A_ENG and L1A_RAW_ATT
   files from a L0B input.'''
   def __init__(self, l0b, obst_dir, osp_dir, scene_file, run_config = None,
+               collection_label = "ECOSTRESS",
                build_id = "0116",
                pge_version = "0.50", 
                file_version = "01"):
@@ -115,9 +116,11 @@ class L1aRawPixGenerate(object):
       self.osp_dir = osp_dir
       self.scene_file = scene_file
       self.run_config = run_config
+      self.collection_label = collection_label
       self.build_id = build_id
       self.pge_version = pge_version
       self.file_version = file_version
+      self.collection_label = collection_label
 
   def process_scene_file(self):
     '''Process the scene file, returning the orbit, scene id, start, 
@@ -140,6 +143,7 @@ class L1aRawPixGenerate(object):
     the file handle and metadata handle.'''
 
     fname = ecostress_file_name(prod_type, orbit, scene, start_time,
+                                collection_label = self.collection_label,
                                 build=self.build_id,
                                 version=self.file_version,
                                 intermediate=intermediate)
@@ -151,6 +155,7 @@ class L1aRawPixGenerate(object):
         product_specfic_group = prod_type + "Metadata",
         proc_lev_desc = 'Level 1A Raw Parameters',
         pge_name="L1A_RAW_PIX", local_granule_id=fname,
+        collection_label = self.collection_label,                      
         build_id = self.build_id, pge_version= self.pge_version,
         orbit_based = (scene is None))
     if(self.run_config is not None):
@@ -714,9 +719,6 @@ class L1aRawPixGenerate(object):
             else: tc = tcorr[tdx]
             print("Scene %d scan %d TCORR=%f TDX=%d" %(scene_id, scan, tcorr[tdx], tdx) )
           else: tc = 0.0
-          if scan==0:  # save refined scene start time of IMG
-            rst = p0t
-            #tc0 = tc
           if seq==0:  # save scan start time
             sst = p0t
             scan = int( ( sst - rst ) / SCAN_DUR + 0.5 )
@@ -732,6 +734,9 @@ class L1aRawPixGenerate(object):
             line = scan * PPFP
 
           elif seq==2:  # save and replicate IMG start time
+            if scan==0:  # save refined scene start time of IMG
+              rst = p0t
+              #tc0 = tc
             print("Orbit %s SCENE %d SCAN %d P0T=%f" %(orb,scene_id,scan,p0t))
             #pix_time[line:line+PPFP] = Time.time_gps( p0t-tc ).j2000
             pix_time[line:line+PPFP] = Time.time_gps( p0t ).j2000
