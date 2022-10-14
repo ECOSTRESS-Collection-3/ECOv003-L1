@@ -719,6 +719,9 @@ class L1aRawPixGenerate(object):
             else: tc = tcorr[tdx]
             print("Scene %d scan %d TCORR=%f TDX=%d" %(scene_id, scan, tcorr[tdx], tdx) )
           else: tc = 0.0
+          if scan==0:  # save refined scene start time of IMG
+            rst = p0t
+              #tc0 = tc
           if seq==0:  # save scan start time
             sst = p0t
             scan = int( ( sst - rst ) / SCAN_DUR + 0.5 )
@@ -734,9 +737,6 @@ class L1aRawPixGenerate(object):
             line = scan * PPFP
 
           elif seq==2:  # save and replicate IMG start time
-            if scan==0:  # save refined scene start time of IMG
-              rst = p0t
-              #tc0 = tc
             print("Orbit %s SCENE %d SCAN %d P0T=%f" %(orb,scene_id,scan,p0t))
             #pix_time[line:line+PPFP] = Time.time_gps( p0t-tc ).j2000
             pix_time[line:line+PPFP] = Time.time_gps( p0t ).j2000
