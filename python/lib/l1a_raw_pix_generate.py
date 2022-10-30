@@ -843,7 +843,7 @@ class L1aRawPixGenerate(object):
 
           # end seq copy loop
           if e0>=tot_pkts:
-            sse = gpt[pkt_idx] + PKT_DUR + FP_DUR
+            # sse = gpt[pkt_idx] + PKT_DUR + FP_DUR
             pkt_idx = tot_pkts - 1
           else:
             if op>op0 and remain>0: pkt_idx = e0-1
