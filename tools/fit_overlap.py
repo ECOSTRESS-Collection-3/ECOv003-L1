@@ -77,7 +77,7 @@ if(args.fit):
     for i in range(len(igccol.parameter_subset)):
         print("  ", igccol.parameter_name_subset[i], ": ",
               igccol.parameter_subset[i])
-    r = scipy.optimize.least_squares(residual, x0, args=(igccol,mpts), loss='soft_l1')
+    r = scipy.optimize.least_squares(residual, x0, args=(igccol,mpts), loss='soft_l1', bounds=[(-0.1,-0.1),(0.1,0.1)])
     print(r)
     print("Fitted values")
     for i in range(len(igccol.parameter_subset)):
