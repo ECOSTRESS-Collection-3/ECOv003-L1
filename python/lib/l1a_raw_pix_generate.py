@@ -382,6 +382,14 @@ class L1aRawPixGenerate(object):
       BANDS = 6
       bo = [5, 3, 2, 0, 1, 4]
       BandSpec = [1.6, 8.2, 8.7, 9.0, 10.5, 12.0]
+    elif bip.shape[3] == 5:
+      BANDS = 5
+      bo = [3, 2, 0, 1, 4]
+      BandSpec = [8.28, 8.78, 9.2, 10.49, 12.09]
+    elif bip.shape[3] == 4:
+      BANDS = 4
+      bo = [2, 0, 1, 4]
+      BandSpec = [8.78, 9.2, 10.49, 12.09]
     else:
       BANDS = 3
       bo = [1, 0, 2]
@@ -711,11 +719,11 @@ class L1aRawPixGenerate(object):
             else: tc = tcorr[tdx]
             print("Scene %d scan %d TCORR=%f TDX=%d" %(scene_id, scan, tcorr[tdx], tdx) )
           else: tc = 0.0
+          if scan==0:  # save refined scene start time of IMG
+            rst = p0t
+              #tc0 = tc
           if seq==0:  # save scan start time
             sst = p0t
-            if scan==0:  # save refined scene start time
-              rst = p0t
-              tc0 = tc
             scan = int( ( sst - rst ) / SCAN_DUR + 0.5 )
             dst = sst - sst0
             std = dst - SCAN_DUR
@@ -730,7 +738,8 @@ class L1aRawPixGenerate(object):
 
           elif seq==2:  # save and replicate IMG start time
             print("Orbit %s SCENE %d SCAN %d P0T=%f" %(orb,scene_id,scan,p0t))
-            pix_time[line:line+PPFP] = Time.time_gps( p0t-tc ).j2000
+            #pix_time[line:line+PPFP] = Time.time_gps( p0t-tc ).j2000
+            pix_time[line:line+PPFP] = Time.time_gps( p0t ).j2000
 
           print("Found %s LID[%d,%d]=%d PH=%d SCENE=%s SCAN=%d GPS=%f DPT=%f %s"%(ev_names[seq],e0,e1,lev[e0,e1],ph,scene_id,scan,p0t,dpt,Time.time_gps(p0t)))
   
@@ -834,7 +843,7 @@ class L1aRawPixGenerate(object):
 
           # end seq copy loop
           if e0>=tot_pkts:
-            sse = gpt[pkt_idx] + PKT_DUR + FP_DUR
+            # sse = gpt[pkt_idx] + PKT_DUR + FP_DUR
             pkt_idx = tot_pkts - 1
           else:
             if op>op0 and remain>0: pkt_idx = e0-1
