@@ -381,19 +381,20 @@ class L1aRawPixGenerate(object):
     if bip.shape[3]==6:
       BANDS = 6
       bo = [5, 3, 2, 0, 1, 4]
-      BandSpec = [1.6, 8.2, 8.7, 9.0, 10.5, 12.0]
+      bs = [1.6, 8.2, 8.7, 9.0, 10.5, 12.0]
     elif bip.shape[3] == 5:
       BANDS = 5
       bo = [3, 2, 0, 1, 4]
-      BandSpec = [8.28, 8.78, 9.2, 10.49, 12.09]
+      bs = [8.28, 8.78, 9.2, 10.49, 12.09]
     elif bip.shape[3] == 4:
       BANDS = 4
       bo = [2, 0, 1, 4]
-      BandSpec = [8.78, 9.2, 10.49, 12.09]
+      bs = [8.78, 9.2, 10.49, 12.09]
     else:
       BANDS = 3
       bo = [1, 0, 2]
-      BandSpec = [8.7, 10.5, 12.0]
+      bs = [8.7, 10.5, 12.0]
+    BandSpec = np.zeros( BANDS, dtype=np.float )
 
     tdpuio = 0
     tcorr = 0
@@ -993,9 +994,9 @@ class L1aRawPixGenerate(object):
         t.attrs['valid_max']='32767'
         t.attrs['fill']='0xffff'
 
-        #if BANDS==6:
         e0 = np.argmax( img[:,:,bo[b]] != 0xffff )
         if e0==0 and img[0,0,bo[b]]==0xffff: BandSpec[b] = 0.0
+        else: BandSpec[b] = bs[b]
 
         t = l1a_bpg.create_dataset("b%d_blackbody_295" %(b+1),
                                    data=cbb[:,:,bo[b]], chunks=(PPFP,BBLEN),
