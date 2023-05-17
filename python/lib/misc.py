@@ -35,7 +35,7 @@ def find_radiance_file(orbnum, scene, multiple_ok = False):
         raise RuntimeError(f"Multiple radiance files found for {orbnum}, scene {scene}")
     return f[0]
 
-def find_orbit_file(orbnum, raw_att = False, mutiple_ok = False):
+def find_orbit_file(orbnum, raw_att = False, multiple_ok = False):
     '''Simple function to find a orbit file by orbit number and scene.
     Note that this is a pretty simplistic function, and doesn't handle things
     like multiple versions etc. But I need to simple functionality often
