@@ -21,7 +21,7 @@ def orb_to_path(orbnum):
         raise RuntimeError(f"Orbit {orbnum} not found. Do you need to run orbit_to_date.py?")
     return orb_to_date[int(orbnum)]
 
-def find_radiance_file(orbnum, scene):
+def find_radiance_file(orbnum, scene, multiple_ok = False):
     '''Simple function to find a radiance file by orbit number and scene.
     Note that this is a pretty simplistic function, and doesn't handle things
     like multiple versions etc. But I need to simple functionality often
@@ -31,11 +31,11 @@ def find_radiance_file(orbnum, scene):
         f = glob.glob(f"/ops/store*/PRODUCTS/L1B_RAD/{orb_to_path(orbnum)[1]}/ECOSTRESS_L1B_RAD_%05d_%03d_*.h5" % (int(orbnum), int(scene)))
     if(len(f) == 0):
         raise RuntimeError(f"Radiance file for {orbnum}, scene {scene} not found")
-    if(len(f) > 1):
+    if(len(f) > 1 and not multiple_ok):
         raise RuntimeError(f"Multiple radiance files found for {orbnum}, scene {scene}")
     return f[0]
 
-def find_orbit_file(orbnum, raw_att = False):
+def find_orbit_file(orbnum, raw_att = False, mutiple_ok = False):
     '''Simple function to find a orbit file by orbit number and scene.
     Note that this is a pretty simplistic function, and doesn't handle things
     like multiple versions etc. But I need to simple functionality often
@@ -49,7 +49,7 @@ def find_orbit_file(orbnum, raw_att = False):
         f = glob.glob(f"/ops/store*/PRODUCTS/L1B_ATT/{orb_to_path(orbnum)[0]}/ECOSTRESS_L1B_ATT_%05d_*.h5" % int(orbnum))
     if(len(f) == 0):
         raise RuntimeError(f"Orbit file for {orbnum} not found")
-    if(len(f) > 1):
+    if(len(f) > 1 and not multiple_ok):
         raise RuntimeError(f"Multiple orbit files found for {orbnum}")
     return f[0]
 
@@ -98,13 +98,15 @@ def create_igc(rad_fname, orb_fname, l1_osp_dir=None, dem = None, title=""):
     finally:
         sys.path.pop()
 
-def create_igccol(orbnum, scene, l1_osp_dir=None, dem = None, title=""):
+def create_igccol(orbnum, scene, l1_osp_dir=None, dem = None, title="",
+                  multiple_ok=False):
     '''Variation of create_igc that puts the IGC as a single entry in
     an IgcCollection (which has support for parameters). This finds the 
     radiance and orbit data for the given orbit and scene number.'''
     igccol = ecostress_swig.EcostressIgcCollection()
-    igccol.add_igc(create_igc(find_radiance_file(orbnum, scene),
-                              find_orbit_file(orbnum),
+    igccol.add_igc(create_igc(find_radiance_file(orbnum, scene,
+                                                 multiple_ok=multiple_ok),
+                              find_orbit_file(orbnum,multiple_ok=multiple_ok),
                               l1_osp_dir=l1_osp_dir, dem=dem, title=title))
     return igccol    
 
