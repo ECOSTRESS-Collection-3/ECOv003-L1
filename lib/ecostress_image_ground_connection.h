@@ -3,7 +3,6 @@
 #include "geocal/image_ground_connection.h"
 #include "geocal/orbit.h"
 #include "geocal/time_table.h"
-#include "ecostress_camera.h"
 #include "ecostress_scan_mirror.h"
 #include "ecostress_time_table.h"
 #include "geocal_gsl_root.h"
@@ -38,7 +37,7 @@ public:
   EcostressImageGroundConnection
   (const boost::shared_ptr<GeoCal::Orbit>& Orb,
    const boost::shared_ptr<GeoCal::TimeTable>& Tt,
-   const boost::shared_ptr<EcostressCamera>& Cam,
+   const boost::shared_ptr<GeoCal::Camera>& Cam,
    const boost::shared_ptr<EcostressScanMirror>& Scan_mirror,
    const boost::shared_ptr<GeoCal::Dem>& D,
    const boost::shared_ptr<GeoCal::RasterImage>& Img,
@@ -113,12 +112,10 @@ public:
 				   bool& Success,
 				   int Band = -1) const;
   boost::shared_ptr<GeoCal::QuaternionOrbitData> orbit_data
-  (const GeoCal::Time& T, double Ic_line, double Ic_sample,
-   double& Dcs_x_offset, double& Dcs_y_offset) const;
+  (const GeoCal::Time& T, double Ic_line, double Ic_sample) const;
   boost::shared_ptr<GeoCal::QuaternionOrbitData> orbit_data
   (const GeoCal::TimeWithDerivative& T, double Ic_line,
-   const GeoCal::AutoDerivative<double>& Ic_sample,
-   double& Dcs_x_offset, double& Dcs_y_offset) const;
+   const GeoCal::AutoDerivative<double>& Ic_sample) const;
   virtual bool has_time() const { return true; }
   virtual GeoCal::Time pixel_time(const GeoCal::ImageCoordinate& Ic) const
   {
@@ -170,13 +167,13 @@ public:
 /// Camera we are using.
 //-------------------------------------------------------------------------
   
-  const boost::shared_ptr<EcostressCamera>& camera() const { return cam; }
+  const boost::shared_ptr<GeoCal::Camera>& camera() const { return cam; }
 
 //-------------------------------------------------------------------------
 /// Set Camera we are using.
 //-------------------------------------------------------------------------
   
-  void camera(const boost::shared_ptr<EcostressCamera>& Cam)
+  void camera(const boost::shared_ptr<GeoCal::Camera>& Cam)
   { cam = Cam; }
 
 //-------------------------------------------------------------------------
@@ -221,18 +218,12 @@ public:
 
   void max_height(double Max_h) { max_h = Max_h;}
 
-//-----------------------------------------------------------------------
-/// Set dcs_offset. This is really meant to be used as an internal
-/// function.
-//-----------------------------------------------------------------------
-  void dcs_offset(double Dcs_x_offset, double Dcs_y_offset) const
-  { cam->dcs_offset(Dcs_x_offset, Dcs_y_offset); }
 private:
   int b;
   double res, max_h;
   boost::shared_ptr<GeoCal::Orbit> orb;
   boost::shared_ptr<GeoCal::TimeTable> tt;
-  boost::shared_ptr<EcostressCamera> cam;
+  boost::shared_ptr<GeoCal::Camera> cam;
   boost::shared_ptr<EcostressScanMirror> sm;
   EcostressImageGroundConnection() {}
   friend class boost::serialization::access;

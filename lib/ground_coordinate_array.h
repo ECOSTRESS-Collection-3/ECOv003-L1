@@ -87,6 +87,9 @@ private:
 					// ray casting
   mutable int sl, el;			// Start frame line and end
 					// frame line for processing.
+  // The ScLookVector is identical for all samples, so we calculate
+  // once and cache
+  blitz::Array<GeoCal::ScLookVector, 3> camera_slv;
   // These are redundant with igc_, but we stash these just to make
   // our code simpler.
   int b;			// Band we are working with

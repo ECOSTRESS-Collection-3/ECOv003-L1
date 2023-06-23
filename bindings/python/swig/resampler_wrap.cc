@@ -7767,7 +7767,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_0(PyObject *SWIGUNUSED
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    /*@SWIG:/groups/algorithm/smyth/anaconda-env/envs/geocal-latest/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -7884,7 +7884,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_1(PyObject *SWIGUNUSED
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    /*@SWIG:/groups/algorithm/smyth/anaconda-env/envs/geocal-latest/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -7993,7 +7993,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_2(PyObject *SWIGUNUSED
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    /*@SWIG:/groups/algorithm/smyth/anaconda-env/envs/geocal-latest/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -8094,7 +8094,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_3(PyObject *SWIGUNUSED
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    /*@SWIG:/groups/algorithm/smyth/anaconda-env/envs/geocal-latest/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -8187,7 +8187,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_4(PyObject *SWIGUNUSED
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    /*@SWIG:/groups/algorithm/smyth/anaconda-env/envs/geocal-latest/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -8281,7 +8281,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_dqi(PyObject *SWIGUNUSEDPARM(self)
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    /*@SWIG:/groups/algorithm/smyth/anaconda-env/envs/geocal-latest/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -9070,7 +9070,7 @@ SWIGINTERN PyObject *_wrap_Resampler_map_values(PyObject *SWIGUNUSEDPARM(self), 
   resultobj = SWIG_Py_Void();
   {
     PyObject *res;
-    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    /*@SWIG:/groups/algorithm/smyth/anaconda-env/envs/geocal-latest/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -9093,7 +9093,7 @@ SWIGINTERN PyObject *_wrap_Resampler_map_values(PyObject *SWIGUNUSEDPARM(self), 
   }
   {
     PyObject *res;
-    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    /*@SWIG:/groups/algorithm/smyth/anaconda-env/envs/geocal-latest/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -9116,7 +9116,7 @@ SWIGINTERN PyObject *_wrap_Resampler_map_values(PyObject *SWIGUNUSEDPARM(self), 
   }
   {
     PyObject *res;
-    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
+    /*@SWIG:/groups/algorithm/smyth/anaconda-env/envs/geocal-latest/share/geocal/swig/swig_array.i,188,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -9350,14 +9350,28 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_Resampler", _wrap_new_Resampler, METH_VARARGS, (char *)"\n"
 		"\n"
-		"Resampler::Resampler(const blitz::Array< double, 2 > &Latitude_interpolated, const\n"
-		"blitz::Array< double, 2 > &Longitude_interpolated, const\n"
+		"Resampler::Resampler(const boost::shared_ptr< GeoCal::RasterImage > &Latitude, const\n"
+		"boost::shared_ptr< GeoCal::RasterImage > &Longitude, const\n"
 		"GeoCal::MapInfo &Mi, int Num_sub_pixel=2, bool Exactly_match_mi=false)\n"
-		"Alternative constructor where we get the lat/lon from something other\n"
-		"than a file.\n"
+		"Constructor.\n"
 		"\n"
-		"The data should already be interpolated (e.g., in python do\n"
-		"scipy.ndimage.interpolation.zoom(t,Num_sub_pixel,order=2) \n"
+		"This takes the latitude and longitude fields as RasterImage (we could\n"
+		"have taken the L1B_GEO file name, but taking RasterImage seems a\n"
+		"little more general). We take the MapInfo that we will resample to\n"
+		"(you can get that from something like mi =\n"
+		"Landsat7Global(\"/raid22\",Landsat7Global.BAND5).map_info.scale(2,2)\n"
+		"in python).\n"
+		"\n"
+		"We make sure the mapinfo covers the latitude/longitude range\n"
+		"\n"
+		"We also pass in the number of subpixels to calculate, so for example\n"
+		"to work with 60 m landsat like map projection you'd want this to be 2.\n"
+		"\n"
+		"By default, we only use Mi to determine the pixel resolution, and we\n"
+		"make sure the output covers the full latitude/longitude range. You can\n"
+		"optionally specify that we exactly match the passed in Mi, regardless\n"
+		"of the actually coverage of the lat/lon. This is useful if we are\n"
+		"producing output files to compare against some existing file. \n"
 		""},
 	 { (char *)"Resampler_resample_dqi", _wrap_Resampler_resample_dqi, METH_VARARGS, (char *)"\n"
 		"\n"

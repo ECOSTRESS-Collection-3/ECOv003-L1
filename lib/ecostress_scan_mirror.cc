@@ -15,8 +15,6 @@ template<class Archive>
 void EcostressScanMirror::load(Archive& Ar, const unsigned int version)
 {
   inst_to_sc_nd_ = value(inst_to_sc_);
-  camera_to_mirror_nd_ = value(camera_to_mirror_);
-  camera_to_mirror_2_nd_ = value(camera_to_mirror_2_);
 }
 
 
@@ -33,14 +31,6 @@ void EcostressScanMirror::serialize(Archive & ar, const unsigned int version)
     & GEOCAL_NVP_(ang_per_ev_2)
     & GEOCAL_NVP_(parameter_mask)
     & GEOCAL_NVP_(inst_to_sc);
-  if(version >= 2) {
-    ar & GEOCAL_NVP_(camera_to_mirror)
-      & GEOCAL_NVP_(camera_to_mirror_2);
-  }
-  if(version >= 3) {
-    ar & GEOCAL_NVP_(boresight_x_offset)
-      & GEOCAL_NVP_(boresight_y_offset);
-  }
   boost::serialization::split_member(ar, *this, version);
 }
 
@@ -69,15 +59,7 @@ EcostressScanMirror::EcostressScanMirror
  double Beta,
  double Delta,
  double First_angle_per_ev,
- double Second_angle_per_ev,
- double Yaw,
- double Roll,
- double Pitch,
- double Yaw_2,
- double Roll_2,
- double Pitch_2,
- double Boresight_x_offset,
- double Boresight_y_offset
+ double Second_angle_per_ev
 )
   : evalue_(Number_scan, Number_sample),
     max_encoder_value_(Max_encoder_value),
@@ -85,9 +67,7 @@ EcostressScanMirror::EcostressScanMirror
     ev0_2_(Second_encoder_value_at_0),
     ang_per_ev_(First_angle_per_ev),
     ang_per_ev_2_(Second_angle_per_ev),
-    parameter_mask_(15),
-    boresight_x_offset_(Boresight_x_offset),
-    boresight_y_offset_(Boresight_y_offset)    
+    parameter_mask_(7)
 {
   for(int i = 0; i < evalue_.rows(); ++i)
     for(int j = 0; j < evalue_.cols(); ++j) {
@@ -99,9 +79,6 @@ EcostressScanMirror::EcostressScanMirror
   blitz::Array<double, 1> t(3);
   t = Epsilon, Beta, Delta;
   euler(t);
-  blitz::Array<double, 1> t2(6);
-  t2 = Yaw, Pitch, Roll, Yaw_2, Pitch_2, Roll_2;
-  mirror_ypr(t2);
 }
 
 //-------------------------------------------------------------------------
@@ -117,15 +94,7 @@ EcostressScanMirror::EcostressScanMirror
  double Beta,
  double Delta,
  double First_angle_per_ev,
- double Second_angle_per_ev,
- double Yaw,
- double Roll,
- double Pitch,
- double Yaw_2,
- double Roll_2,
- double Pitch_2,
- double Boresight_x_offset,
- double Boresight_y_offset
+ double Second_angle_per_ev
  )
   : evalue_(Encoder_value.copy()),
     max_encoder_value_(Max_encoder_value),
@@ -133,9 +102,7 @@ EcostressScanMirror::EcostressScanMirror
     ev0_2_(Second_encoder_value_at_0),
     ang_per_ev_(First_angle_per_ev),
     ang_per_ev_2_(Second_angle_per_ev),
-    parameter_mask_(15),
-    boresight_x_offset_(Boresight_x_offset),
-    boresight_y_offset_(Boresight_y_offset)    
+    parameter_mask_(7)
 {
   blitz::Range ra = blitz::Range::all();
   // Look for scans with some missing data, and fill in. We make sure
@@ -176,9 +143,6 @@ EcostressScanMirror::EcostressScanMirror
   blitz::Array<double, 1> t(3);
   t = Epsilon, Beta, Delta;
   euler(t);
-  blitz::Array<double, 1> t2(6);
-  t2 = Yaw, Pitch, Roll, Yaw_2, Pitch_2, Roll_2;
-  mirror_ypr(t2);
 }
 
 //-------------------------------------------------------------------------
@@ -215,11 +179,7 @@ void EcostressScanMirror::print(std::ostream& Os) const
      << "  Second encoder value at 0:       " << ev0_2_ << "\n"
      << "  First angler per encoder value:  " << ang_per_ev_ << "\n"
      << "  Second angler per encoder value: " << ang_per_ev_2_ << "\n"
-     << "  Instrument to spacecraft:        " << instrument_to_sc() << "\n"
-     << "  Camera to mirror:                " << camera_to_mirror_nd_ << "\n"
-     << "  Camera to mirror side 2:         " << camera_to_mirror_2_nd_ << "\n"
-     << "  Boresight X offset:              " << boresight_x_offset() << "\n"
-     << "  Boresight Y offset:              " << boresight_y_offset() << "\n";
+     << "  Instrument to spacecraft:        " << instrument_to_sc() << "\n";
 }
 
 //-----------------------------------------------------------------------
@@ -230,59 +190,47 @@ void EcostressScanMirror::print(std::ostream& Os) const
 
 void EcostressScanMirror::parameter(const blitz::Array<double, 1>& Parm)
 {
-  if(Parm.rows() != 15)
+  if(Parm.rows() != 7)
     throw Exception("Wrong sized parameter passed.");
   // euler calls notify_update(), so we don't need to do that.
   euler(Parm(blitz::Range(0,2)));
-  mirror_ypr(Parm(blitz::Range(3,8)));
-  ev0_ = Parm(9);
-  ev0_2_ = Parm(10);
-  ang_per_ev_ = Parm(11);
-  ang_per_ev_2_ = Parm(12);
-  boresight_x_offset_ = Parm(13);
-  boresight_y_offset_ = Parm(14);
+  ev0_ = Parm(3);
+  ev0_2_ = Parm(4);
+  ang_per_ev_ = Parm(5);
+  ang_per_ev_2_ = Parm(6);
 }
 
 void EcostressScanMirror::parameter_with_derivative(const GeoCal::ArrayAd<double, 1>& Parm)
 {
-  if(Parm.rows() != 15)
+  if(Parm.rows() != 7)
     throw Exception("Wrong sized parameter passed.");
   // euler calls notify_update(), so we don't need to do that.
   euler_with_derivative(Parm(blitz::Range(0,2)));
-  mirror_ypr_with_derivative(Parm(blitz::Range(3,8)));
-  ev0_ = Parm(9);
-  ev0_2_ = Parm(10);
-  ang_per_ev_ = Parm(11);
-  ang_per_ev_2_ = Parm(12);
-  boresight_x_offset_ = Parm(13);
-  boresight_y_offset_ = Parm(14);
+  ev0_ = Parm(3);
+  ev0_2_ = Parm(4);
+  ang_per_ev_ = Parm(5);
+  ang_per_ev_2_ = Parm(6);
 }
 
 blitz::Array<double, 1> EcostressScanMirror::parameter() const
 {
-  blitz::Array<double, 1> res(15);
+  blitz::Array<double, 1> res(7);
   res(blitz::Range(0,2)) = euler();
-  res(blitz::Range(3,8)) = mirror_ypr();
-  res(9) = first_encoder_value_at_0();
-  res(10) = second_encoder_value_at_0();
-  res(11) = first_angle_per_encoder_value();
-  res(12) = second_angle_per_encoder_value();
-  res(13) = boresight_x_offset_.value();
-  res(14) = boresight_y_offset_.value();
+  res(3) = first_encoder_value_at_0();
+  res(4) = second_encoder_value_at_0();
+  res(5) = first_angle_per_encoder_value();
+  res(6) = second_angle_per_encoder_value();
   return res;
 }
 
 GeoCal::ArrayAd<double, 1> EcostressScanMirror::parameter_with_derivative() const
 {
-  blitz::Array<AutoDerivative<double>, 1> res(15);
+  blitz::Array<AutoDerivative<double>, 1> res(7);
   res(blitz::Range(0,2)) = euler_with_derivative();
-  res(blitz::Range(3,8)) = mirror_ypr_with_derivative();
-  res(9) = first_encoder_value_at_0_with_derivative();
-  res(10) = second_encoder_value_at_0_with_derivative();
-  res(11) = first_angle_per_encoder_value_with_derivative();
-  res(12) = second_angle_per_encoder_value_with_derivative();
-  res(13) = boresight_x_offset_;
-  res(14) = boresight_y_offset_;
+  res(3) = first_encoder_value_at_0_with_derivative();
+  res(4) = second_encoder_value_at_0_with_derivative();
+  res(5) = first_angle_per_encoder_value_with_derivative();
+  res(6) = second_angle_per_encoder_value_with_derivative();
   return ArrayAd<double, 1>(res);
 }
 
@@ -292,18 +240,10 @@ std::vector<std::string> EcostressScanMirror::parameter_name() const
   res.push_back("Instrument Euler Epsilon");
   res.push_back("Instrument Euler Beta");
   res.push_back("Instrument Euler Delta");
-  res.push_back("Camera to Mirror Yaw");
-  res.push_back("Camera to Mirror Pitch");
-  res.push_back("Camera to Mirror Roll");
-  res.push_back("Camera to Mirror Side 2 Yaw");
-  res.push_back("Camera to Mirror Side 2 Pitch");
-  res.push_back("Camera to Mirror Side 2 Roll");
   res.push_back("First encoder value at 0");
   res.push_back("Second encoder value at 0");
   res.push_back("First angle per encoder value");
   res.push_back("Second angle per encoder value");
-  res.push_back("Boresight X offset");
-  res.push_back("Boresight Y offset");
   return res;
 }
 

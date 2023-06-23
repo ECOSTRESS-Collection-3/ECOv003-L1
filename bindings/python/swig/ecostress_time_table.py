@@ -206,16 +206,10 @@ class EcostressTimeTable(geocal_swig.time_table.TimeTable):
     def __init__(self, *args):
         """
 
-        EcostressTimeTable::EcostressTimeTable(const std::string &Fname, bool Averaging_done, double
-        Mirror_rpm=25.4, double Frame_time=0.0000321875, double Toffset=0)
-        Create a time table by reading the input file.
-
-        The file should be a L1A_PIX or a L1B_RAD file.
-
-        This variation lets you set the Averaging_done explicitly. Normally we
-        just set Averaging_done for L1B_RAD and have it false for L1A_PIX. But
-        for testing purposes it can be useful to read one dataset and then
-        pretend it for a different averaging mode. 
+        EcostressTimeTable::EcostressTimeTable(GeoCal::Time Tstart, bool Averaging_done=true, int Num_scan=44,
+        double Mirror_rpm=25.4, double Frame_time=0.0000321875)
+        Create a time table with the given number of scans, with the time
+        spaced exactly the nominal_scan_time(). 
         """
         _ecostress_time_table.EcostressTimeTable_swiginit(self, _ecostress_time_table.new_EcostressTimeTable(*args))
 

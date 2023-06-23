@@ -53,15 +53,7 @@ public:
 		      double Beta = 0,
 		      double Delta = 0,
 		      double First_angle_per_ev = 360.0 / 1749248 * 2,
-		      double Second_angle_per_ev = 360.0 / 1749248 * 2,
-		      double Yaw = 0,
-		      double Roll = 0,
-		      double Pitch = 0,
-		      double Yaw_2 = 0,
-		      double Roll_2 = 0,
-		      double Pitch_2 = 0,
-		      double Boresight_x_offset = 0,
-		      double Boresight_y_offset = 0
+		      double Second_angle_per_ev = 360.0 / 1749248 * 2
 		      );
   EcostressScanMirror(const blitz::Array<int, 2>& Encoder_value,
 		      int Max_encoder_value = 1749248,
@@ -71,15 +63,7 @@ public:
 		      double Beta = 0,
 		      double Delta = 0,
 		      double First_angle_per_ev = 360.0 / 1749248 * 2,
-		      double Second_angle_per_ev = 360.0 / 1749248 * 2,
-		      double Yaw = 0,
-		      double Roll = 0,
-		      double Pitch = 0,
-		      double Yaw_2 = 0,
-		      double Roll_2 = 0,
-		      double Pitch_2 = 0,
-		      double Boresight_x_offset = 0,
-		      double Boresight_y_offset = 0
+		      double Second_angle_per_ev = 360.0 / 1749248 * 2
 		      );
   virtual ~EcostressScanMirror() {}
 
@@ -125,88 +109,32 @@ public:
   void fit_delta(bool V) {parameter_mask_(2) = V;}
 
 //-----------------------------------------------------------------------
-/// Indicate if we fit for camera to mirror yaw.
-//-----------------------------------------------------------------------
-
-  bool fit_camera_to_mirror_yaw() const { return parameter_mask_(3); }
-  void fit_camera_to_mirror_yaw(bool V) {parameter_mask_(3) = V;}
-
-//-----------------------------------------------------------------------
-/// Indicate if we fit for camera to mirror pitch.
-//-----------------------------------------------------------------------
-
-  bool fit_camera_to_mirror_pitch() const { return parameter_mask_(4); }
-  void fit_camera_to_mirror_pitch(bool V) {parameter_mask_(4) = V;}
-
-//-----------------------------------------------------------------------
-/// Indicate if we fit for camera to mirror roll.
-//-----------------------------------------------------------------------
-
-  bool fit_camera_to_mirror_roll() const { return parameter_mask_(5); }
-  void fit_camera_to_mirror_roll(bool V) {parameter_mask_(5) = V;}
-
-//-----------------------------------------------------------------------
-/// Indicate if we fit for camera to mirror second side yaw.
-//-----------------------------------------------------------------------
-
-  bool fit_camera_to_mirror_2_yaw() const { return parameter_mask_(6); }
-  void fit_camera_to_mirror_2_yaw(bool V) {parameter_mask_(6) = V;}
-
-//-----------------------------------------------------------------------
-/// Indicate if we fit for camera to mirror second side pitch.
-//-----------------------------------------------------------------------
-
-  bool fit_camera_to_mirror_2_pitch() const { return parameter_mask_(7); }
-  void fit_camera_to_mirror_2_pitch(bool V) {parameter_mask_(7) = V;}
-
-//-----------------------------------------------------------------------
-/// Indicate if we fit for camera to mirror second side roll.
-//-----------------------------------------------------------------------
-
-  bool fit_camera_to_mirror_2_roll() const { return parameter_mask_(8); }
-  void fit_camera_to_mirror_2_roll(bool V) {parameter_mask_(8) = V;}
-  
-//-----------------------------------------------------------------------
 /// Indicate if we fit for first encoder value at 0
 //-----------------------------------------------------------------------
 
-  bool fit_first_encoder_value_at_0() const { return parameter_mask_(9); }
-  void fit_first_encoder_value_at_0(bool V) {parameter_mask_(9) = V;}
+  bool fit_first_encoder_value_at_0() const { return parameter_mask_(3); }
+  void fit_first_encoder_value_at_0(bool V) {parameter_mask_(3) = V;}
 
 //-----------------------------------------------------------------------
 /// Indicate if we fit for second encoder value at 0
 //-----------------------------------------------------------------------
 
-  bool fit_second_encoder_value_at_0() const { return parameter_mask_(10); }
-  void fit_second_encoder_value_at_0(bool V) {parameter_mask_(10) = V;}
+  bool fit_second_encoder_value_at_0() const { return parameter_mask_(4); }
+  void fit_second_encoder_value_at_0(bool V) {parameter_mask_(4) = V;}
   
 //-----------------------------------------------------------------------
 /// Indicate if we fit for first angle per encoder value
 //-----------------------------------------------------------------------
 
-  bool fit_first_angle_per_encoder_value() const { return parameter_mask_(11); }
-  void fit_first_angle_per_encoder_value(bool V) {parameter_mask_(11) = V;}
+  bool fit_first_angle_per_encoder_value() const { return parameter_mask_(5); }
+  void fit_first_angle_per_encoder_value(bool V) {parameter_mask_(5) = V;}
 
 //-----------------------------------------------------------------------
 /// Indicate if we fit for second angle per encoder value
 //-----------------------------------------------------------------------
 
-  bool fit_second_angle_per_encoder_value() const { return parameter_mask_(12); }
-  void fit_second_angle_per_encoder_value(bool V) {parameter_mask_(12) = V;}
-
-//-----------------------------------------------------------------------
-/// Indicate if we fit for the boresight X offset.
-//-----------------------------------------------------------------------
-
-  bool fit_boresight_x_offset() const { return parameter_mask_(13); }
-  void fit_boresight_x_offset(bool V) {parameter_mask_(13) = V;}
-
-//-----------------------------------------------------------------------
-/// Indicate if we fit for the boresight Y offset.
-//-----------------------------------------------------------------------
-
-  bool fit_boresight_y_offset() const { return parameter_mask_(14); }
-  void fit_boresight_y_offset(bool V) {parameter_mask_(14) = V;}
+  bool fit_second_angle_per_encoder_value() const { return parameter_mask_(6); }
+  void fit_second_angle_per_encoder_value(bool V) {parameter_mask_(6) = V;}
   
 //-------------------------------------------------------------------------
 /// Angle encoder values.
@@ -247,7 +175,7 @@ public:
   void euler(const blitz::Array<double, 1>& Euler)
   {
     if(Euler.rows() != 3)
-      throw GeoCal::Exception("Euler must be size 3");
+      throw GeoCal::Exception("Ypr must be size 3");
     instrument_to_sc(GeoCal::quat_rot("zyx", Euler(0), Euler(1), Euler(2)));
   }
 
@@ -272,116 +200,6 @@ public:
     notify_update();
   }
 
-//-----------------------------------------------------------------------
-/// Return the equivalent Yaw, Pitch, Roll for the each side of the mirror
-/// camera_to_mirror. These are in radians.
-//-----------------------------------------------------------------------
-
-  blitz::Array<double, 1> mirror_ypr() const
-  {
-    blitz::Array<double, 1> res(6);
-    GeoCal::quat_to_ypr(camera_to_mirror_nd_, res(0), res(1), res(2));
-    GeoCal::quat_to_ypr(camera_to_mirror_2_nd_, res(3), res(4), res(5));
-    return res;
-  }
-
-//-----------------------------------------------------------------------
-/// Return the equivalent Yaw, Pitch, Roll for the each side of the mirror
-/// camera_to_mirror. These are in radians.
-//-----------------------------------------------------------------------
-
-  blitz::Array<GeoCal::AutoDerivative<double>, 1>
-  mirror_ypr_with_derivative() const
-  {
-    blitz::Array<GeoCal::AutoDerivative<double>, 1> res(6);
-    GeoCal::quat_to_ypr(camera_to_mirror_, res(0), res(1), res(2));
-    GeoCal::quat_to_ypr(camera_to_mirror_2_, res(3), res(4), res(5));
-    return res;
-  }
-
-//-----------------------------------------------------------------------
-/// Update the camera_to_mirror_ using the given Yaw, Pitch, Roll for both
-/// sides of the mirror, in radians.
-//-----------------------------------------------------------------------
-
-  void mirror_ypr(const blitz::Array<double, 1>& Ypr)
-  {
-    if(Ypr.rows() != 6)
-      throw GeoCal::Exception("Ypr must be size 6");
-    camera_to_mirror(GeoCal::quat_rot("xyz", Ypr(1), Ypr(2), Ypr(0)),
-		     GeoCal::quat_rot("xyz", Ypr(5), Ypr(5), Ypr(3)));
-  }
-
-//-----------------------------------------------------------------------
-/// Update the camera_to_mirror_ using the given Yaw, Pitch, Roll for both
-/// sides of the mirror, in radians.
-//-----------------------------------------------------------------------
-
-  void mirror_ypr_with_derivative
-  (const blitz::Array<GeoCal::AutoDerivative<double>, 1>& Ypr)
-  {
-    if(Ypr.rows() != 6)
-      throw GeoCal::Exception("Ypr must be size 6");
-    camera_to_mirror(GeoCal::quat_rot("xyz", Ypr(1), Ypr(2), Ypr(0)),
-		     GeoCal::quat_rot("xyz", Ypr(5), Ypr(5), Ypr(3)));
-  }
-  void mirror_ypr_with_derivative(const GeoCal::ArrayAd<double, 1>& Ypr)
-  {
-    if(Ypr.rows() != 6)
-      throw GeoCal::Exception("Ypr must be size 6");
-    camera_to_mirror(GeoCal::quat_rot("xyz", Ypr(1), Ypr(2), Ypr(0)),
-		     GeoCal::quat_rot("xyz", Ypr(5), Ypr(5), Ypr(3)));
-  }
-  
-//-----------------------------------------------------------------------
-/// Camera to mirror quaternion.
-//-----------------------------------------------------------------------
-
-  boost::math::quaternion<double> camera_to_mirror(int Scan_index) const
-  {return (mirror_side(Scan_index) == 0 ? camera_to_mirror_nd_:
-	   camera_to_mirror_2_nd_); }
-
-//-----------------------------------------------------------------------
-/// Camera to mirror quaternion.
-//-----------------------------------------------------------------------
-
-  boost::math::quaternion<GeoCal::AutoDerivative<double> >
-  camera_to_mirror_with_derivative(int Scan_index) const
-  {return (mirror_side(Scan_index) == 0 ? camera_to_mirror_:
-	   camera_to_mirror_2_); }
-
-//-----------------------------------------------------------------------
-/// Set camera to mirror quaternion, for both sides of the mirror.
-//-----------------------------------------------------------------------
-  
-  void camera_to_mirror
-  (const boost::math::quaternion<double>& cam_to_mirror_q,
-   const boost::math::quaternion<double>& cam_to_mirror_2_q)
-  {
-    camera_to_mirror_ = GeoCal::to_autoderivative(cam_to_mirror_q);
-    camera_to_mirror_2_ = GeoCal::to_autoderivative(cam_to_mirror_2_q);
-    camera_to_mirror_nd_ = cam_to_mirror_q;
-    camera_to_mirror_2_nd_ = cam_to_mirror_2_q;
-    notify_update();
-  }
-
-//-----------------------------------------------------------------------
-/// Set camera to mirror quaternion, for both sides of the mirror.
-//-----------------------------------------------------------------------
-  
-  void camera_to_mirror
-  (const boost::math::quaternion<GeoCal::AutoDerivative<double> >&
-   cam_to_mirror_q,
-   const boost::math::quaternion<GeoCal::AutoDerivative<double> >&
-   cam_to_mirror_2_q)
-  {
-    camera_to_mirror_ = cam_to_mirror_q;
-    camera_to_mirror_2_ = cam_to_mirror_2_q;
-    camera_to_mirror_nd_ = value(camera_to_mirror_);
-    camera_to_mirror_2_nd_ = value(camera_to_mirror_2_);
-    notify_update();
-  }
-  
 //-----------------------------------------------------------------------
 /// Instrument to spacecraft quaternion.
 //-----------------------------------------------------------------------
@@ -439,15 +257,6 @@ public:
   int max_encoder_value() const {return max_encoder_value_;}
 
 //-------------------------------------------------------------------------
-/// Return mirror side for given scan index (0 for first or 1 for second)
-//-------------------------------------------------------------------------
-
-  int mirror_side(int Scan_index) const
-  {
-    return (encoder_value_interpolate(Scan_index, 0) < max_encoder_value() / 2 ?
-	    0 : 1);
-  }
-//-------------------------------------------------------------------------
 /// Angle that a single encoder value goes through, in degrees.
 //-------------------------------------------------------------------------
 
@@ -460,16 +269,6 @@ public:
   { return ang_per_ev_2_.value(); }
   GeoCal::AutoDerivative<double> second_angle_per_encoder_value_with_derivative() const
   { return ang_per_ev_2_; }
-
-  double boresight_x_offset() const
-  { return boresight_x_offset_.value(); }
-  GeoCal::AutoDerivative<double> boresight_x_offset_with_derivative() const
-  { return boresight_x_offset_; }
-
-  double boresight_y_offset() const
-  { return boresight_y_offset_.value(); }
-  GeoCal::AutoDerivative<double> boresight_y_offset_with_derivative() const
-  { return boresight_y_offset_; }
   
 //-------------------------------------------------------------------------
 /// Encoder value at 0 angle. This is for the first side of the mirror.
@@ -562,20 +361,7 @@ public:
   GeoCal::AutoDerivative<double> scan_mirror_angle
   (int Scan_index, const GeoCal::AutoDerivative<double>& Ic_sample) const
   { return angle_from_encoder_value(encoder_value_interpolate(Scan_index, Ic_sample));}
-
-//-------------------------------------------------------------------------
-/// Offset in the DCS frame
-//-------------------------------------------------------------------------
-
-  void dcs_offset(int Scan_index, double Ic_sample, double& Dcs_x_offset,
-		  double& Dcs_y_offset) const
-  {
-    Dcs_x_offset = boresight_x_offset();
-    Dcs_y_offset = boresight_y_offset() *
-      cos(scan_mirror_angle(Scan_index, Ic_sample) *
-	  GeoCal::Constant::deg_to_rad);
-  }
-    
+  
 //-------------------------------------------------------------------------
 /// Rotation matrix that take the view vector for the Camera and takes
 /// it to the space craft coordinate system.
@@ -585,37 +371,30 @@ public:
   rotation_quaternion(int Scan_index, double Ic_sample) const
   { return instrument_to_sc() *
       GeoCal::quat_rot_x(scan_mirror_angle(Scan_index, Ic_sample) *
-			 GeoCal::Constant::deg_to_rad) *
-      camera_to_mirror(Scan_index); }
+			 GeoCal::Constant::deg_to_rad); }
   boost::math::quaternion<GeoCal::AutoDerivative<double> >
   rotation_quaternion(int Scan_index,
 		     const GeoCal::AutoDerivative<double>& Ic_sample) const
   { return instrument_to_sc_with_derivative() *
       GeoCal::quat_rot_x(scan_mirror_angle(Scan_index, Ic_sample) *
-			 GeoCal::Constant::deg_to_rad) *
-      camera_to_mirror_with_derivative(Scan_index); }
+			 GeoCal::Constant::deg_to_rad); }
   virtual void print(std::ostream& Os) const;
 private:
   blitz::Array<int, 2> evalue_;
   int max_encoder_value_;
   GeoCal::AutoDerivative<double> ev0_, ev0_2_;
   GeoCal::AutoDerivative<double> ang_per_ev_, ang_per_ev_2_;
-  GeoCal::AutoDerivative<double> yaw_, pitch_, roll_, yaw_2_, pitch_2_,
-    roll_2_;
   blitz::Array<bool, 1> parameter_mask_;
 				// Mask of parameters we are fitting for.
   // ** Important, see note below about inst_to_sc_nd_. You can
   // use the member function inst_to_sc(val) to set both at the same
   // time if you like ***
-  boost::math::quaternion<GeoCal::AutoDerivative<double> > inst_to_sc_,
-    camera_to_mirror_, camera_to_mirror_2_;
+  boost::math::quaternion<GeoCal::AutoDerivative<double> > inst_to_sc_;
   // Turns out that converting inst_to_sc_ to a version without
   // derivatives is a bit of a bottle neck in some calculations (e.g.,
   // Ipi). So we keep a copy of value(inst_to_sc_) so we don't need
   // to calculate it multiple times.
-  boost::math::quaternion<double> inst_to_sc_nd_, camera_to_mirror_nd_,
-    camera_to_mirror_2_nd_;
-  GeoCal::AutoDerivative<double> boresight_x_offset_, boresight_y_offset_;
+  boost::math::quaternion<double> inst_to_sc_nd_;
   void fill_in_scan(int S);
   virtual void notify_update()
   {
@@ -633,7 +412,7 @@ private:
 }
 
 BOOST_CLASS_EXPORT_KEY(Ecostress::EcostressScanMirror);
-BOOST_CLASS_VERSION(Ecostress::EcostressScanMirror, 3)
+BOOST_CLASS_VERSION(Ecostress::EcostressScanMirror, 1)
 #endif
   
   

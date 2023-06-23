@@ -32,15 +32,7 @@ public:
 		      double Beta = 0,
 		      double Delta = 0,
 		      double First_angle_per_ev = 360.0 / 1749248 * 2,
-		      double Second_angle_per_ev = 360.0 / 1749248 * 2,
-		      double Yaw = 0,
-		      double Roll = 0,
-		      double Pitch = 0,
-		      double Yaw_2 = 0,
-		      double Roll_2 = 0,
-		      double Pitch_2 = 0,
-		      double Boresight_x_offset = 0,
-		      double Boresight_y_offset = 0
+		      double Second_angle_per_ev = 360.0 / 1749248 * 2
 		      );
   EcostressScanMirror(const blitz::Array<int, 2>& Encoder_value,
 		      int Max_encoder_value = 1749248,
@@ -50,15 +42,7 @@ public:
 		      double Beta = 0,
 		      double Delta = 0,
 		      double First_angle_per_ev = 360.0 / 1749248 * 2,
-		      double Second_angle_per_ev = 360.0 / 1749248 * 2,
-		      double Yaw = 0,
-		      double Roll = 0,
-		      double Pitch = 0,
-		      double Yaw_2 = 0,
-		      double Roll_2 = 0,
-		      double Pitch_2 = 0,
-		      double Boresight_x_offset = 0,
-		      double Boresight_y_offset = 0
+		      double Second_angle_per_ev = 360.0 / 1749248 * 2
 		      );
   virtual void add_observer(GeoCal::Observer<EcostressScanMirror>& Obs);
   virtual void remove_observer(GeoCal::Observer<EcostressScanMirror>& Obs);
@@ -70,17 +54,6 @@ public:
   boost::math::quaternion<GeoCal::AutoDerivative<double> >
   rotation_quaternion(int Scan_index,
 		     const GeoCal::AutoDerivative<double>& Ic_sample) const;
-  boost::math::quaternion<double> camera_to_mirror(int Scan_index) const;
-  boost::math::quaternion<GeoCal::AutoDerivative<double> >
-  camera_to_mirror_with_derivative(int Scan_index) const;
-  void camera_to_mirror
-  (const boost::math::quaternion<double>& cam_to_mirror_q,
-   const boost::math::quaternion<double>& cam_to_mirror_2_q);
-  void camera_to_mirror
-  (const boost::math::quaternion<GeoCal::AutoDerivative<double> >&
-   cam_to_mirror_q,
-   const boost::math::quaternion<GeoCal::AutoDerivative<double> >&
-   cam_to_mirror_2_q);
   double angle_from_encoder_value(double Evalue) const;
   GeoCal::AutoDerivative<double> angle_from_encoder_value
   (const GeoCal::AutoDerivative<double>& Evalue) const;
@@ -95,24 +68,13 @@ public:
   %python_attribute_with_set(euler, blitz::Array<double, 1>);
   %python_attribute_with_set(euler_with_derivative, 
 			     blitz::Array<GeoCal::AutoDerivative<double>, 1>);
-  %python_attribute_with_set(mirror_ypr, blitz::Array<double, 1>);
-  %python_attribute_with_set(mirror_ypr_with_derivative, 
-			     blitz::Array<GeoCal::AutoDerivative<double>, 1>);
   %python_attribute_with_set(fit_epsilon, bool);
   %python_attribute_with_set(fit_beta, bool);
   %python_attribute_with_set(fit_delta, bool);
-  %python_attribute_with_set(fit_camera_to_mirror_yaw, bool);
-  %python_attribute_with_set(fit_camera_to_mirror_pitch, bool);
-  %python_attribute_with_set(fit_camera_to_mirror_roll, bool);
-  %python_attribute_with_set(fit_camera_to_mirror_2_yaw, bool);
-  %python_attribute_with_set(fit_camera_to_mirror_2_pitch, bool);
-  %python_attribute_with_set(fit_camera_to_mirror_2_roll, bool);
   %python_attribute_with_set(fit_first_encoder_value_at_0, bool);
   %python_attribute_with_set(fit_second_encoder_value_at_0, bool);
   %python_attribute_with_set(fit_first_angle_per_encoder_value, bool);
   %python_attribute_with_set(fit_second_angle_per_encoder_value, bool);
-  %python_attribute_with_set(fit_boresight_x_offset, bool);
-  %python_attribute_with_set(fit_boresight_y_offset, bool);
   %python_attribute(first_encoder_value_at_0, double);
   %python_attribute(first_encoder_value_at_0_with_derivative, GeoCal::AutoDerivative<double>);
   %python_attribute(second_encoder_value_at_0, double);
@@ -121,15 +83,9 @@ public:
   %python_attribute(second_angle_per_encoder_value, double);
   %python_attribute(first_angle_per_encoder_value_with_derivative, GeoCal::AutoDerivative<double>);
   %python_attribute(second_angle_per_encoder_value_with_derivative, GeoCal::AutoDerivative<double>);
-  %python_attribute(boresight_x_offset, double);
-  %python_attribute(boresight_y_offset, double);
-  %python_attribute(boresight_x_offset_with_derivative, GeoCal::AutoDerivative<double>);
-  %python_attribute(boresight_y_offset_with_derivative, GeoCal::AutoDerivative<double>);
   %python_attribute(number_sample, int);
   %python_attribute(number_scan, int);
   %python_attribute(encoder_value, blitz::Array<int, 2>);
-  %python_attribute(max_encoder_value, int);
-  int mirror_side(int Scan_index) const;
   std::string print_to_string() const;
   %pickle_serialization();
 };

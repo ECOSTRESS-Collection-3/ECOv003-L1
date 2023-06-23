@@ -185,7 +185,6 @@ import geocal_swig.generic_object
 import geocal_swig.with_parameter
 import geocal_swig.geocal_exception
 import geocal_swig.observer
-import geocal_swig.quaternion_camera
 
 def band_to_band_tie_points(Igc, Scan_index, Band, Nline_pt=10, Nsamp_pt=30):
     """

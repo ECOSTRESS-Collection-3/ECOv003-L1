@@ -40,6 +40,14 @@ void GroundCoordinateArray::init()
   if(!tt)
     throw GeoCal::Exception("GroundCoordinateArray only works with EcostressTimeTable");
   int nl = cam->number_line(b);
+  camera_slv.resize(nl, nsub_line, nsub_sample);
+  for(int i = 0; i < nl; ++i)
+    for(int j = 0; j < nsub_line; ++j)
+      for(int k = 0; k < nsub_sample; ++k)
+	if(tt->averaging_done())
+	  camera_slv(i,j,k) = cam->sc_look_vector(GeoCal::FrameCoordinate(2*(i + (double) j / nsub_line), (double) k / nsub_sample), b);
+	else
+	  camera_slv(i,j,k) = cam->sc_look_vector(GeoCal::FrameCoordinate(i + (double) j / nsub_line, (double) k / nsub_sample), b);
   dist.resize(nl, nsub_line, nsub_sample);
   res.resize(nl, igc_->number_sample(), nsub_line, nsub_sample,
 	     (include_angle ? 7 : 3));
@@ -319,11 +327,8 @@ void GroundCoordinateArray::ground_coor_arr_samp(int Start_line, int Sample,
   Time t;
   FrameCoordinate fc;
   tt->time(ImageCoordinate(Start_line, Sample), t, fc);
-  double dcs_x_offset, dcs_y_offset;
   boost::shared_ptr<QuaternionOrbitData> od =
-    igc_->orbit_data(t, tt->line_to_scan_index(Start_line), Sample,
-		     dcs_x_offset, dcs_y_offset);
-  igc_->dcs_offset(dcs_x_offset, dcs_y_offset);
+    igc_->orbit_data(t, tt->line_to_scan_index(Start_line), Sample);
   boost::shared_ptr<CartesianFixed> cf = od->position_cf();
   CartesianFixedLookVector slv;
   if(include_angle)
@@ -331,12 +336,7 @@ void GroundCoordinateArray::ground_coor_arr_samp(int Start_line, int Sample,
   for(int i = sl; i < el; ++i) 
     for(int j = 0; j < nsub_line; ++j)
       for(int k = 0; k < nsub_sample; ++k) {
-	ScLookVector sv;
-	if(tt->averaging_done())
-	  sv = cam->sc_look_vector(GeoCal::FrameCoordinate(2*(i + (double) j / nsub_line), (double) k / nsub_sample), b);
-	else
-	  sv = cam->sc_look_vector(GeoCal::FrameCoordinate(i + (double) j / nsub_line, (double) k / nsub_sample), b);
-	CartesianFixedLookVector lv = od->cf_look_vector(sv);
+	CartesianFixedLookVector lv = od->cf_look_vector(camera_slv(i, j, k));
 	boost::shared_ptr<CartesianFixed> pt;
 	if(Initial_samp)
 	  pt = igc_->dem().intersect(*cf, lv, igc_->resolution(),
@@ -364,7 +364,6 @@ void GroundCoordinateArray::ground_coor_arr_samp(int Start_line, int Sample,
 	  res(i,Sample,j, k, 6) = sln.view_azimuth();
 	}
       }
-  igc_->dcs_offset(0,0);
 }
 
 void GroundCoordinateArray::print(std::ostream& Os) const

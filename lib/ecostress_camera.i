@@ -20,7 +20,6 @@ public:
 		  boost::math::quaternion<double> Frame_to_sc_q,
 		  bool Line_order_reversed = false);
   void mask_all_parameter();
-  void dcs_offset(double Dcs_x_offset, double Dcs_y_offset);
   %python_attribute_with_set(paraxial_transform, boost::shared_ptr<EcostressParaxialTransform>);
   %python_attribute_with_set(y_scale, double);
   %python_attribute_with_set(y_offset, double);
