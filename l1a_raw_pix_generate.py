@@ -1,3 +1,10 @@
+#  2023-05-03
+#    Corrected band specification
+#    Added collection label
+#  2021-05-16:
+#    Added check SA obstructiion
+#    correct DEM and SPICE setup
+#    Added more attributes to datasets
 import h5py
 import shutil
 import re
@@ -120,7 +127,6 @@ class L1aRawPixGenerate(object):
       self.build_id = build_id
       self.pge_version = pge_version
       self.file_version = file_version
-      self.collection_label = collection_label
 
   def process_scene_file(self):
     '''Process the scene file, returning the orbit, scene id, start, 
@@ -770,7 +776,6 @@ class L1aRawPixGenerate(object):
 
             '''  check against expected delta T between sequences  '''
             if op>op0 and (dt<0 or abs(dt-PKT_DUR)>PKT_DURT) and seq==2:  # time discontinuity
-
               ldd[:] = (lev[e0,1:] - lev[e0,:FPPPKT-1])%MAX_FPIE  # find FP with EV jump
               fpc = np.argmax( ldd > FP_EVT )
               if fpc==0:
@@ -844,8 +849,9 @@ class L1aRawPixGenerate(object):
 
           # end seq copy loop
           if e0>=tot_pkts:
-            # sse = gpt[pkt_idx] + PKT_DUR + FP_DUR
             pkt_idx = tot_pkts - 1
+            sse = gpt[pkt_idx] + PKT_DUR - FP_DUR
+            print("Hit EOF, E0=%d, set scene end time to end of last packet: %f" %(e0, sse) );
           else:
             if op>op0 and remain>0: pkt_idx = e0-1
             else: pkt_idx = e0
