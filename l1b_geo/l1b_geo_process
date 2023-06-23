@@ -6,6 +6,7 @@ import ecostress
 import os
 import re
 import shutil
+import math
 import h5py
 import traceback
 from multiprocessing import Pool
@@ -135,13 +136,21 @@ def print_and_log(s):
     log.flush()
     log=None
 
+def warning_and_log(s):
+    print(s)
+    log = open(log_fname, "a")
+    print("WARNING:L1B_GEO_PGE:%s" % s, file=log)
+    log.flush()
+    log=None
+    
 def report_and_log_exception():
     print("EXCEPTION:*******************************************")
     print("Exception occurred while running SBA/Tiepoint")
     traceback.print_exc()
     print("SBA/Tiepoint failed to correct orbit data. Continue processing without correction.")
     print("EXCEPTION:*******************************************")
-    qa_file.encountered_exception = True
+    if(qa_file is not None):
+        qa_file.encountered_exception = True
     log = open(log_fname, "a")
     print("EXCEPTION:*******************************************",
           file = self.log)
@@ -204,15 +213,62 @@ os.chdir(dirname)
 # in order.
 radlist = sorted(radlist, key=lambda f : ecostress.orbit_from_metadata(f)[2])
 
-inlist = [orbfname, *radlist]
-inlist.append(l1_osp_dir + "/l1b_geo_config.py", )
 log_fname = None
+orbit, scene, acquisition_time = ecostress.orbit_from_metadata(radlist[0])
+ofile = ecostress.ecostress_file_name("L1B_GEO", orbit, scene,
+                                      acquisition_time, build = build_id,
+                                      collection_label = collection_label,
+                                      version = file_version)
+log_fname = os.path.splitext(ofile)[0] + ".log"
 qa_file = None
+
 try:
+    # We have a set of set of scene failures that we want to handle by
+    # just skipping the scenes. Go through and remove these scenes before
+    # we do anything else.
+    radlist_ok = []
+    line_order_list = [ecostress.as_string(h5py.File(radfname,"r")["/L1B_RADMetadata/RadScanLineOrder"][()]) == "Reverse line order" for radfname in radlist]
+    # Do some kind of handling of this.
+    for radfname in radlist:
+        orbit, scene, acquisition_time = ecostress.orbit_from_metadata(radfname)
+        tt = ecostress.create_time_table(radfname, l1b_geo_config.mirror_rpm,
+                                         l1b_geo_config.frame_time)
+        sm = ecostress.create_scan_mirror(radfname,
+                                          l1b_geo_config.max_encoder_value,
+                                          l1b_geo_config.first_encoder_value_0,
+                                          l1b_geo_config.second_encoder_value_0,
+                                          l1b_geo_config.instrument_to_sc_euler,
+                                          l1b_geo_config.first_angle_per_encoder_value,
+                                          l1b_geo_config.second_angle_per_encoder_value)
+        
+        line_order_reversed = False
+        if(ecostress.as_string(h5py.File(radfname,"r")["/L1B_RADMetadata/RadScanLineOrder"][()]) == "Reverse line order"):
+            line_order_reversed = True
+        cam.line_order_reversed = line_order_reversed
+        igc = ecostress.EcostressImageGroundConnection(orb, tt, cam,
+                                                       sm, dem, None, "")
+        # Check that we have no large gaps in the time
+        nspace = int(math.ceil((tt.max_time - tt.min_time) / (l1b_geo_config.large_gap-1.0)))
+        try:
+            for tm in np.linspace(tt.min_time.j2000, tt.max_time.j2000, nspace):
+                od = orb.orbit_data(geocal.Time.time_j2000(tm))
+        except RuntimeError as e:
+            if("Request time is in the middle of a large gap" in str(e)):
+                warning_and_log(f"Large gap found in scene {scene}. Skipping this scene")
+                continue
+            else:
+                raise
+        radlist_ok.append(radfname)
+
+    radlist = radlist_ok
+    inlist = [orbfname, *radlist]
+    inlist.append(l1_osp_dir + "/l1b_geo_config.py", )
+    
     if(ncpu > 1):
         pool = Pool(ncpu)
     else:
         pool = None
+        
     # Determine output file names
     ofile = []
     ofile_map = []
@@ -250,7 +306,6 @@ try:
                                                      version = file_version,
                                                      intermediate=True)
 
-    log_fname = os.path.splitext(ofile[0])[0] + ".log"
     qa_file = ecostress.L1bGeoQaFile(qa_fname, log_fname)
     qa_file.input_list(inlist)
     
@@ -476,12 +531,14 @@ except Exception as e:
     traceback.print_exc(file=log)
     print("L1B_GEO_PGE:ERROR-2-[Unexpected Error]", file=log)
     log.flush()
-    qa_file.close()
+    if(qa_file is not None):
+        qa_file.close()
     raise
 except:
     log = open(log_fname, "a")
     print("L1B_GEO_PGE:ERROR-2-[Unexpected Error]", file=log)
     log.flush()
-    qa_file.close()
+    if(qa_file is not None):
+        qa_file.close()
     raise
 
