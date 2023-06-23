@@ -832,7 +832,7 @@ include_HEADERS =
 # EXTRA_DIST+= docker/ecostress-dependency-repo/ecostress-python-package-1.0-1.el7.x86_64.rpm
 # EXTRA_DIST+= docker/ecostress-dependency-repo/repodata
 EXTRA_DIST = README.md requirements.txt Setup.md end_to_end_testing \
-	coreg_test config/doxygen.cfg config/doc_footer.html \
+	tools coreg_test config/doxygen.cfg config/doc_footer.html \
 	config/create_python_init.py config/doxy2swig.py \
 	config/doxygen_single.cfg @l1a_raw_src@/l0b_sim.py \
 	@l1b_rad_src@/README.md @srcpdf@/README @srcpython@/pytest.ini \
@@ -863,7 +863,9 @@ EXTRA_DIST = README.md requirements.txt Setup.md end_to_end_testing \
 	@srcpythonlib@/l1b_rad_generate_test.py \
 	@srcpythonlib@/l1b_rad_simulate.py \
 	@srcpythonlib@/l1b_rad_simulate_test.py \
-	@srcpythonlib@/misc_test.py @srcpythonlib@/prt_coef.txt \
+	@srcpythonlib@/misc_test.py \
+	@srcpythonlib@/ecostress_igc_extension_test.py \
+	@srcpythonlib@/prt_coef.txt \
 	@srcpythonlib@/rad_write_standard_metadata_test.py \
 	@srcpythonlib@/run_config_test.py \
 	@srcpythonlib@/write_run_config_test.py \
@@ -959,6 +961,7 @@ ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
 	@srcpythonlib@/l1b_rad_generate.py \
 	@srcpythonlib@/l1b_geo_generate.py @srcpythonlib@/l1b_proj.py \
 	@srcpythonlib@/l1b_tp_collect.py @srcpythonlib@/misc.py \
+	@srcpythonlib@/ecostress_igc_extension.py \
 	@srcpythonlib@/pickle_method.py @srcpythonlib@/run_config.py \
 	@srcpythonlib@/write_run_config.py \
 	@srcpythonlib@/write_standard_metadata.py \
@@ -3014,7 +3017,7 @@ l1b-rad-run: install
 
 l1b-geo-run: install
 	-rm -r ./l1b_geo_run
-	$(prefix)/L1B_GEO_PGE $(PROCESS_ARG) --number-cpu=20 $(end_to_end_test_data)/latest/L1A_RAW_ATT_03663_*_0100_01.h5.expected $(end_to_end_test_data)/latest/l1_osp_dir ./l1b_geo_run $(end_to_end_test_data)/latest/ECOSTRESS_L1B_RAD_03663_00*.h5.expected
+	$(prefix)/L1B_GEO_PGE $(PROCESS_ARG) --number-cpu=20 $(end_to_end_test_data)/latest/L1A_RAW_ATT_03663_*_0100_01.h5.expected $(end_to_end_test_data)/latest/l1_osp_dir ./l1b_geo_run $(end_to_end_test_data)/latest/ECOv002_L1B_RAD_03663_00*.h5.expected
 #	source $(prefix)/setup_ecostress.sh && $(PYTHON) $(srcdir)/end_to_end_testing/diff_sba.py
 #	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band l1b_geo_run/ECOv002_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv002_L1B_RAD_03663_00{}_*.h5 l1b_geo_run/proj_final_{}" )
 

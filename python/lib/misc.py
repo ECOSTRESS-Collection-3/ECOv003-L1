@@ -6,9 +6,111 @@ import h5py
 import os
 import sys
 import math
+import glob
 import numpy as np
 from ecostress_swig import *
+import pickle
 
+orb_to_date = None
+
+def orb_to_path(orbnum):
+    global orb_to_date
+    if(orb_to_date is None):
+        orb_to_date = pickle.load(open("/project/sandbox/smyth/orbit_to_date.pkl", "rb"))
+    if int(orbnum) not in orb_to_date:
+        raise RuntimeError(f"Orbit {orbnum} not found. Do you need to run orbit_to_date.py?")
+    return orb_to_date[int(orbnum)]
+
+def find_radiance_file(orbnum, scene, multiple_ok = False):
+    '''Simple function to find a radiance file by orbit number and scene.
+    Note that this is a pretty simplistic function, and doesn't handle things
+    like multiple versions etc. But I need to simple functionality often
+    enough that it is worth havings.'''
+    f = glob.glob(f"/ops/store*/PRODUCTS/L1B_RAD/{orb_to_path(orbnum)[0]}/ECOSTRESS_L1B_RAD_%05d_%03d_*.h5" % (int(orbnum), int(scene)))
+    if(len(f) == 0):
+        f = glob.glob(f"/ops/store*/PRODUCTS/L1B_RAD/{orb_to_path(orbnum)[1]}/ECOSTRESS_L1B_RAD_%05d_%03d_*.h5" % (int(orbnum), int(scene)))
+    if(len(f) == 0):
+        raise RuntimeError(f"Radiance file for {orbnum}, scene {scene} not found")
+    if(len(f) > 1 and not multiple_ok):
+        raise RuntimeError(f"Multiple radiance files found for {orbnum}, scene {scene}")
+    return f[0]
+
+def find_orbit_file(orbnum, raw_att = False, multiple_ok = False):
+    '''Simple function to find a orbit file by orbit number and scene.
+    Note that this is a pretty simplistic function, and doesn't handle things
+    like multiple versions etc. But I need to simple functionality often
+    enough that it is worth havings.
+
+    By default this finds the corrected orbit (ECOSTRESS_L1B_ATT), but you can
+    optionally request a raw file before correction (L1A_RAW_ATT)'''
+    if(raw_att):
+        f = glob.glob(f"/ops/store*/PRODUCTS/L1A_RAW_ATT/{orb_to_path(orbnum)[0]}/L1A_RAW_ATT_%05d_*.h5" % int(orbnum))
+    else:
+        f = glob.glob(f"/ops/store*/PRODUCTS/L1B_ATT/{orb_to_path(orbnum)[0]}/ECOSTRESS_L1B_ATT_%05d_*.h5" % int(orbnum))
+    if(len(f) == 0):
+        raise RuntimeError(f"Orbit file for {orbnum} not found")
+    if(len(f) > 1 and not multiple_ok):
+        raise RuntimeError(f"Multiple orbit files found for {orbnum}")
+    return f[0]
+
+def create_igc(rad_fname, orb_fname, l1_osp_dir=None, dem = None, title=""):
+    '''Create a IGC for the given radiance and orbit file.
+
+    The DEM can be passed in, but if it isn't then we use the default 
+    locations for everything (e.g, read ELEV_ROOT environment variable).'''
+    if(l1_osp_dir is None):
+        if("L1_OSP_DIR" not in os.environ):
+            raise RuntimeError("Need to either set L1_OSP_DIR environment variable, or pass the directory in.")
+        l1_osp_dir = os.environ["L1_OSP_DIR"]
+    sys.path.append(l1_osp_dir)
+    try:
+        import l1b_geo_config
+        orb = ecostress_swig.EcostressOrbit(orb_fname,
+                                            l1b_geo_config.x_offset_iss,
+                                            l1b_geo_config.extrapolation_pad,
+                                            l1b_geo_config.large_gap)
+        cam = geocal.read_shelve(f"{l1_osp_dir}/camera.xml")
+        if(dem is None):
+            dem = geocal.SrtmDem("",False)
+        tt = create_time_table(rad_fname, l1b_geo_config.mirror_rpm,
+                               l1b_geo_config.frame_time)
+        sm = create_scan_mirror(rad_fname,
+                                l1b_geo_config.max_encoder_value,
+                                l1b_geo_config.first_encoder_value_0,
+                                l1b_geo_config.second_encoder_value_0,
+                                l1b_geo_config.instrument_to_sc_euler,
+                                l1b_geo_config.first_angle_per_encoder_value,
+                                l1b_geo_config.second_angle_per_encoder_value)
+        line_order_reversed = False
+        if(as_string(h5py.File(rad_fname,"r")["/L1B_RADMetadata/RadScanLineOrder"][()]) == "Reverse line order"):
+            line_order_reversed = True
+        cam.line_order_reversed = line_order_reversed
+        cam.focal_length = l1b_geo_config.camera_focal_length
+        is_day = as_string(h5py.File(rad_fname,"r")["StandardMetadata/DayNightFlag"][()]) == "Day"
+        b = (l1b_geo_config.ecostress_day_band if is_day else
+             l1b_geo_config.ecostress_night_band)
+        ras = geocal.GdalRasterImage("HDF5:\"%s\"://Radiance/radiance_%d" %
+                                     (rad_fname, b))
+        ras = geocal.ScaleImage(ras, 100.0)
+        igc = ecostress_swig.EcostressImageGroundConnection(orb, tt, cam, sm,
+                                                            dem, ras, title)
+        return igc
+    finally:
+        sys.path.pop()
+
+def create_igccol(orbnum, scene, l1_osp_dir=None, dem = None, title="",
+                  multiple_ok=False):
+    '''Variation of create_igc that puts the IGC as a single entry in
+    an IgcCollection (which has support for parameters). This finds the 
+    radiance and orbit data for the given orbit and scene number.'''
+    igccol = ecostress_swig.EcostressIgcCollection()
+    igccol.add_igc(create_igc(find_radiance_file(orbnum, scene,
+                                                 multiple_ok=multiple_ok),
+                              find_orbit_file(orbnum,multiple_ok=multiple_ok),
+                              l1_osp_dir=l1_osp_dir, dem=dem, title=title))
+    return igccol    
+
+    
 def create_dem(config):
     '''Create the SRTM DEM based on the configuration. In production, we
     take the datum and srtm_dir passed in. But for testing if the special
@@ -34,7 +136,7 @@ def ortho_base_directory(config):
         if(os.path.exists("/raid22/band5_VICAR")):
             ortho_base_dir = "/raid22"
         elif(os.path.exists("/data/smyth/Landsat/band5_VICAR")):
-            ortho_base_dir = "/data/smyth/Landsat"
+            ortho_base_dir = "/data/smyth/Landsat"    
     return ortho_base_dir
 
 def band_to_landsat_band(lband):
@@ -290,10 +392,12 @@ def determine_rotated_map(gc1, gc2, mi):
     mi2 = mi2.scale(s, s)
     return mi2
 
-__all__ = ["create_dem", "ortho_base_directory", "band_to_landsat_band",
+__all__ = ["create_igc", "create_igccol",
+           "create_dem", "ortho_base_directory", "band_to_landsat_band",
            "create_lwm", "setup_spice", "as_string",
            "create_orbit_raw", "create_time_table", "create_scan_mirror",
            "is_day", "aster_radiance_scale_factor", "ecostress_to_aster_band",
            "ecostress_radiance_scale_factor", "time_to_file_string",
            "time_split", "ecostress_file_name", "process_run",
+           "find_radiance_file", "find_orbit_file",
            "orbit_from_metadata", "determine_rotated_map", "determine_rotated_map_igc"]

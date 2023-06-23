@@ -152,10 +152,11 @@ def igc(unit_test_data, test_data, orb_fname, rad_fname):
         vtime.append(Time.time_j2000(t))
     tt = EcostressTimeTable(vtime, True)
     
-    # False here says it ok for SrtmDem to not have tile. This gives support
+    # False here says it ok for SrtmDem to not have a tile. This gives support
     # for data that is over the ocean.
     dem = SrtmDem("",False)
     sm = EcostressScanMirror()
+    cam.line_order_reversed = True
     igc = EcostressImageGroundConnection(orb, tt, cam, sm, dem, None)
     yield igc
 
