@@ -227,8 +227,6 @@ try:
     # just skipping the scenes. Go through and remove these scenes before
     # we do anything else.
     radlist_ok = []
-    line_order_list = [ecostress.as_string(h5py.File(radfname,"r")["/L1B_RADMetadata/RadScanLineOrder"][()]) == "Reverse line order" for radfname in radlist]
-    # Do some kind of handling of this.
     for radfname in radlist:
         orbit, scene, acquisition_time = ecostress.orbit_from_metadata(radfname)
         tt = ecostress.create_time_table(radfname, l1b_geo_config.mirror_rpm,
@@ -255,6 +253,21 @@ try:
         except RuntimeError as e:
             if("Request time is in the middle of a large gap" in str(e)):
                 warning_and_log(f"Large gap found in scene {scene}. Skipping this scene")
+                continue
+            else:
+                raise
+
+        # Check if we cross the dateline. We don't currently handle this.
+        # We could possibly add support, but geotiff doesn't work across
+        # the dateline either so we would need to think carefully how to
+        # do this. For now just skip these scenes.
+        try:
+            if(igc.crosses_dateline):
+                warning_and_log(f"Crossing dateline in scene {scene}. Skipping this scene")
+                continue
+        except RuntimeError as e:
+            if("Out of range error" in str(e)):
+                warning_and_log(f"Crossing dateline in scene {scene}. Skipping this scene")
                 continue
             else:
                 raise
