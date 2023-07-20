@@ -107,7 +107,6 @@ LPS = PPFP * SCPS
 ' standard packets per scene rounded up '
 #PPSC = int( (SCPS*FPB3+FPPPKT-1) / FPPPKT )
 
-
 class L1aRawPixGenerate(object):
   '''This generates a L1A_RAW_PIX, L1A_BB, L1A_ENG and L1A_RAW_ATT
   files from a L0B input.'''
