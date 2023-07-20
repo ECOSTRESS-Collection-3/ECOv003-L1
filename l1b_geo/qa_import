@@ -1,0 +1,75 @@
+#! /usr/bin/env python
+#
+# Short script to dump out a bit of the QA data as a CSV file. We can
+# then import this into pandas or do other things with it.
+
+import os
+import re
+import h5py
+import glob
+import numpy as np
+import pandas as pd
+
+# Go through all the data, just in case there are duplicates. We take
+# the latest version, or otherwise just whatever the last file we find
+# is
+qa_file_by_orb = {}
+for bdir in glob.glob("/ops/store*/PRODUCTS/L1B_GEO_QA"):
+    for root, dir, files in os.walk(bdir):
+        for fname in files:
+            # We'll want to update this as we get new versions.
+            m = re.match(r'^L1B_GEO_QA_(\d{5})_.*_07\d\d_(\d\d).h5$', fname)
+            if(m):
+                orb = m.group(1)
+                ver = int(m.group(2))
+                if(orb in qa_file_by_orb):
+                    oldfile, oldver = qa_file_by_orb[orb]
+                    if(ver > oldver):
+                        qa_file_by_orb[orb] = (root + "/" + fname, ver)
+                else:
+                    qa_file_by_orb[orb] = (root + "/" + fname, ver)
+data = None
+print(f"Have {len(qa_file_by_orb.keys())} files to process")
+for i, orb in enumerate(sorted(qa_file_by_orb.keys())):
+    try:
+        print(f"Processing {qa_file_by_orb[orb][0]} ({i+1} of {len(qa_file_by_orb.keys())})")
+        f = h5py.File(qa_file_by_orb[orb][0], "r")
+        t = f["/Accuracy Estimate/Accuracy Before Correction"][:]
+        d = np.empty((len(t), 11))
+        d[:,0] = int(orb)
+        d[:,1] = [int(f["Accuracy Estimate/Scenes"][i][6:])
+                  for i in range(d.shape[0])]
+        d[:,2] = t
+        d[:,3] = f["/Accuracy Estimate/Final Accuracy"][:]
+        d[:,4] = f["/Accuracy Estimate/Geolocation accuracy QA flag"][:]
+        d[:,5:7] = f["/Average Metadata"]
+        d[:,7:] = f["/Tiepoint/Tiepoint Count"]
+        if(data is None):
+            data = d
+        else:
+            data = np.concatenate((data,d), axis=0)
+    #except KeyError:
+    except ImportError:
+        print("Orbit failed, skipping")
+
+df = pd.DataFrame(data, columns = ["orbnum",
+                                   "scene",
+                                   "initial_accuracy",
+                                   "final_accuracy",
+                                   "geolocation_accuracy_qa_flag",
+                                   "solar_zenith",
+                                   "land_fraction",
+                                   "initial_tiepoint",
+                                   "blunder_removed",
+                                   "final_tiepoint",
+                                   "number_tries"])              
+df.to_csv("qa_data.csv", index=False)
+df.to_pickle("qa_data_pandas.pkl")
+
+# Can process this data, do things like:
+# import pandas as pd
+# import pandasql as pds
+# df = pd.read_pickle("qa_data_pandas.pkl")
+# t = pds.PandaSQL(persist=True)
+# df1 = t("select * from df where final_tiepoint > 0 and number_tries = 1")
+# df2 = t("select * from df where final_tiepoint > 0 and number_tries > 1")
