@@ -909,13 +909,15 @@ class L1aRawPixGenerate(object):
               #Time.time_gps(rst-tc0), Time.time_gps(rse), prod=True )
 
       ' record scan completeness '
-      pcomp = float( good_img ) / float( img_cnt )
+      #pcomp = float( good_img ) / float( img_cnt )
+      pcomp = float( good_img ) / float( FPPSC * SCPS )
       #l1a_fp_met.set('AutomaticQualityFlag', '%16.10e' % pcomp)
       if pcomp > .95:
         l1a_fp_met.set('AutomaticQualityFlag', '%s' % 'PASS')
       else:
         l1a_fp_met.set('AutomaticQualityFlag', '%s' % 'FAIL')
-      bcomp = float( good_bb ) / float( bb_cnt )
+      #bcomp = float( good_bb ) / float( bb_cnt )
+      bcomp = float( good_bb ) / float( SCPS * 2 * BBLEN )
       #l1a_bp_met.set('AutomaticQualityFlag', '%16.10e' % bcomp)
       if bcomp > .95:
         l1a_bp_met.set('AutomaticQualityFlag', '%s' % 'PASS')
