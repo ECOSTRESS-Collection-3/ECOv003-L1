@@ -87,7 +87,13 @@ class L1bGeoGenerate(object):
         vazimuth = res[:,:,0,0,4].copy()
         szenith = res[:,:,0,0,5].copy()
         sazimuth = res[:,:,0,0,6].copy()
-        lfrac = GroundCoordinateArray.interpolate(self.lwm, lat, lon)
+	# Work around a bug in SrtmDem when we get very close to
+	# longitude 180. We should fix this is geocal, but that is
+	# pretty involved. So for now, tweak the longitude values so we
+        # don't run into this. See git Issue #138
+        lon_tweak = lon.copy()
+        lon_tweak[lon_tweak > 179] = 179.0
+        lfrac = GroundCoordinateArray.interpolate(self.lwm, lat, lon_tweak)
         lfrac =  np.where(lfrac <= fill_value_threshold, fill_value_threshold,
                           lfrac * 100.0)
         tlinestart = np.array([self.igc.pixel_time(geocal.ImageCoordinate(ln, 0)).j2000 for ln in range(start_line, start_line+res.shape[0])])

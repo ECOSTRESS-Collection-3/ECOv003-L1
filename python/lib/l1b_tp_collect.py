@@ -171,7 +171,7 @@ class L1bTpCollect(object):
             if(proj_res[i]):
                 it.append(i)
         if(pool is None):
-            tpcollist = map(self.tp, it)
+            tpcollist = list(map(self.tp, it))
         else:
             tpcollist = pool.map(self.tp, it)
         res = geocal.TiePointCollection()

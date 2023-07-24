@@ -3,6 +3,7 @@
 #include "ecostress_dqi.h"
 #include "geocal/ostream_pad.h"
 #include "geocal/vicar_raster_image.h"
+#include "geocal/simple_dem.h"
 
 using namespace Ecostress;
 
@@ -338,17 +339,29 @@ void GroundCoordinateArray::ground_coor_arr_samp(int Start_line, int Sample,
       for(int k = 0; k < nsub_sample; ++k) {
 	CartesianFixedLookVector lv = od->cf_look_vector(camera_slv(i, j, k));
 	boost::shared_ptr<CartesianFixed> pt;
-	if(Initial_samp)
-	  pt = igc_->dem().intersect(*cf, lv, igc_->resolution(),
-				     igc_->max_height());
-	else {
-	  double start_dist = dist(i, j, k);
-	  if(i - 1 >= sl)
-	    start_dist = std::min(start_dist, dist(i-1, j, k));
-	  if(i + 1 < el)
-	    start_dist = std::min(start_dist, dist(i+1, j, k));
-	  pt = igc_->dem().intersect_start_length(*cf, lv, igc_->resolution(),
-						  start_dist);
+	//  Work around a bug in SrtmDem when we get very close to
+	// longitude 180. We should fix this is geocal, but that is
+	// pretty involved. So for now, just use a 0 height for points
+	// that have this issue. See git Issue #138
+	try {	
+	  if(Initial_samp)
+	    pt = igc_->dem().intersect(*cf, lv, igc_->resolution(),
+				       igc_->max_height());
+	  else {
+	    double start_dist = dist(i, j, k);
+	    if(i - 1 >= sl)
+	      start_dist = std::min(start_dist, dist(i-1, j, k));
+	    if(i + 1 < el)
+	      start_dist = std::min(start_dist, dist(i+1, j, k));
+	    pt = igc_->dem().intersect_start_length(*cf, lv, igc_->resolution(),
+						    start_dist);
+	  }
+	} catch(const Exception& e) {
+	  // Work around error in SrtmDem
+	  if(std::string(e.what()).find("Out of range error") == std::string::npos)
+	    throw;
+	  pt = GeoCal::SimpleDem().intersect(*cf, lv, igc_->resolution(),
+					     igc_->max_height());
 	}
 	pt->lat_lon_height(res(i, Sample, j, k, 0), res(i, Sample, j, k, 1),
 			   res(i, Sample, j, k, 2));
