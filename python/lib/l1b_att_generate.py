@@ -75,7 +75,7 @@ class L1bAttGenerate(object):
         t.attrs["Units"] = "dimensionless"
         
         g = fout.create_group("Attitude")
-        # Add times, being careful not to past the edge of the orbit (since
+        # Add times, being careful not to go past the edge of the orbit (since
         # this depends on both ephemeris and attitude we may have points in
         # one or the other that is outside the time range.
         have_min_time = False
@@ -89,7 +89,19 @@ class L1bAttGenerate(object):
                 t = self.orbcorr.max_time
                 have_max_time = True
             if(t >= self.orbcorr.min_time and t <= self.orbcorr.max_time):
-                tatt.append(t)
+                # We occasionally get times that are in a large gap, either
+                # because there is a bad point (e.g. mangled time tag) or
+                # if we start or end with a large gap in the data.
+                # If that happens, just skip the time
+                try:
+                    od = self.orbcorr.orbit_data(t)
+                    tatt.append(t)
+                except RuntimeError as e:
+                    if("Request time is in the middle of a large gap"
+                       in str(e)):
+                        pass
+                    else:
+                        raise
         t = g.create_dataset("time_j2000",
                              data=np.array([t.j2000 for t in tatt]))
         t.attrs["Units"] = "Seconds"
@@ -127,7 +139,19 @@ class L1bAttGenerate(object):
                 t = self.orbcorr.max_time
                 have_max_time = True
             if(t >= self.orbcorr.min_time and t <= self.orbcorr.max_time):
-                teph.append(t)
+                # We occasionally get times that are in a large gap, either
+                # because there is a bad point (e.g. mangled time tag) or
+                # if we start or end with a large gap in the data.
+                # If that happens, just skip the time
+                try:
+                    od = self.orbcorr.orbit_data(t)
+                    teph.append(t)
+                except RuntimeError as e:
+                    if("Request time is in the middle of a large gap"
+                       in str(e)):
+                        pass
+                    else:
+                        raise
         t = g.create_dataset("time_j2000", 
                              data=np.array([t.j2000 for t in teph]))
         pos = np.zeros((len(teph), 3))

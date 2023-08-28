@@ -221,6 +221,7 @@ ofile = ecostress.ecostress_file_name("L1B_GEO", orbit, scene,
                                       version = file_version)
 log_fname = os.path.splitext(ofile)[0] + ".log"
 qa_file = None
+pool = None
 
 try:
     # We have a set of set of scene failures that we want to handle by
@@ -249,7 +250,9 @@ try:
         nspace = int(math.ceil((tt.max_time - tt.min_time) / (l1b_geo_config.large_gap-1.0)))
         try:
             for tm in np.linspace(tt.min_time.j2000, tt.max_time.j2000, nspace):
-                od = orb.orbit_data(geocal.Time.time_j2000(tm))
+                t = geocal.Time.time_j2000(tm)
+                if(t >= orb.min_time and t <= orb.max_time):
+                    od = orb.orbit_data(t)
         except RuntimeError as e:
             if("Request time is in the middle of a large gap" in str(e)):
                 warning_and_log(f"Large gap found in scene {scene}. Skipping this scene")
@@ -536,7 +539,7 @@ try:
     print("L1B_GEO_PGE:INFO-0-[Job Successful]", file=log)
     log.flush()
     qa_file.close()
-    if(pool):
+    if(pool is not None):
         pool.close()
 except Exception as e:
     log = open(log_fname, "a")
@@ -546,6 +549,8 @@ except Exception as e:
     log.flush()
     if(qa_file is not None):
         qa_file.close()
+    if(pool is not None):
+        pool.close()
     raise
 except:
     log = open(log_fname, "a")
@@ -553,5 +558,7 @@ except:
     log.flush()
     if(qa_file is not None):
         qa_file.close()
+    if(pool is not None):
+        pool.close()
     raise
 
