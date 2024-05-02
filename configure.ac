@@ -63,7 +63,7 @@ AC_ARG_WITH([swig],
            [SWIG=/fake_so_fail],
            [])
 
-AC_PROG_SWIG(3.0.7)
+AC_PROG_SWIG()
 SWIG_ENABLE_CXX
 SWIG_PYTHON
 

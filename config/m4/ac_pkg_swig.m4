@@ -130,6 +130,8 @@ AC_DEFUN([AC_PROG_SWIG],[
                         AC_MSG_WARN([cannot determine SWIG version])
                         SWIG='echo "Error: Cannot determine SWIG version.  You should look at http://www.swig.org" ; false'
                 fi
+        else
+          have_swig=yes
         fi
         AC_SUBST([SWIG_LIB])
 AM_CONDITIONAL([HAVE_SWIG], [test "$have_swig" = "yes"])
