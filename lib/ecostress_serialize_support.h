@@ -1,3 +1,4 @@
+#define SWIG_MAPPER_NAMESPACE GeoCal
 #include "geocal/geocal_serialize_support.h"
 
 #define ECOSTRESS_IMPLEMENT(NAME) \
