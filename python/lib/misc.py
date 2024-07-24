@@ -110,7 +110,88 @@ def create_igccol(orbnum, scene, l1_osp_dir=None, dem = None, title="",
                               l1_osp_dir=l1_osp_dir, dem=dem, title=title))
     return igccol    
 
+
+def create_igccol_from_qa(qa_fname, l1_osp_dir=None, dem=None, raw_att=False):
+    '''Create a IgcCollection from a given qa file, using the same input files as it has
+    listed. By default we use the corrected llb_att file, but you can optionally select the
+    raw l1a_raw_att file.  We add the attribute "scene_list" to the igccol for convenience.'''
+    if(l1_osp_dir is None):
+        if("L1_OSP_DIR" not in os.environ):
+            raise RuntimeError("Need to either set L1_OSP_DIR environment variable, or pass the directory in.")
+        l1_osp_dir = os.environ["L1_OSP_DIR"]
     
+    f = h5py.File(qa_fname, "r")
+    t = f["StandardMetadata/InputPointer"][()].decode('utf-8').split(',')
+    radlist = [fname for fname in t if re.match(r'ECOSTRESS_L1B_RAD|ECOv002_L1B_RAD', fname)]
+    l1a_att_fname = [fname for fname in t if re.match(r'L1A_RAW_ATT', fname)][0]
+    datelist = set()
+    for fname in radlist:
+        m = re.match(r'(ECOSTRESS_L1B_RAD|ECOv002_L1B_RAD)_(\d{5})_\d{3}_(\d{8})T\d+_(.*\.h5)',
+                     fname)
+        if not m:
+            raise RuntimeError(f"Don't recognize file name {fname}")
+        fbase = m[1]
+        orbnum = int(m[2])
+        fstem = m[4]
+        datelist.add(f"{m[3][:4]}/{m[3][4:6]}/{m[3][6:]}")
+    flist = []
+    for d in datelist:
+        flist.extend(glob.glob(f"/ops/store*/PRODUCTS/L1B_RAD/{d}/{fbase}_{orbnum:05d}_*.h5"))
+    # Might be extra files found on the system not used in the run
+    radlist = [fname for fname in flist if os.path.basename(fname) in radlist]
+    def scene_from_fname(fname):
+        m = re.match(r'(ECOSTRESS_L1B_RAD|ECOv002_L1B_RAD)_\d{5}_(\d{3})', os.path.basename(fname))
+        return int(m[2])
+    radlist.sort(key=scene_from_fname)
+    scene_list = [scene_from_fname(fname) for fname in radlist]
+    flist = []
+    for d in datelist:
+        flist.extend(glob.glob(f"/ops/store*/PRODUCTS/L1A_RAW_ATT/{d}/{l1a_att_fname}"))
+    l1a_att_fname = flist[0]
+    flist = []
+    for d in datelist:
+        flist.extend(glob.glob(f"/ops/store*/PRODUCTS/L1B_ATT/{d}/*_{orbnum:05d}_*_{fstem}"))
+    l1b_att_fname = flist[0]
+    orb_fname = l1a_att_fname if raw_att else l1b_att_fname
+    try:
+        sys.path.append(l1_osp_dir)
+        import l1b_geo_config
+        orb = ecostress_swig.EcostressOrbit(orb_fname,
+                                            l1b_geo_config.x_offset_iss,
+                                            l1b_geo_config.extrapolation_pad,
+                                            l1b_geo_config.large_gap)
+        cam = geocal.read_shelve(f"{l1_osp_dir}/camera.xml")
+        if(dem is None):
+            dem = geocal.SrtmDem("",False)
+        igccol = ecostress_swig.EcostressIgcCollection()
+        for rad_fname, scene in zip(radlist, scene_list):
+            tt = create_time_table(rad_fname, l1b_geo_config.mirror_rpm,
+                                   l1b_geo_config.frame_time)
+            sm = create_scan_mirror(rad_fname,
+                                    l1b_geo_config.max_encoder_value,
+                                    l1b_geo_config.first_encoder_value_0,
+                                    l1b_geo_config.second_encoder_value_0,
+                                    l1b_geo_config.instrument_to_sc_euler,
+                                    l1b_geo_config.first_angle_per_encoder_value,
+                                    l1b_geo_config.second_angle_per_encoder_value)
+            line_order_reversed = False
+            if(as_string(h5py.File(rad_fname,"r")["/L1B_RADMetadata/RadScanLineOrder"][()]) == "Reverse line order"):
+                line_order_reversed = True
+            cam.line_order_reversed = line_order_reversed
+            cam.focal_length = l1b_geo_config.camera_focal_length
+            is_day = as_string(h5py.File(rad_fname,"r")["StandardMetadata/DayNightFlag"][()]) == "Day"
+            b = (l1b_geo_config.ecostress_day_band if is_day else
+                 l1b_geo_config.ecostress_night_band)
+            ras = geocal.GdalRasterImage("HDF5:\"%s\"://Radiance/radiance_%d" %
+                                         (rad_fname, b))
+            ras = geocal.ScaleImage(ras, 100.0)
+            igccol.add_igc(ecostress_swig.EcostressImageGroundConnection(orb, tt, cam, sm,
+                                                            dem, ras, f"Scene {scene}"))
+        igccol.scene_list = scene_list
+        return igccol
+    finally:
+        sys.path.pop()
+
 def create_dem(config):
     '''Create the SRTM DEM based on the configuration. In production, we
     take the datum and srtm_dir passed in. But for testing if the special
@@ -400,4 +481,5 @@ __all__ = ["create_igc", "create_igccol",
            "ecostress_radiance_scale_factor", "time_to_file_string",
            "time_split", "ecostress_file_name", "process_run",
            "find_radiance_file", "find_orbit_file",
-           "orbit_from_metadata", "determine_rotated_map", "determine_rotated_map_igc"]
+           "orbit_from_metadata", "determine_rotated_map", "determine_rotated_map_igc",
+           "create_igccol_from_qa"]
