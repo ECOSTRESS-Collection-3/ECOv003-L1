@@ -65,7 +65,7 @@ def create_igc(rad_fname, orb_fname, l1_osp_dir=None, dem = None, title=""):
     sys.path.append(l1_osp_dir)
     try:
         import l1b_geo_config
-        if(hasattr("fix_l0_time_tag", l1b_geo_config) and
+        if(hasattr(l1b_geo_config, "fix_l0_time_tag") and
            l1b_geo_config.fix_l0_time_tag):
             orb = ecostress_swig.EcostressOrbitL0Fix(orb_fname,
                                             l1b_geo_config.x_offset_iss,
@@ -163,7 +163,7 @@ def create_igccol_from_qa(qa_fname, l1_osp_dir=None, dem=None, raw_att=False):
     try:
         sys.path.append(l1_osp_dir)
         import l1b_geo_config
-        if(hasattr("fix_l0_time_tag", l1b_geo_config) and
+        if(hasattr(l1b_geo_config, "fix_l0_time_tag") and
            l1b_geo_config.fix_l0_time_tag):
             orb = ecostress_swig.EcostressOrbitL0Fix(orb_fname,
                                             l1b_geo_config.x_offset_iss,

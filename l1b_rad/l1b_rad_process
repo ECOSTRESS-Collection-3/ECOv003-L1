@@ -60,7 +60,7 @@ def print_and_log(s):
     print("INFO:L1B_RAD:%s" % s, file=log)
     log.flush()
 
-if(hasattr("fix_l0_time_tag", l1b_geo_config) and
+if(hasattr(l1b_geo_config, "fix_l0_time_tag") and
    l1b_geo_config.fix_l0_time_tag):
     fix_l0_time_tag = True
 else:

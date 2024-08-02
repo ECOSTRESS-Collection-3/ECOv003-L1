@@ -84,7 +84,7 @@ else:
 sys.path.append(l1_osp_dir)
 import l1b_geo_config
 
-if(hasattr("fix_l0_time_tag", l1b_geo_config) and
+if(hasattr(l1b_geo_config, "fix_l0_time_tag") and
    l1b_geo_config.fix_l0_time_tag):
     fix_l0_time_tag = True
 else:
