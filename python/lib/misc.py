@@ -65,10 +65,17 @@ def create_igc(rad_fname, orb_fname, l1_osp_dir=None, dem = None, title=""):
     sys.path.append(l1_osp_dir)
     try:
         import l1b_geo_config
-        orb = ecostress_swig.EcostressOrbit(orb_fname,
+        if(hasattr("fix_l0_time_tag", l1b_geo_config) and
+           l1b_geo_config.fix_l0_time_tag):
+            orb = ecostress_swig.EcostressOrbitL0Fix(orb_fname,
                                             l1b_geo_config.x_offset_iss,
                                             l1b_geo_config.extrapolation_pad,
                                             l1b_geo_config.large_gap)
+        else:            
+            orb = ecostress_swig.EcostressOrbit(orb_fname,
+                                             l1b_geo_config.x_offset_iss,
+                                             l1b_geo_config.extrapolation_pad,
+                                             l1b_geo_config.large_gap)
         cam = geocal.read_shelve(f"{l1_osp_dir}/camera.xml")
         if(dem is None):
             dem = geocal.SrtmDem("",False)
@@ -156,10 +163,17 @@ def create_igccol_from_qa(qa_fname, l1_osp_dir=None, dem=None, raw_att=False):
     try:
         sys.path.append(l1_osp_dir)
         import l1b_geo_config
-        orb = ecostress_swig.EcostressOrbit(orb_fname,
+        if(hasattr("fix_l0_time_tag", l1b_geo_config) and
+           l1b_geo_config.fix_l0_time_tag):
+            orb = ecostress_swig.EcostressOrbitL0Fix(orb_fname,
                                             l1b_geo_config.x_offset_iss,
                                             l1b_geo_config.extrapolation_pad,
                                             l1b_geo_config.large_gap)
+        else:            
+            orb = ecostress_swig.EcostressOrbit(orb_fname,
+                                             l1b_geo_config.x_offset_iss,
+                                             l1b_geo_config.extrapolation_pad,
+                                             l1b_geo_config.large_gap)
         cam = geocal.read_shelve(f"{l1_osp_dir}/camera.xml")
         if(dem is None):
             dem = geocal.SrtmDem("",False)
@@ -252,8 +266,8 @@ def create_lwm(config):
     if("ECOSTRESS_USE_AFIDS_ENV" in os.environ):
         # Location on pistol, use if found, otherwise use setting in
         # run config file
-        if(os.path.exists("/raid27/tllogan/all_lwm_links")):
-            srtm_lwm_dir = "/raid27/tllogan/all_lwm_links"
+        if(os.path.exists("/raid25/SRTM_2014_update/srtm_v3_lwm")):
+            srtm_lwm_dir = "/raid25/SRTM_2014_update/srtm_v3_lwm"
     lwm = geocal.SrtmLwmData(srtm_lwm_dir, False)
     return lwm
     
@@ -268,16 +282,23 @@ def setup_spice(config):
         os.environ["SPICEDATA"] = spice_data
         
 def create_orbit_raw(config, pos_off=None,
-                     extrapolation_pad = 5, large_gap = 10):
+                     extrapolation_pad = 5, large_gap = 10,
+                     fix_l0_time_tag = False):
     '''Create orbit from L1A_RAW_ATT file'''
     # Spice is needed to work with the orbit data.
     setup_spice(config)
     orbfname = os.path.abspath(config["TimeBasedFileGroup", "L1A_RAW_ATT"])
     # Create orbit.
     if(pos_off is not None):
-        orb = EcostressOrbit(orbfname, pos_off, extrapolation_pad, large_gap)
+        if(fix_l0_time_tag):
+            orb = EcostressOrbitL0Fix(orbfname, pos_off, extrapolation_pad, large_gap)
+        else:
+            orb = EcostressOrbit(orbfname, pos_off, extrapolation_pad, large_gap)
     else:
-        orb = EcostressOrbit(orbfname, extrapolation_pad, large_gap)
+        if(fix_l0_time_tag):
+            orb = EcostressOrbitL0Fix(orbfname, extrapolation_pad, large_gap)
+        else:
+            orb = EcostressOrbit(orbfname, extrapolation_pad, large_gap)
     return orb
 
 def create_time_table(fname, mirror_rpm, frame_time, time_offset=0):

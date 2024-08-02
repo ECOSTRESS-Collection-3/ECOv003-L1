@@ -89,6 +89,10 @@ public:
   bool apply_fix() const {return apply_fix_;}
   
   virtual void print(std::ostream& Os) const;
+
+  static double fix_l0_j2000_time(double Wrong_j2000_time);
+  static blitz::Array<double, 1>
+  fix_l0_j2000_time(const blitz::Array<double, 1>& Wrong_j2000_time);
 protected:
   virtual boost::shared_ptr<GeoCal::QuaternionOrbitData>
   orbit_data_create(GeoCal::Time T) const;

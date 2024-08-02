@@ -19,6 +19,9 @@ public:
 		 const blitz::Array<double, 1>& Pos_off,
 		 double Extrapolation_pad = 5.0,
 		 double Large_gap = 10.0, bool Apply_fix = true);
+  static double fix_l0_j2000_time(double Wrong_j2000_time);
+  static blitz::Array<double, 1>
+  fix_l0_j2000_time(const blitz::Array<double, 1>& Wrong_j2000_time);
   %python_attribute(file_name, std::string)
   %python_attribute(apply_fix, bool)
   bool spacecraft_x_mostly_in_velocity_direction(GeoCal::Time T) const;

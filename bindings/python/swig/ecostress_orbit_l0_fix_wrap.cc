@@ -5088,6 +5088,9 @@ struct SWIG_null_deleter {
 #define SWIG_NO_NULL_DELETER_SWIG_BUILTIN_INIT
 
 
+  #define SWIG_From_double   PyFloat_FromDouble 
+
+
 SWIGINTERNINLINE PyObject *
 SWIG_FromCharPtrAndSize(const char* carray, size_t size)
 {
@@ -5118,9 +5121,6 @@ SWIG_From_std_string  (const std::string& s)
 {
   return SWIG_FromCharPtrAndSize(s.data(), s.size());
 }
-
-
-  #define SWIG_From_double   PyFloat_FromDouble 
 
 
 
@@ -6484,6 +6484,133 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_EcostressOrbitL0Fix_fix_l0_j2000_time__SWIG_0(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  double arg1 ;
+  double val1 ;
+  int ecode1 = 0 ;
+  double result;
+  
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_double(swig_obj[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "EcostressOrbitL0Fix_fix_l0_j2000_time" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  {
+    try {
+      result = (double)Ecostress::EcostressOrbitL0Fix::fix_l0_j2000_time(arg1);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressOrbitL0Fix_fix_l0_j2000_time__SWIG_1(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  blitz::Array< double,1 > *arg1 = 0 ;
+  blitz::Array< double,1 > a1 ;
+  PythonObject numpy1 ;
+  SwigValueWrapper< blitz::Array< double,1 > > result;
+  
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  {
+    int res = SWIG_ConvertPtr(swig_obj[0], (void**)(&arg1), SWIGTYPE_p_blitz__ArrayT_double_1_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy1.obj = to_numpy<double >(swig_obj[0]);
+      if(!numpy1.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'EcostressOrbitL0Fix_fix_l0_j2000_time', expecting type  Array<double,1>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy1.obj) !=1) {
+        SWIG_Error(SWIG_TypeError, "in method 'EcostressOrbitL0Fix_fix_l0_j2000_time', expecting type  Array<double,1>");
+        return NULL;
+      }
+      a1.reference(to_blitz_array<double, 1>(numpy1));
+      arg1 = &a1;
+    }
+  }
+  {
+    try {
+      result = Ecostress::EcostressOrbitL0Fix::fix_l0_j2000_time((blitz::Array< double,1 > const &)*arg1);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    // Treat as pointer for the purposes of the macro
+    /*@SWIG:/home/smyth/Local/geocal-build/install/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
+    // Copy out dimensions and stride from blitz array
+    npy_intp dims[1], stride[1];
+    for(int i = 0; i < 1; ++i) {
+      dims[i] = (&result)->extent(i);
+      // Note numpy stride is in terms of bytes, while blitz in in terms
+      // of type T.
+      stride[i] = (&result)->stride(i) * sizeof(double);
+    }
+    
+    // Create new numpy object using Numpy C API
+    resultobj = PyArray_New(&PyArray_Type, 1, dims, type_to_npy<double >(), 
+      stride, (&result)->data(), 0, 0, 0);
+    blitz::Array<double, 1>* t = new blitz::Array<double, 1>(*(&result));
+    // Stash pointer to original blitz array as detailed above
+    PyArray_SetBaseObject((PyArrayObject*) resultobj, 
+      SWIG_NewPointerObj(SWIG_as_voidptr(t), 
+        SWIGTYPE_p_blitz__ArrayT_double_1_t, 					   SWIG_POINTER_NEW | SWIG_POINTER_OWN ));
+    /*@SWIG@*/;
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressOrbitL0Fix_fix_l0_j2000_time(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[2] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args, "EcostressOrbitL0Fix_fix_l0_j2000_time", 0, 1, argv))) SWIG_fail;
+  --argc;
+  if (argc == 1) {
+    int _v = 0;
+    {
+      {
+        int res = SWIG_AsVal_double(argv[0], NULL);
+        _v = SWIG_CheckState(res);
+      }
+    }
+    if (!_v) goto check_1;
+    return _wrap_EcostressOrbitL0Fix_fix_l0_j2000_time__SWIG_0(self, argc, argv);
+  }
+check_1:
+  
+  if (argc == 1) {
+    PyObject *retobj = _wrap_EcostressOrbitL0Fix_fix_l0_j2000_time__SWIG_1(self, argc, argv);
+    if (!SWIG_Python_TypeErrorOccurred(retobj)) return retobj;
+    SWIG_fail;
+  }
+  
+fail:
+  SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'EcostressOrbitL0Fix_fix_l0_j2000_time'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressOrbitL0Fix::fix_l0_j2000_time(double)\n"
+    "    Ecostress::EcostressOrbitL0Fix::fix_l0_j2000_time(blitz::Array< double,1 > const &)\n");
+  return 0;
+}
+
+
 SWIGINTERN PyObject *_wrap_EcostressOrbitL0Fix__v_file_name(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressOrbitL0Fix *arg1 = (Ecostress::EcostressOrbitL0Fix *) 0 ;
@@ -6951,6 +7078,22 @@ static PyMethodDef SwigMethods[] = {
 		"Treat gaps in the data > Large_gap as a large gap. Also has an offset\n"
 		"in position like OrbitScCoorOffset. \n"
 		""},
+	 { "EcostressOrbitL0Fix_fix_l0_j2000_time", _wrap_EcostressOrbitL0Fix_fix_l0_j2000_time, METH_VARARGS, "\n"
+		"\n"
+		"blitz::Array< double, 1 > EcostressOrbitL0Fix::fix_l0_j2000_time(const blitz::Array< double, 1 > &Wrong_j2000_time)\n"
+		"The L0 processing from launch until B7 calculates the time tags for\n"
+		"the BAD data wrong.\n"
+		"\n"
+		"The time tags are suppose to be Time_coarse + Time_fine / 256.0, but\n"
+		"instead L0 calculated this as Time_coarse + 1.0 / Time_fine\n"
+		"\n"
+		"We can use the existing wrong time and fix this, except for the\n"
+		"special case of Time_fine = 1 (since this is then Time_coarse + 1\n"
+		"which just looks like a increment of 1 in the integer Time_coarse.\n"
+		"\n"
+		"Ultimately we want to fix the L0 processing and reprocessed all the\n"
+		"data, but in the short term we can use this fix. \n"
+		""},
 	 { "EcostressOrbitL0Fix__v_file_name", _wrap_EcostressOrbitL0Fix__v_file_name, METH_O, "\n"
 		"\n"
 		"const std::string& Ecostress::EcostressOrbitL0Fix::file_name() const\n"
@@ -7022,6 +7165,22 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		"Treat gaps in the data > Large_gap as a large gap. Also has an offset\n"
 		"in position like OrbitScCoorOffset. \n"
+		""},
+	 { "EcostressOrbitL0Fix_fix_l0_j2000_time", _wrap_EcostressOrbitL0Fix_fix_l0_j2000_time, METH_VARARGS, "\n"
+		"\n"
+		"blitz::Array< double, 1 > EcostressOrbitL0Fix::fix_l0_j2000_time(const blitz::Array< double, 1 > &Wrong_j2000_time)\n"
+		"The L0 processing from launch until B7 calculates the time tags for\n"
+		"the BAD data wrong.\n"
+		"\n"
+		"The time tags are suppose to be Time_coarse + Time_fine / 256.0, but\n"
+		"instead L0 calculated this as Time_coarse + 1.0 / Time_fine\n"
+		"\n"
+		"We can use the existing wrong time and fix this, except for the\n"
+		"special case of Time_fine = 1 (since this is then Time_coarse + 1\n"
+		"which just looks like a increment of 1 in the integer Time_coarse.\n"
+		"\n"
+		"Ultimately we want to fix the L0 processing and reprocessed all the\n"
+		"data, but in the short term we can use this fix. \n"
 		""},
 	 { "EcostressOrbitL0Fix__v_file_name", _wrap_EcostressOrbitL0Fix__v_file_name, METH_O, "\n"
 		"\n"

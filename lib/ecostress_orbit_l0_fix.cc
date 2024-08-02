@@ -1,5 +1,6 @@
 #include "ecostress_orbit_l0_fix.h"
 #include "ecostress_serialize_support.h"
+#include "geocal/geocal_time.h"
 #include <boost/make_shared.hpp>
 using namespace Ecostress;
 using namespace GeoCal;
@@ -69,6 +70,10 @@ void EcostressOrbitL0Fix::init()
     f.read_field<double, 1>("Attitude/time_j2000");
   Array<double, 2> quat = 
     f.read_field<double, 2>("Attitude/quaternion");
+  if(apply_fix()) {
+    tdouble.reference(fix_l0_j2000_time(tdouble));
+    tdouble2.reference(fix_l0_j2000_time(tdouble2));
+  }
   OrbitArray<Eci, TimeJ2000Creator>::init(tdouble,
      pos, vel, tdouble2, quat,
      OrbitArray<Eci, TimeJ2000Creator>::att_from_sc_to_ref_frame,
@@ -161,4 +166,55 @@ bool EcostressOrbitL0Fix::spacecraft_x_mostly_in_velocity_direction
   CartesianInertialLookVector clv(od->velocity_ci());
   ScLookVector slv = od->sc_look_vector(clv);
   return (slv.look_vector[0] > 0);
+}
+
+//-------------------------------------------------------------------------
+/// The L0 processing from launch until B7 calculates the time tags
+/// for the BAD data wrong. The time tags are suppose to be
+/// Time_coarse + Time_fine / 256.0, but instead L0 calculated this
+/// as Time_coarse + 1.0 / Time_fine
+/// 
+/// We can use the existing wrong time and fix this, except for the
+/// special case of Time_fine = 1 (since this is then Time_coarse + 1
+/// which just looks like a increment of 1 in the integer Time_coarse.
+///
+/// Ultimately we want to fix the L0 processing and reprocessed all
+/// the data, but in the short term we can use this fix.
+//-------------------------------------------------------------------------
+
+double EcostressOrbitL0Fix::fix_l0_j2000_time(double Wrong_j2000_time)
+{
+  double gps_time = Time::time_j2000(Wrong_j2000_time).gps();
+  double coarse_time = floor(gps_time);
+  if(coarse_time == gps_time) // Avoid divide by 0
+    return Wrong_j2000_time;
+  double fine_time = floor(1.0/(gps_time-coarse_time) + 0.5);
+  // Handling if gps_time is close to but not identical to coarse_time
+  if(fine_time > 256)
+    return Wrong_j2000_time;
+  double correct_gps_time = coarse_time + fine_time / 256.0;
+  return Time::time_gps(correct_gps_time).j2000();
+}
+
+//-------------------------------------------------------------------------
+/// The L0 processing from launch until B7 calculates the time tags
+/// for the BAD data wrong. The time tags are suppose to be
+/// Time_coarse + Time_fine / 256.0, but instead L0 calculated this
+/// as Time_coarse + 1.0 / Time_fine
+/// 
+/// We can use the existing wrong time and fix this, except for the
+/// special case of Time_fine = 1 (since this is then Time_coarse + 1
+/// which just looks like a increment of 1 in the integer Time_coarse.
+///
+/// Ultimately we want to fix the L0 processing and reprocessed all
+/// the data, but in the short term we can use this fix.
+//-------------------------------------------------------------------------
+
+blitz::Array<double, 1> EcostressOrbitL0Fix::fix_l0_j2000_time
+(const blitz::Array<double, 1>& Wrong_j2000_time)
+{
+  blitz::Array<double, 1> res(Wrong_j2000_time.rows());
+  for(int i = 0; i < res.rows(); ++i)
+    res(i) = fix_l0_j2000_time(Wrong_j2000_time(i));
+  return res;
 }

@@ -173,6 +173,7 @@ class EcostressOrbitL0Fix(geocal_swig.orbit_array.OrbitArray_Eci_TimeJ2000):
         in position like OrbitScCoorOffset. 
         """
         _ecostress_orbit_l0_fix.EcostressOrbitL0Fix_swiginit(self, _ecostress_orbit_l0_fix.new_EcostressOrbitL0Fix(*args))
+    fix_l0_j2000_time = _swig_new_static_method(_ecostress_orbit_l0_fix.EcostressOrbitL0Fix_fix_l0_j2000_time)
     _v_file_name = _swig_new_instance_method(_ecostress_orbit_l0_fix.EcostressOrbitL0Fix__v_file_name)
 
     @property

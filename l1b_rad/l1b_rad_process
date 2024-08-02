@@ -60,6 +60,12 @@ def print_and_log(s):
     print("INFO:L1B_RAD:%s" % s, file=log)
     log.flush()
 
+if(hasattr("fix_l0_time_tag", l1b_geo_config) and
+   l1b_geo_config.fix_l0_time_tag):
+    fix_l0_time_tag = True
+else:
+    fix_l0_time_tag = False
+    
 # Explicitly list input file
 if(args.run_config):
     l1a_pix = os.path.abspath(config["InputFileGroup", "L1A_PIX"])
@@ -71,7 +77,8 @@ if(args.run_config):
     orb = ecostress.create_orbit_raw(config,
                    pos_off=l1b_geo_config.x_offset_iss,
                    extrapolation_pad=l1b_geo_config.extrapolation_pad,
-                   large_gap=l1b_geo_config.large_gap)
+                   large_gap=l1b_geo_config.large_gap,
+                   fix_l0_time_tag=fix_l0_time_tag)
     dem = ecostress.create_dem(config)
 else:
     l1a_pix = os.path.abspath(args.l1a_pix)
@@ -79,9 +86,16 @@ else:
     dirname = os.path.abspath(args.prod_dir)
     file_version = "01"
     orbfname = os.path.abspath(args.l1a_raw_att)
-    orb = ecostress.EcostressOrbit(orbfname, l1b_geo_config.x_offset_iss,
-                                   l1b_geo_config.extrapolation_pad,
-                                   l1b_geo_config.large_gap)
+    if(fix_l0_time_tag):
+        orb = ecostress.EcostressOrbitL0Fix(
+            orbfname, l1b_geo_config.x_offset_iss,
+            l1b_geo_config.extrapolation_pad,
+            l1b_geo_config.large_gap)
+    else:
+        orb = ecostress.EcostressOrbit(
+            orbfname, l1b_geo_config.x_offset_iss,
+            l1b_geo_config.extrapolation_pad,
+            l1b_geo_config.large_gap)
     dem = geocal.SrtmDem(os.environ["ELEV_ROOT"],False,
                   geocal.DatumGeoid96(os.environ["AFIDS_VDEV_DATA"] +
                                "/EGM96_20_x100.HLF"))

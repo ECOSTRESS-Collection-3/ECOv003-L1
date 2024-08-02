@@ -83,13 +83,20 @@ else:
 # Read in additional configuration parameters    
 sys.path.append(l1_osp_dir)
 import l1b_geo_config
-    
+
+if(hasattr("fix_l0_time_tag", l1b_geo_config) and
+   l1b_geo_config.fix_l0_time_tag):
+    fix_l0_time_tag = True
+else:
+    fix_l0_time_tag = False
+
 if(args.run_config):
     ncpu = int(config["Process", "NumberCpu"])
-    orb = ecostress.create_orbit_raw(config,
-                   pos_off=l1b_geo_config.x_offset_iss,
-                   extrapolation_pad=l1b_geo_config.extrapolation_pad,
-                   large_gap=l1b_geo_config.large_gap)
+    orb = ecostress.create_orbit_raw(
+        config, pos_off=l1b_geo_config.x_offset_iss,
+        extrapolation_pad=l1b_geo_config.extrapolation_pad,
+        large_gap=l1b_geo_config.large_gap,
+        fix_l0_time_tag=fix_l0_time_tag)
     dem = ecostress.create_dem(config)
     lwm = ecostress.create_lwm(config)
     ortho_base_dir = ecostress.ortho_base_directory(config)
@@ -105,14 +112,21 @@ else:
     dirname = os.path.abspath(args.prod_dir)
     file_version = "01"
     orbfname = os.path.abspath(args.l1a_raw_att)
-    orb = ecostress.EcostressOrbit(orbfname, l1b_geo_config.x_offset_iss,
-                                   l1b_geo_config.extrapolation_pad,
-                                   l1b_geo_config.large_gap)
+    if(fix_l0_time_tag):
+        orb = ecostress.EcostressOrbitL0Fix(
+            orbfname, l1b_geo_config.x_offset_iss,
+            l1b_geo_config.extrapolation_pad,
+            l1b_geo_config.large_gap)
+    else:
+        orb = ecostress.EcostressOrbit(
+            orbfname, l1b_geo_config.x_offset_iss,
+            l1b_geo_config.extrapolation_pad,
+            l1b_geo_config.large_gap)
     dem = geocal.SrtmDem(os.environ["ELEV_ROOT"],False,
                   geocal.DatumGeoid96(os.environ["AFIDS_VDEV_DATA"] +
                                "/EGM96_20_x100.HLF"))
-    if(os.path.exists("/raid27/tllogan/all_lwm_links")):
-        lwm = geocal.SrtmLwmData("/raid27/tllogan/all_lwm_links", False)
+    if(os.path.exists("/raid25/SRTM_2014_update/srtm_v3_lwm")):
+        lwm = geocal.SrtmLwmData("/raid25/SRTM_2014_update/srtm_v3_lwm", False)
     elif(os.path.exists("/project/ancillary/SRTM/srtm_v3_lwm")):
         lwm = geocal.SrtmLwmData("/project/ancillary/SRTM/srtm_v3_lwm", False)
     else:

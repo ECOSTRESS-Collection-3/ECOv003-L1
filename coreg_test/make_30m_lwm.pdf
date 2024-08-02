@@ -1,5 +1,5 @@
 procedure
-parm  dir  string  def="/raid27/tllogan/all_lwm_links"
+parm  dir  string  def="/raid25/SRTM_2014_update/srtm_v3_lwm"
 parm  suf  string  def="_lwm_L2.img"
 body
 
