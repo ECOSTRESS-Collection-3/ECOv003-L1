@@ -238,6 +238,9 @@ qa_file = None
 pool = None
 
 try:
+    if(fix_l0_time_tag):
+        print_and_log("Applying Fix to incorrect L0 time tags")
+    
     # We have a set of set of scene failures that we want to handle by
     # just skipping the scenes. Go through and remove these scenes before
     # we do anything else.
