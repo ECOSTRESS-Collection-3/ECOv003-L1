@@ -6,6 +6,7 @@ extern "C" {
   INIT_TYPE INIT_FUNC(_ecostress_dqi)(void);
   INIT_TYPE INIT_FUNC(_ecostress_camera)(void);
   INIT_TYPE INIT_FUNC(_ecostress_orbit)(void);
+  INIT_TYPE INIT_FUNC(_ecostress_orbit_l0_fix)(void);
   INIT_TYPE INIT_FUNC(_ecostress_paraxial_transform)(void);
   INIT_TYPE INIT_FUNC(_ecostress_time_table)(void);
   INIT_TYPE INIT_FUNC(_ecostress_scan_mirror)(void);
@@ -25,6 +26,7 @@ static void module_init(PyObject* module)
   INIT_MODULE(module, "_ecostress_dqi", INIT_FUNC(_ecostress_dqi));
   INIT_MODULE(module, "_ecostress_camera", INIT_FUNC(_ecostress_camera));
   INIT_MODULE(module, "_ecostress_orbit", INIT_FUNC(_ecostress_orbit));
+  INIT_MODULE(module, "_ecostress_orbit_l0_fix", INIT_FUNC(_ecostress_orbit_l0_fix));
   INIT_MODULE(module, "_ecostress_paraxial_transform", INIT_FUNC(_ecostress_paraxial_transform));
   INIT_MODULE(module, "_ecostress_time_table", INIT_FUNC(_ecostress_time_table));
   INIT_MODULE(module, "_ecostress_scan_mirror", INIT_FUNC(_ecostress_scan_mirror));
