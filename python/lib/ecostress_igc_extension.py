@@ -3,7 +3,7 @@
 import geocal
 import ecostress_swig
 
-def _overlap(self, sample=None):
+def _overlap(self, sample=None, scan_number=1):
     '''Calculate the number of lines overlap we have between different
     scans. This is a bit approximate, we just look at the first two scans.
     The overlap depends on the sample. The default is the middle of the
@@ -18,10 +18,10 @@ def _overlap(self, sample=None):
     for 100% overlap.'''
     if(sample is None):
         sample = self.number_sample / 2
-    ic1 = geocal.ImageCoordinate(self.number_line_scan * 2 - 1,
+    ic1 = geocal.ImageCoordinate(self.number_line_scan*(scan_number+1) - 1,
                                  sample)
     ic2, success = self.image_coordinate_scan_index(self.ground_coordinate(ic1),
-                                                   2)
+                                                    scan_number+1)
     if(success):
         return ic2.line - ic1.line
     return -1
