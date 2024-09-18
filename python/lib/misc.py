@@ -131,6 +131,11 @@ def create_igccol_from_qa(qa_fname, l1_osp_dir=None, dem=None, raw_att=False):
     t = f["StandardMetadata/InputPointer"][()].decode('utf-8').split(',')
     radlist = [fname for fname in t if re.match(r'ECOSTRESS_L1B_RAD|ECOv002_L1B_RAD', fname)]
     l1a_att_fname = [fname for fname in t if re.match(r'L1A_RAW_ATT', fname)][0]
+    m = re.match(r'L1B_GEO_QA_(\d{5})_(\d{8})T\d+_(.*\.h5)', os.path.basename(qa_fname))
+    if(not m):
+        raise RuntimeError(f"Don't recognize QA file name {qa_fname}")
+    orbnum = int(m[1])
+    qa_fstem = m[3]
     datelist = set()
     for fname in radlist:
         m = re.match(r'(ECOSTRESS_L1B_RAD|ECOv002_L1B_RAD)_(\d{5})_\d{3}_(\d{8})T\d+_(.*\.h5)',
@@ -139,7 +144,7 @@ def create_igccol_from_qa(qa_fname, l1_osp_dir=None, dem=None, raw_att=False):
             raise RuntimeError(f"Don't recognize file name {fname}")
         fbase = m[1]
         orbnum = int(m[2])
-        fstem = m[4]
+        rad_fstem = m[4]
         datelist.add(f"{m[3][:4]}/{m[3][4:6]}/{m[3][6:]}")
     flist = []
     for d in datelist:
@@ -157,7 +162,7 @@ def create_igccol_from_qa(qa_fname, l1_osp_dir=None, dem=None, raw_att=False):
     l1a_att_fname = flist[0]
     flist = []
     for d in datelist:
-        flist.extend(glob.glob(f"/ops/store*/PRODUCTS/L1B_ATT/{d}/*_{orbnum:05d}_*_{fstem}"))
+        flist.extend(glob.glob(f"/ops/store*/PRODUCTS/L1B_ATT/{d}/*_{orbnum:05d}_*_{qa_fstem}"))
     l1b_att_fname = flist[0]
     orb_fname = l1a_att_fname if raw_att else l1b_att_fname
     try:
