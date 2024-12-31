@@ -107,6 +107,7 @@ LPS = PPFP * SCPS
 ' standard packets per scene rounded up '
 #PPSC = int( (SCPS*FPB3+FPPPKT-1) / FPPPKT )
 
+
 class L1aRawPixGenerate(object):
   '''This generates a L1A_RAW_PIX, L1A_BB, L1A_ENG and L1A_RAW_ATT
   files from a L0B input.'''
@@ -184,7 +185,9 @@ class L1aRawPixGenerate(object):
       print('STS=%s STE=%s' %( str(sts), str(ste) ) )
       print('OBSTFILES=%s' %obst_files )
       fov_obst = "NO"
+      found_file = 0
       for file_name in glob.glob(obst_files):
+        found_file = 1
         fn = os.path.basename( file_name )
         pre,doy1,doy2,post,year=re.split('\_|\.',fn)
         d1 = year + '::' + doy1
@@ -194,7 +197,7 @@ class L1aRawPixGenerate(object):
         d2 = year2 + '::' + doy2
         t1 = Time.parse_time( d1 )
         t2 = Time.parse_time( d2 )
-        ## print("ObstFile dates=%s %s" %( d1, d2 ) )
+        #print("ObstFile dates=%s %s" %( d1, d2 ) )
         if ste<t1 : break  #  time codes beyond scene end
         if sts>t2 :  #  time codes before scene start
           continue
@@ -204,7 +207,10 @@ class L1aRawPixGenerate(object):
             if 'OBSTRUCTED' not in lbuf:  #  Look for "OBSTRUCTED"
               continue
             a,b,c,doy1,t1,d,doy2,t2 = re.split(' |\,|\/', lbuf )
-            #print("OBST lbuf %s %s %s" %(lbuf,t1,t2))
+            #print("%s/%s %s/%s" %(doy1,t1,doy2,t2), end=" ")
+            yr = int( year )
+            if int( doy2 ) < int( doy1 ) : yr = yr + 1
+            year2 = str( yr )
             d1 = year + '::' + doy1 + ' ' + t1
             d2 = year2 + '::' + doy2 + ' ' + t2[0:8]
             t1=Time.parse_time( d1 )
@@ -213,12 +219,13 @@ class L1aRawPixGenerate(object):
             if sts>t2 :  #  time codes before scene start
               continue
             print("Found OBST times %s %s" %( t1, t2 ) )
-            print("Found OBST scene %s %s" %( sts, ste ) )
+            print("OBST scene %s %s" %( sts, ste ) )
             fov_obst = "YES"
             break
-        print("Close file %s" %file_name )
+        print("Close file %s FOV_OBST=%s" %(file_name, fov_obst) )
         ifd.close()
         if fov_obst != "NO" : break
+      if found_file == 0: fov_obst = "NA"
       return fov_obst
 
   def run(self):
