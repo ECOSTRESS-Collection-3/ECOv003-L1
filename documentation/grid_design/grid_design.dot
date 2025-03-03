@@ -1,0 +1,51 @@
+digraph GD {
+	#include "grid_design.inp"
+	DATA_FLOW
+
+	IO(l1b, "Level 1B Radiance")
+	IO(l1geo, "Level 1B Geo")
+	IO(l2db , "Level 2 supplied cloud mask thresholds")
+	IO(l1cg, "Level 1C Grid")
+	IO(l1ct, "Level 1C Tile")
+	IO(l2g, "Level 2 Grid")
+	IO(l2t, "Level 2 Tile")
+	subgraph clusterl1bgeop {
+		label = "L1B Geo PGE"
+		PROCESSNEW(initial_cm, "Initial cloud mask");
+		PROCESS(l1b_geo, "l1b_geo");
+		PROCESSNEW(final_cm, "Final cloud mask");
+		initial_cm -> l1b_geo
+		l1b_geo -> final_cm
+	}
+	subgraph clusterl1t {
+	     label = "L1C PGE"
+	     PROCESSNEW(l1c_grid, "L1C Grid")
+	     PROCESSNEW(l1c_tile, "L1C Tile")
+	     l1c_grid -> l1c_tile
+        }
+	subgraph clusterl2 {
+             label = "L2 PGE"
+	     PROCESS(l2, "L2 process")
+	     PROCESSNEW(l2_tile, "L2 tile")
+	     l2 -> l2_tile
+        }
+	NOTE_NODE(q1, Do we want final cloud mask here?)
+	NOTE_NODE(q2, Does this contain the final cloud mask?)
+	q1 -> final_cm
+	q2 -> l1cg
+	l2db -> initial_cm
+	l2db -> final_cm
+	l1b -> initial_cm
+	l1b -> l1b_geo
+	l1b -> final_cm
+	l1b_geo -> l1geo
+	l1b -> l1c_grid
+	l1geo -> l1c_grid
+	final_cm -> l1c_grid
+	l1c_grid -> l1cg
+	l1c_tile -> l1ct
+	l1cg -> l2
+	l2 -> l2g
+	l2_tile -> l2t
+}
+

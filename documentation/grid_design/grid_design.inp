@@ -1,0 +1,64 @@
+// Stuff common to a lot of graphs
+#define EXISTING_COLOR "darkolivegreen1"
+#define ADD_COLOR "coral1"
+#define INSTRUMENT_COLOR "darkslategray1"
+#define FUNCTION_COLOR "hotpink1"
+// Don't want dir back for data flow
+#define DATA_FLOW edge [fontname = "Bitstream Vera Sans", fontsize = 12, dir = forward ];
+
+#define SINGLE_ARG(...) __VA_ARGS__
+#define CLASS_TABLE(NAME, BODY) shape=none, margin=0,\
+	 label = <\
+	 <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4"> \
+	 <TR><TD>NAME</TD></TR> \
+	 <TR><TD  ALIGN="left">BODY</TD></TR> \
+	 </TABLE>>,
+#define CLASS_TABLE2(NAME, BODY,BODY2) shape=none, margin=0,\
+	 label = <\
+	 <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4"> \
+	 <TR><TD>NAME</TD></TR> \
+	 <TR><TD ALIGN="left">BODY</TD></TR> \
+	 <TR><TD ALIGN="left">BODY2</TD></TR> \
+	 </TABLE>>,
+#define CLASS_TABLE_COMMENT(NAME, BODY) CLASS_TABLE(NAME, SINGLE_ARG(<I> BODY </I>))
+#define NOTE_NODE(NAME, TXT) NAME [ label=<TXT>, style=filled, fillcolor = "yellow", shape = "note"];
+#define IO(NM, TXT) NM [shape=box style=rounded label=TXT]
+#define PROCESS(NM, TXT) NM [shape=ellipse label=TXT style=""]
+#define PROCESSNEW(NM, TXT) NM [shape=ellipse label=TXT style=filled, fillcolor = "turquoise"]
+
+
+// Note arrowhead normally works, but with dir=back you need to
+// use arrowtail (see http://www.graphviz.org/mantisbt/view.php?id=2216)
+// This is actually not a bug, but just the way this works
+
+#define AGGREGATION [arrowtail="odiamond"]
+#define CONTAINS [arrowtail="diamond"]
+#define USES [dir=forward, arrowhead=none, taillabel="Uses"]
+#define NOTE [arrowhead=none]
+
+        fontname = "Bitstream Vera Sans"
+        fontsize = 12
+
+        node [
+                fontname = "Bitstream Vera Sans"
+                fontsize = 12
+		style=filled
+		fillcolor = "darkolivegreen1"
+                shape = "record"
+        ]
+
+	// We use dir=back so the arrow points to the base class.
+	// We don't say OrbitQuaterionList -> Orbit because dot puts
+	// OrbitQuaterionList on top in that case
+        edge [
+                fontname = "Bitstream Vera Sans"
+                fontsize = 12
+		dir = back
+	]
+
+#define FLOW_CHART edge [fontname = "Bitstream Vera Sans", fontsize = 12, dir = forward ];
+
+#define FLOW_START node[shape="box", style="rounded"]
+#define FLOW_STEP node[shape="parallelogram", style=""]
+#define FLOW_DECISION node[shape="diamond", style=""]
+
