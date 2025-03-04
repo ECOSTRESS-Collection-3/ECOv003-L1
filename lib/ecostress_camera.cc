@@ -43,13 +43,13 @@ EcostressCamera::EcostressCamera(double Focal_length, double Y_scale,
   parameter_mask_.resize(6 + 2 * number_band());
   parameter_mask_ = true;
   // Using 1 based bands, we have:
-  // y index on CCD  ecostress band
-  // 2               1
-  // 3               6
-  // 4               2
-  // 5               3
-  // 6               5
-  // 7               4
+  // y index on CCD  ecostress band   band
+  // 2               1                1.62 micrometer
+  // 3               6                12.05 micrometer
+  // 4               2                8.28 micrometer
+  // 5               3                8.63 micrometer
+  // 6               5                11.35 micrometer
+  // 7               4                9.07 micrometer
   //
   // And then (not counting distortion)
   // frame to dcs (ignoring nonlinearity in optics)

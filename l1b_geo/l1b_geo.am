@@ -7,4 +7,5 @@ dist_bin_SCRIPTS += @l1b_geo_src@/map_product
 dist_bin_SCRIPTS += @l1b_geo_src@/map_to_kmz
 dist_bin_SCRIPTS += @l1b_geo_src@/map_index
 dist_bin_SCRIPTS += @l1b_geo_src@/kmz_combine
+dist_bin_SCRIPTS += @l1b_geo_src@/ecostress_util
 
