@@ -1,5 +1,4 @@
-from .coordinate_system import *
-from test_support import *
+from ecostress.coordinate_system import *
 import numpy as np
 
 def test_coordinate_system():

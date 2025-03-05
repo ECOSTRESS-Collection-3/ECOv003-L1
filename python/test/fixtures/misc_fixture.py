@@ -1,6 +1,7 @@
 # Fixtures that don't really fit in one of the other files.
 import pytest
 import os
+import geocal
 
 @pytest.fixture(scope="function")
 def isolated_dir(tmpdir):
@@ -23,4 +24,15 @@ def isolated_dir(tmpdir):
     finally:
         os.chdir(curdir)
 
+@pytest.fixture(scope="function")
+def lwm():
+    '''Determine location of SRTM LWM and initialize object for that.'''
+    if(os.path.exists("/raid25/SRTM_2014_update/srtm_v3_lwm")):
+        srtm_lwm_dir = "/raid25/SRTM_2014_update/srtm_v3_lwm"
+    elif(os.path.exists("/project/ancillary/SRTM/srtm_v3_lwm")):
+        srtm_lwm_dir = "/project/ancillary/SRTM/srtm_v3_lwm"
+    else:
+        raise RuntimeError("Couldn't find SRTM LWM")
+    yield geocal.SrtmLwmData(srtm_lwm_dir,False)
+        
         

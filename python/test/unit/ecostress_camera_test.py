@@ -1,9 +1,5 @@
-try:
-    from ecostress_swig import *
-except ImportError:
-    raise RuntimeError("You need to install the ecostress swig code first. You can install just this by doing 'make install-swig-python'")
 import geocal
-from test_support import *
+from ecostress import EcostressCamera
 
 focal_length = 427.5
 frame_to_sc_q = geocal.Quaternion_double(0,0,0,1)
@@ -15,11 +11,11 @@ def test_basic():
 
 def test_camera_use(igc_old, unit_test_data):
     '''Basic test of have camera used by geocal.'''
-    ic = ImageCoordinate(0,0)
+    ic = geocal.ImageCoordinate(0,0)
     t, fc = igc_old.ipi.time_table.time(ic)
     od = igc_old.ipi.orbit.orbit_data(t)
     dem = igc_old.dem
-    cam = read_shelve(unit_test_data + "camera.xml")
+    cam = geocal.read_shelve(str(unit_test_data / "camera.xml"))
     gp1 = od.surface_intersect(cam, fc, dem)
     fc.line = fc.line + 1
     gp2 = od.surface_intersect(cam, fc, dem)
