@@ -5,32 +5,34 @@ import numpy as np
 import subprocess
 import geocal
 
+
 class L1bGeoQaFile(object):
-    '''This is the L1bGeoQaFile. We have a separate class just to make it
-    easier to interface with.'''
-    def __init__(self, fname, log_fname, local_granule_id = None):
+    """This is the L1bGeoQaFile. We have a separate class just to make it
+    easier to interface with."""
+
+    def __init__(self, fname, log_fname, local_granule_id=None):
         self.fname = fname
         self.log_fname = log_fname
         self.scene_name = None
         self.tp_stat = None
         self.encountered_exception = False
-        if(local_granule_id):
+        if local_granule_id:
             self.local_granule_id = local_granule_id
         else:
             self.local_granule_id = os.path.basename(fname)
         # This ends up getting pickled, and h5py doesn't pickle well. So
         # instead of keeping the file open, we reopen and update as needed.
-        
+
         fout = h5py.File(fname, "w")
         log_group = fout.create_group("Logs")
-        tplog_group = log_group.create_group("Tiepoint Logs")
-        tp_group = fout.create_group("Tiepoint")
-        ac_group = fout.create_group("Accuracy Estimate")
+        log_group.create_group("Tiepoint Logs")
+        fout.create_group("Tiepoint")
+        fout.create_group("Accuracy Estimate")
         fout.close()
 
     def write_xml(self, igc_initial, tpcol, igc_sba, tpcol_sba):
-        '''Write the xml serialization files. Note because these are large 
-        we compress them. HDF5 does compression, but not apparently on 
+        """Write the xml serialization files. Note because these are large
+        we compress them. HDF5 does compression, but not apparently on
         strings. You can access them, but need to manually decompress.
         Note also the serialization has hardcoded paths in them, so often
         you can't use this directly. But writing out as a file to examine
@@ -48,76 +50,86 @@ class L1bGeoQaFile(object):
         import gzip
         t = h5py.File("test_qa.h5", "r")["PythonObject/igccol_initial"][()]
         igccol_initial = geocal.serialize_read_generic_string(gzip.decompress(t).decode('utf8'))
-        '''
+        """
         with h5py.File(self.fname, "a") as f:
             data = []
             desc = []
             for inf in (igc_initial, tpcol, igc_sba, tpcol_sba):
                 try:
-                    data.append(open(inf,"r").read().encode('utf8'))
+                    data.append(open(inf, "r").read().encode("utf8"))
                 except FileNotFoundError:
                     data.append(b"")
                 try:
-                    desc.append(subprocess.run(["shelve_show", inf],
-                      stdout=subprocess.PIPE, stderr=subprocess.STDOUT).stdout)
+                    desc.append(
+                        subprocess.run(
+                            ["shelve_show", inf],
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT,
+                        ).stdout
+                    )
                 except FileNotFoundError:
                     desc.append(b"")
             g = f.create_group("PythonObject")
             # Note, we compress the data ourselves. While HDF5 supports
             # compression, it doesn't seem to do this with strings.
-            for i,fout in enumerate(["igccol_initial", "tpcol",
-                                     "igccol_sba", "tpcol_sba"]):
-                dset = g.create_dataset(fout,
-                                        data=np.void(gzip.compress(data[i])))
-                dset = g.create_dataset(fout + "_desc", data=desc[i],
-                                        dtype=h5py.special_dtype(vlen=bytes))
+            for i, fout in enumerate(
+                ["igccol_initial", "tpcol", "igccol_sba", "tpcol_sba"]
+            ):
+                g.create_dataset(fout, data=np.void(gzip.compress(data[i])))
+                g.create_dataset(
+                    fout + "_desc", data=desc[i], dtype=h5py.special_dtype(vlen=bytes)
+                )
 
     def input_list(self, inlist):
         with h5py.File(self.fname, "a") as f:
-            f.create_dataset("Input File List",
-                             data=[i.encode('utf8') for i in inlist],
-                             dtype=h5py.special_dtype(vlen=bytes))
+            f.create_dataset(
+                "Input File List",
+                data=[i.encode("utf8") for i in inlist],
+                dtype=h5py.special_dtype(vlen=bytes),
+            )
 
     def add_average_metadata(self, avg_md):
-        '''Add average metadata. First column is average solar zenith angle,
-        second is overall land fraction. We have one row per scene'''
+        """Add average metadata. First column is average solar zenith angle,
+        second is overall land fraction. We have one row per scene"""
         with h5py.File(self.fname, "a") as f:
             d = f.create_dataset("Average Metadata", data=avg_md)
-            d.attrs["Description"] = \
-'''This is the average metadata. We have one row for each scene. 
+            d.attrs[
+                "Description"
+            ] = """This is the average metadata. We have one row for each scene. 
 
 The first column is the average solar zenith angle, in degrees. The
-second column is the overall land fraction for the scene, as a percentage.'''
-            
+second column is the overall land fraction for the scene, as a percentage."""
 
     def add_orbit(self, orb):
-        '''Add data about orbit. Note that this requires we use 
-        OrbitOffsetCorrection, it doesn't work otherwise.'''
+        """Add data about orbit. Note that this requires we use
+        OrbitOffsetCorrection, it doesn't work otherwise."""
         atime, acorr, ptime, pcorr = orb.orbit_correction_parameter()
         with h5py.File(self.fname, "a") as f:
             orb_group = f.create_group("Orbit")
-            d = orb_group.create_dataset("Attitude Time Point",
-                                    data=np.array([t.j2000 for t in atime]))
+            d = orb_group.create_dataset(
+                "Attitude Time Point", data=np.array([t.j2000 for t in atime])
+            )
             d.attrs["Units"] = "s"
-            d = orb_group.create_dataset("Position Time Point",
-                                    data=np.array([t.j2000 for t in ptime]))
+            d = orb_group.create_dataset(
+                "Position Time Point", data=np.array([t.j2000 for t in ptime])
+            )
             d.attrs["Units"] = "s"
-            d = orb_group.create_dataset("Attitude Correction",
-                                         data=acorr)
+            d = orb_group.create_dataset("Attitude Correction", data=acorr)
             d.attrs["Units"] = "arcseconds"
-            d.attrs["Description"] = \
-'''This is the attitude correction, one row per time point. 
-The columns are yaw, pitch, and roll in arceconds.'''
-            d = orb_group.create_dataset("Position Correction",
-                                         data=pcorr)
+            d.attrs[
+                "Description"
+            ] = """This is the attitude correction, one row per time point. 
+The columns are yaw, pitch, and roll in arceconds."""
+            d = orb_group.create_dataset("Position Correction", data=pcorr)
             d.attrs["Units"] = "m"
-            d.attrs["Description"] = \
-'''This is the position correction, one row per time point.
+            d.attrs[
+                "Description"
+            ] = """This is the position correction, one row per time point.
 Position is in ECR, in meters. The columns are X, Y, and Z 
-offset.'''
-            
+offset."""
+
     def add_tp_log(self, scene_name, tplogfname):
-        '''Add a TP log file'''
+        """Add a TP log file"""
         try:
             log = open(tplogfname, "r").read()
         except FileNotFoundError:
@@ -125,80 +137,96 @@ offset.'''
             log = "log file missing"
         with h5py.File(self.fname, "a") as f:
             tplog_group = f["Logs/Tiepoint Logs"]
-            dset = tplog_group.create_dataset(scene_name, data=log,
-                                  dtype=h5py.special_dtype(vlen=bytes))
+            tplog_group.create_dataset(
+                scene_name, data=log, dtype=h5py.special_dtype(vlen=bytes)
+            )
 
-    def add_tp_single_scene(self, image_index, igccol, tpcol, ntpoint_initial,
-                            ntpoint_removed, ntpoint_final, number_match_try):
-        '''Write out information about the tiepoints we collect for scene.'''
-        if(self.scene_name is None):
-            self.scene_name = [igccol.title(i).encode('utf8') for i in
-                               range(igccol.number_image)]
-        if(self.tp_stat is None):
+    def add_tp_single_scene(
+        self,
+        image_index,
+        igccol,
+        tpcol,
+        ntpoint_initial,
+        ntpoint_removed,
+        ntpoint_final,
+        number_match_try,
+    ):
+        """Write out information about the tiepoints we collect for scene."""
+        if self.scene_name is None:
+            self.scene_name = [
+                igccol.title(i).encode("utf8") for i in range(igccol.number_image)
+            ]
+        if self.tp_stat is None:
             self.tp_stat = np.full((igccol.number_image, 9), -9999.0)
         self.tp_stat[image_index, 0] = ntpoint_initial
         self.tp_stat[image_index, 1] = ntpoint_removed
         self.tp_stat[image_index, 2] = ntpoint_final
         self.tp_stat[image_index, 3] = number_match_try
-        if(len(tpcol) > 0):
-            df = tpcol.data_frame(igccol,image_index)
-            self.tp_stat[image_index, 4] = df.ground_2d_distance.quantile(.68)
+        if len(tpcol) > 0:
+            df = tpcol.data_frame(igccol, image_index)
+            self.tp_stat[image_index, 4] = df.ground_2d_distance.quantile(0.68)
         tpdata = None
-        if(len(tpcol) > 0):
+        if len(tpcol) > 0:
             tpdata = np.empty((len(tpcol), 5))
         for i, tp in enumerate(tpcol):
             ic = tp.image_coordinate(image_index)
-            tpdata[i,0:2] = ic.line, ic.sample
-            tpdata[i,2:6] = geocal.Ecr(tp.ground_location).position
+            tpdata[i, 0:2] = ic.line, ic.sample
+            tpdata[i, 2:6] = geocal.Ecr(tp.ground_location).position
         with h5py.File(self.fname, "a") as f:
             tp_group = f["Tiepoint"]
             s_group = tp_group.create_group(igccol.title(image_index))
-            if(tpdata is not None):
+            if tpdata is not None:
                 d = s_group.create_dataset("Tiepoints", data=tpdata)
-                d.attrs["Description"] = \
-'''This is the list of tiepoints for a scene, after removing blunders.
+                d.attrs[
+                    "Description"
+                ] = """This is the list of tiepoints for a scene, after removing blunders.
 
 The first column in image coordinate line, the second column is image
 coordinate sample.
 
 The remaining three columns are the location of the ground coordinate in
 the reference image, in Ecr coordinates (in meters).
-'''
-                
-    def add_final_accuracy(self, igccol_corrected, tpcol, tcor_before,
-                           tcor_after, geo_qa):
+"""
+
+    def add_final_accuracy(
+        self, igccol_corrected, tpcol, tcor_before, tcor_after, geo_qa
+    ):
         # Ok if no tiepoints for scene i, this just return nan
-        t = np.array([tpcol.data_frame(igccol_corrected, i).ground_2d_distance.quantile(.68)
-                      for i in range(igccol_corrected.number_image)])
+        t = np.array(
+            [
+                tpcol.data_frame(igccol_corrected, i).ground_2d_distance.quantile(0.68)
+                for i in range(igccol_corrected.number_image)
+            ]
+        )
         t[np.isnan(t)] = -9999
-        self.tp_stat[:,5] = t
-        self.tp_stat[:,6] = tcor_before
-        self.tp_stat[:,7] = tcor_after
+        self.tp_stat[:, 5] = t
+        self.tp_stat[:, 6] = tcor_before
+        self.tp_stat[:, 7] = tcor_after
         for i in range(self.tp_stat.shape[0]):
-            if(geo_qa[i] == "Best"):
-                self.tp_stat[i,8] = 0
-            elif(geo_qa[i] == "Good"):
-                self.tp_stat[i,8] = 1
-            elif(geo_qa[i] == "Suspect"):
-                self.tp_stat[i,8] = 2
-            elif(geo_qa[i] == "Poor"):
-                self.tp_stat[i,8] = 3
+            if geo_qa[i] == "Best":
+                self.tp_stat[i, 8] = 0
+            elif geo_qa[i] == "Good":
+                self.tp_stat[i, 8] = 1
+            elif geo_qa[i] == "Suspect":
+                self.tp_stat[i, 8] = 2
+            elif geo_qa[i] == "Poor":
+                self.tp_stat[i, 8] = 3
             else:
-                self.tp_stat[i,8] = -9999
-        
+                self.tp_stat[i, 8] = -9999
+
     def write_standard_metadata(self, m):
-        '''Write out standard metadata for QA file. Since this is almost
+        """Write out standard metadata for QA file. Since this is almost
         identical to the metadata we have for the l1b_att file, we pass in
         the metadata for that file and just change a few things before
-        writing it out.'''
+        writing it out."""
         # We copy the metadata, just changing the file we attach this to
         # and the local granule id
         with h5py.File(self.fname, "a") as f:
             mcopy = m.copy_new_file(f, self.local_granule_id, "L1B_GEO_QA")
             mcopy.write()
-            
+
     def close(self):
-        '''Finishing writing up data, and close file'''
+        """Finishing writing up data, and close file"""
         try:
             log = open(self.log_fname, "r").read()
         except FileNotFoundError:
@@ -206,56 +234,73 @@ the reference image, in Ecr coordinates (in meters).
             log = "log file missing"
         with h5py.File(self.fname, "a") as f:
             log_group = f["Logs"]
-            dset = log_group.create_dataset("Overall Log", data=log,
-                                dtype=h5py.special_dtype(vlen=bytes))
-            if(self.encountered_exception):
-                dset = log_group.create_dataset("Encountered Exception",
-                   data="True", dtype=h5py.special_dtype(vlen=bytes))
+            dset = log_group.create_dataset(
+                "Overall Log", data=log, dtype=h5py.special_dtype(vlen=bytes)
+            )
+            if self.encountered_exception:
+                dset = log_group.create_dataset(
+                    "Encountered Exception",
+                    data="True",
+                    dtype=h5py.special_dtype(vlen=bytes),
+                )
             else:
-                dset = log_group.create_dataset("Encountered Exception",
-                   data="False", dtype=h5py.special_dtype(vlen=bytes))
+                dset = log_group.create_dataset(
+                    "Encountered Exception",
+                    data="False",
+                    dtype=h5py.special_dtype(vlen=bytes),
+                )
             tp_group = f["Tiepoint"]
-            tp_group.create_dataset("Scenes", data=self.scene_name,
-                                     dtype=h5py.special_dtype(vlen=bytes))
-            if(self.tp_stat is not None):
-                dset = tp_group.create_dataset("Tiepoint Count",
-                                               data=self.tp_stat[:,0:4].astype(np.int32))
-                dset.attrs["Description"] = \
-'''First column is the initial number of tie points
+            tp_group.create_dataset(
+                "Scenes", data=self.scene_name, dtype=h5py.special_dtype(vlen=bytes)
+            )
+            if self.tp_stat is not None:
+                dset = tp_group.create_dataset(
+                    "Tiepoint Count", data=self.tp_stat[:, 0:4].astype(np.int32)
+                )
+                dset.attrs[
+                    "Description"
+                ] = """First column is the initial number of tie points
 
 Second column is the number of blunders removed
 
 Third column is the number after removing blunders and applying minimum
 number of tiepoints (so if < threshold we set this to 0).
 
-Fourth column is the number to image matching tries we did.'''
+Fourth column is the number to image matching tries we did."""
             ac_group = f["Accuracy Estimate"]
-            ac_group.create_dataset("Scenes", data=self.scene_name,
-                                     dtype=h5py.special_dtype(vlen=bytes))
-            if(self.tp_stat is not None):
-                dset = ac_group.create_dataset("Accuracy Before Correction",
-                                               data=self.tp_stat[:,4])
+            ac_group.create_dataset(
+                "Scenes", data=self.scene_name, dtype=h5py.special_dtype(vlen=bytes)
+            )
+            if self.tp_stat is not None:
+                dset = ac_group.create_dataset(
+                    "Accuracy Before Correction", data=self.tp_stat[:, 4]
+                )
                 dset.attrs["Units"] = "m"
-                dset = ac_group.create_dataset("Final Accuracy",
-                                               data=self.tp_stat[:,5])
+                dset = ac_group.create_dataset(
+                    "Final Accuracy", data=self.tp_stat[:, 5]
+                )
                 dset.attrs["Units"] = "m"
-                dset = ac_group.create_dataset("Delta time correction before scene",
-                                               data=self.tp_stat[:,6])
+                dset = ac_group.create_dataset(
+                    "Delta time correction before scene", data=self.tp_stat[:, 6]
+                )
                 dset.attrs["Units"] = "s"
-                dset = ac_group.create_dataset("Delta time correction after scene",
-                                               data=self.tp_stat[:,7])
+                dset = ac_group.create_dataset(
+                    "Delta time correction after scene", data=self.tp_stat[:, 7]
+                )
                 dset.attrs["Units"] = "s"
-                dset = ac_group.create_dataset("Geolocation accuracy QA flag",
-                                               data=self.tp_stat[:,8])
-                dset.attrs["Description"] = \
-'''0: Best - Image matching was performed for this scene, expect 
+                dset = ac_group.create_dataset(
+                    "Geolocation accuracy QA flag", data=self.tp_stat[:, 8]
+                )
+                dset.attrs[
+                    "Description"
+                ] = """0: Best - Image matching was performed for this scene, expect 
        good geolocation accuracy.
 1: Good - Image matching was performed on a nearby scene, and correction 
        has been interpolated/extrapolated. Expect good geolocation accuracy.
 2: Suspect - Matched somewhere in the orbit. Expect better geolocation 
        than orbits w/o image matching, but may still have large errors.
 3: Poor - No matches in the orbit. Expect largest geolocation errors.
-9999: Unknown value'''
+9999: Unknown value"""
+
 
 __all__ = ["L1bGeoQaFile"]
-        

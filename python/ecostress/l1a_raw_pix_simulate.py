@@ -2,14 +2,14 @@ import numpy as np
 import h5py
 from .write_standard_metadata import WriteStandardMetadata
 
-class L1aRawPixSimulate(object):
+class L1aRawPixSimulate:
     '''This is used to generate L1A_RAW_PIX simulated data.'''
     def __init__(self, l1a_pix_fname):
         '''Create a L1APixSimulate to process the given L1A_PIX file.'''
         self.l1a_pix = h5py.File(l1a_pix_fname, "r")
 
     def copy_metadata(self, field):
-        self.m.set(field, self.l1a_pix["/StandardMetadata/" + field].value)
+        self.m.set(field, self.l1a_pix["/StandardMetadata/" + field][()])
         
     def create_file(self, l1a_raw_pix_fname):
         fout = h5py.File(l1a_raw_pix_fname, "w")

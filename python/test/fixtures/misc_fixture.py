@@ -2,6 +2,7 @@
 import pytest
 import os
 import geocal
+from ecostress import ecostress_to_aster_band
 
 
 @pytest.fixture(scope="function")
@@ -34,5 +35,20 @@ def lwm():
     elif os.path.exists("/project/ancillary/SRTM/srtm_v3_lwm"):
         srtm_lwm_dir = "/project/ancillary/SRTM/srtm_v3_lwm"
     else:
-        raise RuntimeError("Couldn't find SRTM LWM")
+        pytest.skip("Couldn't find SRTM LWM")
     yield geocal.SrtmLwmData(srtm_lwm_dir, False)
+
+
+@pytest.fixture(scope="function")
+def aster_mosaic_surface_data(aster_mosaic_dir):
+    sdata = [
+        geocal.VicarLiteRasterImage(
+            str(aster_mosaic_dir / f"calnorm_b{b}.img"),
+            1,
+            geocal.VicarLiteFile.READ,
+            1000,
+            1000,
+        )
+        for b in ecostress_to_aster_band()
+    ]
+    yield sdata
