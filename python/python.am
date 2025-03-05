@@ -1,21 +1,11 @@
-ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py
+# TODO Have a editable version of this
 
-# Number of jobs to run at once. Default is to automatically determine this,
-# but you can specify a different number.
-PYTEST_NJOB=10
+python-install:
+	pip install --prefix=@prefix@ $(srcdir)/@srcpython@
 
-PYTEST_EXTRAFLAGS=
-PYTEST_FLAGS= -q -n $(PYTEST_NJOB) --basetemp=./pytest_tmp
+INSTALL_EXEC_HOOK+= python-install
 
-# Shortcut for just running py.test.
-python-check: script/setup_ecostress.sh
-	source $< && \
-        $(PYTEST) $(PYTEST_FLAGS) $(PYTEST_EXTRAFLAGS) $(srcdir)/@srcpython@
+python-check:
+	pytest -n 10 $(srcdir)/@srcpython@/test
 
-CHECK_HOOK+= python-check
-
-EXTRA_DIST+= @srcpython@/pytest.ini
-EXTRA_DIST+= @srcpython@/conftest.py
-EXTRA_DIST+= @srcpython@/ecostress/__init__.py
-EXTRA_DIST+= @srcpython@/ecostress/README
-
+INSTALLCHECK_HOOK+= python-check

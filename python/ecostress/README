@@ -1,6 +1,0 @@
-This just shuffles things around so we have direct access to the python library
-w/o doing an install. Just a convenience when debugging/testing, this isn't
-actually used in the delivered version.
-
-This uses Ben's preferred convention of needing the full path for the object
-(so ecostress.run_config.RunConfig).

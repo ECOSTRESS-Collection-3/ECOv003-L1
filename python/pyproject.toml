@@ -1,0 +1,19 @@
+# Newer versions of pip prefer a pyproject.toml file. All this does is say
+# we are using setup tools. Note that this also triggers "build isolation"
+# We don't actually need or want this, instead we want to use the packages we
+# have already installed with conda. So we use --no-build-isolation when
+# we install this with pip:
+#
+# pip install . --no-build-isolation
+
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.ruff.lint.per-file-ignores]
+
+# __init__ includes things it doesn't use (e.g., __version__), which
+# is really its job. So don't warn about this.
+
+"__init__.py" = ["F401", "F403"]
+

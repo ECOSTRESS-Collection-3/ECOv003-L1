@@ -56,6 +56,9 @@ AM_CPPFLAGS=
 # hooks for installing. We collect this in one place so automake doesn't
 # complain
 
+INSTALL_EXEC_HOOK=
+install-exec-hook: $(INSTALL_EXEC_HOOK)
+
 INSTALL_DATA_HOOK=
 install-data-hook: $(INSTALL_DATA_HOOK)
 
@@ -91,6 +94,7 @@ complain_if_afids:
           exit 1; \
         fi
 
-BUILT_SOURCES += complain_if_afids
+# No longer needed, but leave in place to document this change
+#BUILT_SOURCES += complain_if_afids
 
 

@@ -1,28 +1,28 @@
-from .misc import *
-from test_support import *
+import pytest
+from ecostress.misc import *
 from geocal import Time, ImageCoordinate, cib01_mapinfo
 
 # Depends on data local to eco-scf2, so don't normally run
-@skip
+@pytest.mark.skip
 def test_find_radiance_file():
     '''Test searching for a radiance file'''
     print(find_radiance_file(468, 7))
 
 # Depends on data local to eco-scf2, so don't normally run
-@skip
+@pytest.mark.skip
 def test_find_orbit_file():
     '''Test searching for a radiance file'''
     print(find_orbit_file(468))
     
 # Depends on data local to eco-scf2, so don't normally run
-@skip
+@pytest.mark.skip
 def test_create_igc(test_data):
     '''Test create_igc function.'''
     print(create_igc(find_radiance_file(468, 7), find_orbit_file(468),
                      test_data + "l1_osp_dir"))
 
 # Depends on data local to eco-scf2, so don't normally run
-@skip
+@pytest.mark.skip
 def test_create_igccol():
     print(create_igccol(468,7))
     

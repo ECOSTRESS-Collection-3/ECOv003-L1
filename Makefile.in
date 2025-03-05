@@ -34,6 +34,8 @@
 
 # Stuff specific to ecostress
 
+# TODO Have a editable version of this
+
 # Cython part
 # ================================================
 
@@ -154,10 +156,10 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
 	$(am__configure_deps) $(dist_bin_SCRIPTS) \
-	$(dist_installecostress_SCRIPTS) $(ecostresspkgpython_PYTHON) \
-	$(pkgpythonswig_PYTHON) $(dist_vicarpdf_DATA) \
-	$(ecostressinc_HEADERS) $(ecostressswiginc_HEADERS) \
-	$(include_HEADERS) $(am__DIST_COMMON)
+	$(dist_installecostress_SCRIPTS) $(pkgpythonswig_PYTHON) \
+	$(dist_vicarpdf_DATA) $(ecostressinc_HEADERS) \
+	$(ecostressswiginc_HEADERS) $(include_HEADERS) \
+	$(am__DIST_COMMON)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
@@ -169,7 +171,6 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(installecostressdir)" \
 	"$(DESTDIR)$(installecostressdir)" \
-	"$(DESTDIR)$(ecostresspkgpythondir)" \
 	"$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(vicarpdfdir)" \
 	"$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(pkgconfigdir)" \
 	"$(DESTDIR)$(ecostressincdir)" \
@@ -581,9 +582,7 @@ am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(srcdir)/ecostress_version.py.in $(srcdir)/include.am \
 	$(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1a_raw/l1a_raw.am \
 	$(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/l1b_rad/l1b_rad.am \
-	$(srcdir)/lib/lib.am $(srcdir)/python/lib/lib.am \
-	$(srcdir)/python/python.am \
-	$(srcdir)/python/test_support/test_support.am \
+	$(srcdir)/lib/lib.am $(srcdir)/python/python.am \
 	$(srcdir)/script/script.am $(srcdir)/thirdparty/thirdparty.am \
 	$(srcdir)/unit_test_data/unit_test_data.am \
 	$(srcdir)/vicar_pdf/vicar_pdf.am $(top_srcdir)/config/compile \
@@ -821,17 +820,8 @@ dist_bin_SCRIPTS = @l1a_raw_src@/l1a_raw_process \
 	@l1b_geo_src@/map_index @l1b_geo_src@/kmz_combine \
 	@l1b_geo_src@/ecostress_util
 AM_LDFLAGS = 
-BUILT_SOURCES = complain_if_afids $(am__append_1) $(am__append_2)
+BUILT_SOURCES = $(am__append_1) $(am__append_2)
 include_HEADERS = 
-
-# We never did anything with this, so drop this for now
-# Cython code to generate
-#ecostresspkgpython_PYTHON+= @srcpythonlib@/cython_try.py
-#CYTHON_SRC+= @srccython@/cython_sample.cc
-#EXTRA_DIST+= @srcpythonlib@/cython_sample.pyx
-#CYTHON_SRC+= @srccython@/cython_sample2.cc
-#EXTRA_DIST+= @srcpythonlib@/cython_sample2.pyx
-#EXTRA_DIST+= @srcpythonlib@/cython_sample_test.py
 
 # Test files
 # Leave out repodata and package because of the size. We can reevaluate that
@@ -842,43 +832,8 @@ EXTRA_DIST = README.md requirements.txt Setup.md end_to_end_testing \
 	tools coreg_test config/doxygen.cfg config/doc_footer.html \
 	config/create_python_init.py config/doxy2swig.py \
 	config/doxygen_single.cfg @l1a_raw_src@/l0b_sim.py \
-	@l1b_rad_src@/README.md @srcpdf@/README @srcpython@/pytest.ini \
-	@srcpython@/conftest.py @srcpython@/ecostress/__init__.py \
-	@srcpython@/ecostress/README \
-	@srcpythonlib@/band_to_band_test.py \
-	@srcpythonlib@/coordinate_system_test.py \
-	@srcpythonlib@/ecostress_camera_test.py \
-	@srcpythonlib@/ecostress_interpolate_test.py \
-	@srcpythonlib@/ev_codes.txt \
-	@srcpythonlib@/gaussian_stretch_test.py \
-	@srcpythonlib@/geo_write_standard_metadata_test.py \
-	@srcpythonlib@/igc_test.py @srcpythonlib@/__init__.py \
-	@srcpythonlib@/l0b_sim_test.py \
-	@srcpythonlib@/l1a_bb_simulate_test.py \
-	@srcpythonlib@/l1a_eng_simulate_test.py \
-	@srcpythonlib@/l1a_pix_generate_test.py \
-	@srcpythonlib@/l1a_pix_simulate_test.py \
-	@srcpythonlib@/l1a_raw_att_simulate_test.py \
-	@srcpythonlib@/l1a_raw_pix_generate_test.py \
-	@srcpythonlib@/l1a_raw_pix_simulate_test.py \
-	@srcpythonlib@/l1b_att_generate_test.py \
-	@srcpythonlib@/l1b_geo_generate_kmz_test.py \
-	@srcpythonlib@/l1b_geo_generate_map_test.py \
-	@srcpythonlib@/l1b_geo_generate_test.py \
-	@srcpythonlib@/l1b_geo_qa_file_test.py \
-	@srcpythonlib@/l1b_proj_test.py \
-	@srcpythonlib@/l1b_rad_generate_test.py \
-	@srcpythonlib@/l1b_rad_simulate.py \
-	@srcpythonlib@/l1b_rad_simulate_test.py \
-	@srcpythonlib@/misc_test.py \
-	@srcpythonlib@/ecostress_igc_extension_test.py \
-	@srcpythonlib@/prt_coef.txt \
-	@srcpythonlib@/rad_write_standard_metadata_test.py \
-	@srcpythonlib@/run_config_test.py \
-	@srcpythonlib@/write_run_config_test.py \
-	@srcpythonlib@/write_standard_metadata_test.py \
-	@testsupportsrc@/test_support.py @testsupportsrc@/__init__.py \
-	$(CYTHON_SRC) @pythonswigsrc@/cython_init.tmpl \
+	@l1b_rad_src@/README.md @srcpdf@/README $(CYTHON_SRC) \
+	@pythonswigsrc@/cython_init.tmpl \
 	@pythonswigsrc@/swig_wrap.tmpl $(patsubst %_wrap.cc, %.py, \
 	$(FULL_SWIG_SRC)) $(FULL_SWIG_SRC) \
 	$(srcdir)/$(swigsrc)/*_wrap.h @srclib@/test_all.sh \
@@ -912,11 +867,12 @@ AM_CPPFLAGS = -I$(srcdir)/@srclib@
 
 # hooks for installing. We collect this in one place so automake doesn't
 # complain
+INSTALL_EXEC_HOOK = python-install
 INSTALL_DATA_HOOK = 
 UNINSTALL_HOOK = 
 CLEAN_HOOK = 
-INSTALLCHECK_HOOK = 
-CHECK_HOOK = python-check
+INSTALLCHECK_HOOK = python-check
+CHECK_HOOK = 
 TESTS = @srclib@/test_all.sh
 check_PROGRAM = 
 check_DATA = 
@@ -955,38 +911,6 @@ H5DIFF_FLAG = -d 6e-2 --exclude-path=/Radiance/radiance_1 \
 dist_vicarpdf_DATA = @srcpdf@/el1a_2pt.pdf @srcpdf@/el1a_bbcal.pdf \
 	@srcpdf@/el1a_tvac.pdf
 installecostress_DATA = @srcscript@/setup_ecostress.csh @srcscript@/setup_ecostress.sh
-ecostresspkgpython_PYTHON = @srcpython@/init/__init__.py \
-	@srcpythonlib@/coordinate_system.py \
-	@srcpythonlib@/l1b_att_generate.py @srcpythonlib@/l0b_sim.py \
-	@srcpythonlib@/l1a_raw_pix_simulate.py \
-	@srcpythonlib@/l1a_raw_pix_generate.py \
-	@srcpythonlib@/l1a_raw_att_simulate.py \
-	@srcpythonlib@/l1a_bb_simulate.py \
-	@srcpythonlib@/l1a_eng_simulate.py \
-	@srcpythonlib@/l1a_pix_generate.py \
-	@srcpythonlib@/l1a_pix_simulate.py \
-	@srcpythonlib@/l1b_rad_generate.py \
-	@srcpythonlib@/l1b_geo_generate.py @srcpythonlib@/l1b_proj.py \
-	@srcpythonlib@/l1b_tp_collect.py @srcpythonlib@/misc.py \
-	@srcpythonlib@/ecostress_igc_extension.py \
-	@srcpythonlib@/pickle_method.py @srcpythonlib@/run_config.py \
-	@srcpythonlib@/write_run_config.py \
-	@srcpythonlib@/write_standard_metadata.py \
-	@srcpythonlib@/geo_write_standard_metadata.py \
-	@srcpythonlib@/rad_write_standard_metadata.py \
-	@srcpythonlib@/exception.py \
-	@srcpythonlib@/ecostress_interpolate.py \
-	@srcpythonlib@/l1b_geo_qa_file.py \
-	@srcpythonlib@/l1b_geo_generate_map.py \
-	@srcpythonlib@/l1b_geo_generate_kmz.py \
-	@srcpythonlib@/gaussian_stretch.py \
-	@srcpythonlib@/distance_to_missing_scanline.py
-
-# Number of jobs to run at once. Default is to automatically determine this,
-# but you can specify a different number.
-PYTEST_NJOB = 10
-PYTEST_EXTRAFLAGS = 
-PYTEST_FLAGS = -q -n $(PYTEST_NJOB) --basetemp=./pytest_tmp
 
 # Will want to move this to automake
 CYTHON_FLAGS = --cplus -3
@@ -1158,7 +1082,7 @@ all: $(BUILT_SOURCES)
 .SUFFIXES: .cc .lo .log .o .obj .test .test$(EXEEXT) .trs
 am--refresh: Makefile
 	@:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/python/lib/lib.am $(srcdir)/python/test_support/test_support.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(srcdir)/unit_test_data/unit_test_data.am $(srcdir)/thirdparty/thirdparty.am $(srcdir)/docker/docker.am $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(srcdir)/unit_test_data/unit_test_data.am $(srcdir)/thirdparty/thirdparty.am $(srcdir)/docker/docker.am $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -1180,7 +1104,7 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles);; \
 	esac;
-$(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/python/lib/lib.am $(srcdir)/python/test_support/test_support.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(srcdir)/unit_test_data/unit_test_data.am $(srcdir)/thirdparty/thirdparty.am $(srcdir)/docker/docker.am $(am__empty):
+$(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(srcdir)/unit_test_data/unit_test_data.am $(srcdir)/thirdparty/thirdparty.am $(srcdir)/docker/docker.am $(am__empty):
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
@@ -2098,54 +2022,6 @@ clean-libtool:
 
 distclean-libtool:
 	-rm -f libtool config.lt
-install-ecostresspkgpythonPYTHON: $(ecostresspkgpython_PYTHON)
-	@$(NORMAL_INSTALL)
-	@list='$(ecostresspkgpython_PYTHON)'; dlist=; list2=; test -n "$(ecostresspkgpythondir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(ecostresspkgpythondir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(ecostresspkgpythondir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then b=; else b="$(srcdir)/"; fi; \
-	  if test -f $$b$$p; then \
-	    $(am__strip_dir) \
-	    dlist="$$dlist $$f"; \
-	    list2="$$list2 $$b$$p"; \
-	  else :; fi; \
-	done; \
-	for file in $$list2; do echo $$file; done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(ecostresspkgpythondir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(ecostresspkgpythondir)" || exit $$?; \
-	done || exit $$?; \
-	if test -n "$$dlist"; then \
-	  $(am__py_compile) --destdir "$(DESTDIR)" \
-	                    --basedir "$(ecostresspkgpythondir)" $$dlist; \
-	else :; fi
-
-uninstall-ecostresspkgpythonPYTHON:
-	@$(NORMAL_UNINSTALL)
-	@list='$(ecostresspkgpython_PYTHON)'; test -n "$(ecostresspkgpythondir)" || list=; \
-	py_files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	test -n "$$py_files" || exit 0; \
-	dir='$(DESTDIR)$(ecostresspkgpythondir)'; \
-	pyc_files=`echo "$$py_files" | sed 's|$$|c|'`; \
-	pyo_files=`echo "$$py_files" | sed 's|$$|o|'`; \
-	py_files_pep3147=`echo "$$py_files" | $(am__pep3147_tweak)`; \
-	echo "$$py_files_pep3147";\
-	pyc_files_pep3147=`echo "$$py_files_pep3147" | sed 's|$$|c|'`; \
-	pyo_files_pep3147=`echo "$$py_files_pep3147" | sed 's|$$|o|'`; \
-	st=0; \
-	for files in \
-	  "$$py_files" \
-	  "$$pyc_files" \
-	  "$$pyo_files" \
-	  "$$pyc_files_pep3147" \
-	  "$$pyo_files_pep3147" \
-	; do \
-	  $(am__uninstall_files_from_dir) || st=$$?; \
-	done; \
-	exit $$st
 install-pkgpythonswigPYTHON: $(pkgpythonswig_PYTHON)
 	@$(NORMAL_INSTALL)
 	@list='$(pkgpythonswig_PYTHON)'; dlist=; list2=; test -n "$(pkgpythonswigdir)" || list=; \
@@ -2719,7 +2595,7 @@ all-am: Makefile $(PROGRAMS) $(LTLIBRARIES) $(SCRIPTS) $(DATA) \
 install-binPROGRAMS: install-libLTLIBRARIES
 
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(ecostresspkgpythondir)" "$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(vicarpdfdir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(ecostressincdir)" "$(DESTDIR)$(ecostressswigincdir)" "$(DESTDIR)$(includedir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(pkgpythonswigdir)" "$(DESTDIR)$(vicarpdfdir)" "$(DESTDIR)$(installecostressdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(ecostressincdir)" "$(DESTDIR)$(ecostressswigincdir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -2835,7 +2711,6 @@ info-am:
 
 install-data-am: install-dist_installecostressSCRIPTS \
 	install-dist_vicarpdfDATA install-ecostressincHEADERS \
-	install-ecostresspkgpythonPYTHON \
 	install-ecostressswigincHEADERS install-includeHEADERS \
 	install-installecostressDATA install-installecostressSCRIPTS \
 	install-pkgconfigDATA install-pkgpythonswigLTLIBRARIES \
@@ -2848,7 +2723,8 @@ install-dvi-am:
 
 install-exec-am: install-binPROGRAMS install-dist_binSCRIPTS \
 	install-libLTLIBRARIES
-
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
 install-html: install-html-am
 
 install-html-am:
@@ -2938,7 +2814,6 @@ ps-am:
 uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	uninstall-dist_installecostressSCRIPTS \
 	uninstall-dist_vicarpdfDATA uninstall-ecostressincHEADERS \
-	uninstall-ecostresspkgpythonPYTHON \
 	uninstall-ecostressswigincHEADERS uninstall-includeHEADERS \
 	uninstall-installecostressDATA \
 	uninstall-installecostressSCRIPTS uninstall-libLTLIBRARIES \
@@ -2947,7 +2822,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
 .MAKE: all check check-am install install-am install-data-am \
-	install-strip uninstall-am
+	install-exec-am install-strip uninstall-am
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--depfiles am--refresh check \
 	check-TESTS check-am check-local clean clean-binPROGRAMS \
@@ -2963,22 +2838,21 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	install-data-am install-data-hook install-dist_binSCRIPTS \
 	install-dist_installecostressSCRIPTS install-dist_vicarpdfDATA \
 	install-dvi install-dvi-am install-ecostressincHEADERS \
-	install-ecostresspkgpythonPYTHON \
 	install-ecostressswigincHEADERS install-exec install-exec-am \
-	install-html install-html-am install-includeHEADERS \
-	install-info install-info-am install-installecostressDATA \
-	install-installecostressSCRIPTS install-libLTLIBRARIES \
-	install-man install-pdf install-pdf-am install-pkgconfigDATA \
-	install-pkgpythonswigLTLIBRARIES install-pkgpythonswigPYTHON \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installcheck-local installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	pdf pdf-am ps ps-am recheck tags tags-am uninstall \
-	uninstall-am uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
+	install-exec-hook install-html install-html-am \
+	install-includeHEADERS install-info install-info-am \
+	install-installecostressDATA install-installecostressSCRIPTS \
+	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
+	install-pkgconfigDATA install-pkgpythonswigLTLIBRARIES \
+	install-pkgpythonswigPYTHON install-ps install-ps-am \
+	install-strip installcheck installcheck-am installcheck-local \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am recheck tags tags-am \
+	uninstall uninstall-am uninstall-binPROGRAMS \
+	uninstall-dist_binSCRIPTS \
 	uninstall-dist_installecostressSCRIPTS \
 	uninstall-dist_vicarpdfDATA uninstall-ecostressincHEADERS \
-	uninstall-ecostresspkgpythonPYTHON \
 	uninstall-ecostressswigincHEADERS uninstall-hook \
 	uninstall-includeHEADERS uninstall-installecostressDATA \
 	uninstall-installecostressSCRIPTS uninstall-libLTLIBRARIES \
@@ -2987,6 +2861,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 
 .PRECIOUS: Makefile
 
+install-exec-hook: $(INSTALL_EXEC_HOOK)
 install-data-hook: $(INSTALL_DATA_HOOK)
 uninstall-hook: $(UNINSTALL_HOOK)
 clean-local: $(CLEAN_HOOK)
@@ -3008,6 +2883,9 @@ complain_if_afids:
           echo "sourcing setup_afids_env.sh or setup_afids_env.csh${default}"; \
           exit 1; \
         fi
+
+# No longer needed, but leave in place to document this change
+#BUILT_SOURCES += complain_if_afids
 
 # End to end test. This should be run after install
 # (so like an installcheck, but we run this separate because
@@ -3074,12 +2952,11 @@ l1b-geo-run: install
 #	source $(prefix)/setup_ecostress.sh && $(PYTHON) $(srcdir)/end_to_end_testing/diff_sba.py
 #	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band l1b_geo_run/ECOv002_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv002_L1B_RAD_03663_00{}_*.h5 l1b_geo_run/proj_final_{}" )
 
-# Shortcut for just running py.test.
-python-check: script/setup_ecostress.sh
-	source $< && \
-        $(PYTEST) $(PYTEST_FLAGS) $(PYTEST_EXTRAFLAGS) $(srcdir)/@srcpython@
-# Allow searchs for .pyx files in this directory
-vpath %.pyx $(srcdir)/@srcpythonlib@
+python-install:
+	pip install --prefix=@prefix@ $(srcdir)/@srcpython@
+
+python-check:
+	pytest -n 10 $(srcdir)/@srcpython@/test
 
 # Noe that this is a little more complicated than maybe we need. Cython
 # will by default create a library file per module. However, we inheritted

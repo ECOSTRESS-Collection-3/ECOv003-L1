@@ -14,3 +14,5 @@ ECOSTRESS/
 *.iso
 # Pickle files generated in tools directory.
 summary_geo_qa_pandas.pkl
+python/build
+ecostress.egg-info
