@@ -1,6 +1,13 @@
-import warnings
 import pytest
-import re
+from pathlib import Path
+import os
+import sys
+
+# Add source to path. For some reason pytest can miss this even if we
+# have this installed editable with a --prefix pip install (probably
+# some weird PYTHONPATH interaction not worth tracking down when we can
+# just work around it).
+sys.path.append(str(Path(os.path.dirname(__file__)).parent))
 
 # ------------------------------------------
 # Various markers we use throughout the tests

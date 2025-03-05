@@ -3,6 +3,7 @@ import pytest
 import os
 import geocal
 
+
 @pytest.fixture(scope="function")
 def isolated_dir(tmpdir):
     """This is a fixture that creates a temporary directory, and uses this
@@ -24,15 +25,14 @@ def isolated_dir(tmpdir):
     finally:
         os.chdir(curdir)
 
+
 @pytest.fixture(scope="function")
 def lwm():
-    '''Determine location of SRTM LWM and initialize object for that.'''
-    if(os.path.exists("/raid25/SRTM_2014_update/srtm_v3_lwm")):
+    """Determine location of SRTM LWM and initialize object for that."""
+    if os.path.exists("/raid25/SRTM_2014_update/srtm_v3_lwm"):
         srtm_lwm_dir = "/raid25/SRTM_2014_update/srtm_v3_lwm"
-    elif(os.path.exists("/project/ancillary/SRTM/srtm_v3_lwm")):
+    elif os.path.exists("/project/ancillary/SRTM/srtm_v3_lwm"):
         srtm_lwm_dir = "/project/ancillary/SRTM/srtm_v3_lwm"
     else:
         raise RuntimeError("Couldn't find SRTM LWM")
-    yield geocal.SrtmLwmData(srtm_lwm_dir,False)
-        
-        
+    yield geocal.SrtmLwmData(srtm_lwm_dir, False)

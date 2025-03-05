@@ -1,29 +1,35 @@
-from .write_run_config import *
-from .run_config import *
-from test_support import *
-import os
+from ecostress.write_run_config import WriteRunConfig
+from ecostress.run_config import RunConfig
+
 
 def test_parse(isolated_dir):
-    '''Test creating a run config file.'''
+    """Test creating a run config file."""
     config = WriteRunConfig()
-    config["DynamicAncillaryFileGroup", "RFIParameters"] = "/ops/LOM/ANCILLARY/RFIParameters/RFIParameters_130901_v008.h5"
-    config["DynamicAncillaryFileGroup", "SpiceAntennaAzimuth"] = \
-        ['/ops/LOM/PREPROCESSOR_OUT/ANTAZ/001/2015/02/28/smap_ar_1502282014_1502282059_v01.bc', 
-         '/ops/LOM/PREPROCESSOR_OUT/ANTAZ/001/2015/02/28/smap_ar_1502281929_1502282014_v01.bc', 
-         '/ops/LOM/PREPROCESSOR_OUT/ANTAZ/001/2015/02/28/smap_ar_1502282059_1502282144_v01.bc'
-        ]
-    if(False):
+    config["DynamicAncillaryFileGroup", "RFIParameters"] = (
+        "/ops/LOM/ANCILLARY/RFIParameters/RFIParameters_130901_v008.h5"
+    )
+    config["DynamicAncillaryFileGroup", "SpiceAntennaAzimuth"] = [
+        "/ops/LOM/PREPROCESSOR_OUT/ANTAZ/001/2015/02/28/smap_ar_1502282014_1502282059_v01.bc",
+        "/ops/LOM/PREPROCESSOR_OUT/ANTAZ/001/2015/02/28/smap_ar_1502281929_1502282014_v01.bc",
+        "/ops/LOM/PREPROCESSOR_OUT/ANTAZ/001/2015/02/28/smap_ar_1502282059_1502282144_v01.bc",
+    ]
+    if False:
         print(config)
     config.write_file("test.xml")
     config2 = RunConfig("test.xml")
-    assert config["DynamicAncillaryFileGroup", "RFIParameters"] == \
-        config2["DynamicAncillaryFileGroup", "RFIParameters"]
-    assert config["DynamicAncillaryFileGroup", "SpiceAntennaAzimuth"] == \
-        config2["DynamicAncillaryFileGroup", "SpiceAntennaAzimuth"]
+    assert (
+        config["DynamicAncillaryFileGroup", "RFIParameters"]
+        == config2["DynamicAncillaryFileGroup", "RFIParameters"]
+    )
+    assert (
+        config["DynamicAncillaryFileGroup", "SpiceAntennaAzimuth"]
+        == config2["DynamicAncillaryFileGroup", "SpiceAntennaAzimuth"]
+    )
+
 
 def test_handling_vector_len1(isolated_dir):
-    '''Test handling of vector of length 1. PCS writes this as a scalar,
-    need to check that this is properly handled.'''
+    """Test handling of vector of length 1. PCS writes this as a scalar,
+    need to check that this is properly handled."""
     config = WriteRunConfig()
     config["Test1", "Value1"] = ["single_item"]
     config.write_file("test.xml")
