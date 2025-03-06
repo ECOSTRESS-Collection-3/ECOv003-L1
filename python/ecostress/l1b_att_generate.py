@@ -1,5 +1,5 @@
-import geocal
-import h5py
+import geocal  # type: ignore
+import h5py  # type: ignore
 from .geo_write_standard_metadata import GeoWriteStandardMetadata
 from .misc import time_split
 import numpy as np

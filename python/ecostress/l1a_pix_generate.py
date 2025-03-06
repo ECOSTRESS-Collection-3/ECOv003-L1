@@ -1,5 +1,5 @@
-import geocal
-import h5py
+import geocal  # type: ignore
+import h5py  # type: ignore
 from .write_standard_metadata import WriteStandardMetadata
 from .misc import process_run
 from .exception import VicarRunException

@@ -1,4 +1,4 @@
-from geocal import VicarInterface, VicarRasterImage, mmap_file
+from geocal import VicarInterface, VicarRasterImage, mmap_file  # type: ignore
 import numpy as np
 
 

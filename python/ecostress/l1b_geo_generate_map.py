@@ -1,10 +1,10 @@
-import geocal
-from ecostress_swig import FILL_VALUE_NOT_SEEN, Resampler
+import geocal  # type: ignore
+from ecostress_swig import FILL_VALUE_NOT_SEEN, Resampler  # type: ignore
 from .misc import determine_rotated_map_igc
 import os
-import h5py
+import h5py  # type: ignore
 import numpy as np
-import scipy
+import scipy  # type: ignore
 import subprocess
 
 

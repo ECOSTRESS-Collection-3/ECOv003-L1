@@ -1,13 +1,13 @@
 import numpy as np
-import h5py
+import h5py  # type: ignore
 from .write_standard_metadata import WriteStandardMetadata
 from .misc import time_split
-from ecostress_swig import (
+from ecostress_swig import (  # type: ignore
     fill_value_threshold,
     GroundCoordinateArray,
     SimulatedRadiance,
 )
-from geocal import ImageCoordinate
+from geocal import ImageCoordinate  # type: ignore
 
 
 class L1aPixSimulate(object):

@@ -2,7 +2,7 @@ from geocal import ImageCoordinate
 import matplotlib.pyplot as plt
 
 
-def test_plot(igc_hres):
+def test_plot(isolated_dir, igc_hres):
     """This creates a IGC, and then creates a plot so we can check size,
     orientation, etc."""
     slat = []
@@ -51,7 +51,7 @@ def test_plot(igc_hres):
         plt.show()
 
 
-def test_plot2(igc_hres):
+def test_plot2(isolated_dir, igc_hres):
     """This creates a IGC, and then creates a plot so we can check size,
     orientation, etc."""
     slat = []

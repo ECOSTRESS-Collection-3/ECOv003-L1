@@ -6,20 +6,20 @@ import warnings
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=DeprecationWarning)
     warnings.filterwarnings("ignore", category=FutureWarning)
-    import tensorflow as tf
-    from tensorflow.python.util import deprecation
+    import tensorflow as tf  # type: ignore
+    from tensorflow.python.util import deprecation  # type: ignore
     import logging
 
     logging.getLogger("tensorflow").setLevel(level=logging.ERROR)
     with deprecation.silence():
-        import tflearn
-        from tflearn.layers.core import input_data, fully_connected
-        from tflearn.layers.estimator import regression
+        import tflearn  # type: ignore
+        from tflearn.layers.core import input_data, fully_connected  # type: ignore
+        from tflearn.layers.estimator import regression  # type: ignore
 import numpy as np
 import random
 import os
 import math
-from ecostress_swig import DQI_STRIPE_NOT_INTERPOLATED, fill_value_threshold
+from ecostress_swig import DQI_STRIPE_NOT_INTERPOLATED, fill_value_threshold  # type: ignore
 from .distance_to_missing_scanline import (
     is_within_x_pixel_of_missing_scanline,
     find_center_of_missing_scan,

@@ -1,7 +1,7 @@
 # Some code for EcostressImageGroundConnection that is easier to do in
 # python.
-import geocal
-import ecostress_swig
+import geocal  # type: ignore
+import ecostress_swig  # type: ignore
 
 
 def _overlap(self, sample=None, scan_number=1):
@@ -96,4 +96,4 @@ def _match_all_overlap(self, min_corr=0.90, min_var=50.0, sample_step=100):
 ecostress_swig.EcostressImageGroundConnection.match_all_overlap = _match_all_overlap
 
 
-__all__ = []
+__all__: list[str] = []

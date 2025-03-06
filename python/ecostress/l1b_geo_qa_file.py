@@ -1,9 +1,9 @@
-import h5py
+import h5py  # type: ignore
 import os
 import gzip
 import numpy as np
 import subprocess
-import geocal
+import geocal  # type: ignore
 
 
 class L1bGeoQaFile(object):

@@ -23,6 +23,6 @@ def _unpickle_method(func_name, obj, cls):
     return func.__get__(obj, cls)
 
 
-copyreg.pickle(types.MethodType, _pickle_method, _unpickle_method)
+copyreg.pickle(types.MethodType, _pickle_method)
 
-__all__ = []
+__all__: list[str] = []

@@ -2956,7 +2956,7 @@ python-install:
 	pip install --prefix=@prefix@ $(srcdir)/@srcpython@
 
 python-check:
-	pytest -n 10 $(srcdir)/@srcpython@/test
+	source $(prefix)/setup_ecostress.sh && pytest -n 10 $(srcdir)/@srcpython@/test
 
 # Noe that this is a little more complicated than maybe we need. Cython
 # will by default create a library file per module. However, we inheritted

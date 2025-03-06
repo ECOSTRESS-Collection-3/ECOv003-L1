@@ -1,5 +1,5 @@
-import geocal
-from ecostress_swig import (
+import geocal  # type: ignore
+from ecostress_swig import (  # type: ignore
     FILL_VALUE_BAD_OR_MISSING,
     FILL_VALUE_STRIPED,
     FILL_VALUE_NOT_SEEN,
@@ -12,7 +12,7 @@ from ecostress_swig import (
     fill_value_threshold,
     band_to_band_tie_points,
 )
-import h5py
+import h5py  # type: ignore
 from .rad_write_standard_metadata import RadWriteStandardMetadata
 from .misc import is_day
 from .ecostress_interpolate import EcostressInterpolate

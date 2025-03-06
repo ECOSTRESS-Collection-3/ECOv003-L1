@@ -1,12 +1,12 @@
 import numpy as np
-import h5py
+import h5py  # type: ignore
 
 # from .misc import time_split, ecostress_file_name
 from .write_standard_metadata import WriteStandardMetadata
 import os
 import re
 from datetime import datetime
-from geocal import Time
+from geocal import Time  # type: ignore
 
 # import pkt_defs.py
 

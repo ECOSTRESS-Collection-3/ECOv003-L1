@@ -1,6 +1,6 @@
-import geocal
+import geocal  # type: ignore
 from .pickle_method import *
-import h5py
+import h5py  # type: ignore
 from .write_standard_metadata import WriteStandardMetadata
 from .misc import time_split
 import math

@@ -1,14 +1,14 @@
 # This is various miscellaneous routines that don't fit elsewhere
-import geocal
+import geocal  # type: ignore
 import re
 import subprocess
-import h5py
+import h5py  # type: ignore
 import os
 import sys
 import math
 import glob
 import numpy as np
-from ecostress_swig import (
+from ecostress_swig import (  # type: ignore
     EcostressScanMirror,
     EcostressTimeTable,
     EcostressOrbit,
@@ -93,7 +93,7 @@ def create_igc(rad_fname, orb_fname, l1_osp_dir=None, dem=None, title=""):
         l1_osp_dir = os.environ["L1_OSP_DIR"]
     sys.path.append(l1_osp_dir)
     try:
-        import l1b_geo_config
+        import l1b_geo_config  # type: ignore
 
         if (
             hasattr(l1b_geo_config, "fix_l0_time_tag")

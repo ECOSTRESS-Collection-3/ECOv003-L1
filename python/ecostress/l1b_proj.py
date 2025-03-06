@@ -1,8 +1,8 @@
-from ecostress_swig import fill_value_threshold, Resampler, GroundCoordinateArray
-import geocal
+from ecostress_swig import fill_value_threshold, Resampler, GroundCoordinateArray  # type: ignore
+import geocal  # type: ignore
 from .pickle_method import *
 import numpy as np
-import scipy.ndimage
+import scipy.ndimage  # type: ignore
 import traceback
 import os
 

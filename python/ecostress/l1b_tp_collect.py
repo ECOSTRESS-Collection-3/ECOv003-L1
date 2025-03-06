@@ -1,5 +1,5 @@
 from .l1b_proj import L1bProj
-import geocal
+import geocal  # type: ignore
 from .pickle_method import *
 import traceback
 import shutil

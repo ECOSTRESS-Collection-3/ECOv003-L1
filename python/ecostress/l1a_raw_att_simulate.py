@@ -1,8 +1,8 @@
 import numpy as np
-import h5py
+import h5py  # type: ignore
 from .write_standard_metadata import WriteStandardMetadata
 from .misc import time_split
-from geocal import Time, quaternion_to_array
+from geocal import Time, quaternion_to_array  # type: ignore
 
 
 class L1aRawAttSimulate(object):

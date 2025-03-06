@@ -5,7 +5,7 @@
 #    Added check SA obstructiion
 #    correct DEM and SPICE setup
 #    Added more attributes to datasets
-import h5py
+import h5py  # type: ignore
 import re
 import os
 import glob
@@ -13,8 +13,8 @@ import numpy as np
 from .write_standard_metadata import WriteStandardMetadata
 from .misc import ecostress_file_name, time_split
 import ecostress
-import geocal
-from geocal import Time
+import geocal  # type: ignore
+from geocal import Time  # type: ignore
 import sys
 from datetime import datetime
 
@@ -266,7 +266,7 @@ class L1aRawPixGenerate(object):
 
         #  setup for locating scene corners
         sys.path.append(self.osp_dir)
-        import l1b_geo_config
+        import l1b_geo_config  # type: ignore
 
         if self.run_config is not None:
             dem = ecostress.create_dem(self.run_config)

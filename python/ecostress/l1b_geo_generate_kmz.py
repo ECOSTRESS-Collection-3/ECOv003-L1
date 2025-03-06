@@ -1,12 +1,12 @@
 from .gaussian_stretch import gaussian_stretch
-import geocal
-from ecostress_swig import Resampler
+import geocal  # type: ignore
+from ecostress_swig import Resampler  # type: ignore
 import os
 import subprocess
 import copy
 import math
 import numpy as np
-import scipy
+import scipy  # type: ignore
 
 
 class L1bGeoGenerateKmz(object):

@@ -1,11 +1,11 @@
-import geocal
-from ecostress_swig import (
+import geocal  # type: ignore
+from ecostress_swig import (  # type: ignore
     fill_value_threshold,
     GroundCoordinateArray,
     FILL_VALUE_BAD_OR_MISSING,
 )
 from .pickle_method import *
-import h5py
+import h5py  # type: ignore
 from .geo_write_standard_metadata import GeoWriteStandardMetadata
 from .misc import time_split
 import numpy as np
