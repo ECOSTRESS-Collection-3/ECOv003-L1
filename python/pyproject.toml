@@ -16,5 +16,8 @@ build-backend = "setuptools.build_meta"
 # is really its job. So don't warn about this.
 
 "__init__.py" = ["F401", "F403"]
-# We need import of pickle method here
+# We need import of pickle_method here
 "l1b_rad_simulate.py" = ["F403"]
+"l1b_geo_generate.py" = ["F403"]
+"l1b_proj.py" = ["F403"]
+"l1b_tp_collect.py" = ["F403"]

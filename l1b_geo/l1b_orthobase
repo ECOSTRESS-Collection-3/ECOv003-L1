@@ -43,9 +43,7 @@ else:
                           ecostress.band_to_landsat_band(args.landsat_band))
 
 mi = geocal.GdalRasterImage(args.input_file).map_info
-ortho_base.create_subset_file(args.output_file, "VICAR",
-                              Desired_map_info = mi,
-                              Translate_arg = "-ot Int16")
+ortho_base.create_subset_file(args.output_file, "VICAR", [], mi, "-ot Int16")
 if(args.erdas):
     cmd = ["gdal_to_erdas", args.output_file,
                 os.path.splitext(args.output_file)[0] + "_erdas.img"]

@@ -52,3 +52,14 @@ def aster_mosaic_surface_data(aster_mosaic_dir):
         for b in ecostress_to_aster_band()
     ]
     yield sdata
+
+
+@pytest.fixture(scope="function")
+def ortho():
+    dir = "/project/ancillary/LANDSAT"
+    if not os.path.exists(dir):
+        # Location on pistol
+        dir = "/raid22"
+    if not os.path.exists(dir):
+        pytest.skip("Couldn't find LANDSAT data")
+    return geocal.Landsat7Global(dir, geocal.Landsat7Global.BAND5)
