@@ -120,7 +120,8 @@ class L1aRawPixGenerate(object):
         collection_label="ECOSTRESS",
         build_id="0116",
         pge_version="0.50", 
-        file_version="01"
+        file_version="01",
+        use_obst_file="YES"
     ):
         """Create a L1aRawPixGenerate to process the given L0 file.
         To actually generate, execute the "run" command."""
@@ -133,6 +134,7 @@ class L1aRawPixGenerate(object):
         self.build_id = build_id
         self.pge_version = pge_version
         self.file_version = file_version
+        self.use_obst_file = use_obst_file
 
     def process_scene_file(self):
         """Process the scene file, returning the orbit, scene id, start,
@@ -212,7 +214,7 @@ class L1aRawPixGenerate(object):
         fov_obst = "NO"
         found_file = 0
         for file_name in glob.glob(obst_files):
-            found_file = 1
+            found_file += 1
             fn = os.path.basename(file_name)
             pre, doy1, doy2, post, year = re.split("\_|\.", fn)
             d1 = year + "::" + doy1
@@ -263,6 +265,10 @@ class L1aRawPixGenerate(object):
         """Do the actual generation of data."""
         print("====  Start run ", datetime.now(), "  ====")
         self.log = None
+
+        if self.use_obst_file=="YES" and os.path.isdir(self.obst_dir)==False:
+            print("Error:  OBST_DIR not found: %s" %self.obst_dir)
+            return -6
 
         #  setup for locating scene corners
         sys.path.append(self.osp_dir)
@@ -369,7 +375,7 @@ class L1aRawPixGenerate(object):
         ef.close()
 
         if RPM == 0.0 or FP_DUR == 0.0 or MAX_FPIE == 0 or FPPSC == 0:
-            print("*** Input parameters not set ***")
+            print("*** Error:  Input parameters not set ***")
             return -3
         PKT_DUR = FP_DUR * float(FPPPKT)
         PKT_DURT = PKT_DUR * 0.05  # PKT duration tolerance
@@ -409,9 +415,9 @@ class L1aRawPixGenerate(object):
         m = re.search("L0B_(.+?)_", self.l0b)
         if m:
             onum = m.group(1)
-            print("Orbit number from file name: %s" % onum)
+            print("Orbit number from file name: %s USE_OBST_FILE=%s" % (onum,self.use_obst_file) )
         else:
-            print("*** Could not find orbit number from L0B file name %s" % self.l0b)
+            print("*** Error:  Could not find orbit number from L0B file name %s" % self.l0b)
             return -1
 
         # open L0B file
@@ -499,7 +505,7 @@ class L1aRawPixGenerate(object):
                 primary_file=True
             )
         else:
-            print("No HK time in L0B file")
+            print("Error:  No HK time in L0B file")
             return -4
         eng_g = eng.create_group("/rtdBlackbodyGradients")
         rtd295 = eng_g.create_dataset("RTD_295K", shape=(epc, 5), dtype="f4")
@@ -552,7 +558,7 @@ class L1aRawPixGenerate(object):
                 intermediate=True
             )
         else:
-            print("No ATT data in L0B file")
+            print("Error:  No ATT data in L0B file")
             return -5
         att_g = attf.create_group("/Attitude")
         a2k = att_g.create_dataset("time_j2000", shape=(aqc,), dtype="f8")
@@ -659,7 +665,10 @@ class L1aRawPixGenerate(object):
 
             # detect field of view obstruction
             fov_obst = self.detect_obst(sts, ste)
-
+            if fov_obst == "NA":
+                print("Error:  Obstruction files not found in DIR %s, terminating" %self.obst_dir )
+                if self.use_obst_dir == "YES":
+                    return -6
             good[:] = 0.0
 
             # *** Assume packets in time sequence ***
@@ -1155,7 +1164,7 @@ class L1aRawPixGenerate(object):
             # Time.time_gps(rst-tc0), Time.time_gps(rse), prod=False, intermediate=True)
 
             " create BB file and BlackBodyPixels group "
-            l1a_bp, l1a_bp_met, fname = self.create_file(
+            l1a_bp, l1a_bp_met, bname = self.create_file(
                 "L1A_BB",
                 orbit,
                 scene_id,
@@ -1466,14 +1475,18 @@ class L1aRawPixGenerate(object):
                     )
             else:
                 print(
-                    "Scene %s missing too many pixels (%f), not generating footprint"
-                    % (scene_id, pcomp)
+                    "Scene %s missing too many pixels (%f), not generating footprint for %s"
+                    % (scene_id, pcomp, pname)
                 )
+                oname = pname + ".bad"
+                os.rename( pname, oname )
+                oname = bname + ".bad"
+                os.rename( bname, oname )
 
         " end scene loop "
 
         if len(scenes) == 0:
-            print("****  FATAL  ****  No scenes generated  ****")
+            print("****  Error:  FATAL  ****  No scenes generated  ****")
             return -2
 
         sss = str(o_start_time)
