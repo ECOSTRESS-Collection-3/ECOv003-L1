@@ -83,7 +83,10 @@ if HAVE_SWIG
 # SWIG doesn't like the GCC extension -isystem (which is like -I, but lets
 # GCC know not to complain about things in the header files we can't change).
 # Just replace -isystem with -I for swig
-GSWIG_FLAGS=$(patsubst -O2,, $(patsubst -isystem%,-I%, $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS)))
+comma:= ,
+empty:=
+space:= $(empty) $(empty)
+GSWIG_FLAGS=$(subst -I$(space),-I,$(patsubst -O2,,$(patsubst -isystem%,-I%, $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS))))
 
 $(swigsrc)/%_wrap.Pcc : %.i %.cc %.h $(SWIG_TARGET)
 	$(SWIG) $(SWIG_PYTHON_OPT) $(SWIG_FLAG) $(AM_CPPFLAGS) $(GSWIG_FLAGS) -MM -MF $(builddir)/$@.tmp -module $* -o $(srcdir)/$(swigsrc)/$*_wrap.cc $<

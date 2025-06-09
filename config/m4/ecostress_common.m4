@@ -3,7 +3,7 @@
 
 AC_DEFUN([ECOSTRESS_COMMON],[
 AC_REQUIRE([AC_CONFIG_AUX_DIR_DEFAULT])
- AC_REQUIRE([AC_PROG_CC])
+AC_REQUIRE([AC_PROG_CC])
 # For some bizarre reason, this doesn't fail if there isn't a C++ compiler.
 # This seems to be a bug, which had some discussion on the forums a while back
 # (see http://lists.gnu.org/archive/html/bug-autoconf/2010-05/msg00001.html),
@@ -34,31 +34,41 @@ if test "$_cv_gnu_make_command" = "" ; then
 fi
 
 AC_COPYRIGHT(
-[Copyright 2015, California Institute of Technology. 
+[Copyright 2017, California Institute of Technology. 
 ALL RIGHTS RESERVED. U.S. Government Sponsorship acknowledged.])
 # The obscure looking tar-pax here sets automake to allow file names longer
 # than 99 characters to be included in the dist tar. See
 # http://noisebleed.blogetery.com/2010/02/27/tar-file-name-is-too-long-max-99/#howtofixit
 AM_INIT_AUTOMAKE([1.9 tar-pax])
 AM_MAINTAINER_MODE
-AC_PROG_LIBTOOL
-# Don't need these yet
+LT_INIT
 AC_PROG_CXX
-# AC_PROG_LN_S
-# AC_COPY_DIR
+#AC_PROG_LN_S
+#AC_COPY_DIR
 
-AC_PREFIX_DEFAULT([`pwd`/install])
+#AC_PREFIX_DEFAULT([`pwd`/install])
 AC_PROG_CC
 
 AM_PROG_CC_C_O
 AC_ENABLE_DEBUG
 
 #=================================================================
-# GeoCal now requires C++11, so we'll go ahead and require that
-# here also.
+# We are far enough along in time that we should be able to just
+# require a C++17 compiler. We can perhaps relax that is needed to
+# support older versions, but as of now (2024) this standard is already
+# 7 years old. It is probably too soon to require C++20 right now,
+# we can revisit that as needed (and perhaps just have this code
+# conditional for now).
 #=================================================================
 
-AX_CXX_COMPILE_STDCXX([11], [ext], [mandatory])
+AX_CXX_COMPILE_STDCXX([17], [ext], [mandatory])
+
+#=================================================================
+# C++ Threading requires pthread sometimes
+#=================================================================
+
+AX_PTHREAD()
+CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
 
 #=================================================================
 # Test if we are using GCC compiler. Some flags get set in the 
@@ -69,6 +79,7 @@ AM_CONDITIONAL([HAVE_GCC], [test "$GCC" = yes])
 
 #=================================================================
 # Add prefix, THIRDPARTY, and /opt/afids_support for pkgconfig file
+#=================================================================
 
 PKG_PROG_PKG_CONFIG
 
@@ -76,6 +87,9 @@ if test "x$THIRDPARTY" = x ; then
   pkg_extra_path=\${prefix}/lib/pkgconfig:/opt/afids_support/lib/pkgconfig
 else
   pkg_extra_path=\${prefix}/lib/pkgconfig:$THIRDPARTY/lib/pkgconfig:/opt/afids_support/lib/pkgconfig
+fi
+if test "x$CONDA_PREFIX" != x; then
+   pkg_extra_path=$CONDA_PREFIX/lib/pkgconfig:${pkg_extra_path}
 fi
 if test "x$PKG_CONFIG_PATH" = x; then
   PKG_CONFIG_PATH=$pkg_extra_path
@@ -85,5 +99,4 @@ fi
 export PKG_CONFIG_PATH
 
 AC_SUBST([pkgconfigdir], [${libdir}/pkgconfig])
-
 ])

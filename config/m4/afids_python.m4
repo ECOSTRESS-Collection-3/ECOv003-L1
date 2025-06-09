@@ -58,7 +58,7 @@ if test "x$want_python" = "xyes"; then
         if test "x$PYTHON" = "x" -a "x$ac_python_path" != "x"; then
             PYTHON=$ac_python_path
 	fi
-	AC_PYTHON_DEVEL([>= '3.4.0'])
+	AC_PYTHON_DEVEL([3.4.0])
 	old_ld_library_path="$LD_LIBRARY_PATH"
 	PYTHON_LDPATH=$PYTHON_PREFIX/lib:$PYTHON_PREFIX/lib64:
 	export LD_LIBRARY_PATH=$PYTHON_LDPATH$LD_LIBRARY_PATH
