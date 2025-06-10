@@ -79,7 +79,7 @@ create-env: micromamba Manifest_linux-modify.yml
 	./micromamba create -y  -c $(AFIDS_PACKAGE_DIR) -f Manifest_linux-modify.yml -p $(ENV_DIR)
 	./micromamba run -p $(ENV_DIR) conda env config vars set LANDSAT_ROOT=/opt/afids/data/landsat
 	./micromamba run -p $(ENV_DIR) conda env config vars set ELEV_ROOT=/opt/afids/data/srtmL2_filled
-	./micromamba run -p $(ENV_DIR) mamba -y install ruff mypy tensorflow
+	./micromamba run -p $(ENV_DIR) mamba -y install ruff mypy tensorflow scikit-learn
 
 # conda env config vars set ECOSTRESSTOP=/ldata/smyth/ecostress-env
 # conda env config vars set TAE_PATH=${ECOSTRESSTOP}/vicar_pdf:${TAE_PATH}
