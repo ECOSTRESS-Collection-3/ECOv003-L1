@@ -175,10 +175,17 @@ def create_igccol(
     return igccol
 
 
-def create_igccol_from_qa(qa_fname, l1_osp_dir=None, dem=None, raw_att=False):
+def create_igccol_from_qa(qa_fname, l1_osp_dir=None, dem=None, raw_att=False,
+                          include_tie_point=False):
     """Create a IgcCollection from a given qa file, using the same input files as it has
     listed. By default we use the corrected llb_att file, but you can optionally select the
-    raw l1a_raw_att file.  We add the attribute "scene_list" to the igccol for convenience."""
+    raw l1a_raw_att file.  We add the attribute "scene_list" to the igccol for convenience.
+
+    If include_tie_point is True, we add the attribute "tiepoint_list". This
+    is a list for each scene, and is either None (if we didn't collect tiepoints)
+    or the TiePointCollection if we had that. We also include "tiepoint_collection"
+    which is one TiePointCollection for the full IgcCollection.
+    '''
     if l1_osp_dir is None:
         if "L1_OSP_DIR" not in os.environ:
             raise RuntimeError(
@@ -305,6 +312,29 @@ def create_igccol_from_qa(qa_fname, l1_osp_dir=None, dem=None, raw_att=False):
                 )
             )
         igccol.scene_list = scene_list
+        if(include_tie_point):
+            res = []
+            tpcolfull = geocal.TiePointCollection()
+            for iscene, scene in enumerate(scene_list):
+                if("Tiepoints") in f[f"Tiepoint/Scene {scene}"]:
+                    tpdata = f[f"Tiepoint/Scene {scene}/Tiepoints"][:]
+                    tpcol = geocal.TiePointCollection()
+                    for i in range(tpdata.shape[0]):
+                        tp = geocal.TiePoint(1)
+                        tp.is_gcp = True
+                        tp.ground_location = geocal.Ecr(*tpdata[i,2:6])
+                        tp.image_coordinate(0,geocal.ImageCoordinate(*tpdata[i,0:2]))
+                        tpcol.push_back(tp)
+                        tp2 = geocal.TiePoint(len(scene_list))
+                        tp2.is_gcp = True
+                        tp2.ground_location = geocal.Ecr(*tpdata[i,2:6])
+                        tp2.image_coordinate(iscene,geocal.ImageCoordinate(*tpdata[i,0:2]))
+                        tpcolfull.append(tp2)
+                    res.append(tpcol)
+                else:
+                    res.append(None)
+            igccol.tiepoint_list = res
+            igccol.tiepoint_collection = tpcolfull
         return igccol
     finally:
         sys.path.pop()
