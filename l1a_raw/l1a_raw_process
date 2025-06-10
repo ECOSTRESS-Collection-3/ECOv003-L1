@@ -51,6 +51,7 @@ if(args.run_config) :
     file_version = config["ProductPathGroup", "ProductCounter"]
     collection_label = config["ProductPathGroup", "CollectionLabel"]
     build_id = config["PrimaryExecutable", "BuildID"]
+    use_obst_file = config["PrimaryExecutable", "UseObstFile"]
 else:
     config = None
     l0b = os.path.abspath(args.l0b)
@@ -58,6 +59,7 @@ else:
     scene_file = os.path.abspath(args.scene_file)
     osp_dir = os.path.abspath(args.osp_dir)
     prod_dir = os.path.abspath(args.prod_dir)
+    use_obst_file = "YES"
     shortname = "L1a_Raw"
     file_version = "01"
 
@@ -71,6 +73,7 @@ l1arawpix = ecostress.L1aRawPixGenerate(l0b, obst_dir, osp_dir, scene_file,
                               build_id = build_id,
                               pge_version = pge_version["l1a_raw"],
                               run_config = config,
-                              file_version = file_version)
+                              file_version = file_version,
+                              use_obst_file = use_obst_file )
 l1arawpix.run()
 

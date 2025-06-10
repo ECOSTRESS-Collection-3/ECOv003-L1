@@ -74,9 +74,9 @@ kh3 = PRT_467_T( P7_R(raw.AnalogsTemp_BB_HOT_3) )
 kh4 = PRT_468_T( P7_R(raw.AnalogsTemp_BB_HOT_4) )
 kh5 = PRT_469_T( P7_R(raw.AnalogsTemp_BB_HOT_5) )
 
-' short word offsets into FPIE packet array '
+" short word offsets into FPIE packet array "
 
-' packet primary header '
+" packet primary header "
 HSYNC = 0
 PKTID = HSYNC + 2
 ENCOD = PKTID + 2
@@ -119,11 +119,12 @@ class L1aRawPixGenerate(object):
         run_config=None,
         collection_label="ECOSTRESS",
         build_id="0116",
-        pge_version="0.50",
+        pge_version="0.50", 
         file_version="01",
+        use_obst_file="YES"
     ):
         """Create a L1aRawPixGenerate to process the given L0 file.
-        To actually generate, execute the 'run' command."""
+        To actually generate, execute the "run" command."""
         self.l0b = l0b
         self.obst_dir = obst_dir
         self.osp_dir = osp_dir
@@ -133,6 +134,7 @@ class L1aRawPixGenerate(object):
         self.build_id = build_id
         self.pge_version = pge_version
         self.file_version = file_version
+        self.use_obst_file = use_obst_file
 
     def process_scene_file(self):
         """Process the scene file, returning the orbit, scene id, start,
@@ -159,7 +161,7 @@ class L1aRawPixGenerate(object):
         end_time,
         primary_file=False,
         prod=True,
-        intermediate=False,
+        intermediate=False
     ):
         """Create the file, generate the standard metadata, and return
         the file handle and metadata handle."""
@@ -172,7 +174,7 @@ class L1aRawPixGenerate(object):
             collection_label=self.collection_label,
             build=self.build_id,
             version=self.file_version,
-            intermediate=intermediate,
+            intermediate=intermediate
         )
         # if(primary_file):
         #    self.log_fname =  os.path.splitext(fname)[0] + ".log"
@@ -187,7 +189,7 @@ class L1aRawPixGenerate(object):
             collection_label=self.collection_label,
             build_id=self.build_id,
             pge_version=self.pge_version,
-            orbit_based=(scene is None),
+            orbit_based=(scene is None)
         )
         if self.run_config is not None:
             m.process_run_config_metadata(self.run_config)
@@ -212,7 +214,7 @@ class L1aRawPixGenerate(object):
         fov_obst = "NO"
         found_file = 0
         for file_name in glob.glob(obst_files):
-            found_file = 1
+            found_file += 1
             fn = os.path.basename(file_name)
             pre, doy1, doy2, post, year = re.split("\_|\.", fn)
             d1 = year + "::" + doy1
@@ -259,10 +261,14 @@ class L1aRawPixGenerate(object):
             fov_obst = "NA"
         return fov_obst
 
-    def run(self):
+    def run(self): 
         """Do the actual generation of data."""
         print("====  Start run ", datetime.now(), "  ====")
         self.log = None
+
+        if self.use_obst_file=="YES" and os.path.isdir(self.obst_dir)==False:
+            print("Error:  OBST_DIR not found: %s" %self.obst_dir)
+            return -6
 
         #  setup for locating scene corners
         sys.path.append(self.osp_dir)
@@ -309,7 +315,7 @@ class L1aRawPixGenerate(object):
         prh[3] = np.poly1d([PRT[15, 2], PRT[15, 1], PRT[15, 0] + c2k])  # PRT_468_T
         prh[4] = np.poly1d([PRT[16, 2], PRT[16, 1], PRT[16, 0] + c2k])  # PRT_469_T
 
-        #  Get EV start codes for BB and IMG pixels
+    #  Get EV start codes for BB and IMG pixels
         RPM = 0
         FP_DUR = 0
         MAX_FPIE = 0
@@ -347,11 +353,11 @@ class L1aRawPixGenerate(object):
                             i,
                             ev_names[i],
                             ev_codes[i, 0],
-                            ev_codes[i, 1],
+                            ev_codes[i, 1], 
                             ev_codes[i, 2],
-                            ev_codes[i, 3],
+                            ev_codes[i, 3], 
                             ev_codes[i, 4],
-                            ev_codes[i, 5],
+                            ev_codes[i, 5]
                         )
                     )
                 else:
@@ -369,7 +375,7 @@ class L1aRawPixGenerate(object):
         ef.close()
 
         if RPM == 0.0 or FP_DUR == 0.0 or MAX_FPIE == 0 or FPPSC == 0:
-            print("*** Input parameters not set ***")
+            print("*** Error:  Input parameters not set ***")
             return -3
         PKT_DUR = FP_DUR * float(FPPPKT)
         PKT_DURT = PKT_DUR * 0.05  # PKT duration tolerance
@@ -377,6 +383,7 @@ class L1aRawPixGenerate(object):
         PIX_DUR = FP_DUR * float(BBLEN * 2 + FPPSC)
         MPER = 60.0 / RPM  # mirror period = 2.3622047 sec / rev
         SCAN_DUR = MPER / 2.0  # half-mirror rotation = 1.1811024 sec
+        FP_ANG = FP_DUR * RPM * 6.0 # FP angle = .0047175926 deg / FP
         """
     FOV = FP_DUR*RPM*6.0*FPPSC # field of view = 25.475000 deg / scan
     ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.00020580272 deg/count
@@ -390,6 +397,7 @@ class L1aRawPixGenerate(object):
         EV_DUR = 60.0 / RPM / float(MAX_FPIE)  # = 1.3504 microsecond/count
         FP_EV = FP_DUR * RPM * MAX_FPIE / 60.0  # = 23.84375 counts/FP
         FP_EVT = FP_EV * 1.1  # FP EV count tolerance
+        PKT_EV = FP_DUR*RPM*MAX_FPIE*FPPPKT/60.0  # = 1525.460873 counts/PKT
         # IMG_EV = FP_DUR*RPM*MAX_FPIE*FPPSC/60.0 # = 128710.76112 counts/IMG
 
         det = [
@@ -398,8 +406,8 @@ class L1aRawPixGenerate(object):
                 (ev_codes[0, 2] - ev_codes[2, 0]) % MAX_FPIE - (FPPSC - FPPPKT) * FP_EV
             ),  # btw IMG and HBB
             EV_DUR * ((ev_codes[1, 0] - ev_codes[0, 0]) % MAX_FPIE),  # btw HBB and CBB
-            EV_DUR * ((ev_codes[2, 0] - ev_codes[1, 0]) % MAX_FPIE),
-        ]  # btw CBB and IMG
+            EV_DUR * ((ev_codes[2, 0] - ev_codes[1, 0]) % MAX_FPIE)   # btw CBB and IMG
+        ]
         print("DET: %f %f %f" % (det[0], det[1], det[2]))
 
         #  get orbit number
@@ -407,9 +415,9 @@ class L1aRawPixGenerate(object):
         m = re.search("L0B_(.+?)_", self.l0b)
         if m:
             onum = m.group(1)
-            print("Orbit number from file name: %s" % onum)
+            print("Orbit number from file name: %s USE_OBST_FILE=%s" % (onum,self.use_obst_file) )
         else:
-            print("*** Could not find orbit number from L0B file name %s" % self.l0b)
+            print("*** Error:  Could not find orbit number from L0B file name %s" % self.l0b)
             return -1
 
         # open L0B file
@@ -420,23 +428,30 @@ class L1aRawPixGenerate(object):
 
         fpie_sync = np.zeros(tot_pkts, dtype=np.int64)
         fsw_sync = np.zeros(tot_pkts, dtype=np.int64)
-        lid = self.fin["flex/id_line"]
-        pid = self.fin["flex/id_packet"]
-        fswt = self.fin["flex/time_fsw"]
-        fpie_sync[:] = self.fin["flex/time_sync_fpie"]
-        fsw_sync[:] = self.fin["flex/time_sync_fsw"]
-        att = self.fin["hk/bad/hr/attitude"]
-        pos = self.fin["hk/bad/hr/position"]
-        vel = self.fin["hk/bad/hr/velocity"]
-        terr = self.fin["hk/bad/hr/time_fsw"]
-        att_time = self.fin["hk/bad/hr/time"]
-        bbt = self.fin["hk/status/temperature"]
-        bb_time = self.fin["hk/status/time"]
-        bb_fsw = self.fin["hk/status/time_fsw"]
-
-        #  Set up band order
-
-        if bip.shape[3] == 6:
+        lid=self.fin["flex/id_line"]
+        pid=self.fin["flex/id_packet"]
+        flex_st=self.fin["flex/state"]
+        fswt=self.fin["flex/time_fsw"]
+        fpie_sync[:]=self.fin["flex/time_sync_fpie"]
+        fsw_sync[:]=self.fin["flex/time_sync_fsw"]
+        att=self.fin["hk/bad/hr/attitude"]
+        pos=self.fin["hk/bad/hr/position"]
+        vel=self.fin["hk/bad/hr/velocity"]
+        terr=self.fin["hk/bad/hr/time_fsw"]
+        att_time=self.fin["hk/bad/hr/time"]
+        dp_mode=self.fin["hk/status/mode/dpuio"]
+        op_mode=self.fin["hk/status/mode/op"]
+        bb1_ms=self.fin["hk/status/motor/bb1"]
+        bb2_ms=self.fin["hk/status/motor/bb2"]
+        mode_ms=self.fin["hk/status/motor/mode"]
+        pstate_ms=self.fin["hk/status/motor/pstate"]
+        bbt=self.fin["hk/status/temperature"]
+        bb_time=self.fin["hk/status/time"]
+        bb_fsw=self.fin["hk/status/time_fsw"]
+    
+    #  Set up band order
+    
+        if bip.shape[3]==6:
             BANDS = 6
             bo = [5, 3, 2, 0, 1, 4]
             bs = [1.6, 8.2, 8.7, 9.0, 10.5, 12.0]
@@ -487,10 +502,10 @@ class L1aRawPixGenerate(object):
                 None,
                 Time.time_gps(bbtime[0]),
                 Time.time_gps(bbtime[epc - 1]),
-                primary_file=True,
+                primary_file=True
             )
         else:
-            print("No HK time in L0B file")
+            print("Error:  No HK time in L0B file")
             return -4
         eng_g = eng.create_group("/rtdBlackbodyGradients")
         rtd295 = eng_g.create_dataset("RTD_295K", shape=(epc, 5), dtype="f4")
@@ -510,8 +525,8 @@ class L1aRawPixGenerate(object):
         rtdtime.attrs["fill"] = "-9999"
         for i in range(epc):  # Convert DNs to Kelvin with PRT parameters
             for j in range(5):
-                rtd295[i, j] = prc[j](p7r(bbt[i, 0, j]))
-                rtd325[i, j] = prh[j](p7r(bbt[i, 1, j]))
+                rtd295[i,j] = prc[j](p7r(bbt[i,0,j]))
+                rtd325[i,j] = prh[j](p7r(bbt[i,1,j]))
             rtdtime[i, 0] = Time.time_gps(bbtime[i]).j2000  # sample time
             rtdtime[i, 1] = Time.time_gps(bbfsw[i]).j2000  # hk pkt time
         rtd295.attrs["Units"] = "K"
@@ -525,7 +540,7 @@ class L1aRawPixGenerate(object):
         eng_met.set("ImageLines", 0)
         eng_met.set("ImagePixels", 0)
         eng_met.set("SISVersion", "1")
-        # eng_met.set('FieldOfViewObstruction', fov_obst) # need code arrangement
+        # eng_met.set("FieldOfViewObstruction", fov_obst) # need code arrangement
         eng_met.write()
         eng.close()
 
@@ -540,10 +555,10 @@ class L1aRawPixGenerate(object):
                 Time.time_gps(att_time[0]),
                 Time.time_gps(att_time[aqc - 1]),
                 prod=False,
-                intermediate=True,
+                intermediate=True
             )
         else:
-            print("No ATT data in L0B file")
+            print("Error:  No ATT data in L0B file")
             return -5
         att_g = attf.create_group("/Attitude")
         a2k = att_g.create_dataset("time_j2000", shape=(aqc,), dtype="f8")
@@ -571,7 +586,7 @@ class L1aRawPixGenerate(object):
         attf_met.set("ImageLines", 0)
         attf_met.set("ImagePixels", 0)
         attf_met.set("SISVersion", "1")
-        # attf_met.set('FieldOfViewObstruction', fov_obst) # need code arrangement
+        # attf_met.set("FieldOfViewObstruction", fov_obst) # need code arrangement
         attf_met.write()
         attf.close()
 
@@ -603,13 +618,13 @@ class L1aRawPixGenerate(object):
 
         gpt = np.zeros(tot_pkts, dtype=np.float64)
         gpt[:] = fswt[:] + (fpie_sync[:] - fsw_sync[:]) / 1000000.0
-
+    
         # extract encoder values
         i, j = lid.shape
         lev = np.zeros((i, j), dtype=np.int32)
         lev[:, :] = lid[:, :] & 0x1FFFFF
-        ldd = np.zeros(j - 1, dtype=np.float32)
-
+        ldd = np.zeros(j-1, dtype=np.float32)
+    
         # working array
         flex_buf = np.zeros((PPFP, FPPPKT, BANDS), dtype=np.uint16)
         # output file arrays
@@ -650,7 +665,10 @@ class L1aRawPixGenerate(object):
 
             # detect field of view obstruction
             fov_obst = self.detect_obst(sts, ste)
-
+            if fov_obst == "NA":
+                print("Error:  Obstruction files not found in DIR %s, terminating" %self.obst_dir )
+                if self.use_obst_dir == "YES":
+                    return -6
             good[:] = 0.0
 
             # *** Assume packets in time sequence ***
@@ -700,6 +718,8 @@ class L1aRawPixGenerate(object):
                 #  Loop through HBB, CBB, and IMG sequences in scan
                 seq = 0
                 gpix[:] = 0
+                """ph0 = 2
+                ph0_idx = 0"""
                 while seq < 3:
                     e0 = pkt_idx
                     ph = 2  # mirror phase should be 0 or 1
@@ -708,7 +728,7 @@ class L1aRawPixGenerate(object):
                             dt = 0
                         else:
                             dt = (
-                                float((lev[e0, 0] - lev[e0 - 1, e1]) % MAX_FPIE)
+                                float((lev[e0, 0] - lev[e0-1, e1]) % MAX_FPIE)
                             ) * EV_DUR
                         adt = abs(dt)
                         if gpt[e0] > rse:  # packet time past end of scene
@@ -724,7 +744,7 @@ class L1aRawPixGenerate(object):
                                     sse,
                                     Time.time_gps(gpt[e0]),
                                     gpt[e0],
-                                    e0,
+                                    e0
                                 )
                             )
                             scan = SCPS  # force finish up current scene
@@ -760,7 +780,7 @@ class L1aRawPixGenerate(object):
                         " end seeking SEQ in current packet "
 
                         if ph == 2:
-                            e0 += 1  # look in next packet
+                            e0 += 1  #  look in next packet
                             e1 = 0
                     " End seeking SEQ through packets "
                     print("Out of SEQ seek E0=%d E1=%d" % (e0, e1))
@@ -837,10 +857,13 @@ class L1aRawPixGenerate(object):
                     # calculate ISS time correction
                     if iss_tcorr > 0:
                         tdx = np.argmax(p0t < terr)
+                        """ if tcorr[tdx] >= 2147483648: tc = (tcorr[tdx] - 4294967296)
+                        else: tc = tcorr[tdx]  """
                         print(
                             "Scene %d scan %d TCORR=%f TDX=%d"
                             % (scene_id, scan, tcorr[tdx], tdx)
                         )
+                    else: tc = 0.0
                     if scan == 0:  # save refined scene start time of IMG
                         rst = p0t
                         # tc0 = tc
@@ -884,7 +907,7 @@ class L1aRawPixGenerate(object):
                             scan,
                             p0t,
                             dpt,
-                            Time.time_gps(p0t),
+                            Time.time_gps(p0t)
                         )
                     )
 
@@ -947,9 +970,9 @@ class L1aRawPixGenerate(object):
                                         lid1,
                                         Time.time_gps(gpt[lid1]),
                                         dt,
-                                        op,
+                                        op
                                     ),
-                                    end="",
+                                    end=""
                                 )
 
                                 if (
@@ -998,7 +1021,7 @@ class L1aRawPixGenerate(object):
                             print(
                                 "Last %s chunk:%d FPC=%d IDX=[%d,%d] OP=%d"
                                 % (ev_names[seq], remain, fpc, e0, p1, op),
-                                end="",
+                                end=""
                             )
                             if seq == 2:
                                 sse = gpt[e0 - 1] + PKT_DUR + fpc * FP_DUR + FP_DUR
@@ -1035,10 +1058,11 @@ class L1aRawPixGenerate(object):
                         op = op + opinc + fpc
                         if op < op0 or op > op1:  # next packet outside of current scan
                             cont = 1
-                            sse = gpt[e0 - 1] + PKT_DUR + fpc * FP_DUR + FP_DUR
+                            # sse = gpt[e0 - 1] + PKT_DUR + fpc * FP_DUR + FP_DUR
+                            sse = rst + fpc * FP_DUR + FP_DUR
                             print(
-                                "Terminating scan %d in %s at FP %d E0=%d SSE=%f"
-                                % (scan, ev_names[seq], op, e0, sse)
+                                "Terminating scan %d in %s at FP %d E0=%d FPC=%d P0T=%f RST=%f SSE=%f"
+                                % (scan, ev_names[seq], op, e0, fpc, p0t, rst, sse)
                             )
                             seq = 3  # force exit SEQ loop
                             op = 0
@@ -1077,7 +1101,7 @@ class L1aRawPixGenerate(object):
                         pkt_idx,
                         remain,
                         op,
-                        rse,
+                        rse
                     )
                 )
 
@@ -1118,7 +1142,7 @@ class L1aRawPixGenerate(object):
                     orbit,
                     scene_id,
                     str(Time.time_gps(rst))[:26],
-                    str(Time.time_gps(rse))[:26],
+                    str(Time.time_gps(rse))[:26]
                 )
             )
             # str( Time.time_gps( rst-tc0 ) )[:26], str( Time.time_gps( rse ) )[:26] ) )
@@ -1135,32 +1159,32 @@ class L1aRawPixGenerate(object):
                 Time.time_gps(rst),
                 Time.time_gps(rse),
                 prod=False,
-                intermediate=True,
+                intermediate=True
             )
             # Time.time_gps(rst-tc0), Time.time_gps(rse), prod=False, intermediate=True)
 
             " create BB file and BlackBodyPixels group "
-            l1a_bp, l1a_bp_met, fname = self.create_file(
+            l1a_bp, l1a_bp_met, bname = self.create_file(
                 "L1A_BB",
                 orbit,
                 scene_id,
                 Time.time_gps(rst),
                 Time.time_gps(rse),
-                prod=True,
+                prod=True
             )
             # Time.time_gps(rst-tc0), Time.time_gps(rse), prod=True )
 
             " record scan completeness "
             # pcomp = float( good_img ) / float( img_cnt )
             pcomp = float(good_img) / float(FPPSC * SCPS)
-            # l1a_fp_met.set('AutomaticQualityFlag', '%16.10e' % pcomp)
+            # l1a_fp_met.set("AutomaticQualityFlag", "%16.10e" % pcomp)
             if pcomp > 0.95:
                 l1a_fp_met.set("AutomaticQualityFlag", "%s" % "PASS")
             else:
                 l1a_fp_met.set("AutomaticQualityFlag", "%s" % "FAIL")
             # bcomp = float( good_bb ) / float( bb_cnt )
             bcomp = float(good_bb) / float(SCPS * 2 * BBLEN)
-            # l1a_bp_met.set('AutomaticQualityFlag', '%16.10e' % bcomp)
+            # l1a_bp_met.set("AutomaticQualityFlag", "%16.10e" % bcomp)
             if bcomp > 0.95:
                 l1a_bp_met.set("AutomaticQualityFlag", "%s" % "PASS")
             else:
@@ -1179,7 +1203,7 @@ class L1aRawPixGenerate(object):
                     img_cnt,
                     bcomp,
                     good_bb,
-                    bb_cnt,
+                    bb_cnt
                 )
             )
 
@@ -1191,7 +1215,7 @@ class L1aRawPixGenerate(object):
             l1a_fp_met.set("ProductionLocation", "ECOSTRESS Science Data System")
             l1a_fp_met.set("PlatformLongName", "International Space Station")
             l1a_fp_met.set("ProcessingLevelDescription", "L1A Raw Pixels")
-            # l1a_fp_met.set('ProductionDateTime', sst ) # given in runconfig file
+            # l1a_fp_met.set("ProductionDateTime", sst ) # given in runconfig file
             l1a_fp_met.set("ShortName", "L1A_RAW")
             l1a_fp_met.set("SISVersion", "1")
             l1a_fp_met.set("FieldOfViewObstruction", fov_obst)
@@ -1204,7 +1228,7 @@ class L1aRawPixGenerate(object):
             l1a_bp_met.set("ProductionLocation", "ECOSTRESS Science Data System")
             l1a_bp_met.set("PlatformLongName", "International Space Station")
             l1a_bp_met.set("ProcessingLevelDescription", "L1A Black Body")
-            # l1a_bp_met.set('ProductionDateTime', sst ) # given in runconfig file
+            # l1a_bp_met.set("ProductionDateTime", sst ) # given in runconfig file
             l1a_bp_met.set("ShortName", "L1A_BB")
             l1a_bp_met.set("SISVersion", "1")
             l1a_bp_met.set("FieldOfViewObstruction", fov_obst)
@@ -1226,11 +1250,11 @@ class L1aRawPixGenerate(object):
                 e0 = np.argmax(rst < terr)
                 e1 = np.argmax(rse < terr)
                 if e1 - e0 > 0:
-                    l1a_metag.create_dataset("ISS_time", data=terr[e0:e1], dtype="f8")
-                    l1a_metag.create_dataset(
+                    l1a_te = l1a_metag.create_dataset("ISS_time", data=terr[e0:e1], dtype="f8")
+                    l1a_td = l1a_metag.create_dataset(
                         "ISS_time_dpuio", data=tdpuio[e0:e1], dtype="i8"
                     )
-                    l1a_metag.create_dataset(
+                    l1a_tc = l1a_metag.create_dataset(
                         "ISS_time_error_correction", data=tcorr[e0:e1], dtype="f8"
                     )
 
@@ -1259,7 +1283,7 @@ class L1aRawPixGenerate(object):
                     "pixel_data_%d" % (b + 1),
                     data=img[:, :, bo[b]],
                     chunks=(PPFP, FPPSC),
-                    dtype="u2",
+                    dtype="u2"
                 )
                 #  not compressing a non-delivered product to save a little time
                 t.attrs["Units"] = "dimensionless"
@@ -1278,7 +1302,7 @@ class L1aRawPixGenerate(object):
                     data=cbb[:, :, bo[b]],
                     chunks=(PPFP, BBLEN),
                     dtype="u2",
-                    compression="gzip",
+                    compression="gzip"
                 )
                 t.attrs["Units"] = "dimensionless"
                 t.attrs["valid_min"] = "0"
@@ -1289,7 +1313,7 @@ class L1aRawPixGenerate(object):
                     data=hbb[:, :, bo[b]],
                     chunks=(PPFP, BBLEN),
                     dtype="u2",
-                    compression="gzip",
+                    compression="gzip"
                 )
                 t.attrs["Units"] = "dimensionless"
                 t.attrs["valid_min"] = "0"
@@ -1348,7 +1372,7 @@ class L1aRawPixGenerate(object):
                     p1 - p0 + 1,
                     5,
                 ),
-                dtype="f4",
+                dtype="f4"
             )
             r2.attrs["Units"] = "K"
             r2.attrs["valid_min"] = "290"
@@ -1360,7 +1384,7 @@ class L1aRawPixGenerate(object):
                     p1 - p0 + 1,
                     5,
                 ),
-                dtype="f4",
+                dtype="f4"
             )
             r3.attrs["Units"] = "K"
             r3.attrs["valid_min"] = "320"
@@ -1391,14 +1415,14 @@ class L1aRawPixGenerate(object):
                     l1b_geo_config.second_encoder_value_0,
                     l1b_geo_config.instrument_to_sc_euler,
                     l1b_geo_config.first_angle_per_encoder_value,
-                    l1b_geo_config.second_angle_per_encoder_value,
+                    l1b_geo_config.second_angle_per_encoder_value
                 )
                 print("Getting orbitt")
                 orbitt = ecostress.EcostressOrbit(
                     attfname,
                     l1b_geo_config.x_offset_iss,
                     l1b_geo_config.extrapolation_pad,
-                    l1b_geo_config.large_gap,
+                    l1b_geo_config.large_gap
                 )
                 print("Getting igc")
                 igc = ecostress.EcostressImageGroundConnection(
@@ -1431,7 +1455,7 @@ class L1aRawPixGenerate(object):
                                 mi_fp.lrc_x,
                                 mi_fp.lrc_y,
                                 mi_fp.ulc_y,
-                                mi_fp.ulc_x,
+                                mi_fp.ulc_x
                             )
                         )
                     else:
@@ -1442,23 +1466,27 @@ class L1aRawPixGenerate(object):
                                 mi_fp.lrc_x,
                                 mi_fp.lrc_y,
                                 mi_fp.ulc_y,
-                                mi_fp.ulc_x,
+                                mi_fp.ulc_x
                             )
                         )
-                except RuntimeError:
+                except:
                     print(
                         "Exception from igc.cover, no footprint for scene %d" % scene_id
                     )
             else:
                 print(
-                    "Scene %s missing too many pixels (%f), not generating footprint"
-                    % (scene_id, pcomp)
+                    "Scene %s missing too many pixels (%f), not generating footprint for %s"
+                    % (scene_id, pcomp, pname)
                 )
+                oname = pname + ".bad"
+                os.rename( pname, oname )
+                oname = bname + ".bad"
+                os.rename( bname, oname )
 
         " end scene loop "
 
         if len(scenes) == 0:
-            print("****  FATAL  ****  No scenes generated  ****")
+            print("****  Error:  FATAL  ****  No scenes generated  ****")
             return -2
 
         sss = str(o_start_time)
@@ -1475,7 +1503,7 @@ class L1aRawPixGenerate(object):
             + "T"
             + sst[11:13]
             + sst[14:16]
-            + sst[17:19],
+            + sst[17:19]
         )
         sfd = open(sf, "w")
         for i in range(len(scenes)):
@@ -1485,5 +1513,5 @@ class L1aRawPixGenerate(object):
         # Write out a dummy log file
         # print("This is a dummy log file", file = self.log)
         # self.log.flush()
-        print("====  End Orbit %s" % orb, datetime.now(), "jumps=%d  ====" % jumps)
+        print("====  End Orbit %s" % orb, datetime.now(), "jumps=%d  ====" % jumps )
         return jumps
