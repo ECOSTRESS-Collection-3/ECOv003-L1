@@ -56,7 +56,7 @@ h.setFormatter(ColorLogFormatter(add_color=True))
 logger.addHandler(h)
 logger.setLevel(loglevel)
 
-def orb_scene_to_fname(flist):
+def orb_scene_to_fname(flist, typ="L1B_GEO"):
     '''Make a dict from (orb,scene) to fname, accounting for multiple versions (taking the
     larger one.'''
     res = dict()
@@ -64,7 +64,7 @@ def orb_scene_to_fname(flist):
     for fname in flist:
         if(fname == ""):
             continue
-        m = re.match(r'ECOv002_L1B_GEO_(\d\d\d\d\d)_(\d\d\d)_.*_(\d\d\d\d)_(\d\d).h5',
+        m = re.match(r'ECOv002_' + typ + '_(\d\d\d\d\d)_(\d\d\d)_.*_(\d\d\d\d)_(\d\d).h5',
                      os.path.basename(fname))
         if(not m):
             print(f"Don't recognize {fname}, skipping")
@@ -138,6 +138,16 @@ def l1b_geo_qa_file_list(flist):
 
     Right now we only look for version 7, although we could change that'''
     subprocess.run(f"find /ops/store*/PRODUCTS/L1B_GEO_QA/*/*/* -name 'L1B_GEO_QA_*_07??_??.h5' | tee {flist}", shell=True)
+
+@cli.command()
+@click.argument("flist", type=str)
+def l2_cloud_file_list(flist):
+    '''Find all the L2 cloud files on the system. We have this as a separate step
+    because it takes a while to run, and it is nice to just summarizes this once
+    in while.
+
+    Right now we only look for version 7, although we could change that'''
+    subprocess.run(f"find /ops/store*/PRODUCTS/L2_CLOUD/*/*/* -name 'ECOv002_L2_CLOUD_*_071?_??.h5' | tee {flist}", shell=True)
     
 @cli.command()
 @click.argument("flist_fname", type=str)
@@ -149,13 +159,39 @@ def qvalue(flist_fname, panda_pickle):
     oscene_to_fname = orb_scene_to_fname(flist)
     d = []
     for (orb, scene), fname in oscene_to_fname.items():
-        logger.info(f"Processing {fname}")
-        f = h5py.File(fname)
-        v = f["/L1GEOMetadata/GeolocationAccuracyQA"][()]
-        d.append([orb, scene, v.decode('utf-8')])
+        try:
+            logger.info(f"Processing {fname}")
+            f = h5py.File(fname)
+            v = f["/L1GEOMetadata/GeolocationAccuracyQA"][()]
+            d.append([orb, scene, v.decode('utf-8')])
+        except:
+            logger.info(f"Error occurred, skipping {fname}")
     df = pd.DataFrame(d, columns=["Orbit", "Scene", "QA"])
     df.to_pickle(panda_pickle)
 
+@cli.command()
+@click.argument("flist_fname", type=str)
+@click.argument("panda_pickle", type=str)
+def cloud_fraction_pickle(flist_fname, panda_pickle):
+    '''Take a list of orbits like l2_cloud_file_list generates, and generate a pandas
+    file with the QAPercentCloudCover for each orbit/scene.'''
+    flist = open(flist_fname).read().split("\n")
+    oscene_to_fname = orb_scene_to_fname(flist, typ="L2_CLOUD")
+    d = []
+    nfile = len(oscene_to_fname)
+    i = 0
+    for (orb, scene), fname in oscene_to_fname.items():
+        try:
+            logger.info(f"Processing {fname} ({i}/{nfile})")
+            i += 1
+            f = h5py.File(fname)
+            v = f["/L2 CLOUD Metadata/QAPercentCloudCover"][0]
+            d.append([orb, scene, v])
+        except:
+            logger.info(f"Error occurred, skipping {fname}")
+    df = pd.DataFrame(d, columns=["orbnum", "scene", "cloud_percentage"])
+    df.to_pickle(panda_pickle)
+    
 @cli.command()
 @click.argument("flist_fname", type=str)
 @click.argument("panda_pickle", type=str)
