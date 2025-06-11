@@ -27,7 +27,7 @@ Options:
        Print this message
 
   --verbose
-       Print more information as we run to stdout.
+       Print more information as we run to stderr.
 
   -v --version      
        Print program version

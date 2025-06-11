@@ -17,6 +17,7 @@ from .rad_write_standard_metadata import RadWriteStandardMetadata
 from .misc import is_day
 from .ecostress_interpolate import EcostressInterpolate
 import numpy as np
+from loguru import logger
 
 
 class L1bRadGenerate(object):
@@ -32,7 +33,6 @@ class L1bRadGenerate(object):
         cal_correction,
         local_granule_id=None,
         run_config=None,
-        log=None,
         build_id="0.30",
         collection_label="ECOSTRESS",
         pge_version="0.30",
@@ -59,7 +59,6 @@ class L1bRadGenerate(object):
         self.local_granule_id = local_granule_id
         self.l1_osp_dir = l1_osp_dir
         self.run_config = run_config
-        self.log = log
         self.collection_label = collection_label
         self.build_id = build_id
         self.pge_version = pge_version
@@ -84,12 +83,7 @@ class L1bRadGenerate(object):
         res = np.empty((int(rad.number_line / 2), rad.number_sample), dtype=np.float32)
         nscan = int(rad.number_line / self.igc.number_line_scan)
         for scan_index in range(nscan):
-            if self.log is not None:
-                print(
-                    "INFO:L1bRadGenerate:Doing scan_index %d for band %d"
-                    % (scan_index, band),
-                    file=self.log,
-                )
+            logger.debug(f"Doing scan_index {scan_index} for band {band}")
             # Perform band to band, unless we have been directed to skip
             # it (useful for initial working on band to band registration
             sline = scan_index * self.igc.number_line_scan
@@ -168,11 +162,9 @@ class L1bRadGenerate(object):
             self.interpolate_stripe_data
             and frac_data_present < self.frac_to_do_interpolation
         ):
-            if self.log is not None:
-                print(
-                    "INFO:L1bRadGenerate:Skipping interpolation because fraction of scans present is too small (e.g., short scene)",
-                    file=self.log,
-                )
+            logger.info(
+                "Skipping interpolation because fraction of scans present is too small (e.g., short scene)"
+            )
         elif self.interpolate_stripe_data:
             band_mode = "5bands" if self.nband >= 5 else "3bands"
             inter = EcostressInterpolate(
