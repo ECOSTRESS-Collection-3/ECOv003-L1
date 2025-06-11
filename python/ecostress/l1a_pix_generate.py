@@ -21,8 +21,6 @@ class L1aPixGenerate(object):
         output_gain_name,
         local_granule_id=None,
         run_config=None,
-        log=None,
-        quiet=False,
         build_id="0.30",
         collection_label="ECOSTRESS",
         pge_version="0.30",
@@ -38,8 +36,6 @@ class L1aPixGenerate(object):
         self.output_gain_name = output_gain_name
         self.local_granule_id = local_granule_id
         self.run_config = run_config
-        self.log = log
-        self.quiet = quiet
         self.collection_label = collection_label
         self.build_id = build_id
         self.pge_version = pge_version
@@ -75,8 +71,6 @@ class L1aPixGenerate(object):
                     "inpupf=%s/L1A_PCF_UPF.txt" % self.l1_osp_dir,
                     "pcount=%s" % self.file_version,
                 ],
-                out_fh=self.log,
-                quiet=self.quiet,
             )
         except subprocess.CalledProcessError:
             raise VicarRunException("VICAR call failed")

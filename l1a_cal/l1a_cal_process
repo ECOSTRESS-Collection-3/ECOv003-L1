@@ -7,6 +7,7 @@ import ecostress
 import os
 import re
 import traceback
+from loguru import logger
 
 # Get version information, in the top directory
 import sys
@@ -60,7 +61,11 @@ else:
     dirname = os.path.abspath(args.prod_dir)
     file_version = "01"
     
-quiet = not args.verbose
+logger.remove()
+if args.verbose:
+    logger.add(sys.stderr, level="DEBUG")
+else:
+    logger.add(sys.stderr, level="INFO")
 
 geocal.makedirs_p(dirname)
 os.chdir(dirname)
@@ -74,34 +79,27 @@ ofile_gain = ecostress.ecostress_file_name("L1A_RAD_GAIN", orbit, scene,
                                  collection_label = collection_label,
                                  build = build_id, version = file_version,
                                  intermediate = True)
-log_fname = os.path.splitext(ofile)[0] + ".log"
-log = open(log_fname, "w")
+logger.add(os.path.splitext(ofile)[0] + ".log", level="DEBUG")
 try:
-# Generate output
-    l1apix = ecostress.L1aPixGenerate(l1a_bb, l1a_raw_pix, l1_osp_dir,
-                            ofile, ofile_gain,
-                            log=log, quiet=quiet, run_config=config,
-                            collection_label = collection_label,
-                            build_id=build_id,
-                            pge_version=pge_version["l1a_cal"],
-                            file_version=file_version)
-    l1apix.run()
-    # Write out a dummy log file
-    print("L1A_CAL_PGE:INFO-0-[Job Successful]", file=log)
-    log.flush()
+    with logger.catch(reraise=True):
+        # Generate output
+        l1apix = ecostress.L1aPixGenerate(l1a_bb, l1a_raw_pix, l1_osp_dir,
+                                          ofile, ofile_gain,
+                                          run_config=config,
+                                          collection_label = collection_label,
+                                          build_id=build_id,
+                                          pge_version=pge_version["l1a_cal"],
+                                          file_version=file_version)
+        l1apix.run()
+        logger.info("L1A_CAL_PGE:INFO-0-[Job Successful]")
 except ecostress.VicarRunException as e:
-    print("L1A_CAL_PGE:ERROR-1-[%s]" % e.message, file=log)
-    log.flush()
+    logger.info("L1A_CAL_PGE:ERROR-1-[%s]" % e.message)
     raise
 except Exception as e:
-    log = open(log_fname, "a")
-    print("L1A_CAL_PGE: Exception thrown:",  file=log)
-    traceback.print_exc(file=log)
-    print("L1A_CAL_PGE:ERROR-2-[Unexpected Error]", file=log)
-    log.flush()
+    logger.info("L1A_CAL_PGE:ERROR-2-[Unexpected Error]")
     raise
 except:
-    print("L1A_CAL_PGE:ERROR-2-[Unexpected Error]", file=log)
+    logger.info("L1A_CAL_PGE:ERROR-2-[Unexpected Error]")
     log.flush()
     raise
 

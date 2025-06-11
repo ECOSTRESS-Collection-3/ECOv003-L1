@@ -17,6 +17,7 @@ from ecostress_swig import (  # type: ignore
     EcostressIgcCollection,
 )
 import pickle
+from loguru import logger
 
 orb_to_date = None
 
@@ -175,8 +176,9 @@ def create_igccol(
     return igccol
 
 
-def create_igccol_from_qa(qa_fname, l1_osp_dir=None, dem=None, raw_att=False,
-                          include_tie_point=False):
+def create_igccol_from_qa(
+    qa_fname, l1_osp_dir=None, dem=None, raw_att=False, include_tie_point=False
+):
     """Create a IgcCollection from a given qa file, using the same input files as it has
     listed. By default we use the corrected llb_att file, but you can optionally select the
     raw l1a_raw_att file.  We add the attribute "scene_list" to the igccol for convenience.
@@ -312,23 +314,25 @@ def create_igccol_from_qa(qa_fname, l1_osp_dir=None, dem=None, raw_att=False,
                 )
             )
         igccol.scene_list = scene_list
-        if(include_tie_point):
+        if include_tie_point:
             res = []
             tpcolfull = geocal.TiePointCollection()
             for iscene, scene in enumerate(scene_list):
-                if("Tiepoints") in f[f"Tiepoint/Scene {scene}"]:
+                if ("Tiepoints") in f[f"Tiepoint/Scene {scene}"]:
                     tpdata = f[f"Tiepoint/Scene {scene}/Tiepoints"][:]
                     tpcol = geocal.TiePointCollection()
                     for i in range(tpdata.shape[0]):
                         tp = geocal.TiePoint(1)
                         tp.is_gcp = True
-                        tp.ground_location = geocal.Ecr(*tpdata[i,2:6])
-                        tp.image_coordinate(0,geocal.ImageCoordinate(*tpdata[i,0:2]))
+                        tp.ground_location = geocal.Ecr(*tpdata[i, 2:6])
+                        tp.image_coordinate(0, geocal.ImageCoordinate(*tpdata[i, 0:2]))
                         tpcol.push_back(tp)
                         tp2 = geocal.TiePoint(len(scene_list))
                         tp2.is_gcp = True
-                        tp2.ground_location = geocal.Ecr(*tpdata[i,2:6])
-                        tp2.image_coordinate(iscene,geocal.ImageCoordinate(*tpdata[i,0:2]))
+                        tp2.ground_location = geocal.Ecr(*tpdata[i, 2:6])
+                        tp2.image_coordinate(
+                            iscene, geocal.ImageCoordinate(*tpdata[i, 0:2])
+                        )
                         tpcolfull.append(tp2)
                     res.append(tpcol)
                 else:
@@ -594,7 +598,7 @@ def ecostress_file_name(
         )
 
 
-def process_run(exec_cmd, out_fh=None, quiet=False):
+def process_run(exec_cmd):
     """This is like subprocess.run, but allowing a unix like 'tee' where
     we write the output to a log file and/or stdout.
 
@@ -612,12 +616,7 @@ def process_run(exec_cmd, out_fh=None, quiet=False):
             break
         if output:
             stdout = stdout + output
-            if not quiet:
-                print(output.strip().decode("utf-8"))
-                sys.stdout.flush()
-            if out_fh:
-                print(output.strip().decode("utf-8"), file=out_fh)
-                out_fh.flush()
+            logger.debug(output.strip().decode("utf-8"))
     if process.poll() != 0:
         raise subprocess.CalledProcessError(process.poll(), exec_cmd, output=stdout)
     return stdout

@@ -1,8 +1,8 @@
 from __future__ import annotations
-import tensorflow as tf # type: ignore
-from tensorflow.keras import layers, Model # type: ignore
+import tensorflow as tf  # type: ignore
+from tensorflow.keras import layers, Model  # type: ignore
 import numpy as np
-from sklearn.model_selection import train_test_split # type: ignore
+from sklearn.model_selection import train_test_split  # type: ignore
 from ecostress_swig import (  # type: ignore
     DQI_INTERPOLATED,
     DQI_STRIPE_NOT_INTERPOLATED,
@@ -10,32 +10,36 @@ from ecostress_swig import (  # type: ignore
     fill_value_threshold,
 )
 
-class EcostressAeDeepEnsembleInterpolate(object):
-    '''Class to interpolate missing data in ECOSTRESS scenes.
-Steffen Mauceri, JPL, 2025
-Steffen.Mauceri@jpl.nasa.gov
 
-Notes:
-replaces the earlier ecostress_interpolate.py
-Compared to earlier version this routine uses:
- - Autoencoder-based interpolation model and provides uncertainties
- - TF 2.x, the Keras API, Adam optimizer, NLL loss function
- - errors are calculated on a test set, not the training set.
- - scanlines can be missing in any band and will be interpolated if at least 2 bands are good.
- - horizontal stripes are identified and interpolated if at least 2 bands are good.
- - model takes no spatial information into account.
-    '''
-    def __init__(self,
-                 grid_size: int = 1,
-                 n_bands: int = 5,
-                 latent_dim: int = 16,
-                 encoder_layers: list[int] = [32],
-                 decoder_layers: list[int] = [32],
-                 activation: str = 'elu',
-                 fill_value_threshold: float = fill_value_threshold,
-                 seed: int = 1234,
-                 n_ensemble: int = 3,
-                 n_good_bands_required: int = 2) -> None:
+class EcostressAeDeepEnsembleInterpolate(object):
+    """Class to interpolate missing data in ECOSTRESS scenes.
+    Steffen Mauceri, JPL, 2025
+    Steffen.Mauceri@jpl.nasa.gov
+
+    Notes:
+    replaces the earlier ecostress_interpolate.py
+    Compared to earlier version this routine uses:
+     - Autoencoder-based interpolation model and provides uncertainties
+     - TF 2.x, the Keras API, Adam optimizer, NLL loss function
+     - errors are calculated on a test set, not the training set.
+     - scanlines can be missing in any band and will be interpolated if at least 2 bands are good.
+     - horizontal stripes are identified and interpolated if at least 2 bands are good.
+     - model takes no spatial information into account.
+    """
+
+    def __init__(
+        self,
+        grid_size: int = 1,
+        n_bands: int = 5,
+        latent_dim: int = 16,
+        encoder_layers: list[int] = [32],
+        decoder_layers: list[int] = [32],
+        activation: str = "elu",
+        fill_value_threshold: float = fill_value_threshold,
+        seed: int = 1234,
+        n_ensemble: int = 3,
+        n_good_bands_required: int = 2,
+    ) -> None:
         """
         Deep Ensemble version of the autoencoder-based interpolation model.
 
@@ -69,8 +73,10 @@ Compared to earlier version this routine uses:
         # Each member of the ensemble is a separate model
         self.models = [self._build_model(i) for i in range(n_ensemble)]
 
-    def find_horizontal_stripes(self, dataset: np.ndarray, data_quality: np.ndarray, threshold: int = 5) -> np.ndarray:
-        '''
+    def find_horizontal_stripes(
+        self, dataset: np.ndarray, data_quality: np.ndarray, threshold: int = 5
+    ) -> np.ndarray:
+        """
         analyzes ECOSTRESS scene and looks for missing, high, or low horizontal stripes that are not identified in
         data_quality mask. Currently constrained to identifying horizontal stripes with a width of 1 to 2 px.
         Could be readily modified to identify wider stripes if needed.
@@ -80,8 +86,7 @@ Compared to earlier version this routine uses:
         :param threshold: threshold for identifying stripes (defined as multiple of MAD)
 
         :return: updated data quality mask
-        '''
-
+        """
 
         if self.n_bands == 3:
             bands_to_process = [1, 3, 4]
@@ -101,7 +106,9 @@ Compared to earlier version this routine uses:
 
             # Compute row-wise differences to detect rapid intensity changes
             row_diff = np.abs(np.diff(band_data, axis=0))
-            row_diff = np.concatenate([np.zeros((1, row_diff.shape[1])), row_diff], axis=0)
+            row_diff = np.concatenate(
+                [np.zeros((1, row_diff.shape[1])), row_diff], axis=0
+            )
 
             # First summarize the pixel-wise differences for each row using the mean
             row_diff_summary = np.nanmean(row_diff, axis=1)
@@ -113,23 +120,25 @@ Compared to earlier version this routine uses:
             mad = np.median(np.abs(row_diff_summary - np.median(row_diff_summary)))
 
             # Identify stripe candidates where differences exceed threshold * MAD
-            stripe_row = row_diff_summary > np.median(row_diff_summary) + threshold * mad
+            stripe_row = (
+                row_diff_summary > np.median(row_diff_summary) + threshold * mad
+            )
 
             # make sure we have a stripe rather than a plateu.
             # Need to have identified two stripes in close proximity
-            for i in range(1, len(stripe_row)-2):
+            for i in range(1, len(stripe_row) - 2):
                 if stripe_row[i]:
                     # check if there is a stripe in the next 2 rows
-                    if not stripe_row[i+1] and not stripe_row[i+2]:
+                    if not stripe_row[i + 1] and not stripe_row[i + 2]:
                         stripe_row[i] = False
                     else:
                         # set the next stripe to true in case it is not already True
-                        stripe_row[i+1] = True
+                        stripe_row[i + 1] = True
 
             # set stripe to 1 if not already identified
             data_quality[stripe_row, :, band] = DQI_STRIPE_NOT_INTERPOLATED
 
-            #print(f"Band {band}: Detected {np.sum(stripe_row)} stripes.")
+            # print(f"Band {band}: Detected {np.sum(stripe_row)} stripes.")
 
         return data_quality
 
@@ -151,8 +160,9 @@ Compared to earlier version this routine uses:
             return tf.cond(
                 tf.equal(tf.size(x), 0),
                 lambda: x,
-                lambda: tf.where(tf.math.is_nan(x), tf.zeros_like(x), x)
+                lambda: tf.where(tf.math.is_nan(x), tf.zeros_like(x), x),
             )
+
         masked_inputs = layers.Lambda(my_nan_to_num, output_shape=lambda s: s)(inputs)
 
         masked_inputs = layers.Concatenate(axis=-1)([masked_inputs, mask])
@@ -171,33 +181,40 @@ Compared to earlier version this routine uses:
             x = layers.Dense(units, activation=self.activation)(x)
 
         # Output layers (predict mean and log-variance)
-        mean_outputs = layers.Dense(self.grid_size * self.grid_size * self.n_bands, activation='linear')(x)
-        var_outputs = layers.Dense(self.grid_size * self.grid_size * self.n_bands, activation='softplus')(x)  # Ensure positive variance
+        mean_outputs = layers.Dense(
+            self.grid_size * self.grid_size * self.n_bands, activation="linear"
+        )(x)
+        var_outputs = layers.Dense(
+            self.grid_size * self.grid_size * self.n_bands, activation="softplus"
+        )(x)  # Ensure positive variance
 
-        mean_outputs = layers.Reshape((self.grid_size, self.grid_size, self.n_bands))(mean_outputs)
-        var_outputs = layers.Reshape((self.grid_size, self.grid_size, self.n_bands))(var_outputs)
+        mean_outputs = layers.Reshape((self.grid_size, self.grid_size, self.n_bands))(
+            mean_outputs
+        )
+        var_outputs = layers.Reshape((self.grid_size, self.grid_size, self.n_bands))(
+            var_outputs
+        )
 
         # need to merge outputs to use custom loss function.
         merged_output = layers.Concatenate(axis=-1)([mean_outputs, var_outputs])
         model = Model(inputs, merged_output)
-        model.compile(optimizer='adam', loss=self.nll_loss)
+        model.compile(optimizer="adam", loss=self.nll_loss)
 
         return model
 
     def model_predict(self, data: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-        ''' predict mean and uncertainty given input data from the ensemble of models
+        """predict mean and uncertainty given input data from the ensemble of models
         :param data: input data
         :return: mean_preds, total_uncertainty (1 sigma)
-        '''
-
+        """
 
         # Get predictions from each ensemble model
         ensemble_means = []
         ensemble_vars = []
         for model in self.models:
             merged_output = model.predict(data, verbose=0)
-            mean_preds = merged_output[..., :self.n_bands]
-            var_preds = merged_output[..., self.n_bands:]
+            mean_preds = merged_output[..., : self.n_bands]
+            var_preds = merged_output[..., self.n_bands :]
             ensemble_means.append(mean_preds)
             ensemble_vars.append(var_preds)
 
@@ -215,26 +232,30 @@ Compared to earlier version this routine uses:
         return mean_preds, total_uncertainty
 
     def nll_loss(self, y_true: tf.Tensor, outputs: tf.Tensor) -> tf.Tensor:
-        ''' Negative log likelihood loss function for probabilistic regression.
+        """Negative log likelihood loss function for probabilistic regression.
         Loss is offset by 5 and has no direct physical meaning.
         The last n_bands channels in y_true contain the mask.
         :param y_true: [True values, mask]
         :param outputs: Predictions
         :return: Loss
-        '''
+        """
 
         # y_true shape: (batch, grid_size, grid_size, n_bands + n_bands_for_mask)
 
-        y_true_data = y_true[..., :self.n_bands]  # the real 'targets'
+        y_true_data = y_true[..., : self.n_bands]  # the real 'targets'
 
         # The last n_bands channels in y_true contain the mask.
-        missing_data_mask = 1 - y_true[..., self.n_bands:]  # shape: (batch, gs, gs, n_bands)
+        missing_data_mask = (
+            1 - y_true[..., self.n_bands :]
+        )  # shape: (batch, gs, gs, n_bands)
 
         # outputs was merged: [mean_outputs, log_var_outputs]
-        y_pred = outputs[..., :self.n_bands]
-        log_var = outputs[..., self.n_bands:]
+        y_pred = outputs[..., : self.n_bands]
+        log_var = outputs[..., self.n_bands :]
 
-        nll = 0.5 * (tf.math.log(log_var) + tf.square(y_true_data - y_pred) / log_var) + 5
+        nll = (
+            0.5 * (tf.math.log(log_var) + tf.square(y_true_data - y_pred) / log_var) + 5
+        )
 
         # Multiply by mask so that only pixels flagged as "to fill" remain in cost.
         nll = nll * missing_data_mask
@@ -261,7 +282,9 @@ Compared to earlier version this routine uses:
             dat[:, :, i] = (dat[:, :, i] - self.mu[i]) / self.sigma[i]
         return dat
 
-    def denormalize_data(self, normalized_data: np.ndarray, std_only: bool = False) -> np.ndarray:
+    def denormalize_data(
+        self, normalized_data: np.ndarray, std_only: bool = False
+    ) -> np.ndarray:
         """
         Convert normalized data back to original scale.
         """
@@ -278,7 +301,9 @@ Compared to earlier version this routine uses:
 
         return result
 
-    def create_training_samples(self, dataset: np.ndarray, missing_mask: np.ndarray, n_samples: int = 10000) -> tuple[np.ndarray, np.ndarray]:
+    def create_training_samples(
+        self, dataset: np.ndarray, missing_mask: np.ndarray, n_samples: int = 10000
+    ) -> tuple[np.ndarray, np.ndarray]:
         """
         Create training samples from the normalized dataset.
 
@@ -298,22 +323,34 @@ Compared to earlier version this routine uses:
         sampled = set()
 
         if n_samples > h * w // 2:
-            raise ValueError("Number of requested samples is too large. Please reduce the number of samples.")
+            raise ValueError(
+                "Number of requested samples is too large. Please reduce the number of samples."
+            )
 
         loop_count = 0
         while len(training_x) < n_samples:
-
             loop_count += 1
             if loop_count > 100 * n_samples:
-                raise ValueError("Could not find enough training samples. Please check the data.")
+                raise ValueError(
+                    "Could not find enough training samples. Please check the data."
+                )
 
             i = np.random.randint(self.grid_size // 2, h - self.grid_size // 2)
             j = np.random.randint(self.grid_size // 2, w - self.grid_size // 2)
-            grid = dataset[i - self.grid_size // 2 : i + self.grid_size // 2 + 1,
-                           j - self.grid_size // 2 : j + self.grid_size // 2 + 1, :]
+            grid = dataset[
+                i - self.grid_size // 2 : i + self.grid_size // 2 + 1,
+                j - self.grid_size // 2 : j + self.grid_size // 2 + 1,
+                :,
+            ]
 
-            if np.any(missing_mask[i - self.grid_size // 2 : i + self.grid_size // 2 + 1,
-                                   j - self.grid_size // 2 : j + self.grid_size // 2 + 1, :] > 0):
+            if np.any(
+                missing_mask[
+                    i - self.grid_size // 2 : i + self.grid_size // 2 + 1,
+                    j - self.grid_size // 2 : j + self.grid_size // 2 + 1,
+                    :,
+                ]
+                > 0
+            ):
                 continue
 
             if (i, j) in sampled:
@@ -336,21 +373,35 @@ Compared to earlier version this routine uses:
             masked_grid[:, :, ~mask] = np.nan
 
             # if we don't have enough good data, or did not mask any -> skip this sample
-            if (np.sum(mask) < self.n_good_bands_required) or (np.sum(mask) == self.n_bands):
+            if (np.sum(mask) < self.n_good_bands_required) or (
+                np.sum(mask) == self.n_bands
+            ):
                 continue
 
-            mask_expanded = np.tile(mask, (self.grid_size, self.grid_size, 1)).astype(np.float32)
+            mask_expanded = np.tile(mask, (self.grid_size, self.grid_size, 1)).astype(
+                np.float32
+            )
             grid = np.concatenate([grid, mask_expanded], axis=-1)
 
             training_x.append(masked_grid)
             training_y.append(grid)
 
-
-        print(f"Created {len(training_x)} training samples out of {loop_count} attempts.")
+        print(
+            f"Created {len(training_x)} training samples out of {loop_count} attempts."
+        )
         return np.array(training_x), np.array(training_y)
 
-    def train(self, dataset: np.ndarray, missing_mask: np.ndarray, epochs: int = 10, batch_size: int = 32, n_samples: int = 10000, validate: bool = False, validate_threshold: float = 5) -> None:
-        """ Train the ensemble models with Negative Log Likelihood loss.
+    def train(
+        self,
+        dataset: np.ndarray,
+        missing_mask: np.ndarray,
+        epochs: int = 10,
+        batch_size: int = 32,
+        n_samples: int = 10000,
+        validate: bool = False,
+        validate_threshold: float = 5,
+    ) -> None:
+        """Train the ensemble models with Negative Log Likelihood loss.
 
         Args:
             dataset: The input dataset with missing values.
@@ -376,27 +427,42 @@ Compared to earlier version this routine uses:
         dataset_subset[missing_mask_subset != 0] = np.nan
 
         normalized_data = self.normalize_data(dataset_subset)
-        training_x, training_y = self.create_training_samples(normalized_data, missing_mask_subset, n_samples=n_samples)
+        training_x, training_y = self.create_training_samples(
+            normalized_data, missing_mask_subset, n_samples=n_samples
+        )
 
-        train_x, test_x, train_y, test_y = train_test_split(training_x, training_y, test_size=0.1, random_state=self.seed)
+        train_x, test_x, train_y, test_y = train_test_split(
+            training_x, training_y, test_size=0.1, random_state=self.seed
+        )
 
         for idx, model in enumerate(self.models):
-            print(f"\nTraining model {idx+1} / {self.n_ensemble}")
+            print(f"\nTraining model {idx + 1} / {self.n_ensemble}")
 
-            train_x_subset, _, train_y_subset, _ = train_test_split(train_x, train_y, test_size=0.5, random_state=self.seed + idx)
+            train_x_subset, _, train_y_subset, _ = train_test_split(
+                train_x, train_y, test_size=0.5, random_state=self.seed + idx
+            )
 
-            model.fit(train_x_subset, train_y_subset,
-                      epochs=epochs,
-                      batch_size=batch_size,
-                      validation_data=(test_x, test_y),
-                      shuffle=True,
-                      verbose=1)
+            model.fit(
+                train_x_subset,
+                train_y_subset,
+                epochs=epochs,
+                batch_size=batch_size,
+                validation_data=(test_x, test_y),
+                shuffle=True,
+                verbose=1,
+            )
 
         # test model to calculate MSE and expected calibration error
         if validate:
-            self.test(test_x, test_y[:,:,:,:self.n_bands], RMSE_threshold=validate_threshold)
+            self.test(
+                test_x,
+                test_y[:, :, :, : self.n_bands],
+                RMSE_threshold=validate_threshold,
+            )
 
-    def test(self, test_x: np.ndarray, test_y: np.ndarray, RMSE_threshold: float = 5) -> None:
+    def test(
+        self, test_x: np.ndarray, test_y: np.ndarray, RMSE_threshold: float = 5
+    ) -> None:
         """
         Test the ensemble models on the test set.
 
@@ -412,7 +478,7 @@ Compared to earlier version this routine uses:
         predictions = self.denormalize_data(mean_preds)
         test_y = self.denormalize_data(test_y)
 
-        interpolated_mask = np.isnan(test_x[:,:,:,:self.n_bands])
+        interpolated_mask = np.isnan(test_x[:, :, :, : self.n_bands])
 
         # set all other predictions to nan
         predictions[~interpolated_mask] = np.nan
@@ -427,9 +493,13 @@ Compared to earlier version this routine uses:
         # throw exception if RMSE is too high
         # TODO: how would we want to log this as a warning?
         if np.any(np.array(RMSEs) > RMSE_threshold):
-            raise ValueError(f"RMSE of Interpolation is higher than {RMSE_threshold} W/m^2/sr/um. ")
+            raise ValueError(
+                f"RMSE of Interpolation is higher than {RMSE_threshold} W/m^2/sr/um. "
+            )
 
-    def interpolate_missing(self, dataset: np.ndarray, data_quality: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def interpolate_missing(
+        self, dataset: np.ndarray, data_quality: np.ndarray
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         Interpolate missing values using the ensemble of models.
         Provides uncertainties.
@@ -443,7 +513,6 @@ Compared to earlier version this routine uses:
             denorm_uncertainty_combined: Uncertainty map for the interpolated values
             data_quality_combined: Updated data quality mask
         """
-
 
         # subset data to n_bands
         if self.n_bands == 3:
@@ -463,7 +532,7 @@ Compared to earlier version this routine uses:
         uncertainty_map = np.zeros_like(dataset_subset)
 
         half = self.grid_size // 2
-        missing_boolean_mask = (data_quality_subset != 0)
+        missing_boolean_mask = data_quality_subset != 0
         missing_any_band = np.any(missing_boolean_mask, axis=2)
 
         if self.grid_size > 1:
@@ -476,13 +545,19 @@ Compared to earlier version this routine uses:
         missing_coords = [tuple(idx) for idx in missing_indices]
 
         if len(missing_coords) == 0:
-            print("No missing data found, returning original dataset without interpolating.")
+            print(
+                "No missing data found, returning original dataset without interpolating."
+            )
             return dataset
 
-        all_subgrids = np.zeros((len(missing_coords), self.grid_size, self.grid_size, self.n_bands), dtype=np.float32)
+        all_subgrids = np.zeros(
+            (len(missing_coords), self.grid_size, self.grid_size, self.n_bands),
+            dtype=np.float32,
+        )
         for idx, (i, j) in enumerate(missing_coords):
-            all_subgrids[idx] = normalized_data[i - half : i + half + 1,
-                                      j - half : j + half + 1, :]
+            all_subgrids[idx] = normalized_data[
+                i - half : i + half + 1, j - half : j + half + 1, :
+            ]
 
         mean_preds, uncertainty = self.model_predict(all_subgrids)
 
@@ -492,7 +567,10 @@ Compared to earlier version this routine uses:
             for band in range(self.n_bands):
                 if missing_boolean_mask[i, j, band]:
                     # check that we have a valid prediciton here. Requires at least self.n_good_bands_required good bands
-                    if np.sum(data_quality_subset[i, j, :] == DQI_GOOD) >= self.n_good_bands_required:
+                    if (
+                        np.sum(data_quality_subset[i, j, :] == DQI_GOOD)
+                        >= self.n_good_bands_required
+                    ):
                         result[i, j, band] = mean_preds[idx, half, half, band]
                         uncertainty_map[i, j, band] = uncertainty[idx, half, half, band]
                         data_quality_subset[i, j, band] = DQI_INTERPOLATED
@@ -502,7 +580,9 @@ Compared to earlier version this routine uses:
         denorm_uncertainty = self.denormalize_data(uncertainty_map, std_only=True)
 
         # OPTIONAL: remove stripes we identified from data_quality that we were not able to interpolate
-        data_quality_subset[data_quality_subset == DQI_STRIPE_NOT_INTERPOLATED] = DQI_GOOD
+        data_quality_subset[data_quality_subset == DQI_STRIPE_NOT_INTERPOLATED] = (
+            DQI_GOOD
+        )
 
         # add missing data back to the result if n_bands == 3
         if self.n_bands == 3:
@@ -516,20 +596,27 @@ Compared to earlier version this routine uses:
             denorm_result_combined[:, :, bands_to_process] = denorm_result
             # replace denorm_result_combined in bands_to_process with dataset where data_quality_subset is not DQI_INTERPOLATED
             # ensures that if there was a value that we wanted to interpolate but could not, we keep the original value
-            denorm_result_combined[~(data_quality_combined == DQI_INTERPOLATED)] = dataset[~(data_quality_combined == DQI_INTERPOLATED)]
-
+            denorm_result_combined[~(data_quality_combined == DQI_INTERPOLATED)] = (
+                dataset[~(data_quality_combined == DQI_INTERPOLATED)]
+            )
 
         elif self.n_bands == 5:
             # replace denorm_result_combined in bands_to_process with dataset where data_quality_subset is not DQI_INTERPOLATED
             # ensures that if there was a value that we wanted to interpolate but could not, we keep the original value
-            denorm_result[~(data_quality_subset == DQI_INTERPOLATED)] = dataset[~(data_quality_subset == DQI_INTERPOLATED)]
+            denorm_result[~(data_quality_subset == DQI_INTERPOLATED)] = dataset[
+                ~(data_quality_subset == DQI_INTERPOLATED)
+            ]
 
             denorm_result_combined = denorm_result
             denorm_uncertainty_combined = denorm_uncertainty
             data_quality_combined = data_quality_subset
 
         # TODO: I added one additional return value, the interpolated_data. This will break things downstream.
-        return denorm_result_combined, denorm_uncertainty_combined, data_quality_combined
+        return (
+            denorm_result_combined,
+            denorm_uncertainty_combined,
+            data_quality_combined,
+        )
 
 
 # Just so we don't need to change code, use the old name as a synonym for the new

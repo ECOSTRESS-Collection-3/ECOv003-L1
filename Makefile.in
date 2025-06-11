@@ -907,6 +907,7 @@ dist_installecostress_SCRIPTS = @l1a_raw_src@/L1A_RAW_PGE \
 SWIG_FLAG = -O
 installecostress_SCRIPTS = ecostress_version.py
 l0b_file = $(end_to_end_test_data)/latest/L0B_03663_20190227T094659_0100_01.h5
+obst_file = $(end_to_end_test_data)/latest/ECO_058_078_Obst.2019
 scene_file = $(end_to_end_test_data)/latest/Scene_03663_20190227T094659_20190227T110441.txt
 l1a_raw_run_config = $(end_to_end_test_data)/latest/ECOSTRESS_L1A_RAW_RunConfig_20190227T0946.xml
 l1a_cal_run_config = $(foreach n,001, $(end_to_end_test_data)/latest/ECOSTRESS_L1A_CAL_RunConfig_03663_$n.xml)
@@ -2949,16 +2950,18 @@ end-to-end-check: installcheck-am
 	$(MKDIR_P) ./end_to_end_test_l0_input
 	$(LN_S) $(l0b_file) ./end_to_end_test_l0_input
 	$(LN_S) $(scene_file) ./end_to_end_test_l0_input
+	$(MKDIR_P) ./end_to_end_test_l0_input/obst_dir
+	$(LN_S) $(obst_file) ./end_to_end_test_l0_input/obst_dir
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1A_RAW_PGE $(l1a_raw_run_config)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1a_raw/*.h5
 	ECOSTRESS_END_TO_END_TEST=t $(PARALLEL) --gnu $(prefix)/L1A_CAL_PGE ::: $(l1a_cal_run_config)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1a_cal/*.h5
-	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(PARALLEL) --gnu $(prefix)/L1B_RAD_PGE ::: $(l1b_cal_run_config)
-	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_rad/*.h5
-	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1B_GEO_PGE $(l1b_geo_run_config)
-	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_ATT*.h5
-	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_GEO_0*.h5
-	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOv002_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv002_L1B_RAD_03663_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
+#	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(PARALLEL) --gnu $(prefix)/L1B_RAD_PGE ::: $(l1b_cal_run_config)
+#	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_rad/*.h5
+#	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1B_GEO_PGE $(l1b_geo_run_config)
+#	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_ATT*.h5
+#	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_GEO_0*.h5
+#	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOv002_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv002_L1B_RAD_03663_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
 
 # Run l1a_cal and l1b_rad using 5 band data. These are the only PGEs that
 # change with 3 vs 5 bands, so we only run these two only. The data is

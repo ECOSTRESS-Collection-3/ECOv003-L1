@@ -56,15 +56,14 @@ def test_interpolate(isolated_dir, test_data_latest):
         return dataset, data_quality
 
     def run_interpolate(data_path, epochs=25, batch_size=32, n_samples=100000):
-        '''Run the interpolation and visualization code on the given data path.
+        """Run the interpolation and visualization code on the given data path.
 
         Parameters:
         data_path (str): Path to the HDF5 file containing the dataset.
         epochs (int, optional): Number of epochs for training the model.
         batch_size (int, optional): Batch size for training the model.
         n_samples (int, optional): Number of samples for training the model.
-        '''
-
+        """
 
         scene = data_path.stem
         # Load the dataset and data quality information
@@ -73,15 +72,12 @@ def test_interpolate(isolated_dir, test_data_latest):
         # remove band 2 pixel for testing
         xy_pixel = 100
         band_pixel = 1
-        test_pixel = dataset[xy_pixel,xy_pixel,band_pixel]
-        data_quality[xy_pixel,xy_pixel,band_pixel] = DQI_BAD_OR_MISSING
+        test_pixel = dataset[xy_pixel, xy_pixel, band_pixel]
+        data_quality[xy_pixel, xy_pixel, band_pixel] = DQI_BAD_OR_MISSING
 
         # get number of bands by checking how many bands are not all bad (data_quality == BAD_OR_MISSING)
         N_BANDS = int(np.sum(np.any(data_quality != DQI_BAD_OR_MISSING, axis=(0, 1))))
         print(f"N_BANDS: {N_BANDS}")
-
-
-
 
         # START of minimal example of how to use the EcostressAeDeepEnsembleInterpolate class ----------------------------------
         # Create an instance of the EcostressAeDeepEnsembleInterpolate class
@@ -92,22 +88,30 @@ def test_interpolate(isolated_dir, test_data_latest):
 
         # check if we have any negative radiances with a good DQI
         if np.any((dataset < 0) & (data_quality == DQI_GOOD)):
-            print(f"Found negative radiances with good DQI in {scene}. Setting to FILL_VALUE_BAD_OR_MISSING")
+            print(
+                f"Found negative radiances with good DQI in {scene}. Setting to FILL_VALUE_BAD_OR_MISSING"
+            )
             # set any negative radiances to FILL_VALUE_BAD_OR_MISSING
             data_quality[dataset < 0] = DQI_BAD_OR_MISSING
             dataset[dataset < 0] = FILL_VALUE_BAD_OR_MISSING
 
         # Train the model and perform interpolation
         print("Starting model training")
-        interpolator.train(dataset, data_quality, epochs=epochs, batch_size=batch_size, n_samples=n_samples,
-                           validate=True, validate_threshold=0.2)
+        interpolator.train(
+            dataset,
+            data_quality,
+            epochs=epochs,
+            batch_size=batch_size,
+            n_samples=n_samples,
+            validate=True,
+            validate_threshold=0.2,
+        )
 
         print("Performing interpolation")
-        interpolated_dataset, interpolation_uncertainty, data_quality = interpolator.interpolate_missing(dataset, data_quality)
+        interpolated_dataset, interpolation_uncertainty, data_quality = (
+            interpolator.interpolate_missing(dataset, data_quality)
+        )
         # END of minimal example --------------------------------------------------------------------------------------
-
-
-
 
         # perform addiitonal checks ---------------------------------------------------------------------------------
         test_pixel_interpolated = interpolated_dataset[xy_pixel, xy_pixel, band_pixel]
@@ -115,19 +119,29 @@ def test_interpolate(isolated_dir, test_data_latest):
 
         assert test_pixel_error < 1, f"Test pixel error is too high: {test_pixel_error}"
         # check that the interpolated pixel is not equal to the original pixel
-        assert test_pixel_interpolated != test_pixel, "Test pixel interpolated value is equal to original value"
+        assert test_pixel_interpolated != test_pixel, (
+            "Test pixel interpolated value is equal to original value"
+        )
         # test that data quality flag has been updated for test pixel
-        assert data_quality[xy_pixel, xy_pixel, band_pixel] == DQI_INTERPOLATED, "Data quality flag not updated for test pixel"
-
+        assert data_quality[xy_pixel, xy_pixel, band_pixel] == DQI_INTERPOLATED, (
+            "Data quality flag not updated for test pixel"
+        )
 
         # make sure the output is the same shape as the input
-        assert interpolated_dataset.shape == dataset.shape, "Interpolated dataset shape does not match input dataset shape"
+        assert interpolated_dataset.shape == dataset.shape, (
+            "Interpolated dataset shape does not match input dataset shape"
+        )
         # make sure the values changed
-        assert np.any(interpolated_dataset != dataset), "Interpolated dataset is the same as input dataset"
+        assert np.any(interpolated_dataset != dataset), (
+            "Interpolated dataset is the same as input dataset"
+        )
 
-
-    data_path_3_band = test_data_latest / "ECOSTRESS_L1B_RAD_16147_025_20210512T032304_0601_01.h5"
-    data_path_5_band = test_data_latest / "ECOSTRESS_L1B_RAD_35950_006_20241108T002252_0601_01.h5"
+    data_path_3_band = (
+        test_data_latest / "ECOSTRESS_L1B_RAD_16147_025_20210512T032304_0601_01.h5"
+    )
+    data_path_5_band = (
+        test_data_latest / "ECOSTRESS_L1B_RAD_35950_006_20241108T002252_0601_01.h5"
+    )
 
     # get all scene files
     files = [data_path_3_band, data_path_5_band]
