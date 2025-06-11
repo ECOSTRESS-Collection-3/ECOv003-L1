@@ -43,7 +43,7 @@ if(False):
 if(args.run_config) :
     config = ecostress.RunConfig(args.run_config)
     l0b = os.path.abspath(config["InputFileGroup", "L0B"])
-    obst_dir = config["InputFileGroup", "ObstDir"]
+    obst_dir = os.path.abspath(config["InputFileGroup", "ObstDir"])
     scene_file = os.path.abspath(config["StaticAncillaryFileGroup", "Scene"])
     osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
     prod_dir = os.path.abspath(config["ProductPathGroup", "ProductPath"])

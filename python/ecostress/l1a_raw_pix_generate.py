@@ -208,7 +208,7 @@ class L1aRawPixGenerate(object):
 
         ys = str(sts)[0:4]
         path = self.obst_dir
-        obst_files = path + "ECO*Obst." + ys
+        obst_files = path + "/ECO*Obst." + ys
         print("STS=%s STE=%s" % (str(sts), str(ste)))
         print("OBSTFILES=%s" % obst_files)
         fov_obst = "NO"
@@ -266,7 +266,7 @@ class L1aRawPixGenerate(object):
         print("====  Start run ", datetime.now(), "  ====")
         self.log = None
 
-        if self.use_obst_file=="YES" and os.path.isdir(self.obst_dir)==False:
+        if self.use_obst_file=="YES" and not os.path.isdir(self.obst_dir):
             print("Error:  OBST_DIR not found: %s" %self.obst_dir)
             return -6
 
@@ -383,7 +383,7 @@ class L1aRawPixGenerate(object):
         PIX_DUR = FP_DUR * float(BBLEN * 2 + FPPSC)
         MPER = 60.0 / RPM  # mirror period = 2.3622047 sec / rev
         SCAN_DUR = MPER / 2.0  # half-mirror rotation = 1.1811024 sec
-        FP_ANG = FP_DUR * RPM * 6.0 # FP angle = .0047175926 deg / FP
+        #FP_ANG = FP_DUR * RPM * 6.0 # FP angle = .0047175926 deg / FP
         """
     FOV = FP_DUR*RPM*6.0*FPPSC # field of view = 25.475000 deg / scan
     ANG_INC = 360.0 / float( MAX_FPIE )  # = 0.00020580272 deg/count
@@ -397,7 +397,7 @@ class L1aRawPixGenerate(object):
         EV_DUR = 60.0 / RPM / float(MAX_FPIE)  # = 1.3504 microsecond/count
         FP_EV = FP_DUR * RPM * MAX_FPIE / 60.0  # = 23.84375 counts/FP
         FP_EVT = FP_EV * 1.1  # FP EV count tolerance
-        PKT_EV = FP_DUR*RPM*MAX_FPIE*FPPPKT/60.0  # = 1525.460873 counts/PKT
+        #PKT_EV = FP_DUR*RPM*MAX_FPIE*FPPPKT/60.0  # = 1525.460873 counts/PKT
         # IMG_EV = FP_DUR*RPM*MAX_FPIE*FPPSC/60.0 # = 128710.76112 counts/IMG
 
         det = [
@@ -430,7 +430,7 @@ class L1aRawPixGenerate(object):
         fsw_sync = np.zeros(tot_pkts, dtype=np.int64)
         lid=self.fin["flex/id_line"]
         pid=self.fin["flex/id_packet"]
-        flex_st=self.fin["flex/state"]
+        #flex_st=self.fin["flex/state"]
         fswt=self.fin["flex/time_fsw"]
         fpie_sync[:]=self.fin["flex/time_sync_fpie"]
         fsw_sync[:]=self.fin["flex/time_sync_fsw"]
@@ -439,12 +439,12 @@ class L1aRawPixGenerate(object):
         vel=self.fin["hk/bad/hr/velocity"]
         terr=self.fin["hk/bad/hr/time_fsw"]
         att_time=self.fin["hk/bad/hr/time"]
-        dp_mode=self.fin["hk/status/mode/dpuio"]
-        op_mode=self.fin["hk/status/mode/op"]
-        bb1_ms=self.fin["hk/status/motor/bb1"]
-        bb2_ms=self.fin["hk/status/motor/bb2"]
-        mode_ms=self.fin["hk/status/motor/mode"]
-        pstate_ms=self.fin["hk/status/motor/pstate"]
+        #dp_mode=self.fin["hk/status/mode/dpuio"]
+        #op_mode=self.fin["hk/status/mode/op"]
+        #bb1_ms=self.fin["hk/status/motor/bb1"]
+        #bb2_ms=self.fin["hk/status/motor/bb2"]
+        #mode_ms=self.fin["hk/status/motor/mode"]
+        #pstate_ms=self.fin["hk/status/motor/pstate"]
         bbt=self.fin["hk/status/temperature"]
         bb_time=self.fin["hk/status/time"]
         bb_fsw=self.fin["hk/status/time_fsw"]
@@ -467,7 +467,7 @@ class L1aRawPixGenerate(object):
             BANDS = 3
             bo = [1, 0, 2]
             bs = [8.7, 10.5, 12.0]
-        BandSpec = np.zeros(BANDS, dtype=np.float)
+        BandSpec = np.zeros(BANDS, dtype=np.float64)
 
         tdpuio = 0
         tcorr = 0
@@ -667,7 +667,7 @@ class L1aRawPixGenerate(object):
             fov_obst = self.detect_obst(sts, ste)
             if fov_obst == "NA":
                 print("Error:  Obstruction files not found in DIR %s, terminating" %self.obst_dir )
-                if self.use_obst_dir == "YES":
+                if self.use_obst_file == "YES":
                     return -6
             good[:] = 0.0
 
@@ -863,7 +863,6 @@ class L1aRawPixGenerate(object):
                             "Scene %d scan %d TCORR=%f TDX=%d"
                             % (scene_id, scan, tcorr[tdx], tdx)
                         )
-                    else: tc = 0.0
                     if scan == 0:  # save refined scene start time of IMG
                         rst = p0t
                         # tc0 = tc
@@ -1250,11 +1249,11 @@ class L1aRawPixGenerate(object):
                 e0 = np.argmax(rst < terr)
                 e1 = np.argmax(rse < terr)
                 if e1 - e0 > 0:
-                    l1a_te = l1a_metag.create_dataset("ISS_time", data=terr[e0:e1], dtype="f8")
-                    l1a_td = l1a_metag.create_dataset(
+                    l1a_metag.create_dataset("ISS_time", data=terr[e0:e1], dtype="f8")
+                    l1a_metag.create_dataset(
                         "ISS_time_dpuio", data=tdpuio[e0:e1], dtype="i8"
                     )
-                    l1a_tc = l1a_metag.create_dataset(
+                    l1a_metag.create_dataset(
                         "ISS_time_error_correction", data=tcorr[e0:e1], dtype="f8"
                     )
 
@@ -1469,7 +1468,7 @@ class L1aRawPixGenerate(object):
                                 mi_fp.ulc_x
                             )
                         )
-                except:
+                except RuntimeError:
                     print(
                         "Exception from igc.cover, no footprint for scene %d" % scene_id
                     )
