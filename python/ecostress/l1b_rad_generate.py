@@ -7,6 +7,7 @@ from ecostress_swig import (  # type: ignore
     DQI_BAD_OR_MISSING,
     DQI_STRIPE_NOT_INTERPOLATED,
     DQI_NOT_SEEN,
+    DQI_GOOD,
     EcostressRadApply,
     EcostressRadAverage,
     fill_value_threshold,
@@ -15,7 +16,7 @@ from ecostress_swig import (  # type: ignore
 import h5py  # type: ignore
 from .rad_write_standard_metadata import RadWriteStandardMetadata
 from .misc import is_day
-from .ecostress_interpolate import EcostressInterpolate
+from .ecostress_interpolate import EcostressAeDeepEnsembleInterpolate
 import numpy as np
 from loguru import logger
 
@@ -149,6 +150,7 @@ class L1bRadGenerate(object):
                 dataset = np.empty((*data.shape, 5))
                 dqi = np.zeros(dataset.shape, dtype=np.int8)
             dataset[:, :, b] = data
+        inter_uncer = np.zeros(dataset.shape)
         dqi[dataset == FILL_VALUE_NOT_SEEN] = DQI_NOT_SEEN
         dqi[dataset == FILL_VALUE_STRIPED] = DQI_STRIPE_NOT_INTERPOLATED
         dqi[dataset == FILL_VALUE_BAD_OR_MISSING] = DQI_BAD_OR_MISSING
@@ -166,26 +168,33 @@ class L1bRadGenerate(object):
                 "Skipping interpolation because fraction of scans present is too small (e.g., short scene)"
             )
         elif self.interpolate_stripe_data:
-            band_mode = "5bands" if self.nband >= 5 else "3bands"
-            inter = EcostressInterpolate(
-                self.igc.time_table, seed=self.seed, band_mode=band_mode
+            # Note there are a number of options on EcostressAeDeepEnsembleInterpolate. We
+            # just use the defaults here. We could expose these, and allow variations by
+            # configurations. But for now, just use the default values
+            inter = EcostressAeDeepEnsembleInterpolate(
+                 seed=self.seed, n_bands=self.nband, verbose=False
             )
-            prediction_matrices, predicted_locations, prediction_errors = (
-                inter.interpolate_missing_bands(dataset, dqi, log=self.log)
-            )
-            if self.nband >= 5:
-                # Only predict band 1 if we have 5 bands of data
-                dataset[:, :, 0] = prediction_matrices[0]
-                dqi[:, :, 0][predicted_locations[0] == 1] = DQI_INTERPOLATED
-                dataset[:, :, 4] = prediction_matrices[1]
-                dqi[:, :, 4][predicted_locations[1] == 1] = DQI_INTERPOLATED
-            else:
-                # Else, predict only band 5
-                dataset[:, :, 4] = prediction_matrices[0]
-                dqi[:, :, 4][predicted_locations[0] == 1] = DQI_INTERPOLATED
+
+            # identify horizontal stripes and update data quality mask
+            dqi = inter.find_horizontal_stripes(dataset, dqi)
+
+            # Prediction apparently doesn't work with negative radiance. We can
+            # actually legitimately have negative radiance (physical radiance isn't,
+            # but measured can be if we happen to have a small DN). But this isn't
+            # overly important, so just go ahead and filter out before we do our training
+            # and fill in.
+            if np.any((dataset < 0) & (dqi == DQI_GOOD)):
+                logger.info("Found negative radiances with good DQI. Setting to FILL_VALUE_BAD_OR_MISSING")
+                dqi[dataset < 0] = DQI_BAD_OR_MISSING
+                dataset[dataset < 0] = FILL_VALUE_BAD_OR_MISSING
+
+            logger.info("Starting model training")
+            # Again, there are a number of values that can be modified here. Take the
+            # defaults
+            inter.train(dataset, dqi)
+            dataset, inter_uncer, dqi = inter.interpolate_missing(dataset, dqi)
         g = fout.create_group("Radiance")
         for b in range(5):
-            data = self.image(b + 1).astype(np.float32)
             t = g.create_dataset(
                 "radiance_%d" % (b + 1),
                 data=dataset[:, :, b],
@@ -195,6 +204,23 @@ class L1bRadGenerate(object):
             )
             t.attrs.create("_FillValue", data=FILL_VALUE_BAD_OR_MISSING, dtype=t.dtype)
             t.attrs["Units"] = "W/m^2/sr/um"
+            t = g.create_dataset(
+                "interpolation_uncertainty_%d" % (b + 1),
+                data=inter_uncer[:, :, b],
+                dtype="f4",
+                fillvalue=0.0,
+                compression="gzip",
+            )
+            t.attrs.create("_FillValue", data=0.0, dtype=t.dtype)
+            t.attrs["Units"] = "W/m^2/sr/um"
+            t.attrs["Description"] = """
+Uncertainty in the interpolated value for data that
+we interpolated (so data_quality has value DQI_INTERPOLATED).
+
+See ATB for details.
+            
+Set to 0.0 for values that we haven't interpolated.
+"""            
             t = g.create_dataset(
                 "data_quality_%d" % (b + 1), data=dqi[:, :, b], compression="gzip"
             )

@@ -9,7 +9,7 @@ from ecostress_swig import (  # type: ignore
     DQI_GOOD,
     fill_value_threshold,
 )
-
+from loguru import logger
 
 class EcostressAeDeepEnsembleInterpolate(object):
     """Class to interpolate missing data in ECOSTRESS scenes.
@@ -39,6 +39,7 @@ class EcostressAeDeepEnsembleInterpolate(object):
         seed: int = 1234,
         n_ensemble: int = 3,
         n_good_bands_required: int = 2,
+        verbose: bool = True,
     ) -> None:
         """
         Deep Ensemble version of the autoencoder-based interpolation model.
@@ -65,6 +66,7 @@ class EcostressAeDeepEnsembleInterpolate(object):
         self.seed = seed
         self.n_ensemble = n_ensemble
         self.n_good_bands_required = n_good_bands_required
+        self.verbose = verbose
 
         # Will store normalization parameters
         self.mu = None
@@ -76,16 +78,18 @@ class EcostressAeDeepEnsembleInterpolate(object):
     def find_horizontal_stripes(
         self, dataset: np.ndarray, data_quality: np.ndarray, threshold: int = 5
     ) -> np.ndarray:
-        """
-        analyzes ECOSTRESS scene and looks for missing, high, or low horizontal stripes that are not identified in
-        data_quality mask. Currently constrained to identifying horizontal stripes with a width of 1 to 2 px.
-        Could be readily modified to identify wider stripes if needed.
+        """analyzes ECOSTRESS scene and looks for missing, high, or
+        low horizontal stripes that are not identified in data_quality
+        mask. Currently constrained to identifying horizontal stripes
+        with a width of 1 to 2 px.  Could be readily modified to
+        identify wider stripes if needed.
 
         :param dataset: input dataset (ECOSTRESS scene)
         :param data_quality: data quality mask
         :param threshold: threshold for identifying stripes (defined as multiple of MAD)
 
         :return: updated data quality mask
+
         """
 
         if self.n_bands == 3:
@@ -315,7 +319,7 @@ class EcostressAeDeepEnsembleInterpolate(object):
             training_x: Input samples with missing values
             training_y: Target samples with complete data and mask concatenated
         """
-        print("Creating training samples...")
+        logger.info("Creating training samples...")
 
         h, w, _ = dataset.shape
         training_x = []
@@ -386,7 +390,7 @@ class EcostressAeDeepEnsembleInterpolate(object):
             training_x.append(masked_grid)
             training_y.append(grid)
 
-        print(
+        logger.info(
             f"Created {len(training_x)} training samples out of {loop_count} attempts."
         )
         return np.array(training_x), np.array(training_y)
@@ -436,7 +440,7 @@ class EcostressAeDeepEnsembleInterpolate(object):
         )
 
         for idx, model in enumerate(self.models):
-            print(f"\nTraining model {idx + 1} / {self.n_ensemble}")
+            logger.info(f"\nTraining model {idx + 1} / {self.n_ensemble}")
 
             train_x_subset, _, train_y_subset, _ = train_test_split(
                 train_x, train_y, test_size=0.5, random_state=self.seed + idx
@@ -449,7 +453,7 @@ class EcostressAeDeepEnsembleInterpolate(object):
                 batch_size=batch_size,
                 validation_data=(test_x, test_y),
                 shuffle=True,
-                verbose=1,
+                verbose=1 if self.verbose else 0,
             )
 
         # test model to calculate MSE and expected calibration error
@@ -488,7 +492,7 @@ class EcostressAeDeepEnsembleInterpolate(object):
         for band in range(self.n_bands):
             mse = np.nanmean((predictions[:, :, :, band] - test_y[:, :, :, band]) ** 2)
             RMSEs.append(np.sqrt(mse))
-        print(f"RMSE for bands: {[f'{rmse:.3f}' for rmse in RMSEs]} W/m^2/sr/um")
+        logger.info(f"RMSE for bands: {[f'{rmse:.3f}' for rmse in RMSEs]} W/m^2/sr/um")
 
         # throw exception if RMSE is too high
         # TODO: how would we want to log this as a warning?
@@ -545,7 +549,7 @@ class EcostressAeDeepEnsembleInterpolate(object):
         missing_coords = [tuple(idx) for idx in missing_indices]
 
         if len(missing_coords) == 0:
-            print(
+            logger.info(
                 "No missing data found, returning original dataset without interpolating."
             )
             return dataset
@@ -619,9 +623,4 @@ class EcostressAeDeepEnsembleInterpolate(object):
         )
 
 
-# Just so we don't need to change code, use the old name as a synonym for the new
-# interpolation code
-
-EcostressInterpolate = EcostressAeDeepEnsembleInterpolate
-
-__all__ = ["EcostressAeDeepEnsembleInterpolate", "EcostressInterpolate"]
+__all__ = ["EcostressAeDeepEnsembleInterpolate", ]
