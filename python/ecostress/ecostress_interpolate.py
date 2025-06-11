@@ -1,51 +1,36 @@
-# Script to interpolate missing data in ECOSTRESS scenes.
-#
-# Steffen Mauceri, JPL, 2025
-# Steffen.Mauceri@jpl.nasa.gov
-
-
-# Notes:
-# replaces the earlier ecostress_interpolate.py
-# Compared to earlier version this routine uses:
-# - Autoencoder-based interpolation model and provides uncertainties
-# - TF 2.x, the Keras API, Adam optimizer, NLL loss function
-# - errors are calculated on a test set, not the training set.
-# - scanlines can be missing in any band and will be interpolated if at least 2 bands are good.
-# - horizontal stripes are identified and interpolated if at least 2 bands are good.
-# - model takes no spatial information into account.
-
-
-import tensorflow as tf
-from tensorflow.keras import layers, Model
+from __future__ import annotations
+import tensorflow as tf # type: ignore
+from tensorflow.keras import layers, Model # type: ignore
 import numpy as np
-from sklearn.model_selection import train_test_split
-from typing import List, Tuple
-
-
-
-# TODO: This new flag needs to be added to pipeline
-DQI_STRIPE_NOT_INTERPOLATED = 2
-
-# TODO: remove in operational pipeline -------------------------------
-fill_value_threshold = -9000 # any value below this is considered a fill value
-DQI_GOOD = 0
-DQI_INTERPOLATED = 1
-DQI_BAD_OR_MISSING = 3
-DQI_NOT_SEEN = 4
-
-FILL_VALUE_BAD_OR_MISSING = -9999
-FILL_VALUE_STRIPED = -9998
-FILL_VALUE_NOT_SEEN = -9997
-# ----------------------------------------------------------------------
-
+from sklearn.model_selection import train_test_split # type: ignore
+from ecostress_swig import (  # type: ignore
+    DQI_INTERPOLATED,
+    DQI_STRIPE_NOT_INTERPOLATED,
+    DQI_GOOD,
+    fill_value_threshold,
+)
 
 class EcostressAeDeepEnsembleInterpolate(object):
+    '''Class to interpolate missing data in ECOSTRESS scenes.
+Steffen Mauceri, JPL, 2025
+Steffen.Mauceri@jpl.nasa.gov
+
+Notes:
+replaces the earlier ecostress_interpolate.py
+Compared to earlier version this routine uses:
+ - Autoencoder-based interpolation model and provides uncertainties
+ - TF 2.x, the Keras API, Adam optimizer, NLL loss function
+ - errors are calculated on a test set, not the training set.
+ - scanlines can be missing in any band and will be interpolated if at least 2 bands are good.
+ - horizontal stripes are identified and interpolated if at least 2 bands are good.
+ - model takes no spatial information into account.
+    '''
     def __init__(self,
                  grid_size: int = 1,
                  n_bands: int = 5,
                  latent_dim: int = 16,
-                 encoder_layers: List[int] = [32],
-                 decoder_layers: List[int] = [32],
+                 encoder_layers: list[int] = [32],
+                 decoder_layers: list[int] = [32],
                  activation: str = 'elu',
                  fill_value_threshold: float = fill_value_threshold,
                  seed: int = 1234,
@@ -199,7 +184,7 @@ class EcostressAeDeepEnsembleInterpolate(object):
 
         return model
 
-    def model_predict(self, data: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    def model_predict(self, data: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         ''' predict mean and uncertainty given input data from the ensemble of models
         :param data: input data
         :return: mean_preds, total_uncertainty (1 sigma)
@@ -293,7 +278,7 @@ class EcostressAeDeepEnsembleInterpolate(object):
 
         return result
 
-    def create_training_samples(self, dataset: np.ndarray, missing_mask: np.ndarray, n_samples: int = 10000) -> Tuple[np.ndarray, np.ndarray]:
+    def create_training_samples(self, dataset: np.ndarray, missing_mask: np.ndarray, n_samples: int = 10000) -> tuple[np.ndarray, np.ndarray]:
         """
         Create training samples from the normalized dataset.
 
@@ -444,7 +429,7 @@ class EcostressAeDeepEnsembleInterpolate(object):
         if np.any(np.array(RMSEs) > RMSE_threshold):
             raise ValueError(f"RMSE of Interpolation is higher than {RMSE_threshold} W/m^2/sr/um. ")
 
-    def interpolate_missing(self, dataset: np.ndarray, data_quality: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def interpolate_missing(self, dataset: np.ndarray, data_quality: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         Interpolate missing values using the ensemble of models.
         Provides uncertainties.

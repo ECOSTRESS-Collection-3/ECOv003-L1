@@ -1,4 +1,14 @@
-from ecostress import EcostressInterpolate, EcostressAeDeepEnsembleInterpolate
+from ecostress import EcostressAeDeepEnsembleInterpolate
+from ecostress_swig import (  # type: ignore
+    FILL_VALUE_BAD_OR_MISSING,
+    FILL_VALUE_STRIPED,
+    FILL_VALUE_NOT_SEEN,
+    DQI_INTERPOLATED,
+    DQI_GOOD,
+    DQI_BAD_OR_MISSING,
+    DQI_STRIPE_NOT_INTERPOLATED,
+    DQI_NOT_SEEN,
+)
 import h5py
 import numpy as np
 import pytest
@@ -6,23 +16,6 @@ import pytest
 
 @pytest.mark.long_test
 def test_interpolate(isolated_dir, test_data_latest):
-
-    # TODO: This new flag needs to the overall data pipeline
-    DQI_STRIPE_NOT_INTERPOLATED = 2
-
-    # TODO: remove in operational pipeline -------------------------------
-    fill_value_threshold = -9000  # any value below this is considered a fill value
-    DQI_GOOD = 0
-    DQI_INTERPOLATED = 1
-    DQI_BAD_OR_MISSING = 3
-    DQI_NOT_SEEN = 4
-
-    FILL_VALUE_BAD_OR_MISSING = -9999
-    FILL_VALUE_STRIPED = -9998
-    FILL_VALUE_NOT_SEEN = -9997
-    # ----------------------------------------------------------------------
-
-
     def load_data(data_path):
         """Load the ECOSTRESS dataset and data quality information from an HDF5 file.
         applies the data quality mask to the dataset.

@@ -185,7 +185,7 @@ def create_igccol_from_qa(qa_fname, l1_osp_dir=None, dem=None, raw_att=False,
     is a list for each scene, and is either None (if we didn't collect tiepoints)
     or the TiePointCollection if we had that. We also include "tiepoint_collection"
     which is one TiePointCollection for the full IgcCollection.
-    '''
+    """
     if l1_osp_dir is None:
         if "L1_OSP_DIR" not in os.environ:
             raise RuntimeError(
