@@ -6,6 +6,7 @@ import h5py  # type: ignore
 import numpy as np
 import scipy  # type: ignore
 import subprocess
+from loguru import logger
 
 
 class L1bGeoGenerateMap(object):
@@ -30,7 +31,6 @@ class L1bGeoGenerateMap(object):
         l1b_rad,
         output_name,
         local_granule_id=None,
-        log_fname=None,
         resolution=70,
         north_up=False,
         number_subpixel=3,
@@ -42,18 +42,9 @@ class L1bGeoGenerateMap(object):
             self.local_granule_id = local_granule_id
         else:
             self.local_granule_id = os.path.basename(output_name)
-        self.log_fname = log_fname
         self.north_up = north_up
         self.resolution = resolution
         self.number_subpixel = number_subpixel
-
-    def print_and_log(self, s):
-        print(s)
-        if self.log_fname is not None:
-            self.log = open(self.log_fname, "a")
-            print("INFO:L1bGeoGenerateMap:%s" % s, file=self.log)
-            self.log.flush()
-            self.log = None
 
     def run(self):
         fout = h5py.File(self.output_name, "w")
@@ -78,7 +69,7 @@ class L1bGeoGenerateMap(object):
         if not self.north_up:
             mi = determine_rotated_map_igc(self.l1b_geo_generate.igc, mi)
         res = Resampler(lat, lon, mi, self.number_subpixel, False)
-        self.print_and_log("Done with Resampler init")
+        logger.info("Done with Resampler init")
         g = fout.create_group("Mapped")
         g2 = g.create_group("MapInformation")
         g2["README"] = """We specify the Map Information by giving the Coordinate System
@@ -128,10 +119,10 @@ information.
         t.attrs["valid_max"] = 180
         t = g.create_dataset("height", data=height, dtype="f4", compression="gzip")
         t.attrs["Units"] = "m"
-        self.print_and_log("Done with lat, lon, height")
+        logger.info("Done with lat, lon, height")
         # Land fraction
         for b in range(1, 6):
-            self.print_and_log("Doing band %d" % b)
+            logger.info("Doing band %d" % b)
             data_in = geocal.GdalRasterImage(
                 'HDF5:"%s"://Radiance/radiance_%d' % (self.l1b_rad, b)
             )
@@ -173,7 +164,7 @@ Data quality indicator.
 """
             t.attrs["Units"] = "dimensionless"
 
-        self.print_and_log("Doing SWIR")
+        logger.info("Doing SWIR")
         data_in = geocal.GdalRasterImage('HDF5:"%s"://SWIR/swir_dn' % self.l1b_rad)
         data = res.resample_field(data_in, 1.0, False, FILL_VALUE_NOT_SEEN).astype(
             np.int16
@@ -184,7 +175,7 @@ Data quality indicator.
         t.attrs.create("_FillValue", data=FILL_VALUE_NOT_SEEN, dtype=t.dtype)
         t.attrs["Units"] = "dimensionless"
         for fld in ["solar_azimuth", "solar_zenith", "view_azimuth", "view_zenith"]:
-            self.print_and_log("Doing %s" % fld)
+            logger.info("Doing %s" % fld)
             data_in = geocal.GdalRasterImage(
                 'HDF5:"%s"://Geolocation/%s' % (self.l1b_geo_generate.output_name, fld)
             )

@@ -600,7 +600,7 @@ def ecostress_file_name(
 
 def process_run(exec_cmd):
     """This is like subprocess.run, but allowing a unix like 'tee' where
-    we write the output to a log file and/or stdout.
+    we write the output to the logger.
 
     The command (which should be a standard array) is run, and the output
     is always returned. In addition, the output is written to the given

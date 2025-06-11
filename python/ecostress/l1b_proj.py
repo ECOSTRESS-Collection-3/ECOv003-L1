@@ -3,8 +3,8 @@ import geocal  # type: ignore
 from .pickle_method import *
 import numpy as np
 import scipy.ndimage  # type: ignore
-import traceback
 import os
+from loguru import logger
 
 
 class L1bProj(object):
@@ -19,7 +19,6 @@ class L1bProj(object):
         ref_fname_list,
         ortho_base,
         qa_file=None,
-        log_fname=None,
         number_subpixel=2,
         min_number_good_scan=41,
         scratch_fname="initial_lat_lon.dat",
@@ -33,7 +32,6 @@ class L1bProj(object):
         self.ortho_base = ortho_base
         self.ref_fname_list = ref_fname_list
         self.fname_list = fname_list
-        self.log_fname = log_fname
         self.scratch_fname = scratch_fname
         self.separate_file_per_scan = separate_file_per_scan
         self.number_subpixel = number_subpixel
@@ -50,43 +48,6 @@ class L1bProj(object):
             self.gc_arr.append(
                 GroundCoordinateArray(self.igccol.image_ground_connection(i))
             )
-
-    def print_and_log(self, s):
-        print(s)
-        if self.log_fname is not None:
-            self.log = open(self.log_fname, "a")
-            print("INFO:L1bProj:%s" % s, file=self.log)
-            self.log.flush()
-            self.log = None
-
-    def report_and_log_exception(self, igc_ind):
-        print("EXCEPTION:*******************************************")
-        print("Exception occurred while projecting %s:" % self.igccol.title(igc_ind))
-        traceback.print_exc()
-        print("Skipping this scene and continuing processing")
-        if self.qa_file is not None:
-            self.qa_file.encountered_exception = True
-        print("EXCEPTION:*******************************************")
-        if self.log_fname is not None:
-            self.log = open(self.log_fname, "a")
-            print(
-                "EXCEPTION:*******************************************", file=self.log
-            )
-            print(
-                "INFO:L1bProj:Exception occurred while projecting %s:"
-                % self.igccol.title(igc_ind),
-                file=self.log,
-            )
-            traceback.print_exc(file=self.log)
-            print(
-                "INFO:L1bProj:Skipping projection for this scene and continuing processing",
-                file=self.log,
-            )
-            print(
-                "EXCEPTION:*******************************************", file=self.log
-            )
-            self.log.flush()
-            self.log = None
 
     def scratch_file(self, create=False):
         """Open/Create the scratch file we use in our lat/lon calculation."""
@@ -105,67 +66,80 @@ class L1bProj(object):
 
     def resample_data(self, igc_ind):
         try:
-            mi = self.ortho_base[igc_ind].map_info.scale(
-                self.ortho_scale[igc_ind], self.ortho_scale[igc_ind]
-            )
-            f = self.scratch_file()
-            lat = f[igc_ind, :, :, 0]
-            lon = f[igc_ind, :, :, 1]
-            # Handle case where we have no good data
-            if np.count_nonzero(lat > -1000) == 0:
-                return False
+            with logger.catch(reraise=True):
+                mi = self.ortho_base[igc_ind].map_info.scale(
+                    self.ortho_scale[igc_ind], self.ortho_scale[igc_ind]
+                )
+                f = self.scratch_file()
+                lat = f[igc_ind, :, :, 0]
+                lon = f[igc_ind, :, :, 1]
+                # Handle case where we have no good data
+                if np.count_nonzero(lat > -1000) == 0:
+                    return False
 
-            # This is bilinear interpolation
-            lat = scipy.ndimage.interpolation.zoom(lat, self.number_subpixel, order=1)
-            # Detect the dateline. -200 is just to filter out any fill data,
-            # is -180 with a bit of pad
-            if np.any(lon > 170) and np.any(np.logical_and(lon > -200, lon < -170)):
-                raise RuntimeError("Don't currently handle crossing the date line")
-            lon = scipy.ndimage.interpolation.zoom(lon, self.number_subpixel, order=1)
-            # Resample data to project to surface
-            res = Resampler(lat, lon, mi, self.number_subpixel)
-            ras = self.igccol.image_ground_connection(igc_ind).image
-            self.print_and_log("Starting resample for %s" % self.igccol.title(igc_ind))
-            if self.separate_file_per_scan:
-                igc = self.igccol.image_ground_connection(igc_ind)
-                nlscan = igc.number_line_scan
-                print(lat.shape)
-                for i in range(igc.number_scan):
-                    s = slice(
-                        i * nlscan * self.number_subpixel,
-                        (i + 1) * nlscan * self.number_subpixel,
-                    )
-                    res_sub = Resampler(
-                        lat[s, :], lon[s, :], res.map_info, self.number_subpixel, True
-                    )
-                    ras_sub = geocal.SubRasterImage(
-                        ras, i * nlscan, 0, nlscan, ras.number_sample
-                    )
-                    ras = self.igccol.image_ground_connection(igc_ind).image
-                    b, ext = os.path.splitext(self.fname_list[igc_ind])
-                    fn = b + "_%02d" % i + ext
-                    res_sub.resample_field(fn, ras_sub, 1.0, "HALF", True)
-            # Don't need this anymore, and the data is large. So free it
-            lat = None
-            lon = None
-            res.resample_field(self.fname_list[igc_ind], ras, 1.0, "HALF", True)
-            self.print_and_log("Done with resample for %s" % self.igccol.title(igc_ind))
-            self.print_and_log(
-                "Starting reference image for %s" % self.igccol.title(igc_ind)
-            )
-            ortho = self.ortho_base[igc_ind]
-            ortho.create_subset_file(
-                self.ref_fname_list[igc_ind], "VICAR", [], res.map_info, "-ot Int16"
-            )
-            #                                     "-ot Int16", 0 True)
-            self.print_and_log(
-                "Done with reference image for %s" % self.igccol.title(igc_ind)
-            )
-            return True
+                # This is bilinear interpolation
+                lat = scipy.ndimage.interpolation.zoom(
+                    lat, self.number_subpixel, order=1
+                )
+                # Detect the dateline. -200 is just to filter out any fill data,
+                # is -180 with a bit of pad
+                if np.any(lon > 170) and np.any(np.logical_and(lon > -200, lon < -170)):
+                    raise RuntimeError("Don't currently handle crossing the date line")
+                lon = scipy.ndimage.interpolation.zoom(
+                    lon, self.number_subpixel, order=1
+                )
+                # Resample data to project to surface
+                res = Resampler(lat, lon, mi, self.number_subpixel)
+                ras = self.igccol.image_ground_connection(igc_ind).image
+                logger.info("Starting resample for %s" % self.igccol.title(igc_ind))
+                if self.separate_file_per_scan:
+                    igc = self.igccol.image_ground_connection(igc_ind)
+                    nlscan = igc.number_line_scan
+                    print(lat.shape)
+                    for i in range(igc.number_scan):
+                        s = slice(
+                            i * nlscan * self.number_subpixel,
+                            (i + 1) * nlscan * self.number_subpixel,
+                        )
+                        res_sub = Resampler(
+                            lat[s, :],
+                            lon[s, :],
+                            res.map_info,
+                            self.number_subpixel,
+                            True,
+                        )
+                        ras_sub = geocal.SubRasterImage(
+                            ras, i * nlscan, 0, nlscan, ras.number_sample
+                        )
+                        ras = self.igccol.image_ground_connection(igc_ind).image
+                        b, ext = os.path.splitext(self.fname_list[igc_ind])
+                        fn = b + "_%02d" % i + ext
+                        res_sub.resample_field(fn, ras_sub, 1.0, "HALF", True)
+                # Don't need this anymore, and the data is large. So free it
+                lat = None
+                lon = None
+                res.resample_field(self.fname_list[igc_ind], ras, 1.0, "HALF", True)
+                logger.info("Done with resample for %s" % self.igccol.title(igc_ind))
+                logger.info(
+                    "Starting reference image for %s" % self.igccol.title(igc_ind)
+                )
+                ortho = self.ortho_base[igc_ind]
+                ortho.create_subset_file(
+                    self.ref_fname_list[igc_ind], "VICAR", [], res.map_info, "-ot Int16"
+                )
+                #                                     "-ot Int16", 0 True)
+                logger.info(
+                    "Done with reference image for %s" % self.igccol.title(igc_ind)
+                )
+                return True
         except Exception:
             if not self.pass_through_error:
                 raise
-            self.report_and_log_exception(igc_ind)
+            logger.warning(
+                f"Exception occurred while projecting {self.igccol.title(igc_ind)}"
+            )
+            if self.qa_file is not None:
+                self.qa_file.encountered_exception = True
             return False
 
     def proj_scan(self, it):
@@ -183,7 +157,7 @@ class L1bProj(object):
         else:
             t = self.gc_arr[igc_ind].ground_coor_scan_arr(start_line)
             f[igc_ind, start_line:end_line, :, :] = t[:, :, 0, 0, 0:2]
-        self.print_and_log("Done with [%d, %d, %d]" % (igc_ind, start_line, end_line))
+        logger.info("Done with [%d, %d, %d]" % (igc_ind, start_line, end_line))
         return True
 
     def proj(self, pool=None):
@@ -197,7 +171,7 @@ class L1bProj(object):
         for i in range(self.igccol.number_image):
             igc = self.igccol.image_ground_connection(i)
             if igc.number_good_scan < self.min_number_good_scan:
-                self.print_and_log(
+                logger.info(
                     "%s has only %d good scans. We require a minimum of %d, so skipping"
                     % (
                         self.igccol.title(i),
@@ -207,7 +181,7 @@ class L1bProj(object):
                 )
                 self.scratch_file()[i, :, :, :] = -9999.0
             elif igc.crosses_dateline:
-                self.print_and_log(
+                logger.info(
                     "%s crosses the date line. We don't currently handle this, so skipping"
                     % self.igccol.title(i)
                 )

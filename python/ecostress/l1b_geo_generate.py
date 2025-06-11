@@ -9,6 +9,7 @@ import h5py  # type: ignore
 from .geo_write_standard_metadata import GeoWriteStandardMetadata
 from .misc import time_split
 import numpy as np
+from loguru import logger
 
 
 class L1bGeoGenerate(object):
@@ -26,7 +27,6 @@ class L1bGeoGenerate(object):
         start_line=0,
         number_line=-1,
         local_granule_id=None,
-        log_fname=None,
         collection_label="ECOSTRESS",
         build_id="0.30",
         pge_version="0.30",
@@ -53,7 +53,6 @@ class L1bGeoGenerate(object):
         self.number_line = number_line
         self.run_config = run_config
         self.local_granule_id = local_granule_id
-        self.log_fname = log_fname
         self.log = None
         self.collection_label = collection_label
         self.build_id = build_id
@@ -70,27 +69,11 @@ class L1bGeoGenerate(object):
         try:
             # Note res here refers to an internal cache array of gc_arr
             res = self.gc_arr.ground_coor_scan_arr(start_line, number_line)
-            print("Done with [%d, %d]" % (start_line, start_line + res.shape[0]))
-            if self.log_fname is not None:
-                self.log = open(self.log_fname, "a")
-                print(
-                    "INFO:L1bGeoGenerate:Done with [%d, %d]"
-                    % (start_line, start_line + res.shape[0]),
-                    file=self.log,
-                )
-                self.log.flush()
+            logger.info(f"Done with [{start_line}, {start_line + res.shape[0]}]")
         except RuntimeError:
             res = np.empty((number_line, self.igc.image.number_sample, 1, 1, 7))
             res[:] = FILL_VALUE_BAD_OR_MISSING
-            print("Skipping [%d, %d]" % (start_line, start_line + res.shape[0]))
-            if self.log_fname is not None:
-                self.log = open(self.log_fname, "a")
-                print(
-                    "INFO:L1bGeoGenerate:Skipping [%d, %d]"
-                    % (start_line, start_line + res.shape[0]),
-                    file=self.log,
-                )
-                self.log.flush()
+            logger.info(f"Skipping [{start_line}, {start_line + res.shape[0]}]")
         # Note the copy() here is very important. As an optimization,
         # ground_coor_scan_arr return a reference to an internal cache
         # variable. This array gets overwritten in the next call to

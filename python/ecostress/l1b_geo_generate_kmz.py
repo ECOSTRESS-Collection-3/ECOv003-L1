@@ -26,7 +26,6 @@ class L1bGeoGenerateKmz(object):
         l1b_rad,
         output_name,
         local_granule_id=None,
-        log_fname=None,
         band_list=[4, 3, 1],
         use_jpeg=False,
         resolution=70,
@@ -47,7 +46,6 @@ class L1bGeoGenerateKmz(object):
             self.local_granule_id = local_granule_id
         else:
             self.local_granule_id = os.path.basename(output_name)
-        self.log_fname = log_fname
         self.thumbnail_size = thumbnail_size
 
     def run(self):

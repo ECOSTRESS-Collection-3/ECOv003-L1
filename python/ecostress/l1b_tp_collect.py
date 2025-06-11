@@ -1,9 +1,9 @@
 from .l1b_proj import L1bProj
 import geocal  # type: ignore
 from .pickle_method import *
-import traceback
 import shutil
 import os
+from loguru import logger
 
 
 class L1bTpCollect(object):
@@ -24,7 +24,6 @@ class L1bTpCollect(object):
         seed=562,
         num_x=10,
         num_y=10,
-        log_fname=None,
         proj_number_subpixel=2,
         min_tp_per_scene=20,
         min_number_good_scan=41,
@@ -46,13 +45,11 @@ class L1bTpCollect(object):
         self.run_dir_name = [
             "tpmatch_%d" % (i + 1) for i in range(self.igccol.number_image)
         ]
-        self.log_fname = log_fname
         self.p = L1bProj(
             self.igccol,
             self.proj_fname,
             self.ref_fname,
             self.ortho_base,
-            log_fname=self.log_fname,
             qa_file=self.qa_file,
             min_number_good_scan=min_number_good_scan,
             number_subpixel=proj_number_subpixel,
@@ -159,46 +156,6 @@ class L1bTpCollect(object):
 
         self.min_tp_per_scene = min_tp_per_scene
 
-    def print_and_log(self, s):
-        print(s)
-        if self.log_fname is not None:
-            self.log = open(self.log_fname, "a")
-            print("INFO:L1bTpCollect:%s" % s, file=self.log)
-            self.log.flush()
-            self.log = None
-
-    def report_and_log_exception(self, i):
-        print("EXCEPTION:*******************************************")
-        print(
-            "Exception occurred while collecting tie-points for %s:"
-            % self.igccol.title(i)
-        )
-        traceback.print_exc()
-        print("Skipping tie-points for this scene and continuing processing")
-        if self.qa_file is not None:
-            self.qa_file.encountered_exception = True
-        print("EXCEPTION:*******************************************")
-        if self.log_fname is not None:
-            self.log = open(self.log_fname, "a")
-            print(
-                "EXCEPTION:*******************************************", file=self.log
-            )
-            print(
-                "INFO:L1bTpCollect:Exception occurred while collecting tie-points for %s:"
-                % self.igccol.title(i),
-                file=self.log,
-            )
-            traceback.print_exc(file=self.log)
-            print(
-                "INFO:L1bTpCollect:Skipping tie-points for this scene and continuing processing",
-                file=self.log,
-            )
-            print(
-                "EXCEPTION:*******************************************", file=self.log
-            )
-            self.log.flush()
-            self.log = None
-
     def tp(self, i):
         """Get tiepoints for the given scene number"""
         ntpoint_initial = 0  # Initial value, so an exception below doesn't
@@ -208,50 +165,56 @@ class L1bTpCollect(object):
         ntpoint_final = 0
         number_match_try = 0
         try:
-            tt = self.igccol.image_ground_connection(i).time_table
-            for i2, tpcol in enumerate(self.tpcollect):
-                tpcol.image_index1 = i
-                tpcol.ref_image_fname = self.ref_fname[i]
-                tpcol.log_file = self.log_file[i] + "_%d" % i2
-                tpcol.run_dir_name = self.run_dir_name[i] + "_%d" % i2
-                shutil.rmtree(tpcol.run_dir_name, ignore_errors=True)
-                self.print_and_log(
-                    "Collecting tp for %s try %d" % (self.igccol.title(i), i2 + 1)
-                )
-                res = tpcol.tie_point_grid(self.num_x, self.num_y)
-                # Try this, and see how it works
-                ntpoint_initial = len(res)
-                ntpoint_removed = 0
-                if len(res) >= self.min_tp_per_scene:
-                    len1 = len(res)
-                    res = geocal.outlier_reject_ransac(
-                        res,
-                        ref_image=geocal.VicarLiteRasterImage(self.ref_fname[i]),
-                        igccol=self.igccol,
-                        threshold=3,
+            with logger.catch(reraise=True):
+                tt = self.igccol.image_ground_connection(i).time_table
+                for i2, tpcol in enumerate(self.tpcollect):
+                    tpcol.image_index1 = i
+                    tpcol.ref_image_fname = self.ref_fname[i]
+                    tpcol.log_file = self.log_file[i] + "_%d" % i2
+                    tpcol.run_dir_name = self.run_dir_name[i] + "_%d" % i2
+                    shutil.rmtree(tpcol.run_dir_name, ignore_errors=True)
+                    logger.info(
+                        "Collecting tp for %s try %d" % (self.igccol.title(i), i2 + 1)
                     )
-                    ntpoint_removed = len1 - len(res)
-                    self.print_and_log(
-                        "Removed %d tie-points using RANSAC for %s"
-                        % (len1 - len(res), self.igccol.title(i))
+                    res = tpcol.tie_point_grid(self.num_x, self.num_y)
+                    # Try this, and see how it works
+                    ntpoint_initial = len(res)
+                    ntpoint_removed = 0
+                    if len(res) >= self.min_tp_per_scene:
+                        len1 = len(res)
+                        res = geocal.outlier_reject_ransac(
+                            res,
+                            ref_image=geocal.VicarLiteRasterImage(self.ref_fname[i]),
+                            igccol=self.igccol,
+                            threshold=3,
+                        )
+                        ntpoint_removed = len1 - len(res)
+                        logger.info(
+                            "Removed %d tie-points using RANSAC for %s"
+                            % (len1 - len(res), self.igccol.title(i))
+                        )
+                    if len(res) >= self.min_tp_per_scene:
+                        break
+                number_match_try = i2 + 1
+                if len(res) < self.min_tp_per_scene:
+                    logger.info(
+                        "Too few tie-point found. Found %d, and require at least %d. Rejecting tie-points for %s"
+                        % (len(res), self.min_tp_per_scene, self.igccol.title(i))
                     )
-                if len(res) >= self.min_tp_per_scene:
-                    break
-            number_match_try = i2 + 1
-            if len(res) < self.min_tp_per_scene:
-                self.print_and_log(
-                    "Too few tie-point found. Found %d, and require at least %d. Rejecting tie-points for %s"
-                    % (len(res), self.min_tp_per_scene, self.igccol.title(i))
-                )
-                res = []
-            else:
-                self.print_and_log(
-                    "Found %d tie-points for %s try %d"
-                    % (len(res), self.igccol.title(i), number_match_try)
-                )
-            self.print_and_log("Done collecting tp for %s" % self.igccol.title(i))
+                    res = []
+                else:
+                    logger.info(
+                        "Found %d tie-points for %s try %d"
+                        % (len(res), self.igccol.title(i), number_match_try)
+                    )
+                logger.info("Done collecting tp for %s" % self.igccol.title(i))
         except Exception:
-            self.report_and_log_exception(i)
+            logger.warning(
+                f"Exception occurred when collecting tie-points for {self.igccol.title(i)}"
+            )
+            logger.info("Skipping tie-points for this scene and continuing processing")
+            if self.qa_file is not None:
+                self.qa_file.encountered_exception = True
             res = []
         ntpoint_final = len(res)
         return (

@@ -10,9 +10,9 @@ class L1bGeoQaFile(object):
     """This is the L1bGeoQaFile. We have a separate class just to make it
     easier to interface with."""
 
-    def __init__(self, fname, log_fname, local_granule_id=None):
+    def __init__(self, fname, log_string_handle, local_granule_id=None):
         self.fname = fname
-        self.log_fname = log_fname
+        self.log_string_handle = log_string_handle
         self.scene_name = None
         self.tp_stat = None
         self.encountered_exception = False
@@ -227,10 +227,9 @@ the reference image, in Ecr coordinates (in meters).
 
     def close(self):
         """Finishing writing up data, and close file"""
-        try:
-            log = open(self.log_fname, "r").read()
-        except FileNotFoundError:
-            # Ok if log file isn't found, just given an message
+        if self.log_string_handle is not None:
+            log = self.log_string_handle.getvalue()
+        else:
             log = "log file missing"
         with h5py.File(self.fname, "a") as f:
             log_group = f["Logs"]
