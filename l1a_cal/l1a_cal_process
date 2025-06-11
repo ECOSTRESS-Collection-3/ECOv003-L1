@@ -5,17 +5,16 @@
 import geocal
 import ecostress
 import os
-import re
-import traceback
 from loguru import logger
 
 # Get version information, in the top directory
 import sys
+
 sys.path.append(os.path.dirname(os.path.abspath(sys.path[0])))
-from ecostress_version import *
+from ecostress_version import pge_version
 
 version = "1.0"
-usage='''Usage:
+usage = """Usage:
   l1a_cal_process [options] <run_config>
   l1a_cal_process [options] <l1a_bb> <l1a_raw_pix> <osp_dir> <prod_dir>
   l1a_cal_process -h | --help
@@ -32,19 +31,20 @@ Options:
 
   -v --version      
        Print program version
-'''
+"""
 
 args = geocal.docopt_simple(usage, version=version)
 
 # Can use this to wait a short time so we can attach strace to this
 # process, useful to find all the files that we are accessing.
-if(False):
+if False:
     print("Waiting a short time")
     import time
+
     time.sleep(20)
 
 # Explicitly list input file
-if(args.run_config):
+if args.run_config:
     config = ecostress.RunConfig(args.run_config)
     l1a_bb = os.path.abspath(config["InputFileGroup", "L1A_BB"])
     l1a_raw_pix = os.path.abspath(config["InputFileGroup", "L1A_RAW_PIX"])
@@ -60,7 +60,7 @@ else:
     l1_osp_dir = os.path.abspath(args.osp_dir)
     dirname = os.path.abspath(args.prod_dir)
     file_version = "01"
-    
+
 logger.remove()
 if args.verbose:
     logger.add(sys.stderr, level="DEBUG")
@@ -71,36 +71,49 @@ geocal.makedirs_p(dirname)
 os.chdir(dirname)
 
 orbit, scene, acquisition_time = ecostress.orbit_from_metadata(l1a_raw_pix)
-ofile = ecostress.ecostress_file_name("L1A_PIX", orbit, scene, acquisition_time,
-                            collection_label = collection_label,
-                            build = build_id, version = file_version)
-ofile_gain = ecostress.ecostress_file_name("L1A_RAD_GAIN", orbit, scene,
-                                 acquisition_time,
-                                 collection_label = collection_label,
-                                 build = build_id, version = file_version,
-                                 intermediate = True)
+ofile = ecostress.ecostress_file_name(
+    "L1A_PIX",
+    orbit,
+    scene,
+    acquisition_time,
+    collection_label=collection_label,
+    build=build_id,
+    version=file_version,
+)
+ofile_gain = ecostress.ecostress_file_name(
+    "L1A_RAD_GAIN",
+    orbit,
+    scene,
+    acquisition_time,
+    collection_label=collection_label,
+    build=build_id,
+    version=file_version,
+    intermediate=True,
+)
 logger.add(os.path.splitext(ofile)[0] + ".log", level="DEBUG")
 try:
     with logger.catch(reraise=True):
         # Generate output
-        l1apix = ecostress.L1aPixGenerate(l1a_bb, l1a_raw_pix, l1_osp_dir,
-                                          ofile, ofile_gain,
-                                          run_config=config,
-                                          collection_label = collection_label,
-                                          build_id=build_id,
-                                          pge_version=pge_version["l1a_cal"],
-                                          file_version=file_version)
+        l1apix = ecostress.L1aPixGenerate(
+            l1a_bb,
+            l1a_raw_pix,
+            l1_osp_dir,
+            ofile,
+            ofile_gain,
+            run_config=config,
+            collection_label=collection_label,
+            build_id=build_id,
+            pge_version=pge_version["l1a_cal"],
+            file_version=file_version,
+        )
         l1apix.run()
         logger.info("L1A_CAL_PGE:INFO-0-[Job Successful]")
 except ecostress.VicarRunException as e:
     logger.info("L1A_CAL_PGE:ERROR-1-[%s]" % e.message)
     raise
-except Exception as e:
+except Exception:
     logger.info("L1A_CAL_PGE:ERROR-2-[Unexpected Error]")
     raise
 except:
     logger.info("L1A_CAL_PGE:ERROR-2-[Unexpected Error]")
-    log.flush()
     raise
-
-

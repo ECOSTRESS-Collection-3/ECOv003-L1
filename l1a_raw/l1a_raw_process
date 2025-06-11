@@ -5,16 +5,15 @@
 import geocal
 import ecostress
 import os
-import re
-import traceback
 
 # Get version information, in the top directory
 import sys
+
 sys.path.append(os.path.dirname(os.path.abspath(sys.path[0])))
-from ecostress_version import *
+from ecostress_version import pge_version
 
 version = "1.0"
-usage='''Usage:
+usage = """Usage:
   l1a_raw_process [options] <run_config>
   l1a_raw_process [options] <l0b> <scene_file> <osp_dir> <prod_dir>
   l1a_raw_process -h | --help
@@ -28,26 +27,27 @@ Options:
 
   -v --version      
        Print program version
-'''
+"""
 
 args = geocal.docopt_simple(usage, version=version)
 
 # Can use this to wait a short time so we can attach strace to this
 # process, useful to find all the files that we are accessing.
-if(False):
+if False:
     print("Waiting a short time")
     import time
+
     time.sleep(20)
 
 # Explicitly list input file
-if(args.run_config) :
+if args.run_config:
     config = ecostress.RunConfig(args.run_config)
     l0b = os.path.abspath(config["InputFileGroup", "L0B"])
     obst_dir = os.path.abspath(config["InputFileGroup", "ObstDir"])
     scene_file = os.path.abspath(config["StaticAncillaryFileGroup", "Scene"])
     osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
     prod_dir = os.path.abspath(config["ProductPathGroup", "ProductPath"])
-    shortname =  config["ProductPathGroup","ShortName"]
+    shortname = config["ProductPathGroup", "ShortName"]
     file_version = config["ProductPathGroup", "ProductCounter"]
     collection_label = config["ProductPathGroup", "CollectionLabel"]
     build_id = config["PrimaryExecutable", "BuildID"]
@@ -63,17 +63,24 @@ else:
     shortname = "L1a_Raw"
     file_version = "01"
 
-print("L1A_RAW_PROCESS BID-%s VV=%s L0B=%s SCENE_FILE=%s PROD_DIR=%s OSP_DIR=%s SHORT=%s" % (build_id, file_version, l0b, scene_file, prod_dir, osp_dir, shortname ) )
+print(
+    "L1A_RAW_PROCESS BID-%s VV=%s L0B=%s SCENE_FILE=%s PROD_DIR=%s OSP_DIR=%s SHORT=%s"
+    % (build_id, file_version, l0b, scene_file, prod_dir, osp_dir, shortname)
+)
 
 geocal.makedirs_p(prod_dir)
 os.chdir(prod_dir)
 
-l1arawpix = ecostress.L1aRawPixGenerate(l0b, obst_dir, osp_dir, scene_file,
-                              collection_label = collection_label,
-                              build_id = build_id,
-                              pge_version = pge_version["l1a_raw"],
-                              run_config = config,
-                              file_version = file_version,
-                              use_obst_file = use_obst_file )
+l1arawpix = ecostress.L1aRawPixGenerate(
+    l0b,
+    obst_dir,
+    osp_dir,
+    scene_file,
+    collection_label=collection_label,
+    build_id=build_id,
+    pge_version=pge_version["l1a_raw"],
+    run_config=config,
+    file_version=file_version,
+    use_obst_file=use_obst_file,
+)
 l1arawpix.run()
-
