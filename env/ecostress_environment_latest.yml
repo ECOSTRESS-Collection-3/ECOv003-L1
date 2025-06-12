@@ -1,0 +1,20 @@
+name: sbg-env
+channels:
+   # Use conda-forge, based on recommendation of JPL.
+   - conda-forge
+   - ../../afids-conda-package/afids-conda-channel
+dependencies:
+  # Package to install
+  - geocal
+  - afids-development-tools
+  - afids
+  - tensorflow
+  - scikit-learn
+  - loguru
+  - loguru-config
+  - pytest-loguru
+  # Useful tools for development
+  - ruff
+  - mypy
+  - mamba
+  
