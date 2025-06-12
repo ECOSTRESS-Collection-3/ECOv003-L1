@@ -170,6 +170,7 @@ try:
             l1a_gain,
             ofile,
             l1_osp_dir,
+            interpolator_parameters=l1b_rad_config.interpolator_parameters,
             run_config=config,
             collection_label=collection_label,
             build_id=build_id,

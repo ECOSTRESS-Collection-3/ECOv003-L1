@@ -31,6 +31,7 @@ class L1bRadGenerate(object):
         output_name,
         l1_osp_dir,
         cal_correction,
+        interpolator_parameters=None,
         local_granule_id=None,
         run_config=None,
         build_id="0.30",
@@ -54,6 +55,10 @@ class L1bRadGenerate(object):
             )
         else:
             self.nband - 6
+        if interpolator_parameters is None:
+            self.interpolator_parameters = {}
+        else:
+            self.interpolator_parameters = interpolator_parameters
         self.l1a_gain_fname = l1a_gain
         self.output_name = output_name
         self.local_granule_id = local_granule_id
@@ -167,14 +172,26 @@ class L1bRadGenerate(object):
                 "Skipping interpolation because fraction of scans present is too small (e.g., short scene)"
             )
         elif self.interpolate_stripe_data:
-            # Note there are a number of options on EcostressAeDeepEnsembleInterpolate. We
-            # just use the defaults here. We could expose these, and allow variations by
-            # configurations. But for now, just use the default values
             inter = EcostressAeDeepEnsembleInterpolate(
-                seed=self.seed, n_bands=self.nband, verbose=False
+                seed=self.seed,
+                n_bands=self.nband,
+                verbose=False,
+                grid_size=self.interpolator_parameters.get("grid_size", 1),
+                latent_dim=self.interpolator_parameters.get("latent_dim", 16),
+                encoder_layers=self.interpolator_parameters.get("encoder_layers", [32]),
+                decoder_layers=self.interpolator_parameters.get("decoder_layers", [32]),
+                activation=self.interpolator_parameters.get("activation", "elu"),
+                n_ensemble=self.interpolator_parameters.get("n_ensemble", 3),
+                n_good_bands_required=self.interpolator_parameters.get(
+                    "n_good_bands_required", 2
+                ),
             )
             # identify horizontal stripes and update data quality mask
-            dqi = inter.find_horizontal_stripes(dataset, dqi)
+            dqi = inter.find_horizontal_stripes(
+                dataset,
+                dqi,
+                threshold=self.interpolator_parameters.get("horizontal_threshold", 5),
+            )
 
             # Prediction apparently doesn't work with negative radiance. We can
             # actually legitimately have negative radiance (physical radiance isn't,
@@ -189,9 +206,17 @@ class L1bRadGenerate(object):
                 dataset[(dataset < 0) & (dqi == DQI_GOOD)] = FILL_VALUE_BAD_OR_MISSING
 
             logger.info("Starting model training")
-            # Again, there are a number of values that can be modified here. Take the
-            # defaults
-            inter.train(dataset, dqi)
+            inter.train(
+                dataset,
+                dqi,
+                epochs=self.interpolator_parameters.get("epochs", 25),
+                batch_size=self.interpolator_parameters.get("batch_size", 32),
+                n_samples=self.interpolator_parameters.get("n_samples", 100_000),
+                validate=self.interpolator_parameters.get("validate", False),
+                validate_threshold=self.interpolator_parameters.get(
+                    "validate_threshold", 5
+                ),
+            )
             dataset, inter_uncer, dqi = inter.interpolate_missing(dataset, dqi)
         g = fout.create_group("Radiance")
         for b in range(5):

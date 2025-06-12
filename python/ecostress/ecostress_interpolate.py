@@ -418,7 +418,6 @@ class EcostressAeDeepEnsembleInterpolate(object):
             validate: Boolean indicating whether to validate the model after training.
 
         """
-
         # subset data to n_bands
         if self.n_bands == 3:
             dataset_subset = dataset[:, :, [1, 3, 4]].copy()
