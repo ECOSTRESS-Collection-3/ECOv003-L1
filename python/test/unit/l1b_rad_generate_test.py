@@ -23,7 +23,7 @@ def test_l1b_rad_generate(
         "ECOv002_L1B_RAD_03663_001_20190227T101222_0100_01.h5",
         "fake_osp",
         cal_correction,
-        interpolate_stripe_data=True
+        interpolate_stripe_data=True,
     )
     l1brad.run()
 

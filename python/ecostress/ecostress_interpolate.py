@@ -7,9 +7,11 @@ from ecostress_swig import (  # type: ignore
     DQI_INTERPOLATED,
     DQI_STRIPE_NOT_INTERPOLATED,
     DQI_GOOD,
+    DQI_NOT_SEEN,
     fill_value_threshold,
 )
 from loguru import logger
+
 
 class EcostressAeDeepEnsembleInterpolate(object):
     """Class to interpolate missing data in ECOSTRESS scenes.
@@ -521,10 +523,12 @@ class EcostressAeDeepEnsembleInterpolate(object):
         # subset data to n_bands
         if self.n_bands == 3:
             bands_to_process = [1, 3, 4]
-            dataset_subset = dataset[:, :, bands_to_process].copy()
+            dataset_subset_original = dataset[:, :, bands_to_process]
+            dataset_subset = dataset_subset_original.copy()
             data_quality_subset = data_quality[:, :, bands_to_process]
         elif self.n_bands == 5:
-            dataset_subset = dataset.copy()
+            dataset_subset_original = dataset
+            dataset_subset = dataset_subset_original.copy()
             data_quality_subset = data_quality
         else:
             raise ValueError("n_bands must be 3 or 5")
@@ -536,7 +540,13 @@ class EcostressAeDeepEnsembleInterpolate(object):
         uncertainty_map = np.zeros_like(dataset_subset)
 
         half = self.grid_size // 2
-        missing_boolean_mask = data_quality_subset != 0
+        # missing mask - note we should *not* fill in pixels that are
+        # missing because they are not actually seen. This data really
+        # isn't there, and we shouldn't interpolate to try filling it
+        # in.
+        missing_boolean_mask = (data_quality_subset != DQI_GOOD) & (
+            data_quality_subset != DQI_NOT_SEEN
+        )
         missing_any_band = np.any(missing_boolean_mask, axis=2)
 
         if self.grid_size > 1:
@@ -583,11 +593,15 @@ class EcostressAeDeepEnsembleInterpolate(object):
         denorm_result = self.denormalize_data(result)
         denorm_uncertainty = self.denormalize_data(uncertainty_map, std_only=True)
 
-        # OPTIONAL: remove stripes we identified from data_quality that we were not able to interpolate
-        data_quality_subset[data_quality_subset == DQI_STRIPE_NOT_INTERPOLATED] = (
-            DQI_GOOD
-        )
-
+        # OPTIONAL: remove stripes we identified from data_quality
+        # that we were not able to interpolate, but were originally
+        # marked as good. In find_horizontal_stripes we updated
+        # data_quality, but not dataset so we can use this to identify
+        # DQI_STRIPE_NOT_INTERPOLATED that were not there originally.
+        data_quality_subset[
+            (data_quality_subset == DQI_STRIPE_NOT_INTERPOLATED)
+            & (dataset_subset_original > self.fill_value_threshold)
+        ] = DQI_GOOD
         # add missing data back to the result if n_bands == 3
         if self.n_bands == 3:
             denorm_uncertainty_combined = np.zeros_like(dataset)
@@ -623,4 +637,6 @@ class EcostressAeDeepEnsembleInterpolate(object):
         )
 
 
-__all__ = ["EcostressAeDeepEnsembleInterpolate", ]
+__all__ = [
+    "EcostressAeDeepEnsembleInterpolate",
+]

@@ -3,7 +3,6 @@ from ecostress_swig import (  # type: ignore
     FILL_VALUE_BAD_OR_MISSING,
     FILL_VALUE_STRIPED,
     FILL_VALUE_NOT_SEEN,
-    DQI_INTERPOLATED,
     DQI_BAD_OR_MISSING,
     DQI_STRIPE_NOT_INTERPOLATED,
     DQI_NOT_SEEN,
@@ -172,9 +171,8 @@ class L1bRadGenerate(object):
             # just use the defaults here. We could expose these, and allow variations by
             # configurations. But for now, just use the default values
             inter = EcostressAeDeepEnsembleInterpolate(
-                 seed=self.seed, n_bands=self.nband, verbose=False
+                seed=self.seed, n_bands=self.nband, verbose=False
             )
-
             # identify horizontal stripes and update data quality mask
             dqi = inter.find_horizontal_stripes(dataset, dqi)
 
@@ -184,9 +182,11 @@ class L1bRadGenerate(object):
             # overly important, so just go ahead and filter out before we do our training
             # and fill in.
             if np.any((dataset < 0) & (dqi == DQI_GOOD)):
-                logger.info("Found negative radiances with good DQI. Setting to FILL_VALUE_BAD_OR_MISSING")
-                dqi[dataset < 0] = DQI_BAD_OR_MISSING
-                dataset[dataset < 0] = FILL_VALUE_BAD_OR_MISSING
+                logger.info(
+                    "Found negative radiances with good DQI. Setting to FILL_VALUE_BAD_OR_MISSING"
+                )
+                dqi[(dataset < 0) & (dqi == DQI_GOOD)] = DQI_BAD_OR_MISSING
+                dataset[(dataset < 0) & (dqi == DQI_GOOD)] = FILL_VALUE_BAD_OR_MISSING
 
             logger.info("Starting model training")
             # Again, there are a number of values that can be modified here. Take the
@@ -220,7 +220,7 @@ we interpolated (so data_quality has value DQI_INTERPOLATED).
 See ATB for details.
             
 Set to 0.0 for values that we haven't interpolated.
-"""            
+"""
             t = g.create_dataset(
                 "data_quality_%d" % (b + 1), data=dqi[:, :, b], compression="gzip"
             )
