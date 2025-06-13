@@ -8,8 +8,8 @@ ecostressinc_HEADERS =
 ecostressswiginc_HEADERS =
 ecostress_test_all_SOURCES =
 SWIG_SRC = 
-libecostress_la_CPPFLAGS = $(AM_CPPFLAGS) $(GEOCAL_CFLAGS)
-libecostress_la_LDFLAGS = $(GEOCAL_LIBS)
+libecostress_la_CPPFLAGS = $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(HDFEOS5_CFLAGS)
+libecostress_la_LDFLAGS = $(GEOCAL_LIBS) $(HDFEOS5_LIBS)
 
 #=================================================================
 # Unit test
@@ -54,6 +54,8 @@ ecostressinc_HEADERS+= @srclib@/ground_coordinate_array.h
 libecostress_la_SOURCES+= @srclib@/ground_coordinate_array.cc
 ecostressinc_HEADERS+= @srclib@/simulated_radiance.h
 libecostress_la_SOURCES+= @srclib@/simulated_radiance.cc
+ecostressinc_HEADERS+= @srclib@/hdfeos_filehandle.h
+libecostress_la_SOURCES+= @srclib@/hdfeos_filehandle.cc
 
 # Files that contain SWIG wrapper information.
 ecostressswiginc_HEADERS+= @srclib@/ecostress_common.i
@@ -89,6 +91,8 @@ SWIG_SRC += @swigsrc@/ground_coordinate_array_wrap.cc
 ecostressswiginc_HEADERS+= @srclib@/ground_coordinate_array.i
 SWIG_SRC += @swigsrc@/simulated_radiance_wrap.cc
 ecostressswiginc_HEADERS+= @srclib@/simulated_radiance.i
+SWIG_SRC += @swigsrc@/hdfeos_filehandle_wrap.cc
+ecostressswiginc_HEADERS+= @srclib@/hdfeos_filehandle.i
 
 # Test files
 EXTRA_DIST+= @srclib@/unit_test_support.h

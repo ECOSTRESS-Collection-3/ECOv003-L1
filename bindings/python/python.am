@@ -56,6 +56,7 @@ pkgpythonswig_LTLIBRARIES = _swig_wrap.la
 
 _swig_wrap_la_CPPFLAGS = $(PYTHON_CPPFLAGS) $(PYTHON_NUMPY_CPPFLAGS) 
 _swig_wrap_la_CPPFLAGS+= $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS)
+_swig_wrap_la_CPPFLAGS+= $(HDFEOS5_CFLAGS)
 _swig_wrap_la_CPPFLAGS+= $(AM_CPPFLAGS)
 # Need to share the geocal type table, so python knows how to convert our
 # types to geocal types (e.g., EcostressCamera to GeoCal::Camera)

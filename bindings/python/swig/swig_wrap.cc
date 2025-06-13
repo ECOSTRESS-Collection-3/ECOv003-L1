@@ -18,6 +18,7 @@ extern "C" {
   INIT_TYPE INIT_FUNC(_ecostress_band_to_band)(void);
   INIT_TYPE INIT_FUNC(_ground_coordinate_array)(void);
   INIT_TYPE INIT_FUNC(_simulated_radiance)(void);
+  INIT_TYPE INIT_FUNC(_hdfeos_filehandle)(void);
 }
 
 static void module_init(PyObject* module)
@@ -38,4 +39,5 @@ static void module_init(PyObject* module)
   INIT_MODULE(module, "_ecostress_band_to_band", INIT_FUNC(_ecostress_band_to_band));
   INIT_MODULE(module, "_ground_coordinate_array", INIT_FUNC(_ground_coordinate_array));
   INIT_MODULE(module, "_simulated_radiance", INIT_FUNC(_simulated_radiance));
+  INIT_MODULE(module, "_hdfeos_filehandle", INIT_FUNC(_hdfeos_filehandle));
 }

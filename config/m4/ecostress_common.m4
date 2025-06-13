@@ -70,6 +70,8 @@ AX_CXX_COMPILE_STDCXX([17], [ext], [mandatory])
 AX_PTHREAD()
 CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
 
+AC_HDFEOS5()
+
 #=================================================================
 # Test if we are using GCC compiler. Some flags get set in the 
 # Makefile that should only be set for GCC.
