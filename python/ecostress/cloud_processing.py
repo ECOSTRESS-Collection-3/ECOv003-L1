@@ -6,7 +6,7 @@ from scipy.interpolate import RegularGridInterpolator
 from scipy.interpolate import interp1d
 import re
 from numba import njit
-
+from loguru import logger
 
 @njit
 def classify_clouds(TB4_flat, BTout1_flat, BTout2_flat, BTout3_flat, El_flat, cloud1, cloudconf):
@@ -40,10 +40,8 @@ def classify_clouds(TB4_flat, BTout1_flat, BTout2_flat, BTout3_flat, El_flat, cl
 
 
 def process_cloud(rad, bt11_lut_file, btdiff_file, rad_lut_data, rad_lut_nlines, cloud_filename):
-
-    #print("Total number of radiance layers in vRAD:", rad.Rad.nchannels)
-    print("Shapes of radiance layers:", [r.shape for r in rad.Rad])
-    print("Band count:", rad.Rad.shape[0])
+    logger.debug(f"Shapes of radiance layers: {[r.shape for r in rad.Rad]}")
+    logger.debug(f"Band count: {rad.Rad.shape[0]}")
 
     BAND_4 = rad.Rad.shape[0] - 2  # Band index for channel 4
     BAND_5 = BAND_4 + 1            # Band index for channel 5, NOTE: band  is not used in this clould mask aglorithm
@@ -51,7 +49,7 @@ def process_cloud(rad, bt11_lut_file, btdiff_file, rad_lut_data, rad_lut_nlines,
     COL_5 = 4
     COL_6 = 5
 
-    print("CONVERT RADIANCES TO BT")
+    logger.debug("Convert radiances to BT")
     nrows, ncols = rad.Rad[BAND_4].shape
     TB4 = np.zeros((nrows, ncols))
 
@@ -78,7 +76,7 @@ def process_cloud(rad, bt11_lut_file, btdiff_file, rad_lut_data, rad_lut_nlines,
     # Apply interpolation only on valid radiance values
     TB4[valid_mask] = interp_func(rad.Rad[BAND_4][valid_mask])
     
-    print("EXTRACT FILE NAME TO GET TIME FOR BT THRESHOLDS")
+    logger.debug("Extract file name to get time for BT thresholds")
     filename_parts = cloud_filename.split("/")[-1]
 
     # Find the position of "L1_CLOUD" in the filename
@@ -108,7 +106,7 @@ def process_cloud(rad, bt11_lut_file, btdiff_file, rad_lut_data, rad_lut_nlines,
     lut_files = {}
 
     for hour in ["00", "06", "12", "18"]:
-        lut_file = bt11_lut_file.replace("??", hour)  # Replace "??" with actual time
+        lut_file = str(bt11_lut_file).replace("??", hour)  # Replace "??" with actual time
         try:
             lut_files[int(hour) // 6] = h5py.File(lut_file, "r")  # Store with index (0,1,2,3)
         except Exception as e:
@@ -130,7 +128,7 @@ def process_cloud(rad, bt11_lut_file, btdiff_file, rad_lut_data, rad_lut_nlines,
     BTout = {i: np.zeros((nrows, ncols)) for i in range(1, 4)}
     slapse = 6.5  # Standard lapse rate
 
-    print("CREATE BT THRESHOLDS")
+    logger.debug("Create BT thresholds")
     for LUTthresh in range(1, 4):  # Iterate over LUT thresholds (1, 2, 3)
         cloudvar1 = f"/Data/LUT_cloudBT{LUTthresh}_{Ztime0:02d}_{mth:02d}"
         cloudvar2 = f"/Data/LUT_cloudBT{LUTthresh}_{Ztime1:02d}_{mth:02d}"
@@ -191,7 +189,7 @@ def process_cloud(rad, bt11_lut_file, btdiff_file, rad_lut_data, rad_lut_nlines,
         valid_mask = ~np.isnan(TB4) & ~np.isnan(rad.El)  # Avoid NaN issues
         BTout[LUTthresh][valid_mask] = BT[valid_mask] - rad.El[valid_mask] * slapse
         
-    print("CLOUD MASK GENERATION")
+    logger.debug("Cloud mask generation")
     cloud1 = np.full((nrows, ncols), 255, dtype=np.uint8)
     cloudconf = np.full((nrows, ncols), 255, dtype=np.uint8)
 
@@ -243,7 +241,7 @@ def process_cloud(rad, bt11_lut_file, btdiff_file, rad_lut_data, rad_lut_nlines,
             cloudconf.flat[i] = 255
     """
 
-    print("WRITE CLOUD MASK FILE")
+    logger.debug("Write Cloud mask file")
     with h5py.File(cloud_filename, "w") as cloudout:
         sds_group = cloudout.create_group("/SDS")
         sds_group.create_dataset("Cloud_confidence", data=cloudconf, dtype=np.uint8)
@@ -253,3 +251,5 @@ def process_cloud(rad, bt11_lut_file, btdiff_file, rad_lut_data, rad_lut_nlines,
     for file in lut_files.values():  # Iterate 
         if isinstance(file, h5py.File):  # ck
             file.close()
+
+__all__ = ["process_cloud",]            
