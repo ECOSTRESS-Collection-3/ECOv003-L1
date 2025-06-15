@@ -1,8 +1,5 @@
 from __future__ import annotations
-import tensorflow as tf  # type: ignore
-from tensorflow.keras import layers, Model  # type: ignore
 import numpy as np
-from sklearn.model_selection import train_test_split  # type: ignore
 from ecostress_swig import (  # type: ignore
     DQI_INTERPOLATED,
     DQI_STRIPE_NOT_INTERPOLATED,
@@ -11,7 +8,12 @@ from ecostress_swig import (  # type: ignore
     fill_value_threshold,
 )
 from loguru import logger
+import typing
 
+if typing.TYPE_CHECKING:
+    import tensorflow as tf  # type: ignore
+    from tensorflow.keras import layers, Model  # type: ignore
+    
 
 class EcostressAeDeepEnsembleInterpolate(object):
     """Class to interpolate missing data in ECOSTRESS scenes.
@@ -153,6 +155,9 @@ class EcostressAeDeepEnsembleInterpolate(object):
         :param index: Index of the model in the ensemble
         :return: Keras model
         """
+        # Import locally, so we don't depend on this unless we use it
+        import tensorflow as tf  # type: ignore
+        from tensorflow.keras import layers, Model  # type: ignore
 
         tf.random.set_seed(self.seed + index)
         np.random.seed(self.seed + index)
@@ -245,6 +250,8 @@ class EcostressAeDeepEnsembleInterpolate(object):
         :param outputs: Predictions
         :return: Loss
         """
+        # Import locally, so we don't depend on this unless we use it
+        import tensorflow as tf  # type: ignore
 
         # y_true shape: (batch, grid_size, grid_size, n_bands + n_bands_for_mask)
 
@@ -418,6 +425,8 @@ class EcostressAeDeepEnsembleInterpolate(object):
             validate: Boolean indicating whether to validate the model after training.
 
         """
+        # Import locally, so we don't depend on this unless we use it
+        from sklearn.model_selection import train_test_split  # type: ignore
         # subset data to n_bands
         if self.n_bands == 3:
             dataset_subset = dataset[:, :, [1, 3, 4]].copy()

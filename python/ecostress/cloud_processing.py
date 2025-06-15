@@ -1,9 +1,12 @@
 import sys
-sys.path.insert(0, "/home/vmj/my_numba")
 import numpy as np
 import h5py
-from scipy.interpolate import RegularGridInterpolator
-from scipy.interpolate import interp1d
+import warnings
+# Have a warning message that we can't do anything about - suppress it
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=UserWarning)
+    from scipy.interpolate import RegularGridInterpolator
+    from scipy.interpolate import interp1d
 import re
 from numba import njit
 from loguru import logger
