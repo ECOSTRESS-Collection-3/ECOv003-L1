@@ -56,6 +56,8 @@ ecostressinc_HEADERS+= @srclib@/simulated_radiance.h
 libecostress_la_SOURCES+= @srclib@/simulated_radiance.cc
 ecostressinc_HEADERS+= @srclib@/hdfeos_filehandle.h
 libecostress_la_SOURCES+= @srclib@/hdfeos_filehandle.cc
+ecostressinc_HEADERS+= @srclib@/hdfeos_grid.h
+libecostress_la_SOURCES+= @srclib@/hdfeos_grid.cc
 
 # Files that contain SWIG wrapper information.
 ecostressswiginc_HEADERS+= @srclib@/ecostress_common.i
@@ -93,6 +95,8 @@ SWIG_SRC += @swigsrc@/simulated_radiance_wrap.cc
 ecostressswiginc_HEADERS+= @srclib@/simulated_radiance.i
 SWIG_SRC += @swigsrc@/hdfeos_filehandle_wrap.cc
 ecostressswiginc_HEADERS+= @srclib@/hdfeos_filehandle.i
+SWIG_SRC += @swigsrc@/hdfeos_grid_wrap.cc
+ecostressswiginc_HEADERS+= @srclib@/hdfeos_grid.i
 
 # Test files
 EXTRA_DIST+= @srclib@/unit_test_support.h

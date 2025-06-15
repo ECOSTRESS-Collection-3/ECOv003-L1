@@ -148,6 +148,16 @@ class HdfEosFileHandle(geocal_swig.generic_object.GenericObject):
     This is a pretty minimal set of classes, really just what is needed
     for generate the L1_CG product.
 
+    Note that we allow fields to be created, but don't provide any access
+    to the actual data. This is because we create fields in python, and
+    h5py is already a complete library. We don't need to duplicate the
+    functionality. We really just want to use HDFEOS to create the map
+    projection stuff, and then fall back to h5py to do all the
+    reading/writing.
+
+    Similarly, we don't provide access to any attributes, again because
+    h5py already had this.
+
     C++ includes: hdfeos_filehandle.h 
     """
 
@@ -156,6 +166,7 @@ class HdfEosFileHandle(geocal_swig.generic_object.GenericObject):
     READ = _hdfeos_filehandle.HdfEosFileHandle_READ
     READWRITE = _hdfeos_filehandle.HdfEosFileHandle_READWRITE
     TRUNC = _hdfeos_filehandle.HdfEosFileHandle_TRUNC
+    CREATE = _hdfeos_filehandle.HdfEosFileHandle_CREATE
 
     def __init__(self, *args):
         r"""
@@ -168,11 +179,11 @@ class HdfEosFileHandle(geocal_swig.generic_object.GenericObject):
         """
         _hdfeos_filehandle.HdfEosFileHandle_swiginit(self, _hdfeos_filehandle.new_HdfEosFileHandle(*args))
     close = _swig_new_instance_method(_hdfeos_filehandle.HdfEosFileHandle_close)
-    _v_filename = _swig_new_instance_method(_hdfeos_filehandle.HdfEosFileHandle__v_filename)
+    _v_file_name = _swig_new_instance_method(_hdfeos_filehandle.HdfEosFileHandle__v_file_name)
 
     @property
-    def filename(self):
-        return self._v_filename()
+    def file_name(self):
+        return self._v_file_name()
 
     _v_mode = _swig_new_instance_method(_hdfeos_filehandle.HdfEosFileHandle__v_mode)
 
@@ -185,6 +196,12 @@ class HdfEosFileHandle(geocal_swig.generic_object.GenericObject):
     @property
     def file_id(self):
         return self._v_file_id()
+
+    _v_grid_name = _swig_new_instance_method(_hdfeos_filehandle.HdfEosFileHandle__v_grid_name)
+
+    @property
+    def grid_name(self):
+        return self._v_grid_name()
 
     __str__ = _swig_new_instance_method(_hdfeos_filehandle.HdfEosFileHandle___str__)
     __swig_destroy__ = _hdfeos_filehandle.delete_HdfEosFileHandle

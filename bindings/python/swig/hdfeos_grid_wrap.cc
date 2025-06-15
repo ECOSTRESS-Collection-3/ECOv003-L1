@@ -13,7 +13,7 @@
 #define SWIG_PYTHON_DIRECTOR_NO_VTABLE
 #define SWIGPYTHON_FASTPROXY
 
-#define SWIG_name    "_hdfeos_filehandle"
+#define SWIG_name    "_hdfeos_grid"
 /* -----------------------------------------------------------------------------
  *  This section contains generic SWIG labels for method/variable
  *  declarations/attributes, and other compiler dependent labels.
@@ -3728,107 +3728,159 @@ namespace Swig {
 /* -------- TYPES TABLE (BEGIN) -------- */
 
 #define SWIGTYPE_p_Ecostress__HdfEosFileHandle swig_types[0]
-#define SWIGTYPE_p_GeoCal__GenericObject swig_types[1]
-#define SWIGTYPE_p_allocator_type swig_types[2]
-#define SWIGTYPE_p_blitz__ArrayT_bool_1_t swig_types[3]
-#define SWIGTYPE_p_blitz__ArrayT_bool_2_t swig_types[4]
-#define SWIGTYPE_p_blitz__ArrayT_bool_3_t swig_types[5]
-#define SWIGTYPE_p_blitz__ArrayT_bool_4_t swig_types[6]
-#define SWIGTYPE_p_blitz__ArrayT_bool_5_t swig_types[7]
-#define SWIGTYPE_p_blitz__ArrayT_bool_6_t swig_types[8]
-#define SWIGTYPE_p_blitz__ArrayT_bool_7_t swig_types[9]
-#define SWIGTYPE_p_blitz__ArrayT_bool_8_t swig_types[10]
-#define SWIGTYPE_p_blitz__ArrayT_char_1_t swig_types[11]
-#define SWIGTYPE_p_blitz__ArrayT_char_2_t swig_types[12]
-#define SWIGTYPE_p_blitz__ArrayT_char_3_t swig_types[13]
-#define SWIGTYPE_p_blitz__ArrayT_char_4_t swig_types[14]
-#define SWIGTYPE_p_blitz__ArrayT_char_5_t swig_types[15]
-#define SWIGTYPE_p_blitz__ArrayT_char_6_t swig_types[16]
-#define SWIGTYPE_p_blitz__ArrayT_char_7_t swig_types[17]
-#define SWIGTYPE_p_blitz__ArrayT_char_8_t swig_types[18]
-#define SWIGTYPE_p_blitz__ArrayT_double_1_t swig_types[19]
-#define SWIGTYPE_p_blitz__ArrayT_double_2_t swig_types[20]
-#define SWIGTYPE_p_blitz__ArrayT_double_3_t swig_types[21]
-#define SWIGTYPE_p_blitz__ArrayT_double_4_t swig_types[22]
-#define SWIGTYPE_p_blitz__ArrayT_double_5_t swig_types[23]
-#define SWIGTYPE_p_blitz__ArrayT_double_6_t swig_types[24]
-#define SWIGTYPE_p_blitz__ArrayT_double_7_t swig_types[25]
-#define SWIGTYPE_p_blitz__ArrayT_double_8_t swig_types[26]
-#define SWIGTYPE_p_blitz__ArrayT_float_1_t swig_types[27]
-#define SWIGTYPE_p_blitz__ArrayT_float_2_t swig_types[28]
-#define SWIGTYPE_p_blitz__ArrayT_float_3_t swig_types[29]
-#define SWIGTYPE_p_blitz__ArrayT_float_4_t swig_types[30]
-#define SWIGTYPE_p_blitz__ArrayT_float_5_t swig_types[31]
-#define SWIGTYPE_p_blitz__ArrayT_float_6_t swig_types[32]
-#define SWIGTYPE_p_blitz__ArrayT_float_7_t swig_types[33]
-#define SWIGTYPE_p_blitz__ArrayT_float_8_t swig_types[34]
-#define SWIGTYPE_p_blitz__ArrayT_int_1_t swig_types[35]
-#define SWIGTYPE_p_blitz__ArrayT_int_2_t swig_types[36]
-#define SWIGTYPE_p_blitz__ArrayT_int_3_t swig_types[37]
-#define SWIGTYPE_p_blitz__ArrayT_int_4_t swig_types[38]
-#define SWIGTYPE_p_blitz__ArrayT_int_5_t swig_types[39]
-#define SWIGTYPE_p_blitz__ArrayT_int_6_t swig_types[40]
-#define SWIGTYPE_p_blitz__ArrayT_int_7_t swig_types[41]
-#define SWIGTYPE_p_blitz__ArrayT_int_8_t swig_types[42]
-#define SWIGTYPE_p_blitz__ArrayT_short_1_t swig_types[43]
-#define SWIGTYPE_p_blitz__ArrayT_short_2_t swig_types[44]
-#define SWIGTYPE_p_blitz__ArrayT_short_3_t swig_types[45]
-#define SWIGTYPE_p_blitz__ArrayT_short_4_t swig_types[46]
-#define SWIGTYPE_p_blitz__ArrayT_short_5_t swig_types[47]
-#define SWIGTYPE_p_blitz__ArrayT_short_6_t swig_types[48]
-#define SWIGTYPE_p_blitz__ArrayT_short_7_t swig_types[49]
-#define SWIGTYPE_p_blitz__ArrayT_short_8_t swig_types[50]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_1_t swig_types[51]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_2_t swig_types[52]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_3_t swig_types[53]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_4_t swig_types[54]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_5_t swig_types[55]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_6_t swig_types[56]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_7_t swig_types[57]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_8_t swig_types[58]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_1_t swig_types[59]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_2_t swig_types[60]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_3_t swig_types[61]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_4_t swig_types[62]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_5_t swig_types[63]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_6_t swig_types[64]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_7_t swig_types[65]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_8_t swig_types[66]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_1_t swig_types[67]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_2_t swig_types[68]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_3_t swig_types[69]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_4_t swig_types[70]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_5_t swig_types[71]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_6_t swig_types[72]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_7_t swig_types[73]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_8_t swig_types[74]
-#define SWIGTYPE_p_blitz__Range swig_types[75]
-#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t swig_types[76]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GenericObject_t swig_types[77]
-#define SWIGTYPE_p_char swig_types[78]
-#define SWIGTYPE_p_char_type swig_types[79]
-#define SWIGTYPE_p_difference_type swig_types[80]
-#define SWIGTYPE_p_fmtflags swig_types[81]
-#define SWIGTYPE_p_hid_t swig_types[82]
-#define SWIGTYPE_p_int_type swig_types[83]
-#define SWIGTYPE_p_iostate swig_types[84]
-#define SWIGTYPE_p_off_type swig_types[85]
-#define SWIGTYPE_p_openmode swig_types[86]
-#define SWIGTYPE_p_pos_type swig_types[87]
-#define SWIGTYPE_p_seekdir swig_types[88]
-#define SWIGTYPE_p_size_t swig_types[89]
-#define SWIGTYPE_p_size_type swig_types[90]
-#define SWIGTYPE_p_state_type swig_types[91]
-#define SWIGTYPE_p_std__basic_iosT_char_t swig_types[92]
-#define SWIGTYPE_p_std__basic_iostreamT_char_t swig_types[93]
-#define SWIGTYPE_p_std__basic_istreamT_char_t swig_types[94]
-#define SWIGTYPE_p_std__basic_ostreamT_char_t swig_types[95]
-#define SWIGTYPE_p_std__invalid_argument swig_types[96]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[97]
-#define SWIGTYPE_p_traits_type swig_types[98]
-#define SWIGTYPE_p_value_type swig_types[99]
-static swig_type_info *swig_types[101];
-static swig_module_info swig_module = {swig_types, 100, 0, 0, 0, 0};
+#define SWIGTYPE_p_Ecostress__HdfEosGrid swig_types[1]
+#define SWIGTYPE_p_GeoCal__AutoDerivativeRefT_double_t swig_types[2]
+#define SWIGTYPE_p_GeoCal__AutoDerivativeT_double_t swig_types[3]
+#define SWIGTYPE_p_GeoCal__CartesianFixed swig_types[4]
+#define SWIGTYPE_p_GeoCal__CartesianFixedLookVector swig_types[5]
+#define SWIGTYPE_p_GeoCal__CartesianFixedLookVectorWithDerivative swig_types[6]
+#define SWIGTYPE_p_GeoCal__CartesianInertial swig_types[7]
+#define SWIGTYPE_p_GeoCal__CartesianInertialLookVector swig_types[8]
+#define SWIGTYPE_p_GeoCal__CartesianInertialLookVectorWithDerivative swig_types[9]
+#define SWIGTYPE_p_GeoCal__CoordinateConverter swig_types[10]
+#define SWIGTYPE_p_GeoCal__DcsLookVector swig_types[11]
+#define SWIGTYPE_p_GeoCal__DcsLookVectorWithDerivative swig_types[12]
+#define SWIGTYPE_p_GeoCal__Dem swig_types[13]
+#define SWIGTYPE_p_GeoCal__GenericObject swig_types[14]
+#define SWIGTYPE_p_GeoCal__GeodeticConverter swig_types[15]
+#define SWIGTYPE_p_GeoCal__GeodeticRadian2piConverter swig_types[16]
+#define SWIGTYPE_p_GeoCal__GeodeticRadianConverter swig_types[17]
+#define SWIGTYPE_p_GeoCal__GroundCoordinate swig_types[18]
+#define SWIGTYPE_p_GeoCal__LnLookVector swig_types[19]
+#define SWIGTYPE_p_GeoCal__LnLookVectorWithDerivative swig_types[20]
+#define SWIGTYPE_p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t swig_types[21]
+#define SWIGTYPE_p_GeoCal__LookVectorT_double_t swig_types[22]
+#define SWIGTYPE_p_GeoCal__MapInfo swig_types[23]
+#define SWIGTYPE_p_GeoCal__ScLookVector swig_types[24]
+#define SWIGTYPE_p_GeoCal__ScLookVectorWithDerivative swig_types[25]
+#define SWIGTYPE_p_GeoCal__Time swig_types[26]
+#define SWIGTYPE_p_GeoCal__TimeWithDerivative swig_types[27]
+#define SWIGTYPE_p_allocator_type swig_types[28]
+#define SWIGTYPE_p_blitz__ArrayT_bool_1_t swig_types[29]
+#define SWIGTYPE_p_blitz__ArrayT_bool_2_t swig_types[30]
+#define SWIGTYPE_p_blitz__ArrayT_bool_3_t swig_types[31]
+#define SWIGTYPE_p_blitz__ArrayT_bool_4_t swig_types[32]
+#define SWIGTYPE_p_blitz__ArrayT_bool_5_t swig_types[33]
+#define SWIGTYPE_p_blitz__ArrayT_bool_6_t swig_types[34]
+#define SWIGTYPE_p_blitz__ArrayT_bool_7_t swig_types[35]
+#define SWIGTYPE_p_blitz__ArrayT_bool_8_t swig_types[36]
+#define SWIGTYPE_p_blitz__ArrayT_char_1_t swig_types[37]
+#define SWIGTYPE_p_blitz__ArrayT_char_2_t swig_types[38]
+#define SWIGTYPE_p_blitz__ArrayT_char_3_t swig_types[39]
+#define SWIGTYPE_p_blitz__ArrayT_char_4_t swig_types[40]
+#define SWIGTYPE_p_blitz__ArrayT_char_5_t swig_types[41]
+#define SWIGTYPE_p_blitz__ArrayT_char_6_t swig_types[42]
+#define SWIGTYPE_p_blitz__ArrayT_char_7_t swig_types[43]
+#define SWIGTYPE_p_blitz__ArrayT_char_8_t swig_types[44]
+#define SWIGTYPE_p_blitz__ArrayT_double_1_t swig_types[45]
+#define SWIGTYPE_p_blitz__ArrayT_double_2_t swig_types[46]
+#define SWIGTYPE_p_blitz__ArrayT_double_3_t swig_types[47]
+#define SWIGTYPE_p_blitz__ArrayT_double_4_t swig_types[48]
+#define SWIGTYPE_p_blitz__ArrayT_double_5_t swig_types[49]
+#define SWIGTYPE_p_blitz__ArrayT_double_6_t swig_types[50]
+#define SWIGTYPE_p_blitz__ArrayT_double_7_t swig_types[51]
+#define SWIGTYPE_p_blitz__ArrayT_double_8_t swig_types[52]
+#define SWIGTYPE_p_blitz__ArrayT_float_1_t swig_types[53]
+#define SWIGTYPE_p_blitz__ArrayT_float_2_t swig_types[54]
+#define SWIGTYPE_p_blitz__ArrayT_float_3_t swig_types[55]
+#define SWIGTYPE_p_blitz__ArrayT_float_4_t swig_types[56]
+#define SWIGTYPE_p_blitz__ArrayT_float_5_t swig_types[57]
+#define SWIGTYPE_p_blitz__ArrayT_float_6_t swig_types[58]
+#define SWIGTYPE_p_blitz__ArrayT_float_7_t swig_types[59]
+#define SWIGTYPE_p_blitz__ArrayT_float_8_t swig_types[60]
+#define SWIGTYPE_p_blitz__ArrayT_int_1_t swig_types[61]
+#define SWIGTYPE_p_blitz__ArrayT_int_2_t swig_types[62]
+#define SWIGTYPE_p_blitz__ArrayT_int_3_t swig_types[63]
+#define SWIGTYPE_p_blitz__ArrayT_int_4_t swig_types[64]
+#define SWIGTYPE_p_blitz__ArrayT_int_5_t swig_types[65]
+#define SWIGTYPE_p_blitz__ArrayT_int_6_t swig_types[66]
+#define SWIGTYPE_p_blitz__ArrayT_int_7_t swig_types[67]
+#define SWIGTYPE_p_blitz__ArrayT_int_8_t swig_types[68]
+#define SWIGTYPE_p_blitz__ArrayT_short_1_t swig_types[69]
+#define SWIGTYPE_p_blitz__ArrayT_short_2_t swig_types[70]
+#define SWIGTYPE_p_blitz__ArrayT_short_3_t swig_types[71]
+#define SWIGTYPE_p_blitz__ArrayT_short_4_t swig_types[72]
+#define SWIGTYPE_p_blitz__ArrayT_short_5_t swig_types[73]
+#define SWIGTYPE_p_blitz__ArrayT_short_6_t swig_types[74]
+#define SWIGTYPE_p_blitz__ArrayT_short_7_t swig_types[75]
+#define SWIGTYPE_p_blitz__ArrayT_short_8_t swig_types[76]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_1_t swig_types[77]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_2_t swig_types[78]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_3_t swig_types[79]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_4_t swig_types[80]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_5_t swig_types[81]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_6_t swig_types[82]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_7_t swig_types[83]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_8_t swig_types[84]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_1_t swig_types[85]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_2_t swig_types[86]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_3_t swig_types[87]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_4_t swig_types[88]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_5_t swig_types[89]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_6_t swig_types[90]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_7_t swig_types[91]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_8_t swig_types[92]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_1_t swig_types[93]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_2_t swig_types[94]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_3_t swig_types[95]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_4_t swig_types[96]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_5_t swig_types[97]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_6_t swig_types[98]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_7_t swig_types[99]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_8_t swig_types[100]
+#define SWIGTYPE_p_blitz__Range swig_types[101]
+#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t swig_types[102]
+#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosGrid_t swig_types[103]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t swig_types[104]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t swig_types[105]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_t swig_types[106]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianFixedLookVector_t swig_types[107]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianFixed_t swig_types[108]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_t swig_types[109]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_t swig_types[110]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CartesianInertial_t swig_types[111]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__CoordinateConverter_t swig_types[112]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_t swig_types[113]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__DcsLookVector_t swig_types[114]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Dem_t swig_types[115]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GenericObject_t swig_types[116]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GeodeticConverter_t swig_types[117]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GeodeticRadian2piConverter_t swig_types[118]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GeodeticRadianConverter_t swig_types[119]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GroundCoordinate_t swig_types[120]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LnLookVectorWithDerivative_t swig_types[121]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LnLookVector_t swig_types[122]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t swig_types[123]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t swig_types[124]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t swig_types[125]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_t swig_types[126]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVector_t swig_types[127]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t swig_types[128]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t swig_types[129]
+#define SWIGTYPE_p_char swig_types[130]
+#define SWIGTYPE_p_char_type swig_types[131]
+#define SWIGTYPE_p_difference_type swig_types[132]
+#define SWIGTYPE_p_fmtflags swig_types[133]
+#define SWIGTYPE_p_hid_t swig_types[134]
+#define SWIGTYPE_p_int_type swig_types[135]
+#define SWIGTYPE_p_iostate swig_types[136]
+#define SWIGTYPE_p_off_type swig_types[137]
+#define SWIGTYPE_p_openmode swig_types[138]
+#define SWIGTYPE_p_pos_type swig_types[139]
+#define SWIGTYPE_p_seekdir swig_types[140]
+#define SWIGTYPE_p_size_t swig_types[141]
+#define SWIGTYPE_p_size_type swig_types[142]
+#define SWIGTYPE_p_state_type swig_types[143]
+#define SWIGTYPE_p_std__basic_iosT_char_t swig_types[144]
+#define SWIGTYPE_p_std__basic_iostreamT_char_t swig_types[145]
+#define SWIGTYPE_p_std__basic_istreamT_char_t swig_types[146]
+#define SWIGTYPE_p_std__basic_ostreamT_char_t swig_types[147]
+#define SWIGTYPE_p_std__invalid_argument swig_types[148]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[149]
+#define SWIGTYPE_p_traits_type swig_types[150]
+#define SWIGTYPE_p_value_type swig_types[151]
+static swig_type_info *swig_types[153];
+static swig_module_info swig_module = {swig_types, 152, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -3840,13 +3892,13 @@ static swig_module_info swig_module = {swig_types, 100, 0, 0, 0, 0};
 #define SWIG_TypeQuery SWIG_Python_TypeQuery
 
 /*-----------------------------------------------
-              @(target):= _hdfeos_filehandle.so
+              @(target):= _hdfeos_grid.so
   ------------------------------------------------*/
 #if PY_VERSION_HEX >= 0x03000000
-#  define SWIG_init    PyInit__hdfeos_filehandle
+#  define SWIG_init    PyInit__hdfeos_grid
 
 #else
-#  define SWIG_init    init_hdfeos_filehandle
+#  define SWIG_init    init_hdfeos_grid
 
 #endif
 
@@ -5112,7 +5164,7 @@ namespace swig {
 #endif  
 
 
-#include "hdfeos_filehandle.h"
+#include "hdfeos_grid.h"
 
 
 SWIGINTERN swig_type_info*
@@ -5240,22 +5292,6 @@ SWIG_AsPtr_std_string (PyObject * obj, std::string **val)
 }
 
 
-SWIGINTERN int
-SWIG_AsVal_int (PyObject * obj, int *val)
-{
-  long v;
-  int res = SWIG_AsVal_long (obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v < INT_MIN || v > INT_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = static_cast< int >(v);
-    }
-  }  
-  return res;
-}
-
-
 struct SWIG_null_deleter {
   void operator() (void const *) const {
   }
@@ -5267,6 +5303,9 @@ struct SWIG_null_deleter {
 
 
 #define SWIG_NO_NULL_DELETER_SWIG_BUILTIN_INIT
+
+
+  #define SWIG_From_double   PyFloat_FromDouble 
 
 
 SWIGINTERNINLINE PyObject *
@@ -6068,7 +6107,7 @@ namespace swig {
  * C++ director class methods
  * --------------------------------------------------- */
 
-#include "hdfeos_filehandle_wrap.h"
+#include "hdfeos_grid_wrap.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -6874,36 +6913,55 @@ SWIGINTERN PyObject *SwigPyIterator_swigregister(PyObject *SWIGUNUSEDPARM(self),
   return SWIG_Py_Void();
 }
 
-SWIGINTERN PyObject *_wrap_new_HdfEosFileHandle__SWIG_0(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_HdfEosGrid__SWIG_0(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
-  std::string *arg1 = 0 ;
-  int arg2 ;
-  int res1 = SWIG_OLDOBJ ;
-  int val2 ;
-  int ecode2 = 0 ;
-  Ecostress::HdfEosFileHandle *result = 0 ;
+  boost::shared_ptr< Ecostress::HdfEosFileHandle > *arg1 = 0 ;
+  std::string *arg2 = 0 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::HdfEosFileHandle > tempshared1 ;
+  boost::shared_ptr< Ecostress::HdfEosFileHandle > temp2shared1 ;
+  int res2 = SWIG_OLDOBJ ;
+  Ecostress::HdfEosGrid *result = 0 ;
   
   (void)self;
   if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
   {
-    std::string *ptr = (std::string *)0;
-    res1 = SWIG_AsPtr_std_string(swig_obj[0], &ptr);
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t,  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_HdfEosFileHandle" "', argument " "1"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_HdfEosGrid" "', argument " "1"" of type '" "boost::shared_ptr< Ecostress::HdfEosFileHandle > const &""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp1) tempshared1 = *reinterpret_cast< boost::shared_ptr< Ecostress::HdfEosFileHandle > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< Ecostress::HdfEosFileHandle > * >(argp1);
+      arg1 = &tempshared1;
+    } else {
+      arg1 = (argp1) ? reinterpret_cast< boost::shared_ptr< Ecostress::HdfEosFileHandle > * >(argp1) : &tempshared1;
+    }
+    // Added mms
+    // Special handling if this is a director class.
+    // See DirectorNotes.md for discussion of this.
+    Swig::Director* dp = dynamic_cast<Swig::Director*>(arg1->get());
+    if(dp) {
+      temp2shared1.reset(arg1->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      arg1 = &temp2shared1;
+    }
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(swig_obj[1], &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_HdfEosGrid" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_NullReferenceError, "invalid null reference " "in method '" "new_HdfEosFileHandle" "', argument " "1"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_NullReferenceError, "invalid null reference " "in method '" "new_HdfEosGrid" "', argument " "2"" of type '" "std::string const &""'"); 
     }
-    arg1 = ptr;
+    arg2 = ptr;
   }
-  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_HdfEosFileHandle" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
   {
     try {
-      result = (Ecostress::HdfEosFileHandle *)new Ecostress::HdfEosFileHandle((std::string const &)*arg1,arg2);
+      result = (Ecostress::HdfEosGrid *)new Ecostress::HdfEosGrid((boost::shared_ptr< Ecostress::HdfEosFileHandle > const &)*arg1,(std::string const &)*arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
     } catch (const std::exception& e) {
@@ -6911,39 +6969,95 @@ SWIGINTERN PyObject *_wrap_new_HdfEosFileHandle__SWIG_0(PyObject *self, Py_ssize
     }
   }
   {
-    boost::shared_ptr<  Ecostress::HdfEosFileHandle > *smartresult = result ? new boost::shared_ptr<  Ecostress::HdfEosFileHandle >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
-    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+    boost::shared_ptr<  Ecostress::HdfEosGrid > *smartresult = result ? new boost::shared_ptr<  Ecostress::HdfEosGrid >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosGrid_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
   }
-  if (SWIG_IsNewObj(res1)) delete arg1;
+  if (SWIG_IsNewObj(res2)) delete arg2;
   return resultobj;
 fail:
-  if (SWIG_IsNewObj(res1)) delete arg1;
+  if (SWIG_IsNewObj(res2)) delete arg2;
   return NULL;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_HdfEosFileHandle__SWIG_1(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
+SWIGINTERN PyObject *_wrap_new_HdfEosGrid__SWIG_1(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
-  std::string *arg1 = 0 ;
-  int res1 = SWIG_OLDOBJ ;
-  Ecostress::HdfEosFileHandle *result = 0 ;
+  boost::shared_ptr< Ecostress::HdfEosFileHandle > *arg1 = 0 ;
+  std::string *arg2 = 0 ;
+  GeoCal::MapInfo *arg3 = 0 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::HdfEosFileHandle > tempshared1 ;
+  boost::shared_ptr< Ecostress::HdfEosFileHandle > temp2shared1 ;
+  int res2 = SWIG_OLDOBJ ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  boost::shared_ptr< GeoCal::MapInfo const > tempshared3 ;
+  Ecostress::HdfEosGrid *result = 0 ;
   
   (void)self;
-  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t,  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_HdfEosGrid" "', argument " "1"" of type '" "boost::shared_ptr< Ecostress::HdfEosFileHandle > const &""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp1) tempshared1 = *reinterpret_cast< boost::shared_ptr< Ecostress::HdfEosFileHandle > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< Ecostress::HdfEosFileHandle > * >(argp1);
+      arg1 = &tempshared1;
+    } else {
+      arg1 = (argp1) ? reinterpret_cast< boost::shared_ptr< Ecostress::HdfEosFileHandle > * >(argp1) : &tempshared1;
+    }
+    // Added mms
+    // Special handling if this is a director class.
+    // See DirectorNotes.md for discussion of this.
+    Swig::Director* dp = dynamic_cast<Swig::Director*>(arg1->get());
+    if(dp) {
+      temp2shared1.reset(arg1->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      arg1 = &temp2shared1;
+    }
+  }
   {
     std::string *ptr = (std::string *)0;
-    res1 = SWIG_AsPtr_std_string(swig_obj[0], &ptr);
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_HdfEosFileHandle" "', argument " "1"" of type '" "std::string const &""'"); 
+    res2 = SWIG_AsPtr_std_string(swig_obj[1], &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_HdfEosGrid" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_NullReferenceError, "invalid null reference " "in method '" "new_HdfEosFileHandle" "', argument " "1"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_NullReferenceError, "invalid null reference " "in method '" "new_HdfEosGrid" "', argument " "2"" of type '" "std::string const &""'"); 
     }
-    arg1 = ptr;
+    arg2 = ptr;
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::MapInfo *ptr;
+    res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], (void**)(&ptr), SWIGTYPE_p_GeoCal__MapInfo,  0 , &newmem);
+    if (SWIG_IsOK(res3)) {
+      arg3 = ptr;
+    } else {
+      res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t,  0 , &newmem);
+      if (!SWIG_IsOK(res3)) {
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_HdfEosGrid" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'");
+      }
+      if (!argp3) {
+        SWIG_exception_fail(SWIG_NullReferenceError, "invalid null reference " "in method '" "new_HdfEosGrid" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared3 = *reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3);
+        delete reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3);
+        arg3 = const_cast< GeoCal::MapInfo * >(tempshared3.get());
+      } else {
+        arg3 = const_cast< GeoCal::MapInfo * >(reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3)->get());
+      }
+    }
   }
   {
     try {
-      result = (Ecostress::HdfEosFileHandle *)new Ecostress::HdfEosFileHandle((std::string const &)*arg1);
+      result = (Ecostress::HdfEosGrid *)new Ecostress::HdfEosGrid((boost::shared_ptr< Ecostress::HdfEosFileHandle > const &)*arg1,(std::string const &)*arg2,(GeoCal::MapInfo const &)*arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
     } catch (const std::exception& e) {
@@ -6951,52 +7065,52 @@ SWIGINTERN PyObject *_wrap_new_HdfEosFileHandle__SWIG_1(PyObject *self, Py_ssize
     }
   }
   {
-    boost::shared_ptr<  Ecostress::HdfEosFileHandle > *smartresult = result ? new boost::shared_ptr<  Ecostress::HdfEosFileHandle >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
-    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+    boost::shared_ptr<  Ecostress::HdfEosGrid > *smartresult = result ? new boost::shared_ptr<  Ecostress::HdfEosGrid >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosGrid_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
   }
-  if (SWIG_IsNewObj(res1)) delete arg1;
+  if (SWIG_IsNewObj(res2)) delete arg2;
   return resultobj;
 fail:
-  if (SWIG_IsNewObj(res1)) delete arg1;
+  if (SWIG_IsNewObj(res2)) delete arg2;
   return NULL;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_HdfEosFileHandle(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_HdfEosGrid(PyObject *self, PyObject *args) {
   Py_ssize_t argc;
-  PyObject *argv[3] = {
+  PyObject *argv[4] = {
     0
   };
   
-  if (!(argc = SWIG_Python_UnpackTuple(args, "new_HdfEosFileHandle", 0, 2, argv))) SWIG_fail;
+  if (!(argc = SWIG_Python_UnpackTuple(args, "new_HdfEosGrid", 0, 3, argv))) SWIG_fail;
   --argc;
-  if (argc == 1) {
-    PyObject *retobj = _wrap_new_HdfEosFileHandle__SWIG_1(self, argc, argv);
+  if (argc == 2) {
+    PyObject *retobj = _wrap_new_HdfEosGrid__SWIG_0(self, argc, argv);
     if (!SWIG_Python_TypeErrorOccurred(retobj)) return retobj;
     SWIG_fail;
   }
-  if (argc == 2) {
-    PyObject *retobj = _wrap_new_HdfEosFileHandle__SWIG_0(self, argc, argv);
+  if (argc == 3) {
+    PyObject *retobj = _wrap_new_HdfEosGrid__SWIG_1(self, argc, argv);
     if (!SWIG_Python_TypeErrorOccurred(retobj)) return retobj;
     SWIG_fail;
   }
   
 fail:
-  SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'new_HdfEosFileHandle'.\n"
+  SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'new_HdfEosGrid'.\n"
     "  Possible C/C++ prototypes are:\n"
-    "    Ecostress::HdfEosFileHandle::HdfEosFileHandle(std::string const &,int)\n"
-    "    Ecostress::HdfEosFileHandle::HdfEosFileHandle(std::string const &)\n");
+    "    Ecostress::HdfEosGrid::HdfEosGrid(boost::shared_ptr< Ecostress::HdfEosFileHandle > const &,std::string const &)\n"
+    "    Ecostress::HdfEosGrid::HdfEosGrid(boost::shared_ptr< Ecostress::HdfEosFileHandle > const &,std::string const &,GeoCal::MapInfo const &)\n");
   return 0;
 }
 
 
-SWIGINTERN PyObject *_wrap_HdfEosFileHandle_close(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_HdfEosGrid_close(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
-  Ecostress::HdfEosFileHandle *arg1 = (Ecostress::HdfEosFileHandle *) 0 ;
+  Ecostress::HdfEosGrid *arg1 = (Ecostress::HdfEosGrid *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  boost::shared_ptr< Ecostress::HdfEosFileHandle > tempshared1 ;
-  boost::shared_ptr< Ecostress::HdfEosFileHandle > *smartarg1 = 0 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid > tempshared1 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid > *smartarg1 = 0 ;
   PyObject *swig_obj[1] ;
   
   (void)self;
@@ -7004,17 +7118,17 @@ SWIGINTERN PyObject *_wrap_HdfEosFileHandle_close(PyObject *self, PyObject *args
   swig_obj[0] = args;
   {
     int newmem = 0;
-    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t, 0 |  0 , &newmem);
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosGrid_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "HdfEosFileHandle_close" "', argument " "1"" of type '" "Ecostress::HdfEosFileHandle *""'");
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "HdfEosGrid_close" "', argument " "1"" of type '" "Ecostress::HdfEosGrid *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
-      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosFileHandle > * >(argp1);
-      delete reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosFileHandle > * >(argp1);
-      arg1 = const_cast< Ecostress::HdfEosFileHandle * >(tempshared1.get());
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosGrid > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >(tempshared1.get());
     } else {
-      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosFileHandle > * >(argp1);
-      arg1 = const_cast< Ecostress::HdfEosFileHandle * >((smartarg1 ? smartarg1->get() : 0));
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >((smartarg1 ? smartarg1->get() : 0));
     }
   }
   {
@@ -7033,13 +7147,77 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_HdfEosFileHandle__v_file_name(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_HdfEosGrid_dms_to_deg(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
-  Ecostress::HdfEosFileHandle *arg1 = (Ecostress::HdfEosFileHandle *) 0 ;
+  double arg1 ;
+  double val1 ;
+  int ecode1 = 0 ;
+  PyObject *swig_obj[1] ;
+  double result;
+  
+  (void)self;
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  ecode1 = SWIG_AsVal_double(swig_obj[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "HdfEosGrid_dms_to_deg" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  {
+    try {
+      result = (double)Ecostress::HdfEosGrid::dms_to_deg(arg1);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_HdfEosGrid_deg_to_dms(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  double arg1 ;
+  double val1 ;
+  int ecode1 = 0 ;
+  PyObject *swig_obj[1] ;
+  double result;
+  
+  (void)self;
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  ecode1 = SWIG_AsVal_double(swig_obj[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "HdfEosGrid_deg_to_dms" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  {
+    try {
+      result = (double)Ecostress::HdfEosGrid::deg_to_dms(arg1);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_HdfEosGrid__v_grid_name(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::HdfEosGrid *arg1 = (Ecostress::HdfEosGrid *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  boost::shared_ptr< Ecostress::HdfEosFileHandle const > tempshared1 ;
-  boost::shared_ptr< Ecostress::HdfEosFileHandle const > *smartarg1 = 0 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid const > tempshared1 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid const > *smartarg1 = 0 ;
   PyObject *swig_obj[1] ;
   std::string result;
   
@@ -7048,22 +7226,22 @@ SWIGINTERN PyObject *_wrap_HdfEosFileHandle__v_file_name(PyObject *self, PyObjec
   swig_obj[0] = args;
   {
     int newmem = 0;
-    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t, 0 |  0 , &newmem);
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosGrid_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "HdfEosFileHandle__v_file_name" "', argument " "1"" of type '" "Ecostress::HdfEosFileHandle const *""'");
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "HdfEosGrid__v_grid_name" "', argument " "1"" of type '" "Ecostress::HdfEosGrid const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
-      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosFileHandle > * >(argp1);
-      delete reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosFileHandle > * >(argp1);
-      arg1 = const_cast< Ecostress::HdfEosFileHandle * >(tempshared1.get());
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >(tempshared1.get());
     } else {
-      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosFileHandle > * >(argp1);
-      arg1 = const_cast< Ecostress::HdfEosFileHandle * >((smartarg1 ? smartarg1->get() : 0));
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >((smartarg1 ? smartarg1->get() : 0));
     }
   }
   {
     try {
-      result = ((Ecostress::HdfEosFileHandle const *)arg1)->file_name();
+      result = ((Ecostress::HdfEosGrid const *)arg1)->grid_name();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
     } catch (const std::exception& e) {
@@ -7077,57 +7255,59 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_HdfEosFileHandle__v_mode(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_HdfEosGrid__v_file_handle(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
-  Ecostress::HdfEosFileHandle *arg1 = (Ecostress::HdfEosFileHandle *) 0 ;
+  Ecostress::HdfEosGrid *arg1 = (Ecostress::HdfEosGrid *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  boost::shared_ptr< Ecostress::HdfEosFileHandle const > tempshared1 ;
-  boost::shared_ptr< Ecostress::HdfEosFileHandle const > *smartarg1 = 0 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid const > tempshared1 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid const > *smartarg1 = 0 ;
   PyObject *swig_obj[1] ;
-  int result;
+  boost::shared_ptr< Ecostress::HdfEosFileHandle > result;
   
   (void)self;
   if (!args) SWIG_fail;
   swig_obj[0] = args;
   {
     int newmem = 0;
-    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t, 0 |  0 , &newmem);
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosGrid_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "HdfEosFileHandle__v_mode" "', argument " "1"" of type '" "Ecostress::HdfEosFileHandle const *""'");
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "HdfEosGrid__v_file_handle" "', argument " "1"" of type '" "Ecostress::HdfEosGrid const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
-      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosFileHandle > * >(argp1);
-      delete reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosFileHandle > * >(argp1);
-      arg1 = const_cast< Ecostress::HdfEosFileHandle * >(tempshared1.get());
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >(tempshared1.get());
     } else {
-      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosFileHandle > * >(argp1);
-      arg1 = const_cast< Ecostress::HdfEosFileHandle * >((smartarg1 ? smartarg1->get() : 0));
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >((smartarg1 ? smartarg1->get() : 0));
     }
   }
   {
     try {
-      result = (int)((Ecostress::HdfEosFileHandle const *)arg1)->mode();
+      result = ((Ecostress::HdfEosGrid const *)arg1)->file_handle();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
   }
-  resultobj = SWIG_From_int(static_cast< int >(result));
+  {
+    resultobj = GeoCal::swig_to_python(result);
+  }
   return resultobj;
 fail:
   return NULL;
 }
 
 
-SWIGINTERN PyObject *_wrap_HdfEosFileHandle__v_file_id(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_HdfEosGrid__v_grid_id(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
-  Ecostress::HdfEosFileHandle *arg1 = (Ecostress::HdfEosFileHandle *) 0 ;
+  Ecostress::HdfEosGrid *arg1 = (Ecostress::HdfEosGrid *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  boost::shared_ptr< Ecostress::HdfEosFileHandle const > tempshared1 ;
-  boost::shared_ptr< Ecostress::HdfEosFileHandle const > *smartarg1 = 0 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid const > tempshared1 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid const > *smartarg1 = 0 ;
   PyObject *swig_obj[1] ;
   hid_t result;
   
@@ -7136,22 +7316,22 @@ SWIGINTERN PyObject *_wrap_HdfEosFileHandle__v_file_id(PyObject *self, PyObject 
   swig_obj[0] = args;
   {
     int newmem = 0;
-    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t, 0 |  0 , &newmem);
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosGrid_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "HdfEosFileHandle__v_file_id" "', argument " "1"" of type '" "Ecostress::HdfEosFileHandle const *""'");
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "HdfEosGrid__v_grid_id" "', argument " "1"" of type '" "Ecostress::HdfEosGrid const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
-      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosFileHandle > * >(argp1);
-      delete reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosFileHandle > * >(argp1);
-      arg1 = const_cast< Ecostress::HdfEosFileHandle * >(tempshared1.get());
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >(tempshared1.get());
     } else {
-      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosFileHandle > * >(argp1);
-      arg1 = const_cast< Ecostress::HdfEosFileHandle * >((smartarg1 ? smartarg1->get() : 0));
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >((smartarg1 ? smartarg1->get() : 0));
     }
   }
   {
     try {
-      result = ((Ecostress::HdfEosFileHandle const *)arg1)->file_id();
+      result = ((Ecostress::HdfEosGrid const *)arg1)->grid_id();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
     } catch (const std::exception& e) {
@@ -7165,13 +7345,60 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_HdfEosFileHandle__v_grid_name(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_HdfEosGrid__v_map_info(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
-  Ecostress::HdfEosFileHandle *arg1 = (Ecostress::HdfEosFileHandle *) 0 ;
+  Ecostress::HdfEosGrid *arg1 = (Ecostress::HdfEosGrid *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  boost::shared_ptr< Ecostress::HdfEosFileHandle const > tempshared1 ;
-  boost::shared_ptr< Ecostress::HdfEosFileHandle const > *smartarg1 = 0 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid const > tempshared1 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid const > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  GeoCal::MapInfo result;
+  
+  (void)self;
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosGrid_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "HdfEosGrid__v_map_info" "', argument " "1"" of type '" "Ecostress::HdfEosGrid const *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = ((Ecostress::HdfEosGrid const *)arg1)->map_info();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    boost::shared_ptr<  GeoCal::MapInfo > *smartresult = new boost::shared_ptr<  GeoCal::MapInfo >(new GeoCal::MapInfo((GeoCal::MapInfo &)result));
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_HdfEosGrid__v_field_name(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::HdfEosGrid *arg1 = (Ecostress::HdfEosGrid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid const > tempshared1 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid const > *smartarg1 = 0 ;
   PyObject *swig_obj[1] ;
   std::vector< std::string,std::allocator< std::string > > result;
   
@@ -7180,22 +7407,22 @@ SWIGINTERN PyObject *_wrap_HdfEosFileHandle__v_grid_name(PyObject *self, PyObjec
   swig_obj[0] = args;
   {
     int newmem = 0;
-    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t, 0 |  0 , &newmem);
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosGrid_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "HdfEosFileHandle__v_grid_name" "', argument " "1"" of type '" "Ecostress::HdfEosFileHandle const *""'");
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "HdfEosGrid__v_field_name" "', argument " "1"" of type '" "Ecostress::HdfEosGrid const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
-      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosFileHandle > * >(argp1);
-      delete reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosFileHandle > * >(argp1);
-      arg1 = const_cast< Ecostress::HdfEosFileHandle * >(tempshared1.get());
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >(tempshared1.get());
     } else {
-      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosFileHandle > * >(argp1);
-      arg1 = const_cast< Ecostress::HdfEosFileHandle * >((smartarg1 ? smartarg1->get() : 0));
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >((smartarg1 ? smartarg1->get() : 0));
     }
   }
   {
     try {
-      result = ((Ecostress::HdfEosFileHandle const *)arg1)->grid_name();
+      result = ((Ecostress::HdfEosGrid const *)arg1)->field_name();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
     } catch (const std::exception& e) {
@@ -7209,13 +7436,127 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_HdfEosFileHandle___str__(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_HdfEosGrid_add_field_uchar(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
-  Ecostress::HdfEosFileHandle *arg1 = (Ecostress::HdfEosFileHandle *) 0 ;
+  Ecostress::HdfEosGrid *arg1 = (Ecostress::HdfEosGrid *) 0 ;
+  std::string *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  boost::shared_ptr< Ecostress::HdfEosFileHandle const > tempshared1 ;
-  boost::shared_ptr< Ecostress::HdfEosFileHandle const > *smartarg1 = 0 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid > tempshared1 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid > *smartarg1 = 0 ;
+  int res2 = SWIG_OLDOBJ ;
+  PyObject *swig_obj[2] ;
+  
+  (void)self;
+  if (!SWIG_Python_UnpackTuple(args, "HdfEosGrid_add_field_uchar", 2, 2, swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosGrid_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "HdfEosGrid_add_field_uchar" "', argument " "1"" of type '" "Ecostress::HdfEosGrid *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosGrid > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(swig_obj[1], &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "HdfEosGrid_add_field_uchar" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_NullReferenceError, "invalid null reference " "in method '" "HdfEosGrid_add_field_uchar" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  {
+    try {
+      (arg1)->add_field_uchar((std::string const &)*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_HdfEosGrid_add_field_float(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::HdfEosGrid *arg1 = (Ecostress::HdfEosGrid *) 0 ;
+  std::string *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid > tempshared1 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid > *smartarg1 = 0 ;
+  int res2 = SWIG_OLDOBJ ;
+  PyObject *swig_obj[2] ;
+  
+  (void)self;
+  if (!SWIG_Python_UnpackTuple(args, "HdfEosGrid_add_field_float", 2, 2, swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosGrid_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "HdfEosGrid_add_field_float" "', argument " "1"" of type '" "Ecostress::HdfEosGrid *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosGrid > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(swig_obj[1], &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "HdfEosGrid_add_field_float" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_NullReferenceError, "invalid null reference " "in method '" "HdfEosGrid_add_field_float" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  {
+    try {
+      (arg1)->add_field_float((std::string const &)*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_HdfEosGrid___str__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::HdfEosGrid *arg1 = (Ecostress::HdfEosGrid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid const > tempshared1 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid const > *smartarg1 = 0 ;
   PyObject *swig_obj[1] ;
   std::string result;
   
@@ -7224,22 +7565,22 @@ SWIGINTERN PyObject *_wrap_HdfEosFileHandle___str__(PyObject *self, PyObject *ar
   swig_obj[0] = args;
   {
     int newmem = 0;
-    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t, 0 |  0 , &newmem);
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosGrid_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "HdfEosFileHandle___str__" "', argument " "1"" of type '" "Ecostress::HdfEosFileHandle const *""'");
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "HdfEosGrid___str__" "', argument " "1"" of type '" "Ecostress::HdfEosGrid const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
-      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosFileHandle > * >(argp1);
-      delete reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosFileHandle > * >(argp1);
-      arg1 = const_cast< Ecostress::HdfEosFileHandle * >(tempshared1.get());
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >(tempshared1.get());
     } else {
-      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosFileHandle > * >(argp1);
-      arg1 = const_cast< Ecostress::HdfEosFileHandle * >((smartarg1 ? smartarg1->get() : 0));
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >((smartarg1 ? smartarg1->get() : 0));
     }
   }
   {
     try {
-      result = ((Ecostress::HdfEosFileHandle const *)arg1)->print_to_string();
+      result = ((Ecostress::HdfEosGrid const *)arg1)->print_to_string();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
     } catch (const std::exception& e) {
@@ -7253,13 +7594,13 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_HdfEosFileHandle(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_HdfEosGrid(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
-  Ecostress::HdfEosFileHandle *arg1 = (Ecostress::HdfEosFileHandle *) 0 ;
+  Ecostress::HdfEosGrid *arg1 = (Ecostress::HdfEosGrid *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  boost::shared_ptr< Ecostress::HdfEosFileHandle > tempshared1 ;
-  boost::shared_ptr< Ecostress::HdfEosFileHandle > *smartarg1 = 0 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid > tempshared1 ;
+  boost::shared_ptr< Ecostress::HdfEosGrid > *smartarg1 = 0 ;
   PyObject *swig_obj[1] ;
   
   (void)self;
@@ -7267,17 +7608,17 @@ SWIGINTERN PyObject *_wrap_delete_HdfEosFileHandle(PyObject *self, PyObject *arg
   swig_obj[0] = args;
   {
     int newmem = 0;
-    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t, 0 |  0 , &newmem);
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosGrid_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_HdfEosFileHandle" "', argument " "1"" of type '" "Ecostress::HdfEosFileHandle *""'");
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_HdfEosGrid" "', argument " "1"" of type '" "Ecostress::HdfEosGrid *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
-      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosFileHandle > * >(argp1);
-      delete reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosFileHandle > * >(argp1);
-      arg1 = const_cast< Ecostress::HdfEosFileHandle * >(tempshared1.get());
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosGrid > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >(tempshared1.get());
     } else {
-      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosFileHandle > * >(argp1);
-      arg1 = const_cast< Ecostress::HdfEosFileHandle * >((smartarg1 ? smartarg1->get() : 0));
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::HdfEosGrid > * >(argp1);
+      arg1 = const_cast< Ecostress::HdfEosGrid * >((smartarg1 ? smartarg1->get() : 0));
     }
   }
   {
@@ -7296,14 +7637,14 @@ fail:
 }
 
 
-SWIGINTERN PyObject *HdfEosFileHandle_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *HdfEosGrid_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *obj = NULL;
   if (!SWIG_Python_UnpackTuple(args, "swigregister", 1, 1, &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t, SWIG_NewClientData(obj));
+  SWIG_TypeNewClientData(SWIGTYPE_p_boost__shared_ptrT_Ecostress__HdfEosGrid_t, SWIG_NewClientData(obj));
   return SWIG_Py_Void();
 }
 
-SWIGINTERN PyObject *HdfEosFileHandle_swiginit(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *HdfEosGrid_swiginit(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   return SWIG_Python_InitShadowInstance(args);
 }
 
@@ -7328,57 +7669,93 @@ static PyMethodDef SwigMethods[] = {
 	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
 	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
-	 { "new_HdfEosFileHandle", _wrap_new_HdfEosFileHandle, METH_VARARGS, "\n"
+	 { "new_HdfEosGrid", _wrap_new_HdfEosGrid, METH_VARARGS, "\n"
 		"\n"
-		"HdfEosFileHandle::HdfEosFileHandle(const std::string &Fname, int mode=READ)\n"
-		"Ecostress::HdfEosFileHandle::HdfEosFileHandle\n"
-		"Constructor, open the file for reading, read/write, or\n"
-		"creating/truncating a file.\n"
-		"\n"
-		""},
-	 { "HdfEosFileHandle_close", _wrap_HdfEosFileHandle_close, METH_O, "\n"
-		"\n"
-		"void HdfEosFileHandle::close()\n"
-		"Ecostress::HdfEosFileHandle::close\n"
-		"Close the file.\n"
+		"HdfEosGrid::HdfEosGrid(const boost::shared_ptr< HdfEosFileHandle > &Fhandle, const\n"
+		"std::string &Grid_name, const GeoCal::MapInfo &Minfo, int\n"
+		"Compression_type=HE5_HDFE_COMP_DEFLATE, int Deflate_level=9)\n"
+		"Ecostress::HdfEosGrid::HdfEosGrid\n"
+		"Constructor, create a grid with the given map info.\n"
 		"\n"
 		""},
-	 { "HdfEosFileHandle__v_file_name", _wrap_HdfEosFileHandle__v_file_name, METH_O, "\n"
+	 { "HdfEosGrid_close", _wrap_HdfEosGrid_close, METH_O, "\n"
 		"\n"
-		"const std::string & Ecostress::HdfEosFileHandle::file_name() const\n"
-		"Ecostress::HdfEosFileHandle::file_name\n"
-		"Filename of file.\n"
-		"\n"
-		""},
-	 { "HdfEosFileHandle__v_mode", _wrap_HdfEosFileHandle__v_mode, METH_O, "\n"
-		"\n"
-		"int Ecostress::HdfEosFileHandle::mode() const\n"
-		"Ecostress::HdfEosFileHandle::mode\n"
-		"Mode file was opened with.\n"
+		"void HdfEosGrid::close()\n"
+		"Ecostress::HdfEosGrid::close\n"
+		"Close the grid.\n"
 		"\n"
 		""},
-	 { "HdfEosFileHandle__v_file_id", _wrap_HdfEosFileHandle__v_file_id, METH_O, "\n"
+	 { "HdfEosGrid_dms_to_deg", _wrap_HdfEosGrid_dms_to_deg, METH_O, "\n"
 		"\n"
-		"hid_t Ecostress::HdfEosFileHandle::file_id() const\n"
-		"Ecostress::HdfEosFileHandle::file_id\n"
+		"double HdfEosGrid::dms_to_deg(double dms)\n"
+		"Ecostress::HdfEosGrid::dms_to_deg\n"
+		"Convert from the DMS format to standard decimal degrees.\n"
+		"\n"
+		""},
+	 { "HdfEosGrid_deg_to_dms", _wrap_HdfEosGrid_deg_to_dms, METH_O, "\n"
+		"\n"
+		"double HdfEosGrid::deg_to_dms(double deg)\n"
+		"Ecostress::HdfEosGrid::deg_to_dms\n"
+		"Convert from the DMS format to standard decimal degrees.\n"
+		"\n"
+		""},
+	 { "HdfEosGrid__v_grid_name", _wrap_HdfEosGrid__v_grid_name, METH_O, "\n"
+		"\n"
+		"const std::string & Ecostress::HdfEosGrid::grid_name() const\n"
+		"Ecostress::HdfEosGrid::grid_name\n"
+		"Grid name.\n"
+		"\n"
+		""},
+	 { "HdfEosGrid__v_file_handle", _wrap_HdfEosGrid__v_file_handle, METH_O, "\n"
+		"\n"
+		"const boost::shared_ptr< HdfEosFileHandle > & Ecostress::HdfEosGrid::file_handle() const\n"
+		"Ecostress::HdfEosGrid::file_handle\n"
+		"File handle.\n"
+		"\n"
+		""},
+	 { "HdfEosGrid__v_grid_id", _wrap_HdfEosGrid__v_grid_id, METH_O, "\n"
+		"\n"
+		"hid_t Ecostress::HdfEosGrid::grid_id() const\n"
+		"Ecostress::HdfEosGrid::grid_id\n"
 		"File id.\n"
 		"\n"
 		""},
-	 { "HdfEosFileHandle__v_grid_name", _wrap_HdfEosFileHandle__v_grid_name, METH_O, "\n"
+	 { "HdfEosGrid__v_map_info", _wrap_HdfEosGrid__v_map_info, METH_O, "\n"
 		"\n"
-		"const std::vector< std::string > & Ecostress::HdfEosFileHandle::grid_name() const\n"
-		"Ecostress::HdfEosFileHandle::grid_name\n"
-		"Grid names in the file.\n"
+		"const GeoCal::MapInfo & Ecostress::HdfEosGrid::map_info() const\n"
+		"Ecostress::HdfEosGrid::map_info\n"
+		"Mapinfo for grid.\n"
 		"\n"
 		""},
-	 { "HdfEosFileHandle___str__", _wrap_HdfEosFileHandle___str__, METH_O, NULL},
-	 { "delete_HdfEosFileHandle", _wrap_delete_HdfEosFileHandle, METH_O, "\n"
+	 { "HdfEosGrid__v_field_name", _wrap_HdfEosGrid__v_field_name, METH_O, "\n"
 		"\n"
-		"virtual Ecostress::HdfEosFileHandle::~HdfEosFileHandle()\n"
-		"Ecostress::HdfEosFileHandle::~HdfEosFileHandle\n"
+		"const std::vector< std::string > & Ecostress::HdfEosGrid::field_name() const\n"
+		"Ecostress::HdfEosGrid::field_name\n"
+		"List of fields in grid.\n"
+		"\n"
 		""},
-	 { "HdfEosFileHandle_swigregister", HdfEosFileHandle_swigregister, METH_O, NULL},
-	 { "HdfEosFileHandle_swiginit", HdfEosFileHandle_swiginit, METH_VARARGS, NULL},
+	 { "HdfEosGrid_add_field_uchar", _wrap_HdfEosGrid_add_field_uchar, METH_VARARGS, "\n"
+		"\n"
+		"void HdfEosGrid::add_field_uchar(const std::string &Name)\n"
+		"Ecostress::HdfEosGrid::add_field_uchar\n"
+		"Add field.\n"
+		"\n"
+		""},
+	 { "HdfEosGrid_add_field_float", _wrap_HdfEosGrid_add_field_float, METH_VARARGS, "\n"
+		"\n"
+		"void HdfEosGrid::add_field_float(const std::string &Name)\n"
+		"Ecostress::HdfEosGrid::add_field_float\n"
+		"Add field.\n"
+		"\n"
+		""},
+	 { "HdfEosGrid___str__", _wrap_HdfEosGrid___str__, METH_O, NULL},
+	 { "delete_HdfEosGrid", _wrap_delete_HdfEosGrid, METH_O, "\n"
+		"\n"
+		"virtual Ecostress::HdfEosGrid::~HdfEosGrid()\n"
+		"Ecostress::HdfEosGrid::~HdfEosGrid\n"
+		""},
+	 { "HdfEosGrid_swigregister", HdfEosGrid_swigregister, METH_O, NULL},
+	 { "HdfEosGrid_swiginit", HdfEosGrid_swiginit, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
@@ -7403,69 +7780,385 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
 	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
-	 { "new_HdfEosFileHandle", _wrap_new_HdfEosFileHandle, METH_VARARGS, "\n"
+	 { "new_HdfEosGrid", _wrap_new_HdfEosGrid, METH_VARARGS, "\n"
 		"\n"
-		"HdfEosFileHandle::HdfEosFileHandle(const std::string &Fname, int mode=READ)\n"
-		"Ecostress::HdfEosFileHandle::HdfEosFileHandle\n"
-		"Constructor, open the file for reading, read/write, or\n"
-		"creating/truncating a file.\n"
-		"\n"
-		""},
-	 { "HdfEosFileHandle_close", _wrap_HdfEosFileHandle_close, METH_O, "\n"
-		"\n"
-		"void HdfEosFileHandle::close()\n"
-		"Ecostress::HdfEosFileHandle::close\n"
-		"Close the file.\n"
+		"HdfEosGrid::HdfEosGrid(const boost::shared_ptr< HdfEosFileHandle > &Fhandle, const\n"
+		"std::string &Grid_name, const GeoCal::MapInfo &Minfo, int\n"
+		"Compression_type=HE5_HDFE_COMP_DEFLATE, int Deflate_level=9)\n"
+		"Ecostress::HdfEosGrid::HdfEosGrid\n"
+		"Constructor, create a grid with the given map info.\n"
 		"\n"
 		""},
-	 { "HdfEosFileHandle__v_file_name", _wrap_HdfEosFileHandle__v_file_name, METH_O, "\n"
+	 { "HdfEosGrid_close", _wrap_HdfEosGrid_close, METH_O, "\n"
 		"\n"
-		"const std::string & Ecostress::HdfEosFileHandle::file_name() const\n"
-		"Ecostress::HdfEosFileHandle::file_name\n"
-		"Filename of file.\n"
-		"\n"
-		""},
-	 { "HdfEosFileHandle__v_mode", _wrap_HdfEosFileHandle__v_mode, METH_O, "\n"
-		"\n"
-		"int Ecostress::HdfEosFileHandle::mode() const\n"
-		"Ecostress::HdfEosFileHandle::mode\n"
-		"Mode file was opened with.\n"
+		"void HdfEosGrid::close()\n"
+		"Ecostress::HdfEosGrid::close\n"
+		"Close the grid.\n"
 		"\n"
 		""},
-	 { "HdfEosFileHandle__v_file_id", _wrap_HdfEosFileHandle__v_file_id, METH_O, "\n"
+	 { "HdfEosGrid_dms_to_deg", _wrap_HdfEosGrid_dms_to_deg, METH_O, "\n"
 		"\n"
-		"hid_t Ecostress::HdfEosFileHandle::file_id() const\n"
-		"Ecostress::HdfEosFileHandle::file_id\n"
+		"double HdfEosGrid::dms_to_deg(double dms)\n"
+		"Ecostress::HdfEosGrid::dms_to_deg\n"
+		"Convert from the DMS format to standard decimal degrees.\n"
+		"\n"
+		""},
+	 { "HdfEosGrid_deg_to_dms", _wrap_HdfEosGrid_deg_to_dms, METH_O, "\n"
+		"\n"
+		"double HdfEosGrid::deg_to_dms(double deg)\n"
+		"Ecostress::HdfEosGrid::deg_to_dms\n"
+		"Convert from the DMS format to standard decimal degrees.\n"
+		"\n"
+		""},
+	 { "HdfEosGrid__v_grid_name", _wrap_HdfEosGrid__v_grid_name, METH_O, "\n"
+		"\n"
+		"const std::string & Ecostress::HdfEosGrid::grid_name() const\n"
+		"Ecostress::HdfEosGrid::grid_name\n"
+		"Grid name.\n"
+		"\n"
+		""},
+	 { "HdfEosGrid__v_file_handle", _wrap_HdfEosGrid__v_file_handle, METH_O, "\n"
+		"\n"
+		"const boost::shared_ptr< HdfEosFileHandle > & Ecostress::HdfEosGrid::file_handle() const\n"
+		"Ecostress::HdfEosGrid::file_handle\n"
+		"File handle.\n"
+		"\n"
+		""},
+	 { "HdfEosGrid__v_grid_id", _wrap_HdfEosGrid__v_grid_id, METH_O, "\n"
+		"\n"
+		"hid_t Ecostress::HdfEosGrid::grid_id() const\n"
+		"Ecostress::HdfEosGrid::grid_id\n"
 		"File id.\n"
 		"\n"
 		""},
-	 { "HdfEosFileHandle__v_grid_name", _wrap_HdfEosFileHandle__v_grid_name, METH_O, "\n"
+	 { "HdfEosGrid__v_map_info", _wrap_HdfEosGrid__v_map_info, METH_O, "\n"
 		"\n"
-		"const std::vector< std::string > & Ecostress::HdfEosFileHandle::grid_name() const\n"
-		"Ecostress::HdfEosFileHandle::grid_name\n"
-		"Grid names in the file.\n"
+		"const GeoCal::MapInfo & Ecostress::HdfEosGrid::map_info() const\n"
+		"Ecostress::HdfEosGrid::map_info\n"
+		"Mapinfo for grid.\n"
 		"\n"
 		""},
-	 { "HdfEosFileHandle___str__", _wrap_HdfEosFileHandle___str__, METH_O, NULL},
-	 { "delete_HdfEosFileHandle", _wrap_delete_HdfEosFileHandle, METH_O, "\n"
+	 { "HdfEosGrid__v_field_name", _wrap_HdfEosGrid__v_field_name, METH_O, "\n"
 		"\n"
-		"virtual Ecostress::HdfEosFileHandle::~HdfEosFileHandle()\n"
-		"Ecostress::HdfEosFileHandle::~HdfEosFileHandle\n"
+		"const std::vector< std::string > & Ecostress::HdfEosGrid::field_name() const\n"
+		"Ecostress::HdfEosGrid::field_name\n"
+		"List of fields in grid.\n"
+		"\n"
 		""},
-	 { "HdfEosFileHandle_swigregister", HdfEosFileHandle_swigregister, METH_O, NULL},
-	 { "HdfEosFileHandle_swiginit", HdfEosFileHandle_swiginit, METH_VARARGS, NULL},
+	 { "HdfEosGrid_add_field_uchar", _wrap_HdfEosGrid_add_field_uchar, METH_VARARGS, "\n"
+		"\n"
+		"void HdfEosGrid::add_field_uchar(const std::string &Name)\n"
+		"Ecostress::HdfEosGrid::add_field_uchar\n"
+		"Add field.\n"
+		"\n"
+		""},
+	 { "HdfEosGrid_add_field_float", _wrap_HdfEosGrid_add_field_float, METH_VARARGS, "\n"
+		"\n"
+		"void HdfEosGrid::add_field_float(const std::string &Name)\n"
+		"Ecostress::HdfEosGrid::add_field_float\n"
+		"Add field.\n"
+		"\n"
+		""},
+	 { "HdfEosGrid___str__", _wrap_HdfEosGrid___str__, METH_O, NULL},
+	 { "delete_HdfEosGrid", _wrap_delete_HdfEosGrid, METH_O, "\n"
+		"\n"
+		"virtual Ecostress::HdfEosGrid::~HdfEosGrid()\n"
+		"Ecostress::HdfEosGrid::~HdfEosGrid\n"
+		""},
+	 { "HdfEosGrid_swigregister", HdfEosGrid_swigregister, METH_O, NULL},
+	 { "HdfEosGrid_swiginit", HdfEosGrid_swiginit, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
+static void *_p_GeoCal__GeodeticConverterTo_p_GeoCal__CoordinateConverter(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::CoordinateConverter *)  ((GeoCal::GeodeticConverter *) x));
+}
+static void *_p_GeoCal__GeodeticRadian2piConverterTo_p_GeoCal__CoordinateConverter(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::CoordinateConverter *)  ((GeoCal::GeodeticRadian2piConverter *) x));
+}
+static void *_p_GeoCal__GeodeticRadianConverterTo_p_GeoCal__CoordinateConverter(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::CoordinateConverter *)  ((GeoCal::GeodeticRadianConverter *) x));
+}
 static void *_p_Ecostress__HdfEosFileHandleTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((GeoCal::GenericObject *)  ((Ecostress::HdfEosFileHandle *) x));
+}
+static void *_p_Ecostress__HdfEosGridTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((Ecostress::HdfEosGrid *) x));
+}
+static void *_p_GeoCal__AutoDerivativeT_double_tTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::AutoDerivative< double > *) x));
+}
+static void *_p_GeoCal__AutoDerivativeRefT_double_tTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::AutoDerivativeRef< double > *) x));
+}
+static void *_p_GeoCal__CartesianFixedTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *) (GeoCal::GroundCoordinate *) ((GeoCal::CartesianFixed *) x));
+}
+static void *_p_GeoCal__CartesianFixedLookVectorTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *) (GeoCal::LookVector< double > *) ((GeoCal::CartesianFixedLookVector *) x));
+}
+static void *_p_GeoCal__CartesianFixedLookVectorWithDerivativeTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *) (GeoCal::LookVector< GeoCal::AutoDerivative< double > > *) ((GeoCal::CartesianFixedLookVectorWithDerivative *) x));
+}
+static void *_p_GeoCal__CartesianInertialTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::CartesianInertial *) x));
+}
+static void *_p_GeoCal__CartesianInertialLookVectorTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *) (GeoCal::LookVector< double > *) ((GeoCal::CartesianInertialLookVector *) x));
+}
+static void *_p_GeoCal__CartesianInertialLookVectorWithDerivativeTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *) (GeoCal::LookVector< GeoCal::AutoDerivative< double > > *) ((GeoCal::CartesianInertialLookVectorWithDerivative *) x));
+}
+static void *_p_GeoCal__CoordinateConverterTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::CoordinateConverter *) x));
+}
+static void *_p_GeoCal__DcsLookVectorTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *) (GeoCal::LookVector< double > *) ((GeoCal::DcsLookVector *) x));
+}
+static void *_p_GeoCal__DcsLookVectorWithDerivativeTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *) (GeoCal::LookVector< GeoCal::AutoDerivative< double > > *) ((GeoCal::DcsLookVectorWithDerivative *) x));
+}
+static void *_p_GeoCal__DemTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::Dem *) x));
+}
+static void *_p_GeoCal__GeodeticConverterTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *) (GeoCal::CoordinateConverter *) ((GeoCal::GeodeticConverter *) x));
+}
+static void *_p_GeoCal__GeodeticRadian2piConverterTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *) (GeoCal::CoordinateConverter *) ((GeoCal::GeodeticRadian2piConverter *) x));
+}
+static void *_p_GeoCal__GeodeticRadianConverterTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *) (GeoCal::CoordinateConverter *) ((GeoCal::GeodeticRadianConverter *) x));
+}
+static void *_p_GeoCal__GroundCoordinateTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::GroundCoordinate *) x));
+}
+static void *_p_GeoCal__LnLookVectorTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *) (GeoCal::LookVector< double > *) ((GeoCal::LnLookVector *) x));
+}
+static void *_p_GeoCal__LnLookVectorWithDerivativeTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *) (GeoCal::LookVector< GeoCal::AutoDerivative< double > > *) ((GeoCal::LnLookVectorWithDerivative *) x));
+}
+static void *_p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_tTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::LookVector< GeoCal::AutoDerivative< double > > *) x));
+}
+static void *_p_GeoCal__LookVectorT_double_tTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::LookVector< double > *) x));
+}
+static void *_p_GeoCal__MapInfoTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::MapInfo *) x));
+}
+static void *_p_GeoCal__ScLookVectorTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *) (GeoCal::LookVector< double > *) ((GeoCal::ScLookVector *) x));
+}
+static void *_p_GeoCal__ScLookVectorWithDerivativeTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *) (GeoCal::LookVector< GeoCal::AutoDerivative< double > > *) ((GeoCal::ScLookVectorWithDerivative *) x));
+}
+static void *_p_GeoCal__TimeTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::Time *) x));
+}
+static void *_p_GeoCal__TimeWithDerivativeTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *)  ((GeoCal::TimeWithDerivative *) x));
+}
+static void *_p_GeoCal__CartesianFixedTo_p_GeoCal__GroundCoordinate(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GroundCoordinate *)  ((GeoCal::CartesianFixed *) x));
+}
+static void *_p_GeoCal__CartesianFixedLookVectorWithDerivativeTo_p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::LookVector< GeoCal::AutoDerivative< double > > *)  ((GeoCal::CartesianFixedLookVectorWithDerivative *) x));
+}
+static void *_p_GeoCal__CartesianInertialLookVectorWithDerivativeTo_p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::LookVector< GeoCal::AutoDerivative< double > > *)  ((GeoCal::CartesianInertialLookVectorWithDerivative *) x));
+}
+static void *_p_GeoCal__DcsLookVectorWithDerivativeTo_p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::LookVector< GeoCal::AutoDerivative< double > > *)  ((GeoCal::DcsLookVectorWithDerivative *) x));
+}
+static void *_p_GeoCal__LnLookVectorWithDerivativeTo_p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::LookVector< GeoCal::AutoDerivative< double > > *)  ((GeoCal::LnLookVectorWithDerivative *) x));
+}
+static void *_p_GeoCal__ScLookVectorWithDerivativeTo_p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::LookVector< GeoCal::AutoDerivative< double > > *)  ((GeoCal::ScLookVectorWithDerivative *) x));
+}
+static void *_p_GeoCal__CartesianFixedLookVectorTo_p_GeoCal__LookVectorT_double_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::LookVector< double > *)  ((GeoCal::CartesianFixedLookVector *) x));
+}
+static void *_p_GeoCal__CartesianInertialLookVectorTo_p_GeoCal__LookVectorT_double_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::LookVector< double > *)  ((GeoCal::CartesianInertialLookVector *) x));
+}
+static void *_p_GeoCal__DcsLookVectorTo_p_GeoCal__LookVectorT_double_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::LookVector< double > *)  ((GeoCal::DcsLookVector *) x));
+}
+static void *_p_GeoCal__LnLookVectorTo_p_GeoCal__LookVectorT_double_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::LookVector< double > *)  ((GeoCal::LnLookVector *) x));
+}
+static void *_p_GeoCal__ScLookVectorTo_p_GeoCal__LookVectorT_double_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::LookVector< double > *)  ((GeoCal::ScLookVector *) x));
+}
+static void *_p_boost__shared_ptrT_GeoCal__GeodeticConverter_tTo_p_boost__shared_ptrT_GeoCal__CoordinateConverter_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::CoordinateConverter >(*(boost::shared_ptr< GeoCal::GeodeticConverter > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__GeodeticRadian2piConverter_tTo_p_boost__shared_ptrT_GeoCal__CoordinateConverter_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::CoordinateConverter >(*(boost::shared_ptr< GeoCal::GeodeticRadian2piConverter > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__GeodeticRadianConverter_tTo_p_boost__shared_ptrT_GeoCal__CoordinateConverter_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::CoordinateConverter >(*(boost::shared_ptr< GeoCal::GeodeticRadianConverter > *)x);
 }
 static void *_p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
     *newmemory = SWIG_CAST_NEW_MEMORY;
     return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< Ecostress::HdfEosFileHandle > *)x);
+}
+static void *_p_boost__shared_ptrT_Ecostress__HdfEosGrid_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< Ecostress::HdfEosGrid > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::AutoDerivative< double > > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::AutoDerivativeRef< double > > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__CartesianFixed_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::CartesianFixed > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__CartesianFixedLookVector_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::CartesianFixedLookVector > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::CartesianFixedLookVectorWithDerivative > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__CartesianInertial_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::CartesianInertial > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::CartesianInertialLookVector > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::CartesianInertialLookVectorWithDerivative > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__CoordinateConverter_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::CoordinateConverter > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__DcsLookVector_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::DcsLookVector > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::DcsLookVectorWithDerivative > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__Dem_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::Dem > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__GeodeticConverter_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::GeodeticConverter > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__GeodeticRadian2piConverter_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::GeodeticRadian2piConverter > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__GeodeticRadianConverter_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::GeodeticRadianConverter > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__GroundCoordinate_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::GroundCoordinate > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__LnLookVector_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::LnLookVector > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__LnLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::LnLookVectorWithDerivative > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::LookVector< GeoCal::AutoDerivative< double > > > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::LookVector< double > > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__MapInfo_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::MapInfo > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__ScLookVector_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::ScLookVector > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::ScLookVectorWithDerivative > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__Time_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::Time > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__TimeWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::TimeWithDerivative > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__CartesianFixed_tTo_p_boost__shared_ptrT_GeoCal__GroundCoordinate_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GroundCoordinate >(*(boost::shared_ptr< GeoCal::CartesianFixed > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::LookVector< GeoCal::AutoDerivative< double > > >(*(boost::shared_ptr< GeoCal::CartesianFixedLookVectorWithDerivative > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::LookVector< GeoCal::AutoDerivative< double > > >(*(boost::shared_ptr< GeoCal::CartesianInertialLookVectorWithDerivative > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::LookVector< GeoCal::AutoDerivative< double > > >(*(boost::shared_ptr< GeoCal::DcsLookVectorWithDerivative > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__LnLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::LookVector< GeoCal::AutoDerivative< double > > >(*(boost::shared_ptr< GeoCal::LnLookVectorWithDerivative > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::LookVector< GeoCal::AutoDerivative< double > > >(*(boost::shared_ptr< GeoCal::ScLookVectorWithDerivative > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__CartesianFixedLookVector_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::LookVector< double > >(*(boost::shared_ptr< GeoCal::CartesianFixedLookVector > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::LookVector< double > >(*(boost::shared_ptr< GeoCal::CartesianInertialLookVector > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__DcsLookVector_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::LookVector< double > >(*(boost::shared_ptr< GeoCal::DcsLookVector > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__LnLookVector_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::LookVector< double > >(*(boost::shared_ptr< GeoCal::LnLookVector > *)x);
+}
+static void *_p_boost__shared_ptrT_GeoCal__ScLookVector_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::LookVector< double > >(*(boost::shared_ptr< GeoCal::ScLookVector > *)x);
 }
 static void *_p_std__basic_iostreamT_char_tTo_p_std__basic_iosT_char_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((std::basic_ios< char,std::char_traits< char > > *) (std::basic_istream< char > *) ((std::basic_iostream< char,std::char_traits< char > > *) x));
@@ -7483,7 +8176,33 @@ static void *_p_std__basic_iostreamT_char_tTo_p_std__basic_ostreamT_char_t(void 
     return (void *)((std::basic_ostream< char,std::char_traits< char > > *)  ((std::basic_iostream< char,std::char_traits< char > > *) x));
 }
 static swig_type_info _swigt__p_Ecostress__HdfEosFileHandle = {"_p_Ecostress__HdfEosFileHandle", "Ecostress::HdfEosFileHandle *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Ecostress__HdfEosGrid = {"_p_Ecostress__HdfEosGrid", "Ecostress::HdfEosGrid *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__AutoDerivativeRefT_double_t = {"_p_GeoCal__AutoDerivativeRefT_double_t", "GeoCal::AutoDerivativeRef< double > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__AutoDerivativeT_double_t = {"_p_GeoCal__AutoDerivativeT_double_t", "GeoCal::AutoDerivative< double > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__CartesianFixed = {"_p_GeoCal__CartesianFixed", "GeoCal::CartesianFixed *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__CartesianFixedLookVector = {"_p_GeoCal__CartesianFixedLookVector", "GeoCal::CartesianFixedLookVector *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__CartesianFixedLookVectorWithDerivative = {"_p_GeoCal__CartesianFixedLookVectorWithDerivative", "GeoCal::CartesianFixedLookVectorWithDerivative *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__CartesianInertial = {"_p_GeoCal__CartesianInertial", "GeoCal::CartesianInertial *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__CartesianInertialLookVector = {"_p_GeoCal__CartesianInertialLookVector", "GeoCal::CartesianInertialLookVector *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__CartesianInertialLookVectorWithDerivative = {"_p_GeoCal__CartesianInertialLookVectorWithDerivative", "GeoCal::CartesianInertialLookVectorWithDerivative *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__CoordinateConverter = {"_p_GeoCal__CoordinateConverter", "GeoCal::CoordinateConverter *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__DcsLookVector = {"_p_GeoCal__DcsLookVector", "GeoCal::DcsLookVector *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__DcsLookVectorWithDerivative = {"_p_GeoCal__DcsLookVectorWithDerivative", "GeoCal::DcsLookVectorWithDerivative *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__Dem = {"_p_GeoCal__Dem", "GeoCal::Dem *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_GeoCal__GenericObject = {"_p_GeoCal__GenericObject", "GeoCal::GenericObject *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__GeodeticConverter = {"_p_GeoCal__GeodeticConverter", "GeoCal::GeodeticConverter *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__GeodeticRadian2piConverter = {"_p_GeoCal__GeodeticRadian2piConverter", "GeoCal::GeodeticRadian2piConverter *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__GeodeticRadianConverter = {"_p_GeoCal__GeodeticRadianConverter", "GeoCal::GeodeticRadianConverter *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__GroundCoordinate = {"_p_GeoCal__GroundCoordinate", "GeoCal::GroundCoordinate *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__LnLookVector = {"_p_GeoCal__LnLookVector", "GeoCal::LnLookVector *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__LnLookVectorWithDerivative = {"_p_GeoCal__LnLookVectorWithDerivative", "GeoCal::LnLookVectorWithDerivative *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t = {"_p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t", "GeoCal::LookVector< GeoCal::AutoDerivative< double > > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__LookVectorT_double_t = {"_p_GeoCal__LookVectorT_double_t", "GeoCal::LookVector< double > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__MapInfo = {"_p_GeoCal__MapInfo", "GeoCal::MapInfo *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__ScLookVector = {"_p_GeoCal__ScLookVector", "GeoCal::ScLookVector *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__ScLookVectorWithDerivative = {"_p_GeoCal__ScLookVectorWithDerivative", "GeoCal::ScLookVectorWithDerivative *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__Time = {"_p_GeoCal__Time", "GeoCal::Time *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__TimeWithDerivative = {"_p_GeoCal__TimeWithDerivative", "GeoCal::TimeWithDerivative *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_allocator_type = {"_p_allocator_type", "allocator_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_blitz__ArrayT_bool_1_t = {"_p_blitz__ArrayT_bool_1_t", "blitz::Array< bool,1 > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_blitz__ArrayT_bool_2_t = {"_p_blitz__ArrayT_bool_2_t", "blitz::Array< bool,2 > *", 0, 0, (void*)0, 0};
@@ -7559,7 +8278,33 @@ static swig_type_info _swigt__p_blitz__ArrayT_unsigned_short_7_t = {"_p_blitz__A
 static swig_type_info _swigt__p_blitz__ArrayT_unsigned_short_8_t = {"_p_blitz__ArrayT_unsigned_short_8_t", "blitz::Array< unsigned short,8 > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_blitz__Range = {"_p_blitz__Range", "blitz::Range *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t = {"_p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t", "boost::shared_ptr< Ecostress::HdfEosFileHandle > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_Ecostress__HdfEosGrid_t = {"_p_boost__shared_ptrT_Ecostress__HdfEosGrid_t", "boost::shared_ptr< Ecostress::HdfEosGrid > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t = {"_p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t", "boost::shared_ptr< GeoCal::AutoDerivativeRef< double > > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t = {"_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t", "boost::shared_ptr< GeoCal::AutoDerivative< double > > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_t = {"_p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_t", "boost::shared_ptr< GeoCal::CartesianFixedLookVectorWithDerivative > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__CartesianFixedLookVector_t = {"_p_boost__shared_ptrT_GeoCal__CartesianFixedLookVector_t", "boost::shared_ptr< GeoCal::CartesianFixedLookVector > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__CartesianFixed_t = {"_p_boost__shared_ptrT_GeoCal__CartesianFixed_t", "boost::shared_ptr< GeoCal::CartesianFixed > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_t = {"_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_t", "boost::shared_ptr< GeoCal::CartesianInertialLookVectorWithDerivative > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_t = {"_p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_t", "boost::shared_ptr< GeoCal::CartesianInertialLookVector > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__CartesianInertial_t = {"_p_boost__shared_ptrT_GeoCal__CartesianInertial_t", "boost::shared_ptr< GeoCal::CartesianInertial > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__CoordinateConverter_t = {"_p_boost__shared_ptrT_GeoCal__CoordinateConverter_t", "boost::shared_ptr< GeoCal::CoordinateConverter > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_t = {"_p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_t", "boost::shared_ptr< GeoCal::DcsLookVectorWithDerivative > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__DcsLookVector_t = {"_p_boost__shared_ptrT_GeoCal__DcsLookVector_t", "boost::shared_ptr< GeoCal::DcsLookVector > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__Dem_t = {"_p_boost__shared_ptrT_GeoCal__Dem_t", "boost::shared_ptr< GeoCal::Dem > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__GenericObject_t = {"_p_boost__shared_ptrT_GeoCal__GenericObject_t", "boost::shared_ptr< GeoCal::GenericObject > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__GeodeticConverter_t = {"_p_boost__shared_ptrT_GeoCal__GeodeticConverter_t", "boost::shared_ptr< GeoCal::GeodeticConverter > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__GeodeticRadian2piConverter_t = {"_p_boost__shared_ptrT_GeoCal__GeodeticRadian2piConverter_t", "boost::shared_ptr< GeoCal::GeodeticRadian2piConverter > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__GeodeticRadianConverter_t = {"_p_boost__shared_ptrT_GeoCal__GeodeticRadianConverter_t", "boost::shared_ptr< GeoCal::GeodeticRadianConverter > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__GroundCoordinate_t = {"_p_boost__shared_ptrT_GeoCal__GroundCoordinate_t", "boost::shared_ptr< GeoCal::GroundCoordinate > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__LnLookVectorWithDerivative_t = {"_p_boost__shared_ptrT_GeoCal__LnLookVectorWithDerivative_t", "boost::shared_ptr< GeoCal::LnLookVectorWithDerivative > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__LnLookVector_t = {"_p_boost__shared_ptrT_GeoCal__LnLookVector_t", "boost::shared_ptr< GeoCal::LnLookVector > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t = {"_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t", "boost::shared_ptr< GeoCal::LookVector< GeoCal::AutoDerivative< double > > > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t = {"_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t", "boost::shared_ptr< GeoCal::LookVector< double > > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__MapInfo_t = {"_p_boost__shared_ptrT_GeoCal__MapInfo_t", "boost::shared_ptr< GeoCal::MapInfo > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_t = {"_p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_t", "boost::shared_ptr< GeoCal::ScLookVectorWithDerivative > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__ScLookVector_t = {"_p_boost__shared_ptrT_GeoCal__ScLookVector_t", "boost::shared_ptr< GeoCal::ScLookVector > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t = {"_p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t", "boost::shared_ptr< GeoCal::TimeWithDerivative > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__Time_t = {"_p_boost__shared_ptrT_GeoCal__Time_t", "boost::shared_ptr< GeoCal::Time > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char_type = {"_p_char_type", "char_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_difference_type = {"_p_difference_type", "difference_type *", 0, 0, (void*)0, 0};
@@ -7585,7 +8330,33 @@ static swig_type_info _swigt__p_value_type = {"_p_value_type", "value_type *", 0
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Ecostress__HdfEosFileHandle,
+  &_swigt__p_Ecostress__HdfEosGrid,
+  &_swigt__p_GeoCal__AutoDerivativeRefT_double_t,
+  &_swigt__p_GeoCal__AutoDerivativeT_double_t,
+  &_swigt__p_GeoCal__CartesianFixed,
+  &_swigt__p_GeoCal__CartesianFixedLookVector,
+  &_swigt__p_GeoCal__CartesianFixedLookVectorWithDerivative,
+  &_swigt__p_GeoCal__CartesianInertial,
+  &_swigt__p_GeoCal__CartesianInertialLookVector,
+  &_swigt__p_GeoCal__CartesianInertialLookVectorWithDerivative,
+  &_swigt__p_GeoCal__CoordinateConverter,
+  &_swigt__p_GeoCal__DcsLookVector,
+  &_swigt__p_GeoCal__DcsLookVectorWithDerivative,
+  &_swigt__p_GeoCal__Dem,
   &_swigt__p_GeoCal__GenericObject,
+  &_swigt__p_GeoCal__GeodeticConverter,
+  &_swigt__p_GeoCal__GeodeticRadian2piConverter,
+  &_swigt__p_GeoCal__GeodeticRadianConverter,
+  &_swigt__p_GeoCal__GroundCoordinate,
+  &_swigt__p_GeoCal__LnLookVector,
+  &_swigt__p_GeoCal__LnLookVectorWithDerivative,
+  &_swigt__p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t,
+  &_swigt__p_GeoCal__LookVectorT_double_t,
+  &_swigt__p_GeoCal__MapInfo,
+  &_swigt__p_GeoCal__ScLookVector,
+  &_swigt__p_GeoCal__ScLookVectorWithDerivative,
+  &_swigt__p_GeoCal__Time,
+  &_swigt__p_GeoCal__TimeWithDerivative,
   &_swigt__p_allocator_type,
   &_swigt__p_blitz__ArrayT_bool_1_t,
   &_swigt__p_blitz__ArrayT_bool_2_t,
@@ -7661,7 +8432,33 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_blitz__ArrayT_unsigned_short_8_t,
   &_swigt__p_blitz__Range,
   &_swigt__p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t,
+  &_swigt__p_boost__shared_ptrT_Ecostress__HdfEosGrid_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__CartesianFixedLookVector_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__CartesianFixed_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__CartesianInertial_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__CoordinateConverter_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__DcsLookVector_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__Dem_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__GenericObject_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__GeodeticConverter_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__GeodeticRadian2piConverter_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__GeodeticRadianConverter_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__GroundCoordinate_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__LnLookVectorWithDerivative_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__LnLookVector_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__MapInfo_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__ScLookVector_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__Time_t,
   &_swigt__p_char,
   &_swigt__p_char_type,
   &_swigt__p_difference_type,
@@ -7687,7 +8484,33 @@ static swig_type_info *swig_type_initial[] = {
 };
 
 static swig_cast_info _swigc__p_Ecostress__HdfEosFileHandle[] = {  {&_swigt__p_Ecostress__HdfEosFileHandle, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_GeoCal__GenericObject[] = {  {&_swigt__p_GeoCal__GenericObject, 0, 0, 0},  {&_swigt__p_Ecostress__HdfEosFileHandle, _p_Ecostress__HdfEosFileHandleTo_p_GeoCal__GenericObject, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Ecostress__HdfEosGrid[] = {  {&_swigt__p_Ecostress__HdfEosGrid, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__AutoDerivativeRefT_double_t[] = {  {&_swigt__p_GeoCal__AutoDerivativeRefT_double_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__AutoDerivativeT_double_t[] = {  {&_swigt__p_GeoCal__AutoDerivativeT_double_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__CartesianFixed[] = {  {&_swigt__p_GeoCal__CartesianFixed, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__CartesianFixedLookVector[] = {  {&_swigt__p_GeoCal__CartesianFixedLookVector, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__CartesianFixedLookVectorWithDerivative[] = {  {&_swigt__p_GeoCal__CartesianFixedLookVectorWithDerivative, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__CartesianInertial[] = {  {&_swigt__p_GeoCal__CartesianInertial, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__CartesianInertialLookVector[] = {  {&_swigt__p_GeoCal__CartesianInertialLookVector, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__CartesianInertialLookVectorWithDerivative[] = {  {&_swigt__p_GeoCal__CartesianInertialLookVectorWithDerivative, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__CoordinateConverter[] = {  {&_swigt__p_GeoCal__CoordinateConverter, 0, 0, 0},  {&_swigt__p_GeoCal__GeodeticConverter, _p_GeoCal__GeodeticConverterTo_p_GeoCal__CoordinateConverter, 0, 0},  {&_swigt__p_GeoCal__GeodeticRadian2piConverter, _p_GeoCal__GeodeticRadian2piConverterTo_p_GeoCal__CoordinateConverter, 0, 0},  {&_swigt__p_GeoCal__GeodeticRadianConverter, _p_GeoCal__GeodeticRadianConverterTo_p_GeoCal__CoordinateConverter, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__DcsLookVector[] = {  {&_swigt__p_GeoCal__DcsLookVector, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__DcsLookVectorWithDerivative[] = {  {&_swigt__p_GeoCal__DcsLookVectorWithDerivative, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__Dem[] = {  {&_swigt__p_GeoCal__Dem, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__GenericObject[] = {  {&_swigt__p_GeoCal__GenericObject, 0, 0, 0},  {&_swigt__p_Ecostress__HdfEosFileHandle, _p_Ecostress__HdfEosFileHandleTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_Ecostress__HdfEosGrid, _p_Ecostress__HdfEosGridTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__AutoDerivativeRefT_double_t, _p_GeoCal__AutoDerivativeRefT_double_tTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__AutoDerivativeT_double_t, _p_GeoCal__AutoDerivativeT_double_tTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__CartesianFixed, _p_GeoCal__CartesianFixedTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__CartesianFixedLookVector, _p_GeoCal__CartesianFixedLookVectorTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__CartesianFixedLookVectorWithDerivative, _p_GeoCal__CartesianFixedLookVectorWithDerivativeTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__CartesianInertial, _p_GeoCal__CartesianInertialTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__CartesianInertialLookVector, _p_GeoCal__CartesianInertialLookVectorTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__CartesianInertialLookVectorWithDerivative, _p_GeoCal__CartesianInertialLookVectorWithDerivativeTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__CoordinateConverter, _p_GeoCal__CoordinateConverterTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__DcsLookVector, _p_GeoCal__DcsLookVectorTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__DcsLookVectorWithDerivative, _p_GeoCal__DcsLookVectorWithDerivativeTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__Dem, _p_GeoCal__DemTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__GeodeticConverter, _p_GeoCal__GeodeticConverterTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__GeodeticRadian2piConverter, _p_GeoCal__GeodeticRadian2piConverterTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__GeodeticRadianConverter, _p_GeoCal__GeodeticRadianConverterTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__GroundCoordinate, _p_GeoCal__GroundCoordinateTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__LnLookVector, _p_GeoCal__LnLookVectorTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__LnLookVectorWithDerivative, _p_GeoCal__LnLookVectorWithDerivativeTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t, _p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_tTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__LookVectorT_double_t, _p_GeoCal__LookVectorT_double_tTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__MapInfo, _p_GeoCal__MapInfoTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__ScLookVector, _p_GeoCal__ScLookVectorTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__ScLookVectorWithDerivative, _p_GeoCal__ScLookVectorWithDerivativeTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__Time, _p_GeoCal__TimeTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__TimeWithDerivative, _p_GeoCal__TimeWithDerivativeTo_p_GeoCal__GenericObject, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__GeodeticConverter[] = {  {&_swigt__p_GeoCal__GeodeticConverter, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__GeodeticRadian2piConverter[] = {  {&_swigt__p_GeoCal__GeodeticRadian2piConverter, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__GeodeticRadianConverter[] = {  {&_swigt__p_GeoCal__GeodeticRadianConverter, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__GroundCoordinate[] = {  {&_swigt__p_GeoCal__GroundCoordinate, 0, 0, 0},  {&_swigt__p_GeoCal__CartesianFixed, _p_GeoCal__CartesianFixedTo_p_GeoCal__GroundCoordinate, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__LnLookVector[] = {  {&_swigt__p_GeoCal__LnLookVector, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__LnLookVectorWithDerivative[] = {  {&_swigt__p_GeoCal__LnLookVectorWithDerivative, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t[] = {  {&_swigt__p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t, 0, 0, 0},  {&_swigt__p_GeoCal__CartesianFixedLookVectorWithDerivative, _p_GeoCal__CartesianFixedLookVectorWithDerivativeTo_p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t, 0, 0},  {&_swigt__p_GeoCal__CartesianInertialLookVectorWithDerivative, _p_GeoCal__CartesianInertialLookVectorWithDerivativeTo_p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t, 0, 0},  {&_swigt__p_GeoCal__DcsLookVectorWithDerivative, _p_GeoCal__DcsLookVectorWithDerivativeTo_p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t, 0, 0},  {&_swigt__p_GeoCal__LnLookVectorWithDerivative, _p_GeoCal__LnLookVectorWithDerivativeTo_p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t, 0, 0},  {&_swigt__p_GeoCal__ScLookVectorWithDerivative, _p_GeoCal__ScLookVectorWithDerivativeTo_p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__LookVectorT_double_t[] = {  {&_swigt__p_GeoCal__LookVectorT_double_t, 0, 0, 0},  {&_swigt__p_GeoCal__CartesianFixedLookVector, _p_GeoCal__CartesianFixedLookVectorTo_p_GeoCal__LookVectorT_double_t, 0, 0},  {&_swigt__p_GeoCal__CartesianInertialLookVector, _p_GeoCal__CartesianInertialLookVectorTo_p_GeoCal__LookVectorT_double_t, 0, 0},  {&_swigt__p_GeoCal__DcsLookVector, _p_GeoCal__DcsLookVectorTo_p_GeoCal__LookVectorT_double_t, 0, 0},  {&_swigt__p_GeoCal__LnLookVector, _p_GeoCal__LnLookVectorTo_p_GeoCal__LookVectorT_double_t, 0, 0},  {&_swigt__p_GeoCal__ScLookVector, _p_GeoCal__ScLookVectorTo_p_GeoCal__LookVectorT_double_t, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__MapInfo[] = {  {&_swigt__p_GeoCal__MapInfo, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__ScLookVector[] = {  {&_swigt__p_GeoCal__ScLookVector, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__ScLookVectorWithDerivative[] = {  {&_swigt__p_GeoCal__ScLookVectorWithDerivative, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__Time[] = {  {&_swigt__p_GeoCal__Time, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__TimeWithDerivative[] = {  {&_swigt__p_GeoCal__TimeWithDerivative, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_allocator_type[] = {  {&_swigt__p_allocator_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_blitz__ArrayT_bool_1_t[] = {  {&_swigt__p_blitz__ArrayT_bool_1_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_blitz__ArrayT_bool_2_t[] = {  {&_swigt__p_blitz__ArrayT_bool_2_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -7763,7 +8586,33 @@ static swig_cast_info _swigc__p_blitz__ArrayT_unsigned_short_7_t[] = {  {&_swigt
 static swig_cast_info _swigc__p_blitz__ArrayT_unsigned_short_8_t[] = {  {&_swigt__p_blitz__ArrayT_unsigned_short_8_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_blitz__Range[] = {  {&_swigt__p_blitz__Range, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t[] = {  {&_swigt__p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__GenericObject_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0, 0},  {&_swigt__p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t, _p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_Ecostress__HdfEosGrid_t[] = {  {&_swigt__p_boost__shared_ptrT_Ecostress__HdfEosGrid_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__CartesianFixedLookVector_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__CartesianFixedLookVector_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__CartesianFixed_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__CartesianFixed_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__CartesianInertial_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__CartesianInertial_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__CoordinateConverter_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__CoordinateConverter_t, 0, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__GeodeticConverter_t, _p_boost__shared_ptrT_GeoCal__GeodeticConverter_tTo_p_boost__shared_ptrT_GeoCal__CoordinateConverter_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__GeodeticRadian2piConverter_t, _p_boost__shared_ptrT_GeoCal__GeodeticRadian2piConverter_tTo_p_boost__shared_ptrT_GeoCal__CoordinateConverter_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__GeodeticRadianConverter_t, _p_boost__shared_ptrT_GeoCal__GeodeticRadianConverter_tTo_p_boost__shared_ptrT_GeoCal__CoordinateConverter_t, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__DcsLookVector_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__DcsLookVector_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__Dem_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__Dem_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__GenericObject_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0, 0},  {&_swigt__p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t, _p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_Ecostress__HdfEosGrid_t, _p_boost__shared_ptrT_Ecostress__HdfEosGrid_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t, _p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t, _p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_t, _p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__CartesianFixedLookVector_t, _p_boost__shared_ptrT_GeoCal__CartesianFixedLookVector_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__CartesianFixed_t, _p_boost__shared_ptrT_GeoCal__CartesianFixed_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_t, _p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_t, _p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__CartesianInertial_t, _p_boost__shared_ptrT_GeoCal__CartesianInertial_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__CoordinateConverter_t, _p_boost__shared_ptrT_GeoCal__CoordinateConverter_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_t, _p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__DcsLookVector_t, _p_boost__shared_ptrT_GeoCal__DcsLookVector_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__Dem_t, _p_boost__shared_ptrT_GeoCal__Dem_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__GeodeticConverter_t, _p_boost__shared_ptrT_GeoCal__GeodeticConverter_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__GeodeticRadian2piConverter_t, _p_boost__shared_ptrT_GeoCal__GeodeticRadian2piConverter_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__GeodeticRadianConverter_t, _p_boost__shared_ptrT_GeoCal__GeodeticRadianConverter_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__GroundCoordinate_t, _p_boost__shared_ptrT_GeoCal__GroundCoordinate_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__LnLookVectorWithDerivative_t, _p_boost__shared_ptrT_GeoCal__LnLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__LnLookVector_t, _p_boost__shared_ptrT_GeoCal__LnLookVector_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t, _p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t, _p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__MapInfo_t, _p_boost__shared_ptrT_GeoCal__MapInfo_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_t, _p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ScLookVector_t, _p_boost__shared_ptrT_GeoCal__ScLookVector_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t, _p_boost__shared_ptrT_GeoCal__TimeWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__Time_t, _p_boost__shared_ptrT_GeoCal__Time_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__GeodeticConverter_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__GeodeticConverter_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__GeodeticRadian2piConverter_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__GeodeticRadian2piConverter_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__GeodeticRadianConverter_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__GeodeticRadianConverter_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__GroundCoordinate_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__GroundCoordinate_t, 0, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__CartesianFixed_t, _p_boost__shared_ptrT_GeoCal__CartesianFixed_tTo_p_boost__shared_ptrT_GeoCal__GroundCoordinate_t, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__LnLookVectorWithDerivative_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__LnLookVectorWithDerivative_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__LnLookVector_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__LnLookVector_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t, 0, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_t, _p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_t, _p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_t, _p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__LnLookVectorWithDerivative_t, _p_boost__shared_ptrT_GeoCal__LnLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_t, _p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t, 0, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__CartesianFixedLookVector_t, _p_boost__shared_ptrT_GeoCal__CartesianFixedLookVector_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_t, _p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__DcsLookVector_t, _p_boost__shared_ptrT_GeoCal__DcsLookVector_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__LnLookVector_t, _p_boost__shared_ptrT_GeoCal__LnLookVector_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ScLookVector_t, _p_boost__shared_ptrT_GeoCal__ScLookVector_tTo_p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__MapInfo_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__MapInfo_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ScLookVector_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ScLookVector_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__Time_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__Time_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char_type[] = {  {&_swigt__p_char_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_difference_type[] = {  {&_swigt__p_difference_type, 0, 0, 0},{0, 0, 0, 0}};
@@ -7789,7 +8638,33 @@ static swig_cast_info _swigc__p_value_type[] = {  {&_swigt__p_value_type, 0, 0, 
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Ecostress__HdfEosFileHandle,
+  _swigc__p_Ecostress__HdfEosGrid,
+  _swigc__p_GeoCal__AutoDerivativeRefT_double_t,
+  _swigc__p_GeoCal__AutoDerivativeT_double_t,
+  _swigc__p_GeoCal__CartesianFixed,
+  _swigc__p_GeoCal__CartesianFixedLookVector,
+  _swigc__p_GeoCal__CartesianFixedLookVectorWithDerivative,
+  _swigc__p_GeoCal__CartesianInertial,
+  _swigc__p_GeoCal__CartesianInertialLookVector,
+  _swigc__p_GeoCal__CartesianInertialLookVectorWithDerivative,
+  _swigc__p_GeoCal__CoordinateConverter,
+  _swigc__p_GeoCal__DcsLookVector,
+  _swigc__p_GeoCal__DcsLookVectorWithDerivative,
+  _swigc__p_GeoCal__Dem,
   _swigc__p_GeoCal__GenericObject,
+  _swigc__p_GeoCal__GeodeticConverter,
+  _swigc__p_GeoCal__GeodeticRadian2piConverter,
+  _swigc__p_GeoCal__GeodeticRadianConverter,
+  _swigc__p_GeoCal__GroundCoordinate,
+  _swigc__p_GeoCal__LnLookVector,
+  _swigc__p_GeoCal__LnLookVectorWithDerivative,
+  _swigc__p_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t,
+  _swigc__p_GeoCal__LookVectorT_double_t,
+  _swigc__p_GeoCal__MapInfo,
+  _swigc__p_GeoCal__ScLookVector,
+  _swigc__p_GeoCal__ScLookVectorWithDerivative,
+  _swigc__p_GeoCal__Time,
+  _swigc__p_GeoCal__TimeWithDerivative,
   _swigc__p_allocator_type,
   _swigc__p_blitz__ArrayT_bool_1_t,
   _swigc__p_blitz__ArrayT_bool_2_t,
@@ -7865,7 +8740,33 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_blitz__ArrayT_unsigned_short_8_t,
   _swigc__p_blitz__Range,
   _swigc__p_boost__shared_ptrT_Ecostress__HdfEosFileHandle_t,
+  _swigc__p_boost__shared_ptrT_Ecostress__HdfEosGrid_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__CartesianFixedLookVectorWithDerivative_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__CartesianFixedLookVector_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__CartesianFixed_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__CartesianInertialLookVectorWithDerivative_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__CartesianInertialLookVector_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__CartesianInertial_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__CoordinateConverter_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__DcsLookVectorWithDerivative_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__DcsLookVector_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__Dem_t,
   _swigc__p_boost__shared_ptrT_GeoCal__GenericObject_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__GeodeticConverter_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__GeodeticRadian2piConverter_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__GeodeticRadianConverter_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__GroundCoordinate_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__LnLookVectorWithDerivative_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__LnLookVector_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__LookVectorT_GeoCal__AutoDerivativeT_double_t_t_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__LookVectorT_double_t_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__MapInfo_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__ScLookVector_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__Time_t,
   _swigc__p_char,
   _swigc__p_char_type,
   _swigc__p_difference_type,
@@ -8426,12 +9327,8 @@ SWIG_init(void) {
   SWIG_Python_SetConstant(d, "SWIG_MODULE_ALREADY_DONE",SWIG_From_int(static_cast< int >(1)));
   SWIG_Python_SetConstant(d, "SHARED_PTR_DISOWN",SWIG_From_int(static_cast< int >(0)));
   
-  GeoCal::SwigTypeMapperBase::add(typeid(Ecostress::HdfEosFileHandle), boost::make_shared<GeoCal::SwigTypeMapper< Ecostress::HdfEosFileHandle > > ("boost::shared_ptr< Ecostress::HdfEosFileHandle > *"));
+  GeoCal::SwigTypeMapperBase::add(typeid(Ecostress::HdfEosGrid), boost::make_shared<GeoCal::SwigTypeMapper< Ecostress::HdfEosGrid > > ("boost::shared_ptr< Ecostress::HdfEosGrid > *"));
   
-  SWIG_Python_SetConstant(d, "HdfEosFileHandle_READ",SWIG_From_int(static_cast< int >(Ecostress::HdfEosFileHandle::READ)));
-  SWIG_Python_SetConstant(d, "HdfEosFileHandle_READWRITE",SWIG_From_int(static_cast< int >(Ecostress::HdfEosFileHandle::READWRITE)));
-  SWIG_Python_SetConstant(d, "HdfEosFileHandle_TRUNC",SWIG_From_int(static_cast< int >(Ecostress::HdfEosFileHandle::TRUNC)));
-  SWIG_Python_SetConstant(d, "HdfEosFileHandle_CREATE",SWIG_From_int(static_cast< int >(Ecostress::HdfEosFileHandle::CREATE)));
 #if PY_VERSION_HEX >= 0x03000000
   return m;
 #else
