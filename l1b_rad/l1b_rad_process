@@ -2,7 +2,11 @@
 #
 # This runs the L1B Rad process.
 
-import geocal
+import warnings
+# Have a warning message that we can't do anything about - suppress it
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=UserWarning)
+    import geocal
 import ecostress
 import os
 from loguru import logger

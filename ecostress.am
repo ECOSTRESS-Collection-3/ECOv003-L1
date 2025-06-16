@@ -36,6 +36,7 @@ l1a_raw_run_config = $(end_to_end_test_data)/latest/ECOSTRESS_L1A_RAW_RunConfig_
 l1a_cal_run_config = $(foreach n,001, $(end_to_end_test_data)/latest/ECOSTRESS_L1A_CAL_RunConfig_03663_$n.xml)
 l1b_cal_run_config = $(foreach n,001, $(end_to_end_test_data)/latest/ECOSTRESS_L1B_RAD_RunConfig_03663_$n.xml)
 l1b_geo_run_config = $(end_to_end_test_data)/latest/ECOSTRESS_L1B_GEO_RunConfig_20190227T0946.xml
+l1c_run_config = $(end_to_end_test_data)/latest/ECOSTRESS_L1C_RunConfig_03663_001.xml
 
 H5DIFF_FLAG=-d 6e-2
 # We skip radiance 1 and 5 because the filling in of the missing data can
@@ -59,6 +60,7 @@ end-to-end-check: installcheck-am
 	-rm -r ./end_to_end_test_l1a_cal
 	-rm -r ./end_to_end_test_l1b_rad
 	-rm -r ./end_to_end_test_l1b_geo
+	-rm -r ./end_to_end_test_l1c
 	-rm ./l1_osp_dir
 	$(LN_S) $(end_to_end_test_data)/latest/l1_osp_dir l1_osp_dir
 	$(MKDIR_P) ./end_to_end_test_l0_input
@@ -76,6 +78,8 @@ end-to-end-check: installcheck-am
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_ATT*.h5
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_GEO_0*.h5
 	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOv002_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv002_L1B_RAD_03663_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
+	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1C_PGE $(l1c_run_config)
+
 
 # Run l1a_cal and l1b_rad using 5 band data. These are the only PGEs that
 # change with 3 vs 5 bands, so we only run these two only. The data is

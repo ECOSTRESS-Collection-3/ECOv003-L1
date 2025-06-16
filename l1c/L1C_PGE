@@ -1,0 +1,18 @@
+#! /bin/bash
+# For right now, we assume bash. We can probably relax this is needed, but
+# handling pipe failures is a pain with bourne shell. Pretty much any system
+# we deliver to is likely to have bash
+
+# Die on error
+set -e
+set -o pipefail
+
+# Where we are running from
+scriptpath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+binpath="${scriptpath}/bin"
+# Source setup
+source "${scriptpath}/setup_ecostress.sh"
+
+# Execute actual process
+"${binpath}/l1c_process" $*
+

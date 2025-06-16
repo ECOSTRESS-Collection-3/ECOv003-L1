@@ -144,10 +144,9 @@ class Resampler(geocal_swig.generic_object.GenericObject):
 
     This is a bit brute force, and we don't worry about memory usage. The
     arrays are something like 10Kx10K floating point, so we are talking GB
-    but not 10's of GB. Since this is something we only run occasionally,
-    this memory usage is probably fine. But if this becomes an issue, we
-    can revisit this and make this code more efficient - but for now this
-    doesn't seem to be worth the effort.
+    but not 10's of GB. But if this becomes an issue, we can revisit this
+    and make this code more efficient - but for now this doesn't seem to
+    be worth the effort.
 
     C++ includes: resampler.h 
     """

@@ -599,8 +599,9 @@ am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(srcdir)/ecostress_version.py.in $(srcdir)/include.am \
 	$(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1a_raw/l1a_raw.am \
 	$(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/l1b_rad/l1b_rad.am \
-	$(srcdir)/lib/lib.am $(srcdir)/python/python.am \
-	$(srcdir)/script/script.am $(srcdir)/thirdparty/thirdparty.am \
+	$(srcdir)/l1c/l1c.am $(srcdir)/lib/lib.am \
+	$(srcdir)/python/python.am $(srcdir)/script/script.am \
+	$(srcdir)/thirdparty/thirdparty.am \
 	$(srcdir)/unit_test_data/unit_test_data.am \
 	$(srcdir)/vicar_pdf/vicar_pdf.am $(top_srcdir)/config/compile \
 	$(top_srcdir)/config/config.guess \
@@ -793,6 +794,7 @@ l1a_cal_src = @l1a_cal_src@
 l1a_raw_src = @l1a_raw_src@
 l1b_geo_src = @l1b_geo_src@
 l1b_rad_src = @l1b_rad_src@
+l1c_src = @l1c_src@
 libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
@@ -855,7 +857,7 @@ dist_bin_SCRIPTS = @l1a_raw_src@/l1a_raw_process \
 	@l1b_geo_src@/l1b_orthobase @l1b_geo_src@/map_to_gdal \
 	@l1b_geo_src@/map_product @l1b_geo_src@/map_to_kmz \
 	@l1b_geo_src@/map_index @l1b_geo_src@/kmz_combine \
-	@l1b_geo_src@/ecostress_util
+	@l1b_geo_src@/ecostress_util @l1c_src@/l1c_process
 AM_LDFLAGS = 
 BUILT_SOURCES = $(am__append_1) $(am__append_2)
 include_HEADERS = 
@@ -917,7 +919,7 @@ check_DATA =
 # Build these up as we go
 dist_installecostress_SCRIPTS = @l1a_raw_src@/L1A_RAW_PGE \
 	@l1a_cal_src@/L1A_CAL_PGE @l1b_rad_src@/L1B_RAD_PGE \
-	@l1b_geo_src@/L1B_GEO_PGE
+	@l1b_geo_src@/L1B_GEO_PGE @l1c_src@/L1C_PGE
 
 # SWIG part
 # ================================================
@@ -930,6 +932,7 @@ l1a_raw_run_config = $(end_to_end_test_data)/latest/ECOSTRESS_L1A_RAW_RunConfig_
 l1a_cal_run_config = $(foreach n,001, $(end_to_end_test_data)/latest/ECOSTRESS_L1A_CAL_RunConfig_03663_$n.xml)
 l1b_cal_run_config = $(foreach n,001, $(end_to_end_test_data)/latest/ECOSTRESS_L1B_RAD_RunConfig_03663_$n.xml)
 l1b_geo_run_config = $(end_to_end_test_data)/latest/ECOSTRESS_L1B_GEO_RunConfig_20190227T0946.xml
+l1c_run_config = $(end_to_end_test_data)/latest/ECOSTRESS_L1C_RunConfig_03663_001.xml
 # We skip radiance 1 and 5 because the filling in of the missing data can
 # vary from one run to the next, so no easy way to compare. Also exclude the uncertaintiy,
 # for same reason
@@ -1131,7 +1134,7 @@ all: $(BUILT_SOURCES)
 .SUFFIXES: .cc .lo .log .o .obj .test .test$(EXEEXT) .trs
 am--refresh: Makefile
 	@:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(srcdir)/unit_test_data/unit_test_data.am $(srcdir)/thirdparty/thirdparty.am $(srcdir)/docker/docker.am $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/l1c/l1c.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(srcdir)/unit_test_data/unit_test_data.am $(srcdir)/thirdparty/thirdparty.am $(srcdir)/docker/docker.am $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -1153,7 +1156,7 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles);; \
 	esac;
-$(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(srcdir)/unit_test_data/unit_test_data.am $(srcdir)/thirdparty/thirdparty.am $(srcdir)/docker/docker.am $(am__empty):
+$(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/l1c/l1c.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(srcdir)/unit_test_data/unit_test_data.am $(srcdir)/thirdparty/thirdparty.am $(srcdir)/docker/docker.am $(am__empty):
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
@@ -3018,6 +3021,7 @@ end-to-end-check: installcheck-am
 	-rm -r ./end_to_end_test_l1a_cal
 	-rm -r ./end_to_end_test_l1b_rad
 	-rm -r ./end_to_end_test_l1b_geo
+	-rm -r ./end_to_end_test_l1c
 	-rm ./l1_osp_dir
 	$(LN_S) $(end_to_end_test_data)/latest/l1_osp_dir l1_osp_dir
 	$(MKDIR_P) ./end_to_end_test_l0_input
@@ -3035,6 +3039,7 @@ end-to-end-check: installcheck-am
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_ATT*.h5
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_GEO_0*.h5
 	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOv002_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv002_L1B_RAD_03663_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
+	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1C_PGE $(l1c_run_config)
 
 # Run l1a_cal and l1b_rad using 5 band data. These are the only PGEs that
 # change with 3 vs 5 bands, so we only run these two only. The data is

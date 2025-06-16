@@ -1,0 +1,3 @@
+dist_installecostress_SCRIPTS += @l1c_src@/L1C_PGE
+dist_bin_SCRIPTS += @l1c_src@/l1c_process
+
