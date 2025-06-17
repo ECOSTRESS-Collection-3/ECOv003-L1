@@ -61,7 +61,12 @@ else:
     logger.add(sys.stderr, level="INFO")
 
 if args.run_config:
-   raise RuntimeError("Not implemented yet")
+    dirname = config["ProductPathGroup", "ProductPath"]
+    file_version = config["ProductPathGroup", "ProductCounter"]
+    l1b_rad_fname = os.path.abspath(config["InputFileGroup", "L1B_RAD"])
+    l1b_geo_fname = os.path.abspath(config["InputFileGroup", "L1B_RAD"])
+    build_id = config["PrimaryExecutable", "BuildID"]
+    collection_label = config["ProductPathGroup", "CollectionLabel"]
 else:
     dirname = os.path.abspath(args.prod_dir)
     file_version = "01"

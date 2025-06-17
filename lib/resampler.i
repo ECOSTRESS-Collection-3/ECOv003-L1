@@ -17,14 +17,16 @@
 namespace Ecostress {
 class Resampler : public GeoCal::GenericObject {
 public:
-  Resampler(const boost::shared_ptr<GeoCal::RasterImage>& Latitude,
-	    const boost::shared_ptr<GeoCal::RasterImage>& Longitude,
+  Resampler(const boost::shared_ptr<GeoCal::RasterImage>& X_coor,
+	    const boost::shared_ptr<GeoCal::RasterImage>& Y_coor,
 	    const GeoCal::MapInfo& Mi, int Num_sub_pixel = 2,
-	    bool Exactly_match_mi = false);
-  Resampler(const blitz::Array<double, 2>& Latitude_interpolated,
-	    const blitz::Array<double, 2>& Longitude_interpolated,
+	    bool Exactly_match_mi = false,
+	    double Mark_missing=-1000.0);
+  Resampler(const blitz::Array<double, 2>& X_coor_interpolated,
+	    const blitz::Array<double, 2>& Y_coor_interpolated,
 	    const GeoCal::MapInfo& Mi, int Num_sub_pixel = 2,
-	    bool Exactly_match_mi = false);
+	    bool Exactly_match_mi = false,
+	    double Mark_missing=-1000.0);
   blitz::Array<double, 2> resample_field
   (const boost::shared_ptr<GeoCal::RasterImage>& Data,
    double Scale_data=1.0,

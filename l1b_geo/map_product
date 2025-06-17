@@ -69,7 +69,7 @@ if(not args.north_up):
         lat.read_double(max(igood),smid, 1, 1)[0,0],
         lon.read_double(max(igood),smid, 1, 1)[0,0])
     mi = ecostress.determine_rotated_map(gc1, gc2, mi)
-res = ecostress.Resampler(lat, lon, mi, 3, False)
+res = ecostress.Resampler(lon, lat, mi, 3, False)
 print("Done with Resampler init")
 fout = h5py.File(args.output_file, "w")
 g = fout.create_group("Mapped")

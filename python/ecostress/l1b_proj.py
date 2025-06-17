@@ -89,21 +89,20 @@ class L1bProj(object):
                     lon, self.number_subpixel, order=1
                 )
                 # Resample data to project to surface
-                res = Resampler(lat, lon, mi, self.number_subpixel)
+                res = Resampler(lon, lat, mi, self.number_subpixel)
                 ras = self.igccol.image_ground_connection(igc_ind).image
                 logger.info("Starting resample for %s" % self.igccol.title(igc_ind))
                 if self.separate_file_per_scan:
                     igc = self.igccol.image_ground_connection(igc_ind)
                     nlscan = igc.number_line_scan
-                    print(lat.shape)
                     for i in range(igc.number_scan):
                         s = slice(
                             i * nlscan * self.number_subpixel,
                             (i + 1) * nlscan * self.number_subpixel,
                         )
                         res_sub = Resampler(
-                            lat[s, :],
                             lon[s, :],
+                            lat[s, :],
                             res.map_info,
                             self.number_subpixel,
                             True,

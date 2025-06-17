@@ -60,15 +60,35 @@ class L1bGeoGenerateMap(object):
             m.band_specification = fin["L1B_RADMetadata/BandSpecification"][:]
         m.write()
         mi = geocal.cib01_mapinfo(self.resolution)
-        lat = scipy.ndimage.interpolation.zoom(
-            self.l1b_geo_generate.lat, self.number_subpixel, order=2
-        )
-        lon = scipy.ndimage.interpolation.zoom(
-            self.l1b_geo_generate.lon, self.number_subpixel, order=2
-        )
+        # Most of the time, we have no fill values so just do a normal zoom
+        if(np.count_nonzero(self.l1b_geo_generate.lat < fill_value_threshold) == 0 and
+           np.count_nonzero(self.l1b_geo_generate.lon < fill_value_threshold) == 0):
+            lat = scipy.ndimage.interpolation.zoom(
+                self.l1b_geo_generate.lat, self.number_subpixel, order=2
+            )
+            lon = scipy.ndimage.interpolation.zoom(
+                self.l1b_geo_generate.lon, self.number_subpixel, order=2
+            )
+        else:
+            # But if we do, have special handling
+            #
+            # Order here of "1" is bilinear. We can't use higher order since we
+            # may have missing data and this gets spread out with higher order
+            # interpolation. As an easy way of handling this, we set
+            # missing data as extremely negative value
+            latv = self.l1b_geo_generate.lat.copy()
+            lonv = self.l1b_geo_generate.lon.copy()
+            latv[latv < fill_value_threshold] = -1e20
+            lonv[lonv < fill_value_threshold] = -1e20
+            lat = scipy.ndimage.interpolation.zoom(
+                self.l1b_geo_generate.lat, self.number_subpixel, order=1
+            )
+            lon = scipy.ndimage.interpolation.zoom(
+                self.l1b_geo_generate.lon, self.number_subpixel, order=1
+            )
         if not self.north_up:
             mi = determine_rotated_map_igc(self.l1b_geo_generate.igc, mi)
-        res = Resampler(lat, lon, mi, self.number_subpixel, False)
+        res = Resampler(lon, lat, mi, self.number_subpixel, False)
         logger.info("Done with Resampler init")
         g = fout.create_group("Mapped")
         g2 = g.create_group("MapInformation")

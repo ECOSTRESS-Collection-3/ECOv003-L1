@@ -139,8 +139,8 @@ import geocal_swig.geocal_exception
 class Resampler(geocal_swig.generic_object.GenericObject):
     r"""
 
-    This is used to take the L1B_GEO latitude and longitude fields and
-    project data to a given MapInfo.
+    This is used to take the L1B_GEO latitude and longitude fields (or
+    other coordinate X and Y) and project data to a given MapInfo.
 
     This is a bit brute force, and we don't worry about memory usage. The
     arrays are something like 10Kx10K floating point, so we are talking GB
@@ -157,17 +157,23 @@ class Resampler(geocal_swig.generic_object.GenericObject):
     def __init__(self, *args):
         r"""
 
-        Resampler::Resampler(const boost::shared_ptr< GeoCal::RasterImage > &Latitude, const
-        boost::shared_ptr< GeoCal::RasterImage > &Longitude, const
-        GeoCal::MapInfo &Mi, int Num_sub_pixel=2, bool Exactly_match_mi=false)
+        Resampler::Resampler(const boost::shared_ptr< GeoCal::RasterImage > &X_coor, const
+        boost::shared_ptr< GeoCal::RasterImage > &Y_coor, const
+        GeoCal::MapInfo &Mi, int Num_sub_pixel=2, bool Exactly_match_mi=false,
+        double Mark_missing=-1000.0)
         Ecostress::Resampler::Resampler
         Constructor.
-        This takes the latitude and longitude fields as RasterImage (we could
-        have taken the L1B_GEO file name, but taking RasterImage seems a
-        little more general). We take the MapInfo that we will resample to
-        (you can get that from something like mi =
+        This takes the latitude (Y) and longitude (X) fields as RasterImage
+        (we could have taken the L1B_GEO file name, but taking RasterImage
+        seems a little more general). We take the MapInfo that we will
+        resample to (you can get that from something like mi =
         Landsat7Global("/raid22",Landsat7Global.BAND5).map_info.scale(2,2)
         in python).
+
+        For a geodetic map, this is longitude (X) and latitude (Y). For other
+        map projections, this is just the general X and Y coordinates. Note
+        that these should already be converted to the coordinate system of the
+        map info.
 
         We make sure the mapinfo covers the latitude/longitude range
 

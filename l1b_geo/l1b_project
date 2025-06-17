@@ -102,7 +102,7 @@ lat = geocal.GdalRasterImage("HDF5:\"%s\"://Geolocation/latitude" %
                              args.l1b_geo_file)
 lon = geocal.GdalRasterImage("HDF5:\"%s\"://Geolocation/longitude" %
                              args.l1b_geo_file)
-res = ecostress.Resampler(lat, lon, mi, args.number_subpixel,
+res = ecostress.Resampler(lon, lat, mi, args.number_subpixel,
                           args.exactly_match_map_info)
 if(args.all_band or args.all_band_real):
     flist = []

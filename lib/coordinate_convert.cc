@@ -1,0 +1,24 @@
+#include "coordinate_convert.h"
+using namespace Ecostress;
+
+
+//-----------------------------------------------------------------------
+/// This is a bulk conversion from latitude/longitude to a different
+/// set of coordinates.
+//-----------------------------------------------------------------------
+
+blitz::Array<double, 2> Ecostress::coordinate_convert(const blitz::Array<double, 1> latitude,
+						      const blitz::Array<double, 1> longitude,
+						      const boost::shared_ptr<GeoCal::OgrWrapper>& ogr)
+{
+  blitz::Range ra = blitz::Range::all();
+  if(latitude.rows() != longitude.rows())
+    throw GeoCal::Exception("latitude and longitude need to be the same size");
+  blitz::Array<double, 1> x = longitude.copy();
+  blitz::Array<double, 1> y = latitude.copy();
+  const_cast<OGRCoordinateTransformation*>(ogr->inverse_transform())->Transform(latitude.rows(), &x(0), &y(0));
+  blitz::Array<double, 2> res(x.rows(), 2);
+  res(ra,0) = x;
+  res(ra,1) = y;
+  return res;
+}
