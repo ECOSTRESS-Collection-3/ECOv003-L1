@@ -7270,6 +7270,50 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_Resampler_empty_resample(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::Resampler const > tempshared1 ;
+  boost::shared_ptr< Ecostress::Resampler const > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  bool result;
+  
+  (void)self;
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_empty_resample" "', argument " "1"" of type '" "Ecostress::Resampler const *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
+      arg1 = const_cast< Ecostress::Resampler * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
+      arg1 = const_cast< Ecostress::Resampler * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = (bool)((Ecostress::Resampler const *)arg1)->empty_resample();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_0(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
@@ -8968,6 +9012,13 @@ static PyMethodDef SwigMethods[] = {
 		"of the actually coverage of the lat/lon. This is useful if we are\n"
 		"producing output files to compare against some existing file. \n"
 		""},
+	 { "Resampler_empty_resample", _wrap_Resampler_empty_resample, METH_O, "\n"
+		"\n"
+		"bool Resampler::empty_resample() const\n"
+		"Ecostress::Resampler::empty_resample\n"
+		"Check to see if we will have any data fall with the MapInfo.\n"
+		"\n"
+		""},
 	 { "Resampler_resample_dqi", _wrap_Resampler_resample_dqi, METH_VARARGS, "\n"
 		"\n"
 		"blitz::Array< int, 2 > Resampler::resample_dqi(const boost::shared_ptr< GeoCal::RasterImage > &Data) const\n"
@@ -9084,6 +9135,13 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"optionally specify that we exactly match the passed in Mi, regardless\n"
 		"of the actually coverage of the lat/lon. This is useful if we are\n"
 		"producing output files to compare against some existing file. \n"
+		""},
+	 { "Resampler_empty_resample", _wrap_Resampler_empty_resample, METH_O, "\n"
+		"\n"
+		"bool Resampler::empty_resample() const\n"
+		"Ecostress::Resampler::empty_resample\n"
+		"Check to see if we will have any data fall with the MapInfo.\n"
+		"\n"
 		""},
 	 { "Resampler_resample_dqi", _wrap_Resampler_resample_dqi, METH_VARARGS, "\n"
 		"\n"

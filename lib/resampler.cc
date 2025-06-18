@@ -126,6 +126,24 @@ void Resampler::init(const blitz::Array<double, 2>& X_coor,
 }
 
 //-------------------------------------------------------------------------
+/// Check to see if we will have any data fall with the MapInfo.
+//-------------------------------------------------------------------------
+
+bool Resampler::empty_resample() const
+{
+  for(int i = 0; i < data_index.rows(); ++i)
+    for(int j = 0; j < data_index.cols(); ++j) {
+      int ln, smp;
+      ln = data_index(i,j,0);
+      smp = data_index(i,j,1);
+      if(ln >= 0 && ln < mi.number_y_pixel() &&
+	 smp >=0 && smp < mi.number_x_pixel())
+	return false;
+    }
+  return true;
+}
+
+//-------------------------------------------------------------------------
 /// Resample the given data and return an array of values.
 ///
 /// We can scale the data by the given factor, optionally clip

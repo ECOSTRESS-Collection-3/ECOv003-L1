@@ -27,6 +27,7 @@ public:
 	    const GeoCal::MapInfo& Mi, int Num_sub_pixel = 2,
 	    bool Exactly_match_mi = false,
 	    double Mark_missing=-1000.0);
+  bool empty_resample() const;
   blitz::Array<double, 2> resample_field
   (const boost::shared_ptr<GeoCal::RasterImage>& Data,
    double Scale_data=1.0,

@@ -187,6 +187,7 @@ class Resampler(geocal_swig.generic_object.GenericObject):
         producing output files to compare against some existing file. 
         """
         _resampler.Resampler_swiginit(self, _resampler.new_Resampler(*args))
+    empty_resample = _swig_new_instance_method(_resampler.Resampler_empty_resample)
     resample_dqi = _swig_new_instance_method(_resampler.Resampler_resample_dqi)
     resample_field = _swig_new_instance_method(_resampler.Resampler_resample_field)
     map_values = _swig_new_instance_method(_resampler.Resampler_map_values)

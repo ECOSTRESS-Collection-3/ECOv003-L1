@@ -26,6 +26,7 @@ public:
 	    const GeoCal::MapInfo& Mi, int Num_sub_pixel = 2,
 	    bool Exactly_match_mi = false, double Mark_missing=-1000.0);
   virtual ~Resampler() {}
+  bool empty_resample() const;
   const GeoCal::MapInfo& map_info() const { return mi; }
   int number_sub_pixel() const {return nsub; }
   blitz::Array<double, 2> resample_field
