@@ -1,5 +1,6 @@
 #include "hdfeos_filehandle.h"
 #include <geocal/geocal_exception.h>
+#include <iostream>
 using namespace Ecostress;
 using namespace GeoCal;
 
@@ -15,11 +16,19 @@ HdfEosFileHandle::HdfEosFileHandle(const std::string& fname, int mode)
   gdfid_ = HE5_GDopen(fname.c_str(), mode);
   if(gdfid_ == -1)
     throw Exception("Trouble opening file " + fname);
+  if(mode == TRUNC || mode == CREATE)
+    // No grids yet, so skip trying to read.
+    return;
   long bufsize;
-  HE5_GDinqgrid(fname.c_str(), 0, &bufsize);
+  long ngrid = HE5_GDinqgrid(fname.c_str(), 0, &bufsize);
+  if(ngrid == -1)
+    // Ok if it fails, just skip
+    return;
   if(bufsize > 0) {
     std::vector<char> buf(bufsize);
-    HE5_GDinqgrid(fname.c_str(), &buf[0], &bufsize);
+    ngrid = HE5_GDinqgrid(fname.c_str(), &buf[0], &bufsize);
+    if(ngrid == -1)
+      throw Exception("Call to HE5_GDinqgrid failed");
     if(buf[0] != '\0') {
       int st = 0;
       for(int i = 0; i < bufsize; ++i)

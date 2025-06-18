@@ -1,6 +1,10 @@
 import geocal  # type: ignore
+from ecostress_swig import fill_value_threshold, Resampler, HdfEosFileHandle, HdfEosGrid  # type: ignore
 import os
 import h5py
+import scipy
+import numpy as np
+from loguru import logger
 
 class L1cgGenerate:
     '''The L1CG product is HDFEOS5. This isn't something I would have necessarily
@@ -33,8 +37,87 @@ class L1cgGenerate:
         self.number_subpixel = number_subpixel
 
     def run(self):
+        mi = geocal.cib01_mapinfo(self.resolution)
+        fin_geo = h5py.File(self.l1b_geo, "r")
+        latv = fin_geo["Geolocation/latitude"][:,:]
+        lonv = fin_geo["Geolocation/longitude"][:,:]
+        # Make sure fill values are negative enough that is clear we
+        # should ignore them, even after interpolation
+        latv[latv < fill_value_threshold] = -1e20
+        lonv[lonv < fill_value_threshold] = -1e20
+        # Order 1 is bilinear interpolation
+        lat = scipy.ndimage.interpolation.zoom(
+            latv, self.number_subpixel, order=1
+        )
+        lon = scipy.ndimage.interpolation.zoom(
+            lonv, self.number_subpixel, order=1
+        )
+        res = Resampler(lon, lat, mi, self.number_subpixel, False)
+        logger.info("Done with Resampler init")
+        mi = res.map_info
+        # Create HDFEOS file. We just create the structure here. Note it
+        # looks like we are creating a bunch of fields and then deleting them.
+        # But this is actually efficient, we have compression turned on and these
+        # fields are size 0. So we just create placeholders here, and then fill
+        # them in the next step.
+        fout = HdfEosFileHandle(self.output_name, HdfEosFileHandle.TRUNC)
+        g = HdfEosGrid(fout, "ECO_L1CG_RAD_70m", mi)
+        g.add_field_uchar("prelim_cloud")
+        g.add_field_uchar("water")
+        g.add_field_float("view_zenith")
+        g.add_field_float("height")
+        for i in range(5):
+            g.add_field_float(f"data_quality_{i+1}")
+            g.add_field_float(f"radiance_{i+1}")
+        g.close()
+        fout.close()
+        fout = h5py.File(self.output_name, "r+")
+        dfield = fout["//HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields"]
+        fattr = fout["/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES"]
+        del dfield["prelim_cloud"]
+        del dfield["water"]
+        del dfield["view_zenith"]
+        del dfield["height"]
+        for i in range(5):
+            del dfield[f"data_quality_{i+1}"]
+            del dfield[f"radiance_{i+1}"]
+        for b in range(1, 6):
+            logger.info("Doing radiance band %d" % b)
+            data_in = geocal.GdalRasterImage(
+                f'HDF5:"{self.l1b_rad}"://Radiance/radiance_{b}'
+            )
+            data = res.resample_field(data_in, 1.0, False, np.nan).astype(
+                np.float32
+            )
+            t = dfield.create_dataset(
+                "radiance_%d" % b,
+                data=data,
+                dtype="f4",
+                fillvalue=np.nan,
+                compression="gzip",
+            )
+            t.attrs.create("_FillValue", data=np.nan, dtype=t.dtype)
+            t.attrs["Units"] = "W/m^2/sr/um"
+        for b in range(1, 6):
+            # GeoCal doesn't support the dqi type. We could update geocal,
+            # but no strong reason to. Just read into memory
+            logger.info("Doing DQI band %d" % b)
+            din = h5py.File(self.l1b_rad)[f"Radiance/data_quality_{b}"][:,:]
+            data_in = geocal.MemoryRasterImage(din.shape[0], din.shape[1])
+            data_in.write(0,0,din)
+            data = res.resample_dqi(data_in).astype(np.int8)
+            t = dfield.create_dataset(
+                "data_quality_%d" % b,
+                data=data,
+                fillvalue=0,
+                compression="gzip",
+            )
+            t.attrs.create("_FillValue", data=0, dtype=t.dtype)
+            
+
         # TODO Make sure to update bounding box stuff in output metadata
-        fout = h5py.File(self.output_name, "w")
+        # TODO Put into place, I think we need to handle this with something
+        # other than write_standard_metadata
         #m = self.l1b_geo_generate.m.copy_new_file(
         #    fout, self.local_granule_id, "ECO_L1CG_RAD"
         #)
