@@ -22,3 +22,13 @@ blitz::Array<double, 2> Ecostress::coordinate_convert(const blitz::Array<double,
   res(ra,1) = y;
   return res;
 }
+
+//-----------------------------------------------------------------------
+/// This really belongs in geocal, but stick here for now. We will
+/// probably eventually migrate this to geocal.
+//-----------------------------------------------------------------------
+
+void Ecostress::set_fill_value(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img, double Fill_value)
+{
+  Img->raster_band().SetNoDataValue(Fill_value);
+}

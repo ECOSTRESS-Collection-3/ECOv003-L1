@@ -133,7 +133,6 @@ def _new_from_set(cls, version, *args):
     inst.set(*args)
     return inst
 
-import geocal_swig.ogr_coordinate
 import geocal_swig.generic_object
 import geocal_swig.ground_coordinate
 import geocal_swig.look_vector
@@ -141,8 +140,13 @@ import geocal_swig.coordinate_converter
 import geocal_swig.dem
 import geocal_swig.observer
 import geocal_swig.with_parameter
+import geocal_swig.raster_image_tiled_file
+import geocal_swig.raster_image_variable
+import geocal_swig.raster_image
+import geocal_swig.geocal_exception
 coordinate_convert = _coordinate_convert.coordinate_convert
+set_fill_value = _coordinate_convert.set_fill_value
 
-__all__ = ["coordinate_convert"]
+__all__ = ["coordinate_convert","set_fill_value"]
 
 
