@@ -54,6 +54,12 @@ class L1bRadGenerate(object):
             self.nband = np.count_nonzero(
                 self.l1a_pix["L1A_PIXMetadata/BandSpecification"][:] > 0
             )
+            # The earliest data still had the SWIR on. So we might see "6".
+            # For the purpose of EcostressAeDeepEnsembleInterpolate, this is
+            # the same as 5 bands - the SWIR is never used. Adjust this
+            # so EcostressAeDeepEnsembleInterpolate isn't confused by getting a "6"
+            if(self.nband > 5):
+                self.nband = 5
         else:
             self.nband - 6
         if interpolator_parameters is None:

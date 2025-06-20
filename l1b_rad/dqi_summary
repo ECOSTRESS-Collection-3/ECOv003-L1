@@ -1,0 +1,38 @@
+#! /usr/bin/env python
+#
+# Short program for giving summary of DQI
+
+import geocal
+import ecostress
+import h5py
+import numpy as np
+
+version = "1.0"
+usage='''Usage:
+  dqi_summary [options] <l1b_rad_file>
+  dqi_summary -h | --help
+  dqi_summary -v | --version
+
+Short program for giving summary of DQI.
+
+Options:
+  -h --help         
+       Print this message
+
+  -v --version      
+       Print program version
+'''
+
+args = geocal.docopt_simple(usage, version=version)
+print(args.l1b_rad_file)
+
+f = h5py.File(args.l1b_rad_file)
+for band in range(1,6):
+    print(f"Band {band}")
+    dqi = f[f"/Radiance/data_quality_{band}"][:,:]
+    print(f"   DQI_GOOD:                    {np.count_nonzero(dqi == ecostress.DQI_GOOD)}")
+    print(f"   DQI_INTERPOLATED:            {np.count_nonzero(dqi == ecostress.DQI_INTERPOLATED)}")
+    print(f"   DQI_STRIPE_NOT INTERPOLATED: {np.count_nonzero(dqi == ecostress.DQI_STRIPE_NOT_INTERPOLATED)}")
+    print(f"   DQI_BAD_OR_MISSING:          {np.count_nonzero(dqi == ecostress.DQI_BAD_OR_MISSING)}")
+    print(f"   DQI_NOT_SEEN:                {np.count_nonzero(dqi == ecostress.DQI_NOT_SEEN)}")
+    
