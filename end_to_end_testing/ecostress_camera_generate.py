@@ -1,6 +1,7 @@
-# This is a short python script that ingests the distortion data. This is really
-# just a placeholder to give something kind of right, we'll replace this with
-# a real camera model from bill Johnson
+# This is a short python script that ingests the distortion data.
+#
+# Note that there is a second step applied some time after this, see
+# fit_cam_band_to_band.py for updates to the camera model.
 
 import pandas as pd
 import numpy as np
