@@ -1,6 +1,8 @@
 #include "geometric_model_image_handle_fill.h"
+#include "ecostress_dqi.h"
 #include "geocal/ostream_pad.h"
 #include "ecostress_serialize_support.h"
+#include <algorithm>
 using namespace Ecostress;
 using namespace blitz;
 
@@ -44,28 +46,17 @@ void GeometricModelImageHandleFill::calc(int Lstart, int Sstart) const
       else {
 	int i2 = (int) ic.line;
 	int j2 = (int) ic.sample;
-	double t1 = unchecked_read_double(i2, j2);
-	double t2 = unchecked_read_double(i2, j2 + 1);
-	double t3 = unchecked_read_double(i2 + 1, j2);
-	double t4 = unchecked_read_double(i2 + 1, j2 + 1);
-	if(t1 < fill_value_threshold) {
-	  data(i,j) = t1;
+	double t1 = raw_data_->unchecked_read_double(i2, j2);
+	double t2 = raw_data_->unchecked_read_double(i2, j2 + 1);
+	double t3 = raw_data_->unchecked_read_double(i2 + 1, j2);
+	double t4 = raw_data_->unchecked_read_double(i2 + 1, j2 + 1);
+	double mint = min(t1,min(t2,min(t3,t4)));
+	if(mint < fill_value_threshold) {
+	  data(i,j) = mint;
 	} else {
-	  if(t2 < fill_value_threshold) {
-	    data(i,j) = t2;
-	  } else {
-	    if(t3 < fill_value_threshold) {
-	      data(i,j) = t3;
-	    } else {
-	      if(t4 < fill_value_threshold) {
-		data(i,j) = t4;
-	      } else {
-		double t5 = t1 + (t2 - t1) * (ic.sample - j2);
-		double t6 = t3 + (t4 - t3) * (ic.sample - j2);
-		data(i, j) = t5 + (t6 - t5) * (ic.line - i2);
-	      }
-	    }
-	  }
+	  double t5 = t1 + (t2 - t1) * (ic.sample - j2);
+	  double t6 = t3 + (t4 - t3) * (ic.sample - j2);
+	  data(i, j) = t5 + (t6 - t5) * (ic.line - i2);
 	}
       }
     }

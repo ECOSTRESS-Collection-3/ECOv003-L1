@@ -11,6 +11,7 @@ from ecostress_swig import (  # type: ignore
     EcostressRadAverage,
     fill_value_threshold,
     band_to_band_tie_points,
+    GeometricModelImageHandleFill
 )
 import h5py  # type: ignore
 from .rad_write_standard_metadata import RadWriteStandardMetadata
@@ -110,14 +111,12 @@ class L1bRadGenerate(object):
                     m = geocal.QuadraticGeometricModel()
                     m.fit_transformation(tplist)
                     fill_value = FILL_VALUE_NOT_SEEN
-                    # Note nearest neighbor preserves fill values
-                    rbreg = geocal.GeometricModelImage(
+                    rbreg = GeometricModelImageHandleFill(
                         radsub,
                         m,
                         radsub.number_line,
                         radsub.number_sample,
-                        fill_value,
-                        geocal.GeometricModelImage.NEAREST_NEIGHBOR,
+                        fill_value
                     )
                     rbreg_avg = EcostressRadAverage(rbreg)
                 else:

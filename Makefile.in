@@ -230,7 +230,8 @@ am__objects_1 = @swigsrc@/_swig_wrap_la-ecostress_swig_array_wrap.lo \
 	@swigsrc@/_swig_wrap_la-simulated_radiance_wrap.lo \
 	@swigsrc@/_swig_wrap_la-hdfeos_filehandle_wrap.lo \
 	@swigsrc@/_swig_wrap_la-hdfeos_grid_wrap.lo \
-	@swigsrc@/_swig_wrap_la-coordinate_convert_wrap.lo
+	@swigsrc@/_swig_wrap_la-coordinate_convert_wrap.lo \
+	@swigsrc@/_swig_wrap_la-geometric_model_image_handle_fill_wrap.lo
 am__objects_2 = $(am__objects_1)
 am__swig_wrap_la_OBJECTS = $(am__objects_2) \
 	@swigsrc@/_swig_wrap_la-swig_wrap.lo
@@ -261,7 +262,8 @@ am_libecostress_la_OBJECTS =  \
 	@srclib@/libecostress_la-simulated_radiance.lo \
 	@srclib@/libecostress_la-hdfeos_filehandle.lo \
 	@srclib@/libecostress_la-hdfeos_grid.lo \
-	@srclib@/libecostress_la-coordinate_convert.lo
+	@srclib@/libecostress_la-coordinate_convert.lo \
+	@srclib@/libecostress_la-geometric_model_image_handle_fill.lo
 libecostress_la_OBJECTS = $(am_libecostress_la_OBJECTS)
 libecostress_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
@@ -335,6 +337,7 @@ am__depfiles_remade = @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_tes
 	@srclib@/$(DEPDIR)/libecostress_la-ecostress_rad_average.Plo \
 	@srclib@/$(DEPDIR)/libecostress_la-ecostress_scan_mirror.Plo \
 	@srclib@/$(DEPDIR)/libecostress_la-ecostress_time_table.Plo \
+	@srclib@/$(DEPDIR)/libecostress_la-geometric_model_image_handle_fill.Plo \
 	@srclib@/$(DEPDIR)/libecostress_la-ground_coordinate_array.Plo \
 	@srclib@/$(DEPDIR)/libecostress_la-hdfeos_filehandle.Plo \
 	@srclib@/$(DEPDIR)/libecostress_la-hdfeos_grid.Plo \
@@ -354,6 +357,7 @@ am__depfiles_remade = @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_tes
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_scan_mirror_wrap.Plo \
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_swig_array_wrap.Plo \
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_time_table_wrap.Plo \
+	@swigsrc@/$(DEPDIR)/_swig_wrap_la-geometric_model_image_handle_fill_wrap.Plo \
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-ground_coordinate_array_wrap.Plo \
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-hdfeos_filehandle_wrap.Plo \
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-hdfeos_grid_wrap.Plo \
@@ -1005,7 +1009,8 @@ libecostress_la_SOURCES = @srclib@/ecostress_camera.cc \
 	@srclib@/ecostress_band_to_band.cc \
 	@srclib@/ground_coordinate_array.cc \
 	@srclib@/simulated_radiance.cc @srclib@/hdfeos_filehandle.cc \
-	@srclib@/hdfeos_grid.cc @srclib@/coordinate_convert.cc
+	@srclib@/hdfeos_grid.cc @srclib@/coordinate_convert.cc \
+	@srclib@/geometric_model_image_handle_fill.cc
 
 #=================================================================
 # List of source files
@@ -1022,7 +1027,8 @@ ecostressinc_HEADERS = @srclib@/ecostress_serialize_support.h \
 	@srclib@/ecostress_band_to_band.h \
 	@srclib@/ground_coordinate_array.h \
 	@srclib@/simulated_radiance.h @srclib@/hdfeos_filehandle.h \
-	@srclib@/hdfeos_grid.h @srclib@/coordinate_convert.h
+	@srclib@/hdfeos_grid.h @srclib@/coordinate_convert.h \
+	@srclib@/geometric_model_image_handle_fill.h
 
 # Files that contain SWIG wrapper information.
 ecostressswiginc_HEADERS = @srclib@/ecostress_common.i \
@@ -1039,7 +1045,8 @@ ecostressswiginc_HEADERS = @srclib@/ecostress_common.i \
 	@srclib@/ecostress_band_to_band.i \
 	@srclib@/ground_coordinate_array.i \
 	@srclib@/simulated_radiance.i @srclib@/hdfeos_filehandle.i \
-	@srclib@/hdfeos_grid.i @srclib@/coordinate_convert.i
+	@srclib@/hdfeos_grid.i @srclib@/coordinate_convert.i \
+	@srclib@/geometric_model_image_handle_fill.i
 ecostress_test_all_SOURCES = @srclib@/test_all.cc \
 	@srclib@/global_fixture.cc @srclib@/global_fixture_default.cc \
 	@srclib@/ecostress_camera_test.cc \
@@ -1073,7 +1080,8 @@ SWIG_SRC = @swigsrc@/ecostress_swig_array_wrap.cc \
 	@swigsrc@/simulated_radiance_wrap.cc \
 	@swigsrc@/hdfeos_filehandle_wrap.cc \
 	@swigsrc@/hdfeos_grid_wrap.cc \
-	@swigsrc@/coordinate_convert_wrap.cc
+	@swigsrc@/coordinate_convert_wrap.cc \
+	@swigsrc@/geometric_model_image_handle_fill_wrap.cc
 libecostress_la_CPPFLAGS = $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(HDFEOS5_CFLAGS)
 libecostress_la_LDFLAGS = $(GEOCAL_LIBS) $(HDFEOS5_LIBS)
 ecostress_test_all_LDADD = libecostress.la 
@@ -1346,6 +1354,8 @@ clean-pkgpythonswigLTLIBRARIES:
 	@swigsrc@/$(am__dirstamp) @swigsrc@/$(DEPDIR)/$(am__dirstamp)
 @swigsrc@/_swig_wrap_la-coordinate_convert_wrap.lo:  \
 	@swigsrc@/$(am__dirstamp) @swigsrc@/$(DEPDIR)/$(am__dirstamp)
+@swigsrc@/_swig_wrap_la-geometric_model_image_handle_fill_wrap.lo:  \
+	@swigsrc@/$(am__dirstamp) @swigsrc@/$(DEPDIR)/$(am__dirstamp)
 @swigsrc@/_swig_wrap_la-swig_wrap.lo: @swigsrc@/$(am__dirstamp) \
 	@swigsrc@/$(DEPDIR)/$(am__dirstamp)
 
@@ -1390,6 +1400,8 @@ _swig_wrap.la: $(_swig_wrap_la_OBJECTS) $(_swig_wrap_la_DEPENDENCIES) $(EXTRA__s
 @srclib@/libecostress_la-hdfeos_grid.lo: @srclib@/$(am__dirstamp) \
 	@srclib@/$(DEPDIR)/$(am__dirstamp)
 @srclib@/libecostress_la-coordinate_convert.lo:  \
+	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
+@srclib@/libecostress_la-geometric_model_image_handle_fill.lo:  \
 	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
 
 libecostress.la: $(libecostress_la_OBJECTS) $(libecostress_la_DEPENDENCIES) $(EXTRA_libecostress_la_DEPENDENCIES) 
@@ -1574,6 +1586,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_rad_average.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_scan_mirror.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ecostress_time_table.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-geometric_model_image_handle_fill.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ground_coordinate_array.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-hdfeos_filehandle.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-hdfeos_grid.Plo@am__quote@ # am--include-marker
@@ -1593,6 +1606,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_scan_mirror_wrap.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_swig_array_wrap.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_time_table_wrap.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-geometric_model_image_handle_fill_wrap.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ground_coordinate_array_wrap.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-hdfeos_filehandle_wrap.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-hdfeos_grid_wrap.Plo@am__quote@ # am--include-marker
@@ -1763,6 +1777,13 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -c -o @swigsrc@/_swig_wrap_la-coordinate_convert_wrap.lo `test -f '@swigsrc@/coordinate_convert_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/coordinate_convert_wrap.cc
 
+@swigsrc@/_swig_wrap_la-geometric_model_image_handle_fill_wrap.lo: @swigsrc@/geometric_model_image_handle_fill_wrap.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -MT @swigsrc@/_swig_wrap_la-geometric_model_image_handle_fill_wrap.lo -MD -MP -MF @swigsrc@/$(DEPDIR)/_swig_wrap_la-geometric_model_image_handle_fill_wrap.Tpo -c -o @swigsrc@/_swig_wrap_la-geometric_model_image_handle_fill_wrap.lo `test -f '@swigsrc@/geometric_model_image_handle_fill_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/geometric_model_image_handle_fill_wrap.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @swigsrc@/$(DEPDIR)/_swig_wrap_la-geometric_model_image_handle_fill_wrap.Tpo @swigsrc@/$(DEPDIR)/_swig_wrap_la-geometric_model_image_handle_fill_wrap.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@swigsrc@/geometric_model_image_handle_fill_wrap.cc' object='@swigsrc@/_swig_wrap_la-geometric_model_image_handle_fill_wrap.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -c -o @swigsrc@/_swig_wrap_la-geometric_model_image_handle_fill_wrap.lo `test -f '@swigsrc@/geometric_model_image_handle_fill_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/geometric_model_image_handle_fill_wrap.cc
+
 @swigsrc@/_swig_wrap_la-swig_wrap.lo: @swigsrc@/swig_wrap.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -MT @swigsrc@/_swig_wrap_la-swig_wrap.lo -MD -MP -MF @swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Tpo -c -o @swigsrc@/_swig_wrap_la-swig_wrap.lo `test -f '@swigsrc@/swig_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/swig_wrap.cc
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Tpo @swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Plo
@@ -1888,6 +1909,13 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/coordinate_convert.cc' object='@srclib@/libecostress_la-coordinate_convert.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/libecostress_la-coordinate_convert.lo `test -f '@srclib@/coordinate_convert.cc' || echo '$(srcdir)/'`@srclib@/coordinate_convert.cc
+
+@srclib@/libecostress_la-geometric_model_image_handle_fill.lo: @srclib@/geometric_model_image_handle_fill.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/libecostress_la-geometric_model_image_handle_fill.lo -MD -MP -MF @srclib@/$(DEPDIR)/libecostress_la-geometric_model_image_handle_fill.Tpo -c -o @srclib@/libecostress_la-geometric_model_image_handle_fill.lo `test -f '@srclib@/geometric_model_image_handle_fill.cc' || echo '$(srcdir)/'`@srclib@/geometric_model_image_handle_fill.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/libecostress_la-geometric_model_image_handle_fill.Tpo @srclib@/$(DEPDIR)/libecostress_la-geometric_model_image_handle_fill.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/geometric_model_image_handle_fill.cc' object='@srclib@/libecostress_la-geometric_model_image_handle_fill.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/libecostress_la-geometric_model_image_handle_fill.lo `test -f '@srclib@/geometric_model_image_handle_fill.cc' || echo '$(srcdir)/'`@srclib@/geometric_model_image_handle_fill.cc
 
 @srclib@/ecostress_test_all-test_all.o: @srclib@/test_all.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-test_all.o -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-test_all.Tpo -c -o @srclib@/ecostress_test_all-test_all.o `test -f '@srclib@/test_all.cc' || echo '$(srcdir)/'`@srclib@/test_all.cc
@@ -2803,6 +2831,7 @@ distclean: distclean-am
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_rad_average.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_scan_mirror.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_time_table.Plo
+	-rm -f @srclib@/$(DEPDIR)/libecostress_la-geometric_model_image_handle_fill.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ground_coordinate_array.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-hdfeos_filehandle.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-hdfeos_grid.Plo
@@ -2822,6 +2851,7 @@ distclean: distclean-am
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_scan_mirror_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_swig_array_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_time_table_wrap.Plo
+	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-geometric_model_image_handle_fill_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ground_coordinate_array_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-hdfeos_filehandle_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-hdfeos_grid_wrap.Plo
@@ -2911,6 +2941,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_rad_average.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_scan_mirror.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ecostress_time_table.Plo
+	-rm -f @srclib@/$(DEPDIR)/libecostress_la-geometric_model_image_handle_fill.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ground_coordinate_array.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-hdfeos_filehandle.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-hdfeos_grid.Plo
@@ -2930,6 +2961,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_scan_mirror_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_swig_array_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ecostress_time_table_wrap.Plo
+	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-geometric_model_image_handle_fill_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ground_coordinate_array_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-hdfeos_filehandle_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-hdfeos_grid_wrap.Plo
