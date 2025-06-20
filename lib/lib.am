@@ -60,6 +60,8 @@ ecostressinc_HEADERS+= @srclib@/hdfeos_grid.h
 libecostress_la_SOURCES+= @srclib@/hdfeos_grid.cc
 ecostressinc_HEADERS+= @srclib@/coordinate_convert.h
 libecostress_la_SOURCES+= @srclib@/coordinate_convert.cc
+ecostressinc_HEADERS+= @srclib@/geometric_model_image_handle_fill.h
+libecostress_la_SOURCES+= @srclib@/geometric_model_image_handle_fill.cc
 
 # Files that contain SWIG wrapper information.
 ecostressswiginc_HEADERS+= @srclib@/ecostress_common.i
@@ -101,6 +103,8 @@ SWIG_SRC += @swigsrc@/hdfeos_grid_wrap.cc
 ecostressswiginc_HEADERS+= @srclib@/hdfeos_grid.i
 SWIG_SRC += @swigsrc@/coordinate_convert_wrap.cc
 ecostressswiginc_HEADERS+= @srclib@/coordinate_convert.i
+SWIG_SRC += @swigsrc@/geometric_model_image_handle_fill_wrap.cc
+ecostressswiginc_HEADERS+= @srclib@/geometric_model_image_handle_fill.i
 
 # Test files
 EXTRA_DIST+= @srclib@/unit_test_support.h

@@ -21,6 +21,7 @@ extern "C" {
   INIT_TYPE INIT_FUNC(_hdfeos_filehandle)(void);
   INIT_TYPE INIT_FUNC(_hdfeos_grid)(void);
   INIT_TYPE INIT_FUNC(_coordinate_convert)(void);
+  INIT_TYPE INIT_FUNC(_geometric_model_image_handle_fill)(void);
 }
 
 static void module_init(PyObject* module)
@@ -44,4 +45,5 @@ static void module_init(PyObject* module)
   INIT_MODULE(module, "_hdfeos_filehandle", INIT_FUNC(_hdfeos_filehandle));
   INIT_MODULE(module, "_hdfeos_grid", INIT_FUNC(_hdfeos_grid));
   INIT_MODULE(module, "_coordinate_convert", INIT_FUNC(_coordinate_convert));
+  INIT_MODULE(module, "_geometric_model_image_handle_fill", INIT_FUNC(_geometric_model_image_handle_fill));
 }
