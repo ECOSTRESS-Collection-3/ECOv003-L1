@@ -5,17 +5,31 @@ from ecostress_swig import (  # type: ignore
 import numpy as np
 import h5py
 import warnings
+import os
 # Have a warning message that we can't do anything about - suppress it
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=UserWarning)
+    import scipy.interpolate
     from scipy.interpolate import RegularGridInterpolator
     from scipy.interpolate import interp1d
 import re
 from loguru import logger
 
 class CloudProcessing:
-    def __init__(self) -> None:
-        pass
+    def __init__(self, rad_lut_fname : str | os.PathLike) -> None:
+        # Read the LUT data.
+        self.rad_lut_data = np.loadtxt(rad_lut_fname, dtype=np.float64)
+        
+        # Create interpolation function with extrapolation. Index 4 is the
+        # radiance value, index 0 is the brightness temperature
+        #
+        # Note that the C code needs
+        # to have this sorted, but scipy interp1d doesn't need this - it
+        # sorts the data itself.
+        self.rad_to_bt_interpolate = scipy.interpolate.interp1d(
+            self.rad_lut_data[:,4], self.rad_lut_data[:,0], 
+            kind="linear", bounds_error=False, fill_value = "extrapolate"
+        )
     
     def classify_clouds(self, tb4, bt_out, el):
         # Mark cloud, just so we can more easily handle the if/else logic here. We can
@@ -52,7 +66,7 @@ class CloudProcessing:
     
         return cloud1, cloudconf
     
-    def process_cloud(self, rad, bt11_lut_file, btdiff_file, rad_lut_data, rad_lut_nlines, cloud_filename):
+    def process_cloud(self, rad, bt11_lut_file, btdiff_file, cloud_filename):
         logger.debug(f"Shapes of radiance layers: {[r.shape for r in rad.Rad]}")
         logger.debug(f"Band count: {rad.Rad.shape[0]}")
     
@@ -66,28 +80,13 @@ class CloudProcessing:
         nrows, ncols = rad.Rad[band_4].shape
         tb4 = np.zeros((nrows, ncols))
     
-    
-        # Ensure the LUT table is sorted in descending order 
-        if rad_lut_data[col_5][-1] < rad_lut_data[col_5][0]:  # Descending order in aas in C
-            sorted_indices = np.argsort(-rad_lut_data[:, col_5])  # Sort descending
-        else:
-            sorted_indices = np.argsort(rad_lut_data[:, col_5])   # Sort ascending
-    
-        sorted_x_5 = rad_lut_data[sorted_indices, col_5]  # Radiance values for Band 4
-        sorted_y_5 = rad_lut_data[sorted_indices, col_1]  # Brightness temperature for Band 4
-        
         # Mask out fill values before interpolation
         # Valid pixels (True = keep, False = fill)
         valid_mask = rad.Rad[band_4] != FILL_VALUE_NOT_SEEN  
         tb4 = np.full((nrows, ncols), np.nan)  # Initialize with NaN
     
-        # Create interpolation function with extrapolation
-        interp_func = interp1d(
-        sorted_x_5, sorted_y_5, 
-            kind="linear", bounds_error=False, fill_value = "extrapolate"
-        )
         # Apply interpolation only on valid radiance values
-        tb4[valid_mask] = interp_func(rad.Rad[band_4][valid_mask])
+        tb4[valid_mask] = self.rad_to_bt_interpolate(rad.Rad[band_4][valid_mask])
         
         logger.debug("Extract file name to get time for bt thresholds")
         filename_parts = cloud_filename.split("/")[-1]
