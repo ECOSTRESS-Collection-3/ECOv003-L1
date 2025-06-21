@@ -1,4 +1,4 @@
-from ecostress import process_cloud
+from ecostress import CloudProcessing
 import pytest
 import numpy as np
 import h5py
@@ -136,7 +136,8 @@ def test_process_cloud(isolated_dir, test_data_latest):
     vrad = load_radiance_data(l1b_rad_fname)
     vrad.Lat, vrad.Lon, vrad.El = load_geolocation_data(geo_fname)
     lut, nlut_lines = load_lookup_table(rad_lut_fname)
-    process_cloud(vrad, cloud_lut_fname, cloud_btdiff_fname, lut, nlut_lines, cloud_fname)
+    cprocess = CloudProcessing()
+    cprocess.process_cloud(vrad, cloud_lut_fname, cloud_btdiff_fname, lut, nlut_lines, cloud_fname)
     subprocess.run(["h5diff", "-r", cloud_fname, test_data_latest / f"{cloud_fname}.expected"],
                    check=True)
 
@@ -151,7 +152,8 @@ def test_process_cloud2(isolated_dir, test_data_latest):
     vrad = load_radiance_data(l1b_rad_fname)
     vrad.Lat, vrad.Lon, vrad.El = load_geolocation_data(geo_fname)
     lut, nlut_lines = load_lookup_table(rad_lut_fname)
-    process_cloud(vrad, cloud_lut_fname, cloud_btdiff_fname, lut, nlut_lines, cloud_fname)
+    cprocess = CloudProcessing()
+    cprocess.process_cloud(vrad, cloud_lut_fname, cloud_btdiff_fname, lut, nlut_lines, cloud_fname)
     subprocess.run(["h5diff", "-r", cloud_fname, test_data_latest / f"{cloud_fname}.expected"],
                    check=True)
     
