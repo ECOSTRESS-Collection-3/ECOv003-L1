@@ -30,6 +30,10 @@ install2:
 lint:
 	ruff check ecostress test
 
+# Add some extra rules
+lint-strict:
+	ruff check --select N ecostress test
+
 lint-fix:
 	ruff check --fix ecostress test
 
@@ -54,33 +58,3 @@ check:
 	pytest -n 10 test
 
 
-# Install micromamba
-PLATFORM=linux
-ARCH=64
-MICROMAMBA_URL=https://github.com/mamba-org/micromamba-releases/releases/latest/download/micromamba-$(PLATFORM)-$(ARCH)
-
-micromamba:
-	wget -qO micromamba $(MICROMAMBA_URL) && chmod +x micromamba
-
-AFIDS_PACKAGE_DIR=/ldata/smyth/afids-conda-package/afids-conda-channel
-# We should perhaps create our own manifest file
-AFIDS_ENV_FILE=$(AFIDS_PACKAGE_DIR)/../Manifest_linux.yml
-ENV_DIR=$(PWD)/../../ecostress-env
-
-Manifest_linux-modify.yml: $(AFIDS_ENV_FILE)
-# We need to replace the local-channel line found in the spec file, since
-# this is a hard coded path and isn't necessarily the same on this system
-	( grep -B 1000 afids-conda-channel $< | grep -v afids-conda-channel ) > Manifest_linux-modify.yml
-	echo "  - file://$(AFIDS_PACKAGE_DIR)" >> Manifest_linux-modify.yml
-	( grep -A 1000 afids-conda-channel $< | grep -v afids-conda-channel ) >> Manifest_linux-modify.yml
-
-create-env: micromamba Manifest_linux-modify.yml
-	-rm -rf $(ENV_DIR)
-	./micromamba create -y  -c $(AFIDS_PACKAGE_DIR) -f Manifest_linux-modify.yml -p $(ENV_DIR)
-	./micromamba run -p $(ENV_DIR) conda env config vars set LANDSAT_ROOT=/opt/afids/data/landsat
-	./micromamba run -p $(ENV_DIR) conda env config vars set ELEV_ROOT=/opt/afids/data/srtmL2_filled
-	./micromamba run -p $(ENV_DIR) mamba -y install ruff mypy tensorflow scikit-learn git-annex loguru loguru-config pytest-loguru
-	./micromamba run -p $(ENV_DIR) pip install types-tensorflow
-
-# conda env config vars set ECOSTRESSTOP=/ldata/smyth/ecostress-env
-# conda env config vars set TAE_PATH=${ECOSTRESSTOP}/vicar_pdf:${TAE_PATH}
