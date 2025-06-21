@@ -1605,7 +1605,7 @@ Optional Packages:
   --with-geocal=DIR       give directory where geocal can be found (optional,
                           default is /pkg/afids/geocal_latest)
   --with-afids=DIR        give directory where afids can be found (optional,
-                          default is /pkg/afids/afids_latest)
+                          default is location of geocal)
   --with-test-data=DIR    give directory where end to end test data can be
                           found (optional, default is
                           /project/test/ASTER/EndToEndTest)
@@ -22292,13 +22292,19 @@ pkgconfigdir=${libdir}/pkgconfig
 # Find location of afids and geocal
 
 
+if test "x$CONDA_PREFIX" != x; then
+   ac_geocal_default="$CONDA_PREFIX"
+else
+   ac_geocal_default="/pkg/afids/geocal_latest"
+fi
+
 
 # Check whether --with-geocal was given.
 if test ${with_geocal+y}
 then :
   withval=$with_geocal;  ac_geocal_dir="$withval"
 else case e in #(
-  e)  ac_geocal_dir="/pkg/afids/geocal_latest"  ;;
+  e)  ac_geocal_dir="$ac_geocal_default"  ;;
 esac
 fi
 
