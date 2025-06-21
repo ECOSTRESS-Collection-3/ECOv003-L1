@@ -1,3 +1,4 @@
+from __future__ import annotations
 from ecostress_swig import (  # type: ignore
     FILL_VALUE_NOT_SEEN,
 )
@@ -5,14 +6,16 @@ import numpy as np
 import h5py
 import warnings
 import os
-
 # Have a warning message that we can't do anything about - suppress it
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=UserWarning)
     import scipy.interpolate
 import re
 from loguru import logger
+import typing
 
+if typing.TYPE_CHECKING:
+    import geocal
 
 class CloudProcessing:
     def __init__(self, rad_lut_fname: str | os.PathLike,
@@ -41,10 +44,34 @@ class CloudProcessing:
             fill_value="extrapolate",
         )
 
-        self.b11_lut_files : dict[int, h5py.File] = {}
+        self._b11_lut_fname : dict[int, h5py.File] = {}
         for hour in ["00", "06", "12", "18"]:
             fname = str(b11_lut_file_pattern).replace("??", hour)
-            self.b11_lut_files[int(hour)] = h5py.File(fname, "r")
+            self._b11_lut_fname[int(hour)] = fname
+
+
+    def bt11_interpolator(self, hour : int, month : int) -> list[scipy.interpolate.RegularGridInterpolator]:
+        '''Take the given hour (which should be a multiple of 6) and
+        month and return three interpolators mapping lat/lon to the
+        brightness temperature threshold 1, 2 and 3
+        '''
+        res = []
+        with h5py.File(self._b11_lut_fname[hour]) as f:
+            lut_lat = np.transpose(f["/Geolocation/Latitude"][:])
+            lut_lon = np.transpose(f["/Geolocation/Longitude"][:])
+            for lut_thresh in range(1, 4):  # Iterate over LUT thresholds (1, 2, 3)
+                cloudvar1 = f"/Data/LUT_cloudBT{lut_thresh}_{hour:02d}_{month:02d}"
+                bt = np.transpose(f[cloudvar1][:])
+                res.append(scipy.interpolate.RegularGridInterpolator(
+                    (lut_lat[:, 0], lut_lon[0, :]),
+                    bt,
+                    method="linear",
+                    bounds_error=False,
+                    fill_value=np.nan,
+                ))
+        return res
+                
+                
 
     def convert_radiance_to_bt(self, rad_band_4: np.ndarray) -> np.ndarray:
         """Convert band 4 radiance to brightness temperature"""
@@ -54,7 +81,7 @@ class CloudProcessing:
         tb4[valid_mask] = self.rad_to_bt_interpolate(rad_band_4[valid_mask])
         return tb4
 
-    def classify_clouds(self, tb4, bt_out, el):
+    def classify_clouds(self, tb4, bt_out, height):
         # Mark cloud, just so we can more easily handle the if/else logic here. We can
         # make sure to only update values at each step that weren't done before.
         cloud1 = np.full(tb4.shape, 128, dtype=np.uint8)
@@ -75,11 +102,11 @@ class CloudProcessing:
         # Probably cloudy
         # At altitude > 2 km consider probablycloud as clear
         cloud1[
-            (cloud1 == 128) & (tb4 <= bt_out[2]) & (tb4 > bt_out[1]) & (el > 2.0)
+            (cloud1 == 128) & (tb4 <= bt_out[2]) & (tb4 > bt_out[1]) & (height > 2.0)
         ] = 0
         # Otherwise, mark as cloudy
         cloud1[
-            (cloud1 == 128) & (tb4 <= bt_out[2]) & (tb4 > bt_out[1]) & (el <= 2.0)
+            (cloud1 == 128) & (tb4 <= bt_out[2]) & (tb4 > bt_out[1]) & (height <= 2.0)
         ] = 1
         cloudconf[(cloudconf == 128) & (tb4 <= bt_out[2]) & (tb4 > bt_out[1])] = 2
 
@@ -93,7 +120,25 @@ class CloudProcessing:
 
         return cloud1, cloudconf
 
-    def process_cloud(self, rad, btdiff_file, cloud_filename):
+    def parse_time(self, tstart : geocal.Time) -> (int,int,int):
+        '''Parse the start time for the radiance data, returning month, hour, and minute.'''
+        # geocal time string in a standard CCSDS string, so we know the format.
+        m = re.match(r'(\d\d\d\d)-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d\.\d+)Z', str(tstart))
+        if(m is None):
+            raise RuntimeError("Trouble parsing time string")
+        return (int(m[2]), int(m[4]), int(m[5]))
+    
+    def process_cloud(self, rad, tstart : geocal.Time) -> (np.ndarray, np.ndarray):
+        '''Process the given band 4 radiance data to determine the cloud mask.
+
+        This returns two arrays, a cloud mask and a cloud confidence mask.
+        
+        The cloud mask is 0 for clear, 1 for cloudy, or 255 for pixels that
+        can't be computed (e.g., the radiance data is fill).
+
+        The cloud confidence is 0 - confident clear 1 - probably clear, 2 - probably cloud
+        and 3 - probably cloudy. It is 255 for pixels that can't be computed.'''
+        
         logger.debug(f"Shapes of radiance layers: {[r.shape for r in rad.Rad]}")
         logger.debug(f"Band count: {rad.Rad.shape[0]}")
 
@@ -101,76 +146,23 @@ class CloudProcessing:
 
         tb4 = self.convert_radiance_to_bt(rad.Rad[band_4])
 
-        logger.debug("Extract file name to get time for bt thresholds")
-        filename_parts = cloud_filename.split("/")[-1]
-
-        # Find the position of "L1_CLOUD" in the filename
-        match = re.search(r"L1_CLOUD", filename_parts)
-        if not match:
-            raise RuntimeError(f"L1_CLOUD not found in filename: {cloud_filename}")
-
-        # Extract `mth` and `hh`, `mm` relative to "L1_CLOUD"
-        start_idx = match.start()
-        mth = int(filename_parts[start_idx + 23 : start_idx + 25])  # Month
-        hh = int(filename_parts[start_idx + 28 : start_idx + 30])  # Hour
-        mm = int(filename_parts[start_idx + 30 : start_idx + 32])  # Minute
-
-        # Ensure values are reasonable
-        if not (1 <= mth <= 12):
-            raise RuntimeError(f"Invalid month extracted: {mth} from {cloud_filename}")
-        if not (0 <= hh < 24):
-            raise RuntimeError(f"Invalid hour extracted: {hh} from {cloud_filename}")
-        if not (0 <= mm < 60):
-            raise RuntimeError(f"Invalid minute extracted: {mm} from {cloud_filename}")
+        month, hour, minute = self.parse_time(tstart)
 
         # Compute 6-hour time intervals, and use to determine the b11 LUT file we use
-        hrfrac = hh + mm / 60.0
-        ztime0 = 6 * (hh // 6)  # Nearest past 6-hour mark
+        hrfrac = hour + minute / 60.0
+        ztime0 = 6 * (hour // 6)  # Nearest past 6-hour mark
         ztime1 = (ztime0 + 6) % 24  # Next 6-hour mark
 
-        # Load latitude and longitude from the LUT file corresponding to ztime1
-        lut_lat = np.transpose(self.b11_lut_files[ztime1]["/Geolocation/Latitude"][:])
-        lut_lon = np.transpose(self.b11_lut_files[ztime1]["/Geolocation/Longitude"][:])
-
-        sorted_lat = lut_lat  #   not sorting to match C
-
-        # Prepare brightness temperature thresholds
+        logger.debug("Create bt thresholds")
         bt_out = {i: np.zeros(tb4.shape) for i in range(1, 4)}
         slapse = 6.5  # Standard lapse rate
-
-        logger.debug("Create bt thresholds")
+        interp_bt1 = self.bt11_interpolator(ztime0, month)
+        interp_bt2 = self.bt11_interpolator(ztime1, month)
         for lut_thresh in range(1, 4):  # Iterate over LUT thresholds (1, 2, 3)
-            cloudvar1 = f"/Data/LUT_cloudBT{lut_thresh}_{ztime0:02d}_{mth:02d}"
-            cloudvar2 = f"/Data/LUT_cloudBT{lut_thresh}_{ztime1:02d}_{mth:02d}"
-
-            bt1 = np.transpose(
-                self.b11_lut_files[ztime0][cloudvar1][:]
-            )
-            bt2 = np.transpose(
-                self.b11_lut_files[ztime1][cloudvar2][:]
-            ) 
-
-            # Create RegularGridInterpolator functions
-            interp_bt1 = scipy.interpolate.RegularGridInterpolator(
-                (lut_lat[:, 0], lut_lon[0, :]),
-                bt1,
-                method="linear",
-                bounds_error=False,
-                fill_value=np.nan,
-            )
-
-            interp_bt2 = scipy.interpolate.RegularGridInterpolator(
-                (lut_lat[:, 0], lut_lon[0, :]),
-                bt2,
-                method="linear",
-                bounds_error=False,
-                fill_value=np.nan,
-            )
-
             # Vectorized interpolation
             points = np.column_stack((rad.Lat.ravel(), rad.Lon.ravel()))
-            btgrid1_interp = interp_bt1(points).reshape(tb4.shape)
-            btgrid2_interp = interp_bt2(points).reshape(tb4.shape)
+            btgrid1_interp = interp_bt1[lut_thresh-1](points).reshape(tb4.shape)
+            btgrid2_interp = interp_bt2[lut_thresh-1](points).reshape(tb4.shape)
 
             # Temporal interpolation
             m = (hrfrac - ztime0) / 6.0
@@ -192,12 +184,7 @@ class CloudProcessing:
         # classify clouds
         cloud1, cloudconf = self.classify_clouds(tb4, bt_out, rad.El)
 
-        logger.debug("Write Cloud mask file")
-        with h5py.File(cloud_filename, "w") as cloudout:
-            sds_group = cloudout.create_group("/SDS")
-            sds_group.create_dataset("Cloud_confidence", data=cloudconf, dtype=np.uint8)
-            sds_group.create_dataset("Cloud_final", data=cloud1, dtype=np.uint8)
-
+        return (cloud1, cloudconf)
 
 __all__ = [
     "CloudProcessing",

@@ -1,4 +1,5 @@
 from ecostress import CloudProcessing
+import geocal
 import pytest
 import numpy as np
 import h5py
@@ -64,40 +65,9 @@ def load_geolocation_data(geo_file):
         return None, None
 
 
-def load_lut_files(bt11_lut_file):
-    """
-    Load the brightness temperature LUT files for the 6-hour intervals.
-
-    Parameters:
-        bt11_lut_file (str): Path pattern to the LUT file containing "??" as a placeholder.
-
-    Returns:
-        list: A list of opened HDF5 LUT file objects.
-    """
-    hour_strings = ["00", "06", "12", "18"]  # 6-hour intervals
-    lut_files = []
-
-    # Ensure that the file pattern contains "??"
-    if "??" not in bt11_lut_file:
-        raise RuntimeError(f"cloudLUT file path is missing '??': {bt11_lut_file}")
-
-    for hour in hour_strings:
-        # Replace "??" with the actual hour string
-        lut_file = bt11_lut_file.replace("??", hour)
-        try:
-            hdf5_file = h5py.File(lut_file, "r")  # Open the LUT file in read mode
-            lut_files.append(hdf5_file)
-            print(f"Loaded LUT file: {lut_file}")  # Debugging output
-        except Exception as e:
-            raise RuntimeError(f"Unable to open LUT: {lut_file} - {e}")
-
-    return lut_files  # List of opened HDF5 LUT files
-
-
 def test_process_cloud(isolated_dir, test_data_latest):
     osp_dir = test_data_latest / "l1_osp_dir"
     cloud_lut_fname = osp_dir / "ECOSTRESS_LUT_Cloud_BT11_v3_??.h5"
-    cloud_btdiff_fname = osp_dir / "cloud_BTdiff_4minus5_ecostress.h5"
     rad_lut_fname = osp_dir / "ECOSTRESS_Rad_LUT_v4.txt"
     cloud_fname = "ECOv002_L1_CLOUD_05675_016_20190706T235959.h5"
     geo_fname = (
@@ -108,8 +78,16 @@ def test_process_cloud(isolated_dir, test_data_latest):
     )
     vrad = load_radiance_data(l1b_rad_fname)
     vrad.Lat, vrad.Lon, vrad.El = load_geolocation_data(geo_fname)
+    tstart = geocal.Time.parse_time("2019-07-06T23:59:59Z")
     cprocess = CloudProcessing(rad_lut_fname, cloud_lut_fname)
-    cprocess.process_cloud(vrad, cloud_btdiff_fname, cloud_fname)
+    cloud, cloudconf = cprocess.process_cloud(vrad, tstart)
+
+    # Write data out, just so we can easily compare with the expected data
+    with h5py.File(cloud_fname, "w") as cloudout:
+        sds_group = cloudout.create_group("/SDS")
+        sds_group.create_dataset("Cloud_confidence", data=cloudconf, dtype=np.uint8)
+        sds_group.create_dataset("Cloud_final", data=cloud, dtype=np.uint8)
+    
     subprocess.run(
         ["h5diff", "-r", cloud_fname, test_data_latest / f"{cloud_fname}.expected"],
         check=True,
@@ -119,7 +97,6 @@ def test_process_cloud(isolated_dir, test_data_latest):
 def test_process_cloud2(isolated_dir, test_data_latest):
     osp_dir = test_data_latest / "l1_osp_dir"
     cloud_lut_fname = osp_dir / "ECOSTRESS_LUT_Cloud_BT11_v3_??.h5"
-    cloud_btdiff_fname = osp_dir / "cloud_BTdiff_4minus5_ecostress.h5"
     rad_lut_fname = osp_dir / "ECOSTRESS_Rad_LUT_v4.txt"
     cloud_fname = "ECOv002_L1_CLOUD_27322_005_20230501T155850.h5"
     geo_fname = (
@@ -130,8 +107,16 @@ def test_process_cloud2(isolated_dir, test_data_latest):
     )
     vrad = load_radiance_data(l1b_rad_fname)
     vrad.Lat, vrad.Lon, vrad.El = load_geolocation_data(geo_fname)
+    tstart = geocal.Time.parse_time("2023-05-01T15:58:50Z")
     cprocess = CloudProcessing(rad_lut_fname, cloud_lut_fname)
-    cprocess.process_cloud(vrad, cloud_btdiff_fname, cloud_fname)
+    cloud, cloudconf = cprocess.process_cloud(vrad, tstart)
+    
+    # Write data out, just so we can easily compare with the expected data
+    with h5py.File(cloud_fname, "w") as cloudout:
+        sds_group = cloudout.create_group("/SDS")
+        sds_group.create_dataset("Cloud_confidence", data=cloudconf, dtype=np.uint8)
+        sds_group.create_dataset("Cloud_final", data=cloud, dtype=np.uint8)
+    
     subprocess.run(
         ["h5diff", "-r", cloud_fname, test_data_latest / f"{cloud_fname}.expected"],
         check=True,
