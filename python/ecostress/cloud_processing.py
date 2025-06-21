@@ -10,13 +10,20 @@ import os
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=UserWarning)
     import scipy.interpolate
-    from scipy.interpolate import RegularGridInterpolator
 import re
 from loguru import logger
 
 
 class CloudProcessing:
-    def __init__(self, rad_lut_fname: str | os.PathLike) -> None:
+    def __init__(self, rad_lut_fname: str | os.PathLike,
+                 b11_lut_file_pattern: str | os.PathLike) -> None:
+        '''Initialize cloud processing. The rad_lut_fname is found in
+        our l1_osp_dir and this is a lookup table mapping band 4 radiance
+        to brightness temperature.
+
+        The bt11_lut_file_pattern should have "??" in the name as a placeholder,
+        we use this to determine the names at 6 hour intervals'''
+        
         # Read the LUT data.
         self.rad_lut_data = np.loadtxt(rad_lut_fname, dtype=np.float64)
 
@@ -33,6 +40,11 @@ class CloudProcessing:
             bounds_error=False,
             fill_value="extrapolate",
         )
+
+        self.b11_lut_files : dict[int, h5py.File] = {}
+        for hour in ["00", "06", "12", "18"]:
+            fname = str(b11_lut_file_pattern).replace("??", hour)
+            self.b11_lut_files[int(hour)] = h5py.File(fname, "r")
 
     def convert_radiance_to_bt(self, rad_band_4: np.ndarray) -> np.ndarray:
         """Convert band 4 radiance to brightness temperature"""
@@ -81,7 +93,7 @@ class CloudProcessing:
 
         return cloud1, cloudconf
 
-    def process_cloud(self, rad, bt11_lut_file, btdiff_file, cloud_filename):
+    def process_cloud(self, rad, btdiff_file, cloud_filename):
         logger.debug(f"Shapes of radiance layers: {[r.shape for r in rad.Rad]}")
         logger.debug(f"Band count: {rad.Rad.shape[0]}")
 
@@ -111,34 +123,14 @@ class CloudProcessing:
         if not (0 <= mm < 60):
             raise RuntimeError(f"Invalid minute extracted: {mm} from {cloud_filename}")
 
-        # Compute 6-hour time intervals
+        # Compute 6-hour time intervals, and use to determine the b11 LUT file we use
         hrfrac = hh + mm / 60.0
         ztime0 = 6 * (hh // 6)  # Nearest past 6-hour mark
         ztime1 = (ztime0 + 6) % 24  # Next 6-hour mark
 
-        lut_files = {}
-
-        for hour in ["00", "06", "12", "18"]:
-            lut_file = str(bt11_lut_file).replace(
-                "??", hour
-            )  # Replace "??" with actual time
-            try:
-                lut_files[int(hour) // 6] = h5py.File(
-                    lut_file, "r"
-                )  # Store with index (0,1,2,3)
-            except Exception:
-                raise RuntimeError(f"Unable to open LUT: {lut_file}")
-
         # Load latitude and longitude from the LUT file corresponding to ztime1
-        lut_index = ztime1 // 6  # In C, lutid[3] is used; we map it dynamically
-
-        try:
-            lut_lat = np.transpose(lut_files[lut_index]["/Geolocation/Latitude"][:])
-            lut_lon = np.transpose(lut_files[lut_index]["/Geolocation/Longitude"][:])
-        except KeyError as e:
-            raise RuntimeError(
-                f"Error reading geolocation data from LUT file index {lut_index}: {e}"
-            )
+        lut_lat = np.transpose(self.b11_lut_files[ztime1]["/Geolocation/Latitude"][:])
+        lut_lon = np.transpose(self.b11_lut_files[ztime1]["/Geolocation/Longitude"][:])
 
         sorted_lat = lut_lat  #   not sorting to match C
 
@@ -151,51 +143,25 @@ class CloudProcessing:
             cloudvar1 = f"/Data/LUT_cloudBT{lut_thresh}_{ztime0:02d}_{mth:02d}"
             cloudvar2 = f"/Data/LUT_cloudBT{lut_thresh}_{ztime1:02d}_{mth:02d}"
 
-            # Select the correct LUT file index
-            lut0 = ztime0 // 6  # Matches C's lut0 = ztime0 / 6
-            lut1 = ztime1 // 6  # Matches C's lut1 = ztime1 / 6
+            bt1 = np.transpose(
+                self.b11_lut_files[ztime0][cloudvar1][:]
+            )
+            bt2 = np.transpose(
+                self.b11_lut_files[ztime1][cloudvar2][:]
+            ) 
 
-            try:
-                bt1 = np.transpose(
-                    lut_files[lut0][cloudvar1][:]
-                )  # Read and transpose bt1
-            except KeyError:
-                raise RuntimeError(
-                    f"Error: Could not find dataset {cloudvar1} in LUT file index {lut0}."
-                )
-
-            try:
-                bt2 = np.transpose(
-                    lut_files[lut1][cloudvar2][:]
-                )  # Read and transpose bt2
-            except KeyError:
-                raise RuntimeError(
-                    f"Error: Could not find dataset {cloudvar2} in LUT file index {lut1}."
-                )
-
-            sorted_bt1 = bt1  # not sorting to match C
-            sorted_bt2 = bt2  # not sorting to match C
-
-            # in case of debug
-            # np.savetxt("bt1.csv", bt1, delimiter=",")
-            # np.savetxt("bt2.csv", bt2, delimiter=",")
-            # print("Saved bt1.csv and bt2.csv")
-
-            # Create RegularGridInterpolator functions with sorted latitude
-            interp_bt1 = RegularGridInterpolator(
-                (
-                    sorted_lat[:, 0],
-                    lut_lon[0, :],
-                ),  # Sorted latitude, unchanged longitude
-                sorted_bt1,
+            # Create RegularGridInterpolator functions
+            interp_bt1 = scipy.interpolate.RegularGridInterpolator(
+                (lut_lat[:, 0], lut_lon[0, :]),
+                bt1,
                 method="linear",
                 bounds_error=False,
                 fill_value=np.nan,
             )
 
-            interp_bt2 = RegularGridInterpolator(
-                (sorted_lat[:, 0], lut_lon[0, :]),
-                sorted_bt2,
+            interp_bt2 = scipy.interpolate.RegularGridInterpolator(
+                (lut_lat[:, 0], lut_lon[0, :]),
+                bt2,
                 method="linear",
                 bounds_error=False,
                 fill_value=np.nan,
@@ -231,11 +197,6 @@ class CloudProcessing:
             sds_group = cloudout.create_group("/SDS")
             sds_group.create_dataset("Cloud_confidence", data=cloudconf, dtype=np.uint8)
             sds_group.create_dataset("Cloud_final", data=cloud1, dtype=np.uint8)
-
-        # Cleanup
-        for file in lut_files.values():  # Iterate
-            if isinstance(file, h5py.File):  # ck
-                file.close()
 
 
 __all__ = [

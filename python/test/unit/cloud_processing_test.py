@@ -108,8 +108,8 @@ def test_process_cloud(isolated_dir, test_data_latest):
     )
     vrad = load_radiance_data(l1b_rad_fname)
     vrad.Lat, vrad.Lon, vrad.El = load_geolocation_data(geo_fname)
-    cprocess = CloudProcessing(rad_lut_fname)
-    cprocess.process_cloud(vrad, cloud_lut_fname, cloud_btdiff_fname, cloud_fname)
+    cprocess = CloudProcessing(rad_lut_fname, cloud_lut_fname)
+    cprocess.process_cloud(vrad, cloud_btdiff_fname, cloud_fname)
     subprocess.run(
         ["h5diff", "-r", cloud_fname, test_data_latest / f"{cloud_fname}.expected"],
         check=True,
@@ -130,8 +130,8 @@ def test_process_cloud2(isolated_dir, test_data_latest):
     )
     vrad = load_radiance_data(l1b_rad_fname)
     vrad.Lat, vrad.Lon, vrad.El = load_geolocation_data(geo_fname)
-    cprocess = CloudProcessing(rad_lut_fname)
-    cprocess.process_cloud(vrad, cloud_lut_fname, cloud_btdiff_fname, cloud_fname)
+    cprocess = CloudProcessing(rad_lut_fname, cloud_lut_fname)
+    cprocess.process_cloud(vrad, cloud_btdiff_fname, cloud_fname)
     subprocess.run(
         ["h5diff", "-r", cloud_fname, test_data_latest / f"{cloud_fname}.expected"],
         check=True,
