@@ -13,7 +13,7 @@ import typing
 if typing.TYPE_CHECKING:
     import tensorflow as tf  # type: ignore
     from tensorflow.keras import layers, Model  # type: ignore
-    
+
 
 class EcostressAeDeepEnsembleInterpolate(object):
     """Class to interpolate missing data in ECOSTRESS scenes.
@@ -427,6 +427,7 @@ class EcostressAeDeepEnsembleInterpolate(object):
         """
         # Import locally, so we don't depend on this unless we use it
         from sklearn.model_selection import train_test_split  # type: ignore
+
         # subset data to n_bands
         if self.n_bands == 3:
             dataset_subset = dataset[:, :, [1, 3, 4]].copy()

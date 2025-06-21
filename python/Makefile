@@ -32,7 +32,7 @@ lint:
 
 # Add some extra rules
 lint-strict:
-	ruff check --select N ecostress test
+	ruff check --extend-select N ecostress test
 
 lint-fix:
 	ruff check --fix ecostress test

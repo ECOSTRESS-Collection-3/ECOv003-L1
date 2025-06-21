@@ -61,8 +61,10 @@ class L1bGeoGenerateMap(object):
         m.write()
         mi = geocal.cib01_mapinfo(self.resolution)
         # Most of the time, we have no fill values so just do a normal zoom
-        if(np.count_nonzero(self.l1b_geo_generate.lat < fill_value_threshold) == 0 and
-           np.count_nonzero(self.l1b_geo_generate.lon < fill_value_threshold) == 0):
+        if (
+            np.count_nonzero(self.l1b_geo_generate.lat < fill_value_threshold) == 0
+            and np.count_nonzero(self.l1b_geo_generate.lon < fill_value_threshold) == 0
+        ):
             lat = scipy.ndimage.interpolation.zoom(
                 self.l1b_geo_generate.lat, self.number_subpixel, order=2
             )

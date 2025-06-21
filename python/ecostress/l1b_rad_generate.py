@@ -11,7 +11,7 @@ from ecostress_swig import (  # type: ignore
     EcostressRadAverage,
     fill_value_threshold,
     band_to_band_tie_points,
-    GeometricModelImageHandleFill
+    GeometricModelImageHandleFill,
 )
 import h5py  # type: ignore
 from .rad_write_standard_metadata import RadWriteStandardMetadata
@@ -58,7 +58,7 @@ class L1bRadGenerate(object):
             # For the purpose of EcostressAeDeepEnsembleInterpolate, this is
             # the same as 5 bands - the SWIR is never used. Adjust this
             # so EcostressAeDeepEnsembleInterpolate isn't confused by getting a "6"
-            if(self.nband > 5):
+            if self.nband > 5:
                 self.nband = 5
         else:
             self.nband - 6
@@ -118,11 +118,7 @@ class L1bRadGenerate(object):
                     m.fit_transformation(tplist)
                     fill_value = FILL_VALUE_NOT_SEEN
                     rbreg = GeometricModelImageHandleFill(
-                        radsub,
-                        m,
-                        radsub.number_line,
-                        radsub.number_sample,
-                        fill_value
+                        radsub, m, radsub.number_line, radsub.number_sample, fill_value
                     )
                     rbreg_avg = EcostressRadAverage(rbreg)
                 else:
