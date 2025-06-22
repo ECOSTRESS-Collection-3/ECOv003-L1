@@ -1,0 +1,11 @@
+# These are what are used in the docker image
+CONDA_FIXED=yes
+ECOSTRESS_ANCILLARY=/project/ancillary
+AFIDS_DATA_ELEV_ROOT=$(ECOSTRESS_ANCILLARY)/srtm_v3_dem_L2
+AFIDS_DATA_LWM=$(ECOSTRESS_ANCILLARY)/srtm_v3_lwm
+AFIDS_DATA_SPICEDATA=$(ECOSTRESS_ANCILLARY)/cspice
+AFIDS_DATA_ORTHO=$(ECOSTRESS_ANCILLARY)/ortho_lsat7
+ECOSTRESS_OSP_DIR=$(ECOSTRESS_ANCILLARY)/l1_osp_dir
+CONDA_PACKAGE_DIR=/home/afids-conda-package/afids-conda-channel
+ECOSTRESS_WORKDIR=/home/ecostress-workdir
+ENV_DIR=/home/ecostress-env

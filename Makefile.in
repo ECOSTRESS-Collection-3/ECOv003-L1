@@ -39,8 +39,6 @@
 # Cython part
 # ================================================
 
-# See the README file for why we are building tensorflow
-
 
 
 
@@ -603,13 +601,12 @@ TEST_LOG_COMPILE = $(TEST_LOG_COMPILER) $(AM_TEST_LOG_FLAGS) \
 	$(TEST_LOG_FLAGS)
 am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(srcdir)/bindings/python/python.am $(srcdir)/common.am \
-	$(srcdir)/docker/docker.am $(srcdir)/ecostress.am \
-	$(srcdir)/ecostress_version.py.in $(srcdir)/include.am \
-	$(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1a_raw/l1a_raw.am \
-	$(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/l1b_rad/l1b_rad.am \
-	$(srcdir)/l1c/l1c.am $(srcdir)/lib/lib.am \
-	$(srcdir)/python/python.am $(srcdir)/script/script.am \
-	$(srcdir)/thirdparty/thirdparty.am \
+	$(srcdir)/ecostress.am $(srcdir)/ecostress_version.py.in \
+	$(srcdir)/include.am $(srcdir)/l1a_cal/l1a_cal.am \
+	$(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1b_geo/l1b_geo.am \
+	$(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1c/l1c.am \
+	$(srcdir)/lib/lib.am $(srcdir)/python/python.am \
+	$(srcdir)/script/script.am \
 	$(srcdir)/unit_test_data/unit_test_data.am \
 	$(srcdir)/vicar_pdf/vicar_pdf.am $(top_srcdir)/config/compile \
 	$(top_srcdir)/config/config.guess \
@@ -871,10 +868,6 @@ BUILT_SOURCES = $(am__append_1) $(am__append_2)
 include_HEADERS = 
 
 # Test files
-# Leave out repodata and package because of the size. We can reevaluate that
-# if needed
-# EXTRA_DIST+= docker/ecostress-dependency-repo/ecostress-python-package-1.0-1.el7.x86_64.rpm
-# EXTRA_DIST+= docker/ecostress-dependency-repo/repodata
 EXTRA_DIST = README.md requirements.txt Setup.md end_to_end_testing \
 	tools coreg_test config/doxygen.cfg config/doc_footer.html \
 	config/create_python_init.py config/doxy2swig.py \
@@ -889,13 +882,7 @@ EXTRA_DIST = README.md requirements.txt Setup.md end_to_end_testing \
 	@unittestdata@/cam_paraxial.xml \
 	@unittestdata@/SMAP_L1B_TB_SPS_RunConfig_20150228T224642376.xml \
 	@unittestdata@/Scene_problem.txt \
-	@unittestdata@/L1A_RAW_ATT_00049_20180709T214305_0400_01.h5 \
-	thirdparty/README thirdparty/tensorflow-1.14.0.patch \
-	docker/README docker/BuildDocker_directions.txt \
-	docker/afids-docker/Dockerfile \
-	docker/ecostress-dependency-repo/ecostress-dependency.repo \
-	docker/ecostress-dependency-repo/ecostress-python-package.spec \
-	docker/ecostress-dependency-docker/Dockerfile
+	@unittestdata@/L1A_RAW_ATT_00049_20180709T214305_0400_01.h5
 CYTHON_SRC = 
 pkgconfig_DATA = 
 AM_CPPFLAGS = -I$(srcdir)/@srclib@
@@ -1090,59 +1077,6 @@ libecostress_la_LDFLAGS = $(GEOCAL_LIBS) $(HDFEOS5_LIBS)
 ecostress_test_all_LDADD = libecostress.la 
 ecostress_test_all_LDFLAGS = -no-install 
 ecostress_test_all_CPPFLAGS = $(AM_CPPFLAGS) $(GEOCAL_CFLAGS)
-
-# Note that these versions need to match, you can't in general build using
-# a different version of bazel
-TENSORFLOW_VERSION = 1.14.0
-BAZEL_VERSION = 0.24.1
-AFIDS_DVD_DATE = 04-12-2021
-AFIDS_FULL_VERSION = 1.29
-TENSORFLOW_WHEEL = tensorflow-1.14.0-cp39-cp39-linux_x86_64.whl
-ECOSTRESS_DEPENDENCY_VERSION = 7.10
-# Most of the time the image version number will be the same as the
-# version defined in configure.ac, but there might be instances where
-# we want something different (e.g., we are creating a test image while
-# we are working on a new delivery)
-ECOSTRESS_IMAGE_VERSION = $(VERSION)
-
-# We pull this out, because --squash is still experimental and not available
-# everywhere. You can set this to a blank string to turn this off if needed.
-# Images will be larger, but this might not matter.
-# Normally want no-chache. If we are rebuilding things, something changed
-# and we want to build everything
-EXTRA_DOCKER_FLAG = --squash --no-cache
-# Locations on ECOSTRESS
-@CARTLAB_MACHINE_FALSE@landsat_dir = /project/ancillary/LANDSAT
-
-# We normally want to use a Dockerfile to build an image. But in this case
-# we want to run our tests before creating an image, which require a number
-# of datasets. We want to mount rather than copy, and there is no way to
-# do that with Dockerfile. So we instead create a container, build in there,
-# and then save the results as an image.
-#
-# We don't run the end to end check, that is done separately after we
-# have built the system
-#
-# We use the --login so the /etc/profile.d files are read, in particular the
-# setup of afids.
-
-# We only actually use the srtm_dir and end_to_end_dir, but list the
-# others here in case we want to run the end to end check in the
-# future. The end_to_end_dir is used just for the ecostress units tests,
-# we don't need this generally when we run.
-#
-# If you have a failed run, you can do a "docker attach $(cat docker_run.id)"
-# to get into the running docker instance.
-# Locations on pistol/rifle
-@CARTLAB_MACHINE_TRUE@landsat_dir = /raid22
-@CARTLAB_MACHINE_FALSE@srtm_dir = /project/ancillary/SRTM/srtm_v3_dem_L2
-@CARTLAB_MACHINE_TRUE@srtm_dir = /raid25/SRTM_2014_update/srtm_v3_dem_L2
-@CARTLAB_MACHINE_FALSE@srtm_lwm_dir = /project/ancillary/SRTM/srtm_v3_lwm
-@CARTLAB_MACHINE_TRUE@srtm_lwm_dir = /raid25/SRTM_2014_update/srtm_v3_lwm
-@CARTLAB_MACHINE_FALSE@spice_dir = /pkg/afids/afids_latest/data/cspice
-@CARTLAB_MACHINE_TRUE@spice_dir = /pkg/afids/afids_latest/data/cspice
-@CARTLAB_MACHINE_FALSE@end_to_end_dir = /project/test/ASTER/EndToEndTest
-@CARTLAB_MACHINE_TRUE@end_to_end_dir = /home/smyth/Local/ecostress-test-data
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -1150,7 +1084,7 @@ all: $(BUILT_SOURCES)
 .SUFFIXES: .cc .lo .log .o .obj .test .test$(EXEEXT) .trs
 am--refresh: Makefile
 	@:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/l1c/l1c.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(srcdir)/unit_test_data/unit_test_data.am $(srcdir)/thirdparty/thirdparty.am $(srcdir)/docker/docker.am $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/l1c/l1c.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(srcdir)/unit_test_data/unit_test_data.am $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -1172,7 +1106,7 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles);; \
 	esac;
-$(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/l1c/l1c.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(srcdir)/unit_test_data/unit_test_data.am $(srcdir)/thirdparty/thirdparty.am $(srcdir)/docker/docker.am $(am__empty):
+$(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/l1c/l1c.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(srcdir)/unit_test_data/unit_test_data.am $(am__empty):
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
@@ -3248,139 +3182,6 @@ ecostress-check-am: ecostress_test_all
 vpath %.cc $(srcdir)/@srclib@
 vpath %.h $(srcdir)/@srclib@
 vpath %.i $(srcdir)/@srclib@
-
-# Don't put the wheel in the dist file. It is really pretty big. We can
-# reevaluate that if needed, but for now skip. We do have this checked
-# into git using the lfs though
-# EXTRA_DIST+= thirdparty/tensorflow-1.14.0-cp37-cp37m-linux_x86_64.whl
-# EXTRA_DIST+= thirdparty/tensorflow-1.14.0-cp39-cp39m-linux_x86_64.whl
-
-tensorflow-$(TENSORFLOW_VERSION).tar.gz:
-	curl -L -o $@ https://github.com/tensorflow/tensorflow/archive/v$(TENSORFLOW_VERSION).tar.gz
-
-bazel:
-	curl -L -o $@ https://github.com/bazelbuild/bazel/releases/download/$(BAZEL_VERSION)/bazel-$(BAZEL_VERSION)-linux-x86_64
-	chmod +x $@
-
-# Note numpy 1.19.3 which we now use with AFIDS breaks this. See
-# https://github.com/tensorflow/tensorflow/issues/40688 and
-# https://github.com/tensorflow/tensorflow/issues/34197
-# with the given patch we seem to have fixed this
-tensorflow-wheel: tensorflow-$(TENSORFLOW_VERSION).tar.gz bazel thirdparty/tensorflow-1.14.0.patch
-	-rm -r tensorflow-$(TENSORFLOW_VERSION)
-	tar -xf $<
-	PATH=$(abs_builddir):$${PATH} which bazel && \
-          cd tensorflow-$(TENSORFLOW_VERSION) && \
-          patch -p1 < $(abs_srcdir)/thirdparty/tensorflow-1.14.0.patch && \
-          ( yes "" | ./configure ) && \
-          $(abs_builddir)/bazel build -c opt \
-             //tensorflow/tools/pip_package:build_pip_package && \
-          ./bazel-bin/tensorflow/tools/pip_package/build_pip_package $(abs_srcdir)/thirdparty
-
-afids-image: docker/afids-docker/afids-$(AFIDS_DVD_DATE).iso
-	-rm $(abs_srcdir)/docker/afids-docker/afids.iso
-	ln -s ./$(notdir $<) $(abs_srcdir)/docker/afids-docker/afids.iso
-	docker build $(EXTRA_DOCKER_FLAG) -t ecostress/afids:$(AFIDS_FULL_VERSION) $(abs_srcdir)/docker/afids-docker
-
-# Make sure to run "make create-ecostress-dependency-repo" if you haven't done so
-# already. Need to do when we update afids-image, or if we want a newer set
-# of the python packages
-ecostress-dependency-image:
-	cp -r $(abs_srcdir)/docker/ecostress-dependency-repo/ $(abs_srcdir)/docker/ecostress-dependency-docker
-	docker build $(EXTRA_DOCKER_FLAG) --cap-add SYS_ADMIN -t ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) $(abs_srcdir)/docker/ecostress-dependency-docker
-	rm -r $(abs_srcdir)/docker/ecostress-dependency-docker/ecostress-dependency-repo
-
-# Don't run this very often, but if we need to update the tensorflow
-# wheel we can run this. Note that this is a bit of a chicken and egg,
-# we use the existing ecostress-dependency-image, but once we update
-# tensorflow we need to go back and update ecostress-dependency-image. We
-# could probably break this, but we only rarely need to run this.
-# After running this, rerun create-ecostress-dependency-repo and
-# ecostress-dependency-image
-tensorflow-wheel-build:
-	$(MAKE) dist
-# Use the default locations of various datasets. 
-	docker run -t -d --cidfile=docker_run.id \
-           -v $(abs_builddir)/:/media/work_dir:Z \
-           -v $(srtm_dir):/srtm \
-           -v $(end_to_end_dir):/project/test/ASTER/EndToEndTest:Z \
-           -v $(srtm_lwm_dir):/project/ancillary/SRTM/srtm_v3_lwm \
-           ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) \
-           /bin/bash
-	docker exec $$(cat docker_run.id) bash --login -c "cd /root && tar --no-same-owner -xf /media/work_dir/$(PACKAGE)-$(VERSION).tar.gz"
-	docker exec $$(cat docker_run.id) bash --login -c "yum install -y which patch"
-	docker exec $$(cat docker_run.id) bash --login -c "cd /root/$(PACKAGE)-$(VERSION) && ./configure --with-afids=/opt/afids --with-geocal=/opt/afids --prefix=/opt/ecostress && make tensorflow-wheel && cp /root/ecostress-level1-7.10/thirdparty/tensorflow*.whl /media/work_dir"
-	docker container stop $$(cat docker_run.id)
-
-ecostress-image:
-	$(MAKE) dist
-# Use the default locations of various datasets. 
-	docker run -t -d --cidfile=docker_run.id \
-           -v $(abs_builddir)/:/media/work_dir:Z \
-           -v $(srtm_dir):/srtm \
-           -v $(end_to_end_dir):/project/test/ASTER/EndToEndTest:Z \
-           -v $(srtm_lwm_dir):/project/ancillary/SRTM/srtm_v3_lwm \
-           ecostress/ecostress-dependency:$(ECOSTRESS_DEPENDENCY_VERSION) \
-           /bin/bash
-	docker exec $$(cat docker_run.id) bash --login -c "cd /root && tar --no-same-owner -xf /media/work_dir/$(PACKAGE)-$(VERSION).tar.gz"
-	docker exec $$(cat docker_run.id) bash --login -c "cd /root/$(PACKAGE)-$(VERSION) && ./configure --with-afids=/opt/afids --with-geocal=/opt/afids --prefix=/opt/ecostress && make -j 12 all && make install && make -j 12 check"
-	docker exec $$(cat docker_run.id) bash --login -c "rm -f /etc/profile.d/geocal.sh && cp /opt/ecostress/setup_ecostress.* /etc/profile.d"
-#	docker exec $$(cat docker_run.id) bash --login -c "ln -s /opt/ecostress/L1*_PGE /opt/ecostress/setup_ecostress.* /usr/bin"
-	docker exec $$(cat docker_run.id) bash --login -c "rm -fr /root/ecostress*"
-	docker commit $$(cat docker_run.id) ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION)
-	docker container stop $$(cat docker_run.id)
-
-ecostress-image-end-to-end-check:
-	docker run -t --workdir /root \
-           -v $(srtm_dir):/srtm \
-	   -v $(end_to_end_dir):/project/test/ASTER/EndToEndTest:Z \
-           -v $(srtm_lwm_dir):/project/ancillary/SRTM/srtm_v3_lwm \
-           -v $(landsat_dir):/landsat \
-           ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION) \
-           /bin/bash --login -c /project/test/ASTER/EndToEndTest/latest/end_to_end.sh
-
-# When we have an ecostress image we want to save, run this
-ecostress-image-save:
-	docker save ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION) | pigz > ecostress-level1-docker-$(ECOSTRESS_IMAGE_VERSION).tar.gz
-
-ecostress-image-delivery:
-	@echo "Note that this will ask for you username and password."
-	@echo "this is the normal LDAP username and password we use for"
-	@echo "many JPL logins. The username should already be in the"
-	@echo "right group to have write privileges to the artifactory"
-	docker tag ecostress/ecostress-level1:$(ECOSTRESS_IMAGE_VERSION) cae-artifactory.jpl.nasa.gov:16001/gov/nasa/jpl/ecostress/sds/pge/pge-eco-level-1:$(ECOSTRESS_IMAGE_VERSION)
-	docker login cae-artifactory.jpl.nasa.gov:16001
-	docker push cae-artifactory.jpl.nasa.gov:16001/gov/nasa/jpl/ecostress/sds/pge/pge-eco-level-1:$(ECOSTRESS_IMAGE_VERSION)
-
-# To record the exact version of packages we install for python, we
-# capture these as RPMs. That way we can install the same set of packages
-# each time in an image. Not sure that recording this as a package rather
-# than just a docker image is worth the extra work, but it isn't a lot
-# of work and for now at least we'll do this.
-#
-# Note if you run this interactivately to debug something, you can
-# connect to the container with docker exec -it $(cat docker_run.id) bash
-#
-# I don't really understand the mounting permissions. It seems in some
-# way that docker root goes to eco-docker. For now, just open up permissions
-# and we sort this out. Should be better way
-#
-# We don't have this as a Dockerfile because we don't care about this image
-# after we are done - we are just using the container to generate RPMs
-
-create-ecostress-dependency-repo:
-	mkdir -p ecostress-dependency-repo
-	chmod a+w ecostress-dependency-repo
-	cp $(srcdir)/docker/ecostress-dependency-repo/ecostress-python-package.spec ecostress-dependency-repo
-	cp $(abs_srcdir)/thirdparty/$(TENSORFLOW_WHEEL) ecostress-dependency-repo
-	docker run -t -d --cidfile=docker_run.id \
-           -v $(abs_builddir)/ecostress-dependency-repo:/media/ecostress-dependency-repo:Z \
-           ecostress/afids:$(AFIDS_FULL_VERSION) /bin/bash
-	docker exec $$(cat docker_run.id) bash -c "yum install rpm-build createrepo gcc-gfortran gcc gcc-c++ -y"
-	docker exec $$(cat docker_run.id) bash -c "export PATH=/opt/afids_support/bin:$${PATH} && export LD_LIBRARY_PATH=/opt/afids_support/lib:/opt/afids_support/lib64:$${LD_LIBRARY_PATH} && mkdir -p /root/rpmbuild/SOURCES && cp /media/ecostress-dependency-repo/$(TENSORFLOW_WHEEL) /root/rpmbuild/SOURCES && rpmbuild -ba /media/ecostress-dependency-repo/ecostress-python-package.spec && mv /root/rpmbuild/RPMS/x86_64/ecostress-python-package*.x86_64.rpm /media/ecostress-dependency-repo && cd /media/ecostress-dependency-repo && createrepo . && chmod a+w -R repodata"
-	rm $(builddir)/ecostress-dependency-repo/$(TENSORFLOW_WHEEL)
-	cp -fr $(builddir)/ecostress-dependency-repo/* $(srcdir)/docker/ecostress-dependency-repo
-	docker container stop $$(cat docker_run.id)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

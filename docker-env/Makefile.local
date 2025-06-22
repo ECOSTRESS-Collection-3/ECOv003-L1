@@ -1,0 +1,6 @@
+AFIDS_DATA_ELEV_ROOT=/raid25/SRTM_2014_update/srtm_v3_dem_L2
+AFIDS_DATA_LWM=/raid25/SRTM_2014_update/srtm_v3_lwm
+AFIDS_DATA_SPICEDATA=/opt/afids/data/cspice
+AFIDS_DATA_ORTHO=/bigdata/tllogan30/ortho_lsat7
+SBG_OSP_DIR=/home/smyth/Local/sbg-test-data/latest/l1_osp_dir
+SBG_WORKDIR=/home/smyth/Local/sbg-workdir

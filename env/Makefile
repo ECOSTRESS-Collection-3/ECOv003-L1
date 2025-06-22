@@ -22,9 +22,9 @@ CONDA_PACKAGE_DIR=../../afids-conda-package/afids-conda-channel
 ECOSTRESS_ANCILLARY=/project/ancillary
 AFIDS_DATA_ELEV_ROOT=$(ECOSTRESS_ANCILLARY)/SRTM/srtm_v3_dem_L2
 AFIDS_DATA_LWM=$(ECOSTRESS_ANCILLARY)/SRTM/srtm_v3_lwm
-AFIDS_DATA_SPICEDATA=/pkg/afids/afids_20210813/data/cspice
+AFIDS_DATA_SPICEDATA=/pkg/afids/afids_latest/data/cspice
 AFIDS_DATA_ORTHO=$(ECOSTRESS_ANCILLARY)/LANDSAT
-ECOSTRESS_OSP_DIR=/project/test/ASTER/EndToEndTest/7.12/l1_osp_dir
+ECOSTRESS_OSP_DIR=/project/test/ASTER/EndToEndTest/8.00/l1_osp_dir
 
 # Include a Makefile.local to override things, if found
 -include Makefile.local
