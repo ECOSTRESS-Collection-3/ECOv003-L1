@@ -555,7 +555,7 @@ try:
         )
 
         # Generate output data
-        avg_md = np.full((len(radlist), 2), -9999.0)
+        avg_md = np.full((len(radlist), 3), -9999.0)
         for i in range(len(radlist)):
             # Generate output
             logger.info("Doing scene number %d" % scenelist[i])
@@ -620,6 +620,7 @@ try:
                 l1bgeo.run(pool)
                 avg_md[i, 0] = l1bgeo.avg_sz
                 avg_md[i, 1] = l1bgeo.oa_lf
+                avg_md[i, 2] = l1bgeo.cloud_cover
                 if l1b_geo_config.generate_map_product:
                     logger.info("Generating Map Product scene number %d" % scenelist[i])
                     l1bgeo_map = ecostress.L1bGeoGenerateMap(

@@ -2,6 +2,7 @@
 #
 # This runs the L1C process.
 import warnings
+
 # Have a warning message that we can't do anything about - suppress it
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=UserWarning)
@@ -14,6 +15,7 @@ from multiprocessing import Pool
 import numpy as np
 import io
 from loguru import logger
+from pathlib import Path
 
 # Get version information, in the top directory
 import sys
@@ -34,6 +36,11 @@ Options:
   -h --help         
        Print this message
 
+  --number-cpu=d
+       Number of CPUs to use when processing. Ignored if we are using a 
+       run_config file, this is instead passed through the config file.
+       [default: 10]
+
   --verbose
        Print more information as we run to stderr.
 
@@ -45,13 +52,13 @@ args = geocal.docopt_simple(usage, version=version)
 
 if args.run_config:
     config = ecostress.RunConfig(args.run_config)
-    l1_osp_dir = os.path.abspath(config["StaticAncillaryFileGroup", "L1_OSP_DIR"])
+    l1_osp_dir = Path(config["StaticAncillaryFileGroup", "L1_OSP_DIR"]).absolute()
 else:
     config = None
-    l1_osp_dir = os.path.abspath(args.osp_dir)
+    l1_osp_dir = Path(args.osp_dir).absolute()
 
 # Read in additional configuration parameters
-sys.path.append(l1_osp_dir)
+sys.path.append(str(l1_osp_dir))
 import l1c_config
 
 logger.remove()
@@ -61,39 +68,77 @@ else:
     logger.add(sys.stderr, level="INFO")
 
 if args.run_config:
+    ncpu = int(config["Process", "NumberCpu"])
     dirname = config["ProductPathGroup", "ProductPath"]
     file_version = config["ProductPathGroup", "ProductCounter"]
     l1b_rad_fname = os.path.abspath(config["InputFileGroup", "L1B_RAD"])
-    l1b_geo_fname = os.path.abspath(config["InputFileGroup", "L1B_RAD"])
+    l1b_geo_fname = os.path.abspath(config["InputFileGroup", "L1B_GEO"])
     build_id = config["PrimaryExecutable", "BuildID"]
     collection_label = config["ProductPathGroup", "CollectionLabel"]
 else:
+    ncpu = args.number_cpu
     dirname = os.path.abspath(args.prod_dir)
     file_version = "01"
     l1b_rad_fname = os.path.abspath(args.l1b_rad)
     l1b_geo_fname = os.path.abspath(args.l1b_geo)
 
-    
-l1b_rad = h5py.File(l1b_rad_fname, "r")
-l1b_geo = h5py.File(l1b_geo_fname, "r")
 orbit, scene, acquisition_time = ecostress.orbit_from_metadata(l1b_rad_fname)
 
 geocal.makedirs_p(dirname)
 os.chdir(dirname)
 
-ofile = ecostress.ecostress_file_name("ECOv002_L1CG_RAD", orbit, scene, acquisition_time,
-                                      collection_label=collection_label, build=build_id,
-                                      version=file_version)
+ofile = ecostress.ecostress_file_name(
+    "L1CG_RAD",
+    orbit,
+    scene,
+    acquisition_time,
+    collection_label=collection_label,
+    build=build_id,
+    version=file_version,
+)
+ofile2 = ecostress.ecostress_file_name(
+    "L1CG_RAD",
+    orbit,
+    scene,
+    acquisition_time,
+    collection_label=collection_label,
+    build=build_id,
+    version=file_version,
+    tile=True,
+    extension="",
+)
 logger.add(os.path.splitext(ofile)[0] + ".log", level="DEBUG")
 
+pool = None
 try:
     with logger.catch(reraise=True):
-        l1c = ecostress.L1cgGenerate(l1b_geo, l1b_rad, ofile)
-        l1c.run()
+        l1cg = ecostress.L1cgGenerate(
+            l1b_geo_fname,
+            l1b_rad_fname,
+            ofile,
+            resolution=l1c_config.l1cg_resolution,
+            number_subpixel=l1c_config.l1cg_number_subpixel,
+        )
+        l1cg.run()
+        l1ct = ecostress.L1ctGenerate(
+            l1b_geo_fname,
+            l1b_rad_fname,
+            l1_osp_dir,
+            ofile2,
+            resolution=l1c_config.l1ct_resolution,
+            number_subpixel=l1c_config.l1ct_number_subpixel,
+        )
+        if ncpu > 1:
+            pool = Pool(ncpu)
+        l1ct.run(pool=pool)
+        pool.close()
 except Exception:
     logger.info("L1C_PGE:ERROR-2-[Unexpected Error]")
+    if pool is not None:
+        pool.close()
     raise
 except:
     logger.info("L1C_PGE:ERROR-2-[Unexpected Error]")
+    if pool is not None:
+        pool.close()
     raise
-        

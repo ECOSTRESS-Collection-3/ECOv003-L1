@@ -153,6 +153,7 @@ class L1bGeoGenerate(object):
         cloud, cloudconf = self.cprocess.process_cloud(
             rad_band_4, lat, lon, height, geocal.Time.time_j2000(tlinestart[0])
         )
+        self.cloud_cover = (np.count_nonzero(cloud == 1) / np.count_nonzero(cloud != 255)) * 100.0
         fout = h5py.File(self.output_name, "w")
         m = GeoWriteStandardMetadata(
             fout,
@@ -170,6 +171,7 @@ class L1bGeoGenerate(object):
         )
         if self.run_config is not None:
             m.process_run_config_metadata(self.run_config)
+        m.set("CloudCover", self.cloud_cover)
         m.set("WestBoundingCoordinate", lon[lon > -998].min())
         m.set("EastBoundingCoordinate", lon[lon > -998].max())
         m.set("SouthBoundingCoordinate", lat[lat > -998].min())

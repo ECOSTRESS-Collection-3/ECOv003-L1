@@ -39,15 +39,15 @@ class GeoWriteStandardMetadata(WriteStandardMetadata):
 
     def write(self):
         super().write()
+        g = self.hdf_file["StandardMetadata"]
         pg = self.hdf_file[self.product_specfic_group]
         pg["OrbitCorrectionPerformed"] = "True" if self.orbit_corrected else "False"
         if not self.orbit_based:
             pg["GeolocationAccuracyQA"] = self.geolocation_accuracy_qa
+            g["GeolocationAccuracyQA"] = self.geolocation_accuracy_qa
             pg["DeltaTimeOfCorrectionBeforeScene"] = self.tcorr_before
             pg["DeltaTimeOfCorrectionAfterScene"] = self.tcorr_after
-            pg[
-                "GeolocationAccuracyQAExplanation"
-            ] = """Best - Image matching was performed for this scene, expect 
+            txt = """Best - Image matching was performed for this scene, expect 
        good geolocation accuracy.
 Good - Image matching was performed on a nearby scene, and correction 
        has been interpolated/extrapolated. Expect good geolocation accuracy.
@@ -55,6 +55,8 @@ Suspect - Matched somewhere in the orbit. Expect better geolocation
        than orbits w/o image matching, but may still have large errors.
 Poor - No matches in the orbit. Expect largest geolocation errors.
 """
+            pg["GeolocationAccuracyQAExplanation"] = txt
+            g["GeolocationAccuracyQAExplanation"] = txt
 
 
 __all__ = ["GeoWriteStandardMetadata"]

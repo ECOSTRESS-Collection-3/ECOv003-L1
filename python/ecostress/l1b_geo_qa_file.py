@@ -90,7 +90,7 @@ class L1bGeoQaFile(object):
 
     def add_average_metadata(self, avg_md):
         """Add average metadata. First column is average solar zenith angle,
-        second is overall land fraction. We have one row per scene"""
+        second is overall land fraction, third is cloud coverage. We have one row per scene"""
         with h5py.File(self.fname, "a") as f:
             d = f.create_dataset("Average Metadata", data=avg_md)
             d.attrs[
@@ -98,7 +98,8 @@ class L1bGeoQaFile(object):
             ] = """This is the average metadata. We have one row for each scene. 
 
 The first column is the average solar zenith angle, in degrees. The
-second column is the overall land fraction for the scene, as a percentage."""
+second column is the overall land fraction for the scene, as a percentage.
+The third column is the cloud cover, as a percentage."""
 
     def add_orbit(self, orb):
         """Add data about orbit. Note that this requires we use

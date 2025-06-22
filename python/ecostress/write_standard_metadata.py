@@ -36,8 +36,12 @@ class WriteStandardMetadata(object):
         for m, typ in self.mlist:
             if typ == "String":
                 self.data[m] = "dummy"
+            elif typ == "StringorNone":
+                self.data[m] = None
             elif typ == "Float64":
                 self.data[m] = np.float64(0.0)
+            elif typ == "Float64orNone":
+                self.data[m] = None
             elif typ == "Int32":
                 self.data[m] = np.int32(0)
             elif typ == "Float32":
@@ -107,7 +111,7 @@ class WriteStandardMetadata(object):
         self.set("InputPointer", ",".join(os.path.basename(i) for i in flist))
 
     def set(self, m, v):
-        if self.data[m] is None:
+        if m not in self.data:
             raise RuntimeError(f"Key '{m}' is not in standard metadata")
         if isinstance(self.data[m], bytes) or isinstance(self.data[m], str):
             self.data[m] = v
@@ -117,6 +121,8 @@ class WriteStandardMetadata(object):
             self.data[m] = np.int32(v)
         elif isinstance(self.data[m], np.float32):
             self.data[m] = np.float32(v)
+        elif self.data[m] is None:
+            self.data[m] = v
         else:
             raise RuntimeError("Unrecognized type")
 
@@ -136,6 +142,9 @@ class WriteStandardMetadata(object):
             ["AutomaticQualityFlag", "String"],
             ["BuildID", "String"],
             ["CollectionLabel", "String"],
+            ["CloudCover", "Float64orNone"],
+            ["GeolocationAccuracyQA", "StringorNone"],
+            ["GeolocationAccuracyQAExplanation", "StringorNone"],
             ["DataFormatType", "String"],
             ["DayNightFlag", "String"],
             ["EastBoundingCoordinate", "Float64"],
@@ -214,7 +223,8 @@ class WriteStandardMetadata(object):
             g = self.hdf_file.create_group("StandardMetadata")
         self.clear_old(g)
         for m, typ in self.mlist:
-            g[m] = self.data[m]
+            if(self.data[m] is not None):
+                g[m] = self.data[m]
         if self.product_specfic_group in self.hdf_file:
             pg = self.hdf_file[self.product_specfic_group]
         else:

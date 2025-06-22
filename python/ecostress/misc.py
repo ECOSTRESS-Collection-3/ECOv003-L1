@@ -549,6 +549,7 @@ def ecostress_file_name(
     version="01",
     extension=".h5",
     intermediate=False,
+    tile=False
 ):
     """Create an ecostress file name from the given components."""
     if intermediate:
@@ -580,6 +581,17 @@ def ecostress_file_name(
             front,
             product_type,
             orbit,
+            time_to_file_string(acquisition_time),
+            build,
+            version,
+            extension,
+        )
+    elif tile:
+        return "%s%s_%05d_%03d_TILE_%s_%s_%s%s" % (
+            front,
+            product_type,
+            orbit,
+            scene,
             time_to_file_string(acquisition_time),
             build,
             version,
