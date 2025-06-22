@@ -1,5 +1,4 @@
 from ecostress import L1ctGenerate
-import h5py
 import pytest
 from multiprocessing import Pool
 

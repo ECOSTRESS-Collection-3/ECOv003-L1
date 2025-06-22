@@ -2,12 +2,9 @@ import geocal  # type: ignore
 from ecostress_swig import (
     fill_value_threshold,
     Resampler,
-    HdfEosFileHandle,
-    HdfEosGrid,
     coordinate_convert,
     set_fill_value,
 )  # type: ignore
-import os
 import h5py
 import scipy
 import numpy as np
@@ -56,7 +53,7 @@ class L1ctGenerate:
         )
         # Calculate all the UTM. We do this before starting the parallel step
         if pool is None:
-            r = list(map(self.process_tile, shp))
+            _ = list(map(self.process_tile, [shp for shp in lay]))
         else:
             self.use_file_cache = True
             shp_dict_list = []
@@ -67,7 +64,7 @@ class L1ctGenerate:
                     d[ky] = shp[ky]
                 shp_dict_list.append(d)
             self._utm_coor = {}
-            r = pool.map(self.process_tile, shp_dict_list)
+            _ = pool.map(self.process_tile, shp_dict_list)
 
     def utm_coor(self, epsg):
         """Calculate utm coordinate. We can optional save/load from disk if needed - this

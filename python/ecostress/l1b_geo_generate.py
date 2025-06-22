@@ -18,6 +18,8 @@ class L1bGeoGenerate(object):
     def __init__(
         self,
         igc,
+        cprocess,
+        radfname,
         lwm,
         output_name,
         inlist,
@@ -45,6 +47,8 @@ class L1bGeoGenerate(object):
         have the run config available."""
         self.igc = igc
         self.gc_arr = GroundCoordinateArray(self.igc, True)
+        self.cprocess = cprocess
+        self.radfname = radfname
         self.lwm = lwm
         self.is_day = is_day
         self.field_of_view_obscured = field_of_view_obscured
@@ -144,6 +148,10 @@ class L1bGeoGenerate(object):
         """Do the actual generation of data."""
         lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac, tlinestart = (
             self.loc(pool)
+        )
+        rad_band_4 = h5py.File(self.radfname, "r")["//Radiance/radiance_4"][:, :]
+        cloud, cloudconf = self.cprocess.process_cloud(
+            rad_band_4, lat, lon, height, geocal.Time.time_j2000(tlinestart[0])
         )
         fout = h5py.File(self.output_name, "w")
         m = GeoWriteStandardMetadata(
@@ -246,6 +254,16 @@ GEOGCS["WGS 84",
         t.attrs["Units"] = "degrees"
         t.attrs["valid_min"] = -180
         t.attrs["valid_max"] = 180
+        t = g.create_dataset(
+            "prelim_cloud_mask", data=cloud, dtype="u1", compression="gzip"
+        )
+        t.attrs["Units"] = "dimensionless"
+        t.attrs["valid_min"] = 0
+        t.attrs["valid_max"] = 0
+        t.attrs["fill"] = 255
+        t.attrs["Description"] = (
+            "This is the preliminary cloud mask. O for clear, 1 for cloudy, 255 for pixels we can't calculate cloud mask for"
+        )
         t = g.create_dataset("line_start_time_j2000", data=tlinestart, dtype="f8")
         t.attrs["Description"] = "J2000 time of first pixel in line"
         t.attrs["Units"] = "second"

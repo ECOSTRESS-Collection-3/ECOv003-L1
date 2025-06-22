@@ -39,6 +39,7 @@ class L1bRadGenerate(object):
         collection_label="ECOSTRESS",
         pge_version="0.30",
         interpolate_stripe_data=False,
+        find_horizontal_stripes=True,
         seed=1234,
         line_order_flipped=False,
         skip_band_to_band=False,
@@ -75,6 +76,7 @@ class L1bRadGenerate(object):
         self.build_id = build_id
         self.pge_version = pge_version
         self.interpolate_stripe_data = interpolate_stripe_data
+        self.find_horizontal_stripes = find_horizontal_stripes
         self.seed = seed
         self.skip_band_to_band = skip_band_to_band
         self.total_possible_scan = 0
@@ -187,12 +189,15 @@ class L1bRadGenerate(object):
                     "n_good_bands_required", 2
                 ),
             )
-            # identify horizontal stripes and update data quality mask
-            dqi = inter.find_horizontal_stripes(
-                dataset,
-                dqi,
-                threshold=self.interpolator_parameters.get("horizontal_threshold", 5),
-            )
+            # identify horizontal stripes and update data quality mask (if turned on)
+            if self.find_horizontal_stripes:
+                dqi = inter.find_horizontal_stripes(
+                    dataset,
+                    dqi,
+                    threshold=self.interpolator_parameters.get(
+                        "horizontal_threshold", 5
+                    ),
+                )
 
             # Prediction apparently doesn't work with negative radiance. We can
             # actually legitimately have negative radiance (physical radiance isn't,

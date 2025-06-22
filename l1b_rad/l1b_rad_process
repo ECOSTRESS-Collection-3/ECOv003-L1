@@ -180,6 +180,7 @@ try:
             build_id=build_id,
             pge_version=pge_version["l1b_rad"],
             interpolate_stripe_data=l1b_rad_config.interpolate_stripe_data,
+            find_horizontal_stripes=l1b_rad_config.find_horizontal_stripes,
             seed=l1b_rad_config.seed,
             line_order_flipped=line_order_flipped,
             skip_band_to_band=args.skip_band_to_band,

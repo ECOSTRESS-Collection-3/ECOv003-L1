@@ -1,47 +1,8 @@
 from ecostress import CloudProcessing
 import geocal
-import pytest
 import numpy as np
 import h5py
 import subprocess
-
-
-class RadianceData:
-    """Structured object to store radiance and geolocation data."""
-
-    def __init__(self, radiance, lat=None, lon=None, el=None):
-        self.Rad = radiance  # NumPy array for radiance data
-        self.Lat = lat  # NumPy array for latitude
-        self.Lon = lon  # NumPy array for longitude
-        self.El = el  # NumPy array fro elevation
-
-
-def load_radiance_data(hdf5_file):
-    """
-    Load radiance data from an HDF5 file.
-
-    Parameters:
-        hdf5_file (str): Path to the HDF5 file containing radiance data.
-
-    Returns:
-        list: A list of NumPy arrays containing radiance data for different bands.
-    """
-    try:
-        with h5py.File(hdf5_file, "r") as hdf:
-            rad1 = hdf["/Radiance/radiance_1"][:]
-            rad2 = hdf["/Radiance/radiance_2"][:]
-            rad3 = hdf["/Radiance/radiance_3"][:]
-            rad4 = hdf["/Radiance/radiance_4"][:]  # BAND_4
-            rad5 = hdf["/Radiance/radiance_5"][:]  # BAND_5
-
-        # Stack the radiance bands into a single NumPy array (shape: [5, height, width])
-        radiance_data = np.stack([rad1, rad2, rad3, rad4, rad5], axis=0)
-
-        return RadianceData(radiance_data)
-
-    except Exception as e:
-        print(f"Error loading radiance data from {hdf5_file}: {e}")
-        return None
 
 
 def load_geolocation_data(geo_file):
@@ -76,18 +37,22 @@ def test_process_cloud(isolated_dir, test_data_latest):
     l1b_rad_fname = (
         test_data_latest / "ECOSTRESS_L1B_RAD_05675_016_20190706T235959_0601_02.h5"
     )
-    vrad = load_radiance_data(l1b_rad_fname)
-    vrad.Lat, vrad.Lon, vrad.El = load_geolocation_data(geo_fname)
+    rad = h5py.File(l1b_rad_fname, "r")["/Radiance/radiance_4"][:]
+    f = h5py.File(geo_fname, "r")
+    lat = f["/Geolocation/latitude"][:]
+    lon = f["/Geolocation/longitude"][:]
+    height_meter = f["/Geolocation/height"][:]
     tstart = geocal.Time.parse_time("2019-07-06T23:59:59Z")
+
     cprocess = CloudProcessing(rad_lut_fname, cloud_lut_fname)
-    cloud, cloudconf = cprocess.process_cloud(vrad, tstart)
+    cloud, cloudconf = cprocess.process_cloud(rad, lat, lon, height_meter, tstart)
 
     # Write data out, just so we can easily compare with the expected data
     with h5py.File(cloud_fname, "w") as cloudout:
         sds_group = cloudout.create_group("/SDS")
         sds_group.create_dataset("Cloud_confidence", data=cloudconf, dtype=np.uint8)
         sds_group.create_dataset("Cloud_final", data=cloud, dtype=np.uint8)
-    
+
     subprocess.run(
         ["h5diff", "-r", cloud_fname, test_data_latest / f"{cloud_fname}.expected"],
         check=True,
@@ -105,18 +70,22 @@ def test_process_cloud2(isolated_dir, test_data_latest):
     l1b_rad_fname = (
         test_data_latest / "ECOv002_L1B_RAD_27322_005_20230501T155850_0710_02.h5"
     )
-    vrad = load_radiance_data(l1b_rad_fname)
-    vrad.Lat, vrad.Lon, vrad.El = load_geolocation_data(geo_fname)
+    rad = h5py.File(l1b_rad_fname, "r")["/Radiance/radiance_4"][:]
+    f = h5py.File(geo_fname, "r")
+    lat = f["/Geolocation/latitude"][:]
+    lon = f["/Geolocation/longitude"][:]
+    height_meter = f["/Geolocation/height"][:]
     tstart = geocal.Time.parse_time("2023-05-01T15:58:50Z")
+
     cprocess = CloudProcessing(rad_lut_fname, cloud_lut_fname)
-    cloud, cloudconf = cprocess.process_cloud(vrad, tstart)
-    
+    cloud, cloudconf = cprocess.process_cloud(rad, lat, lon, height_meter, tstart)
+
     # Write data out, just so we can easily compare with the expected data
     with h5py.File(cloud_fname, "w") as cloudout:
         sds_group = cloudout.create_group("/SDS")
         sds_group.create_dataset("Cloud_confidence", data=cloudconf, dtype=np.uint8)
         sds_group.create_dataset("Cloud_final", data=cloud, dtype=np.uint8)
-    
+
     subprocess.run(
         ["h5diff", "-r", cloud_fname, test_data_latest / f"{cloud_fname}.expected"],
         check=True,

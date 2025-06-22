@@ -1,5 +1,4 @@
 from ecostress import L1cgGenerate
-import h5py
 import pytest
 
 

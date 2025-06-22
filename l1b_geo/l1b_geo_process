@@ -14,6 +14,7 @@ from multiprocessing import Pool
 import numpy as np
 import io
 from loguru import logger
+from pathlib import Path
 
 # Get version information, in the top directory
 import sys
@@ -591,8 +592,16 @@ try:
                     ][()]
                 except KeyError:
                     field_of_view_obscured = "NO"
+                # We actually want to generate the cloud mask upstream of this,
+                # when we are doing the original tiepoint collection. But for
+                # now tuck this in here, so we can get the basics of this running
+                # and make this part of our processing chain.
+                cprocess = ecostress.CloudProcessing(Path(l1_osp_dir) / l1b_geo_config.rad_lut_fname,
+                                                     Path(l1_osp_dir) / l1b_geo_config.b11_lut_file_pattern)
                 l1bgeo = ecostress.L1bGeoGenerate(
                     igccol_corrected.image_ground_connection(i),
+                    cprocess,
+                    radlist[i],
                     lwm,
                     ofile[i],
                     inlist,

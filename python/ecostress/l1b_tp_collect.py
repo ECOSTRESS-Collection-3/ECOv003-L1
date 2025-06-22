@@ -236,6 +236,8 @@ class L1bTpCollect(object):
 
         # First project all the data.
         proj_res = self.p.proj(pool=pool)
+        # TODO I think this is where we want to put in the cloud mask, but for
+        # now we do this further down stream
         it = []
         for i in range(self.igccol.number_image):
             if proj_res[i]:

@@ -12,7 +12,6 @@ import typing
 
 if typing.TYPE_CHECKING:
     import tensorflow as tf  # type: ignore
-    from tensorflow.keras import layers, Model  # type: ignore
 
 
 class EcostressAeDeepEnsembleInterpolate(object):
