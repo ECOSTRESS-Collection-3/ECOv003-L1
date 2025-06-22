@@ -1,5 +1,0 @@
-[ecostress-dependency]
-name=Red Hat $releasever - AFIDS packages
-baseurl=file:///media/ecostress-dependency-repo
-enabled=0
-gpgcheck=0
