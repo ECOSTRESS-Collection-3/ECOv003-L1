@@ -105,13 +105,6 @@ class CloudProcessing:
 
         # Probably cloudy
         cloud1[(cloud1 == 128) & (tb4 <= bt_out[2]) & (tb4 > bt_out[1])] = 0
-        # Otherwise, mark as cloudy
-        cloud1[
-            (cloud1 == 128)
-            & (tb4 <= bt_out[2])
-            & (tb4 > bt_out[1])
-            & (height_meter <= 2000)
-        ] = 1
         cloudconf[(cloudconf == 128) & (tb4 <= bt_out[2]) & (tb4 > bt_out[1])] = 2
 
         # Confident cloudy
