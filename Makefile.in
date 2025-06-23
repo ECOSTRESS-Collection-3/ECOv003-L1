@@ -950,6 +950,25 @@ H5DIFF_FLAG = -d 6e-2 --exclude-path=/Radiance/radiance_1 \
 	--exclude-path=/Geolocation/view_zenith \
 	--exclude-path=/Geolocation/land_fraction \
 	--exclude-path=/Ephemeris/eci_position
+
+# Different set of flags for gridded product
+GH5DIFF_FLAG = -d 6e-2 \
+	--exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
+	Fields/radiance_1" \
+	--exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
+	Fields/radiance_5" \
+	--exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
+	Fields/radiance_2" \
+	--exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
+	Fields/interpolation_uncertainty_1" \
+	--exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
+	Fields/interpolation_uncertainty_5" \
+	--exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
+	Fields/interpolation_uncertainty_2" \
+	--exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
+	Fields/height" \
+	--exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
+	Fields/view_zenith"
 dist_vicarpdf_DATA = @srcpdf@/el1a_2pt.pdf @srcpdf@/el1a_bbcal.pdf \
 	@srcpdf@/el1a_tvac.pdf
 installecostress_DATA = @srcscript@/setup_ecostress.csh @srcscript@/setup_ecostress.sh
@@ -3038,6 +3057,7 @@ end-to-end-check: installcheck-am
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_GEO_0*.h5
 	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOv002_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv002_L1B_RAD_03663_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1C_PGE $(l1c_run_config)
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(GH5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1c/*L1CG_RAD*.h5
 
 # We should put a check in for the l1c products, but for now just skip since it will
 # probably take some time to figure out what to do here, in particular for the tile products
@@ -3071,6 +3091,15 @@ l1b-geo-run:
 #	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOv002_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv002_L1B_RAD_03663_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
 #	source $(prefix)/setup_ecostress.sh && $(PYTHON) $(srcdir)/end_to_end_testing/diff_sba.py
 #	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band l1b_geo_run/ECOv002_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv002_L1B_RAD_03663_00{}_*.h5 l1b_geo_run/proj_final_{}" )
+
+l1c-run: 
+	-rm -r ./l1c_run
+	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1C_PGE --number-cpu=20 $(end_to_end_test_data)/latest/ECOv002_L1B_RAD_03663_001_*.h5.expected $(end_to_end_test_data)/latest/ECOv002_L1B_GEO_03663_001_*.h5.expected $(end_to_end_test_data)/latest/l1_osp_dir ./l1c_run
+
+temp:
+	-rm -r ./end_to_end_test_l1c
+	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1C_PGE $(l1c_run_config)
+	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(GH5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1c/*L1CG_RAD*.h5
 
 python-install:
 	pip install --prefix=@prefix@ $(srcdir)/@srcpython@

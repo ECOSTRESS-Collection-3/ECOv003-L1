@@ -112,12 +112,15 @@ logger.add(os.path.splitext(ofile)[0] + ".log", level="DEBUG")
 pool = None
 try:
     with logger.catch(reraise=True):
+        inlist = [l1b_geo_fname, l1b_rad_fname, str(l1_osp_dir / "l1c_config.py")]
         l1cg = ecostress.L1cgGenerate(
             l1b_geo_fname,
             l1b_rad_fname,
             ofile,
+            inlist,
             resolution=l1c_config.l1cg_resolution,
             number_subpixel=l1c_config.l1cg_number_subpixel,
+            run_config=config,
             collection_label=collection_label,
             build_id=build_id,
             pge_version=pge_version["l1c"],
@@ -128,8 +131,10 @@ try:
             l1b_rad_fname,
             l1_osp_dir,
             ofile2,
+            inlist,
             resolution=l1c_config.l1ct_resolution,
             number_subpixel=l1c_config.l1ct_number_subpixel,
+            run_config=config,
             collection_label=collection_label,
             build_id=build_id,
             pge_version=pge_version["l1c"],

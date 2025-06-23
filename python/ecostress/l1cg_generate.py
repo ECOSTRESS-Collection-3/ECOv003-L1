@@ -36,6 +36,7 @@ class L1cgGenerate:
         local_granule_id=None,
         resolution=70,
         number_subpixel=3,
+        run_config=None,
         collection_label="ECOSTRESS",
         build_id="0.30",
         pge_version="0.30",
@@ -49,6 +50,7 @@ class L1cgGenerate:
             self.local_granule_id = os.path.basename(output_name)
         self.resolution = resolution
         self.number_subpixel = number_subpixel
+        self.run_config = run_config
         self.inlist = inlist
         self.collection_label = collection_label
         self.build_id = build_id
@@ -95,14 +97,14 @@ class L1cgGenerate:
             fout,
             product_specfic_group="L1CGMetadata",
             proc_lev_desc="Level 1C Gridded Parameters",
-            pge_name="L1C_PGE",
+            pge_name="L1C",
             collection_label=self.collection_label,
             build_id=self.build_id,
             pge_version=self.pge_version,
             orbit_corrected=fin_geo["L1GEOMetadata/OrbitCorrectionPerformed"][()] == b"True",
             tcorr_before=fin_geo["L1GEOMetadata/DeltaTimeOfCorrectionBeforeScene"][()],
             tcorr_after=fin_geo["L1GEOMetadata/DeltaTimeOfCorrectionAfterScene"][()],
-            geolocation_accuracy_qa=fin_geo["L1GEOMetadata/GeolocationAccuracyQA"][()],
+            geolocation_accuracy_qa=fin_geo["L1GEOMetadata/GeolocationAccuracyQA"][()].decode('utf-8'),
             over_all_land_fraction = fin_geo["L1GEOMetadata/OverAllLandFraction"][()],
             average_solar_zenith = fin_geo["L1GEOMetadata/AverageSolarZenith"][()],
             qa_precentage_missing=fin_rad["L1B_RADMetadata/QAPercentMissingData"],
@@ -110,7 +112,8 @@ class L1cgGenerate:
             cal_correction=cal_correction,
             local_granule_id=self.local_granule_id,
         )
-        # TODO various things set
+        if self.run_config is not None:
+            m.process_run_config_metadata(self.run_config)
         m.set("CloudCover", fin_geo["StandardMetadata/CloudCover"][()])
         m.set("WestBoundingCoordinate", mi.ulc_x)
         m.set("EastBoundingCoordinate", mi.lrc_x)
@@ -137,8 +140,8 @@ class L1cgGenerate:
         for i in range(5):
             del dfield[f"data_quality_{i + 1}"]
             del dfield[f"radiance_{i + 1}"]
-        #for b in range(1, 6):
-        for b in range(1, 1):
+        #for b in range(1, 1):
+        for b in range(1, 6):
             logger.info("Doing radiance band %d" % b)
             data_in = geocal.GdalRasterImage(
                 f'HDF5:"{self.l1b_rad}"://Radiance/radiance_{b}'
@@ -153,8 +156,8 @@ class L1cgGenerate:
             )
             t.attrs.create("_FillValue", data=np.nan, dtype=t.dtype)
             t.attrs["Units"] = "W/m^2/sr/um"
-        # for b in range(1, 6):
-        for b in range(1, 1):
+        #for b in range(1, 1):
+        for b in range(1, 6):
             # GeoCal doesn't support the dqi type. We could update geocal,
             # but no strong reason to. Just read into memory
             logger.info("Doing DQI band %d" % b)

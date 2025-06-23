@@ -26,5 +26,6 @@ if 'ECOSTRESS_END_TO_END_TEST' in os.environ:
                    "l1a_cal" : "5.00",
                    "l1b_rad" : "5.00",
                    "l1b_geo" : "5.00",
+                   "l1c"     : "5.00",
                   }
     

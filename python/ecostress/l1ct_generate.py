@@ -22,8 +22,10 @@ class L1ctGenerate:
         l1b_rad,
         l1_osp_dir,
         output_pattern,
+        inlist,
         resolution=70,
         number_subpixel=3,
+        run_config=None,
         collection_label="ECOSTRESS",
         build_id="0.30",
         pge_version="0.30",
@@ -41,6 +43,8 @@ class L1ctGenerate:
         self.number_subpixel = number_subpixel
         self._utm_coor = {}
         self.use_file_cache = False
+        self.run_config = run_config
+        self.inlist = inlist
         self.collection_label = collection_label
         self.build_id = build_id
         self.pge_version = pge_version
