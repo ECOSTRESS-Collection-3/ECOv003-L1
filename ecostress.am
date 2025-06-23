@@ -56,9 +56,9 @@ H5DIFF_FLAG+= --exclude-path=/Ephemeris/eci_position
 
 # Different set of flags for gridded product
 GH5DIFF_FLAG=-d 6e-2
-GH5DIFF_FLAG+= --exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/radiance_1" --exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/radiance_5" --exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/radiance_2"
-GH5DIFF_FLAG+= --exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/interpolation_uncertainty_1" --exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/interpolation_uncertainty_5" --exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/interpolation_uncertainty_2"
-GH5DIFF_FLAG+=--exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/height" --exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/view_zenith"
+GH5DIFF_FLAG+= --exclude-path='"HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/radiance_1"' --exclude-path='"HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/radiance_5"' --exclude-path='"HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/radiance_2"'
+GH5DIFF_FLAG+= --exclude-path='"HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/interpolation_uncertainty_1"' --exclude-path='"HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/interpolation_uncertainty_5"' --exclude-path='"HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/interpolation_uncertainty_2"'
+GH5DIFF_FLAG+=--exclude-path='"HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/height"' --exclude-path='"HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/view_zenith"'
 
 # Note, if you need to update the expected a results a "trick" is to
 # replace H5DIFF with "cp" on the make line (so make end-to-end-check H5DIFF=cp H5DIFF_FLAG= H5DIFF_ATT_FLAG= )

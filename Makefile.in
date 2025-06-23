@@ -953,22 +953,22 @@ H5DIFF_FLAG = -d 6e-2 --exclude-path=/Radiance/radiance_1 \
 
 # Different set of flags for gridded product
 GH5DIFF_FLAG = -d 6e-2 \
-	--exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
-	Fields/radiance_1" \
-	--exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
-	Fields/radiance_5" \
-	--exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
-	Fields/radiance_2" \
-	--exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
-	Fields/interpolation_uncertainty_1" \
-	--exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
-	Fields/interpolation_uncertainty_5" \
-	--exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
-	Fields/interpolation_uncertainty_2" \
-	--exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
-	Fields/height" \
-	--exclude-path="HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
-	Fields/view_zenith"
+	--exclude-path='"HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
+	Fields/radiance_1"' \
+	--exclude-path='"HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
+	Fields/radiance_5"' \
+	--exclude-path='"HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
+	Fields/radiance_2"' \
+	--exclude-path='"HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
+	Fields/interpolation_uncertainty_1"' \
+	--exclude-path='"HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
+	Fields/interpolation_uncertainty_5"' \
+	--exclude-path='"HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
+	Fields/interpolation_uncertainty_2"' \
+	--exclude-path='"HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
+	Fields/height"' \
+	--exclude-path='"HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data \
+	Fields/view_zenith"'
 dist_vicarpdf_DATA = @srcpdf@/el1a_2pt.pdf @srcpdf@/el1a_bbcal.pdf \
 	@srcpdf@/el1a_tvac.pdf
 installecostress_DATA = @srcscript@/setup_ecostress.csh @srcscript@/setup_ecostress.sh
