@@ -118,6 +118,9 @@ try:
             ofile,
             resolution=l1c_config.l1cg_resolution,
             number_subpixel=l1c_config.l1cg_number_subpixel,
+            collection_label=collection_label,
+            build_id=build_id,
+            pge_version=pge_version["l1c"],
         )
         l1cg.run()
         l1ct = ecostress.L1ctGenerate(
@@ -127,6 +130,9 @@ try:
             ofile2,
             resolution=l1c_config.l1ct_resolution,
             number_subpixel=l1c_config.l1ct_number_subpixel,
+            collection_label=collection_label,
+            build_id=build_id,
+            pge_version=pge_version["l1c"],
         )
         if ncpu > 1:
             pool = Pool(ncpu)

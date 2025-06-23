@@ -153,7 +153,9 @@ class L1bGeoGenerate(object):
         cloud, cloudconf = self.cprocess.process_cloud(
             rad_band_4, lat, lon, height, geocal.Time.time_j2000(tlinestart[0])
         )
-        self.cloud_cover = (np.count_nonzero(cloud == 1) / np.count_nonzero(cloud != 255)) * 100.0
+        self.cloud_cover = (
+            np.count_nonzero(cloud == 1) / np.count_nonzero(cloud != 255)
+        ) * 100.0
         fout = h5py.File(self.output_name, "w")
         m = GeoWriteStandardMetadata(
             fout,

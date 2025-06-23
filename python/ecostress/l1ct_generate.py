@@ -24,6 +24,9 @@ class L1ctGenerate:
         output_pattern,
         resolution=70,
         number_subpixel=3,
+        collection_label="ECOSTRESS",
+        build_id="0.30",
+        pge_version="0.30",
     ):
         """The output pattern should leave a portion called "TILE" in the name, that
         we fill in. Also leave the extension off, so a name like:
@@ -38,6 +41,9 @@ class L1ctGenerate:
         self.number_subpixel = number_subpixel
         self._utm_coor = {}
         self.use_file_cache = False
+        self.collection_label = collection_label
+        self.build_id = build_id
+        self.pge_version = pge_version
 
     def run(self, pool=None):
         fin_geo = h5py.File(self.l1b_geo, "r")

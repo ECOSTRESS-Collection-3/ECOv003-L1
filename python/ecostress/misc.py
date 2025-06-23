@@ -549,7 +549,7 @@ def ecostress_file_name(
     version="01",
     extension=".h5",
     intermediate=False,
-    tile=False
+    tile=False,
 ):
     """Create an ecostress file name from the given components."""
     if intermediate:

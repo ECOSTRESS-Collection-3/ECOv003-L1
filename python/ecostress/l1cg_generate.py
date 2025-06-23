@@ -1,5 +1,6 @@
 import geocal  # type: ignore
 from ecostress_swig import fill_value_threshold, Resampler, HdfEosFileHandle, HdfEosGrid  # type: ignore
+from .l1cg_write_standard_metadata import L1cgWriteStandardMetadata
 import os
 import h5py
 import scipy
@@ -31,9 +32,13 @@ class L1cgGenerate:
         l1b_geo,
         l1b_rad,
         output_name,
+        inlist,
         local_granule_id=None,
         resolution=70,
         number_subpixel=3,
+        collection_label="ECOSTRESS",
+        build_id="0.30",
+        pge_version="0.30",
     ):
         self.l1b_geo = l1b_geo
         self.l1b_rad = l1b_rad
@@ -44,10 +49,15 @@ class L1cgGenerate:
             self.local_granule_id = os.path.basename(output_name)
         self.resolution = resolution
         self.number_subpixel = number_subpixel
+        self.inlist = inlist
+        self.collection_label = collection_label
+        self.build_id = build_id
+        self.pge_version = pge_version
 
     def run(self):
         mi = geocal.cib01_mapinfo(self.resolution)
         fin_geo = h5py.File(self.l1b_geo, "r")
+        fin_rad = h5py.File(self.l1b_rad, "r")
         latv = fin_geo["Geolocation/latitude"][:, :]
         lonv = fin_geo["Geolocation/longitude"][:, :]
         # Make sure fill values are negative enough that is clear we
@@ -77,8 +87,49 @@ class L1cgGenerate:
         g.close()
         fout.close()
         fout = h5py.File(self.output_name, "r+")
+        t = fin_rad["L1B_RADMetadata/CalibrationGainCorrection"][:]
+        cal_correction = np.empty((2,t.shape[0]))
+        cal_correction[0,:]=t
+        cal_correction[1,:]=fin_rad["L1B_RADMetadata/CalibrationOffsetCorrection"][:]
+        m = L1cgWriteStandardMetadata(
+            fout,
+            product_specfic_group="L1CGMetadata",
+            proc_lev_desc="Level 1C Gridded Parameters",
+            pge_name="L1C_PGE",
+            collection_label=self.collection_label,
+            build_id=self.build_id,
+            pge_version=self.pge_version,
+            orbit_corrected=fin_geo["L1GEOMetadata/OrbitCorrectionPerformed"][()] == b"True",
+            tcorr_before=fin_geo["L1GEOMetadata/DeltaTimeOfCorrectionBeforeScene"][()],
+            tcorr_after=fin_geo["L1GEOMetadata/DeltaTimeOfCorrectionAfterScene"][()],
+            geolocation_accuracy_qa=fin_geo["L1GEOMetadata/GeolocationAccuracyQA"][()],
+            over_all_land_fraction = fin_geo["L1GEOMetadata/OverAllLandFraction"][()],
+            average_solar_zenith = fin_geo["L1GEOMetadata/AverageSolarZenith"][()],
+            qa_precentage_missing=fin_rad["L1B_RADMetadata/QAPercentMissingData"],
+            band_specification=fin_rad["L1B_RADMetadata/BandSpecification"],
+            cal_correction=cal_correction,
+            local_granule_id=self.local_granule_id,
+        )
+        # TODO various things set
+        m.set("CloudCover", fin_geo["StandardMetadata/CloudCover"][()])
+        m.set("WestBoundingCoordinate", mi.ulc_x)
+        m.set("EastBoundingCoordinate", mi.lrc_x)
+        m.set("SouthBoundingCoordinate", mi.lrc_y)
+        m.set("NorthBoundingCoordinate", mi.ulc_y)
+        m.set("FieldOfViewObstruction", fin_geo["StandardMetadata/FieldOfViewObstruction"][()])
+        m.set("ImageLines", mi.number_y_pixel)
+        m.set("ImagePixels", mi.number_x_pixel)
+        m.set("ImageLineSpacing", self.resolution)
+        m.set("ImagePixelSpacing", self.resolution)
+        m.set("RangeBeginningDate", fin_geo["StandardMetadata/RangeBeginningDate"][()])
+        m.set("RangeBeginningTime", fin_geo["StandardMetadata/RangeBeginningTime"][()])
+        m.set("RangeEndingDate", fin_geo["StandardMetadata/RangeEndingDate"][()])
+        m.set("RangeEndingTime", fin_geo["StandardMetadata/RangeEndingTime"][()])
+        m.set("DayNightFlag",fin_geo["StandardMetadata/DayNightFlag"][()])
+        m.set_input_pointer(self.inlist)
+        # Not sure if having this open interferes with GDAL, but simple enough to close         
+        fin_rad = None 
         dfield = fout["//HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields"]
-        fattr = fout["/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES"]
         del dfield["prelim_cloud"]
         del dfield["water"]
         del dfield["view_zenith"]
@@ -86,7 +137,8 @@ class L1cgGenerate:
         for i in range(5):
             del dfield[f"data_quality_{i + 1}"]
             del dfield[f"radiance_{i + 1}"]
-        for b in range(1, 6):
+        #for b in range(1, 6):
+        for b in range(1, 1):
             logger.info("Doing radiance band %d" % b)
             data_in = geocal.GdalRasterImage(
                 f'HDF5:"{self.l1b_rad}"://Radiance/radiance_{b}'
@@ -101,7 +153,8 @@ class L1cgGenerate:
             )
             t.attrs.create("_FillValue", data=np.nan, dtype=t.dtype)
             t.attrs["Units"] = "W/m^2/sr/um"
-        for b in range(1, 6):
+        # for b in range(1, 6):
+        for b in range(1, 1):
             # GeoCal doesn't support the dqi type. We could update geocal,
             # but no strong reason to. Just read into memory
             logger.info("Doing DQI band %d" % b)
@@ -116,6 +169,7 @@ class L1cgGenerate:
                 compression="gzip",
             )
             t.attrs.create("_FillValue", data=0, dtype=t.dtype)
+        m.write()
 
         # TODO Make sure to update bounding box stuff in output metadata
         # TODO Put into place, I think we need to handle this with something

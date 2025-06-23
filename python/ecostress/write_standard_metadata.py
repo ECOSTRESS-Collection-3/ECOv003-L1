@@ -21,6 +21,7 @@ class WriteStandardMetadata(object):
         band_specification=None,
         orbit_based=False,
         level0_file=False,
+        hdfeos_file=False,
     ):
         """hdf_file should be the h5py.File handler. You can pass the
         local_granule_id, or if None we assume the filename for the hdf_file is
@@ -28,6 +29,7 @@ class WriteStandardMetadata(object):
         self.hdf_file = hdf_file
         self.orbit_based = orbit_based
         self.product_specfic_group = product_specfic_group
+        self.hdfeos_file = hdfeos_file
         if local_granule_id is None:
             local_granule_id = os.path.basename(hdf_file.filename)
 
@@ -217,18 +219,24 @@ class WriteStandardMetadata(object):
 
     def write(self):
         """Actually write the metadata."""
-        if "StandardMetadata" in self.hdf_file:
-            g = self.hdf_file["StandardMetadata"]
+        gname = "StandardMetadata"
+        if self.hdfeos_file:
+            gname = "/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/StandardMetadata"
+        if gname in self.hdf_file:
+            g = self.hdf_file[gname]
         else:
-            g = self.hdf_file.create_group("StandardMetadata")
+            g = self.hdf_file.create_group(gname)
         self.clear_old(g)
         for m, typ in self.mlist:
-            if(self.data[m] is not None):
+            if self.data[m] is not None:
                 g[m] = self.data[m]
-        if self.product_specfic_group in self.hdf_file:
-            pg = self.hdf_file[self.product_specfic_group]
+        pgname = self.product_specfic_group
+        if self.hdfeos_file:
+            pgname = f"/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/{self.product_specfic_group}"
+        if pgname in self.hdf_file:
+            pg = self.hdf_file[pgname]
         else:
-            pg = self.hdf_file.create_group(self.product_specfic_group)
+            pg = self.hdf_file.create_group(pgname)
         pg["AncillaryFiles"] = np.int32(0)
         if self.qa_precentage_missing is not None:
             pg["QAPercentMissingData"] = np.float32(self.qa_precentage_missing)
