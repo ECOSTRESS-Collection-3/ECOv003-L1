@@ -13,11 +13,12 @@
 %import "ogr_coordinate.i"
 %import "gdal_raster_image.i"
 namespace Ecostress {
-  blitz::Array<double, 2> coordinate_convert(const blitz::Array<double, 1> latitude,
-					     const blitz::Array<double, 1> longitude,
+  blitz::Array<double, 2> coordinate_convert(const blitz::Array<double, 1>& latitude,
+					     const blitz::Array<double, 1>& longitude,
 					     const boost::shared_ptr<GeoCal::OgrWrapper>& ogr);
   void set_fill_value(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img, double Fill_value);
+  void write_data(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img, const blitz::Array<double, 2>& Data);
 }
 
 // List of things "import *" will include
-%python_export("coordinate_convert", "set_fill_value")
+%python_export("coordinate_convert", "set_fill_value", "write_data")

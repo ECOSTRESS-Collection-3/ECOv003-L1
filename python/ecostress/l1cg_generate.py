@@ -1,5 +1,5 @@
 import geocal  # type: ignore
-from ecostress_swig import fill_value_threshold, Resampler, HdfEosFileHandle, HdfEosGrid  # type: ignore
+from ecostress_swig import fill_value_threshold, Resampler, HdfEosFileHandle, HdfEosGrid, GroundCoordinateArray  # type: ignore
 from .l1cg_write_standard_metadata import L1cgWriteStandardMetadata
 import os
 import h5py
@@ -31,6 +31,8 @@ class L1cgGenerate:
         self,
         l1b_geo,
         l1b_rad,
+        dem,
+        lwm,
         output_name,
         inlist,
         local_granule_id=None,
@@ -48,6 +50,8 @@ class L1cgGenerate:
             self.local_granule_id = local_granule_id
         else:
             self.local_granule_id = os.path.basename(output_name)
+        self.dem = dem
+        self.lwm = lwm
         self.resolution = resolution
         self.number_subpixel = number_subpixel
         self.run_config = run_config
@@ -79,13 +83,14 @@ class L1cgGenerate:
         # them in the next step.
         fout = HdfEosFileHandle(self.output_name, HdfEosFileHandle.TRUNC)
         g = HdfEosGrid(fout, "ECO_L1CG_RAD_70m", mi)
-        g.add_field_uchar("prelim_cloud")
+        g.add_field_uchar("prelim_cloud_mask")
         g.add_field_uchar("water")
         g.add_field_float("view_zenith")
         g.add_field_float("height")
         for i in range(5):
             g.add_field_float(f"data_quality_{i + 1}")
             g.add_field_float(f"radiance_{i + 1}")
+            g.add_field_float(f"interpolation_uncertainty_{i + 1}")
         g.close()
         fout.close()
         fout = h5py.File(self.output_name, "r+")
@@ -133,14 +138,14 @@ class L1cgGenerate:
         # Not sure if having this open interferes with GDAL, but simple enough to close         
         fin_rad = None 
         dfield = fout["//HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields"]
-        del dfield["prelim_cloud"]
+        del dfield["prelim_cloud_mask"]
         del dfield["water"]
         del dfield["view_zenith"]
         del dfield["height"]
         for i in range(5):
             del dfield[f"data_quality_{i + 1}"]
             del dfield[f"radiance_{i + 1}"]
-        #for b in range(1, 1):
+            del dfield[f"interpolation_uncertainty_{i + 1}"]
         for b in range(1, 6):
             logger.info("Doing radiance band %d" % b)
             data_in = geocal.GdalRasterImage(
@@ -156,7 +161,21 @@ class L1cgGenerate:
             )
             t.attrs.create("_FillValue", data=np.nan, dtype=t.dtype)
             t.attrs["Units"] = "W/m^2/sr/um"
-        #for b in range(1, 1):
+        for b in range(1, 6):
+            logger.info("Doing uncertainty band %d" % b)
+            data_in = geocal.GdalRasterImage(
+                f'HDF5:"{self.l1b_rad}"://Radiance/interpolation_uncertainty_{b}'
+            )
+            data = res.resample_field(data_in, 1.0, False, np.nan).astype(np.float32)
+            t = dfield.create_dataset(
+                "interpolation_uncertainty_%d" % b,
+                data=data,
+                dtype="f4",
+                fillvalue=np.nan,
+                compression="gzip",
+            )
+            t.attrs.create("_FillValue", data=np.nan, dtype=t.dtype)
+            t.attrs["Units"] = "W/m^2/sr/um"
         for b in range(1, 6):
             # GeoCal doesn't support the dqi type. We could update geocal,
             # but no strong reason to. Just read into memory
@@ -172,14 +191,71 @@ class L1cgGenerate:
                 compression="gzip",
             )
             t.attrs.create("_FillValue", data=0, dtype=t.dtype)
+            
+        logger.info("Doing view_zenith")
+        data_in = geocal.GdalRasterImage(
+            f'HDF5:"{self.l1b_geo}"://Geolocation/view_zenith'
+        )
+        data = res.resample_field(data_in, 1.0, False, np.nan, True).astype(np.float32)
+        t = dfield.create_dataset(
+            "view_zenith",
+            data=data,
+            dtype="f4",
+            fillvalue=np.nan,
+            compression="gzip",
+        )
+        t.attrs.create("_FillValue", data=np.nan, dtype=t.dtype)
+        t.attrs["Units"] = "degrees"
+        t.attrs["valid_min"] = -90
+        t.attrs["valid_max"] = 90
+        logger.info("Doing height")
+        lat, lon, height = res.map_values(self.dem)
+        t = dfield.create_dataset("height", data=data, dtype="f4", compression="gzip")
+        t.attrs["Units"] = "m"
+        
+        logger.info("Doing water")
+        # Work around a bug in SrtmDem when we get very close to
+        # longitude 180. We should fix this is geocal, but that is
+        # pretty involved. So for now, tweak the longitude values so we
+        # don't run into this. See git Issue #138
+        lon_tweak = lon.copy()
+        lon_tweak[lon_tweak > 179] = 179.0
+        lfrac = GroundCoordinateArray.interpolate(self.lwm, lat, lon_tweak)
+        # Fill value is 0, so we treat as land 100%
+        lfrac = np.where(
+            lfrac <= fill_value_threshold, 100.0, lfrac * 100.0
+        )
+        # Water mask is 0 for land or fill, 1 for water. We just threshold of the land fraction
+        water_data = np.where(lfrac < 50, 1, 0).astype(np.uint8)
+        t = dfield.create_dataset(
+                "water",
+                data=water_data,
+                fillvalue=0,
+                compression="gzip",
+        )
+        t.attrs.create("_FillValue", data=0, dtype=t.dtype)
+        t.attrs["Description"] = "1 for water, 0 for land or fill value"
+
+        logger.info("Doing prelim_cloud_mask")
+        din = h5py.File(self.l1b_geo)[f"Geolocation/prelim_cloud_mask"][:, :]
+        # Remove fill value, treat as clear
+        din[din > 1] = 0
+        data_in = geocal.MemoryRasterImage(din.shape[0], din.shape[1])
+        data_in.write(0, 0, din)
+        data = res.resample_field(data_in, 1.0, False, 0)
+        data = np.where(data < 0.5, 0, 1).astype(np.uint8)
+        t = dfield.create_dataset(
+            "prelim_cloud_mask",
+            data=data,
+            dtype=np.uint8,
+            fillvalue=0,
+            compression="gzip",
+        )
+        t.attrs.create("_FillValue", data=0, dtype=t.dtype)
+        t.attrs["Description"] = "1 for cloudy, 0 for clear or fill"
+        
         m.write()
 
-        # TODO Make sure to update bounding box stuff in output metadata
-        # TODO Put into place, I think we need to handle this with something
-        # other than write_standard_metadata
-        # m = self.l1b_geo_generate.m.copy_new_file(
-        #    fout, self.local_granule_id, "ECO_L1CG_RAD"
-        # )
 
 
 __all__ = ["L1cgGenerate"]

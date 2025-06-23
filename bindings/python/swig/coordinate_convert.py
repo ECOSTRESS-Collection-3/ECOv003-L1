@@ -146,7 +146,8 @@ import geocal_swig.raster_image
 import geocal_swig.geocal_exception
 coordinate_convert = _coordinate_convert.coordinate_convert
 set_fill_value = _coordinate_convert.set_fill_value
+write_data = _coordinate_convert.write_data
 
-__all__ = ["coordinate_convert","set_fill_value"]
+__all__ = ["coordinate_convert","set_fill_value","write_data"]
 
 

@@ -3,6 +3,7 @@ from ecostress_swig import (
     fill_value_threshold,
     Resampler,
     coordinate_convert,
+    write_data,
     set_fill_value,
 )  # type: ignore
 import h5py
@@ -11,7 +12,8 @@ import numpy as np
 import math
 from loguru import logger
 from pathlib import Path
-
+from zipfile import ZipFile
+import shutil
 
 class L1ctGenerate:
     """Produce L1CT tiles"""
@@ -157,7 +159,7 @@ class L1ctGenerate:
                 "TILED=YES BLOCKXSIZE=256 BLOCKYSIZE=256 COMPRESS=DEFLATE",
             )
             set_fill_value(f, np.nan)
-            f.write(0, 0, data)
+            write_data(f, data)
             f.close()
         for b in range(1, 6):
             # GeoCal doesn't support the dqi type. We could update geocal,
@@ -178,6 +180,12 @@ class L1ctGenerate:
             f.write(0, 0, data)
             f.close()
         res = None
+        # Create zip file
+        with ZipFile(f"{dirname}.zip", "w") as fh:
+            for filename in Path(dirname).glob("*"):
+                fh.write(filename)
+        shutil.rmtree(dirname)
+                
         logger.info(f"Done with {shp['tile_id']}")
         return True
 

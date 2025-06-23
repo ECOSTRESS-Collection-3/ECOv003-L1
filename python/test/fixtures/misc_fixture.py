@@ -36,8 +36,13 @@ def lwm():
         srtm_lwm_dir = "/project/ancillary/SRTM/srtm_v3_lwm"
     else:
         pytest.skip("Couldn't find SRTM LWM")
-    yield geocal.SrtmLwmData(srtm_lwm_dir, False)
+    return geocal.SrtmLwmData(srtm_lwm_dir, False)
 
+@pytest.fixture(scope="function")
+def dem():
+    # False here says it ok for SrtmDem to not have a tile. This gives support
+    # for data that is over the ocean.
+    return geocal.SrtmDem("", False)
 
 @pytest.fixture(scope="function")
 def aster_mosaic_surface_data(aster_mosaic_dir):
@@ -51,7 +56,7 @@ def aster_mosaic_surface_data(aster_mosaic_dir):
         )
         for b in ecostress_to_aster_band()
     ]
-    yield sdata
+    return sdata
 
 
 @pytest.fixture(scope="function")

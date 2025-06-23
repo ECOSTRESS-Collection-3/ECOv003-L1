@@ -6130,10 +6130,12 @@ SWIGINTERN PyObject *SwigPyIterator_swigregister(PyObject *SWIGUNUSEDPARM(self),
 
 SWIGINTERN PyObject *_wrap_coordinate_convert(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
-  SwigValueWrapper< blitz::Array< double,1 > > arg1 ;
-  SwigValueWrapper< blitz::Array< double,1 > > arg2 ;
+  blitz::Array< double,1 > *arg1 = 0 ;
+  blitz::Array< double,1 > *arg2 = 0 ;
   boost::shared_ptr< GeoCal::OgrWrapper > *arg3 = 0 ;
+  blitz::Array< double,1 > a1 ;
   PythonObject numpy1 ;
+  blitz::Array< double,1 > a2 ;
   PythonObject numpy2 ;
   void *argp3 ;
   int res3 = 0 ;
@@ -6145,24 +6147,38 @@ SWIGINTERN PyObject *_wrap_coordinate_convert(PyObject *self, PyObject *args) {
   (void)self;
   if (!SWIG_Python_UnpackTuple(args, "coordinate_convert", 3, 3, swig_obj)) SWIG_fail;
   {
-    numpy1.obj = to_numpy<double >(swig_obj[0]);
-    if(!numpy1.obj) {
-      SWIG_Error(SWIG_TypeError, "in method 'coordinate_convert', expecting type  Array<double,1>");
+    int res = SWIG_ConvertPtr(swig_obj[0], (void**)(&arg1), SWIGTYPE_p_blitz__ArrayT_double_1_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy1.obj = to_numpy<double >(swig_obj[0]);
+      if(!numpy1.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'coordinate_convert', expecting type  Array<double,1>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy1.obj) !=1) {
+        SWIG_Error(SWIG_TypeError, "in method 'coordinate_convert', expecting type  Array<double,1>");
+        return NULL;
+      }
+      a1.reference(to_blitz_array<double, 1>(numpy1));
+      arg1 = &a1;
     }
-    if(PyArray_NDIM((PyArrayObject*)numpy1.obj) !=1) {
-      SWIG_Error(SWIG_TypeError, "in method 'coordinate_convert', expecting type  Array<double,1>");
-    }
-    arg1 = to_blitz_array<double, 1>(numpy1);
   }
   {
-    numpy2.obj = to_numpy<double >(swig_obj[1]);
-    if(!numpy2.obj) {
-      SWIG_Error(SWIG_TypeError, "in method 'coordinate_convert', expecting type  Array<double,1>");
+    int res = SWIG_ConvertPtr(swig_obj[1], (void**)(&arg2), SWIGTYPE_p_blitz__ArrayT_double_1_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy2.obj = to_numpy<double >(swig_obj[1]);
+      if(!numpy2.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'coordinate_convert', expecting type  Array<double,1>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy2.obj) !=1) {
+        SWIG_Error(SWIG_TypeError, "in method 'coordinate_convert', expecting type  Array<double,1>");
+        return NULL;
+      }
+      a2.reference(to_blitz_array<double, 1>(numpy2));
+      arg2 = &a2;
     }
-    if(PyArray_NDIM((PyArrayObject*)numpy2.obj) !=1) {
-      SWIG_Error(SWIG_TypeError, "in method 'coordinate_convert', expecting type  Array<double,1>");
-    }
-    arg2 = to_blitz_array<double, 1>(numpy2);
   }
   {
     int newmem = 0;
@@ -6188,7 +6204,7 @@ SWIGINTERN PyObject *_wrap_coordinate_convert(PyObject *self, PyObject *args) {
   }
   {
     try {
-      result = Ecostress::coordinate_convert(SWIG_STD_MOVE(arg1),SWIG_STD_MOVE(arg2),(boost::shared_ptr< GeoCal::OgrWrapper > const &)*arg3);
+      result = Ecostress::coordinate_convert((blitz::Array< double,1 > const &)*arg1,(blitz::Array< double,1 > const &)*arg2,(boost::shared_ptr< GeoCal::OgrWrapper > const &)*arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
     } catch (const std::exception& e) {
@@ -6280,6 +6296,75 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_write_data(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  boost::shared_ptr< GeoCal::GdalRasterImage > *arg1 = 0 ;
+  blitz::Array< double,2 > *arg2 = 0 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  boost::shared_ptr< GeoCal::GdalRasterImage > tempshared1 ;
+  boost::shared_ptr< GeoCal::GdalRasterImage > temp2shared1 ;
+  blitz::Array< double,2 > a2 ;
+  PythonObject numpy2 ;
+  PyObject *swig_obj[2] ;
+  
+  (void)self;
+  if (!SWIG_Python_UnpackTuple(args, "write_data", 2, 2, swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_GeoCal__GdalRasterImage_t,  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "write_data" "', argument " "1"" of type '" "boost::shared_ptr< GeoCal::GdalRasterImage > const &""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp1) tempshared1 = *reinterpret_cast< boost::shared_ptr< GeoCal::GdalRasterImage > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< GeoCal::GdalRasterImage > * >(argp1);
+      arg1 = &tempshared1;
+    } else {
+      arg1 = (argp1) ? reinterpret_cast< boost::shared_ptr< GeoCal::GdalRasterImage > * >(argp1) : &tempshared1;
+    }
+    // Added mms
+    // Special handling if this is a director class.
+    // See DirectorNotes.md for discussion of this.
+    Swig::Director* dp = dynamic_cast<Swig::Director*>(arg1->get());
+    if(dp) {
+      temp2shared1.reset(arg1->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      arg1 = &temp2shared1;
+    }
+  }
+  {
+    int res = SWIG_ConvertPtr(swig_obj[1], (void**)(&arg2), SWIGTYPE_p_blitz__ArrayT_double_2_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy2.obj = to_numpy<double >(swig_obj[1]);
+      if(!numpy2.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'write_data', expecting type  Array<double,2>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy2.obj) !=2) {
+        SWIG_Error(SWIG_TypeError, "in method 'write_data', expecting type  Array<double,2>");
+        return NULL;
+      }
+      a2.reference(to_blitz_array<double, 2>(numpy2));
+      arg2 = &a2;
+    }
+  }
+  {
+    try {
+      Ecostress::write_data((boost::shared_ptr< GeoCal::GdalRasterImage > const &)*arg1,(blitz::Array< double,2 > const &)*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
@@ -6303,8 +6388,9 @@ static PyMethodDef SwigMethods[] = {
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "coordinate_convert", _wrap_coordinate_convert, METH_VARARGS, "\n"
 		"\n"
-		"blitz::Array< double, 2 > Ecostress::coordinate_convert(const blitz::Array< double, 1 > latitude, const blitz::Array< double,\n"
-		"1 > longitude, const boost::shared_ptr< GeoCal::OgrWrapper > &ogr)\n"
+		"blitz::Array< double, 2 > Ecostress::coordinate_convert(const blitz::Array< double, 1 > &latitude, const blitz::Array<\n"
+		"double, 1 > &longitude, const boost::shared_ptr< GeoCal::OgrWrapper >\n"
+		"&ogr)\n"
 		"Ecostress::coordinate_convert\n"
 		"This is a bulk conversion from latitude/longitude to a different set\n"
 		"of coordinates.\n"
@@ -6317,6 +6403,17 @@ static PyMethodDef SwigMethods[] = {
 		"Ecostress::set_fill_value\n"
 		"This really belongs in geocal, but stick here for now.\n"
 		"We will probably eventually migrate this to geocal. \n"
+		""},
+	 { "write_data", _wrap_write_data, METH_VARARGS, "\n"
+		"\n"
+		"void Ecostress::write_data(const boost::shared_ptr< GeoCal::GdalRasterImage > &Img, const\n"
+		"blitz::Array< double, 2 > &Data)\n"
+		"Ecostress::write_data\n"
+		"This really belongs in geocal, but stick here for now.\n"
+		"We will probably eventually migrate this to geocal. The actual\n"
+		"GdalRasterImage already handles writing double data, but we hadn't put\n"
+		"this into the python swig wrappers. No reason, just an oversight that\n"
+		"never came up until now. \n"
 		""},
 	 { NULL, NULL, 0, NULL }
 };
@@ -6344,8 +6441,9 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "coordinate_convert", _wrap_coordinate_convert, METH_VARARGS, "\n"
 		"\n"
-		"blitz::Array< double, 2 > Ecostress::coordinate_convert(const blitz::Array< double, 1 > latitude, const blitz::Array< double,\n"
-		"1 > longitude, const boost::shared_ptr< GeoCal::OgrWrapper > &ogr)\n"
+		"blitz::Array< double, 2 > Ecostress::coordinate_convert(const blitz::Array< double, 1 > &latitude, const blitz::Array<\n"
+		"double, 1 > &longitude, const boost::shared_ptr< GeoCal::OgrWrapper >\n"
+		"&ogr)\n"
 		"Ecostress::coordinate_convert\n"
 		"This is a bulk conversion from latitude/longitude to a different set\n"
 		"of coordinates.\n"
@@ -6358,6 +6456,17 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"Ecostress::set_fill_value\n"
 		"This really belongs in geocal, but stick here for now.\n"
 		"We will probably eventually migrate this to geocal. \n"
+		""},
+	 { "write_data", _wrap_write_data, METH_VARARGS, "\n"
+		"\n"
+		"void Ecostress::write_data(const boost::shared_ptr< GeoCal::GdalRasterImage > &Img, const\n"
+		"blitz::Array< double, 2 > &Data)\n"
+		"Ecostress::write_data\n"
+		"This really belongs in geocal, but stick here for now.\n"
+		"We will probably eventually migrate this to geocal. The actual\n"
+		"GdalRasterImage already handles writing double data, but we hadn't put\n"
+		"this into the python swig wrappers. No reason, just an oversight that\n"
+		"never came up until now. \n"
 		""},
 	 { NULL, NULL, 0, NULL }
 };

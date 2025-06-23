@@ -7,9 +7,10 @@ using namespace Ecostress;
 /// set of coordinates.
 //-----------------------------------------------------------------------
 
-blitz::Array<double, 2> Ecostress::coordinate_convert(const blitz::Array<double, 1> latitude,
-						      const blitz::Array<double, 1> longitude,
-						      const boost::shared_ptr<GeoCal::OgrWrapper>& ogr)
+blitz::Array<double, 2> Ecostress::coordinate_convert
+(const blitz::Array<double, 1>& latitude,
+ const blitz::Array<double, 1>& longitude,
+ const boost::shared_ptr<GeoCal::OgrWrapper>& ogr)
 {
   blitz::Range ra = blitz::Range::all();
   if(latitude.rows() != longitude.rows())
@@ -32,3 +33,18 @@ void Ecostress::set_fill_value(const boost::shared_ptr<GeoCal::GdalRasterImage>&
 {
   Img->raster_band().SetNoDataValue(Fill_value);
 }
+
+//-----------------------------------------------------------------------
+/// This really belongs in geocal, but stick here for now. We will
+/// probably eventually migrate this to geocal. The actual
+/// GdalRasterImage already handles writing double data, but we hadn't 
+/// put this into the python swig wrappers. No reason, just an
+/// oversight that never came up until now.
+
+//-----------------------------------------------------------------------
+
+void Ecostress::write_data(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img, const blitz::Array<double, 2>& Data)
+{
+  Img->write(0,0,Data);
+}
+
