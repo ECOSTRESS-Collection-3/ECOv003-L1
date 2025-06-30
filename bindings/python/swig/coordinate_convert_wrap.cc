@@ -5317,6 +5317,131 @@ namespace swig {
 #include <geocal/image_ground_connection.h>
 
 
+SWIGINTERN swig_type_info*
+SWIG_pchar_descriptor(void)
+{
+  static swig_type_info* info = 0;
+  if (!info) {
+    info = SWIG_TypeQuery("_p_char");
+  }
+  return info;
+}
+
+
+/* Return string from Python obj. NOTE: obj must remain in scope in order
+   to use the returned cptr (but only when alloc is set to SWIG_OLDOBJ) */
+SWIGINTERN int
+SWIG_AsCharPtrAndSize(PyObject *obj, char **cptr, size_t *psize, int *alloc)
+{
+#if PY_VERSION_HEX>=0x03000000
+#if defined(SWIG_PYTHON_STRICT_BYTE_CHAR)
+  if (PyBytes_Check(obj))
+#else
+  if (PyUnicode_Check(obj))
+#endif
+#else  
+  if (PyString_Check(obj))
+#endif
+  {
+    char *cstr; Py_ssize_t len;
+    PyObject *bytes = NULL;
+    int ret = SWIG_OK;
+    if (alloc)
+      *alloc = SWIG_OLDOBJ;
+#if PY_VERSION_HEX>=0x03000000 && defined(SWIG_PYTHON_STRICT_BYTE_CHAR)
+    if (PyBytes_AsStringAndSize(obj, &cstr, &len) == -1)
+      return SWIG_TypeError;
+#else
+    cstr = (char *)SWIG_PyUnicode_AsUTF8AndSize(obj, &len, &bytes);
+    if (!cstr)
+      return SWIG_TypeError;
+    /* The returned string is only duplicated if the char * returned is not owned and memory managed by obj */
+    if (bytes && cptr) {
+      if (alloc) {
+        cstr = reinterpret_cast< char* >(memcpy(new char[len + 1], cstr, sizeof(char)*(len + 1)));
+        *alloc = SWIG_NEWOBJ;
+      } else {
+        /* alloc must be set in order to clean up allocated memory */
+        return SWIG_RuntimeError;
+      }
+    }
+#endif
+    if (cptr) *cptr = cstr;
+    if (psize) *psize = len + 1;
+    SWIG_Py_XDECREF(bytes);
+    return ret;
+  } else {
+#if defined(SWIG_PYTHON_2_UNICODE)
+#if defined(SWIG_PYTHON_STRICT_BYTE_CHAR)
+#error "Cannot use both SWIG_PYTHON_2_UNICODE and SWIG_PYTHON_STRICT_BYTE_CHAR at once"
+#endif
+#if PY_VERSION_HEX<0x03000000
+    if (PyUnicode_Check(obj)) {
+      char *cstr; Py_ssize_t len;
+      if (!alloc && cptr) {
+        return SWIG_RuntimeError;
+      }
+      obj = PyUnicode_AsUTF8String(obj);
+      if (!obj)
+        return SWIG_TypeError;
+      if (PyString_AsStringAndSize(obj, &cstr, &len) != -1) {
+        if (cptr) {
+          if (alloc) *alloc = SWIG_NEWOBJ;
+          *cptr = reinterpret_cast< char* >(memcpy(new char[len + 1], cstr, sizeof(char)*(len + 1)));
+        }
+        if (psize) *psize = len + 1;
+
+        SWIG_Py_XDECREF(obj);
+        return SWIG_OK;
+      } else {
+        SWIG_Py_XDECREF(obj);
+      }
+    }
+#endif
+#endif
+
+    swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
+    if (pchar_descriptor) {
+      void* vptr = 0;
+      if (SWIG_ConvertPtr(obj, &vptr, pchar_descriptor, 0) == SWIG_OK) {
+	if (cptr) *cptr = (char *) vptr;
+	if (psize) *psize = vptr ? (strlen((char *)vptr) + 1) : 0;
+	if (alloc) *alloc = SWIG_OLDOBJ;
+	return SWIG_OK;
+      }
+    }
+  }
+  return SWIG_TypeError;
+}
+
+
+SWIGINTERN int
+SWIG_AsPtr_std_string (PyObject * obj, std::string **val) 
+{
+  char* buf = 0 ; size_t size = 0; int alloc = SWIG_OLDOBJ;
+  if (SWIG_IsOK((SWIG_AsCharPtrAndSize(obj, &buf, &size, &alloc)))) {
+    if (buf) {
+      if (val) *val = new std::string(buf, size - 1);
+      if (alloc == SWIG_NEWOBJ) delete[] buf;
+      return SWIG_NEWOBJ;
+    } else {
+      if (val) *val = 0;
+      return SWIG_OLDOBJ;
+    }
+  } else {
+    PyErr_Clear();
+    static swig_type_info *descriptor = SWIG_TypeQuery("std::string" " *");
+    if (descriptor) {
+      std::string *vptr;
+      int res = SWIG_ConvertPtr(obj, (void**)&vptr, descriptor, 0);
+      if (SWIG_IsOK(res) && val) *val = vptr;
+      return res;
+    }
+  }
+  return SWIG_ERROR;
+}
+
+
 
 /* ---------------------------------------------------
  * C++ director class methods
@@ -6365,6 +6490,102 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_write_gdal(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  std::string *arg1 = 0 ;
+  std::string *arg2 = 0 ;
+  GeoCal::GdalRasterImage *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  int res1 = SWIG_OLDOBJ ;
+  int res2 = SWIG_OLDOBJ ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  boost::shared_ptr< GeoCal::GdalRasterImage const > tempshared3 ;
+  int res4 = SWIG_OLDOBJ ;
+  PyObject *swig_obj[4] ;
+  
+  (void)self;
+  if (!SWIG_Python_UnpackTuple(args, "write_gdal", 4, 4, swig_obj)) SWIG_fail;
+  {
+    std::string *ptr = (std::string *)0;
+    res1 = SWIG_AsPtr_std_string(swig_obj[0], &ptr);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "write_gdal" "', argument " "1"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_NullReferenceError, "invalid null reference " "in method '" "write_gdal" "', argument " "1"" of type '" "std::string const &""'"); 
+    }
+    arg1 = ptr;
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(swig_obj[1], &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "write_gdal" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_NullReferenceError, "invalid null reference " "in method '" "write_gdal" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::GdalRasterImage *ptr;
+    res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], (void**)(&ptr), SWIGTYPE_p_GeoCal__GdalRasterImage,  0 , &newmem);
+    if (SWIG_IsOK(res3)) {
+      arg3 = ptr;
+    } else {
+      res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__GdalRasterImage_t,  0 , &newmem);
+      if (!SWIG_IsOK(res3)) {
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "write_gdal" "', argument " "3"" of type '" "GeoCal::GdalRasterImage const &""'");
+      }
+      if (!argp3) {
+        SWIG_exception_fail(SWIG_NullReferenceError, "invalid null reference " "in method '" "write_gdal" "', argument " "3"" of type '" "GeoCal::GdalRasterImage const &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared3 = *reinterpret_cast< boost::shared_ptr< const GeoCal::GdalRasterImage > * >(argp3);
+        delete reinterpret_cast< boost::shared_ptr< const GeoCal::GdalRasterImage > * >(argp3);
+        arg3 = const_cast< GeoCal::GdalRasterImage * >(tempshared3.get());
+      } else {
+        arg3 = const_cast< GeoCal::GdalRasterImage * >(reinterpret_cast< boost::shared_ptr< const GeoCal::GdalRasterImage > * >(argp3)->get());
+      }
+    }
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res4 = SWIG_AsPtr_std_string(swig_obj[3], &ptr);
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "write_gdal" "', argument " "4"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_NullReferenceError, "invalid null reference " "in method '" "write_gdal" "', argument " "4"" of type '" "std::string const &""'"); 
+    }
+    arg4 = ptr;
+  }
+  {
+    try {
+      Ecostress::write_gdal((std::string const &)*arg1,(std::string const &)*arg2,(GeoCal::GdalRasterImage const &)*arg3,(std::string const &)*arg4);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  if (SWIG_IsNewObj(res1)) delete arg1;
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res4)) delete arg4;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res1)) delete arg1;
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res4)) delete arg4;
+  return NULL;
+}
+
+
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
@@ -6414,6 +6635,17 @@ static PyMethodDef SwigMethods[] = {
 		"GdalRasterImage already handles writing double data, but we hadn't put\n"
 		"this into the python swig wrappers. No reason, just an oversight that\n"
 		"never came up until now. \n"
+		""},
+	 { "write_gdal", _wrap_write_gdal, METH_VARARGS, "\n"
+		"\n"
+		"void Ecostress::write_gdal(const std::string &Fname, const std::string &Driver_name, const\n"
+		"GeoCal::GdalRasterImage &Img, const std::string &Options)\n"
+		"Ecostress::write_gdal\n"
+		"This really belongs in geocal, but stick here for now.\n"
+		"We will probably eventually migrate this to geocal. This handles\n"
+		"drivers that only support create_copy (like COG). We create using a\n"
+		"different driver, often \"MEM\", and then pass to this to create the\n"
+		"output file. \n"
 		""},
 	 { NULL, NULL, 0, NULL }
 };
@@ -6467,6 +6699,17 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"GdalRasterImage already handles writing double data, but we hadn't put\n"
 		"this into the python swig wrappers. No reason, just an oversight that\n"
 		"never came up until now. \n"
+		""},
+	 { "write_gdal", _wrap_write_gdal, METH_VARARGS, "\n"
+		"\n"
+		"void Ecostress::write_gdal(const std::string &Fname, const std::string &Driver_name, const\n"
+		"GeoCal::GdalRasterImage &Img, const std::string &Options)\n"
+		"Ecostress::write_gdal\n"
+		"This really belongs in geocal, but stick here for now.\n"
+		"We will probably eventually migrate this to geocal. This handles\n"
+		"drivers that only support create_copy (like COG). We create using a\n"
+		"different driver, often \"MEM\", and then pass to this to create the\n"
+		"output file. \n"
 		""},
 	 { NULL, NULL, 0, NULL }
 };

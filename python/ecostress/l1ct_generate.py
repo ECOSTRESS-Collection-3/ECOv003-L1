@@ -4,6 +4,7 @@ from ecostress_swig import (
     Resampler,
     coordinate_convert,
     write_data,
+    write_gdal,
     set_fill_value,
 )  # type: ignore
 import h5py
@@ -150,16 +151,18 @@ class L1ctGenerate:
                 f'HDF5:"{self.l1b_rad}"://Radiance/radiance_{b}'
             )
             data = res.resample_field(data_in, 1.0, False, np.nan)
+            # COG can only create on copy, so we first create this in memory and
+            # then write out.
             f = geocal.GdalRasterImage(
-                str(dirname / f"{dirname}_radiance_{b}.tif"),
-                "gtiff",
+                "",
+                "MEM",
                 mi,
                 1,
-                geocal.GdalRasterImage.Float32,
-                "TILED=YES BLOCKXSIZE=256 BLOCKYSIZE=256 COMPRESS=DEFLATE",
-            )
+                geocal.GdalRasterImage.Float32)
             set_fill_value(f, np.nan)
             write_data(f, data)
+            write_gdal(str(dirname / f"{dirname}_radiance_{b}.tif"), "COG",
+                       f, "BLOCKSIZE=256 COMPRESS=DEFLATE")
             f.close()
         for b in range(1, 6):
             # GeoCal doesn't support the dqi type. We could update geocal,
@@ -169,15 +172,18 @@ class L1ctGenerate:
             data_in = geocal.MemoryRasterImage(din.shape[0], din.shape[1])
             data_in.write(0, 0, din)
             data = res.resample_dqi(data_in).astype(int)
+            # COG can only create on copy, so we first create this in memory and
+            # then write out.
             f = geocal.GdalRasterImage(
-                str(dirname / f"{dirname}_data_quality_{b}.tif"),
-                "gtiff",
+                "",
+                "MEM",
                 mi,
                 1,
-                geocal.GdalRasterImage.UInt16,
-                "TILED=YES BLOCKXSIZE=256 BLOCKYSIZE=256 COMPRESS=DEFLATE",
+                geocal.GdalRasterImage.UInt16
             )
             f.write(0, 0, data)
+            write_gdal(str(dirname / f"{dirname}_data_quality_{b}.tif"), "COG",
+                       f, "BLOCKSIZE=256 COMPRESS=DEFLATE")
             f.close()
         res = None
         # Create zip file

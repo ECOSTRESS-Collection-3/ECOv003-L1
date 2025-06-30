@@ -48,3 +48,19 @@ void Ecostress::write_data(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img
   Img->write(0,0,Data);
 }
 
+
+//-----------------------------------------------------------------------
+/// This really belongs in geocal, but stick here for now. We will
+/// probably eventually migrate this to geocal. This handles drivers
+/// that only support create_copy (like COG). We create using a
+/// different driver, often "MEM", and then pass to this to create the
+/// output file.
+//-----------------------------------------------------------------------
+
+
+void Ecostress::write_gdal(const std::string& Fname, const std::string& Driver_name,
+			   const GeoCal::GdalRasterImage& Img, const std::string& Options)
+{
+  GeoCal::gdal_create_copy(Fname, Driver_name, *Img.data_set(), Options);
+}
+
