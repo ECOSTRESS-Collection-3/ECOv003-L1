@@ -1,4 +1,5 @@
 import geocal  # type: ignore
+from .gaussian_stretch import gaussian_stretch
 from ecostress_swig import (
     fill_value_threshold,
     Resampler,
@@ -15,6 +16,7 @@ from loguru import logger
 from pathlib import Path
 from zipfile import ZipFile
 import shutil
+import subprocess
 
 class L1ctGenerate:
     """Produce L1CT tiles"""
@@ -32,6 +34,8 @@ class L1ctGenerate:
         collection_label="ECOSTRESS",
         build_id="0.30",
         pge_version="0.30",
+        browse_band_list_5band = [4, 3, 1],
+        browse_band_list_3band = [5, 4, 2],
     ):
         """The output pattern should leave a portion called "TILE" in the name, that
         we fill in. Also leave the extension off, so a name like:
@@ -51,6 +55,14 @@ class L1ctGenerate:
         self.collection_label = collection_label
         self.build_id = build_id
         self.pge_version = pge_version
+        fin_rad = h5py.File(self.l1b_rad, "r")
+        if "BandSpecification" in fin_rad["L1B_RADMetadata"]:
+            nband = np.count_nonzero(
+                fin_rad["L1B_RADMetadata/BandSpecification"][:] > 0
+            )
+        else:
+            nband = 6
+        self.browse_band_list = browse_band_list_3band if nband == 3 else browse_band_list_5band
 
     def run(self, pool=None):
         fin_geo = h5py.File(self.l1b_geo, "r")
@@ -161,9 +173,36 @@ class L1ctGenerate:
                 geocal.GdalRasterImage.Float32)
             set_fill_value(f, np.nan)
             write_data(f, data)
-            write_gdal(str(dirname / f"{dirname}_radiance_{b}.tif"), "COG",
+            write_gdal(str(dirname / f"{dirname.name}_radiance_{b}.tif"), "COG",
                        f, "BLOCKSIZE=256 COMPRESS=DEFLATE")
             f.close()
+            # Create data for browse product
+            if b in self.browse_band_list:
+                data = data.copy()
+                data[np.isnan(data)] = -999.0
+                data_scaled = gaussian_stretch(data)
+                fname = str(dirname / f"rad_b{b}_scaled.img")
+                d = geocal.mmap_file(fname, res.map_info, nodata=0.0, dtype=np.uint8)
+                d[:] = data_scaled
+                d = None
+
+        cmd_merge = ["gdalbuildvrt", "-q", "-separate", str(dirname / "map_scaled.vrt")]
+        for b in self.browse_band_list:
+            cmd_merge.append(str(dirname / f"rad_b{b}_scaled.img"))
+        subprocess.run(cmd_merge)
+        cmd_merge = [
+            "gdal_translate",
+            "-of",
+            "png",
+            "-outsize",
+            "1080",
+            "1080",
+            str(dirname / "map_scaled.vrt"),
+            str(dirname.parent / f"{dirname.name}.png"),
+        ]
+        subprocess.run(cmd_merge)
+        for filename in dirname.parent.glob(f"{dirname.name}.png.*"):
+            filename.unlink()
         for b in range(1, 6):
             # GeoCal doesn't support the dqi type. We could update geocal,
             # but no strong reason to. Just read into memory
@@ -173,7 +212,7 @@ class L1ctGenerate:
             data_in.write(0, 0, din)
             data = res.resample_dqi(data_in).astype(int)
             # COG can only create on copy, so we first create this in memory and
-            # then write out.
+
             f = geocal.GdalRasterImage(
                 "",
                 "MEM",
@@ -182,13 +221,13 @@ class L1ctGenerate:
                 geocal.GdalRasterImage.UInt16
             )
             f.write(0, 0, data)
-            write_gdal(str(dirname / f"{dirname}_data_quality_{b}.tif"), "COG",
+            write_gdal(str(dirname / f"{dirname.name}_data_quality_{b}.tif"), "COG",
                        f, "BLOCKSIZE=256 COMPRESS=DEFLATE")
             f.close()
         res = None
         # Create zip file
-        with ZipFile(f"{dirname}.zip", "w") as fh:
-            for filename in Path(dirname).glob("*"):
+        with ZipFile(str(dirname.parent / f"{dirname.name}.zip"), "w") as fh:
+            for filename in Path(dirname).glob(f"{dirname}*"):
                 fh.write(filename)
         shutil.rmtree(dirname)
                 

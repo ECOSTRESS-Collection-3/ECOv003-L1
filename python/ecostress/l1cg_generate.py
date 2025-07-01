@@ -42,6 +42,8 @@ class L1cgGenerate:
         collection_label="ECOSTRESS",
         build_id="0.30",
         pge_version="0.30",
+        browse_band_list_5band = [4, 3, 1],
+        browse_band_list_3band = [5, 4, 2],
     ):
         self.l1b_geo = l1b_geo
         self.l1b_rad = l1b_rad
@@ -59,6 +61,14 @@ class L1cgGenerate:
         self.collection_label = collection_label
         self.build_id = build_id
         self.pge_version = pge_version
+        fin_rad = h5py.File(self.l1b_rad, "r")
+        if "BandSpecification" in fin_rad["L1B_RADMetadata"]:
+            nband = np.count_nonzero(
+                fin_rad["L1B_RADMetadata/BandSpecification"][:] > 0
+            )
+        else:
+            nband = 6
+        self.browse_band_list = browse_band_list_3band if nband == 3 else browse_band_list_5band
 
     def run(self):
         mi = geocal.cib01_mapinfo(self.resolution)

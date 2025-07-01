@@ -110,7 +110,7 @@ ofile = ecostress.ecostress_file_name(
     version=file_version,
 )
 ofile2 = ecostress.ecostress_file_name(
-    "L1CG_RAD",
+    "L1CT_RAD",
     orbit,
     scene,
     acquisition_time,
@@ -139,6 +139,8 @@ try:
             collection_label=collection_label,
             build_id=build_id,
             pge_version=pge_version["l1c"],
+            browse_band_list_5band=l1c_config.browse_band_list_5band,
+            browse_band_list_3band=l1c_config.browse_band_list_3band,
         )
         l1cg.run()
         l1ct = ecostress.L1ctGenerate(
@@ -153,6 +155,8 @@ try:
             collection_label=collection_label,
             build_id=build_id,
             pge_version=pge_version["l1c"],
+            browse_band_list_5band=l1c_config.browse_band_list_5band,
+            browse_band_list_3band=l1c_config.browse_band_list_3band,
         )
         if ncpu > 1:
             pool = Pool(ncpu)
