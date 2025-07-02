@@ -85,7 +85,9 @@ class CloudProcessing:
         tb4[valid_mask] = self.rad_to_bt_interpolate(rad_band_4[valid_mask])
         return tb4
 
-    def classify_clouds(self, tb4, bt_out, height_meter):
+    def classify_clouds(
+        self, tb4: np.ndarray, bt_out: dict[int, np.ndarray], height_meter: np.ndarray
+    ) -> tuple[np.ndarray, np.ndarray]:
         # Mark cloud, just so we can more easily handle the if/else logic here. We can
         # make sure to only update values at each step that weren't done before.
         cloud1 = np.full(tb4.shape, 128, dtype=np.uint8)

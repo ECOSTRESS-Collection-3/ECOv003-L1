@@ -1,4 +1,6 @@
+from __future__ import annotations
 from .write_standard_metadata import WriteStandardMetadata
+from typing import Any
 
 
 class GeoWriteStandardMetadata(WriteStandardMetadata):
@@ -6,13 +8,13 @@ class GeoWriteStandardMetadata(WriteStandardMetadata):
 
     def __init__(
         self,
-        *args,
-        orbit_corrected=True,
-        tcorr_before=-9999,
-        tcorr_after=-9999,
-        geolocation_accuracy_qa="Poor",
-        **kwargs,
-    ):
+        *args: Any,
+        orbit_corrected: bool = True,
+        tcorr_before: float = -9999,
+        tcorr_after: float = -9999,
+        geolocation_accuracy_qa: str = "Poor",
+        **kwargs: Any,
+    ) -> None:
         super().__init__(*args, **kwargs)
         self.orbit_corrected = orbit_corrected
         self.geolocation_accuracy_qa = geolocation_accuracy_qa
@@ -32,12 +34,12 @@ class GeoWriteStandardMetadata(WriteStandardMetadata):
             )
 
     @property
-    def mlist(self):
+    def mlist(self) -> list[tuple[str, str]]:
         m = super().mlist
-        m.append(["AutomaticQualityFlagExplanation", "String"])
+        m.append(("AutomaticQualityFlagExplanation", "String"))
         return m
 
-    def write(self):
+    def write(self) -> None:
         super().write()
         g = self.hdf_file["StandardMetadata"]
         pg = self.hdf_file[self.product_specfic_group]

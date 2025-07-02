@@ -1,5 +1,7 @@
+from __future__ import annotations
 from .write_standard_metadata import WriteStandardMetadata
 import numpy as np
+from typing import Any
 
 
 class L1cgWriteStandardMetadata(WriteStandardMetadata):
@@ -7,19 +9,20 @@ class L1cgWriteStandardMetadata(WriteStandardMetadata):
 
     def __init__(
         self,
-        *args,
-        orbit_corrected=True,
-        tcorr_before=-9999,
-        tcorr_after=-9999,
-        over_all_land_fraction=0.0,
-        average_solar_zenith=0.0,
-        geolocation_accuracy_qa="Poor",
-        qa_precentage_missing=None,
-        band_specification=None,
-        cal_correction=None,
-        **kwargs,
-    ):
-        super().__init__(*args, hdfeos_file=True, **kwargs)
+        *args: Any,
+        orbit_corrected: bool = True,
+        tcorr_before: float = -9999,
+        tcorr_after: float = -9999,
+        over_all_land_fraction: float = 0.0,
+        average_solar_zenith: float = 0.0,
+        geolocation_accuracy_qa: str = "Poor",
+        qa_precentage_missing: float | None = None,
+        band_specification: None | list[float] = None,
+        cal_correction: None | np.ndarray = None,
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(*args, **kwargs)
+        self.hdfeos_file = True
         self.orbit_corrected = orbit_corrected
         self.geolocation_accuracy_qa = geolocation_accuracy_qa
         self.tcorr_before = tcorr_before
@@ -43,12 +46,12 @@ class L1cgWriteStandardMetadata(WriteStandardMetadata):
             )
 
     @property
-    def mlist(self):
+    def mlist(self) -> list[tuple[str, str]]:
         m = super().mlist
-        m.append(["AutomaticQualityFlagExplanation", "String"])
+        m.append(("AutomaticQualityFlagExplanation", "String"))
         return m
 
-    def write(self):
+    def write(self) -> None:
         super().write()
         g = self.hdf_file["/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/StandardMetadata"]
         pg = self.hdf_file[
@@ -82,18 +85,19 @@ Poor - No matches in the orbit. Expect largest geolocation errors.
             d.attrs["valid_min"] = 0
             d.attrs["valid_max"] = 100
             d.attrs["Description"] = "Overall land fraction for scene"
-            d = pg.create_dataset(
-                "CalibrationGainCorrection",
-                data=self.cal_correction[0, :],
-                dtype=np.float32,
-            )
-            d.attrs["Units"] = "dimensionless"
-            d = pg.create_dataset(
-                "CalibrationOffsetCorrection",
-                data=self.cal_correction[1, :],
-                dtype=np.float32,
-            )
-            d.attrs["Units"] = "W/m^2/sr/um"
+            if self.cal_correction is not None:
+                d = pg.create_dataset(
+                    "CalibrationGainCorrection",
+                    data=self.cal_correction[0, :],
+                    dtype=np.float32,
+                )
+                d.attrs["Units"] = "dimensionless"
+                d = pg.create_dataset(
+                    "CalibrationOffsetCorrection",
+                    data=self.cal_correction[1, :],
+                    dtype=np.float32,
+                )
+                d.attrs["Units"] = "W/m^2/sr/um"
 
 
 __all__ = ["L1cgWriteStandardMetadata"]
