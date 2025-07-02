@@ -76,12 +76,12 @@ def test_interpolate(isolated_dir, test_data_latest):
         data_quality[xy_pixel, xy_pixel, band_pixel] = DQI_BAD_OR_MISSING
 
         # get number of bands by checking how many bands are not all bad (data_quality == BAD_OR_MISSING)
-        N_BANDS = int(np.sum(np.any(data_quality != DQI_BAD_OR_MISSING, axis=(0, 1))))
-        print(f"N_BANDS: {N_BANDS}")
+        n_bands = int(np.sum(np.any(data_quality != DQI_BAD_OR_MISSING, axis=(0, 1))))
+        print(f"N_BANDS: {n_bands}")
 
         # START of minimal example of how to use the EcostressAeDeepEnsembleInterpolate class ----------------------------------
         # Create an instance of the EcostressAeDeepEnsembleInterpolate class
-        interpolator = EcostressAeDeepEnsembleInterpolate(n_bands=N_BANDS)
+        interpolator = EcostressAeDeepEnsembleInterpolate(n_bands=n_bands)
 
         # identify horizontal stripes and update data quality mask
         data_quality = interpolator.find_horizontal_stripes(dataset, data_quality)

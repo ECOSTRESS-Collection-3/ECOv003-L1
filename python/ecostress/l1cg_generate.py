@@ -1,13 +1,20 @@
 import geocal  # type: ignore
-from ecostress_swig import fill_value_threshold, Resampler, HdfEosFileHandle, HdfEosGrid, GroundCoordinateArray  # type: ignore
+from ecostress_swig import (  # type: ignore
+    fill_value_threshold,
+    Resampler,
+    HdfEosFileHandle,
+    HdfEosGrid,
+    GroundCoordinateArray,
+) 
 from .l1cg_write_standard_metadata import L1cgWriteStandardMetadata
 from .gaussian_stretch import gaussian_stretch
 import subprocess
-import h5py
-import scipy
+import h5py  # type: ignore
+import scipy  # type: ignore
 import numpy as np
 from loguru import logger
 from pathlib import Path
+
 
 class L1cgGenerate:
     """The L1CG product is HDFEOS5. This isn't something I would have necessarily
@@ -43,8 +50,8 @@ class L1cgGenerate:
         collection_label="ECOSTRESS",
         build_id="0.30",
         pge_version="0.30",
-        browse_band_list_5band = [4, 3, 1],
-        browse_band_list_3band = [5, 4, 2],
+        browse_band_list_5band=[4, 3, 1],
+        browse_band_list_3band=[5, 4, 2],
     ):
         self.l1b_geo = l1b_geo
         self.l1b_rad = l1b_rad
@@ -69,7 +76,9 @@ class L1cgGenerate:
             )
         else:
             nband = 6
-        self.browse_band_list = browse_band_list_3band if nband == 3 else browse_band_list_5band
+        self.browse_band_list = (
+            browse_band_list_3band if nband == 3 else browse_band_list_5band
+        )
 
     def run(self):
         mi = geocal.cib01_mapinfo(self.resolution)
@@ -106,9 +115,9 @@ class L1cgGenerate:
         fout.close()
         fout = h5py.File(self.output_name, "r+")
         t = fin_rad["L1B_RADMetadata/CalibrationGainCorrection"][:]
-        cal_correction = np.empty((2,t.shape[0]))
-        cal_correction[0,:]=t
-        cal_correction[1,:]=fin_rad["L1B_RADMetadata/CalibrationOffsetCorrection"][:]
+        cal_correction = np.empty((2, t.shape[0]))
+        cal_correction[0, :] = t
+        cal_correction[1, :] = fin_rad["L1B_RADMetadata/CalibrationOffsetCorrection"][:]
         m = L1cgWriteStandardMetadata(
             fout,
             product_specfic_group="L1CGMetadata",
@@ -117,12 +126,15 @@ class L1cgGenerate:
             collection_label=self.collection_label,
             build_id=self.build_id,
             pge_version=self.pge_version,
-            orbit_corrected=fin_geo["L1GEOMetadata/OrbitCorrectionPerformed"][()] == b"True",
+            orbit_corrected=fin_geo["L1GEOMetadata/OrbitCorrectionPerformed"][()]
+            == b"True",
             tcorr_before=fin_geo["L1GEOMetadata/DeltaTimeOfCorrectionBeforeScene"][()],
             tcorr_after=fin_geo["L1GEOMetadata/DeltaTimeOfCorrectionAfterScene"][()],
-            geolocation_accuracy_qa=fin_geo["L1GEOMetadata/GeolocationAccuracyQA"][()].decode('utf-8'),
-            over_all_land_fraction = fin_geo["L1GEOMetadata/OverAllLandFraction"][()],
-            average_solar_zenith = fin_geo["L1GEOMetadata/AverageSolarZenith"][()],
+            geolocation_accuracy_qa=fin_geo["L1GEOMetadata/GeolocationAccuracyQA"][
+                ()
+            ].decode("utf-8"),
+            over_all_land_fraction=fin_geo["L1GEOMetadata/OverAllLandFraction"][()],
+            average_solar_zenith=fin_geo["L1GEOMetadata/AverageSolarZenith"][()],
             qa_precentage_missing=fin_rad["L1B_RADMetadata/QAPercentMissingData"],
             band_specification=fin_rad["L1B_RADMetadata/BandSpecification"],
             cal_correction=cal_correction,
@@ -135,7 +147,10 @@ class L1cgGenerate:
         m.set("EastBoundingCoordinate", mi.lrc_x)
         m.set("SouthBoundingCoordinate", mi.lrc_y)
         m.set("NorthBoundingCoordinate", mi.ulc_y)
-        m.set("FieldOfViewObstruction", fin_geo["StandardMetadata/FieldOfViewObstruction"][()])
+        m.set(
+            "FieldOfViewObstruction",
+            fin_geo["StandardMetadata/FieldOfViewObstruction"][()],
+        )
         m.set("ImageLines", mi.number_y_pixel)
         m.set("ImagePixels", mi.number_x_pixel)
         m.set("ImageLineSpacing", self.resolution)
@@ -144,10 +159,10 @@ class L1cgGenerate:
         m.set("RangeBeginningTime", fin_geo["StandardMetadata/RangeBeginningTime"][()])
         m.set("RangeEndingDate", fin_geo["StandardMetadata/RangeEndingDate"][()])
         m.set("RangeEndingTime", fin_geo["StandardMetadata/RangeEndingTime"][()])
-        m.set("DayNightFlag",fin_geo["StandardMetadata/DayNightFlag"][()])
+        m.set("DayNightFlag", fin_geo["StandardMetadata/DayNightFlag"][()])
         m.set_input_pointer(self.inlist)
-        # Not sure if having this open interferes with GDAL, but simple enough to close         
-        fin_rad = None 
+        # Not sure if having this open interferes with GDAL, but simple enough to close
+        fin_rad = None
         dfield = fout["//HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields"]
         del dfield["prelim_cloud_mask"]
         del dfield["water"]
@@ -177,13 +192,24 @@ class L1cgGenerate:
                 data = data.copy()
                 data[np.isnan(data)] = -999.0
                 data_scaled = gaussian_stretch(data)
-                fname = str(self.output_name.parent / f"{self.output_name.stem}_b{b}_scaled.img")
+                fname = str(
+                    self.output_name.parent / f"{self.output_name.stem}_b{b}_scaled.img"
+                )
                 d = geocal.mmap_file(fname, res.map_info, nodata=0.0, dtype=np.uint8)
                 d[:] = data_scaled
                 d = None
-        cmd_merge = ["gdalbuildvrt", "-q", "-separate", str(self.output_name.parent / f"{self.output_name.stem}_scaled.vrt")]
+        cmd_merge = [
+            "gdalbuildvrt",
+            "-q",
+            "-separate",
+            str(self.output_name.parent / f"{self.output_name.stem}_scaled.vrt"),
+        ]
         for b in self.browse_band_list:
-            cmd_merge.append(str(self.output_name.parent / f"{self.output_name.stem}_b{b}_scaled.img"))
+            cmd_merge.append(
+                str(
+                    self.output_name.parent / f"{self.output_name.stem}_b{b}_scaled.img"
+                )
+            )
         subprocess.run(cmd_merge)
         cmd_merge = [
             "gdal_translate",
@@ -196,9 +222,9 @@ class L1cgGenerate:
             str(self.output_name.parent / f"{self.output_name.stem}.png"),
         ]
         subprocess.run(cmd_merge)
-        #for filename in self.output_name.parent.glob(f"{self.output_name.stem}.png.*"):
+        # for filename in self.output_name.parent.glob(f"{self.output_name.stem}.png.*"):
         #    filename.unlink()
-        
+
         for b in range(1, 6):
             logger.info("Doing uncertainty band %d" % b)
             data_in = geocal.GdalRasterImage(
@@ -229,7 +255,7 @@ class L1cgGenerate:
                 compression="gzip",
             )
             t.attrs.create("_FillValue", data=0, dtype=t.dtype)
-            
+
         logger.info("Doing view_zenith")
         data_in = geocal.GdalRasterImage(
             f'HDF5:"{self.l1b_geo}"://Geolocation/view_zenith'
@@ -250,7 +276,7 @@ class L1cgGenerate:
         lat, lon, height = res.map_values(self.dem)
         t = dfield.create_dataset("height", data=data, dtype="f4", compression="gzip")
         t.attrs["Units"] = "m"
-        
+
         logger.info("Doing water")
         # Work around a bug in SrtmDem when we get very close to
         # longitude 180. We should fix this is geocal, but that is
@@ -260,16 +286,14 @@ class L1cgGenerate:
         lon_tweak[lon_tweak > 179] = 179.0
         lfrac = GroundCoordinateArray.interpolate(self.lwm, lat, lon_tweak)
         # Fill value is 0, so we treat as land 100%
-        lfrac = np.where(
-            lfrac <= fill_value_threshold, 100.0, lfrac * 100.0
-        )
+        lfrac = np.where(lfrac <= fill_value_threshold, 100.0, lfrac * 100.0)
         # Water mask is 0 for land or fill, 1 for water. We just threshold of the land fraction
         water_data = np.where(lfrac < 50, 1, 0).astype(np.uint8)
         t = dfield.create_dataset(
-                "water",
-                data=water_data,
-                fillvalue=0,
-                compression="gzip",
+            "water",
+            data=water_data,
+            fillvalue=0,
+            compression="gzip",
         )
         t.attrs.create("_FillValue", data=0, dtype=t.dtype)
         t.attrs["Description"] = "1 for water, 0 for land or fill value"
@@ -291,9 +315,8 @@ class L1cgGenerate:
         )
         t.attrs.create("_FillValue", data=0, dtype=t.dtype)
         t.attrs["Description"] = "1 for cloudy, 0 for clear or fill"
-        
-        m.write()
 
+        m.write()
 
 
 __all__ = ["L1cgGenerate"]

@@ -1,6 +1,7 @@
 from .write_standard_metadata import WriteStandardMetadata
 import numpy as np
 
+
 class L1cgWriteStandardMetadata(WriteStandardMetadata):
     """Add a few extra fields we use in l1gc"""
 
@@ -25,9 +26,9 @@ class L1cgWriteStandardMetadata(WriteStandardMetadata):
         self.tcorr_after = tcorr_after
         self.over_all_land_fraction = over_all_land_fraction
         self.average_solar_zenith = average_solar_zenith
-        self.qa_precentage_missing= qa_precentage_missing
-        self.band_specification= band_specification
-        self.cal_correction= cal_correction
+        self.qa_precentage_missing = qa_precentage_missing
+        self.band_specification = band_specification
+        self.cal_correction = cal_correction
         if (self.orbit_based and orbit_corrected) or geolocation_accuracy_qa in (
             "Best",
             "Good",
@@ -50,7 +51,9 @@ class L1cgWriteStandardMetadata(WriteStandardMetadata):
     def write(self):
         super().write()
         g = self.hdf_file["/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/StandardMetadata"]
-        pg = self.hdf_file[f"/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/{self.product_specfic_group}"]
+        pg = self.hdf_file[
+            f"/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/{self.product_specfic_group}"
+        ]
         pg["OrbitCorrectionPerformed"] = "True" if self.orbit_corrected else "False"
         if not self.orbit_based:
             pg["GeolocationAccuracyQA"] = self.geolocation_accuracy_qa
@@ -72,7 +75,9 @@ Poor - No matches in the orbit. Expect largest geolocation errors.
             d.attrs["valid_min"] = -90
             d.attrs["valid_max"] = 90
             d.attrs["Description"] = "Average solar zenith angle for scene"
-            d = pg.create_dataset("OverAllLandFraction", data=self.over_all_land_fraction)
+            d = pg.create_dataset(
+                "OverAllLandFraction", data=self.over_all_land_fraction
+            )
             d.attrs["Units"] = "percentage"
             d.attrs["valid_min"] = 0
             d.attrs["valid_max"] = 100
@@ -89,7 +94,6 @@ Poor - No matches in the orbit. Expect largest geolocation errors.
                 dtype=np.float32,
             )
             d.attrs["Units"] = "W/m^2/sr/um"
-            
 
 
 __all__ = ["L1cgWriteStandardMetadata"]

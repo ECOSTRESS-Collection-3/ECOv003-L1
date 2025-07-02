@@ -1,15 +1,15 @@
 import geocal  # type: ignore
 from .gaussian_stretch import gaussian_stretch
-from ecostress_swig import (
+from ecostress_swig import ( # type: ignore
     fill_value_threshold,
     Resampler,
     coordinate_convert,
     write_data,
     write_gdal,
     set_fill_value,
-)  # type: ignore
-import h5py
-import scipy
+)  
+import h5py # type: ignore
+import scipy  # type: ignore
 import numpy as np
 import math
 from loguru import logger
@@ -17,6 +17,7 @@ from pathlib import Path
 from zipfile import ZipFile
 import shutil
 import subprocess
+
 
 class L1ctGenerate:
     """Produce L1CT tiles"""
@@ -34,8 +35,8 @@ class L1ctGenerate:
         collection_label="ECOSTRESS",
         build_id="0.30",
         pge_version="0.30",
-        browse_band_list_5band = [4, 3, 1],
-        browse_band_list_3band = [5, 4, 2],
+        browse_band_list_5band=[4, 3, 1],
+        browse_band_list_3band=[5, 4, 2],
     ):
         """The output pattern should leave a portion called "TILE" in the name, that
         we fill in. Also leave the extension off, so a name like:
@@ -62,7 +63,9 @@ class L1ctGenerate:
             )
         else:
             nband = 6
-        self.browse_band_list = browse_band_list_3band if nband == 3 else browse_band_list_5band
+        self.browse_band_list = (
+            browse_band_list_3band if nband == 3 else browse_band_list_5band
+        )
 
     def run(self, pool=None):
         fin_geo = h5py.File(self.l1b_geo, "r")
@@ -165,16 +168,15 @@ class L1ctGenerate:
             data = res.resample_field(data_in, 1.0, False, np.nan)
             # COG can only create on copy, so we first create this in memory and
             # then write out.
-            f = geocal.GdalRasterImage(
-                "",
-                "MEM",
-                mi,
-                1,
-                geocal.GdalRasterImage.Float32)
+            f = geocal.GdalRasterImage("", "MEM", mi, 1, geocal.GdalRasterImage.Float32)
             set_fill_value(f, np.nan)
             write_data(f, data)
-            write_gdal(str(dirname / f"{dirname.name}_radiance_{b}.tif"), "COG",
-                       f, "BLOCKSIZE=256 COMPRESS=DEFLATE")
+            write_gdal(
+                str(dirname / f"{dirname.name}_radiance_{b}.tif"),
+                "COG",
+                f,
+                "BLOCKSIZE=256 COMPRESS=DEFLATE",
+            )
             f.close()
             # Create data for browse product
             if b in self.browse_band_list:
@@ -213,16 +215,14 @@ class L1ctGenerate:
             data = res.resample_dqi(data_in).astype(int)
             # COG can only create on copy, so we first create this in memory and
 
-            f = geocal.GdalRasterImage(
-                "",
-                "MEM",
-                mi,
-                1,
-                geocal.GdalRasterImage.UInt16
-            )
+            f = geocal.GdalRasterImage("", "MEM", mi, 1, geocal.GdalRasterImage.UInt16)
             f.write(0, 0, data)
-            write_gdal(str(dirname / f"{dirname.name}_data_quality_{b}.tif"), "COG",
-                       f, "BLOCKSIZE=256 COMPRESS=DEFLATE")
+            write_gdal(
+                str(dirname / f"{dirname.name}_data_quality_{b}.tif"),
+                "COG",
+                f,
+                "BLOCKSIZE=256 COMPRESS=DEFLATE",
+            )
             f.close()
         res = None
         # Create zip file
@@ -230,7 +230,7 @@ class L1ctGenerate:
             for filename in Path(dirname).glob(f"{dirname}*"):
                 fh.write(filename)
         shutil.rmtree(dirname)
-                
+
         logger.info(f"Done with {shp['tile_id']}")
         return True
 

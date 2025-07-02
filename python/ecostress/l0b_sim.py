@@ -145,9 +145,9 @@ BANDS = 6
 # number of pixels per focal plane
 PPFP = 256
 # number of focal planes per full scan
-# FPPSC = 5400
+# fppsc = 5400
 # number of FPs in each BB per scan
-BBLEN = 64
+bblen = 64
 # number of FPs per raw packet
 FPPPKT = 64
 # Scans per scene
@@ -170,7 +170,7 @@ class L0BSimulate(object):
         self.l1a_raw_att_fname = l1a_raw_att_fname
         self.scene_files = scene_files
 
-    def kelvin2DN(self, x, K):
+    def kelvin_to_dn(self, x, k):
         # convert Kelvin temperature to PRT DN values given PRT coefficients
         # a = array of coefficients
         # K = kelvin temperature
@@ -178,11 +178,11 @@ class L0BSimulate(object):
         a = x[0] * x[3] * x[3]
         b = 2.0 * x[0] * x[3] * x[4] + x[1] * x[3]
         c = (
-            x[0] * x[4] * x[4] + x[1] * x[4] + x[2] - (K - 273.15)
+            x[0] * x[4] * x[4] + x[1] * x[4] + x[2] - (k - 273.15)
         )  # needs to be celsius
         rdn = (np.sqrt(b * b - 4.0 * a * c) - b) / (2.0 * a)
         dn = int(rdn + 0.5)
-        # print("kelvin2DN,X=%f %f %f %f %f K=%f RDN=%f DN=%d" % (x[0],x[1],x[2],x[3],x[4],K,rdn,dn))
+        # print("kelvin_to_dn,X=%f %f %f %f %f K=%f RDN=%f DN=%d" % (x[0],x[1],x[2],x[3],x[4],K,rdn,dn))
         return dn  # little-Endian
 
     def create_file(self, l0b_fname):
@@ -190,39 +190,39 @@ class L0BSimulate(object):
         print("====  Start time  ", datetime.now(), "  ====")
 
         #  Read the PRT coefficients
-        PRT = np.zeros((17, 3), dtype=np.float64)
+        prt = np.zeros((17, 3), dtype=np.float64)
         with open(self.osp_dir + "/prt_coef.txt", "r") as pf:
             for i, pvl in enumerate(pf):
                 p0, p1, p2, p3 = re.split(r"\s+", pvl.strip())
-                PRT[i, 0] = float(p1)
-                PRT[i, 1] = float(p2)
-                PRT[i, 2] = float(p3)
+                prt[i, 0] = float(p1)
+                prt[i, 1] = float(p2)
+                prt[i, 2] = float(p3)
                 print(
                     "PRT[%d](%s) = %20.12f %20.12f %20.12f"
-                    % (i, p0, PRT[i, 0], PRT[i, 1], PRT[i, 2])
+                    % (i, p0, prt[i, 0], prt[i, 1], prt[i, 2])
                 )
         pf.close()
         kc = np.zeros((5, 5), dtype=np.float64)
         kh = np.zeros((5, 5), dtype=np.float64)
-        kc[0,] = PRT[1, 2], PRT[1, 1], PRT[1, 0], PRT[0, 0], -(PRT[0, 1] + PRT[0, 2])
-        kc[1,] = PRT[2, 2], PRT[2, 1], PRT[2, 0], PRT[0, 0], -(PRT[0, 1] + PRT[0, 2])
-        kc[2,] = PRT[4, 2], PRT[4, 1], PRT[4, 0], PRT[0, 0], -(PRT[0, 1] + PRT[0, 2])
-        kc[3,] = PRT[3, 2], PRT[3, 1], PRT[3, 0], PRT[0, 0], -(PRT[0, 1] + PRT[0, 2])
-        kc[4,] = PRT[5, 2], PRT[5, 1], PRT[5, 0], PRT[0, 0], -(PRT[0, 1] + PRT[0, 2])
-        kh[0,] = PRT[12, 2], PRT[12, 1], PRT[12, 0], PRT[0, 0], -(PRT[0, 1] + PRT[0, 2])
-        kh[1,] = PRT[13, 2], PRT[13, 1], PRT[13, 0], PRT[0, 0], -(PRT[0, 1] + PRT[0, 2])
-        kh[2,] = PRT[14, 2], PRT[14, 1], PRT[14, 0], PRT[0, 0], -(PRT[0, 1] + PRT[0, 2])
-        kh[3,] = PRT[15, 2], PRT[15, 1], PRT[15, 0], PRT[0, 0], -(PRT[0, 1] + PRT[0, 2])
-        kh[4,] = PRT[16, 2], PRT[16, 1], PRT[16, 0], PRT[0, 0], -(PRT[0, 1] + PRT[0, 2])
+        kc[0,] = prt[1, 2], prt[1, 1], prt[1, 0], prt[0, 0], -(prt[0, 1] + prt[0, 2])
+        kc[1,] = prt[2, 2], prt[2, 1], prt[2, 0], prt[0, 0], -(prt[0, 1] + prt[0, 2])
+        kc[2,] = prt[4, 2], prt[4, 1], prt[4, 0], prt[0, 0], -(prt[0, 1] + prt[0, 2])
+        kc[3,] = prt[3, 2], prt[3, 1], prt[3, 0], prt[0, 0], -(prt[0, 1] + prt[0, 2])
+        kc[4,] = prt[5, 2], prt[5, 1], prt[5, 0], prt[0, 0], -(prt[0, 1] + prt[0, 2])
+        kh[0,] = prt[12, 2], prt[12, 1], prt[12, 0], prt[0, 0], -(prt[0, 1] + prt[0, 2])
+        kh[1,] = prt[13, 2], prt[13, 1], prt[13, 0], prt[0, 0], -(prt[0, 1] + prt[0, 2])
+        kh[2,] = prt[14, 2], prt[14, 1], prt[14, 0], prt[0, 0], -(prt[0, 1] + prt[0, 2])
+        kh[3,] = prt[15, 2], prt[15, 1], prt[15, 0], prt[0, 0], -(prt[0, 1] + prt[0, 2])
+        kh[4,] = prt[16, 2], prt[16, 1], prt[16, 0], prt[0, 0], -(prt[0, 1] + prt[0, 2])
 
         #  Get EV start codes for BB and IMG pixels
         ev_codes = np.zeros((4, 4), dtype=np.int32)
         ev_names = [p0 for p0 in range(5)]
         " open EV codes file "
-        RPM = 0
-        FP_DUR = 0
-        MAX_FPIE = 0
-        FPPSC = 0
+        rpm = 0
+        fp_dur = 0
+        max_fpie = 0
+        fppsc = 0
         with open(self.osp_dir + "/ev_codes.txt", "r") as ef:
             for i, evl in enumerate(ef):
                 p0, p1, p2, p3, p4 = re.split(r"\s+", evl.strip())
@@ -244,15 +244,15 @@ class L0BSimulate(object):
                         )
                     )
                 else:
-                    RPM = float(p1)  # RPM = 25.396627  # 25.4 nominal
-                    FP_DUR = (
+                    rpm = float(p1)  # RPM = 25.396627  # 25.4 nominal
+                    fp_dur = (
                         float(p2) / 1000000.0
-                    )  # FP_DUR = 0.000032196620  # 0.0000322 nominal
-                    MAX_FPIE = int(p3)  # MAX_FPIE=1749248
-                    FPPSC = int(p4)
+                    )  # fp_dur = 0.000032196620  # 0.0000322 nominal
+                    max_fpie = int(p3)  # MAX_FPIE=1749248
+                    fppsc = int(p4)
                     print(
-                        "RPM=%f FP_DUR=%f20.10 MAX_FPIE=%d FPPSC=%d"
-                        % (RPM, FP_DUR, MAX_FPIE, FPPSC)
+                        "RPM=%f fp_dur=%f20.10 max_fpie=%d fppsc=%d"
+                        % (rpm, fp_dur, max_fpie, fppsc)
                     )
 
         ef.close()
@@ -260,21 +260,21 @@ class L0BSimulate(object):
         ev1 = ev_codes[3, 1]
         ev2 = ev_codes[3, 2]
 
-        if RPM == 0.0 or FP_DUR == 0.0 or MAX_FPIE == 0 or FPPSC == 0:
+        if rpm == 0.0 or fp_dur == 0.0 or max_fpie == 0 or fppsc == 0:
             print("*** Input parameters not set ***")
             return -3
-        PKT_DUR = FP_DUR * float(FPPPKT)
+        pkt_dur = fp_dur * float(FPPPKT)
         # FPIE mirror encoder - 50.95 degree swath width
         # covered by 25.475 degree of mirror scan.  Mirror
         # is 2-sided, so every other scan is 180 degrees apart
-        EV_DUR = 60.0 / RPM / float(MAX_FPIE)  # = 1.3504 microsecond/count
-        FP_EV = FP_DUR * RPM * MAX_FPIE / 60.0  # = 22.922887 counts/FP
+        ev_dur = 60.0 / rpm / float(max_fpie)  # = 1.3504 microsecond/count
+        fp_ev = fp_dur * rpm * max_fpie / 60.0  # = 22.922887 counts/FP
         # Total FPs per scan including hot and cold BB
-        FPB3 = FPPSC + BBLEN * 2
+        fpb3 = fppsc + bblen * 2
 
         # backup times from IMG to BB3 and BB2
-        dt3 = (ev_codes[2, 0] - ev_codes[0, 0]) * EV_DUR
-        dt2 = (ev_codes[2, 0] - ev_codes[1, 0]) * EV_DUR
+        dt3 = (ev_codes[2, 0] - ev_codes[0, 0]) * ev_dur
+        dt2 = (ev_codes[2, 0] - ev_codes[1, 0]) * ev_dur
         print("DT3=%f, DT2=%f" % (dt3, dt2))
 
         # bo = [5, 3, 2, 0, 1, 4]  # L0B to L1A (raw pix)
@@ -371,8 +371,8 @@ class L0BSimulate(object):
         #  ****  convert Kelvin to DN  ****
         for i in range(enc):
             for j in range(enr):
-                bbt[i, 0, j] = self.kelvin2DN(kc[j, :], r2k[i, j])
-                bbt[i, 1, j] = self.kelvin2DN(kh[j, :], r3k[i, j])
+                bbt[i, 0, j] = self.kelvin_to_dn(kc[j, :], r2k[i, j])
+                bbt[i, 1, j] = self.kelvin_to_dn(kh[j, :], r3k[i, j])
                 # print("ENC=%d ENR=%d R2K=%f R3K=%f BB2=%d BB3=%d" %(enr,enc,r2k[i,j],r3k[i,j],bbt[i,0,j],bbt[i,1,j]))
 
         eng_time = l1e["/rtdBlackbodyGradients/time_j2000"]
@@ -419,17 +419,17 @@ class L0BSimulate(object):
         pkt_id = 0
 
         # working array including PIX and BB, and 1 packet
-        bufsiz = FPB3 + FPPPKT
+        bufsiz = fpb3 + FPPPKT
         pix_buf = np.zeros((PPFP, bufsiz, BANDS), dtype=np.uint16)
         ev_buf = np.zeros(bufsiz, dtype=np.uint32)
-        evc = np.zeros((2, FPB3), dtype=np.uint32)
+        evc = np.zeros((2, fpb3), dtype=np.uint32)
 
         for i in range(2):  # generate EVs for both mirror phases
-            for j in range(BBLEN):  # BB pixels
-                evc[i, j + ev0] = int(ev_codes[0, i * 2] + j * FP_EV + 0.5) % MAX_FPIE
-                evc[i, j + ev1] = int(ev_codes[1, i * 2] + j * FP_EV + 0.5) % MAX_FPIE
-            for j in range(FPPSC):  # image pixels
-                evc[i, j + ev2] = int(ev_codes[2, i * 2] + j * FP_EV + 0.5) % MAX_FPIE
+            for j in range(bblen):  # BB pixels
+                evc[i, j + ev0] = int(ev_codes[0, i * 2] + j * fp_ev + 0.5) % max_fpie
+                evc[i, j + ev1] = int(ev_codes[1, i * 2] + j * fp_ev + 0.5) % max_fpie
+            for j in range(fppsc):  # image pixels
+                evc[i, j + ev2] = int(ev_codes[2, i * 2] + j * fp_ev + 0.5) % max_fpie
 
         p0 = 0
         prev = 0
@@ -464,7 +464,7 @@ class L0BSimulate(object):
             tot_lines = tot_lines + lines
             line = 0
             # pkts for scene
-            tot_pkt = int((FPB3 * tot_lines / PPFP + FPPPKT - 1) / FPPPKT)
+            tot_pkt = int((fpb3 * tot_lines / PPFP + FPPPKT - 1) / FPPPKT)
             # extend packet dataset to new total
             bip.resize(tot_pkt, 0)
             lid.resize(tot_pkt, 0)
@@ -483,11 +483,11 @@ class L0BSimulate(object):
             while line < lines:
                 # pix_buf and ev_buf offsets
                 ps0 = p0 + ev0
-                pe0 = ps0 + BBLEN  # HBB first
+                pe0 = ps0 + bblen  # HBB first
                 ps1 = p0 + ev1
-                pe1 = ps1 + BBLEN  # then CBB
+                pe1 = ps1 + bblen  # then CBB
                 ps2 = p0 + ev2
-                pe2 = ps2 + FPPSC  # then IMG
+                pe2 = ps2 + fppsc  # then IMG
 
                 # assemble pix and bb data into buffer, with offset from previous buffer
                 for b in range(BANDS):
@@ -496,21 +496,21 @@ class L0BSimulate(object):
                     pix_buf[:, ps2:pe2, b] = pix_dat[b][line : line + PPFP, :]
 
                 ## ev_buf[ps2:pe2] = env[scan,:] # Use provided EVs for IMG
-                ## for i in range(BBLEN): # calculate EVs for BBs
-                ##   ev_buf[ps1+i] = (ev_buf[ps2] + int( (i-BBLEN)*FP_EV+0.5 ))%MAX_FPIE
-                ##   ev_buf[ps0+i] = (ev_buf[ps1+i] - int( BBLEN*FP_EV+0.5 ))%MAX_FPIE
+                ## for i in range(bblen): # calculate EVs for BBs
+                ##   ev_buf[ps1+i] = (ev_buf[ps2] + int( (i-bblen)*fp_ev+0.5 ))%max_fpie
+                ##   ev_buf[ps0+i] = (ev_buf[ps1+i] - int( bblen*fp_ev+0.5 ))%max_fpie
                 ## scan += 1
 
-                ev_buf[ps0:pe0] = evc[evp, ev0 : ev0 + BBLEN]  # use generated EVs
-                ev_buf[ps1:pe1] = evc[evp, ev1 : ev1 + BBLEN]
-                ev_buf[ps2:pe2] = evc[evp, ev2 : ev2 + FPPSC]
+                ev_buf[ps0:pe0] = evc[evp, ev0 : ev0 + bblen]  # use generated EVs
+                ev_buf[ps1:pe1] = evc[evp, ev1 : ev1 + bblen]
+                ev_buf[ps2:pe2] = evc[evp, ev2 : ev2 + fppsc]
 
                 # step through buffer in packet steps (FPPPKT) starting from 0
                 bts = 0
-                bte = p0 + FPB3
+                bte = p0 + fpb3
                 t2k = pix_2k[line]
                 if p0 > 0:
-                    t2k += FP_DUR * float(FPPPKT - p0)  # for next packet
+                    t2k += fp_dur * float(FPPPKT - p0)  # for next packet
                 ### angnadir = 180.0 - angnadir
                 print("====  ", datetime.now(), "  ====")
                 print(
@@ -549,7 +549,7 @@ class L0BSimulate(object):
                         if prev == 0:
                             fswt[pkt_id] = Time.time_j2000(t2k - t).gps
                             if t == 0 and b >= 0:
-                                t2k += PKT_DUR
+                                t2k += pkt_dur
                         else:
                             fswt[pkt_id] = Time.time_j2000(t0).gps
                         print(

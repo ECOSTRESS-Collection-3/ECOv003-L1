@@ -2,7 +2,7 @@ import geocal  # type: ignore
 import h5py  # type: ignore
 from .write_standard_metadata import WriteStandardMetadata
 from .misc import process_run
-from .exception import VicarRunException
+from .exception import VicarRunError
 import re
 import os
 import subprocess
@@ -73,7 +73,7 @@ class L1aPixGenerate(object):
                 ],
             )
         except subprocess.CalledProcessError:
-            raise VicarRunException("VICAR call failed")
+            raise VicarRunError("VICAR call failed")
         finally:
             os.chdir(curdir)
         # Search through log output for success message, or throw an
@@ -83,9 +83,9 @@ class L1aPixGenerate(object):
         )
         if mtch:
             if mtch.group(1) != "0":
-                raise VicarRunException(mtch.group(2))
+                raise VicarRunError(mtch.group(2))
         else:
-            raise VicarRunException("Success result not seen in log")
+            raise VicarRunError("Success result not seen in log")
         fout = h5py.File(self.output_name, "w")
         fout_gain = h5py.File(self.output_gain_name, "w")
         # Copy output from vicar into output file.

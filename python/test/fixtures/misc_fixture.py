@@ -38,11 +38,13 @@ def lwm():
         pytest.skip("Couldn't find SRTM LWM")
     return geocal.SrtmLwmData(srtm_lwm_dir, False)
 
+
 @pytest.fixture(scope="function")
 def dem():
     # False here says it ok for SrtmDem to not have a tile. This gives support
     # for data that is over the ocean.
     return geocal.SrtmDem("", False)
+
 
 @pytest.fixture(scope="function")
 def aster_mosaic_surface_data(aster_mosaic_dir):

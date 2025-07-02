@@ -14,7 +14,7 @@ def find_center_of_missing_scan(dq):
 
     # find the size of the dimension perpendicular to the missing scan
     # columns
-    L = dq.shape[0]
+    dsize = dq.shape[0]
 
     # convert matrix to 0 (good data) or 1 (all bad data). Sum across
     # the rows (dimension perpendicular to scanline) to form a vector
@@ -29,10 +29,10 @@ def find_center_of_missing_scan(dq):
     # arithmetics)
     filter_mask = np.zeros(
         [
-            L,
+            dsize,
         ]
     )
-    for index in range(L):
+    for index in range(dsize):
         # compute the distance from the center of -.5 in modulo 128
         # arithmetics
         distance_from_center = np.mod(index - (-0.5), 128)
@@ -68,9 +68,9 @@ def shift_filter_mask_x_pixel(filter_mask, x):
     # array example, let a = [0, 1, 2, 0,
     # 3]. shift_filter_mask_x_pixel(a , 1) = [3, 0, 1, 2, 0]
 
-    L = filter_mask.size
-    shifting_index = np.array(range(L))
-    shifting_index = np.mod(shifting_index - x, L)
+    fsize = filter_mask.size
+    shifting_index = np.array(range(fsize))
+    shifting_index = np.mod(shifting_index - x, fsize)
     shifted_filter_mask = filter_mask[shifting_index]
 
     return shifted_filter_mask

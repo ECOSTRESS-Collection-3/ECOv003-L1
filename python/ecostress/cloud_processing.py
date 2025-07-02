@@ -3,20 +3,20 @@ from ecostress_swig import (  # type: ignore
     FILL_VALUE_NOT_SEEN,
 )
 import numpy as np
-import h5py
+import h5py # type: ignore
 import warnings
 import os
 
 # Have a warning message that we can't do anything about - suppress it
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=UserWarning)
-    import scipy.interpolate
+    import scipy.interpolate # type: ignore
 import re
 from loguru import logger
 import typing
 
 if typing.TYPE_CHECKING:
-    import geocal
+    import geocal # type: ignore
 
 
 class CloudProcessing:
@@ -117,7 +117,7 @@ class CloudProcessing:
 
         return cloud1, cloudconf
 
-    def parse_time(self, tstart: geocal.Time) -> (int, int, int):
+    def parse_time(self, tstart: geocal.Time) -> tuple[int, int, int]:
         """Parse the start time for the radiance data, returning month, hour, and minute."""
         # geocal time string in a standard CCSDS string, so we know the format.
         m = re.match(
@@ -134,7 +134,7 @@ class CloudProcessing:
         longitude: np.ndarray,
         height_meter: np.ndarray,
         tstart: geocal.Time,
-    ) -> (np.ndarray, np.ndarray):
+    ) -> tuple[np.ndarray, np.ndarray]:
         """Process the given band 4 radiance data to determine the cloud mask.
 
         The latitude and longitude is the initial guess since we need the

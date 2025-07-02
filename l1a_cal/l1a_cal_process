@@ -112,7 +112,7 @@ try:
         )
         l1apix.run()
         logger.info("L1A_CAL_PGE:INFO-0-[Job Successful]")
-except ecostress.VicarRunException as e:
+except ecostress.VicarRunError as e:
     logger.info("L1A_CAL_PGE:ERROR-1-[%s]" % e.message)
     raise
 except Exception:

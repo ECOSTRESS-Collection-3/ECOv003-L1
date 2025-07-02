@@ -1,7 +1,7 @@
 # Various exception classes that we want to report
 
 
-class VicarRunException(Exception):
+class VicarRunError(Exception):
     """Class thrown in VICAR process either returns a nonzero return value
     or a failed status message."""
 

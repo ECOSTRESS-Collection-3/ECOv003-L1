@@ -72,8 +72,8 @@ class EcostressAeDeepEnsembleInterpolate(object):
         self.verbose = verbose
 
         # Will store normalization parameters
-        self.mu = None
-        self.sigma = None
+        self.mu : np.ndarray | None = None
+        self.sigma : np.ndarray | None = None
 
         # Each member of the ensemble is a separate model
         self.models = [self._build_model(i) for i in range(n_ensemble)]
@@ -330,8 +330,8 @@ class EcostressAeDeepEnsembleInterpolate(object):
         logger.info("Creating training samples...")
 
         h, w, _ = dataset.shape
-        training_x = []
-        training_y = []
+        training_x  : list[np.ndarray] = []
+        training_y : list[np.ndarray] = []
         sampled = set()
 
         if n_samples > h * w // 2:
@@ -471,11 +471,11 @@ class EcostressAeDeepEnsembleInterpolate(object):
             self.test(
                 test_x,
                 test_y[:, :, :, : self.n_bands],
-                RMSE_threshold=validate_threshold,
+                rmse_threshold=validate_threshold,
             )
 
     def test(
-        self, test_x: np.ndarray, test_y: np.ndarray, RMSE_threshold: float = 5
+        self, test_x: np.ndarray, test_y: np.ndarray, rmse_threshold: float = 5
     ) -> None:
         """
         Test the ensemble models on the test set.
@@ -498,17 +498,17 @@ class EcostressAeDeepEnsembleInterpolate(object):
         predictions[~interpolated_mask] = np.nan
 
         # Calculate RMSE for each band
-        RMSEs = []
+        rmses = []
         for band in range(self.n_bands):
             mse = np.nanmean((predictions[:, :, :, band] - test_y[:, :, :, band]) ** 2)
-            RMSEs.append(np.sqrt(mse))
-        logger.info(f"RMSE for bands: {[f'{rmse:.3f}' for rmse in RMSEs]} W/m^2/sr/um")
+            rmses.append(np.sqrt(mse))
+        logger.info(f"RMSE for bands: {[f'{rmse:.3f}' for rmse in rmses]} W/m^2/sr/um")
 
         # throw exception if RMSE is too high
         # TODO: how would we want to log this as a warning?
-        if np.any(np.array(RMSEs) > RMSE_threshold):
+        if np.any(np.array(rmses) > rmse_threshold):
             raise ValueError(
-                f"RMSE of Interpolation is higher than {RMSE_threshold} W/m^2/sr/um. "
+                f"RMSE of Interpolation is higher than {rmse_threshold} W/m^2/sr/um. "
             )
 
     def interpolate_missing(
@@ -570,7 +570,7 @@ class EcostressAeDeepEnsembleInterpolate(object):
             logger.info(
                 "No missing data found, returning original dataset without interpolating."
             )
-            return dataset
+            return (np.ndarray([]), np.ndarray([]), dataset)
 
         all_subgrids = np.zeros(
             (len(missing_coords), self.grid_size, self.grid_size, self.n_bands),

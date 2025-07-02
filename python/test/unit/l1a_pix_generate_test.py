@@ -1,5 +1,5 @@
 from ecostress.l1a_pix_generate import L1aPixGenerate
-from ecostress.exception import VicarRunException
+from ecostress.exception import VicarRunError
 import pytest
 from loguru import logger
 
@@ -35,5 +35,5 @@ def test_l1a_pix_generate_failed(isolated_dir, test_data, vicar_path):
         f"ECOSTRESS_L1A_PIX_{fvar}",
         f"L1A_RAD_GAIN_{fvar}",
     )
-    with pytest.raises(VicarRunException):
+    with pytest.raises(VicarRunError):
         l1apix.run()
