@@ -1,12 +1,13 @@
 import geocal  # type: ignore
 from ecostress_swig import fill_value_threshold, Resampler, HdfEosFileHandle, HdfEosGrid, GroundCoordinateArray  # type: ignore
 from .l1cg_write_standard_metadata import L1cgWriteStandardMetadata
-import os
+from .gaussian_stretch import gaussian_stretch
+import subprocess
 import h5py
 import scipy
 import numpy as np
 from loguru import logger
-
+from pathlib import Path
 
 class L1cgGenerate:
     """The L1CG product is HDFEOS5. This isn't something I would have necessarily
@@ -47,11 +48,11 @@ class L1cgGenerate:
     ):
         self.l1b_geo = l1b_geo
         self.l1b_rad = l1b_rad
-        self.output_name = output_name
+        self.output_name = Path(output_name)
         if local_granule_id:
             self.local_granule_id = local_granule_id
         else:
-            self.local_granule_id = os.path.basename(output_name)
+            self.local_granule_id = self.output_name.name
         self.dem = dem
         self.lwm = lwm
         self.resolution = resolution
@@ -91,7 +92,7 @@ class L1cgGenerate:
         # But this is actually efficient, we have compression turned on and these
         # fields are size 0. So we just create placeholders here, and then fill
         # them in the next step.
-        fout = HdfEosFileHandle(self.output_name, HdfEosFileHandle.TRUNC)
+        fout = HdfEosFileHandle(str(self.output_name), HdfEosFileHandle.TRUNC)
         g = HdfEosGrid(fout, "ECO_L1CG_RAD_70m", mi)
         g.add_field_uchar("prelim_cloud_mask")
         g.add_field_uchar("water")
@@ -171,6 +172,33 @@ class L1cgGenerate:
             )
             t.attrs.create("_FillValue", data=np.nan, dtype=t.dtype)
             t.attrs["Units"] = "W/m^2/sr/um"
+            # Create data for browse product
+            if b in self.browse_band_list:
+                data = data.copy()
+                data[np.isnan(data)] = -999.0
+                data_scaled = gaussian_stretch(data)
+                fname = str(self.output_name.parent / f"{self.output_name.stem}_b{b}_scaled.img")
+                d = geocal.mmap_file(fname, res.map_info, nodata=0.0, dtype=np.uint8)
+                d[:] = data_scaled
+                d = None
+        cmd_merge = ["gdalbuildvrt", "-q", "-separate", str(self.output_name.parent / f"{self.output_name.stem}_scaled.vrt")]
+        for b in self.browse_band_list:
+            cmd_merge.append(str(self.output_name.parent / f"{self.output_name.stem}_b{b}_scaled.img"))
+        subprocess.run(cmd_merge)
+        cmd_merge = [
+            "gdal_translate",
+            "-of",
+            "png",
+            "-outsize",
+            "1080",
+            "1080",
+            str(self.output_name.parent / f"{self.output_name.stem}_scaled.vrt"),
+            str(self.output_name.parent / f"{self.output_name.stem}.png"),
+        ]
+        subprocess.run(cmd_merge)
+        #for filename in self.output_name.parent.glob(f"{self.output_name.stem}.png.*"):
+        #    filename.unlink()
+        
         for b in range(1, 6):
             logger.info("Doing uncertainty band %d" % b)
             data_in = geocal.GdalRasterImage(
@@ -247,7 +275,7 @@ class L1cgGenerate:
         t.attrs["Description"] = "1 for water, 0 for land or fill value"
 
         logger.info("Doing prelim_cloud_mask")
-        din = h5py.File(self.l1b_geo)[f"Geolocation/prelim_cloud_mask"][:, :]
+        din = h5py.File(self.l1b_geo)["Geolocation/prelim_cloud_mask"][:, :]
         # Remove fill value, treat as clear
         din[din > 1] = 0
         data_in = geocal.MemoryRasterImage(din.shape[0], din.shape[1])

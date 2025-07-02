@@ -21,3 +21,5 @@ build-backend = "setuptools.build_meta"
 "l1b_geo_generate.py" = ["F403"]
 "l1b_proj.py" = ["F403"]
 "l1b_tp_collect.py" = ["F403"]
+# This is Eugene's code, which we want to leave alone as much as possible
+"l1a_raw_pix_generate.py" = ["N806"]
