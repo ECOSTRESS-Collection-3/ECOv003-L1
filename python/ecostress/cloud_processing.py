@@ -3,20 +3,20 @@ from ecostress_swig import (  # type: ignore
     FILL_VALUE_NOT_SEEN,
 )
 import numpy as np
-import h5py # type: ignore
+import h5py  # type: ignore
 import warnings
 import os
 
 # Have a warning message that we can't do anything about - suppress it
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=UserWarning)
-    import scipy.interpolate # type: ignore
+    import scipy.interpolate  # type: ignore
 import re
 from loguru import logger
 import typing
 
 if typing.TYPE_CHECKING:
-    import geocal # type: ignore
+    import geocal  # type: ignore
 
 
 class CloudProcessing:

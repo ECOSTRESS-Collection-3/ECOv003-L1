@@ -1,10 +1,16 @@
+from __future__ import annotations
+
 # Some code for EcostressImageGroundConnection that is easier to do in
 # python.
 import geocal  # type: ignore
 import ecostress_swig  # type: ignore
 
 
-def _overlap(self, sample=None, scan_number=1):
+def _overlap(
+    self: ecostress_swig.EcostressImageGroundConnection,
+    sample: int | None = None,
+    scan_number: int = 1,
+) -> float:
     """Calculate the number of lines overlap we have between different
     scans. This is a bit approximate, we just look at the first two scans.
     The overlap depends on the sample. The default is the middle of the
@@ -31,7 +37,14 @@ def _overlap(self, sample=None, scan_number=1):
 ecostress_swig.EcostressImageGroundConnection.overlap = _overlap
 
 
-def _match_overlap(self, matcher, scan, sample):
+def _match_overlap(
+    self: ecostress_swig.EcostressImageGroundConnection,
+    matcher: geocal.ImageMatcher,
+    scan: int,
+    sample: float,
+) -> tuple[
+    geocal.ImageCoordinate, geocal.ImageCoordinate, geocal.ImageCoordinate, bool, int
+]:
     """Determine the middle of the overlap for the given scan and sample
     with scan+1, and use the matcher to match the data. Returns
     ImageCoordinate 1, ImageCoordinate 2 guess, ImageCoordinate 2 match,
@@ -77,7 +90,14 @@ def _match_overlap(self, matcher, scan, sample):
 ecostress_swig.EcostressImageGroundConnection.match_overlap = _match_overlap
 
 
-def _match_all_overlap(self, min_corr=0.90, min_var=50.0, sample_step=100):
+def _match_all_overlap(
+    self: ecostress_swig.EcostressImageGroundConnection,
+    min_corr: float = 0.90,
+    min_var: float = 50.0,
+    sample_step: int = 100,
+) -> list[
+    tuple[int, geocal.ImageCoordinate, geocal.ImageCoordinate, geocal.ImageCoordinate]
+]:
     """Use a reasonable image matcher, and step through the whole IGC looking
     for matches. Return an list of results, which is a set of 4 tuples of
     scan number, ic1 (in scan number), ic2 (in scan number + 1), ic2_match"""

@@ -5,7 +5,7 @@ from ecostress_swig import (  # type: ignore
     HdfEosFileHandle,
     HdfEosGrid,
     GroundCoordinateArray,
-) 
+)
 from .l1cg_write_standard_metadata import L1cgWriteStandardMetadata
 from .gaussian_stretch import gaussian_stretch
 import subprocess

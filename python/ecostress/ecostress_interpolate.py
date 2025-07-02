@@ -72,8 +72,8 @@ class EcostressAeDeepEnsembleInterpolate(object):
         self.verbose = verbose
 
         # Will store normalization parameters
-        self.mu : np.ndarray | None = None
-        self.sigma : np.ndarray | None = None
+        self.mu: np.ndarray | None = None
+        self.sigma: np.ndarray | None = None
 
         # Each member of the ensemble is a separate model
         self.models = [self._build_model(i) for i in range(n_ensemble)]
@@ -330,8 +330,8 @@ class EcostressAeDeepEnsembleInterpolate(object):
         logger.info("Creating training samples...")
 
         h, w, _ = dataset.shape
-        training_x  : list[np.ndarray] = []
-        training_y : list[np.ndarray] = []
+        training_x: list[np.ndarray] = []
+        training_y: list[np.ndarray] = []
         sampled = set()
 
         if n_samples > h * w // 2:
