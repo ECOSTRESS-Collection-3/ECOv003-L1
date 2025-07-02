@@ -1,8 +1,15 @@
+from __future__ import annotations
 import geocal  # type: ignore
 import h5py  # type: ignore
 from .geo_write_standard_metadata import GeoWriteStandardMetadata
 from .misc import time_split
 import numpy as np
+import os
+import typing
+
+if typing.TYPE_CHECKING:
+    from .l1b_geo_qa_file import L1bGeoQaFile
+    from .run_config import RunConfig
 
 
 class L1bAttGenerate(object):
@@ -14,20 +21,20 @@ class L1bAttGenerate(object):
 
     def __init__(
         self,
-        l1a_raw_att_fname,
-        orbcorr,
-        output_name,
-        tatt,
-        teph,
-        inlist,
-        qa_file,
-        run_config=None,
-        local_granule_id=None,
-        build_id="0.30",
-        collection_label="ECOSTRESS",
-        pge_version="0.30",
-        correction_done=True,
-    ):
+        l1a_raw_att_fname: str | os.PathLike[str],
+        orbcorr: geocal.Orbit,
+        output_name: str | os.PathLike[str],
+        tatt: list[geocal.Time],
+        teph: list[geocal.Time],
+        inlist: list[str],
+        qa_file: L1bGeoQaFile,
+        run_config: RunConfig | None = None,
+        local_granule_id: str | None = None,
+        build_id: str = "0.30",
+        collection_label: str = "ECOSTRESS",
+        pge_version: str = "0.30",
+        correction_done: bool = True,
+    ) -> None:
         """Create a L1bAttGenerate with the given ImageGroundConnection
         and output file name. To actually generate, execute the 'run'
         command.
@@ -50,7 +57,7 @@ class L1bAttGenerate(object):
         self.correction_done = correction_done
         self.qa_file = qa_file
 
-    def run(self):
+    def run(self) -> None:
         """Do the actual generation of data."""
         fout = h5py.File(self.output_name, "w")
         m = GeoWriteStandardMetadata(

@@ -1,3 +1,4 @@
+from __future__ import annotations
 import geocal  # type: ignore
 from ecostress_swig import (  # type: ignore
     fill_value_threshold,
@@ -10,6 +11,13 @@ from .geo_write_standard_metadata import GeoWriteStandardMetadata
 from .misc import time_split
 import numpy as np
 from loguru import logger
+import os
+import typing
+
+if typing.TYPE_CHECKING:
+    from multiprocessing.pool import Pool
+    from .cloud_processing import CloudProcessing
+    from .run_config import RunConfig
 
 
 class L1bGeoGenerate(object):
@@ -17,26 +25,26 @@ class L1bGeoGenerate(object):
 
     def __init__(
         self,
-        igc,
-        cprocess,
-        radfname,
-        lwm,
-        output_name,
-        inlist,
-        is_day,
-        field_of_view_obscured="NO",
-        run_config=None,
-        start_line=0,
-        number_line=-1,
-        local_granule_id=None,
-        collection_label="ECOSTRESS",
-        build_id="0.30",
-        pge_version="0.30",
-        correction_done=True,
-        tcorr_before=-9999,
-        tcorr_after=-9999,
-        geolocation_accuracy_qa="Poor",
-    ):
+        igc: geocal.ImageGroundConnection,
+        cprocess: CloudProcessing,
+        radfname: str | os.PathLike[str],
+        lwm: geocal.SrtmLwmData,
+        output_name: str | os.PathLike[str],
+        inlist: list[str],
+        is_day: bool,
+        field_of_view_obscured: str = "NO",
+        run_config: None | RunConfig = None,
+        start_line: int = 0,
+        number_line: int = -1,
+        local_granule_id: str | None = None,
+        collection_label: str = "ECOSTRESS",
+        build_id: str = "0.30",
+        pge_version: str = "0.30",
+        correction_done: bool = True,
+        tcorr_before: float = -9999,
+        tcorr_after: float = -9999,
+        geolocation_accuracy_qa: str = "Poor",
+    ) -> None:
         """Create a L1bGeoGenerate with the given ImageGroundConnection
         and output file name. To actually generate, execute the "run"
         command.
@@ -67,7 +75,19 @@ class L1bGeoGenerate(object):
         self.tcorr_after = tcorr_after
         self.geolocation_accuracy_qa = geolocation_accuracy_qa
 
-    def loc_parallel_func(self, it):
+    def loc_parallel_func(
+        self, it: tuple[int, int]
+    ) -> tuple[
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+    ]:
         """Variation of loc that is easier to use with a multiprocessor pool."""
         start_line, number_line = it
         try:
@@ -118,7 +138,19 @@ class L1bGeoGenerate(object):
             tlinestart,
         )
 
-    def loc(self, pool=None):
+    def loc(
+        self, pool: None | Pool = None
+    ) -> tuple[
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+    ]:
         """Determine locations"""
         it = []
         for i in range(self.igc.time_table.number_scan):
@@ -144,7 +176,7 @@ class L1bGeoGenerate(object):
         tlinestart = np.hstack([rv[8] for rv in r])
         return lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac, tlinestart
 
-    def run(self, pool=None):
+    def run(self, pool: None | Pool = None) -> None:
         """Do the actual generation of data."""
         lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac, tlinestart = (
             self.loc(pool)
