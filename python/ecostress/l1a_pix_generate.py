@@ -7,6 +7,10 @@ from .exception import VicarRunError
 import re
 import os
 import subprocess
+import typing
+
+if typing.TYPE_CHECKING:
+    from .run_config import RunConfig
 
 
 class L1aPixGenerate(object):
@@ -15,18 +19,18 @@ class L1aPixGenerate(object):
 
     def __init__(
         self,
-        l1a_bb,
-        l1a_raw,
-        l1_osp_dir,
-        output_name,
-        output_gain_name,
-        local_granule_id=None,
-        run_config=None,
-        build_id="0.30",
-        collection_label="ECOSTRESS",
-        pge_version="0.30",
-        file_version="01",
-    ):
+        l1a_bb: str,
+        l1a_raw: str,
+        l1_osp_dir: str,
+        output_name: str,
+        output_gain_name: str,
+        local_granule_id: str | None = None,
+        run_config: None | RunConfig = None,
+        build_id: str = "0.30",
+        collection_label: str = "ECOSTRESS",
+        pge_version: str = "0.30",
+        file_version: str = "01",
+    ) -> None:
         """Create a L1aPixGenerate with the given input files
         and output file name. To actually generate, execute the 'run'
         command."""
@@ -42,7 +46,7 @@ class L1aPixGenerate(object):
         self.pge_version = pge_version
         self.file_version = file_version
 
-    def _create_dir(self):
+    def _create_dir(self) -> str:
         i = 1
         done = False
         while not done:
@@ -54,7 +58,7 @@ class L1aPixGenerate(object):
                 i += 1
         return dirname
 
-    def run(self):
+    def run(self) -> None:
         """Do the actual generation of data."""
         # Run Tom's vicar code. Note we assume we are already in the directory
         # to run in, and that Tom's code is on the TAE_PATH. This is try in

@@ -15,6 +15,11 @@ import scipy  # type: ignore
 import numpy as np
 from loguru import logger
 from pathlib import Path
+import os
+import typing
+
+if typing.TYPE_CHECKING:
+    from .run_config import RunConfig
 
 
 class L1cgGenerate:
@@ -38,22 +43,22 @@ class L1cgGenerate:
 
     def __init__(
         self,
-        l1b_geo,
-        l1b_rad,
-        dem,
-        lwm,
-        output_name,
-        inlist,
-        local_granule_id=None,
-        resolution=70,
-        number_subpixel=3,
-        run_config=None,
-        collection_label="ECOSTRESS",
-        build_id="0.30",
-        pge_version="0.30",
-        browse_band_list_5band=[4, 3, 1],
-        browse_band_list_3band=[5, 4, 2],
-    ):
+        l1b_geo: str | os.PathLike[str],
+        l1b_rad: str | os.PathLike[str],
+        dem: geocal.Dem,
+        lwm: geocal.SrtmLwmData,
+        output_name: str | os.PathLike[str],
+        inlist: list[str],
+        local_granule_id: str | None = None,
+        resolution: float = 70,
+        number_subpixel: int = 3,
+        run_config: RunConfig | None = None,
+        collection_label: str = "ECOSTRESS",
+        build_id: str = "0.30",
+        pge_version: str = "0.30",
+        browse_band_list_5band: list[int] = [4, 3, 1],
+        browse_band_list_3band: list[int] = [5, 4, 2],
+    ) -> None:
         self.l1b_geo = l1b_geo
         self.l1b_rad = l1b_rad
         self.output_name = Path(output_name)
@@ -81,7 +86,7 @@ class L1cgGenerate:
             browse_band_list_3band if nband == 3 else browse_band_list_5band
         )
 
-    def run(self):
+    def run(self) -> None:
         mi = geocal.cib01_mapinfo(self.resolution)
         fin_geo = h5py.File(self.l1b_geo, "r")
         fin_rad = h5py.File(self.l1b_rad, "r")

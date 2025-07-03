@@ -20,6 +20,11 @@ from .misc import is_day
 from .ecostress_interpolate import EcostressAeDeepEnsembleInterpolate
 import numpy as np
 from loguru import logger
+import typing
+from typing import Any
+
+if typing.TYPE_CHECKING:
+    from .run_config import RunConfig
 
 
 class L1bRadGenerate(object):
@@ -27,25 +32,25 @@ class L1bRadGenerate(object):
 
     def __init__(
         self,
-        igc,
-        l1a_pix,
-        l1a_gain,
-        output_name,
-        l1_osp_dir,
-        cal_correction,
-        interpolator_parameters=None,
-        local_granule_id=None,
-        run_config=None,
-        build_id="0.30",
-        collection_label="ECOSTRESS",
-        pge_version="0.30",
-        interpolate_stripe_data=False,
-        find_horizontal_stripes=True,
-        seed=1234,
-        line_order_flipped=False,
-        skip_band_to_band=False,
-        frac_to_do_interpolation=0.3,
-    ):
+        igc: geocal.ImageGroundConnection,
+        l1a_pix: str,
+        l1a_gain: str,
+        output_name: str,
+        l1_osp_dir: str,
+        cal_correction: np.ndarray,
+        interpolator_parameters: dict[str, Any] | None = None,
+        local_granule_id: str | None = None,
+        run_config: None | RunConfig = None,
+        build_id: str = "0.30",
+        collection_label: str = "ECOSTRESS",
+        pge_version: str = "0.30",
+        interpolate_stripe_data: bool = False,
+        find_horizontal_stripes: bool = True,
+        seed: int = 1234,
+        line_order_flipped: bool = False,
+        skip_band_to_band: bool = False,
+        frac_to_do_interpolation: float = 0.3,
+    ) -> None:
         """Create a L1bRadGenerate with the given input files
         and output file name. To actually generate, execute the 'run'
         command."""
@@ -86,7 +91,7 @@ class L1bRadGenerate(object):
         self.line_order_flipped = line_order_flipped
         self.cal_correction = cal_correction
 
-    def image(self, band):
+    def image(self, band: int) -> np.ndarray:
         """Generate L1B_RAD image.
 
         This applies the gains from L1A_PIX to scale to radiance data.
@@ -146,7 +151,7 @@ class L1bRadGenerate(object):
             )
         return res
 
-    def run(self):
+    def run(self) -> None:
         """Do the actual generation of data."""
         fout = h5py.File(self.output_name, "w")
         # Get all data and DQI first, so we can

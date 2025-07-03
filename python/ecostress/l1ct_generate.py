@@ -17,7 +17,13 @@ from loguru import logger
 from pathlib import Path
 from zipfile import ZipFile
 import shutil
+import os
 import subprocess
+import typing
+
+if typing.TYPE_CHECKING:
+    from multiprocessing.pool import Pool
+    from .run_config import RunConfig
 
 
 class L1ctGenerate:
@@ -25,32 +31,32 @@ class L1ctGenerate:
 
     def __init__(
         self,
-        l1b_geo,
-        l1b_rad,
-        l1_osp_dir,
-        output_pattern,
-        inlist,
-        resolution=70,
-        number_subpixel=3,
-        run_config=None,
-        collection_label="ECOSTRESS",
-        build_id="0.30",
-        pge_version="0.30",
-        browse_band_list_5band=[4, 3, 1],
-        browse_band_list_3band=[5, 4, 2],
-    ):
+        l1b_geo: str | os.PathLike[str],
+        l1b_rad: str | os.PathLike[str],
+        l1_osp_dir: str | os.PathLike[str],
+        output_pattern: str | os.PathLike[str],
+        inlist: list[str],
+        resolution: float = 70,
+        number_subpixel: int = 3,
+        run_config: RunConfig | None = None,
+        collection_label: str = "ECOSTRESS",
+        build_id: str = "0.30",
+        pge_version: str = "0.30",
+        browse_band_list_5band: list[int] = [4, 3, 1],
+        browse_band_list_3band: list[int] = [5, 4, 2],
+    ) -> None:
         """The output pattern should leave a portion called "TILE" in the name, that
         we fill in. Also leave the extension off, so a name like:
 
         ECOv002_L1CT_RAD_35544_007_TILE_20241012T201510_0713_01
         """
-        self.l1b_geo = l1b_geo
-        self.l1b_rad = l1b_rad
+        self.l1b_geo = Path(l1b_geo)
+        self.l1b_rad = Path(l1b_rad)
         self.output_pattern = output_pattern
-        self.l1_osp_dir = l1_osp_dir
+        self.l1_osp_dir = Path(l1_osp_dir)
         self.resolution = resolution
         self.number_subpixel = number_subpixel
-        self._utm_coor = {}
+        self._utm_coor: dict[int, tuple[geocal.OgrWrapper, np.ndarray, np.ndarray]] = {}
         self.use_file_cache = False
         self.run_config = run_config
         self.inlist = inlist
@@ -68,7 +74,7 @@ class L1ctGenerate:
             browse_band_list_3band if nband == 3 else browse_band_list_5band
         )
 
-    def run(self, pool=None):
+    def run(self, pool: None | Pool = None) -> None:
         fin_geo = h5py.File(self.l1b_geo, "r")
         self.lat = fin_geo["Geolocation/latitude"][:, :]
         self.lon = fin_geo["Geolocation/longitude"][:, :]
@@ -95,7 +101,7 @@ class L1ctGenerate:
             self._utm_coor = {}
             _ = pool.map(self.process_tile, shp_dict_list)
 
-    def utm_coor(self, epsg):
+    def utm_coor(self, epsg: int) -> tuple[geocal.OgrWrapper, np.ndarray, np.ndarray]:
         """Calculate utm coordinate. We can optional save/load from disk if needed - this
         is to support multiprocessing"""
         if epsg not in self._utm_coor:
@@ -131,8 +137,10 @@ class L1ctGenerate:
                     self._utm_coor[epsg] = (owrap, x, y)
         return self._utm_coor[epsg]
 
-    def process_tile(self, shp):
+    def process_tile(self, shp: dict) -> bool:
         logger.info(f"Processing {shp['tile_id']}")
+        x: np.ndarray | None = None
+        y: np.ndarray | None = None
         owrap, x, y = self.utm_coor(shp["epsg"])
         # Tile is exactly 109800, but depending on resolution we might be slightly
         # smaller since we need an even number of pixels
@@ -159,7 +167,7 @@ class L1ctGenerate:
             logger.info(f"Done with {shp['tile_id']}")
             res = None
             return False
-        dirname = Path(self.output_pattern.replace("TILE", shp["tile_id"]))
+        dirname = Path(str(self.output_pattern).replace("TILE", shp["tile_id"]))
         geocal.makedirs_p(dirname)
         for b in range(1, 6):
             logger.info(f"Doing radiance band {b} - {shp['tile_id']}")
