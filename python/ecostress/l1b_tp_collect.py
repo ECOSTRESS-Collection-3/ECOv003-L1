@@ -5,6 +5,11 @@ from .pickle_method import *
 import shutil
 import os
 from loguru import logger
+import typing
+
+if typing.TYPE_CHECKING:
+    from .l1b_geo_qa_file import L1bGeoQaFile
+    from multiprocessing.pool import Pool
 
 
 class L1bTpCollect(object):
@@ -13,22 +18,22 @@ class L1bTpCollect(object):
 
     def __init__(
         self,
-        igccol,
-        ortho_base,
-        qa_file,
-        fftsize=256,
-        magnify=4.0,
-        magmin=2.0,
-        toler=1.5,
-        redo=36,
-        ffthalf=2,
-        seed=562,
-        num_x=10,
-        num_y=10,
-        proj_number_subpixel=2,
-        min_tp_per_scene=20,
-        min_number_good_scan=41,
-    ):
+        igccol: geocal.IgcCollection,
+        ortho_base: list[geocal.RasterImage],
+        qa_file: L1bGeoQaFile | None = None,
+        fftsize: int = 256,
+        magnify: float = 4.0,
+        magmin: float = 2.0,
+        toler: float = 1.5,
+        redo: int = 36,
+        ffthalf: int = 2,
+        seed: int = 562,
+        num_x: int = 10,
+        num_y: int = 10,
+        proj_number_subpixel: int = 2,
+        min_tp_per_scene: int = 20,
+        min_number_good_scan: int = 41,
+    ) -> None:
         self.igccol = igccol
         self.ortho_base = ortho_base
         self.qa_file = qa_file
@@ -157,7 +162,9 @@ class L1bTpCollect(object):
 
         self.min_tp_per_scene = min_tp_per_scene
 
-    def tp(self, i):
+    def tp(
+        self, i: int
+    ) -> tuple[geocal.TiePointCollection, geocal.Time, geocal.Time, int, int, int, int]:
         """Get tiepoints for the given scene number"""
         ntpoint_initial = 0  # Initial value, so an exception below doesn't
         # result in "local variable referenced before
@@ -228,7 +235,9 @@ class L1bTpCollect(object):
             number_match_try,
         )
 
-    def tpcol(self, pool=None):
+    def tpcol(
+        self, pool: Pool | None = None
+    ) -> tuple[geocal.TiePointCollection, list[tuple[geocal.Time, geocal.Time]]]:
         """Return tiepoints collected. We also return the time ranges for the
         ImageGroundConnection that we got good tiepoint for. This
         can be used by the calling program to determine such things
@@ -252,7 +261,7 @@ class L1bTpCollect(object):
         for i in range(self.igccol.number_image):
             for i2 in range(len(self.tpcollect)):
                 lf = self.log_file[i] + "_%d" % i2
-                if os.path.exists(lf):
+                if os.path.exists(lf) and self.qa_file is not None:
                     self.qa_file.add_tp_log(self.igccol.title(i) + "_%d" % i2, lf)
         j = 0
         for i in range(self.igccol.number_image):
@@ -266,21 +275,23 @@ class L1bTpCollect(object):
                     ntpoint_final,
                     number_match_try,
                 ) = tpcollist[j]
-                self.qa_file.add_tp_single_scene(
-                    i,
-                    self.igccol,
-                    tpcol,
-                    ntpoint_initial,
-                    ntpoint_removed,
-                    ntpoint_final,
-                    number_match_try,
-                )
+                if self.qa_file is not None:
+                    self.qa_file.add_tp_single_scene(
+                        i,
+                        self.igccol,
+                        tpcol,
+                        ntpoint_initial,
+                        ntpoint_removed,
+                        ntpoint_final,
+                        number_match_try,
+                    )
                 if len(tpcol) > 0:
                     res.extend(tpcol)
-                    time_range_tp.append([tmin, tmax])
+                    time_range_tp.append((tmin, tmax))
                 j += 1
             else:
-                self.qa_file.add_tp_single_scene(i, self.igccol, [], 0, 0, 0, 0)
+                if self.qa_file is not None:
+                    self.qa_file.add_tp_single_scene(i, self.igccol, [], 0, 0, 0, 0)
         for i in range(len(res)):
             res[i].id = i + 1
         return res, time_range_tp

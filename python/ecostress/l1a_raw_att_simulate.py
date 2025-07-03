@@ -57,12 +57,12 @@ class L1aRawAttSimulate(object):
             pge_name="L1A_RAW_PGE",
             orbit_based=True,
         )
-        dt, tm = time_split(self.min_time)
+        dt, tm2 = time_split(self.min_time)
         m.set("RangeBeginningDate", dt)
-        m.set("RangeBeginningTime", tm)
-        dt, tm = time_split(self.max_time)
+        m.set("RangeBeginningTime", tm2)
+        dt, tm2 = time_split(self.max_time)
         m.set("RangeEndingDate", dt)
-        m.set("RangeEndingTime", tm)
+        m.set("RangeEndingTime", tm2)
         m.write()
         fout.close()
 

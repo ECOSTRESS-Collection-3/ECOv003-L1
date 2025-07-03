@@ -5,17 +5,27 @@ import gzip
 import numpy as np
 import subprocess
 import geocal  # type: ignore
+import typing
+
+if typing.TYPE_CHECKING:
+    import io
+    from .geo_write_standard_metadata import GeoWriteStandardMetadata
 
 
 class L1bGeoQaFile(object):
     """This is the L1bGeoQaFile. We have a separate class just to make it
     easier to interface with."""
 
-    def __init__(self, fname, log_string_handle, local_granule_id=None):
+    def __init__(
+        self,
+        fname: str,
+        log_string_handle: io.StringIO,
+        local_granule_id: str | None = None,
+    ) -> None:
         self.fname = fname
         self.log_string_handle = log_string_handle
-        self.scene_name = None
-        self.tp_stat = None
+        self.scene_name: list[str] | None = None
+        self.tp_stat: np.ndarray | None = None
         self.encountered_exception = False
         if local_granule_id:
             self.local_granule_id = local_granule_id
@@ -31,7 +41,9 @@ class L1bGeoQaFile(object):
         fout.create_group("Accuracy Estimate")
         fout.close()
 
-    def write_xml(self, igc_initial, tpcol, igc_sba, tpcol_sba):
+    def write_xml(
+        self, igc_initial: str, tpcol: str, igc_sba: str, tpcol_sba: str
+    ) -> None:
         """Write the xml serialization files. Note because these are large
         we compress them. HDF5 does compression, but not apparently on
         strings. You can access them, but need to manually decompress.
@@ -81,7 +93,7 @@ class L1bGeoQaFile(object):
                     fout + "_desc", data=desc[i], dtype=h5py.special_dtype(vlen=bytes)
                 )
 
-    def input_list(self, inlist):
+    def input_list(self, inlist: list[str]) -> None:
         with h5py.File(self.fname, "a") as f:
             f.create_dataset(
                 "Input File List",
@@ -89,7 +101,7 @@ class L1bGeoQaFile(object):
                 dtype=h5py.special_dtype(vlen=bytes),
             )
 
-    def add_average_metadata(self, avg_md):
+    def add_average_metadata(self, avg_md: np.ndarray) -> None:
         """Add average metadata. First column is average solar zenith angle,
         second is overall land fraction, third is cloud coverage. We have one row per scene"""
         with h5py.File(self.fname, "a") as f:
@@ -102,7 +114,7 @@ The first column is the average solar zenith angle, in degrees. The
 second column is the overall land fraction for the scene, as a percentage.
 The third column is the cloud cover, as a percentage."""
 
-    def add_orbit(self, orb):
+    def add_orbit(self, orb: geocal.Orbit) -> None:
         """Add data about orbit. Note that this requires we use
         OrbitOffsetCorrection, it doesn't work otherwise."""
         atime, acorr, ptime, pcorr = orb.orbit_correction_parameter()
@@ -130,7 +142,7 @@ The columns are yaw, pitch, and roll in arceconds."""
 Position is in ECR, in meters. The columns are X, Y, and Z 
 offset."""
 
-    def add_tp_log(self, scene_name, tplogfname):
+    def add_tp_log(self, scene_name: str, tplogfname: str) -> None:
         """Add a TP log file"""
         try:
             log = open(tplogfname, "r").read()
@@ -145,14 +157,14 @@ offset."""
 
     def add_tp_single_scene(
         self,
-        image_index,
-        igccol,
-        tpcol,
-        ntpoint_initial,
-        ntpoint_removed,
-        ntpoint_final,
-        number_match_try,
-    ):
+        image_index: int,
+        igccol: geocal.IgcCollection,
+        tpcol: geocal.TiePointCollection,
+        ntpoint_initial: int,
+        ntpoint_removed: int,
+        ntpoint_final: int,
+        number_match_try: int,
+    ) -> None:
         """Write out information about the tiepoints we collect for scene."""
         if self.scene_name is None:
             self.scene_name = [
@@ -172,6 +184,7 @@ offset."""
             tpdata = np.empty((len(tpcol), 5))
         for i, tp in enumerate(tpcol):
             ic = tp.image_coordinate(image_index)
+            assert tpdata is not None
             tpdata[i, 0:2] = ic.line, ic.sample
             tpdata[i, 2:6] = geocal.Ecr(tp.ground_location).position
         with h5py.File(self.fname, "a") as f:
@@ -191,8 +204,13 @@ the reference image, in Ecr coordinates (in meters).
 """
 
     def add_final_accuracy(
-        self, igccol_corrected, tpcol, tcor_before, tcor_after, geo_qa
-    ):
+        self,
+        igccol_corrected: geocal.IgcCollection,
+        tpcol: geocal.TiePointCollection,
+        tcor_before: list[float],
+        tcor_after: list[float],
+        geo_qa: list[str],
+    ) -> None:
         # Ok if no tiepoints for scene i, this just return nan
         t = np.array(
             [
@@ -201,6 +219,7 @@ the reference image, in Ecr coordinates (in meters).
             ]
         )
         t[np.isnan(t)] = -9999
+        assert self.tp_stat is not None
         self.tp_stat[:, 5] = t
         self.tp_stat[:, 6] = tcor_before
         self.tp_stat[:, 7] = tcor_after
@@ -216,7 +235,7 @@ the reference image, in Ecr coordinates (in meters).
             else:
                 self.tp_stat[i, 8] = -9999
 
-    def write_standard_metadata(self, m):
+    def write_standard_metadata(self, m: GeoWriteStandardMetadata) -> None:
         """Write out standard metadata for QA file. Since this is almost
         identical to the metadata we have for the l1b_att file, we pass in
         the metadata for that file and just change a few things before
@@ -227,7 +246,7 @@ the reference image, in Ecr coordinates (in meters).
             mcopy = m.copy_new_file(f, self.local_granule_id, "L1B_GEO_QA")
             mcopy.write()
 
-    def close(self):
+    def close(self) -> None:
         """Finishing writing up data, and close file"""
         if self.log_string_handle is not None:
             log = self.log_string_handle.getvalue()

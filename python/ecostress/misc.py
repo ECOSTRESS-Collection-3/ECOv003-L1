@@ -20,11 +20,15 @@ from ecostress_swig import (  # type: ignore
 )
 import pickle
 from loguru import logger
+import typing
+
+if typing.TYPE_CHECKING:
+    from .run_config import RunConfig
 
 orb_to_date = None
 
 
-def orb_to_path(orbnum):
+def orb_to_path(orbnum: int) -> str:
     global orb_to_date
     if orb_to_date is None:
         orb_to_date = pickle.load(
@@ -37,7 +41,7 @@ def orb_to_path(orbnum):
     return orb_to_date[int(orbnum)]
 
 
-def find_radiance_file(orbnum, scene, multiple_ok=False):
+def find_radiance_file(orbnum: int, scene: int, multiple_ok: bool = False) -> str:
     """Simple function to find a radiance file by orbit number and scene.
     Note that this is a pretty simplistic function, and doesn't handle things
     like multiple versions etc. But I need to simple functionality often
@@ -58,7 +62,9 @@ def find_radiance_file(orbnum, scene, multiple_ok=False):
     return f[0]
 
 
-def find_orbit_file(orbnum, raw_att=False, multiple_ok=False):
+def find_orbit_file(
+    orbnum: int, raw_att: bool = False, multiple_ok: bool = False
+) -> str:
     """Simple function to find a orbit file by orbit number and scene.
     Note that this is a pretty simplistic function, and doesn't handle things
     like multiple versions etc. But I need to simple functionality often
@@ -83,7 +89,13 @@ def find_orbit_file(orbnum, raw_att=False, multiple_ok=False):
     return f[0]
 
 
-def create_igc(rad_fname, orb_fname, l1_osp_dir=None, dem=None, title=""):
+def create_igc(
+    rad_fname: str,
+    orb_fname: str,
+    l1_osp_dir: str | None = None,
+    dem: geocal.Dem | None = None,
+    title: str = "",
+) -> geocal.ImageGroundConnection:
     """Create a IGC for the given radiance and orbit file.
 
     The DEM can be passed in, but if it isn't then we use the default
@@ -160,8 +172,13 @@ def create_igc(rad_fname, orb_fname, l1_osp_dir=None, dem=None, title=""):
 
 
 def create_igccol(
-    orbnum, scene, l1_osp_dir=None, dem=None, title="", multiple_ok=False
-):
+    orbnum: int,
+    scene: int,
+    l1_osp_dir: str | None = None,
+    dem: geocal.Dem = None,
+    title: str = "",
+    multiple_ok: bool = False,
+) -> geocal.IgcCollection:
     """Variation of create_igc that puts the IGC as a single entry in
     an IgcCollection (which has support for parameters). This finds the
     radiance and orbit data for the given orbit and scene number."""
@@ -179,8 +196,12 @@ def create_igccol(
 
 
 def create_igccol_from_qa(
-    qa_fname, l1_osp_dir=None, dem=None, raw_att=False, include_tie_point=False
-):
+    qa_fname: str,
+    l1_osp_dir: str | None = None,
+    dem: geocal.Dem | None = None,
+    raw_att: bool = False,
+    include_tie_point: bool = False,
+) -> geocal.IgcCollection:
     """Create a IgcCollection from a given qa file, using the same input files as it has
     listed. By default we use the corrected llb_att file, but you can optionally select the
     raw l1a_raw_att file.  We add the attribute "scene_list" to the igccol for convenience.
@@ -227,11 +248,13 @@ def create_igccol_from_qa(
     # Might be extra files found on the system not used in the run
     radlist = [fname for fname in flist if os.path.basename(fname) in radlist]
 
-    def scene_from_fname(fname):
+    def scene_from_fname(fname: str) -> int:
         m = re.match(
             r"(ECOSTRESS_L1B_RAD|ECOv002_L1B_RAD)_\d{5}_(\d{3})",
             os.path.basename(fname),
         )
+        if m is None:
+            raise RuntimeError("Couldn't parse file name")
         return int(m[2])
 
     radlist.sort(key=scene_from_fname)
@@ -346,13 +369,13 @@ def create_igccol_from_qa(
         sys.path.pop()
 
 
-def create_dem(config):
+def create_dem(config: RunConfig) -> geocal.Dem:
     """Create the SRTM DEM based on the configuration. In production, we
     take the datum and srtm_dir passed in. But for testing if the special
     variable ECOSTRESS_USE_AFIDS_ENV is defined then we use the value
     passed in from the environment."""
-    datum = os.path.abspath(config["StaticAncillaryFileGroup", "Datum"])
-    srtm_dir = os.path.abspath(config["StaticAncillaryFileGroup", "SRTMDir"])
+    datum = os.path.abspath(config.as_list("StaticAncillaryFileGroup", "Datum")[0])
+    srtm_dir = os.path.abspath(config.as_list("StaticAncillaryFileGroup", "SRTMDir")[0])
     if "ECOSTRESS_USE_AFIDS_ENV" in os.environ:
         datum = os.environ["AFIDS_VDEV_DATA"] + "/EGM96_20_x100.HLF"
         srtm_dir = os.environ["ELEV_ROOT"]
@@ -360,11 +383,13 @@ def create_dem(config):
     return dem
 
 
-def ortho_base_directory(config):
+def ortho_base_directory(config: RunConfig) -> str:
     """Create the ortho base. In production, take the directory passed in
     from the configuration file. But for testing, if ECOSTRESS_USE_AFIDS_ENV
     is defined then look for the location of this on pistol"""
-    ortho_base_dir = os.path.abspath(config["StaticAncillaryFileGroup", "OrthoBase"])
+    ortho_base_dir = os.path.abspath(
+        config.as_list("StaticAncillaryFileGroup", "OrthoBase")[0]
+    )
     if "ECOSTRESS_USE_AFIDS_ENV" in os.environ:
         # Location on pistol, use if found, otherwise use setting in
         # run config file
@@ -375,7 +400,7 @@ def ortho_base_directory(config):
     return ortho_base_dir
 
 
-def band_to_landsat_band(lband):
+def band_to_landsat_band(lband: int) -> int:
     if lband == 1:
         return geocal.Landsat7Global.BAND1
     elif lband == 2:
@@ -398,12 +423,14 @@ def band_to_landsat_band(lband):
         raise RuntimeError("Unrecognized band number")
 
 
-def create_lwm(config):
+def create_lwm(config: RunConfig) -> geocal.SrtmLwmData:
     """Create the land water mask. In production, use the directory passed
     in by the configuration file. But for testing if the special environment
     variable ECOSTRESS_USE_AFIDS_ENV is defined then look for the data at
     the standard location on pistol."""
-    srtm_lwm_dir = os.path.abspath(config["StaticAncillaryFileGroup", "SRTMLWMDir"])
+    srtm_lwm_dir = os.path.abspath(
+        config.as_list("StaticAncillaryFileGroup", "SRTMLWMDir")[0]
+    )
     if "ECOSTRESS_USE_AFIDS_ENV" in os.environ:
         # Location on pistol, use if found, otherwise use setting in
         # run config file
@@ -413,23 +440,29 @@ def create_lwm(config):
     return lwm
 
 
-def setup_spice(config):
+def setup_spice(config: RunConfig) -> None:
     """Set up SPICE. In production, we use the directory passed in by
     configuration file. However, for testing if the special environment
     variable ECOSTRESS_USE_AFIDS_ENV is defined then we use the value passed
     in from the environment."""
-    spice_data = os.path.abspath(config["StaticAncillaryFileGroup", "SpiceDataDir"])
+    spice_data = os.path.abspath(
+        config.as_list("StaticAncillaryFileGroup", "SpiceDataDir")[0]
+    )
     if "ECOSTRESS_USE_AFIDS_ENV" not in os.environ:
         os.environ["SPICEDATA"] = spice_data
 
 
 def create_orbit_raw(
-    config, pos_off=None, extrapolation_pad=5, large_gap=10, fix_l0_time_tag=False
-):
+    config: RunConfig,
+    pos_off: None | np.ndarray = None,
+    extrapolation_pad: float = 5,
+    large_gap: float = 10,
+    fix_l0_time_tag: bool = False,
+) -> geocal.Orbit:
     """Create orbit from L1A_RAW_ATT file"""
     # Spice is needed to work with the orbit data.
     setup_spice(config)
-    orbfname = os.path.abspath(config["TimeBasedFileGroup", "L1A_RAW_ATT"])
+    orbfname = os.path.abspath(config.as_list("TimeBasedFileGroup", "L1A_RAW_ATT")[0])
     # Create orbit.
     if pos_off is not None:
         if fix_l0_time_tag:
@@ -444,20 +477,22 @@ def create_orbit_raw(
     return orb
 
 
-def create_time_table(fname, mirror_rpm, frame_time, time_offset=0):
+def create_time_table(
+    fname: str, mirror_rpm: float, frame_time: float, time_offset: float = 0
+) -> geocal.TimeTable:
     """Create the time table using the data from the given input."""
     return EcostressTimeTable(fname, mirror_rpm, frame_time, time_offset)
 
 
 def create_scan_mirror(
-    fname,
-    max_encoder_value,
-    first_encoder_value_0,
-    second_encoder_value_0,
-    instrument_to_sc_euler,
-    first_angle_per_encoder_value,
-    second_angle_per_encoder_value,
-):
+    fname: str,
+    max_encoder_value: int,
+    first_encoder_value_0: float,
+    second_encoder_value_0: float,
+    instrument_to_sc_euler: np.ndarray,
+    first_angle_per_encoder_value: float,
+    second_angle_per_encoder_value: float,
+) -> EcostressScanMirror:
     """Create the scan mirror"""
     ev = h5py.File(fname, "r")["/FPIEencoder/EncoderValue"][:]
     sm = EcostressScanMirror(
@@ -474,7 +509,7 @@ def create_scan_mirror(
     return sm
 
 
-def is_day(igc):
+def is_day(igc: geocal.ImageGroundConnection) -> bool:
     """Determine if the center pixel of the igc is in day or night, defined
     by having the solar elevation > 0"""
     ic = geocal.ImageCoordinate(igc.number_line / 2, igc.number_sample / 2)
@@ -484,7 +519,7 @@ def is_day(igc):
     return sol_elv > 0
 
 
-def aster_radiance_scale_factor():
+def aster_radiance_scale_factor() -> list[float]:
     """Return the ASTER scale factors. This is for L1T data, found at
     https://lpdaac.usgs.gov/dataset_discovery/aster/aster_products_table/ast_l1t
     Our mosiac actually had adjustments made to make a clean mosaic, but this
@@ -508,7 +543,7 @@ def aster_radiance_scale_factor():
     ]
 
 
-def ecostress_to_aster_band():
+def ecostress_to_aster_band() -> list[int]:
     """This is the mapping from the ASTER bands to the ECOSTRESS bands. Note that
     these aren't exact, these are just the closest match. There is no match
     for the 12.05 micron ecostress band, we reuse the 10.95 - 11.65 band. These
@@ -516,7 +551,7 @@ def ecostress_to_aster_band():
     return [4, 10, 11, 12, 14, 14]
 
 
-def ecostress_radiance_scale_factor(band):
+def ecostress_radiance_scale_factor(band: int) -> float:
     """Not sure what we will use here, right now we use the ASTER scale. Probably
     be something like this, since the dynamic range is somewhat similar. But in
     any case, for testing this is what we use.
@@ -526,33 +561,35 @@ def ecostress_radiance_scale_factor(band):
     return aster_radiance_scale_factor()[ecostress_to_aster_band()[band] - 1]
 
 
-def time_to_file_string(acquisition_time):
+def time_to_file_string(acquisition_time: geocal.Time) -> str:
     """Return the portion of the ecostress filename based on the data acquisition
     date and time"""
     y, m, d, h, min, sec, *rest = re.split(r"[-T:.]", str(acquisition_time))
     return y + m + d + "T" + h + min + sec
 
 
-def time_split(t):
+def time_split(t: geocal.Time) -> tuple[str, str]:
     """Split a time into date and time, which we need to do for some of the
     metadata fields. Returns date, time"""
     mt = re.match(r"(.*)T(.*)Z", str(t))
+    if mt is None:
+        raise RuntimeError("Trouble parsing time string")
     return mt.group(1), mt.group(2)
 
 
 def ecostress_file_name(
-    product_type,
-    orbit,
-    scene,
-    acquisition_time,
-    end_time=None,
-    collection_label="ECOSTRESS",
-    build="0100",
-    version="01",
-    extension=".h5",
-    intermediate=False,
-    tile=False,
-):
+    product_type: str,
+    orbit: int,
+    scene: int | None,
+    acquisition_time: geocal.Time,
+    end_time: geocal.Time | None = None,
+    collection_label: str = "ECOSTRESS",
+    build: str = "0100",
+    version: str = "01",
+    extension: str = ".h5",
+    intermediate: bool = False,
+    tile: bool = False,
+) -> str:
     """Create an ecostress file name from the given components."""
     if intermediate:
         front = ""
@@ -612,7 +649,7 @@ def ecostress_file_name(
         )
 
 
-def process_run(exec_cmd):
+def process_run(exec_cmd: list[str]) -> bytes:
     """This is like subprocess.run, but allowing a unix like 'tee' where
     we write the output to the logger.
 
@@ -625,18 +662,22 @@ def process_run(exec_cmd):
     )
     stdout = b""
     while True:
-        output = process.stdout.readline()
-        if output == b"" and process.poll() is not None:
-            break
-        if output:
-            stdout = stdout + output
-            logger.debug(output.strip().decode("utf-8"))
-    if process.poll() != 0:
-        raise subprocess.CalledProcessError(process.poll(), exec_cmd, output=stdout)
+        if process.stdout is not None:
+            output = process.stdout.readline()
+            if output == b"" and process.poll() is not None:
+                break
+            if output:
+                stdout = stdout + output
+                logger.debug(output.strip().decode("utf-8"))
+    pvalue = process.poll()
+    if pvalue != 0:
+        if pvalue is None:
+            raise RuntimeError("Should be able to happen")
+        raise subprocess.CalledProcessError(pvalue, exec_cmd, output=stdout)
     return stdout
 
 
-def as_string(t):
+def as_string(t: bytes | str) -> str:
     """Handle a variable that is either a bytes or a string, returning
     a string.
 
@@ -654,7 +695,7 @@ def as_string(t):
     return t
 
 
-def orbit_from_metadata(fname):
+def orbit_from_metadata(fname: str) -> tuple[int, int, geocal.Time]:
     """Read the standard metadata from the given file to return the orbit,
     scene, and acquisition_time for the given file."""
     fin = h5py.File(fname, "r")
@@ -666,7 +707,9 @@ def orbit_from_metadata(fname):
     return int(onum), int(sid), acquisition_time
 
 
-def determine_rotated_map_igc(igc, mi):
+def determine_rotated_map_igc(
+    igc: geocal.ImageGroundConnection, mi: geocal.MapInfo
+) -> geocal.MapInfo:
     """Rotate the given MapInfo so that it follows the path of the igc
     (which should be something like the minimum gore). We don't get
     the full coverage right here, but if you then use this in something
@@ -682,7 +725,9 @@ def determine_rotated_map_igc(igc, mi):
     return determine_rotated_map(gc1, gc2, mi)
 
 
-def determine_rotated_map(gc1, gc2, mi):
+def determine_rotated_map(
+    gc1: geocal.GroundCoordinate, gc2: geocal.GroundCoordinate, mi: geocal.MapInfo
+) -> geocal.MapInfo:
     """Rotate the given MapInfo so that it follows the path of the igc
     (which should be something like the minimum gore). We don't get
     the full coverage right here, but if you then use this in something
