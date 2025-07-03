@@ -1,3 +1,4 @@
+from __future__ import annotations
 import numpy as np
 
 # This has the coordinate systems from the ATB in explicit form. We don't

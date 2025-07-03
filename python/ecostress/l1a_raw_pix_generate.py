@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 #  2023-05-03
 #    Corrected band specification
 #    Added collection label
@@ -11,12 +13,26 @@ import os
 import glob
 import numpy as np
 from .write_standard_metadata import WriteStandardMetadata
-from .misc import ecostress_file_name, time_split
-import ecostress
+from .misc import (
+    ecostress_file_name,
+    time_split,
+    create_dem,
+    setup_spice,
+    create_time_table,
+    create_scan_mirror,
+)
+from ecostress_swig import (  # type: ignore
+    EcostressOrbit,
+    EcostressImageGroundConnection,
+)
 import geocal  # type: ignore
 from geocal import Time  # type: ignore
 import sys
 from datetime import datetime
+import typing
+
+if typing.TYPE_CHECKING:
+    from .run_config import RunConfig
 
 """
 By packets:
@@ -112,17 +128,17 @@ class L1aRawPixGenerate(object):
 
     def __init__(
         self,
-        l0b,
-        obst_dir,
-        osp_dir,
-        scene_file,
-        run_config=None,
-        collection_label="ECOSTRESS",
-        build_id="0116",
-        pge_version="0.50",
-        file_version="01",
-        use_obst_file="YES",
-    ):
+        l0b: str,
+        obst_dir: str,
+        osp_dir: str,
+        scene_file: str,
+        run_config: None | RunConfig = None,
+        collection_label: str = "ECOSTRESS",
+        build_id: str = "0116",
+        pge_version: str = "0.50",
+        file_version: str = "01",
+        use_obst_file: str = "YES",
+    ) -> None:
         """Create a L1aRawPixGenerate to process the given L0 file.
         To actually generate, execute the "run" command."""
         self.l0b = l0b
@@ -136,7 +152,7 @@ class L1aRawPixGenerate(object):
         self.file_version = file_version
         self.use_obst_file = use_obst_file
 
-    def process_scene_file(self):
+    def process_scene_file(self) -> list[tuple[int, int, Time, Time]]:
         """Process the scene file, returning the orbit, scene id, start,
         and end times"""
         res = []
@@ -149,20 +165,20 @@ class L1aRawPixGenerate(object):
                 scene_id = int(scene_id)
                 sts = Time.parse_time(sc_start_time)
                 ste = Time.parse_time(sc_end_time)
-                res.append([orbit, scene_id, sts, ste])
+                res.append((orbit, scene_id, sts, ste))
         return res
 
     def create_file(
         self,
-        prod_type,
-        orbit,
-        scene,
-        start_time,
-        end_time,
-        primary_file=False,
-        prod=True,
-        intermediate=False,
-    ):
+        prod_type: str,
+        orbit: int,
+        scene: int | None,
+        start_time: Time,
+        end_time: Time,
+        primary_file: bool = False,
+        prod: bool = True,
+        intermediate: bool = False,
+    ) -> tuple[h5py.File, WriteStandardMetadata, str]:
         """Create the file, generate the standard metadata, and return
         the file handle and metadata handle."""
 
@@ -202,7 +218,7 @@ class L1aRawPixGenerate(object):
         m.set_input_pointer([self.l0b, self.scene_file])
         return fout, m, fname
 
-    def detect_obst(self, sts, ste):
+    def detect_obst(self, sts: Time, ste: Time) -> str:
         # look for dolar array obstruction on scene using start/end times
         # and solar array obstruction reports from HOSC
 
@@ -261,7 +277,7 @@ class L1aRawPixGenerate(object):
             fov_obst = "NA"
         return fov_obst
 
-    def run(self):
+    def run(self) -> int:
         """Do the actual generation of data."""
         print("====  Start run ", datetime.now(), "  ====")
         self.log = None
@@ -275,8 +291,8 @@ class L1aRawPixGenerate(object):
         import l1b_geo_config  # type: ignore
 
         if self.run_config is not None:
-            dem = ecostress.create_dem(self.run_config)
-            ecostress.setup_spice(self.run_config)
+            dem = create_dem(self.run_config)
+            setup_spice(self.run_config)
         else:
             datum = os.environ["AFIDS_VDEV_DATA"] + "/EGM96_20_x100.HLF"
             srtm_dir = os.environ["AFIDS_DATA"] + "/srtmL2_filled"
@@ -302,26 +318,26 @@ class L1aRawPixGenerate(object):
 
         c2k = 273.15
         p7r = np.poly1d([PRT[0, 0], -(PRT[0, 1] + PRT[0, 2])])
-        prc = [n for n in range(5)]
-        prh = [n for n in range(5)]
-        prc[0] = np.poly1d([PRT[1, 2], PRT[1, 1], PRT[1, 0] + c2k])  # PRT_313_T
-        prc[1] = np.poly1d([PRT[2, 2], PRT[2, 1], PRT[2, 0] + c2k])  # PRT_314_T
-        prc[2] = np.poly1d([PRT[4, 2], PRT[4, 1], PRT[4, 0] + c2k])  # PRT_317_T
-        prc[3] = np.poly1d([PRT[3, 2], PRT[3, 1], PRT[3, 0] + c2k])  # PRT_315_T
-        prc[4] = np.poly1d([PRT[5, 2], PRT[5, 1], PRT[5, 0] + c2k])  # PRT_318_T
-        prh[0] = np.poly1d([PRT[12, 2], PRT[12, 1], PRT[12, 0] + c2k])  # PRT_465_T
-        prh[1] = np.poly1d([PRT[13, 2], PRT[13, 1], PRT[13, 0] + c2k])  # PRT_466_T
-        prh[2] = np.poly1d([PRT[14, 2], PRT[14, 1], PRT[14, 0] + c2k])  # PRT_467_T
-        prh[3] = np.poly1d([PRT[15, 2], PRT[15, 1], PRT[15, 0] + c2k])  # PRT_468_T
-        prh[4] = np.poly1d([PRT[16, 2], PRT[16, 1], PRT[16, 0] + c2k])  # PRT_469_T
+        prc = []
+        prh = []
+        prc.append(np.poly1d([PRT[1, 2], PRT[1, 1], PRT[1, 0] + c2k]))  # PRT_313_T
+        prc.append(np.poly1d([PRT[2, 2], PRT[2, 1], PRT[2, 0] + c2k]))  # PRT_314_T
+        prc.append(np.poly1d([PRT[4, 2], PRT[4, 1], PRT[4, 0] + c2k]))  # PRT_317_T
+        prc.append(np.poly1d([PRT[3, 2], PRT[3, 1], PRT[3, 0] + c2k]))  # PRT_315_T
+        prc.append(np.poly1d([PRT[5, 2], PRT[5, 1], PRT[5, 0] + c2k]))  # PRT_318_T
+        prh.append(np.poly1d([PRT[12, 2], PRT[12, 1], PRT[12, 0] + c2k]))  # PRT_465_T
+        prh.append(np.poly1d([PRT[13, 2], PRT[13, 1], PRT[13, 0] + c2k]))  # PRT_466_T
+        prh.append(np.poly1d([PRT[14, 2], PRT[14, 1], PRT[14, 0] + c2k]))  # PRT_467_T
+        prh.append(np.poly1d([PRT[15, 2], PRT[15, 1], PRT[15, 0] + c2k]))  # PRT_468_T
+        prh.append(np.poly1d([PRT[16, 2], PRT[16, 1], PRT[16, 0] + c2k]))  # PRT_469_T
 
         #  Get EV start codes for BB and IMG pixels
-        RPM = 0
-        FP_DUR = 0
+        RPM = 0.0
+        FP_DUR = 0.0
         MAX_FPIE = 0
         FPPSC = 0
         ev_codes = np.zeros((4, 6), dtype=np.int32)
-        ev_names = [e0 for e0 in range(5)]
+        ev_names = ["" for e0 in range(5)]
         " open EV codes file "
         with open(self.osp_dir + "/ev_codes.txt", "r") as ef:
             for i, evl in enumerate(ef):
@@ -475,8 +491,8 @@ class L1aRawPixGenerate(object):
             bs = [8.7, 10.5, 12.0]
         BandSpec = np.zeros(BANDS, dtype=np.float64)
 
-        tdpuio = 0
-        tcorr = 0
+        tdpuio = [0]
+        tcorr = [0.0]
         iss_tcorr = 0
         if (
             "/hk/bad/hr/time_dpuio" in self.fin
@@ -639,16 +655,13 @@ class L1aRawPixGenerate(object):
         cbb = np.zeros((SCPS * PPFP, BBLEN, BANDS), dtype=np.uint16)
         pix_time = np.zeros(SCPS * PPFP, dtype=np.float64)
         ev_buf = np.zeros((SCPS, FPPSC), dtype=np.uint32)
-        obuf = [0, 1, 2]
-        obuf[0] = hbb
-        obuf[1] = cbb
-        obuf[2] = img
+        obuf = [hbb, cbb, img]
 
         good = np.zeros(3, dtype=np.float32)
         gpix = np.zeros(3, dtype=np.float32)
         scenes = []  # record refined scene start/stop times
 
-        pkt_idx = 0  # start looking at first packet in file
+        # start looking at first packet in file
         # iterate through scenes from scene start/stop file
         o_start_time = None
         jumps = 0
@@ -957,7 +970,7 @@ class L1aRawPixGenerate(object):
                             ldd[:] = (
                                 lev[e0, 1:] - lev[e0, : FPPPKT - 1]
                             ) % MAX_FPIE  # find FP with EV jump
-                            fpc = np.argmax(ldd > FP_EVT)
+                            fpc = int(np.argmax(ldd > FP_EVT))
                             if fpc == 0:
                                 if ldd[0] > FP_EVT:
                                     fpc = 1
@@ -1356,8 +1369,8 @@ class L1aRawPixGenerate(object):
 
             # copy RTD temps to BB file
             if epc > 0:
-                p0 = np.argmax(bbtime >= rst)
-                p1 = np.argmax(bbtime >= rse)
+                p0 = int(np.argmax(bbtime >= rst))
+                p1 = int(np.argmax(bbtime >= rse))
             else:
                 p0 = 0
                 p1 = -1
@@ -1412,11 +1425,11 @@ class L1aRawPixGenerate(object):
             if pcomp < 50.0:
                 #  Generate corner locations
                 print("Getting time table")
-                tt = ecostress.create_time_table(
+                tt = create_time_table(
                     pname, l1b_geo_config.mirror_rpm, l1b_geo_config.frame_time
                 )
                 print("getting SM")
-                sm = ecostress.create_scan_mirror(
+                sm = create_scan_mirror(
                     pname,
                     l1b_geo_config.max_encoder_value,
                     l1b_geo_config.first_encoder_value_0,
@@ -1426,16 +1439,14 @@ class L1aRawPixGenerate(object):
                     l1b_geo_config.second_angle_per_encoder_value,
                 )
                 print("Getting orbitt")
-                orbitt = ecostress.EcostressOrbit(
+                orbitt = EcostressOrbit(
                     attfname,
                     l1b_geo_config.x_offset_iss,
                     l1b_geo_config.extrapolation_pad,
                     l1b_geo_config.large_gap,
                 )
                 print("Getting igc")
-                igc = ecostress.EcostressImageGroundConnection(
-                    orbitt, tt, cam, sm, dem, None
-                )
+                igc = EcostressImageGroundConnection(orbitt, tt, cam, sm, dem, None)
                 print("Getting mi")
                 mi = geocal.cib01_mapinfo()
                 print("Getting mi_fp")

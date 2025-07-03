@@ -1,3 +1,4 @@
+from __future__ import annotations
 import h5py  # type: ignore
 import os
 import gzip

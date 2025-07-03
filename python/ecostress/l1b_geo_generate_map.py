@@ -1,3 +1,4 @@
+from __future__ import annotations
 import geocal  # type: ignore
 from ecostress_swig import FILL_VALUE_NOT_SEEN, Resampler, fill_value_threshold  # type: ignore
 from .misc import determine_rotated_map_igc
@@ -7,6 +8,10 @@ import numpy as np
 import scipy  # type: ignore
 import subprocess
 from loguru import logger
+import typing
+
+if typing.TYPE_CHECKING:
+    from .l1b_geo_generate import L1bGeoGenerate
 
 
 class L1bGeoGenerateMap(object):
@@ -27,14 +32,14 @@ class L1bGeoGenerateMap(object):
 
     def __init__(
         self,
-        l1b_geo_generate,
-        l1b_rad,
-        output_name,
-        local_granule_id=None,
-        resolution=70,
-        north_up=False,
-        number_subpixel=3,
-    ):
+        l1b_geo_generate: L1bGeoGenerate,
+        l1b_rad: str,
+        output_name: str,
+        local_granule_id: str | None = None,
+        resolution: float = 70,
+        north_up: bool = False,
+        number_subpixel: int = 3,
+    ) -> None:
         self.l1b_geo_generate = l1b_geo_generate
         self.l1b_rad = l1b_rad
         self.output_name = output_name
@@ -46,7 +51,7 @@ class L1bGeoGenerateMap(object):
         self.resolution = resolution
         self.number_subpixel = number_subpixel
 
-    def run(self):
+    def run(self) -> None:
         fout = h5py.File(self.output_name, "w")
         m = self.l1b_geo_generate.m.copy_new_file(
             fout, self.local_granule_id, "ECO1BMAPRAD"

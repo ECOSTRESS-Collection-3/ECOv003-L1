@@ -1,3 +1,4 @@
+from __future__ import annotations
 from .gaussian_stretch import gaussian_stretch
 import geocal  # type: ignore
 from ecostress_swig import Resampler, fill_value_threshold  # type: ignore
@@ -7,6 +8,10 @@ import copy
 import math
 import numpy as np
 import scipy  # type: ignore
+import typing
+
+if typing.TYPE_CHECKING:
+    from .l1b_geo_generate import L1bGeoGenerate
 
 
 class L1bGeoGenerateKmz(object):
@@ -22,16 +27,16 @@ class L1bGeoGenerateKmz(object):
 
     def __init__(
         self,
-        l1b_geo_generate,
-        l1b_rad,
-        output_name,
-        local_granule_id=None,
-        band_list=[4, 3, 1],
-        use_jpeg=False,
-        resolution=70,
-        number_subpixel=3,
-        thumbnail_size=[0, 0],
-    ):
+        l1b_geo_generate: L1bGeoGenerate,
+        l1b_rad: str,
+        output_name: str,
+        local_granule_id: str | None = None,
+        band_list: list[int] = [4, 3, 1],
+        use_jpeg: bool = False,
+        resolution: float = 70,
+        number_subpixel: int = 3,
+        thumbnail_size: list[int] = [0, 0],
+    ) -> None:
         """Thumbnail size is in pixels, x and y. If one of the
         sizes is 0 then we hold the aspect ratio to 1. If both are 0, then
         we use the size of final kmz layer"""
@@ -48,7 +53,7 @@ class L1bGeoGenerateKmz(object):
             self.local_granule_id = os.path.basename(output_name)
         self.thumbnail_size = thumbnail_size
 
-    def run(self):
+    def run(self) -> None:
         # Note short name is L1B_KMZ_MAP, although we don't actually
         # generate standard metadata
         # m = self.l1b_geo_generate.m.copy_new_file(fout,

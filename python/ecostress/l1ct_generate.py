@@ -1,3 +1,4 @@
+from __future__ import annotations
 import geocal  # type: ignore
 from .gaussian_stretch import gaussian_stretch
 from ecostress_swig import (  # type: ignore

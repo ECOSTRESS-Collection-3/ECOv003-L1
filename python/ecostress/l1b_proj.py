@@ -1,3 +1,4 @@
+from __future__ import annotations
 from ecostress_swig import fill_value_threshold, Resampler, GroundCoordinateArray  # type: ignore
 import geocal  # type: ignore
 from .pickle_method import *
@@ -5,6 +6,11 @@ import numpy as np
 import scipy.ndimage  # type: ignore
 import os
 from loguru import logger
+import typing
+
+if typing.TYPE_CHECKING:
+    from multiprocessing.pool import Pool
+    from .l1b_geo_qa_file import L1bGeoQaFile
 
 
 class L1bProj(object):
@@ -14,17 +20,17 @@ class L1bProj(object):
 
     def __init__(
         self,
-        igccol,
-        fname_list,
-        ref_fname_list,
-        ortho_base,
-        qa_file=None,
-        number_subpixel=2,
-        min_number_good_scan=41,
-        scratch_fname="initial_lat_lon.dat",
-        pass_through_error=False,
-        separate_file_per_scan=False,
-    ):
+        igccol: geocal.IgcCollection,
+        fname_list: list[str],
+        ref_fname_list: list[str],
+        ortho_base: list[geocal.RasterImage],
+        qa_file: L1bGeoQaFile | None = None,
+        number_subpixel: int = 2,
+        min_number_good_scan: int = 41,
+        scratch_fname: str = "initial_lat_lon.dat",
+        pass_through_error: bool = False,
+        separate_file_per_scan: bool = False,
+    ) -> None:
         """Project igc and generate a Vicar file fname."""
         self.igccol = igccol
         self.gc_arr = list()
@@ -49,10 +55,10 @@ class L1bProj(object):
                 GroundCoordinateArray(self.igccol.image_ground_connection(i))
             )
 
-    def scratch_file(self, create=False):
+    def scratch_file(self, create: bool = False) -> np.memmap:
         """Open/Create the scratch file we use in our lat/lon calculation."""
         mode = "w+" if create else "r+"
-        return np.memmap(
+        return np.memmap(  # type:ignore[call-overload]
             self.scratch_fname,
             dtype="f8",
             mode=mode,
@@ -64,15 +70,19 @@ class L1bProj(object):
             ),
         )
 
-    def resample_data(self, igc_ind):
+    def resample_data(self, igc_ind: int) -> bool:
         try:
             with logger.catch(reraise=True):
                 mi = self.ortho_base[igc_ind].map_info.scale(
                     self.ortho_scale[igc_ind], self.ortho_scale[igc_ind]
                 )
                 f = self.scratch_file()
-                lat = f[igc_ind, :, :, 0]
-                lon = f[igc_ind, :, :, 1]
+                lat: np.ndarray | None = f[igc_ind, :, :, 0]
+                lon: np.ndarray | None = f[igc_ind, :, :, 1]
+                if lat is None or lon is None:
+                    raise RuntimeError(
+                        "This can't happen, but make mypy happy by checking"
+                    )
                 # Handle case where we have no good data
                 if np.count_nonzero(lat > -1000) == 0:
                     return False
@@ -141,7 +151,7 @@ class L1bProj(object):
                 self.qa_file.encountered_exception = True
             return False
 
-    def proj_scan(self, it):
+    def proj_scan(self, it: tuple[int, int]) -> bool:
         igc_ind, scan_index = it
         igc = self.igccol.image_ground_connection(igc_ind)
         start_line, end_line = igc.time_table.scan_index_to_line(scan_index)
@@ -159,7 +169,7 @@ class L1bProj(object):
         logger.info("Done with [%d, %d, %d]" % (igc_ind, start_line, end_line))
         return True
 
-    def proj(self, pool=None):
+    def proj(self, pool: Pool | None = None) -> list[bool]:
         # Create file, but then close. We reopen in each process. Without
         # this, numpy seems to create some sort of lock where only one
         # process acts at a time.
@@ -195,13 +205,13 @@ class L1bProj(object):
 
         # Now resample data, and also resample orthobase to the same
         # map projection.
-        it = list(range(self.igccol.number_image))
+        it2 = list(range(self.igccol.number_image))
         # Seem to run into trouble doing this in parallel, I think the
         # memory use is high enough that it causes problems. May look
         # to reduce resample_data memory use somehow. This step is quick
         # enough that this probably isn't much of an actual problem in
         # practice
-        return list(map(self.resample_data, it))
+        return list(map(self.resample_data, it2))
         # if(pool is None):
         #    list(map(self.resample_data, it))
         # else:

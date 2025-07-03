@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pathlib import Path
 import geocal  # type: ignore
 import numpy as np

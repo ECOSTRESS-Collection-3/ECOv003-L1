@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 # This is various miscellaneous routines that don't fit elsewhere
 import geocal  # type: ignore
 import re

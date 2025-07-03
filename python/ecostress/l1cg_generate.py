@@ -1,3 +1,4 @@
+from __future__ import annotations
 import geocal  # type: ignore
 from ecostress_swig import (  # type: ignore
     fill_value_threshold,

@@ -1,3 +1,4 @@
+from __future__ import annotations
 import geocal  # type: ignore
 import h5py  # type: ignore
 from .write_standard_metadata import WriteStandardMetadata
