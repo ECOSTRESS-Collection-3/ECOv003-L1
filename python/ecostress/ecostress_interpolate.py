@@ -166,7 +166,7 @@ class EcostressAeDeepEnsembleInterpolate(object):
         # Mask missing data (0 for missing, 1 for valid)
         mask = layers.Lambda(lambda x: tf.cast(~tf.math.is_nan(x), tf.float32))(inputs)
 
-        def my_nan_to_num(x):
+        def my_nan_to_num(x):  # type: ignore
             return tf.cond(
                 tf.equal(tf.size(x), 0),
                 lambda: x,

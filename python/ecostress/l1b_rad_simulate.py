@@ -1,3 +1,4 @@
+from __future__ import annotations
 import geocal  # type: ignore
 from .pickle_method import *
 import h5py  # type: ignore
@@ -5,6 +6,10 @@ from .write_standard_metadata import WriteStandardMetadata
 from .misc import time_split
 import math
 import numpy as np
+import typing
+
+if typing.TYPE_CHECKING:
+    from multiprocessing.pool import Pool
 
 
 class L1bRadSimulate(object):
@@ -18,14 +23,14 @@ class L1bRadSimulate(object):
 
     def __init__(
         self,
-        orbit,
-        time_table,
-        camera,
-        surface_image,
-        dem=None,
-        number_integration_step=1,
-        raycast_resolution=-1,
-    ):
+        orbit: geocal.Orbit,
+        time_table: geocal.TimeTable,
+        camera: geocal.Camera,
+        surface_image: list[geocal.RasterImage],
+        dem: None | geocal.Dem = None,
+        number_integration_step: int = 1,
+        raycast_resolution: int = -1,
+    ) -> None:
         """Create a L1bGeoSimulate that works with the given orbit, time
         table, camera, and surface images. surface_image should have
         one image for each band.
@@ -53,7 +58,7 @@ class L1bRadSimulate(object):
             # for data that is partially over the ocean
             self.dem = geocal.SrtmDem("", False)
 
-    def create_file(self, l1b_rad_fname, pool=None):
+    def create_file(self, l1b_rad_fname: str, pool: None | Pool = None) -> None:
         fout = h5py.File(l1b_rad_fname, "w")
         g = fout.create_group("Radiance")
         g2 = fout.create_group("SWIR")
@@ -97,7 +102,7 @@ class L1bRadSimulate(object):
         m.write()
         fout.close()
 
-    def image_parallel_func(self, it):
+    def image_parallel_func(self, it: tuple[int, int]) -> np.ndarray:
         """Calculate image for a subset of the data, suitable for use with a
         multiprocessor pool."""
         # Handle number_sample too large here, so we don't have to
@@ -109,7 +114,9 @@ class L1bRadSimulate(object):
             0, start_sample, self.igc_ray_cast.number_line, number_sample
         )
 
-    def image(self, band, camera_band=None, pool=None):
+    def image(
+        self, band: int, camera_band: int | None = None, pool: None | Pool = None
+    ) -> np.ndarray:
         """Use raycasting to generate a image for the given band. By default the
         camera_band is the same as the band, but you can optionally set it to a
         different value.
@@ -135,14 +142,14 @@ class L1bRadSimulate(object):
             self.raycast_resolution,
         )
         if pool is None:
-            return self.image_parallel_func([0, self.igc_ray_cast.number_sample])
-        nprocess = pool._processes
+            return self.image_parallel_func((0, self.igc_ray_cast.number_sample))
+        nprocess = pool._processes  # type: ignore[attr-defined]
         n = math.floor(self.igc_ray_cast.number_sample / nprocess)
         if self.igc_ray_cast.number_sample % nprocess > 0:
             n += 1
-        it = [[i, n] for i in range(0, self.igc_ray_cast.number_sample, n)]
-        r = pool.map(self.image_parallel_func, it)
-        r = np.hstack(r)
+        it = [(i, n) for i in range(0, self.igc_ray_cast.number_sample, n)]
+        rv = pool.map(self.image_parallel_func, it)
+        r = np.hstack(rv)
         r[r < 0] = 0
         return r
 

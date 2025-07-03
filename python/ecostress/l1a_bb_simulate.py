@@ -7,7 +7,7 @@ class L1aBbSimulate(object):
     """This is used to generate L1A_BB simulated data. Right now, this is just
     dummy data."""
 
-    def __init__(self, l1a_pix_fname):
+    def __init__(self, l1a_pix_fname: str) -> None:
         """Create a L1APixSimulate to process the given L1A_PIX file."""
         self.l1a_pix = h5py.File(l1a_pix_fname, "r")
         # We can calculate with these values by doing something like:
@@ -26,10 +26,10 @@ class L1aBbSimulate(object):
         self.bb_295_mean = [4, 849 + 580, 925 + 590, 996 + 590, 1238 + 610, 1238 + 710]
         self.bb_295_sigma = [0, 0, 0, 0, 0, 0]
 
-    def copy_metadata(self, field):
+    def copy_metadata(self, field: str) -> None:
         self.m.set(field, self.l1a_pix["/StandardMetadata/" + field][()])
 
-    def gaussian_data(self, mean, sigma):
+    def gaussian_data(self, mean: float, sigma: float) -> np.ndarray:
         """Return random data of the right length for the given mean and sigma.
         Tom uses the vicar function gausnois. We could use that, but since
         numpy already has this function and we don't need to then generate
@@ -43,12 +43,12 @@ class L1aBbSimulate(object):
             r = np.empty((len, 1), dtype=np.uint16)
             r[:] = mean
         else:
-            r = np.round(np.random.normal(mean, sigma, (len, 1)).astype(np.uint16))
+            r = np.round(np.random.normal(mean, sigma, (len, 1))).astype(np.uint16)
         # Repeat the data so it is the full size (64 is number of samples,
         # 44 is number of scans in a scene
         return np.repeat(np.repeat(r, 64, axis=1), 44, axis=0)
 
-    def create_file(self, l1a_bb_fname):
+    def create_file(self, l1a_bb_fname: str) -> None:
         fout = h5py.File(l1a_bb_fname, "w")
         g = fout.create_group("BlackBodyPixels")
         for b in range(6):

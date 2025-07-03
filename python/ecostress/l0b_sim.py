@@ -157,7 +157,13 @@ SCPS = 44
 class L0BSimulate(object):
     # This is used to generate L0 simulated data. We take the output of the
     # l1a_raw pge and reverse the processing to produce a L0 file.
-    def __init__(self, l1a_raw_att_fname, l1a_eng_fname, scene_files, osp_dir=None):
+    def __init__(
+        self,
+        l1a_raw_att_fname: str,
+        l1a_eng_fname: str,
+        scene_files: list[tuple[int, str, str]],
+        osp_dir: str | None = None,
+    ) -> None:
         # Create a L0Simulate to process the given files. The orbit based files
         # are passed in as a file name, and the scene based files are passed as a dict
         # with keys of scene id. The values in the dict are an array, the first entry
@@ -170,7 +176,7 @@ class L0BSimulate(object):
         self.l1a_raw_att_fname = l1a_raw_att_fname
         self.scene_files = scene_files
 
-    def kelvin_to_dn(self, x, k):
+    def kelvin_to_dn(self, x: np.ndarray, k: float) -> int:
         # convert Kelvin temperature to PRT DN values given PRT coefficients
         # a = array of coefficients
         # K = kelvin temperature
@@ -185,7 +191,7 @@ class L0BSimulate(object):
         # print("kelvin_to_dn,X=%f %f %f %f %f K=%f RDN=%f DN=%d" % (x[0],x[1],x[2],x[3],x[4],K,rdn,dn))
         return dn  # little-Endian
 
-    def create_file(self, l0b_fname):
+    def create_file(self, l0b_fname: str) -> None:
         print("====  CREATE_FILE L0B_FNAME %s ====" % l0b_fname)
         print("====  Start time  ", datetime.now(), "  ====")
 
@@ -217,10 +223,10 @@ class L0BSimulate(object):
 
         #  Get EV start codes for BB and IMG pixels
         ev_codes = np.zeros((4, 4), dtype=np.int32)
-        ev_names = [p0 for p0 in range(5)]
+        ev_names: list[str] = [str(p0) for p0 in range(5)]
         " open EV codes file "
-        rpm = 0
-        fp_dur = 0
+        rpm = 0.0
+        fp_dur = 0.0
         max_fpie = 0
         fppsc = 0
         with open(self.osp_dir + "/ev_codes.txt", "r") as ef:
@@ -261,8 +267,7 @@ class L0BSimulate(object):
         ev2 = ev_codes[3, 2]
 
         if rpm == 0.0 or fp_dur == 0.0 or max_fpie == 0 or fppsc == 0:
-            print("*** Input parameters not set ***")
-            return -3
+            raise RuntimeError("*** Input parameters not set ***")
         pkt_dur = fp_dur * float(FPPPKT)
         # FPIE mirror encoder - 50.95 degree swath width
         # covered by 25.475 degree of mirror scan.  Mirror
@@ -435,9 +440,9 @@ class L0BSimulate(object):
         prev = 0
         evp = 0
         t0 = 0
-        pix_dat = [b for b in range(BANDS)]
-        b295 = [b for b in range(BANDS)]
-        b325 = [b for b in range(BANDS)]
+        pix_dat = [np.empty((0, 0)) for b in range(BANDS)]
+        b295 = [np.empty((0, 0)) for b in range(BANDS)]
+        b325 = [np.empty((0, 0)) for b in range(BANDS)]
         ### angnadir = 180.0
 
         # process scenes make sure to do it in order

@@ -1,3 +1,4 @@
+from __future__ import annotations
 import numpy as np
 import h5py  # type: ignore
 from .write_standard_metadata import WriteStandardMetadata
@@ -7,13 +8,13 @@ class L1aEngSimulate(object):
     """This is used to generate L1A_ENG simulated data. Right now, this is just
     dummy data."""
 
-    def __init__(self, l1a_raw_att_fname):
+    def __init__(self, l1a_raw_att_fname: str) -> None:
         """Create a L1APixSimulate to process the given L1B_RAD file."""
         # Right now, get times from raw att file
         self.att_file = h5py.File(l1a_raw_att_fname)
         self.time_j2000 = self.att_file["/Ephemeris/time_j2000"][:]
 
-    def create_file(self, l1a_eng_fname):
+    def create_file(self, l1a_eng_fname: str) -> None:
         fout = h5py.File(l1a_eng_fname, "w")
         g = fout.create_group("rtdBlackbodyGradients")
         data = np.zeros((self.time_j2000.shape[0], 5))

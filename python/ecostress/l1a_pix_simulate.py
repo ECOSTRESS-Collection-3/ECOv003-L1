@@ -1,3 +1,4 @@
+from __future__ import annotations
 import numpy as np
 import h5py  # type: ignore
 from .write_standard_metadata import WriteStandardMetadata
@@ -7,14 +8,24 @@ from ecostress_swig import (  # type: ignore
     GroundCoordinateArray,
     SimulatedRadiance,
 )
-from geocal import ImageCoordinate  # type: ignore
+import geocal  # type: ignore
+import typing
+
+if typing.TYPE_CHECKING:
+    from multiprocessing.pool import Pool
 
 
 class L1aPixSimulate(object):
     """This is used to generate L1A_PIX simulated data from a L1B_RAD file.
     This is the inverse of the l1b_rad_generate process."""
 
-    def __init__(self, igc, surface_image, gain_fname=None, scale_factor=None):
+    def __init__(
+        self,
+        igc: geocal.ImageGroundConnection,
+        surface_image: list[geocal.RasterImage],
+        gain_fname: None | str = None,
+        scale_factor: None | list[float | None] = None,
+    ) -> None:
         """Create a L1APixSimulate to process the given
         EcostressImageGroundConnection.  We supply the surface map projected
         image as an array, one entry per band in the igc."""
@@ -23,11 +34,11 @@ class L1aPixSimulate(object):
         self.gain_fname = gain_fname
         self.scale_factor = scale_factor
 
-    def image_parallel_func(self, it):
+    def image_parallel_func(self, it: tuple[int, int]) -> np.ndarray:
         """Calculate image for a subset of data."""
         return self.sim_rad.radiance_scan(it[0], it[1])
 
-    def image(self, band, pool=None):
+    def image(self, band: int, pool: Pool | None = None) -> np.ndarray:
         """Generate a l1a pix image for the given band."""
         print("Doing band %d" % (band + 1))
         self.igc.band = band
@@ -37,12 +48,12 @@ class L1aPixSimulate(object):
         self.sim_rad = SimulatedRadiance(
             GroundCoordinateArray(self.igc), self.surface_image[band], avg_fact
         )
-        it = [[i, 256] for i in range(0, self.igc.number_line, 256)]
+        it = [(i, 256) for i in range(0, self.igc.number_line, 256)]
         if pool:
-            r = pool.map(self.image_parallel_func, it)
+            rv = pool.map(self.image_parallel_func, it)
         else:
-            r = map(self.image_parallel_func, it)
-        r = np.vstack(r)
+            rv = list(map(self.image_parallel_func, it))
+        r = np.vstack(rv)
         # Don't think we have any negative data, but go ahead and zero this out
         # if there is any
         r[r < 0] = 0
@@ -72,7 +83,7 @@ class L1aPixSimulate(object):
         r = r.astype(np.int16)
         return r
 
-    def create_file(self, l1a_pix_fname, pool=None):
+    def create_file(self, l1a_pix_fname: str, pool: None | Pool = None) -> None:
         fout = h5py.File(l1a_pix_fname, "w")
         g = fout.create_group("UncalibratedDN")
         for b in range(6):
@@ -83,7 +94,7 @@ class L1aPixSimulate(object):
             "line_start_time_j2000",
             data=np.array(
                 [
-                    self.igc.time_table.time(ImageCoordinate(i, 0))[0].j2000
+                    self.igc.time_table.time(geocal.ImageCoordinate(i, 0))[0].j2000
                     for i in range(self.igc.time_table.max_line + 1)
                 ]
             ),

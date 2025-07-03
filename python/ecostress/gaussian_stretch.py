@@ -4,7 +4,7 @@ import numpy as np
 
 
 class GaussianStretch(VicarInterface):
-    def __init__(self, data : np.ndarray) -> None:
+    def __init__(self, data: np.ndarray) -> None:
         super().__init__()
         self.data = data
         self.timing = False
@@ -21,7 +21,7 @@ class GaussianStretch(VicarInterface):
         self.out = VicarRasterImage("out.img").read_all()
 
 
-def gaussian_stretch(data : np.ndarray) -> np.ndarray:
+def gaussian_stretch(data: np.ndarray) -> np.ndarray:
     """This does histogram equalization on the given data, doing a Gaussian
     stretch.
 

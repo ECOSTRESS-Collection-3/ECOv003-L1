@@ -6,14 +6,14 @@ from .write_standard_metadata import WriteStandardMetadata
 class L1aRawPixSimulate:
     """This is used to generate L1A_RAW_PIX simulated data."""
 
-    def __init__(self, l1a_pix_fname):
+    def __init__(self, l1a_pix_fname: str) -> None:
         """Create a L1APixSimulate to process the given L1A_PIX file."""
         self.l1a_pix = h5py.File(l1a_pix_fname, "r")
 
-    def copy_metadata(self, field):
+    def copy_metadata(self, field: str) -> None:
         self.m.set(field, self.l1a_pix["/StandardMetadata/" + field][()])
 
-    def create_file(self, l1a_raw_pix_fname):
+    def create_file(self, l1a_raw_pix_fname: str) -> None:
         fout = h5py.File(l1a_raw_pix_fname, "w")
         g = fout.create_group("UncalibratedPixels")
         for b in range(6):

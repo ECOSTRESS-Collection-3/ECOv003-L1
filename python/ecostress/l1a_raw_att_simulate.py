@@ -1,20 +1,23 @@
+from __future__ import annotations
 import numpy as np
 import h5py  # type: ignore
 from .write_standard_metadata import WriteStandardMetadata
 from .misc import time_split
-from geocal import Time, quaternion_to_array  # type: ignore
+import geocal  # type: ignore
 
 
 class L1aRawAttSimulate(object):
     """This is used to generate L1A_RAW_ATT simulated data."""
 
-    def __init__(self, orb, min_time, max_time):
+    def __init__(
+        self, orb: geocal.Orbit, min_time: geocal.Time, max_time: geocal.Time
+    ) -> None:
         """Create a L1ARawAttSimulate to process the given orbit."""
         self.orb = orb
         self.min_time = min_time
         self.max_time = max_time
 
-    def create_file(self, l1a_raw_att_fname):
+    def create_file(self, l1a_raw_att_fname: str) -> None:
         fout = h5py.File(l1a_raw_att_fname, "w")
         # For now, we have both ephemeris and attitude with same time spacing.
         # We could change that in the future if needed.
@@ -26,10 +29,10 @@ class L1aRawAttSimulate(object):
         vel = np.zeros((tm.shape[0], 3))
         quat = np.zeros((tm.shape[0], 4))
         for i, t in enumerate(tm):
-            od = self.orb.orbit_data(Time.time_j2000(t))
+            od = self.orb.orbit_data(geocal.Time.time_j2000(t))
             pos[i, :] = od.position_ci.position
             vel[i, :] = od.velocity_ci
-            quat[i, :] = quaternion_to_array(od.sc_to_ci)
+            quat[i, :] = geocal.quaternion_to_array(od.sc_to_ci)
         g = fout.create_group("Ephemeris")
         t = g.create_dataset("time_j2000", data=tm)
         t.attrs["Units"] = "Seconds"
