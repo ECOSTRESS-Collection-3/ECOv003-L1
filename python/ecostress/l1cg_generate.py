@@ -253,14 +253,14 @@ class L1cgGenerate:
             din = h5py.File(self.l1b_rad)[f"Radiance/data_quality_{b}"][:, :]
             data_in = geocal.MemoryRasterImage(din.shape[0], din.shape[1])
             data_in.write(0, 0, din)
-            data = res.resample_dqi(data_in).astype(np.int8)
+            data = res.resample_dqi(data_in).astype(np.uint8)
             t = dfield.create_dataset(
                 "data_quality_%d" % b,
                 data=data,
-                fillvalue=0,
+                dtype=np.uint8,
                 compression="gzip",
             )
-            t.attrs.create("_FillValue", data=0, dtype=t.dtype)
+            t.attrs["Units"] = "dimensionless"
 
         logger.info("Doing view_zenith")
         data_in = geocal.GdalRasterImage(
@@ -280,7 +280,7 @@ class L1cgGenerate:
         t.attrs["valid_max"] = 90
         logger.info("Doing height")
         lat, lon, height = res.map_values(self.dem)
-        t = dfield.create_dataset("height", data=data, dtype="f4", compression="gzip")
+        t = dfield.create_dataset("height", data=height, dtype="f4", compression="gzip")
         t.attrs["Units"] = "m"
 
         logger.info("Doing water")
@@ -298,11 +298,11 @@ class L1cgGenerate:
         t = dfield.create_dataset(
             "water",
             data=water_data,
-            fillvalue=0,
+            dtype=np.uint8,
             compression="gzip",
         )
-        t.attrs.create("_FillValue", data=0, dtype=t.dtype)
         t.attrs["Description"] = "1 for water, 0 for land or fill value"
+        t.attrs["Units"] = "dimensionless"
 
         logger.info("Doing prelim_cloud_mask")
         din = h5py.File(self.l1b_geo)["Geolocation/prelim_cloud_mask"][:, :]
@@ -316,11 +316,10 @@ class L1cgGenerate:
             "prelim_cloud_mask",
             data=data,
             dtype=np.uint8,
-            fillvalue=0,
             compression="gzip",
         )
-        t.attrs.create("_FillValue", data=0, dtype=t.dtype)
         t.attrs["Description"] = "1 for cloudy, 0 for clear or fill"
+        t.attrs["Units"] = "dimensionless"
 
         m.write()
 

@@ -4,6 +4,7 @@ from .gaussian_stretch import gaussian_stretch
 from ecostress_swig import (  # type: ignore
     fill_value_threshold,
     Resampler,
+    GroundCoordinateArray,
     coordinate_convert,
     write_data,
     write_gdal,
@@ -33,6 +34,7 @@ class L1ctGenerate:
         self,
         l1b_geo: str | os.PathLike[str],
         l1b_rad: str | os.PathLike[str],
+        lwm : geocal.SrtmLwmData,
         l1_osp_dir: str | os.PathLike[str],
         output_pattern: str | os.PathLike[str],
         inlist: list[str],
@@ -52,6 +54,7 @@ class L1ctGenerate:
         """
         self.l1b_geo = Path(l1b_geo)
         self.l1b_rad = Path(l1b_rad)
+        self.lwm = lwm
         self.output_pattern = output_pattern
         self.l1_osp_dir = Path(l1_osp_dir)
         self.resolution = resolution
@@ -233,6 +236,48 @@ class L1ctGenerate:
                 "BLOCKSIZE=256 COMPRESS=DEFLATE",
             )
             f.close()
+        # water mask
+        logger.info(f"Doing water - {shp['tile_id']}")
+        lat, lon, height = res.map_values(geocal.SimpleDem())
+        # Work around a bug in SrtmDem when we get very close to
+        # longitude 180. We should fix this is geocal, but that is
+        # pretty involved. So for now, tweak the longitude values so we
+        # don't run into this. See git Issue #138
+        lon_tweak = lon.copy()
+        lon_tweak[lon_tweak > 179] = 179.0
+        lfrac = GroundCoordinateArray.interpolate(self.lwm, lat, lon_tweak)
+        # Fill value is 0, so we treat as land 100%
+        lfrac = np.where(lfrac <= fill_value_threshold, 100.0, lfrac * 100.0)
+        # Water mask is 0 for land or fill, 1 for water. We just threshold of the land fraction
+        water_data = np.where(lfrac < 50, 1, 0).astype(np.uint8)
+        f = geocal.GdalRasterImage("", "MEM", mi, 1, geocal.GdalRasterImage.Byte)
+        f.write(0, 0, data)
+        write_gdal(
+            str(dirname / f"{dirname.name}_water.tif"),
+            "COG",
+            f,
+            "BLOCKSIZE=256 COMPRESS=DEFLATE",
+        )
+        f.close()
+
+        # Cloud mask
+        logger.info(f"Doing prelim_cloud_mask - {shp['tile_id']}")
+        din = h5py.File(self.l1b_geo)["Geolocation/prelim_cloud_mask"][:, :]
+        # Remove fill value, treat as clear
+        din[din > 1] = 0
+        data_in = geocal.MemoryRasterImage(din.shape[0], din.shape[1])
+        data_in.write(0, 0, din)
+        data = res.resample_field(data_in, 1.0, False, 0)
+        data = np.where(data < 0.5, 0, 1).astype(int)
+        f = geocal.GdalRasterImage("", "MEM", mi, 1, geocal.GdalRasterImage.Byte)
+        f.write(0, 0, data)
+        write_gdal(
+            str(dirname / f"{dirname.name}_prelim_cloud_mask.tif"),
+            "COG",
+            f,
+            "BLOCKSIZE=256 COMPRESS=DEFLATE",
+        )
+        f.close()
         res = None
         # Create zip file
         with ZipFile(str(dirname.parent / f"{dirname.name}.zip"), "w") as fh:
@@ -242,22 +287,6 @@ class L1ctGenerate:
 
         logger.info(f"Done with {shp['tile_id']}")
         return True
-
-        # breakpoint()
-        # Make sure fill values are negative enough that is clear we
-        # should ignore them, even after interpolation
-        # latv[latv < fill_value_threshold] = -1e20
-        # lonv[lonv < fill_value_threshold] = -1e20
-        # Order 1 is bilinear interpolation
-        # lat = scipy.ndimage.interpolation.zoom(
-        #    latv, self.number_subpixel, order=1
-        # )
-        # lon = scipy.ndimage.interpolation.zoom(
-        #    lonv, self.number_subpixel, order=1
-        # )
-        # res = Resampler(lon, lat, mi, self.number_subpixel, False)
-        # logger.info("Done with Resampler init")
-        # mi = res.map_info
 
         # TODO Make sure to update bounding box stuff in output metadata
         # TODO Put into place, I think we need to handle this with something

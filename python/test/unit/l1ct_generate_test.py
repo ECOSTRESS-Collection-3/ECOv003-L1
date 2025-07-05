@@ -4,7 +4,7 @@ from multiprocessing import Pool
 
 
 @pytest.mark.long_test
-def test_l1ct_generate(isolated_dir, test_data_latest):
+def test_l1ct_generate(isolated_dir, test_data_latest, lwm):
     l1_osp_dir = test_data_latest / "l1_osp_dir"
     l1b_geo_fname = (
         test_data_latest
@@ -18,6 +18,7 @@ def test_l1ct_generate(isolated_dir, test_data_latest):
     g = L1ctGenerate(
         l1b_geo_fname,
         l1b_rad_fname,
+        lwm,
         l1_osp_dir,
         out_pattern,
         [

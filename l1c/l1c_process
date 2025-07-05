@@ -142,6 +142,7 @@ try:
         l1ct = ecostress.L1ctGenerate(
             l1b_geo_fname,
             l1b_rad_fname,
+            lwm,
             l1_osp_dir,
             ofile2,
             inlist,
