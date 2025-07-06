@@ -159,7 +159,7 @@ class L1cgGenerate:
             d[:] = data_scaled
             d = None
 
-    def write_browse(self, mi : geocal.MapInfo) -> None:
+    def write_browse(self, mi: geocal.MapInfo) -> None:
         """Write out the browse product"""
         cmd_merge = [
             "gdalbuildvrt",
@@ -175,7 +175,7 @@ class L1cgGenerate:
             )
         subprocess.run(cmd_merge)
         # Size of 0 tells GDAL to maintain the aspect ratio
-        if(mi.number_x_pixel > mi.number_y_pixel):
+        if mi.number_x_pixel > mi.number_y_pixel:
             xsize = self.browse_size
             ysize = 0
         else:

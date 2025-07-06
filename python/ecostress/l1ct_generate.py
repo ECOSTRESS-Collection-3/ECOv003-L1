@@ -175,9 +175,15 @@ class L1ctGenerate:
         ras_b.write(0, 0, image_array_int[:, :, 2])
         write_gdal(fname, "JPEG", ras_r, "")
         if vicar_fname is not None:
+            # Scale to 1 to 255, leaving 0 for nodata
+            data_scaled *= 254.9
+            data_scaled += 1.0
             data_scaled[np.isnan(data_scaled)] = 0
+            # Clip, in case round off takes us past the end
+            data_scaled[data_scaled < 0.0] = 0.0
+            data_scaled[data_scaled > 255.0] = 255.0
             d = geocal.mmap_file(vicar_fname, mi, nodata=0.0, dtype=np.uint8)
-            d[:] = (data_scaled * 255).astype(np.uint8)
+            d[:] = data_scaled.astype(np.uint8)
             d = None
 
     def write_browse(self, dirname: Path) -> None:
