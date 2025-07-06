@@ -8,6 +8,7 @@ from ecostress_swig import (  # type: ignore
     coordinate_convert,
     write_data,
     write_gdal,
+    gdal_band,
     set_fill_value,
 )
 import h5py  # type: ignore
@@ -20,6 +21,9 @@ from zipfile import ZipFile
 import shutil
 import os
 import subprocess
+import matplotlib.pyplot as plt
+import PIL
+import io
 import typing
 
 if typing.TYPE_CHECKING:
@@ -140,6 +144,27 @@ class L1ctGenerate:
                     self._utm_coor[epsg] = (owrap, x, y)
         return self._utm_coor[epsg]
 
+    def write_jpeg(self, fname, mi, data, vmin, vmax):
+        '''Create jpeg preview of the given data. Not sure how useful this actually is,
+        but this was done in collection 2 so we want to match that.'''
+        # Scale data from 0.0 to 1.0, which is what the cmap uses
+        data_scaled = (data - float(vmin)) / (float(vmax) - float(vmin))
+        data_scaled[data_scaled < 0.0] = 0.0
+        data_scaled[data_scaled > 1.0] = 1.0
+        cmap = plt.get_cmap('jet')
+        # Map to rgba, in the range 0.0 to 1.0
+        image_array_norm = cmap(data_scaled)
+        # Then scale to 0 to 255 as a byte
+        image_array_int = np.uint8(image_array_norm * 255)
+        # Write out as jpeg
+        ras_r = geocal.GdalRasterImage("", "MEM", mi, 3, geocal.GdalRasterImage.Byte)
+        ras_g = gdal_band(ras_r, 2)
+        ras_b = gdal_band(ras_r, 3)
+        ras_r.write(0,0,image_array_int[:,:,0])
+        ras_g.write(0,0,image_array_int[:,:,1])
+        ras_b.write(0,0,image_array_int[:,:,2])
+        write_gdal(fname, "JPEG", ras_r, "")
+
     def process_tile(self, shp: dict) -> bool:
         logger.info(f"Processing {shp['tile_id']}")
         x: np.ndarray | None = None
@@ -190,6 +215,22 @@ class L1ctGenerate:
                 "BLOCKSIZE=256 COMPRESS=DEFLATE",
             )
             f.close()
+            # Get the range to use in the jpeg preview. We use the full range
+            # of all the data, so we don't have weird changes in the color map from one
+            # tile to the next
+            din = data_in.read_all_double()
+            if(np.count_nonzero(din > fill_value_threshold) > 0):
+                mn = din[din > fill_value_threshold].min()
+                mx = din[din > fill_value_threshold].max()
+                mean = np.mean(din[din > fill_value_threshold])
+                sd = np.std(din[din > fill_value_threshold])
+                vmin = max(mean-2*sd,mn)
+                vmax = min(mean+2*sd,mx)
+            else:
+                vmin=0
+                vmax=1
+            self.write_jpeg(str(dirname / f"{dirname.name}_radiance_{b}.jpeg"),
+                            mi, data, vmin, vmax)
             # Create data for browse product
             if b in self.browse_band_list:
                 data = data.copy()
@@ -236,6 +277,9 @@ class L1ctGenerate:
                 "BLOCKSIZE=256 COMPRESS=DEFLATE",
             )
             f.close()
+            # DQI ranges from 0 to 4
+            self.write_jpeg(str(dirname / f"{dirname.name}_data_quality_{b}.jpeg"),
+                            mi, data, 0,4)
         # water mask
         logger.info(f"Doing water - {shp['tile_id']}")
         lat, lon, height = res.map_values(geocal.SimpleDem())
@@ -251,7 +295,7 @@ class L1ctGenerate:
         # Water mask is 0 for land or fill, 1 for water. We just threshold of the land fraction
         water_data = np.where(lfrac < 50, 1, 0).astype(np.uint8)
         f = geocal.GdalRasterImage("", "MEM", mi, 1, geocal.GdalRasterImage.Byte)
-        f.write(0, 0, data)
+        f.write(0, 0, water_data)
         write_gdal(
             str(dirname / f"{dirname.name}_water.tif"),
             "COG",
@@ -259,6 +303,7 @@ class L1ctGenerate:
             "BLOCKSIZE=256 COMPRESS=DEFLATE",
         )
         f.close()
+        self.write_jpeg(str(dirname / f"{dirname.name}_water.jpeg"), mi, water_data, 0,1)
 
         # Cloud mask
         logger.info(f"Doing prelim_cloud_mask - {shp['tile_id']}")
@@ -278,6 +323,7 @@ class L1ctGenerate:
             "BLOCKSIZE=256 COMPRESS=DEFLATE",
         )
         f.close()
+        self.write_jpeg(str(dirname / f"{dirname.name}_prelim_cloud_mask.jpeg"), mi, data, 0,1)
         res = None
         # Create zip file
         with ZipFile(str(dirname.parent / f"{dirname.name}.zip"), "w") as fh:

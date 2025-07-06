@@ -148,7 +148,8 @@ coordinate_convert = _coordinate_convert.coordinate_convert
 set_fill_value = _coordinate_convert.set_fill_value
 write_data = _coordinate_convert.write_data
 write_gdal = _coordinate_convert.write_gdal
+gdal_band = _coordinate_convert.gdal_band
 
-__all__ = ["coordinate_convert","set_fill_value","write_data","write_gdal"]
+__all__ = ["coordinate_convert","set_fill_value","write_data","write_gdal","gdal_band"]
 
 

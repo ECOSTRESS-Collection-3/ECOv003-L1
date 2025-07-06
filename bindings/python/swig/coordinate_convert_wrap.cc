@@ -5442,6 +5442,22 @@ SWIG_AsPtr_std_string (PyObject * obj, std::string **val)
 }
 
 
+SWIGINTERN int
+SWIG_AsVal_int (PyObject * obj, int *val)
+{
+  long v;
+  int res = SWIG_AsVal_long (obj, &v);
+  if (SWIG_IsOK(res)) {
+    if ((v < INT_MIN || v > INT_MAX)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = static_cast< int >(v);
+    }
+  }  
+  return res;
+}
+
+
 
 /* ---------------------------------------------------
  * C++ director class methods
@@ -6586,6 +6602,66 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_gdal_band(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  boost::shared_ptr< GeoCal::GdalRasterImage > *arg1 = 0 ;
+  int arg2 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  boost::shared_ptr< GeoCal::GdalRasterImage > tempshared1 ;
+  boost::shared_ptr< GeoCal::GdalRasterImage > temp2shared1 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject *swig_obj[2] ;
+  boost::shared_ptr< GeoCal::GdalRasterImage > result;
+  
+  (void)self;
+  if (!SWIG_Python_UnpackTuple(args, "gdal_band", 2, 2, swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_GeoCal__GdalRasterImage_t,  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gdal_band" "', argument " "1"" of type '" "boost::shared_ptr< GeoCal::GdalRasterImage > const &""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp1) tempshared1 = *reinterpret_cast< boost::shared_ptr< GeoCal::GdalRasterImage > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< GeoCal::GdalRasterImage > * >(argp1);
+      arg1 = &tempshared1;
+    } else {
+      arg1 = (argp1) ? reinterpret_cast< boost::shared_ptr< GeoCal::GdalRasterImage > * >(argp1) : &tempshared1;
+    }
+    // Added mms
+    // Special handling if this is a director class.
+    // See DirectorNotes.md for discussion of this.
+    Swig::Director* dp = dynamic_cast<Swig::Director*>(arg1->get());
+    if(dp) {
+      temp2shared1.reset(arg1->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      arg1 = &temp2shared1;
+    }
+  }
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gdal_band" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = Ecostress::gdal_band((boost::shared_ptr< GeoCal::GdalRasterImage > const &)*arg1,arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    resultobj = GeoCal::swig_to_python(result);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
@@ -6646,6 +6722,11 @@ static PyMethodDef SwigMethods[] = {
 		"drivers that only support create_copy (like COG). We create using a\n"
 		"different driver, often \"MEM\", and then pass to this to create the\n"
 		"output file. \n"
+		""},
+	 { "gdal_band", _wrap_gdal_band, METH_VARARGS, "\n"
+		"\n"
+		"boost::shared_ptr< GeoCal::GdalRasterImage > Ecostress::gdal_band(const boost::shared_ptr< GeoCal::GdalRasterImage > &G, int B)\n"
+		"Ecostress::gdal_band\n"
 		""},
 	 { NULL, NULL, 0, NULL }
 };
@@ -6710,6 +6791,11 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"drivers that only support create_copy (like COG). We create using a\n"
 		"different driver, often \"MEM\", and then pass to this to create the\n"
 		"output file. \n"
+		""},
+	 { "gdal_band", _wrap_gdal_band, METH_VARARGS, "\n"
+		"\n"
+		"boost::shared_ptr< GeoCal::GdalRasterImage > Ecostress::gdal_band(const boost::shared_ptr< GeoCal::GdalRasterImage > &G, int B)\n"
+		"Ecostress::gdal_band\n"
 		""},
 	 { NULL, NULL, 0, NULL }
 };
