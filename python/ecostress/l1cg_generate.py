@@ -58,6 +58,7 @@ class L1cgGenerate:
         pge_version: str = "0.30",
         browse_band_list_5band: list[int] = [4, 3, 1],
         browse_band_list_3band: list[int] = [5, 4, 2],
+        browse_size: int = 1080,
     ) -> None:
         self.l1b_geo = l1b_geo
         self.l1b_rad = l1b_rad
@@ -85,41 +86,15 @@ class L1cgGenerate:
         self.browse_band_list = (
             browse_band_list_3band if nband == 3 else browse_band_list_5band
         )
+        self.browse_size = browse_size
 
-    def run(self) -> None:
-        mi = geocal.cib01_mapinfo(self.resolution)
-        fin_geo = h5py.File(self.l1b_geo, "r")
-        fin_rad = h5py.File(self.l1b_rad, "r")
-        latv = fin_geo["Geolocation/latitude"][:, :]
-        lonv = fin_geo["Geolocation/longitude"][:, :]
-        # Make sure fill values are negative enough that is clear we
-        # should ignore them, even after interpolation
-        latv[latv < fill_value_threshold] = -1e20
-        lonv[lonv < fill_value_threshold] = -1e20
-        # Order 1 is bilinear interpolation
-        lat = scipy.ndimage.interpolation.zoom(latv, self.number_subpixel, order=1)
-        lon = scipy.ndimage.interpolation.zoom(lonv, self.number_subpixel, order=1)
-        res = Resampler(lon, lat, mi, self.number_subpixel, False)
-        logger.info("Done with Resampler init")
-        mi = res.map_info
-        # Create HDFEOS file. We just create the structure here. Note it
-        # looks like we are creating a bunch of fields and then deleting them.
-        # But this is actually efficient, we have compression turned on and these
-        # fields are size 0. So we just create placeholders here, and then fill
-        # them in the next step.
-        fout = HdfEosFileHandle(str(self.output_name), HdfEosFileHandle.TRUNC)
-        g = HdfEosGrid(fout, "ECO_L1CG_RAD_70m", mi)
-        g.add_field_uchar("prelim_cloud_mask")
-        g.add_field_uchar("water")
-        g.add_field_float("view_zenith")
-        g.add_field_float("height")
-        for i in range(5):
-            g.add_field_float(f"data_quality_{i + 1}")
-            g.add_field_float(f"radiance_{i + 1}")
-            g.add_field_float(f"interpolation_uncertainty_{i + 1}")
-        g.close()
-        fout.close()
-        fout = h5py.File(self.output_name, "r+")
+    def create_standard_metadata(
+        self,
+        mi: geocal.MapInfo,
+        fin_rad: h5py.File,
+        fin_geo: h5py.File,
+        fout: h5py.File,
+    ) -> L1cgWriteStandardMetadata:
         t = fin_rad["L1B_RADMetadata/CalibrationGainCorrection"][:]
         cal_correction = np.empty((2, t.shape[0]))
         cal_correction[0, :] = t
@@ -167,8 +142,93 @@ class L1cgGenerate:
         m.set("RangeEndingTime", fin_geo["StandardMetadata/RangeEndingTime"][()])
         m.set("DayNightFlag", fin_geo["StandardMetadata/DayNightFlag"][()])
         m.set_input_pointer(self.inlist)
-        # Not sure if having this open interferes with GDAL, but simple enough to close
-        fin_rad = None
+        return m
+
+    def save_for_browse(self, mi: geocal.MapInfo, data: np.ndarray, b: int) -> None:
+        """If this band is part of the browse product, create an intermediate file that
+        then gets used in write_browse"""
+        # Create data for browse product
+        if b in self.browse_band_list:
+            data = data.copy()
+            data[np.isnan(data)] = -999.0
+            data_scaled = gaussian_stretch(data)
+            fname = str(
+                self.output_name.parent / f"{self.output_name.stem}_b{b}_scaled.img"
+            )
+            d = geocal.mmap_file(fname, mi, nodata=0.0, dtype=np.uint8)
+            d[:] = data_scaled
+            d = None
+
+    def write_browse(self, mi : geocal.MapInfo) -> None:
+        """Write out the browse product"""
+        cmd_merge = [
+            "gdalbuildvrt",
+            "-q",
+            "-separate",
+            str(self.output_name.parent / f"{self.output_name.stem}_scaled.vrt"),
+        ]
+        for b in self.browse_band_list:
+            cmd_merge.append(
+                str(
+                    self.output_name.parent / f"{self.output_name.stem}_b{b}_scaled.img"
+                )
+            )
+        subprocess.run(cmd_merge)
+        # Size of 0 tells GDAL to maintain the aspect ratio
+        if(mi.number_x_pixel > mi.number_y_pixel):
+            xsize = self.browse_size
+            ysize = 0
+        else:
+            xsize = 0
+            ysize = self.browse_size
+        cmd_merge = [
+            "gdal_translate",
+            "-of",
+            "png",
+            "-outsize",
+            f"{xsize}",
+            f"{ysize}",
+            str(self.output_name.parent / f"{self.output_name.stem}_scaled.vrt"),
+            str(self.output_name.parent / f"{self.output_name.stem}.png"),
+        ]
+        subprocess.run(cmd_merge)
+        for filename in self.output_name.parent.glob(f"{self.output_name.stem}.png.*"):
+            filename.unlink()
+
+    def run(self) -> None:
+        mi = geocal.cib01_mapinfo(self.resolution)
+        fin_geo = h5py.File(self.l1b_geo, "r")
+        fin_rad = h5py.File(self.l1b_rad, "r")
+        latv = fin_geo["Geolocation/latitude"][:, :]
+        lonv = fin_geo["Geolocation/longitude"][:, :]
+        # Make sure fill values are negative enough that is clear we
+        # should ignore them, even after interpolation
+        latv[latv < fill_value_threshold] = -1e20
+        lonv[lonv < fill_value_threshold] = -1e20
+        # Order 1 is bilinear interpolation
+        lat = scipy.ndimage.interpolation.zoom(latv, self.number_subpixel, order=1)
+        lon = scipy.ndimage.interpolation.zoom(lonv, self.number_subpixel, order=1)
+        res = Resampler(lon, lat, mi, self.number_subpixel, False)
+        logger.info("Done with Resampler init")
+        mi = res.map_info
+        # Create HDFEOS file. We just create the structure here. Note it
+        # looks like we are creating a bunch of fields and then deleting them.
+        # But this is actually efficient, we have compression turned on and these
+        # fields are size 0. So we just create placeholders here, and then fill
+        # them in the next step.
+        fout = HdfEosFileHandle(str(self.output_name), HdfEosFileHandle.TRUNC)
+        g = HdfEosGrid(fout, "ECO_L1CG_RAD_70m", mi)
+        g.add_field_uchar("prelim_cloud_mask")
+        g.add_field_uchar("water")
+        g.add_field_float("view_zenith")
+        g.add_field_float("height")
+        for i in range(5):
+            g.add_field_float(f"data_quality_{i + 1}")
+            g.add_field_float(f"radiance_{i + 1}")
+            g.add_field_float(f"interpolation_uncertainty_{i + 1}")
+        g.close()
+        fout.close()
+        fout = h5py.File(self.output_name, "r+")
         dfield = fout["//HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields"]
         del dfield["prelim_cloud_mask"]
         del dfield["water"]
@@ -178,6 +238,10 @@ class L1cgGenerate:
             del dfield[f"data_quality_{i + 1}"]
             del dfield[f"radiance_{i + 1}"]
             del dfield[f"interpolation_uncertainty_{i + 1}"]
+
+        m = self.create_standard_metadata(mi, fin_rad, fin_geo, fout)
+        # Not sure if having this open interferes with GDAL, but simple enough to close
+        fin_rad = None
         for b in range(1, 6):
             logger.info("Doing radiance band %d" % b)
             data_in = geocal.GdalRasterImage(
@@ -193,44 +257,8 @@ class L1cgGenerate:
             )
             t.attrs.create("_FillValue", data=np.nan, dtype=t.dtype)
             t.attrs["Units"] = "W/m^2/sr/um"
-            # Create data for browse product
-            if b in self.browse_band_list:
-                data = data.copy()
-                data[np.isnan(data)] = -999.0
-                data_scaled = gaussian_stretch(data)
-                fname = str(
-                    self.output_name.parent / f"{self.output_name.stem}_b{b}_scaled.img"
-                )
-                d = geocal.mmap_file(fname, res.map_info, nodata=0.0, dtype=np.uint8)
-                d[:] = data_scaled
-                d = None
-        cmd_merge = [
-            "gdalbuildvrt",
-            "-q",
-            "-separate",
-            str(self.output_name.parent / f"{self.output_name.stem}_scaled.vrt"),
-        ]
-        for b in self.browse_band_list:
-            cmd_merge.append(
-                str(
-                    self.output_name.parent / f"{self.output_name.stem}_b{b}_scaled.img"
-                )
-            )
-        subprocess.run(cmd_merge)
-        cmd_merge = [
-            "gdal_translate",
-            "-of",
-            "png",
-            "-outsize",
-            "1080",
-            "1080",
-            str(self.output_name.parent / f"{self.output_name.stem}_scaled.vrt"),
-            str(self.output_name.parent / f"{self.output_name.stem}.png"),
-        ]
-        subprocess.run(cmd_merge)
-        # for filename in self.output_name.parent.glob(f"{self.output_name.stem}.png.*"):
-        #    filename.unlink()
-
+            self.save_for_browse(mi, data, b)
+        self.write_browse(mi)
         for b in range(1, 6):
             logger.info("Doing uncertainty band %d" % b)
             data_in = geocal.GdalRasterImage(
@@ -246,9 +274,18 @@ class L1cgGenerate:
             )
             t.attrs.create("_FillValue", data=np.nan, dtype=t.dtype)
             t.attrs["Units"] = "W/m^2/sr/um"
+            t.attrs["Description"] = """
+Uncertainty in the interpolated value for data that
+we interpolated (so data_quality has value DQI_INTERPOLATED).
+
+See ATB for details.
+            
+Set to 0.0 for values that we haven't interpolated.
+"""
         for b in range(1, 6):
             # GeoCal doesn't support the dqi type. We could update geocal,
-            # but no strong reason to. Just read into memory
+            # but no strong reason to. Just read into memory. Probably should have
+            # had dqi be uint8 rather than int8, but not worth changing now.
             logger.info("Doing DQI band %d" % b)
             din = h5py.File(self.l1b_rad)[f"Radiance/data_quality_{b}"][:, :]
             data_in = geocal.MemoryRasterImage(din.shape[0], din.shape[1])
@@ -260,6 +297,27 @@ class L1cgGenerate:
                 dtype=np.uint8,
                 compression="gzip",
             )
+            t.attrs["valid_min"] = 0
+            t.attrs["valid_max"] = 4
+            t.attrs["Description"] = """
+Data quality indicator. 
+  0 - DQI_GOOD, normal data, nothing wrong with it
+  1 - DQI_INTERPOLATED, data was part of instrument 
+      'stripe', and we have filled this in with 
+      interpolated data (see ATB) 
+  2 - DQI_STRIPE_NOT_INTERPOLATED, data was part of
+      instrument 'stripe' and we could not fill in
+      with interpolated data.
+  3 - DQI_BAD_OR_MISSING, indicates data with a bad 
+      value (e.g., negative DN) or missing packets.
+  4 - DQI_NOT_SEEN, pixels where because of the 
+      difference in time that a sample is seen with 
+      each band, the ISS has moved enough we haven't 
+      seen the pixel. So data is missing, but by
+      instrument design instead of some problem. Also
+      used for grid pixels that are just outside the range
+      seen by ECOSTRESS
+"""
             t.attrs["Units"] = "dimensionless"
 
         logger.info("Doing view_zenith")

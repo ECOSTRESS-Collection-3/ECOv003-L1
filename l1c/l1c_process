@@ -137,6 +137,7 @@ try:
             pge_version=pge_version["l1c"],
             browse_band_list_5band=l1c_config.browse_band_list_5band,
             browse_band_list_3band=l1c_config.browse_band_list_3band,
+            browse_size=l1c_config.l1cg_browse_size,
         )
         l1cg.run()
         l1ct = ecostress.L1ctGenerate(
@@ -154,6 +155,7 @@ try:
             pge_version=pge_version["l1c"],
             browse_band_list_5band=l1c_config.browse_band_list_5band,
             browse_band_list_3band=l1c_config.browse_band_list_3band,
+            browse_size=l1c_config.l1ct_browse_size,
         )
         if ncpu > 1:
             pool = Pool(ncpu)

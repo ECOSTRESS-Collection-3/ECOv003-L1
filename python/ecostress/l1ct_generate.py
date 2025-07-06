@@ -1,6 +1,5 @@
 from __future__ import annotations
 import geocal  # type: ignore
-from .gaussian_stretch import gaussian_stretch
 from ecostress_swig import (  # type: ignore
     fill_value_threshold,
     Resampler,
@@ -22,8 +21,6 @@ import shutil
 import os
 import subprocess
 import matplotlib.pyplot as plt
-import PIL
-import io
 import typing
 
 if typing.TYPE_CHECKING:
@@ -38,7 +35,7 @@ class L1ctGenerate:
         self,
         l1b_geo: str | os.PathLike[str],
         l1b_rad: str | os.PathLike[str],
-        lwm : geocal.SrtmLwmData,
+        lwm: geocal.SrtmLwmData,
         l1_osp_dir: str | os.PathLike[str],
         output_pattern: str | os.PathLike[str],
         inlist: list[str],
@@ -50,6 +47,7 @@ class L1ctGenerate:
         pge_version: str = "0.30",
         browse_band_list_5band: list[int] = [4, 3, 1],
         browse_band_list_3band: list[int] = [5, 4, 2],
+        browse_size: int = 1080,
     ) -> None:
         """The output pattern should leave a portion called "TILE" in the name, that
         we fill in. Also leave the extension off, so a name like:
@@ -80,6 +78,7 @@ class L1ctGenerate:
         self.browse_band_list = (
             browse_band_list_3band if nband == 3 else browse_band_list_5band
         )
+        self.browse_size = browse_size
 
     def run(self, pool: None | Pool = None) -> None:
         fin_geo = h5py.File(self.l1b_geo, "r")
@@ -144,26 +143,61 @@ class L1ctGenerate:
                     self._utm_coor[epsg] = (owrap, x, y)
         return self._utm_coor[epsg]
 
-    def write_jpeg(self, fname, mi, data, vmin, vmax):
-        '''Create jpeg preview of the given data. Not sure how useful this actually is,
-        but this was done in collection 2 so we want to match that.'''
+    def write_preview(
+        self,
+        fname: str,
+        mi: geocal.MapInfo,
+        data: np.ndarray,
+        vmin: float,
+        vmax: float,
+        vicar_fname: str | None = None,
+    ) -> None:
+        """Create jpeg preview of the given data. Not sure how useful this actually is,
+        but this was done in collection 2 so we want to match that.
+
+        Because it is so related, we optionally take a vicar file name. If this is
+        supplied, the data is also saved to this file. This is then used in write_browse."""
         # Scale data from 0.0 to 1.0, which is what the cmap uses
         data_scaled = (data - float(vmin)) / (float(vmax) - float(vmin))
         data_scaled[data_scaled < 0.0] = 0.0
         data_scaled[data_scaled > 1.0] = 1.0
-        cmap = plt.get_cmap('jet')
+        cmap = plt.get_cmap("jet")
         # Map to rgba, in the range 0.0 to 1.0
         image_array_norm = cmap(data_scaled)
         # Then scale to 0 to 255 as a byte
-        image_array_int = np.uint8(image_array_norm * 255)
+        image_array_int = (image_array_norm * 255).astype(np.uint8)
         # Write out as jpeg
         ras_r = geocal.GdalRasterImage("", "MEM", mi, 3, geocal.GdalRasterImage.Byte)
         ras_g = gdal_band(ras_r, 2)
         ras_b = gdal_band(ras_r, 3)
-        ras_r.write(0,0,image_array_int[:,:,0])
-        ras_g.write(0,0,image_array_int[:,:,1])
-        ras_b.write(0,0,image_array_int[:,:,2])
+        ras_r.write(0, 0, image_array_int[:, :, 0])
+        ras_g.write(0, 0, image_array_int[:, :, 1])
+        ras_b.write(0, 0, image_array_int[:, :, 2])
         write_gdal(fname, "JPEG", ras_r, "")
+        if vicar_fname is not None:
+            data_scaled[np.isnan(data_scaled)] = 0
+            d = geocal.mmap_file(vicar_fname, mi, nodata=0.0, dtype=np.uint8)
+            d[:] = (data_scaled * 255).astype(np.uint8)
+            d = None
+
+    def write_browse(self, dirname: Path) -> None:
+        cmd_merge = ["gdalbuildvrt", "-q", "-separate", str(dirname / "map_scaled.vrt")]
+        for b in self.browse_band_list:
+            cmd_merge.append(str(dirname / f"rad_b{b}_scaled.img"))
+        subprocess.run(cmd_merge)
+        cmd_merge = [
+            "gdal_translate",
+            "-of",
+            "png",
+            "-outsize",
+            f"{self.browse_size}",
+            f"{self.browse_size}",
+            str(dirname / "map_scaled.vrt"),
+            str(dirname.parent / f"{dirname.name}.png"),
+        ]
+        subprocess.run(cmd_merge)
+        for filename in dirname.parent.glob(f"{dirname.name}.png.*"):
+            filename.unlink()
 
     def process_tile(self, shp: dict) -> bool:
         logger.info(f"Processing {shp['tile_id']}")
@@ -219,45 +253,29 @@ class L1ctGenerate:
             # of all the data, so we don't have weird changes in the color map from one
             # tile to the next
             din = data_in.read_all_double()
-            if(np.count_nonzero(din > fill_value_threshold) > 0):
+            if np.count_nonzero(din > fill_value_threshold) > 0:
                 mn = din[din > fill_value_threshold].min()
                 mx = din[din > fill_value_threshold].max()
                 mean = np.mean(din[din > fill_value_threshold])
                 sd = np.std(din[din > fill_value_threshold])
-                vmin = max(mean-2*sd,mn)
-                vmax = min(mean+2*sd,mx)
+                vmin = max(mean - 2 * sd, mn)
+                vmax = min(mean + 2 * sd, mx)
             else:
-                vmin=0
-                vmax=1
-            self.write_jpeg(str(dirname / f"{dirname.name}_radiance_{b}.jpeg"),
-                            mi, data, vmin, vmax)
-            # Create data for browse product
+                vmin = 0
+                vmax = 1
+            vicar_fname = None
             if b in self.browse_band_list:
-                data = data.copy()
-                data[np.isnan(data)] = -999.0
-                data_scaled = gaussian_stretch(data)
-                fname = str(dirname / f"rad_b{b}_scaled.img")
-                d = geocal.mmap_file(fname, res.map_info, nodata=0.0, dtype=np.uint8)
-                d[:] = data_scaled
-                d = None
-
-        cmd_merge = ["gdalbuildvrt", "-q", "-separate", str(dirname / "map_scaled.vrt")]
-        for b in self.browse_band_list:
-            cmd_merge.append(str(dirname / f"rad_b{b}_scaled.img"))
-        subprocess.run(cmd_merge)
-        cmd_merge = [
-            "gdal_translate",
-            "-of",
-            "png",
-            "-outsize",
-            "1080",
-            "1080",
-            str(dirname / "map_scaled.vrt"),
-            str(dirname.parent / f"{dirname.name}.png"),
-        ]
-        subprocess.run(cmd_merge)
-        for filename in dirname.parent.glob(f"{dirname.name}.png.*"):
-            filename.unlink()
+                vicar_fname = str(dirname / f"rad_b{b}_scaled.img")
+            self.write_preview(
+                str(dirname / f"{dirname.name}_radiance_{b}.jpeg"),
+                mi,
+                data,
+                vmin,
+                vmax,
+                vicar_fname=vicar_fname,
+            )
+        # Combine files saved in write_preview into top level browse file
+        self.write_browse(dirname)
         for b in range(1, 6):
             # GeoCal doesn't support the dqi type. We could update geocal,
             # but no strong reason to. Just read into memory
@@ -278,8 +296,9 @@ class L1ctGenerate:
             )
             f.close()
             # DQI ranges from 0 to 4
-            self.write_jpeg(str(dirname / f"{dirname.name}_data_quality_{b}.jpeg"),
-                            mi, data, 0,4)
+            self.write_preview(
+                str(dirname / f"{dirname.name}_data_quality_{b}.jpeg"), mi, data, 0, 4
+            )
         # water mask
         logger.info(f"Doing water - {shp['tile_id']}")
         lat, lon, height = res.map_values(geocal.SimpleDem())
@@ -303,7 +322,9 @@ class L1ctGenerate:
             "BLOCKSIZE=256 COMPRESS=DEFLATE",
         )
         f.close()
-        self.write_jpeg(str(dirname / f"{dirname.name}_water.jpeg"), mi, water_data, 0,1)
+        self.write_preview(
+            str(dirname / f"{dirname.name}_water.jpeg"), mi, water_data, 0, 1
+        )
 
         # Cloud mask
         logger.info(f"Doing prelim_cloud_mask - {shp['tile_id']}")
@@ -323,7 +344,9 @@ class L1ctGenerate:
             "BLOCKSIZE=256 COMPRESS=DEFLATE",
         )
         f.close()
-        self.write_jpeg(str(dirname / f"{dirname.name}_prelim_cloud_mask.jpeg"), mi, data, 0,1)
+        self.write_preview(
+            str(dirname / f"{dirname.name}_prelim_cloud_mask.jpeg"), mi, data, 0, 1
+        )
         res = None
         # Create zip file
         with ZipFile(str(dirname.parent / f"{dirname.name}.zip"), "w") as fh:

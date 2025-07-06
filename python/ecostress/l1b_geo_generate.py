@@ -246,9 +246,6 @@ GEOGCS["WGS 84",
     UNIT["degree",0.0174532925199433],
     AUTHORITY["EPSG","4326"]]
 """
-        # Compression doesn't seem to do a lot, so leave turned off. We can always
-        # turn this on if needed.
-        # t = g.create_dataset("latitude", data=lat, chunks=(250,250), compression="gzip")
         t = g.create_dataset("latitude", data=lat, dtype="f8", compression="gzip")
         t.attrs["Units"] = "degrees"
         t.attrs["valid_min"] = -90
