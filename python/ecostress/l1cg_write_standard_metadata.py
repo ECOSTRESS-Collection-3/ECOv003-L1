@@ -44,11 +44,15 @@ class L1cgWriteStandardMetadata(WriteStandardMetadata):
             self.data["AutomaticQualityFlagExplanation"] = (
                 "Image matching was not successful correcting scene ephemeris/attitude. Ephemeris/attitude may have significant errors."
             )
+        self.data["CRS"] = "+proj=longlat +datum=WGS84 +no_defs +type=crs"
+        self.data["SceneBoundaryLatLonWKT"] = "fake"
 
     @property
     def mlist(self) -> list[tuple[str, str]]:
         m = super().mlist
         m.append(("AutomaticQualityFlagExplanation", "String"))
+        m.append(("CRS", "String"))
+        m.append(("SceneBoundaryLatLonWKT", "String"))
         return m
 
     def write(self) -> None:

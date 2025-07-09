@@ -10,6 +10,7 @@ from ecostress_swig import (  # type: ignore
     gdal_band,
     set_fill_value,
 )
+from .l1ct_write_standard_metadata import L1ctWriteStandardMetadata
 import h5py  # type: ignore
 import scipy  # type: ignore
 import numpy as np
@@ -79,6 +80,53 @@ class L1ctGenerate:
             browse_band_list_3band if nband == 3 else browse_band_list_5band
         )
         self.browse_size = browse_size
+
+    def create_standard_metadata(
+        self,
+        mi: geocal.MapInfo,
+        fin_geo: h5py.File,
+        tile_id : str,
+        fout: Path,
+    ) -> L1ctWriteStandardMetadata:
+        m = L1ctWriteStandardMetadata(
+            None, xml_file=fout,
+            product_specfic_group="",
+            proc_lev_desc="Level 1 Tiled Top of Atmosphere Calibrated Radiance",
+            pge_name="L1C",
+            collection_label=self.collection_label,
+            build_id=self.build_id,
+            pge_version=self.pge_version,
+            geolocation_accuracy_qa=fin_geo["L1GEOMetadata/GeolocationAccuracyQA"][
+                ()
+            ].decode("utf-8"),
+        )
+        m.set("RegionID", tile_id)
+        m.set("DataFormatType", "COG")
+        m.set("HDFVersionID", None)
+        if self.run_config is not None:
+            m.process_run_config_metadata(self.run_config)
+        m.set("CloudCover", fin_geo["StandardMetadata/CloudCover"][()])
+        # TODO Replace with lat/lon
+        m.set("WestBoundingCoordinate", mi.ulc_x)
+        m.set("EastBoundingCoordinate", mi.lrc_x)
+        m.set("SouthBoundingCoordinate", mi.lrc_y)
+        m.set("NorthBoundingCoordinate", mi.ulc_y)
+        # TODO Add polygon
+        m.set(
+            "FieldOfViewObstruction",
+            fin_geo["StandardMetadata/FieldOfViewObstruction"][()].decode('utf-8'),
+        )
+        m.set("ImageLines", mi.number_y_pixel)
+        m.set("ImagePixels", mi.number_x_pixel)
+        m.set("ImageLineSpacing", self.resolution)
+        m.set("ImagePixelSpacing", self.resolution)
+        m.set("RangeBeginningDate", fin_geo["StandardMetadata/RangeBeginningDate"][()].decode('utf-8'))
+        m.set("RangeBeginningTime", fin_geo["StandardMetadata/RangeBeginningTime"][()].decode('utf-8'))
+        m.set("RangeEndingDate", fin_geo["StandardMetadata/RangeEndingDate"][()].decode('utf-8'))
+        m.set("RangeEndingTime", fin_geo["StandardMetadata/RangeEndingTime"][()].decode('utf-8'))
+        m.set("DayNightFlag", fin_geo["StandardMetadata/DayNightFlag"][()].decode('utf-8'))
+        m.set_input_pointer(self.inlist)
+        return m
 
     def run(self, pool: None | Pool = None) -> None:
         fin_geo = h5py.File(self.l1b_geo, "r")
@@ -237,6 +285,13 @@ class L1ctGenerate:
             return False
         dirname = Path(str(self.output_pattern).replace("TILE", shp["tile_id"]))
         geocal.makedirs_p(dirname)
+        fin_geo = h5py.File(self.l1b_geo)
+        m = self.create_standard_metadata(mi, fin_geo, shp['tile_id'], dirname.parent / f"{dirname.name}.zip.xml")
+        # Temp
+        if False:
+            m.write()
+            breakpoint()
+            return
         for b in range(1, 6):
             logger.info(f"Doing radiance band {b} - {shp['tile_id']}")
             data_in = geocal.GdalRasterImage(
@@ -334,7 +389,7 @@ class L1ctGenerate:
 
         # Cloud mask
         logger.info(f"Doing prelim_cloud_mask - {shp['tile_id']}")
-        din = h5py.File(self.l1b_geo)["Geolocation/prelim_cloud_mask"][:, :]
+        din = fin_geo["Geolocation/prelim_cloud_mask"][:, :]
         # Remove fill value, treat as clear
         din[din > 1] = 0
         data_in = geocal.MemoryRasterImage(din.shape[0], din.shape[1])
@@ -353,6 +408,7 @@ class L1ctGenerate:
         self.write_preview(
             str(dirname / f"{dirname.name}_prelim_cloud_mask.jpeg"), mi, data, 0, 1
         )
+        m.write()
         res = None
         # Create zip file
         with ZipFile(str(dirname.parent / f"{dirname.name}.zip"), "w") as fh:

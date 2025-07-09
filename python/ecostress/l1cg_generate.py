@@ -142,6 +142,9 @@ class L1cgGenerate:
         m.set("RangeEndingTime", fin_geo["StandardMetadata/RangeEndingTime"][()])
         m.set("DayNightFlag", fin_geo["StandardMetadata/DayNightFlag"][()])
         m.set_input_pointer(self.inlist)
+        bnd = geocal.ShapeLayer.polygon_2d([[mi.ulc_x,  mi.ulc_y], [mi.ulc_x, mi.lrc_y],
+                                            [mi.lrc_x, mi.lrc_y], [mi.lrc_x, mi.ulc_y]])
+        m.set("SceneBoundaryLatLonWKT", str(bnd))
         return m
 
     def save_for_browse(self, mi: geocal.MapInfo, data: np.ndarray, b: int) -> None:

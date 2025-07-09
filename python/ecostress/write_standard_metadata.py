@@ -4,6 +4,7 @@ import os
 import re
 import copy
 import typing
+from pathlib import Path
 from typing import Any, Self
 
 if typing.TYPE_CHECKING:
@@ -16,10 +17,11 @@ class WriteStandardMetadata(object):
 
     def __init__(
         self,
-        hdf_file: h5py.File,
+        hdf_file: h5py.File | None,
         product_specfic_group: str = "L1GEOMetadata",
         proc_lev_desc: str = "Level 1 Geolocation Parameters",
         pge_name: str = "L1B_GEO",
+        xml_file: str | os.PathLike[str] | None = None,
         local_granule_id: str | None = None,
         collection_label: str = "ECOSTRESS",
         build_id: str = "0.01",
@@ -34,11 +36,15 @@ class WriteStandardMetadata(object):
         local_granule_id, or if None we assume the filename for the hdf_file is
         the local_granule_id"""
         self.hdf_file = hdf_file
+        self.xml_file = Path(xml_file) if xml_file is not None else None
         self.orbit_based = orbit_based
         self.product_specfic_group = product_specfic_group
         self.hdfeos_file = hdfeos_file
         if local_granule_id is None:
-            local_granule_id = os.path.basename(hdf_file.filename)
+            if(hdf_file is not None):
+                local_granule_id = os.path.basename(hdf_file.filename)
+            else:
+                local_granule_id = self.xml_file.stem
         self.local_granule_id = local_granule_id
 
         # Initialize all the data.
@@ -229,8 +235,28 @@ class WriteStandardMetadata(object):
         mcopy.set("ShortName", short_name)
         return mcopy
 
+    def write_xml(self) -> None:
+        fh = open(self.xml_file, "w")
+        # Not sure what the significance of the xmls is here, but this comes
+        # from Gregories' code (see ECOSTRESS-Collection-2/ECOSTRESS/XML_metadata.py)
+        print(
+'''<?xml version="1.0" encoding="UTF-8"?>
+<cas:metadata xmlns:cas="http://oodt.jpl.nasa.gov/1.0/cas">''', file=fh)
+        klist = sorted([m for m, _ in self.mlist])
+        for m in klist:
+            if self.data[m] is not None:
+                print(
+f'''   <keyval type="vector">
+      <key>{m}</key>
+      <val>{self.data[m]}</val>
+   </keyval>''', file=fh)
+        print("</cas:metadata>", file=fh)
+
     def write(self) -> None:
         """Actually write the metadata."""
+        if(self.hdf_file is None and self.xml_file is not None):
+            self.write_xml()
+            return
         gname = "StandardMetadata"
         if self.hdfeos_file:
             gname = "/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/StandardMetadata"

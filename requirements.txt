@@ -1,13 +1,10 @@
 # We require all the packages geocal requires (see requirements.txt for that
 # package), plus stuff listed in this file.
+# afids geocal afids-development-tools
 #
-# We need to build our own copy of tensorflow, see thirdparty/README
-# for a discussion of this. We have make file rules for building this.
-cython
-xlrd
-tflearn
-# Don't got to tensorflow 2.x, I don't know that something isn't broken by
-# this. We need to build our own copy, then do a "pip install <the wheel>"
-tensorflow==1.14.0
-# tensorflow requires an older version of protobuf
-protobuf<=3.21
+tensorflow
+scikit-learn
+loguru
+loguru-config
+pytest-loguru
+

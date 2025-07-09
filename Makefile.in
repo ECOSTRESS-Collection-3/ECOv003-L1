@@ -964,11 +964,7 @@ GH5DIFF_FLAG = -d 6e-2 \
 	--exclude-path="/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data\\ \
 	Fields/interpolation_uncertainty_5" \
 	--exclude-path="/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data\\ \
-	Fields/interpolation_uncertainty_2" \
-	--exclude-path="/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data\\ \
-	Fields/height" \
-	--exclude-path="/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data\\ \
-	Fields/view_zenith"
+	Fields/interpolation_uncertainty_2"
 dist_vicarpdf_DATA = @srcpdf@/el1a_2pt.pdf @srcpdf@/el1a_bbcal.pdf \
 	@srcpdf@/el1a_tvac.pdf
 installecostress_DATA = @srcscript@/setup_ecostress.csh @srcscript@/setup_ecostress.sh
@@ -3101,6 +3097,9 @@ temp:
 	-rm -r ./end_to_end_test_l1c
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1C_PGE $(l1c_run_config)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(GH5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1c/*L1CG_RAD*.h5
+
+temp2:
+	$(H5DIFF) $(GH5DIFF_FLAG) end_to_end_test_l1c/ECOv002_L1CG_RAD_03663_001_20190227T101222_0100_01.h5 $(end_to_end_test_data)/latest/ECOv002_L1CG_RAD_03663_001_20190227T101222_0100_01.h5.expected
 
 python-install:
 	pip install --prefix=@prefix@ $(srcdir)/@srcpython@
