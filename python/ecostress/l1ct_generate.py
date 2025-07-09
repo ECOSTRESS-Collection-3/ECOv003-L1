@@ -9,6 +9,7 @@ from ecostress_swig import (  # type: ignore
     write_gdal,
     gdal_band,
     set_fill_value,
+    to_proj4
 )
 from .l1ct_write_standard_metadata import L1ctWriteStandardMetadata
 import h5py  # type: ignore
@@ -106,12 +107,25 @@ class L1ctGenerate:
         if self.run_config is not None:
             m.process_run_config_metadata(self.run_config)
         m.set("CloudCover", fin_geo["StandardMetadata/CloudCover"][()])
-        # TODO Replace with lat/lon
-        m.set("WestBoundingCoordinate", mi.ulc_x)
-        m.set("EastBoundingCoordinate", mi.lrc_x)
-        m.set("SouthBoundingCoordinate", mi.lrc_y)
-        m.set("NorthBoundingCoordinate", mi.ulc_y)
-        # TODO Add polygon
+        conv = mi.coordinate_converter
+        g1 = conv.convert_from_coordinate(mi.ulc_x, mi.ulc_y)
+        g2 = conv.convert_from_coordinate(mi.lrc_x, mi.ulc_y)
+        g3 = conv.convert_from_coordinate(mi.lrc_x, mi.lrc_y)
+        g4 = conv.convert_from_coordinate(mi.ulc_x, mi.lrc_y)
+        m.set("WestBoundingCoordinate", np.array([g1.longitude, g2.longitude, g3.longitude,
+                                                  g4.longitude]).min())
+        m.set("EastBoundingCoordinate", np.array([g1.longitude, g2.longitude, g3.longitude,
+                                                  g4.longitude]).max())
+        m.set("SouthBoundingCoordinate", np.array([g1.latitude, g2.latitude, g3.latitude,
+                                                  g4.latitude]).min())
+        m.set("NorthBoundingCoordinate",np.array([g1.latitude, g2.latitude, g3.latitude,
+                                                  g4.latitude]).max())
+        bnd = geocal.ShapeLayer.polygon_2d([[g1.latitude, g1.longitude],
+                                            [g2.latitude, g2.longitude],
+                                            [g3.latitude, g3.longitude],
+                                            [g3.latitude, g4.longitude]])
+        m.set("SceneBoundaryLatLonWKT", str(bnd))
+        m.set("CRS", to_proj4(g1))
         m.set(
             "FieldOfViewObstruction",
             fin_geo["StandardMetadata/FieldOfViewObstruction"][()].decode('utf-8'),

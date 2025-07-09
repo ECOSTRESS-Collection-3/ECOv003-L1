@@ -21,7 +21,9 @@ namespace Ecostress {
   void write_gdal(const std::string& Fname, const std::string& Driver_name,
 		  const GeoCal::GdalRasterImage& Img, const std::string& Options);
   boost::shared_ptr<GeoCal::GdalRasterImage> gdal_band(const boost::shared_ptr<GeoCal::GdalRasterImage>& G, int B);
+  std::string to_proj4(const boost::shared_ptr<GeoCal::OgrCoordinate>& G);
 }
 
 // List of things "import *" will include
-%python_export("coordinate_convert", "set_fill_value", "write_data", "write_gdal", "gdal_band")
+%python_export("coordinate_convert", "set_fill_value", "write_data", "write_gdal", "gdal_band",
+	       "to_proj4")

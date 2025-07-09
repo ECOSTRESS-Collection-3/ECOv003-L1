@@ -64,3 +64,17 @@ void Ecostress::write_gdal(const std::string& Fname, const std::string& Driver_n
   GeoCal::gdal_create_copy(Fname, Driver_name, *Img.data_set(), Options);
 }
 
+//-----------------------------------------------------------------------
+/// This really belongs in geocal, but stick here for now. We will
+/// probably eventually migrate this to geocal. This returns the proj4
+/// string for the projection of the given coordinate.
+//-----------------------------------------------------------------------
+
+std::string Ecostress::to_proj4(const boost::shared_ptr<GeoCal::OgrCoordinate>& G)
+{
+  char *res;
+  G->ogr().ogr().exportToProj4(&res);
+  std::string ress(res);
+  CPLFree(res);
+  return ress;
+}

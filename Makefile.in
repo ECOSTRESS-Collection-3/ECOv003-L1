@@ -953,17 +953,17 @@ H5DIFF_FLAG = -d 6e-2 --exclude-path=/Radiance/radiance_1 \
 
 # Different set of flags for gridded product
 GH5DIFF_FLAG = -d 6e-2 \
-	--exclude-path="/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data\\ \
+	--exclude-path="/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data\ \
 	Fields/radiance_1" \
-	--exclude-path="/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data\\ \
+	--exclude-path="/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data\ \
 	Fields/radiance_5" \
-	--exclude-path="/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data\\ \
+	--exclude-path="/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data\ \
 	Fields/radiance_2" \
-	--exclude-path="/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data\\ \
+	--exclude-path="/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data\ \
 	Fields/interpolation_uncertainty_1" \
-	--exclude-path="/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data\\ \
+	--exclude-path="/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data\ \
 	Fields/interpolation_uncertainty_5" \
-	--exclude-path="/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data\\ \
+	--exclude-path="/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data\ \
 	Fields/interpolation_uncertainty_2"
 dist_vicarpdf_DATA = @srcpdf@/el1a_2pt.pdf @srcpdf@/el1a_bbcal.pdf \
 	@srcpdf@/el1a_tvac.pdf
@@ -3054,7 +3054,7 @@ end-to-end-check: installcheck-am
 	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOv002_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv002_L1B_RAD_03663_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1C_PGE $(l1c_run_config)
 # Don't treat as an error yet, until get get this all sorted out
-	-$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(GH5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1c/*L1CG_RAD*.h5
+	-$(H5DIFF) $(GH5DIFF_FLAG) end_to_end_test_l1c/ECOv002_L1CG_RAD_03663_001_20190227T101222_0100_01.h5 $(end_to_end_test_data)/latest/ECOv002_L1CG_RAD_03663_001_20190227T101222_0100_01.h5.expected
 
 # We should put a check in for the l1c products, but for now just skip since it will
 # probably take some time to figure out what to do here, in particular for the tile products
@@ -3096,7 +3096,7 @@ l1c-run:
 temp:
 	-rm -r ./end_to_end_test_l1c
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1C_PGE $(l1c_run_config)
-	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(GH5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1c/*L1CG_RAD*.h5
+	$(H5DIFF) $(GH5DIFF_FLAG) end_to_end_test_l1c/ECOv002_L1CG_RAD_03663_001_20190227T101222_0100_01.h5 $(end_to_end_test_data)/latest/ECOv002_L1CG_RAD_03663_001_20190227T101222_0100_01.h5.expected
 
 temp2:
 	$(H5DIFF) $(GH5DIFF_FLAG) end_to_end_test_l1c/ECOv002_L1CG_RAD_03663_001_20190227T101222_0100_01.h5 $(end_to_end_test_data)/latest/ECOv002_L1CG_RAD_03663_001_20190227T101222_0100_01.h5.expected

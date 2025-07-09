@@ -25,7 +25,7 @@ def test_l1ct_generate(isolated_dir, test_data_latest, lwm):
             "fake_input.h5",
         ],
     )
-    if False:
+    if True:
         pool = Pool(20)
     else:
         pool = None

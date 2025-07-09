@@ -12,4 +12,5 @@ namespace Ecostress {
   boost::shared_ptr<GeoCal::GdalRasterImage> gdal_band(
       const boost::shared_ptr<GeoCal::GdalRasterImage>& G, int B)
   { return boost::make_shared<GeoCal::GdalRasterImage>(G->data_set(), B); }
+  std::string to_proj4(const boost::shared_ptr<GeoCal::OgrCoordinate>& G);
 }

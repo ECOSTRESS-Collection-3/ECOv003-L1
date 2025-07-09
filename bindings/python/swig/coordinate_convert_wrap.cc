@@ -5458,6 +5458,38 @@ SWIG_AsVal_int (PyObject * obj, int *val)
 }
 
 
+SWIGINTERNINLINE PyObject *
+SWIG_FromCharPtrAndSize(const char* carray, size_t size)
+{
+  if (carray) {
+    if (size > INT_MAX) {
+      swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
+      return pchar_descriptor ? 
+	SWIG_InternalNewPointerObj(const_cast< char * >(carray), pchar_descriptor, 0) : SWIG_Py_Void();
+    } else {
+#if PY_VERSION_HEX >= 0x03000000
+#if defined(SWIG_PYTHON_STRICT_BYTE_CHAR)
+      return PyBytes_FromStringAndSize(carray, static_cast< Py_ssize_t >(size));
+#else
+      return PyUnicode_DecodeUTF8(carray, static_cast< Py_ssize_t >(size), "surrogateescape");
+#endif
+#else
+      return PyString_FromStringAndSize(carray, static_cast< Py_ssize_t >(size));
+#endif
+    }
+  } else {
+    return SWIG_Py_Void();
+  }
+}
+
+
+SWIGINTERNINLINE PyObject *
+SWIG_From_std_string  (const std::string& s)
+{
+  return SWIG_FromCharPtrAndSize(s.data(), s.size());
+}
+
+
 
 /* ---------------------------------------------------
  * C++ director class methods
@@ -6354,7 +6386,7 @@ SWIGINTERN PyObject *_wrap_coordinate_convert(PyObject *self, PyObject *args) {
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-pixi-env/.pixi/envs/default/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
+    /*@SWIG:/home/smyth/Local/ecostress-env/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -6662,6 +6694,57 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_to_proj4(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  boost::shared_ptr< GeoCal::OgrCoordinate > *arg1 = 0 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  boost::shared_ptr< GeoCal::OgrCoordinate > tempshared1 ;
+  boost::shared_ptr< GeoCal::OgrCoordinate > temp2shared1 ;
+  PyObject *swig_obj[1] ;
+  std::string result;
+  
+  (void)self;
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_GeoCal__OgrCoordinate_t,  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "to_proj4" "', argument " "1"" of type '" "boost::shared_ptr< GeoCal::OgrCoordinate > const &""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp1) tempshared1 = *reinterpret_cast< boost::shared_ptr< GeoCal::OgrCoordinate > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< GeoCal::OgrCoordinate > * >(argp1);
+      arg1 = &tempshared1;
+    } else {
+      arg1 = (argp1) ? reinterpret_cast< boost::shared_ptr< GeoCal::OgrCoordinate > * >(argp1) : &tempshared1;
+    }
+    // Added mms
+    // Special handling if this is a director class.
+    // See DirectorNotes.md for discussion of this.
+    Swig::Director* dp = dynamic_cast<Swig::Director*>(arg1->get());
+    if(dp) {
+      temp2shared1.reset(arg1->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      arg1 = &temp2shared1;
+    }
+  }
+  {
+    try {
+      result = Ecostress::to_proj4((boost::shared_ptr< GeoCal::OgrCoordinate > const &)*arg1);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_std_string(static_cast< std::string >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
@@ -6727,6 +6810,14 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		"boost::shared_ptr< GeoCal::GdalRasterImage > Ecostress::gdal_band(const boost::shared_ptr< GeoCal::GdalRasterImage > &G, int B)\n"
 		"Ecostress::gdal_band\n"
+		""},
+	 { "to_proj4", _wrap_to_proj4, METH_O, "\n"
+		"\n"
+		"std::string Ecostress::to_proj4(const boost::shared_ptr< GeoCal::OgrCoordinate > &G)\n"
+		"Ecostress::to_proj4\n"
+		"This really belongs in geocal, but stick here for now.\n"
+		"We will probably eventually migrate this to geocal. This returns the\n"
+		"proj4 string for the projection of the given coordinate. \n"
 		""},
 	 { NULL, NULL, 0, NULL }
 };
@@ -6796,6 +6887,14 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		"boost::shared_ptr< GeoCal::GdalRasterImage > Ecostress::gdal_band(const boost::shared_ptr< GeoCal::GdalRasterImage > &G, int B)\n"
 		"Ecostress::gdal_band\n"
+		""},
+	 { "to_proj4", _wrap_to_proj4, METH_O, "\n"
+		"\n"
+		"std::string Ecostress::to_proj4(const boost::shared_ptr< GeoCal::OgrCoordinate > &G)\n"
+		"Ecostress::to_proj4\n"
+		"This really belongs in geocal, but stick here for now.\n"
+		"We will probably eventually migrate this to geocal. This returns the\n"
+		"proj4 string for the projection of the given coordinate. \n"
 		""},
 	 { NULL, NULL, 0, NULL }
 };

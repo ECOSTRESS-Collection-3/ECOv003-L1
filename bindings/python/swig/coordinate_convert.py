@@ -149,7 +149,8 @@ set_fill_value = _coordinate_convert.set_fill_value
 write_data = _coordinate_convert.write_data
 write_gdal = _coordinate_convert.write_gdal
 gdal_band = _coordinate_convert.gdal_band
+to_proj4 = _coordinate_convert.to_proj4
 
-__all__ = ["coordinate_convert","set_fill_value","write_data","write_gdal","gdal_band"]
+__all__ = ["coordinate_convert","set_fill_value","write_data","write_gdal","gdal_band","to_proj4"]
 
 
