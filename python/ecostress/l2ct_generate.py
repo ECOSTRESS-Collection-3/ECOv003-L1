@@ -4,14 +4,13 @@ from ecostress_swig import (  # type: ignore
     fill_value_threshold,
     FILL_VALUE_BAD_OR_MISSING,
     Resampler,
-    GroundCoordinateArray,
     coordinate_convert,
     write_data,
     write_gdal,
     gdal_band,
     set_fill_value,
     to_proj4,
-    MemoryRasterImageFloat
+    MemoryRasterImageFloat,
 )
 from .l1ct_write_standard_metadata import L1ctWriteStandardMetadata
 import h5py  # type: ignore
@@ -77,11 +76,12 @@ class L2ctGenerate:
         self,
         mi: geocal.MapInfo,
         fin_geo: h5py.File,
-        tile_id : str,
+        tile_id: str,
         fout: Path,
     ) -> L1ctWriteStandardMetadata:
         m = L1ctWriteStandardMetadata(
-            None, xml_file=fout,
+            None,
+            xml_file=fout,
             product_specfic_group="",
             proc_lev_desc="Level 1 Tiled Top of Atmosphere Calibrated Radiance",
             pge_name="L1C",
@@ -103,42 +103,71 @@ class L2ctGenerate:
         g2 = conv.convert_from_coordinate(mi.lrc_x, mi.ulc_y)
         g3 = conv.convert_from_coordinate(mi.lrc_x, mi.lrc_y)
         g4 = conv.convert_from_coordinate(mi.ulc_x, mi.lrc_y)
-        m.set("WestBoundingCoordinate", np.array([g1.longitude, g2.longitude, g3.longitude,
-                                                  g4.longitude]).min())
-        m.set("EastBoundingCoordinate", np.array([g1.longitude, g2.longitude, g3.longitude,
-                                                  g4.longitude]).max())
-        m.set("SouthBoundingCoordinate", np.array([g1.latitude, g2.latitude, g3.latitude,
-                                                  g4.latitude]).min())
-        m.set("NorthBoundingCoordinate",np.array([g1.latitude, g2.latitude, g3.latitude,
-                                                  g4.latitude]).max())
-        bnd = geocal.ShapeLayer.polygon_2d([[g1.latitude, g1.longitude],
-                                            [g2.latitude, g2.longitude],
-                                            [g3.latitude, g3.longitude],
-                                            [g3.latitude, g4.longitude]])
+        m.set(
+            "WestBoundingCoordinate",
+            np.array([g1.longitude, g2.longitude, g3.longitude, g4.longitude]).min(),
+        )
+        m.set(
+            "EastBoundingCoordinate",
+            np.array([g1.longitude, g2.longitude, g3.longitude, g4.longitude]).max(),
+        )
+        m.set(
+            "SouthBoundingCoordinate",
+            np.array([g1.latitude, g2.latitude, g3.latitude, g4.latitude]).min(),
+        )
+        m.set(
+            "NorthBoundingCoordinate",
+            np.array([g1.latitude, g2.latitude, g3.latitude, g4.latitude]).max(),
+        )
+        bnd = geocal.ShapeLayer.polygon_2d(
+            [
+                [g1.latitude, g1.longitude],
+                [g2.latitude, g2.longitude],
+                [g3.latitude, g3.longitude],
+                [g3.latitude, g4.longitude],
+            ]
+        )
         m.set("SceneBoundaryLatLonWKT", str(bnd))
         m.set("CRS", to_proj4(g1))
         m.set(
             "FieldOfViewObstruction",
-            fin_geo["StandardMetadata/FieldOfViewObstruction"][()].decode('utf-8'),
+            fin_geo["StandardMetadata/FieldOfViewObstruction"][()].decode("utf-8"),
         )
         m.set("ImageLines", mi.number_y_pixel)
         m.set("ImagePixels", mi.number_x_pixel)
         m.set("ImageLineSpacing", self.resolution)
         m.set("ImagePixelSpacing", self.resolution)
-        m.set("RangeBeginningDate", fin_geo["StandardMetadata/RangeBeginningDate"][()].decode('utf-8'))
-        m.set("RangeBeginningTime", fin_geo["StandardMetadata/RangeBeginningTime"][()].decode('utf-8'))
-        m.set("RangeEndingDate", fin_geo["StandardMetadata/RangeEndingDate"][()].decode('utf-8'))
-        m.set("RangeEndingTime", fin_geo["StandardMetadata/RangeEndingTime"][()].decode('utf-8'))
-        m.set("DayNightFlag", fin_geo["StandardMetadata/DayNightFlag"][()].decode('utf-8'))
+        m.set(
+            "RangeBeginningDate",
+            fin_geo["StandardMetadata/RangeBeginningDate"][()].decode("utf-8"),
+        )
+        m.set(
+            "RangeBeginningTime",
+            fin_geo["StandardMetadata/RangeBeginningTime"][()].decode("utf-8"),
+        )
+        m.set(
+            "RangeEndingDate",
+            fin_geo["StandardMetadata/RangeEndingDate"][()].decode("utf-8"),
+        )
+        m.set(
+            "RangeEndingTime",
+            fin_geo["StandardMetadata/RangeEndingTime"][()].decode("utf-8"),
+        )
+        m.set(
+            "DayNightFlag", fin_geo["StandardMetadata/DayNightFlag"][()].decode("utf-8")
+        )
         m.set_input_pointer(self.inlist)
         return m
 
     def run(self, pool: None | Pool = None) -> None:
-        vzen = geocal.GdalRasterImage(f'HDF5:"{self.l1cg}"://HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data_Fields/view_zenith')
+        vzen = geocal.GdalRasterImage(
+            f'HDF5:"{self.l1cg}"://HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data_Fields/view_zenith'
+        )
         mi = vzen.map_info
         vzen = None
-        xindex, yindex = np.meshgrid(list(range(mi.number_x_pixel)),
-                                     list(range(mi.number_y_pixel)))
+        xindex, yindex = np.meshgrid(
+            list(range(mi.number_x_pixel)), list(range(mi.number_y_pixel))
+        )
         self.lon, self.lat = mi.index_to_coordinate(xindex, yindex)
         sfile = geocal.ShapeFile(self.l1_osp_dir / "sentinel_tile.shp")
         lay = sfile["sentinel_tile"]
@@ -299,7 +328,7 @@ class L2ctGenerate:
             return False
         dirname = Path(str(self.output_pattern).replace("TILE", shp["tile_id"]))
         geocal.makedirs_p(dirname)
-        #m = self.create_standard_metadata(mi, fin_geo, shp['tile_id'], dirname.parent / f"{dirname.name}.zip.xml")
+        # m = self.create_standard_metadata(mi, fin_geo, shp['tile_id'], dirname.parent / f"{dirname.name}.zip.xml")
         # Temp
         if False:
             m.write()
@@ -378,8 +407,8 @@ class L2ctGenerate:
             vmax,
             vicar_fname=vicar_fname,
         )
-        
-        #m.write()
+
+        # m.write()
         res = None
         breakpoint()
         # Create zip file
@@ -390,5 +419,6 @@ class L2ctGenerate:
 
         logger.info(f"Done with {shp['tile_id']}")
         return True
+
 
 __all__ = ["L2ctGenerate"]

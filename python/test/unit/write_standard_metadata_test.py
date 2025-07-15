@@ -9,9 +9,9 @@ def test_write_standard_metadata(isolated_dir):
     )
     m.write()
 
+
 def test_write_xml_standard_metadata(isolated_dir):
     m = WriteStandardMetadata(
         None, xml_file="ECOSTRESS_L1B_GEO_80001_001_20151024_020211_0100_01.xml"
     )
     m.write()
-    

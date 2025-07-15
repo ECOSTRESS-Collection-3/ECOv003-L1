@@ -1,7 +1,8 @@
 from __future__ import annotations
 from .write_standard_metadata import WriteStandardMetadata
-import numpy as np
 from typing import Any
+import json
+import numpy as np
 
 
 class L1ctWriteStandardMetadata(WriteStandardMetadata):
@@ -9,10 +10,17 @@ class L1ctWriteStandardMetadata(WriteStandardMetadata):
 
     def __init__(
         self,
-        *args : Any,
-        orbit_corrected : bool=True,
-        geolocation_accuracy_qa : str="Poor",
-        **kwargs : Any,
+        *args: Any,
+        orbit_corrected: bool = True,
+        tcorr_before: float = -9999,
+        tcorr_after: float = -9999,
+        over_all_land_fraction: float = 0.0,
+        average_solar_zenith: float = 0.0,
+        geolocation_accuracy_qa: str = "Poor",
+        qa_precentage_missing: float | None = None,
+        band_specification: None | list[float] = None,
+        cal_correction: None | np.ndarray = None,
+        **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
         self.orbit_corrected = orbit_corrected
@@ -30,24 +38,49 @@ class L1ctWriteStandardMetadata(WriteStandardMetadata):
                 "Image matching was not successful correcting scene ephemeris/attitude. Ephemeris/attitude may have significant errors."
             )
         self.set("GeolocationAccuracyQA", self.geolocation_accuracy_qa)
-        self.set("GeolocationAccuracyQAExplanation",
-"""Best - Image matching was performed for this scene, expect 
+        self.set(
+            "GeolocationAccuracyQAExplanation",
+            """Best - Image matching was performed for this scene, expect 
        good geolocation accuracy.
 Good - Image matching was performed on a nearby scene, and correction 
        has been interpolated/extrapolated. Expect good geolocation accuracy.
 Suspect - Matched somewhere in the orbit. Expect better geolocation 
        than orbits w/o image matching, but may still have large errors.
 Poor - No matches in the orbit. Expect largest geolocation errors.
-""")
+""",
+        )
         self.data["CRS"] = "fake"
         self.data["SceneBoundaryLatLonWKT"] = "fake"
 
     @property
-    def mlist(self) -> list[tuple[str,str]]:
+    def mlist(self) -> list[tuple[str, str]]:
         m = super().mlist
         m.append(("AutomaticQualityFlagExplanation", "String"))
         m.append(("CRS", "String"))
         m.append(("SceneBoundaryLatLonWKT", "String"))
         return m
+
+    def write(self) -> None:
+        super().write()
+        self.write_json()
+
+    def write_json(self) -> None:
+        fh = open(self.json_file, "w")
+        jdict = {}
+        jdict["StandardMetadata"] = {}
+        jdict["ProductMetadata"] = {"AncillaryFiles": 0}
+        klist = sorted([m for m, _ in self.mlist])
+        for m in klist:
+            d = self.data[m]
+            if isinstance(d, np.int32):
+                d = int(d)
+            elif isinstance(d, np.float32):
+                d = float(d)
+            elif isinstance(d, np.float64):
+                d = float(d)
+            if d is not None:
+                jdict["StandardMetadata"][m] = d
+        print(json.dumps(jdict, indent=2), file=fh)
+
 
 __all__ = ["L1ctWriteStandardMetadata"]

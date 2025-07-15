@@ -9,7 +9,7 @@ from ecostress_swig import (  # type: ignore
     write_gdal,
     gdal_band,
     set_fill_value,
-    to_proj4
+    to_proj4,
 )
 from .l1ct_write_standard_metadata import L1ctWriteStandardMetadata
 import h5py  # type: ignore
@@ -85,21 +85,38 @@ class L1ctGenerate:
     def create_standard_metadata(
         self,
         mi: geocal.MapInfo,
+        fin_rad: h5py.File,
         fin_geo: h5py.File,
-        tile_id : str,
+        tile_id: str,
         fout: Path,
+        fout2: Path,
     ) -> L1ctWriteStandardMetadata:
+        t = fin_rad["L1B_RADMetadata/CalibrationGainCorrection"][:]
+        cal_correction = np.empty((2, t.shape[0]))
+        cal_correction[0, :] = t
+        cal_correction[1, :] = fin_rad["L1B_RADMetadata/CalibrationOffsetCorrection"][:]
         m = L1ctWriteStandardMetadata(
-            None, xml_file=fout,
+            None,
+            xml_file=fout,
+            json_file=fout2,
             product_specfic_group="",
             proc_lev_desc="Level 1 Tiled Top of Atmosphere Calibrated Radiance",
             pge_name="L1C",
             collection_label=self.collection_label,
             build_id=self.build_id,
             pge_version=self.pge_version,
+            orbit_corrected=fin_geo["L1GEOMetadata/OrbitCorrectionPerformed"][()]
+            == b"True",
+            tcorr_before=fin_geo["L1GEOMetadata/DeltaTimeOfCorrectionBeforeScene"][()],
+            tcorr_after=fin_geo["L1GEOMetadata/DeltaTimeOfCorrectionAfterScene"][()],
             geolocation_accuracy_qa=fin_geo["L1GEOMetadata/GeolocationAccuracyQA"][
                 ()
             ].decode("utf-8"),
+            over_all_land_fraction=fin_geo["L1GEOMetadata/OverAllLandFraction"][()],
+            average_solar_zenith=fin_geo["L1GEOMetadata/AverageSolarZenith"][()],
+            qa_precentage_missing=fin_rad["L1B_RADMetadata/QAPercentMissingData"],
+            band_specification=fin_rad["L1B_RADMetadata/BandSpecification"],
+            cal_correction=cal_correction,
         )
         m.set("RegionID", tile_id)
         m.set("DataFormatType", "COG")
@@ -112,33 +129,59 @@ class L1ctGenerate:
         g2 = conv.convert_from_coordinate(mi.lrc_x, mi.ulc_y)
         g3 = conv.convert_from_coordinate(mi.lrc_x, mi.lrc_y)
         g4 = conv.convert_from_coordinate(mi.ulc_x, mi.lrc_y)
-        m.set("WestBoundingCoordinate", np.array([g1.longitude, g2.longitude, g3.longitude,
-                                                  g4.longitude]).min())
-        m.set("EastBoundingCoordinate", np.array([g1.longitude, g2.longitude, g3.longitude,
-                                                  g4.longitude]).max())
-        m.set("SouthBoundingCoordinate", np.array([g1.latitude, g2.latitude, g3.latitude,
-                                                  g4.latitude]).min())
-        m.set("NorthBoundingCoordinate",np.array([g1.latitude, g2.latitude, g3.latitude,
-                                                  g4.latitude]).max())
-        bnd = geocal.ShapeLayer.polygon_2d([[g1.latitude, g1.longitude],
-                                            [g2.latitude, g2.longitude],
-                                            [g3.latitude, g3.longitude],
-                                            [g3.latitude, g4.longitude]])
+        m.set(
+            "WestBoundingCoordinate",
+            np.array([g1.longitude, g2.longitude, g3.longitude, g4.longitude]).min(),
+        )
+        m.set(
+            "EastBoundingCoordinate",
+            np.array([g1.longitude, g2.longitude, g3.longitude, g4.longitude]).max(),
+        )
+        m.set(
+            "SouthBoundingCoordinate",
+            np.array([g1.latitude, g2.latitude, g3.latitude, g4.latitude]).min(),
+        )
+        m.set(
+            "NorthBoundingCoordinate",
+            np.array([g1.latitude, g2.latitude, g3.latitude, g4.latitude]).max(),
+        )
+        bnd = geocal.ShapeLayer.polygon_2d(
+            [
+                [g1.latitude, g1.longitude],
+                [g2.latitude, g2.longitude],
+                [g3.latitude, g3.longitude],
+                [g3.latitude, g4.longitude],
+            ]
+        )
         m.set("SceneBoundaryLatLonWKT", str(bnd))
         m.set("CRS", to_proj4(g1))
         m.set(
             "FieldOfViewObstruction",
-            fin_geo["StandardMetadata/FieldOfViewObstruction"][()].decode('utf-8'),
+            fin_geo["StandardMetadata/FieldOfViewObstruction"][()].decode("utf-8"),
         )
         m.set("ImageLines", mi.number_y_pixel)
         m.set("ImagePixels", mi.number_x_pixel)
         m.set("ImageLineSpacing", self.resolution)
         m.set("ImagePixelSpacing", self.resolution)
-        m.set("RangeBeginningDate", fin_geo["StandardMetadata/RangeBeginningDate"][()].decode('utf-8'))
-        m.set("RangeBeginningTime", fin_geo["StandardMetadata/RangeBeginningTime"][()].decode('utf-8'))
-        m.set("RangeEndingDate", fin_geo["StandardMetadata/RangeEndingDate"][()].decode('utf-8'))
-        m.set("RangeEndingTime", fin_geo["StandardMetadata/RangeEndingTime"][()].decode('utf-8'))
-        m.set("DayNightFlag", fin_geo["StandardMetadata/DayNightFlag"][()].decode('utf-8'))
+        m.set(
+            "RangeBeginningDate",
+            fin_geo["StandardMetadata/RangeBeginningDate"][()].decode("utf-8"),
+        )
+        m.set(
+            "RangeBeginningTime",
+            fin_geo["StandardMetadata/RangeBeginningTime"][()].decode("utf-8"),
+        )
+        m.set(
+            "RangeEndingDate",
+            fin_geo["StandardMetadata/RangeEndingDate"][()].decode("utf-8"),
+        )
+        m.set(
+            "RangeEndingTime",
+            fin_geo["StandardMetadata/RangeEndingTime"][()].decode("utf-8"),
+        )
+        m.set(
+            "DayNightFlag", fin_geo["StandardMetadata/DayNightFlag"][()].decode("utf-8")
+        )
         m.set_input_pointer(self.inlist)
         return m
 
@@ -300,12 +343,15 @@ class L1ctGenerate:
         dirname = Path(str(self.output_pattern).replace("TILE", shp["tile_id"]))
         geocal.makedirs_p(dirname)
         fin_geo = h5py.File(self.l1b_geo)
-        m = self.create_standard_metadata(mi, fin_geo, shp['tile_id'], dirname.parent / f"{dirname.name}.zip.xml")
-        # Temp
-        if False:
-            m.write()
-            breakpoint()
-            return
+        fin_rad = h5py.File(self.l1b_rad)
+        m = self.create_standard_metadata(
+            mi,
+            fin_rad,
+            fin_geo,
+            shp["tile_id"],
+            dirname.parent / f"{dirname.name}.zip.xml",
+            dirname / f"{dirname.name}.json",
+        )
         for b in range(1, 6):
             logger.info(f"Doing radiance band {b} - {shp['tile_id']}")
             data_in = geocal.GdalRasterImage(
@@ -424,6 +470,7 @@ class L1ctGenerate:
         )
         m.write()
         res = None
+        breakpoint()
         # Create zip file
         with ZipFile(str(dirname.parent / f"{dirname.name}.zip"), "w") as fh:
             for filename in Path(dirname).glob(f"{dirname}*"):
@@ -432,13 +479,6 @@ class L1ctGenerate:
 
         logger.info(f"Done with {shp['tile_id']}")
         return True
-
-        # TODO Make sure to update bounding box stuff in output metadata
-        # TODO Put into place, I think we need to handle this with something
-        # other than write_standard_metadata
-        # m = self.l1b_geo_generate.m.copy_new_file(
-        #    fout, self.local_granule_id, "ECO_L1CG_RAD"
-        # )
 
 
 __all__ = ["L1ctGenerate"]
