@@ -229,7 +229,8 @@ am__objects_1 = @swigsrc@/_swig_wrap_la-ecostress_swig_array_wrap.lo \
 	@swigsrc@/_swig_wrap_la-hdfeos_filehandle_wrap.lo \
 	@swigsrc@/_swig_wrap_la-hdfeos_grid_wrap.lo \
 	@swigsrc@/_swig_wrap_la-coordinate_convert_wrap.lo \
-	@swigsrc@/_swig_wrap_la-geometric_model_image_handle_fill_wrap.lo
+	@swigsrc@/_swig_wrap_la-geometric_model_image_handle_fill_wrap.lo \
+	@swigsrc@/_swig_wrap_la-memory_raster_image_float_wrap.lo
 am__objects_2 = $(am__objects_1)
 am__swig_wrap_la_OBJECTS = $(am__objects_2) \
 	@swigsrc@/_swig_wrap_la-swig_wrap.lo
@@ -261,7 +262,8 @@ am_libecostress_la_OBJECTS =  \
 	@srclib@/libecostress_la-hdfeos_filehandle.lo \
 	@srclib@/libecostress_la-hdfeos_grid.lo \
 	@srclib@/libecostress_la-coordinate_convert.lo \
-	@srclib@/libecostress_la-geometric_model_image_handle_fill.lo
+	@srclib@/libecostress_la-geometric_model_image_handle_fill.lo \
+	@srclib@/libecostress_la-memory_raster_image_float.lo
 libecostress_la_OBJECTS = $(am_libecostress_la_OBJECTS)
 libecostress_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
@@ -339,6 +341,7 @@ am__depfiles_remade = @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_tes
 	@srclib@/$(DEPDIR)/libecostress_la-ground_coordinate_array.Plo \
 	@srclib@/$(DEPDIR)/libecostress_la-hdfeos_filehandle.Plo \
 	@srclib@/$(DEPDIR)/libecostress_la-hdfeos_grid.Plo \
+	@srclib@/$(DEPDIR)/libecostress_la-memory_raster_image_float.Plo \
 	@srclib@/$(DEPDIR)/libecostress_la-resampler.Plo \
 	@srclib@/$(DEPDIR)/libecostress_la-simulated_radiance.Plo \
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-coordinate_convert_wrap.Plo \
@@ -359,6 +362,7 @@ am__depfiles_remade = @srclib@/$(DEPDIR)/ecostress_test_all-ecostress_camera_tes
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-ground_coordinate_array_wrap.Plo \
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-hdfeos_filehandle_wrap.Plo \
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-hdfeos_grid_wrap.Plo \
+	@swigsrc@/$(DEPDIR)/_swig_wrap_la-memory_raster_image_float_wrap.Plo \
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-resampler_wrap.Plo \
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-simulated_radiance_wrap.Plo \
 	@swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Plo
@@ -605,8 +609,8 @@ am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(srcdir)/include.am $(srcdir)/l1a_cal/l1a_cal.am \
 	$(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1b_geo/l1b_geo.am \
 	$(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1c/l1c.am \
-	$(srcdir)/lib/lib.am $(srcdir)/python/python.am \
-	$(srcdir)/script/script.am \
+	$(srcdir)/l2c/l2c.am $(srcdir)/lib/lib.am \
+	$(srcdir)/python/python.am $(srcdir)/script/script.am \
 	$(srcdir)/unit_test_data/unit_test_data.am \
 	$(srcdir)/vicar_pdf/vicar_pdf.am $(top_srcdir)/config/compile \
 	$(top_srcdir)/config/config.guess \
@@ -800,6 +804,7 @@ l1a_raw_src = @l1a_raw_src@
 l1b_geo_src = @l1b_geo_src@
 l1b_rad_src = @l1b_rad_src@
 l1c_src = @l1c_src@
+l2c_src = @l2c_src@
 libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
@@ -862,7 +867,8 @@ dist_bin_SCRIPTS = @l1a_raw_src@/l1a_raw_process \
 	@l1b_geo_src@/l1b_orthobase @l1b_geo_src@/map_to_gdal \
 	@l1b_geo_src@/map_product @l1b_geo_src@/map_to_kmz \
 	@l1b_geo_src@/map_index @l1b_geo_src@/kmz_combine \
-	@l1b_geo_src@/ecostress_util @l1c_src@/l1c_process
+	@l1b_geo_src@/ecostress_util @l1c_src@/l1c_process \
+	@l2c_src@/l2c_process
 AM_LDFLAGS = 
 BUILT_SOURCES = $(am__append_1) $(am__append_2)
 include_HEADERS = 
@@ -914,7 +920,7 @@ check_DATA =
 # Build these up as we go
 dist_installecostress_SCRIPTS = @l1a_raw_src@/L1A_RAW_PGE \
 	@l1a_cal_src@/L1A_CAL_PGE @l1b_rad_src@/L1B_RAD_PGE \
-	@l1b_geo_src@/L1B_GEO_PGE @l1c_src@/L1C_PGE
+	@l1b_geo_src@/L1B_GEO_PGE @l1c_src@/L1C_PGE @l2c_src@/L2C_PGE
 
 # SWIG part
 # ================================================
@@ -1015,7 +1021,8 @@ libecostress_la_SOURCES = @srclib@/ecostress_camera.cc \
 	@srclib@/ground_coordinate_array.cc \
 	@srclib@/simulated_radiance.cc @srclib@/hdfeos_filehandle.cc \
 	@srclib@/hdfeos_grid.cc @srclib@/coordinate_convert.cc \
-	@srclib@/geometric_model_image_handle_fill.cc
+	@srclib@/geometric_model_image_handle_fill.cc \
+	@srclib@/memory_raster_image_float.cc
 
 #=================================================================
 # List of source files
@@ -1033,7 +1040,8 @@ ecostressinc_HEADERS = @srclib@/ecostress_serialize_support.h \
 	@srclib@/ground_coordinate_array.h \
 	@srclib@/simulated_radiance.h @srclib@/hdfeos_filehandle.h \
 	@srclib@/hdfeos_grid.h @srclib@/coordinate_convert.h \
-	@srclib@/geometric_model_image_handle_fill.h
+	@srclib@/geometric_model_image_handle_fill.h \
+	@srclib@/memory_raster_image_float.h
 
 # Files that contain SWIG wrapper information.
 ecostressswiginc_HEADERS = @srclib@/ecostress_common.i \
@@ -1051,7 +1059,8 @@ ecostressswiginc_HEADERS = @srclib@/ecostress_common.i \
 	@srclib@/ground_coordinate_array.i \
 	@srclib@/simulated_radiance.i @srclib@/hdfeos_filehandle.i \
 	@srclib@/hdfeos_grid.i @srclib@/coordinate_convert.i \
-	@srclib@/geometric_model_image_handle_fill.i
+	@srclib@/geometric_model_image_handle_fill.i \
+	@srclib@/memory_raster_image_float.i
 ecostress_test_all_SOURCES = @srclib@/test_all.cc \
 	@srclib@/global_fixture.cc @srclib@/global_fixture_default.cc \
 	@srclib@/ecostress_camera_test.cc \
@@ -1086,7 +1095,8 @@ SWIG_SRC = @swigsrc@/ecostress_swig_array_wrap.cc \
 	@swigsrc@/hdfeos_filehandle_wrap.cc \
 	@swigsrc@/hdfeos_grid_wrap.cc \
 	@swigsrc@/coordinate_convert_wrap.cc \
-	@swigsrc@/geometric_model_image_handle_fill_wrap.cc
+	@swigsrc@/geometric_model_image_handle_fill_wrap.cc \
+	@swigsrc@/memory_raster_image_float_wrap.cc
 libecostress_la_CPPFLAGS = $(AM_CPPFLAGS) $(GEOCAL_CFLAGS) $(HDFEOS5_CFLAGS)
 libecostress_la_LDFLAGS = $(GEOCAL_LIBS) $(HDFEOS5_LIBS)
 ecostress_test_all_LDADD = libecostress.la 
@@ -1099,7 +1109,7 @@ all: $(BUILT_SOURCES)
 .SUFFIXES: .cc .lo .log .o .obj .test .test$(EXEEXT) .trs
 am--refresh: Makefile
 	@:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/l1c/l1c.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(srcdir)/unit_test_data/unit_test_data.am $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/l1c/l1c.am $(srcdir)/l2c/l2c.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(srcdir)/unit_test_data/unit_test_data.am $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -1121,7 +1131,7 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles);; \
 	esac;
-$(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/l1c/l1c.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(srcdir)/unit_test_data/unit_test_data.am $(am__empty):
+$(srcdir)/common.am $(srcdir)/include.am $(srcdir)/ecostress.am $(srcdir)/l1a_raw/l1a_raw.am $(srcdir)/l1a_cal/l1a_cal.am $(srcdir)/l1b_rad/l1b_rad.am $(srcdir)/l1b_geo/l1b_geo.am $(srcdir)/l1c/l1c.am $(srcdir)/l2c/l2c.am $(srcdir)/vicar_pdf/vicar_pdf.am $(srcdir)/script/script.am $(srcdir)/python/python.am $(srcdir)/bindings/python/python.am $(srcdir)/lib/lib.am $(srcdir)/unit_test_data/unit_test_data.am $(am__empty):
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
@@ -1308,6 +1318,8 @@ clean-pkgpythonswigLTLIBRARIES:
 	@swigsrc@/$(am__dirstamp) @swigsrc@/$(DEPDIR)/$(am__dirstamp)
 @swigsrc@/_swig_wrap_la-geometric_model_image_handle_fill_wrap.lo:  \
 	@swigsrc@/$(am__dirstamp) @swigsrc@/$(DEPDIR)/$(am__dirstamp)
+@swigsrc@/_swig_wrap_la-memory_raster_image_float_wrap.lo:  \
+	@swigsrc@/$(am__dirstamp) @swigsrc@/$(DEPDIR)/$(am__dirstamp)
 @swigsrc@/_swig_wrap_la-swig_wrap.lo: @swigsrc@/$(am__dirstamp) \
 	@swigsrc@/$(DEPDIR)/$(am__dirstamp)
 
@@ -1354,6 +1366,8 @@ _swig_wrap.la: $(_swig_wrap_la_OBJECTS) $(_swig_wrap_la_DEPENDENCIES) $(EXTRA__s
 @srclib@/libecostress_la-coordinate_convert.lo:  \
 	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
 @srclib@/libecostress_la-geometric_model_image_handle_fill.lo:  \
+	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
+@srclib@/libecostress_la-memory_raster_image_float.lo:  \
 	@srclib@/$(am__dirstamp) @srclib@/$(DEPDIR)/$(am__dirstamp)
 
 libecostress.la: $(libecostress_la_OBJECTS) $(libecostress_la_DEPENDENCIES) $(EXTRA_libecostress_la_DEPENDENCIES) 
@@ -1542,6 +1556,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-ground_coordinate_array.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-hdfeos_filehandle.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-hdfeos_grid.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-memory_raster_image_float.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-resampler.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@srclib@/$(DEPDIR)/libecostress_la-simulated_radiance.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-coordinate_convert_wrap.Plo@am__quote@ # am--include-marker
@@ -1562,6 +1577,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-ground_coordinate_array_wrap.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-hdfeos_filehandle_wrap.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-hdfeos_grid_wrap.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-memory_raster_image_float_wrap.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-resampler_wrap.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-simulated_radiance_wrap.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@@swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Plo@am__quote@ # am--include-marker
@@ -1736,6 +1752,13 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -c -o @swigsrc@/_swig_wrap_la-geometric_model_image_handle_fill_wrap.lo `test -f '@swigsrc@/geometric_model_image_handle_fill_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/geometric_model_image_handle_fill_wrap.cc
 
+@swigsrc@/_swig_wrap_la-memory_raster_image_float_wrap.lo: @swigsrc@/memory_raster_image_float_wrap.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -MT @swigsrc@/_swig_wrap_la-memory_raster_image_float_wrap.lo -MD -MP -MF @swigsrc@/$(DEPDIR)/_swig_wrap_la-memory_raster_image_float_wrap.Tpo -c -o @swigsrc@/_swig_wrap_la-memory_raster_image_float_wrap.lo `test -f '@swigsrc@/memory_raster_image_float_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/memory_raster_image_float_wrap.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @swigsrc@/$(DEPDIR)/_swig_wrap_la-memory_raster_image_float_wrap.Tpo @swigsrc@/$(DEPDIR)/_swig_wrap_la-memory_raster_image_float_wrap.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@swigsrc@/memory_raster_image_float_wrap.cc' object='@swigsrc@/_swig_wrap_la-memory_raster_image_float_wrap.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -c -o @swigsrc@/_swig_wrap_la-memory_raster_image_float_wrap.lo `test -f '@swigsrc@/memory_raster_image_float_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/memory_raster_image_float_wrap.cc
+
 @swigsrc@/_swig_wrap_la-swig_wrap.lo: @swigsrc@/swig_wrap.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(_swig_wrap_la_CPPFLAGS) $(CPPFLAGS) $(_swig_wrap_la_CXXFLAGS) $(CXXFLAGS) -MT @swigsrc@/_swig_wrap_la-swig_wrap.lo -MD -MP -MF @swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Tpo -c -o @swigsrc@/_swig_wrap_la-swig_wrap.lo `test -f '@swigsrc@/swig_wrap.cc' || echo '$(srcdir)/'`@swigsrc@/swig_wrap.cc
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Tpo @swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Plo
@@ -1868,6 +1891,13 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/geometric_model_image_handle_fill.cc' object='@srclib@/libecostress_la-geometric_model_image_handle_fill.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/libecostress_la-geometric_model_image_handle_fill.lo `test -f '@srclib@/geometric_model_image_handle_fill.cc' || echo '$(srcdir)/'`@srclib@/geometric_model_image_handle_fill.cc
+
+@srclib@/libecostress_la-memory_raster_image_float.lo: @srclib@/memory_raster_image_float.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/libecostress_la-memory_raster_image_float.lo -MD -MP -MF @srclib@/$(DEPDIR)/libecostress_la-memory_raster_image_float.Tpo -c -o @srclib@/libecostress_la-memory_raster_image_float.lo `test -f '@srclib@/memory_raster_image_float.cc' || echo '$(srcdir)/'`@srclib@/memory_raster_image_float.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) @srclib@/$(DEPDIR)/libecostress_la-memory_raster_image_float.Tpo @srclib@/$(DEPDIR)/libecostress_la-memory_raster_image_float.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='@srclib@/memory_raster_image_float.cc' object='@srclib@/libecostress_la-memory_raster_image_float.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libecostress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @srclib@/libecostress_la-memory_raster_image_float.lo `test -f '@srclib@/memory_raster_image_float.cc' || echo '$(srcdir)/'`@srclib@/memory_raster_image_float.cc
 
 @srclib@/ecostress_test_all-test_all.o: @srclib@/test_all.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ecostress_test_all_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT @srclib@/ecostress_test_all-test_all.o -MD -MP -MF @srclib@/$(DEPDIR)/ecostress_test_all-test_all.Tpo -c -o @srclib@/ecostress_test_all-test_all.o `test -f '@srclib@/test_all.cc' || echo '$(srcdir)/'`@srclib@/test_all.cc
@@ -2787,6 +2817,7 @@ distclean: distclean-am
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ground_coordinate_array.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-hdfeos_filehandle.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-hdfeos_grid.Plo
+	-rm -f @srclib@/$(DEPDIR)/libecostress_la-memory_raster_image_float.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-resampler.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-simulated_radiance.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-coordinate_convert_wrap.Plo
@@ -2807,6 +2838,7 @@ distclean: distclean-am
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ground_coordinate_array_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-hdfeos_filehandle_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-hdfeos_grid_wrap.Plo
+	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-memory_raster_image_float_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-resampler_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-simulated_radiance_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Plo
@@ -2897,6 +2929,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-ground_coordinate_array.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-hdfeos_filehandle.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-hdfeos_grid.Plo
+	-rm -f @srclib@/$(DEPDIR)/libecostress_la-memory_raster_image_float.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-resampler.Plo
 	-rm -f @srclib@/$(DEPDIR)/libecostress_la-simulated_radiance.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-coordinate_convert_wrap.Plo
@@ -2917,6 +2950,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-ground_coordinate_array_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-hdfeos_filehandle_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-hdfeos_grid_wrap.Plo
+	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-memory_raster_image_float_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-resampler_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-simulated_radiance_wrap.Plo
 	-rm -f @swigsrc@/$(DEPDIR)/_swig_wrap_la-swig_wrap.Plo

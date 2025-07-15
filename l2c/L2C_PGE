@@ -14,5 +14,5 @@ binpath="${scriptpath}/bin"
 source "${scriptpath}/setup_ecostress.sh"
 
 # Execute actual process
-"${binpath}/l1c_process" $*
+"${binpath}/l2c_process" $*
 
