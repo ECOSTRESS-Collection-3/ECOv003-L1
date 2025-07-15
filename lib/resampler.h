@@ -27,6 +27,7 @@ public:
 	    bool Exactly_match_mi = false, double Mark_missing=-1000.0);
   virtual ~Resampler() {}
   bool empty_resample() const;
+  bool empty_resample(const boost::shared_ptr<GeoCal::RasterImage>& Data) const;
   const GeoCal::MapInfo& map_info() const { return mi; }
   int number_sub_pixel() const {return nsub; }
   blitz::Array<double, 2> resample_field

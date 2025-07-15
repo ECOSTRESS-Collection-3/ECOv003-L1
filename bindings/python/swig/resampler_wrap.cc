@@ -7270,19 +7270,17 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Resampler_empty_resample(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_Resampler_empty_resample__SWIG_0(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   boost::shared_ptr< Ecostress::Resampler const > tempshared1 ;
   boost::shared_ptr< Ecostress::Resampler const > *smartarg1 = 0 ;
-  PyObject *swig_obj[1] ;
   bool result;
   
   (void)self;
-  if (!args) SWIG_fail;
-  swig_obj[0] = args;
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
   {
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
@@ -7311,6 +7309,103 @@ SWIGINTERN PyObject *_wrap_Resampler_empty_resample(PyObject *self, PyObject *ar
   return resultobj;
 fail:
   return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Resampler_empty_resample__SWIG_1(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
+  boost::shared_ptr< GeoCal::RasterImage > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::Resampler const > tempshared1 ;
+  boost::shared_ptr< Ecostress::Resampler const > *smartarg1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  boost::shared_ptr< GeoCal::RasterImage > tempshared2 ;
+  boost::shared_ptr< GeoCal::RasterImage > temp2shared2 ;
+  bool result;
+  
+  (void)self;
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_empty_resample" "', argument " "1"" of type '" "Ecostress::Resampler const *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
+      arg1 = const_cast< Ecostress::Resampler * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::Resampler > * >(argp1);
+      arg1 = const_cast< Ecostress::Resampler * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__RasterImage_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Resampler_empty_resample" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::RasterImage > const &""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp2) tempshared2 = *reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2);
+      delete reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2);
+      arg2 = &tempshared2;
+    } else {
+      arg2 = (argp2) ? reinterpret_cast< boost::shared_ptr< GeoCal::RasterImage > * >(argp2) : &tempshared2;
+    }
+    // Added mms
+    // Special handling if this is a director class.
+    // See DirectorNotes.md for discussion of this.
+    Swig::Director* dp = dynamic_cast<Swig::Director*>(arg2->get());
+    if(dp) {
+      temp2shared2.reset(arg2->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      arg2 = &temp2shared2;
+    }
+  }
+  {
+    try {
+      result = (bool)((Ecostress::Resampler const *)arg1)->empty_resample((boost::shared_ptr< GeoCal::RasterImage > const &)*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Resampler_empty_resample(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[3] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args, "Resampler_empty_resample", 0, 2, argv))) SWIG_fail;
+  --argc;
+  if (argc == 1) {
+    PyObject *retobj = _wrap_Resampler_empty_resample__SWIG_0(self, argc, argv);
+    if (!SWIG_Python_TypeErrorOccurred(retobj)) return retobj;
+    SWIG_fail;
+  }
+  if (argc == 2) {
+    PyObject *retobj = _wrap_Resampler_empty_resample__SWIG_1(self, argc, argv);
+    if (!SWIG_Python_TypeErrorOccurred(retobj)) return retobj;
+    SWIG_fail;
+  }
+  
+fail:
+  SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'Resampler_empty_resample'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::Resampler::empty_resample() const\n"
+    "    Ecostress::Resampler::empty_resample(boost::shared_ptr< GeoCal::RasterImage > const &) const\n");
+  return 0;
 }
 
 
@@ -7410,7 +7505,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_0(PyObject *self, Py_s
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-pixi-env/.pixi/envs/default/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
+    /*@SWIG:/home/smyth/Local/ecostress-env/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -7524,7 +7619,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_1(PyObject *self, Py_s
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-pixi-env/.pixi/envs/default/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
+    /*@SWIG:/home/smyth/Local/ecostress-env/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -7630,7 +7725,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_2(PyObject *self, Py_s
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-pixi-env/.pixi/envs/default/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
+    /*@SWIG:/home/smyth/Local/ecostress-env/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -7728,7 +7823,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_3(PyObject *self, Py_s
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-pixi-env/.pixi/envs/default/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
+    /*@SWIG:/home/smyth/Local/ecostress-env/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -7818,7 +7913,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_4(PyObject *self, Py_s
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-pixi-env/.pixi/envs/default/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
+    /*@SWIG:/home/smyth/Local/ecostress-env/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -7909,7 +8004,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_dqi(PyObject *self, PyObject *args
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-pixi-env/.pixi/envs/default/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
+    /*@SWIG:/home/smyth/Local/ecostress-env/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -8698,7 +8793,7 @@ SWIGINTERN PyObject *_wrap_Resampler_map_values(PyObject *self, PyObject *args) 
   resultobj = SWIG_Py_Void();
   {
     PyObject *res;
-    /*@SWIG:/ldata/smyth/ecostress-pixi-env/.pixi/envs/default/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
+    /*@SWIG:/home/smyth/Local/ecostress-env/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -8721,7 +8816,7 @@ SWIGINTERN PyObject *_wrap_Resampler_map_values(PyObject *self, PyObject *args) 
   }
   {
     PyObject *res;
-    /*@SWIG:/ldata/smyth/ecostress-pixi-env/.pixi/envs/default/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
+    /*@SWIG:/home/smyth/Local/ecostress-env/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -8744,7 +8839,7 @@ SWIGINTERN PyObject *_wrap_Resampler_map_values(PyObject *self, PyObject *args) 
   }
   {
     PyObject *res;
-    /*@SWIG:/ldata/smyth/ecostress-pixi-env/.pixi/envs/default/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
+    /*@SWIG:/home/smyth/Local/ecostress-env/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -9012,12 +9107,12 @@ static PyMethodDef SwigMethods[] = {
 		"of the actually coverage of the lat/lon. This is useful if we are\n"
 		"producing output files to compare against some existing file. \n"
 		""},
-	 { "Resampler_empty_resample", _wrap_Resampler_empty_resample, METH_O, "\n"
+	 { "Resampler_empty_resample", _wrap_Resampler_empty_resample, METH_VARARGS, "\n"
 		"\n"
-		"bool Resampler::empty_resample() const\n"
+		"bool Resampler::empty_resample(const boost::shared_ptr< GeoCal::RasterImage > &Data) const\n"
 		"Ecostress::Resampler::empty_resample\n"
 		"Check to see if we will have any data fall with the MapInfo.\n"
-		"\n"
+		"Checks a field also to exclude fill data \n"
 		""},
 	 { "Resampler_resample_dqi", _wrap_Resampler_resample_dqi, METH_VARARGS, "\n"
 		"\n"
@@ -9136,12 +9231,12 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"of the actually coverage of the lat/lon. This is useful if we are\n"
 		"producing output files to compare against some existing file. \n"
 		""},
-	 { "Resampler_empty_resample", _wrap_Resampler_empty_resample, METH_O, "\n"
+	 { "Resampler_empty_resample", _wrap_Resampler_empty_resample, METH_VARARGS, "\n"
 		"\n"
-		"bool Resampler::empty_resample() const\n"
+		"bool Resampler::empty_resample(const boost::shared_ptr< GeoCal::RasterImage > &Data) const\n"
 		"Ecostress::Resampler::empty_resample\n"
 		"Check to see if we will have any data fall with the MapInfo.\n"
-		"\n"
+		"Checks a field also to exclude fill data \n"
 		""},
 	 { "Resampler_resample_dqi", _wrap_Resampler_resample_dqi, METH_VARARGS, "\n"
 		"\n"
