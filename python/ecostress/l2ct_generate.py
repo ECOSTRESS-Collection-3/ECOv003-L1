@@ -25,7 +25,6 @@ import os
 import subprocess
 import matplotlib.pyplot as plt
 import typing
-import gc
 
 if typing.TYPE_CHECKING:
     from multiprocessing.pool import Pool
@@ -39,7 +38,6 @@ class L2ctGenerate:
     def __init__(
         self,
         l1cg: str | os.PathLike[str],
-        l2cg_cloud: str | os.PathLike[str],
         l2cg_lste: str | os.PathLike[str],
         l1_osp_dir: str | os.PathLike[str],
         output_pattern: str | os.PathLike[str],
@@ -58,7 +56,6 @@ class L2ctGenerate:
         ECOv002_L2T_LSTE_35544_007_TILE_20241012T201510_0713_01
         """
         self.l1cg = Path(l1cg)
-        self.l2cg_cloud = Path(l2cg_cloud)
         self.l2cg_lste = Path(l2cg_lste)
         self.output_pattern = output_pattern
         self.l1_osp_dir = Path(l1_osp_dir)
@@ -253,8 +250,9 @@ class L2ctGenerate:
         fname: str,
         mi: geocal.MapInfo,
         data: np.ndarray,
-        vmin: float,
-        vmax: float,
+        vmin: float | None,
+        vmax: float | None,
+        din: np.ndarray | None = None,
         vicar_fname: str | None = None,
     ) -> None:
         """Create jpeg preview of the given data. Not sure how useful this actually is,
@@ -262,6 +260,23 @@ class L2ctGenerate:
 
         Because it is so related, we optionally take a vicar file name. If this is
         supplied, the data is also saved to this file. This is then used in write_browse."""
+        # If vmin and vmax aren't supplied, use a simple algorithm to calculate this
+        if(vmax is None or vmin is None):
+            # Get the range to use in the jpeg preview. We use the full range
+            # of all the data, so we don't have weird changes in the color map from one
+            # tile to the next
+            if np.count_nonzero(din > fill_value_threshold) > 0:
+                mn = din[din > fill_value_threshold].min()
+                mx = din[din > fill_value_threshold].max()
+                mean = np.mean(din[din > fill_value_threshold])
+                sd = np.std(din[din > fill_value_threshold])
+                vmin = max(mean - 2 * sd, mn)
+                vmax = min(mean + 2 * sd, mx)
+            else:
+                vmin = 0
+                vmax = 1
+        if(vmin == vmax):
+            vmax += 1.0
         # Scale data from 0.0 to 1.0, which is what the cmap uses
         data_scaled = (data - float(vmin)) / (float(vmax) - float(vmin))
         data_scaled[data_scaled < 0.0] = 0.0
@@ -310,6 +325,27 @@ class L2ctGenerate:
         for filename in dirname.parent.glob(f"{dirname.name}.png.*"):
             filename.unlink()
 
+    def process_field(self, field_name, dirname, mi, res, din, dtype=geocal.GdalRasterImage.Float32, use_smallest_ic=False):
+        din[np.isnan(din)] = FILL_VALUE_BAD_OR_MISSING
+        data_in = MemoryRasterImageFloat(din.shape[0], din.shape[1])
+        data_in.write(0, 0, din)
+        data = res.resample_field(data_in, 1.0, False, np.nan if dtype == geocal.GdalRasterImage.Float32 else 0, use_smallest_ic)
+        f = geocal.GdalRasterImage("", "MEM", mi, 1, dtype)
+        if dtype == geocal.GdalRasterImage.Float32:
+            set_fill_value(f, np.nan)
+        write_data(f, data)
+        write_gdal(
+            str(dirname / f"{dirname.name}_{field_name}.tif"),
+            "COG",
+            f,
+            "BLOCKSIZE=256 COMPRESS=DEFLATE",
+        )
+        f.close()
+        self.write_preview(
+            str(dirname / f"{dirname.name}_{field_name}.jpeg"), mi, data, None, None,
+            din=din
+        )
+        
     def process_tile(self, shp: dict) -> bool:
         logger.info(f"Processing {shp['tile_id']}")
         x: np.ndarray | None = None
@@ -380,65 +416,67 @@ class L2ctGenerate:
             "BLOCKSIZE=256 COMPRESS=DEFLATE",
         )
         f.close()
-        # Get the range to use in the jpeg preview. We use the full range
-        # of all the data, so we don't have weird changes in the color map from one
-        # tile to the next
-        if np.count_nonzero(din > fill_value_threshold) > 0:
-            mn = din[din > fill_value_threshold].min()
-            mx = din[din > fill_value_threshold].max()
-            mean = np.mean(din[din > fill_value_threshold])
-            sd = np.std(din[din > fill_value_threshold])
-            vmin = max(mean - 2 * sd, mn)
-            vmax = min(mean + 2 * sd, mx)
-        else:
-            vmin = 0
-            vmax = 1
         self.write_preview(
-            str(dirname / f"{dirname.name}_view_zenith.jpeg"), mi, data, vmin, vmax
+            str(dirname / f"{dirname.name}_view_zenith.jpeg"), mi, data, None, None,
+            din=din
         )
 
-        # Do rad 2, just to give a simple thing for us to compare against
-        b = 2
-        logger.info(f"Doing radiance band {b} - {shp['tile_id']}")
-        din = fin_l1cg[f"/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/radiance_{b}"][lrange, srange]
-        # Change nan to fill value
-        din[np.isnan(din)] = FILL_VALUE_BAD_OR_MISSING
-        data_in = MemoryRasterImageFloat(din.shape[0], din.shape[1])
-        data_in.write(0, 0, din)
-        data = res.resample_field(data_in, 1.0, False, np.nan)
-        # COG can only create on copy, so we first create this in memory and
-        # then write out.
-        f = geocal.GdalRasterImage("", "MEM", mi, 1, geocal.GdalRasterImage.Float32)
-        set_fill_value(f, np.nan)
-        write_data(f, data)
-        write_gdal(
-            str(dirname / f"{dirname.name}_radiance_{b}.tif"),
-            "COG",
-            f,
-            "BLOCKSIZE=256 COMPRESS=DEFLATE",
-        )
-        f.close()
-        if np.count_nonzero(din > fill_value_threshold) > 0:
-            mn = din[din > fill_value_threshold].min()
-            mx = din[din > fill_value_threshold].max()
-            mean = np.mean(din[din > fill_value_threshold])
-            sd = np.std(din[din > fill_value_threshold])
-            vmin = max(mean - 2 * sd, mn)
-            vmax = min(mean + 2 * sd, mx)
-        else:
-            vmin = 0
-            vmax = 1
-        vicar_fname = str(dirname / f"rad_b{b}_scaled.img")
-        self.write_preview(
-            str(dirname / f"{dirname.name}_radiance_{b}.jpeg"),
-            mi,
-            data,
-            vmin,
-            vmax,
-            vicar_fname=vicar_fname,
-        )
+        # height
+        logger.info(f"Doing height - {shp['tile_id']}")
+        self.process_field("height", dirname, mi, res,
+               fin_l1cg["/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/height"][lrange, srange])
+
+        fin_l2cg_lste = h5py.File(self.l2cg_lste, "r")
+        # cloud, byte
+        logger.info(f"Doing cloud - {shp['tile_id']}")
+        self.process_field("cloud", dirname, mi, res,
+                           fin_l2cg_lste["/HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data Fields/cloud_mask"][lrange, srange],
+                           dtype=geocal.GdalRasterImage.Byte, use_smallest_ic=True)
+
+        # emiswb, float32
+        logger.info(f"Doing EmisWB - {shp['tile_id']}")
+        self.process_field("EmisWB", dirname, mi, res,
+                           fin_l2cg_lste["/HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data Fields/EmisWB"][lrange, srange],
+                           )
+
+        # LST_err, float32
+        logger.info(f"Doing LST_err - {shp['tile_id']}")
+        self.process_field("LST_err", dirname, mi, res,
+                           fin_l2cg_lste["/HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data Fields/LST_err"][lrange, srange],
+                           )
+
+        # LST, float32
+        logger.info(f"Doing LST - {shp['tile_id']}")
+        self.process_field("LST", dirname, mi, res,
+                           fin_l2cg_lste["/HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data Fields/LST"][lrange, srange],
+                           )
+
+        # QC, uint16
+        logger.info(f"Doing QC - {shp['tile_id']}")
+        self.process_field("QC", dirname, mi, res,
+                           fin_l2cg_lste["/HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data Fields/QC"][lrange, srange],
+                           dtype=geocal.GdalRasterImage.UInt16, use_smallest_ic=True,
+                           )
+
+        # water, byte
+        logger.info(f"Doing water - {shp['tile_id']}")
+        self.process_field("water", dirname, mi, res,
+                           fin_l2cg_lste["/HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data Fields/water_mask"][lrange, srange],
+                           dtype=geocal.GdalRasterImage.UInt16, use_smallest_ic=True,
+                           )
+        
+        # We did radiance 2 just to give a simple thing for us to compare against with
+        # our l1ct code. Leave this in case we want to come back to this, but normally
+        # don't do this.
+        if False:
+            b = 2
+            logger.info(f"Doing radiance band {b} - {shp['tile_id']}")
+            self.process_field(f"radiance_{b}", dirname, mi, res,
+            fin_l1cg[f"/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/radiance_{b}"][lrange, srange])
+        
         m.write()
         fin_l1cg.close()
+        fin_l2cg_lste.close()
         din = None
         data_in = None
         data = None

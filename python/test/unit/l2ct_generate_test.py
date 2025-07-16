@@ -7,16 +7,12 @@ from multiprocessing import Pool
 def test_l2ct_generate(isolated_dir, test_data_latest, lwm):
     l1_osp_dir = test_data_latest / "l1_osp_dir"
     l1cg = test_data_latest / "ECOv003_L1CG_RAD_03129_002_20190124T012016_0800_01.h5"
-    l2cg_cloud = (
-        test_data_latest / "ECOv003_L2G_CLOUD_03129_002_20190124T012016_7999_97.h5"
-    )
     l2cg_lste = (
         test_data_latest / "ECOv003_L2G_LSTE_03129_002_20190124T012016_7999_97.h5"
     )
     out_pattern = "ECOv003_L2T_LSTE_03129_002_TILE_20190124T012016_0100_01"
     g = L2ctGenerate(
         l1cg,
-        l2cg_cloud,
         l2cg_lste,
         l1_osp_dir,
         out_pattern,

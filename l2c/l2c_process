@@ -22,7 +22,7 @@ from ecostress_version import pge_version, build_id, collection_label
 version = "1.0"
 usage = """Usage:
   l2c_process [options] <run_config>
-  l2c_process [options] <l1cg> <l2g_cloud> <l2g_lste> <osp_dir> <prod_dir>
+  l2c_process [options] <l1cg> <l2g_lste> <osp_dir> <prod_dir>
   l2c_process -h | --help
   l2c_process -v | --version
 
@@ -68,7 +68,6 @@ if args.run_config:
     dirname = os.path.abspath(config["ProductPathGroup", "ProductPath"])
     file_version = config["ProductPathGroup", "ProductCounter"]
     l1cg_fname = os.path.abspath(config["InputFileGroup", "L1CG"])
-    l2g_cloud_fname = os.path.abspath(config["InputFileGroup", "L2G_CLOUD"])
     l2g_lste_fname = os.path.abspath(config["InputFileGroup", "L2G_LSTE"])
     build_id = config["PrimaryExecutable", "BuildID"]
     collection_label = config["ProductPathGroup", "CollectionLabel"]
@@ -77,7 +76,6 @@ else:
     dirname = os.path.abspath(args.prod_dir)
     file_version = "01"
     l1cg_fname = os.path.abspath(args.l1cg)
-    l2g_cloud_fname = os.path.abspath(args.l2g_cloud)
     l2g_lste_fname = os.path.abspath(args.l2g_lste)
 
 orbit, scene, acquisition_time = ecostress.orbit_from_grid_metadata(l1cg_fname)
@@ -110,10 +108,9 @@ logger.add(os.path.splitext(ofile)[0] + ".log", level="DEBUG")
 pool = None
 try:
     with logger.catch(reraise=True):
-        inlist = [l1cg_fname, l2g_cloud_fname, l2g_lste_fname, str(l1_osp_dir / "l2c_config.py")]
+        inlist = [l1cg_fname, l2g_lste_fname, str(l1_osp_dir / "l2c_config.py")]
         l2ct = ecostress.L2ctGenerate(
             l1cg_fname,
-            l2g_cloud_fname,
             l2g_lste_fname,
             l1_osp_dir,
             ofile2,
