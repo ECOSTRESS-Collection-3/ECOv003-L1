@@ -75,29 +75,48 @@ class L2ctGenerate:
     def create_standard_metadata(
         self,
         mi: geocal.MapInfo,
-        fin_geo: h5py.File,
+        fin_l1cg: h5py.File,
         tile_id: str,
         fout: Path,
+        fout2: Path,
     ) -> L1ctWriteStandardMetadata:
+        # Right now we use the same metadata as L1CT. This might possibly change in
+        # the future
+        l1g1 = fin_l1cg["/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/StandardMetadata"]
+        l1g2 = fin_l1cg["/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/L1CGMetadata"]
+        t = l1g2["CalibrationGainCorrection"][:]
+        cal_correction = np.empty((2, t.shape[0]))
+        cal_correction[0, :] = t
+        cal_correction[1, :] = l1g2["CalibrationOffsetCorrection"][:]
         m = L1ctWriteStandardMetadata(
             None,
             xml_file=fout,
+            json_file=fout2,
             product_specfic_group="",
-            proc_lev_desc="Level 1 Tiled Top of Atmosphere Calibrated Radiance",
-            pge_name="L1C",
+            proc_lev_desc="Level 2 Tiled LSTE",
+            pge_name="L2C",
             collection_label=self.collection_label,
             build_id=self.build_id,
             pge_version=self.pge_version,
-            geolocation_accuracy_qa=fin_geo["L1GEOMetadata/GeolocationAccuracyQA"][
+            orbit_corrected=l1g2["OrbitCorrectionPerformed"][()]
+            == b"True",
+            tcorr_before=l1g2["DeltaTimeOfCorrectionBeforeScene"][()],
+            tcorr_after=l1g2["DeltaTimeOfCorrectionAfterScene"][()],
+            geolocation_accuracy_qa=l1g2["GeolocationAccuracyQA"][
                 ()
             ].decode("utf-8"),
+            over_all_land_fraction=l1g2["OverAllLandFraction"][()],
+            average_solar_zenith=l1g2["AverageSolarZenith"][()],
+            qa_precentage_missing=l1g2["QAPercentMissingData"],
+            band_specification=l1g2["BandSpecification"],
+            cal_correction=cal_correction,
         )
         m.set("RegionID", tile_id)
         m.set("DataFormatType", "COG")
         m.set("HDFVersionID", None)
         if self.run_config is not None:
             m.process_run_config_metadata(self.run_config)
-        m.set("CloudCover", fin_geo["StandardMetadata/CloudCover"][()])
+        m.set("CloudCover", l1g1["CloudCover"][()])
         conv = mi.coordinate_converter
         g1 = conv.convert_from_coordinate(mi.ulc_x, mi.ulc_y)
         g2 = conv.convert_from_coordinate(mi.lrc_x, mi.ulc_y)
@@ -131,7 +150,7 @@ class L2ctGenerate:
         m.set("CRS", to_proj4(g1))
         m.set(
             "FieldOfViewObstruction",
-            fin_geo["StandardMetadata/FieldOfViewObstruction"][()].decode("utf-8"),
+            l1g1["FieldOfViewObstruction"][()].decode("utf-8"),
         )
         m.set("ImageLines", mi.number_y_pixel)
         m.set("ImagePixels", mi.number_x_pixel)
@@ -139,24 +158,25 @@ class L2ctGenerate:
         m.set("ImagePixelSpacing", self.resolution)
         m.set(
             "RangeBeginningDate",
-            fin_geo["StandardMetadata/RangeBeginningDate"][()].decode("utf-8"),
+            l1g1["RangeBeginningDate"][()].decode("utf-8"),
         )
         m.set(
             "RangeBeginningTime",
-            fin_geo["StandardMetadata/RangeBeginningTime"][()].decode("utf-8"),
+            l1g1["RangeBeginningTime"][()].decode("utf-8"),
         )
         m.set(
             "RangeEndingDate",
-            fin_geo["StandardMetadata/RangeEndingDate"][()].decode("utf-8"),
+            l1g1["RangeEndingDate"][()].decode("utf-8"),
         )
         m.set(
             "RangeEndingTime",
-            fin_geo["StandardMetadata/RangeEndingTime"][()].decode("utf-8"),
+            l1g1["RangeEndingTime"][()].decode("utf-8"),
         )
         m.set(
-            "DayNightFlag", fin_geo["StandardMetadata/DayNightFlag"][()].decode("utf-8")
+            "DayNightFlag", l1g1["DayNightFlag"][()].decode("utf-8")
         )
         m.set_input_pointer(self.inlist)
+        m.set("SISName", "Level 2 Product Specification Document (JPL D-94635)")
         return m
 
     def run(self, pool: None | Pool = None) -> None:
@@ -328,12 +348,7 @@ class L2ctGenerate:
             return False
         dirname = Path(str(self.output_pattern).replace("TILE", shp["tile_id"]))
         geocal.makedirs_p(dirname)
-        # m = self.create_standard_metadata(mi, fin_geo, shp['tile_id'], dirname.parent / f"{dirname.name}.zip.xml")
-        # Temp
-        if False:
-            m.write()
-            breakpoint()
-            return
+        m = self.create_standard_metadata(mi, fin_l1cg, shp['tile_id'], dirname.parent / f"{dirname.name}.zip.xml", dirname / f"{dirname.name}.json")
         # view zenith
         logger.info(f"Doing view_zenith - {shp['tile_id']}")
         # data_in read above, we used this for checking for empty tiles.
@@ -408,9 +423,8 @@ class L2ctGenerate:
             vicar_fname=vicar_fname,
         )
 
-        # m.write()
+        m.write()
         res = None
-        breakpoint()
         # Create zip file
         with ZipFile(str(dirname.parent / f"{dirname.name}.zip"), "w") as fh:
             for filename in Path(dirname).glob(f"{dirname}*"):

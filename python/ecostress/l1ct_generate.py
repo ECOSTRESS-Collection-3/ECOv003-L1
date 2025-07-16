@@ -470,7 +470,6 @@ class L1ctGenerate:
         )
         m.write()
         res = None
-        breakpoint()
         # Create zip file
         with ZipFile(str(dirname.parent / f"{dirname.name}.zip"), "w") as fh:
             for filename in Path(dirname).glob(f"{dirname}*"):

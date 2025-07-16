@@ -934,6 +934,10 @@ l1a_cal_run_config = $(foreach n,001, $(end_to_end_test_data)/latest/ECOSTRESS_L
 l1b_cal_run_config = $(foreach n,001, $(end_to_end_test_data)/latest/ECOSTRESS_L1B_RAD_RunConfig_03663_$n.xml)
 l1b_geo_run_config = $(end_to_end_test_data)/latest/ECOSTRESS_L1B_GEO_RunConfig_20190227T0946.xml
 l1c_run_config = $(end_to_end_test_data)/latest/ECOSTRESS_L1C_RunConfig_03663_001.xml
+l2c_run_config = $(end_to_end_test_data)/latest/ECOSTRESS_L2C_RunConfig_03129_001.xml
+l1cg_file = $(end_to_end_test_data)/latest/ECOv003_L1CG_RAD_03129_002_20190124T012016_0800_01.h5
+l2g_cloud_file = $(end_to_end_test_data)/latest/ECOv003_L2G_CLOUD_03129_002_20190124T012016_7999_97.h5
+l2g_lste_file = $(end_to_end_test_data)/latest/ECOv003_L2G_LSTE_03129_002_20190124T012016_7999_97.h5
 # We skip radiance 1 and 5 because the filling in of the missing data can
 # vary from one run to the next, so no easy way to compare. Also exclude the uncertaintiy,
 # for same reason
@@ -3134,6 +3138,17 @@ temp:
 
 temp2:
 	$(H5DIFF) $(GH5DIFF_FLAG) end_to_end_test_l1c/ECOv002_L1CG_RAD_03663_001_20190227T101222_0100_01.h5 $(end_to_end_test_data)/latest/ECOv002_L1CG_RAD_03663_001_20190227T101222_0100_01.h5.expected
+
+l2c-check: 
+	-rm -r ./end_to_end_test_l1and2_grid
+	-rm -r ./end_to_end_test_l2c
+	-rm ./l1_osp_dir
+	$(LN_S) $(end_to_end_test_data)/latest/l1_osp_dir l1_osp_dir
+	$(MKDIR_P) ./end_to_end_test_l1and2_grid
+	$(LN_S) $(l1cg_file) ./end_to_end_test_l1and2_grid
+	$(LN_S) $(l2g_cloud_file) ./end_to_end_test_l1and2_grid
+	$(LN_S) $(l2g_lste_file) ./end_to_end_test_l1and2_grid
+	ECOSTRESS_END_TO_END_TEST=t $(prefix)/L2C_PGE $(l2c_run_config)
 
 python-install:
 	pip install --prefix=@prefix@ $(srcdir)/@srcpython@

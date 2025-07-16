@@ -14,6 +14,7 @@ pge_version = {"l1a_raw" : "8.00",
                "l1b_rad" : "8.00",
                "l1b_geo" : "8.00",
                "l1c"     : "8.00",
+               "l2c"     : "8.00",
                }
 
 # For end to end testing, fake having the final 5.00 version. This allows us
@@ -27,5 +28,6 @@ if 'ECOSTRESS_END_TO_END_TEST' in os.environ:
                    "l1b_rad" : "5.00",
                    "l1b_geo" : "5.00",
                    "l1c"     : "5.00",
+                   "l2c"     : "5.00",
                   }
     

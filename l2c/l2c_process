@@ -22,7 +22,7 @@ from ecostress_version import pge_version, build_id, collection_label
 version = "1.0"
 usage = """Usage:
   l2c_process [options] <run_config>
-  l2c_process [options] <l1b_rad> <l1b_geo> <osp_dir> <prod_dir>
+  l2c_process [options] <l1cg> <l2g_cloud> <l2g_lste> <osp_dir> <prod_dir>
   l2c_process -h | --help
   l2c_process -v | --version
 
@@ -48,23 +48,10 @@ args = geocal.docopt_simple(usage, version=version)
 
 if args.run_config:
     config = ecostress.RunConfig(args.run_config)
-    dem = ecostress.create_dem(config)
-    lwm = ecostress.create_lwm(config)
     l1_osp_dir = Path(config["StaticAncillaryFileGroup", "L1_OSP_DIR"]).absolute()
 else:
     config = None
     l1_osp_dir = Path(args.osp_dir).absolute()
-    dem = geocal.SrtmDem(
-        os.environ["ELEV_ROOT"],
-        False,
-        geocal.DatumGeoid96(os.environ["AFIDS_VDEV_DATA"] + "/EGM96_20_x100.HLF"),
-    )
-    if os.path.exists("/raid25/SRTM_2014_update/srtm_v3_lwm"):
-        lwm = geocal.SrtmLwmData("/raid25/SRTM_2014_update/srtm_v3_lwm", False)
-    elif os.path.exists("/project/ancillary/SRTM/srtm_v3_lwm"):
-        lwm = geocal.SrtmLwmData("/project/ancillary/SRTM/srtm_v3_lwm", False)
-    else:
-        raise RuntimeError("Can't find land/water mask data")
 
 # Read in additional configuration parameters
 sys.path.append(str(l1_osp_dir))
@@ -80,64 +67,53 @@ if args.run_config:
     ncpu = int(config["Process", "NumberCpu"])
     dirname = config["ProductPathGroup", "ProductPath"]
     file_version = config["ProductPathGroup", "ProductCounter"]
-    l1b_rad_fname = os.path.abspath(config["InputFileGroup", "L1B_RAD"])
-    l1b_geo_fname = os.path.abspath(config["InputFileGroup", "L1B_GEO"])
+    l1cg_fname = os.path.abspath(config["InputFileGroup", "L1CG"])
+    l2g_cloud_fname = os.path.abspath(config["InputFileGroup", "L2G_CLOUD"])
+    l2g_lste_fname = os.path.abspath(config["InputFileGroup", "L2G_LSTE"])
     build_id = config["PrimaryExecutable", "BuildID"]
     collection_label = config["ProductPathGroup", "CollectionLabel"]
 else:
     ncpu = args.number_cpu
     dirname = os.path.abspath(args.prod_dir)
     file_version = "01"
-    l1b_rad_fname = os.path.abspath(args.l1b_rad)
-    l1b_geo_fname = os.path.abspath(args.l1b_geo)
+    l1cg_fname = os.path.abspath(args.l1cg)
+    l2g_cloud_fname = os.path.abspath(args.l2g_cloud)
+    l2g_lste_fname = os.path.abspath(args.l2g_lste)
 
-orbit, scene, acquisition_time = ecostress.orbit_from_metadata(l1b_rad_fname)
+orbit, scene, acquisition_time = ecostress.orbit_from_grid_metadata(l1cg_fname)
 
 geocal.makedirs_p(dirname)
 os.chdir(dirname)
 
 ofile = ecostress.ecostress_file_name(
-    "L2CG_RAD",
+    "L2T_LSTE",
     orbit,
     scene,
     acquisition_time,
     collection_label=collection_label,
     build=build_id,
     version=file_version,
-)
-ofile2 = ecostress.ecostress_file_name(
-    "L2CT_RAD",
-    orbit,
-    scene,
-    acquisition_time,
-    collection_label=collection_label,
-    build=build_id,
-    version=file_version,
-    tile=True,
-    extension="",
 )
 logger.add(os.path.splitext(ofile)[0] + ".log", level="DEBUG")
 
 pool = None
 try:
     with logger.catch(reraise=True):
-        inlist = [l1b_geo_fname, l1b_rad_fname, str(l1_osp_dir / "l2c_config.py")]
+        inlist = [l1cg_fname, l2g_cloud_fname, l2g_lste_fname, str(l1_osp_dir / "l2c_config.py")]
         l2ct = ecostress.L2ctGenerate(
-            l1b_geo_fname,
-            l1b_rad_fname,
-            lwm,
+            l1cg_fname,
+            l2g_cloud_fname,
+            l2g_lste_fname,
             l1_osp_dir,
-            ofile2,
+            ofile,
             inlist,
-            resolution=l1c_config.l1ct_resolution,
-            number_subpixel=l1c_config.l1ct_number_subpixel,
+            resolution=l2c_config.l2t_resolution,
+            number_subpixel=l2c_config.l2t_number_subpixel,
             run_config=config,
             collection_label=collection_label,
             build_id=build_id,
-            pge_version=pge_version["l1c"],
-            browse_band_list_5band=l1c_config.browse_band_list_5band,
-            browse_band_list_3band=l1c_config.browse_band_list_3band,
-            browse_size=l1c_config.l1ct_browse_size,
+            pge_version=pge_version["l2c"],
+            browse_size=l2c_config.l2t_browse_size,
         )
         if ncpu > 1:
             pool = Pool(ncpu)
