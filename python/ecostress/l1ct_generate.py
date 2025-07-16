@@ -10,6 +10,7 @@ from ecostress_swig import (  # type: ignore
     gdal_band,
     set_fill_value,
     to_proj4,
+    MemoryRasterImageFloat,
 )
 from .l1ct_write_standard_metadata import L1ctWriteStandardMetadata
 import h5py  # type: ignore
@@ -365,9 +366,9 @@ class L1ctGenerate:
         )
         for b in range(1, 6):
             logger.info(f"Doing radiance band {b} - {shp['tile_id']}")
-            data_in = geocal.SubRasterImage(geocal.GdalRasterImage(
-                f'HDF5:"{self.l1b_rad}"://Radiance/radiance_{b}'
-            ), lrange.start, lrange.stop-lrange.start-1, srange.start, srange.stop-srange.start-1)
+            din = h5py.File(self.l1b_rad)[f"Radiance/radiance_{b}"][lrange, srange]
+            data_in = MemoryRasterImageFloat(din.shape[0], din.shape[1])
+            data_in.write(0, 0, din)
             data = res.resample_field(data_in, 1.0, False, np.nan)
             # COG can only create on copy, so we first create this in memory and
             # then write out.

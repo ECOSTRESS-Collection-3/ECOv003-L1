@@ -178,8 +178,10 @@ void Resampler::determine_range(const blitz::Array<double, 2>& X_coor_interpolat
   // Tweak to make divisible by Num_sub_pixel
   lstart = std::floor(double(lstart) / Num_sub_pixel) * Num_sub_pixel;
   lend = std::ceil(double(lend) / Num_sub_pixel) * Num_sub_pixel;
+  lend = std::min(lend, xindex.rows());
   sstart = std::floor(double(sstart) / Num_sub_pixel) * Num_sub_pixel;
   send = std::ceil(double(send) / Num_sub_pixel) * Num_sub_pixel;
+  send = std::min(send, xindex.cols());
 }
 
 //-------------------------------------------------------------------------
