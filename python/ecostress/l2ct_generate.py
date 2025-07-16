@@ -307,10 +307,6 @@ class L2ctGenerate:
             d = None
 
     def write_browse(self, dirname: Path) -> None:
-        cmd_merge = ["gdalbuildvrt", "-q", "-separate", str(dirname / "map_scaled.vrt")]
-        for b in self.browse_band_list:
-            cmd_merge.append(str(dirname / f"rad_b{b}_scaled.img"))
-        subprocess.run(cmd_merge)
         cmd_merge = [
             "gdal_translate",
             "-of",
@@ -318,7 +314,7 @@ class L2ctGenerate:
             "-outsize",
             f"{self.browse_size}",
             f"{self.browse_size}",
-            str(dirname / "map_scaled.vrt"),
+            str(dirname / f"{dirname}_LST.jpeg"),
             str(dirname.parent / f"{dirname.name}.png"),
         ]
         subprocess.run(cmd_merge)
@@ -464,7 +460,7 @@ class L2ctGenerate:
                            fin_l2cg_lste["/HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data Fields/water_mask"][lrange, srange],
                            dtype=geocal.GdalRasterImage.UInt16, use_smallest_ic=True,
                            )
-        
+
         # We did radiance 2 just to give a simple thing for us to compare against with
         # our l1ct code. Leave this in case we want to come back to this, but normally
         # don't do this.
@@ -473,7 +469,8 @@ class L2ctGenerate:
             logger.info(f"Doing radiance band {b} - {shp['tile_id']}")
             self.process_field(f"radiance_{b}", dirname, mi, res,
             fin_l1cg[f"/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/radiance_{b}"][lrange, srange])
-        
+
+        self.write_browse(dirname)
         m.write()
         fin_l1cg.close()
         fin_l2cg_lste.close()
