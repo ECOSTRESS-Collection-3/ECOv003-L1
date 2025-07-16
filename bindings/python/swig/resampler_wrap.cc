@@ -3933,25 +3933,26 @@ namespace Swig {
 #define SWIGTYPE_p_char_type swig_types[203]
 #define SWIGTYPE_p_difference_type swig_types[204]
 #define SWIGTYPE_p_fmtflags swig_types[205]
-#define SWIGTYPE_p_int_type swig_types[206]
-#define SWIGTYPE_p_iostate swig_types[207]
-#define SWIGTYPE_p_off_type swig_types[208]
-#define SWIGTYPE_p_openmode swig_types[209]
-#define SWIGTYPE_p_pos_type swig_types[210]
-#define SWIGTYPE_p_seekdir swig_types[211]
-#define SWIGTYPE_p_size_t swig_types[212]
-#define SWIGTYPE_p_size_type swig_types[213]
-#define SWIGTYPE_p_state_type swig_types[214]
-#define SWIGTYPE_p_std__basic_iosT_char_t swig_types[215]
-#define SWIGTYPE_p_std__basic_iostreamT_char_t swig_types[216]
-#define SWIGTYPE_p_std__basic_istreamT_char_t swig_types[217]
-#define SWIGTYPE_p_std__basic_ostreamT_char_t swig_types[218]
-#define SWIGTYPE_p_std__invalid_argument swig_types[219]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[220]
-#define SWIGTYPE_p_traits_type swig_types[221]
-#define SWIGTYPE_p_value_type swig_types[222]
-static swig_type_info *swig_types[224];
-static swig_module_info swig_module = {swig_types, 223, 0, 0, 0, 0};
+#define SWIGTYPE_p_int swig_types[206]
+#define SWIGTYPE_p_int_type swig_types[207]
+#define SWIGTYPE_p_iostate swig_types[208]
+#define SWIGTYPE_p_off_type swig_types[209]
+#define SWIGTYPE_p_openmode swig_types[210]
+#define SWIGTYPE_p_pos_type swig_types[211]
+#define SWIGTYPE_p_seekdir swig_types[212]
+#define SWIGTYPE_p_size_t swig_types[213]
+#define SWIGTYPE_p_size_type swig_types[214]
+#define SWIGTYPE_p_state_type swig_types[215]
+#define SWIGTYPE_p_std__basic_iosT_char_t swig_types[216]
+#define SWIGTYPE_p_std__basic_iostreamT_char_t swig_types[217]
+#define SWIGTYPE_p_std__basic_istreamT_char_t swig_types[218]
+#define SWIGTYPE_p_std__basic_ostreamT_char_t swig_types[219]
+#define SWIGTYPE_p_std__invalid_argument swig_types[220]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[221]
+#define SWIGTYPE_p_traits_type swig_types[222]
+#define SWIGTYPE_p_value_type swig_types[223]
+static swig_type_info *swig_types[225];
+static swig_module_info swig_module = {swig_types, 224, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -7270,6 +7271,188 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_Resampler_clear(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::Resampler > tempshared1 ;
+  boost::shared_ptr< Ecostress::Resampler > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  
+  (void)self;
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__Resampler_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Resampler_clear" "', argument " "1"" of type '" "Ecostress::Resampler *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::Resampler > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::Resampler > * >(argp1);
+      arg1 = const_cast< Ecostress::Resampler * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::Resampler > * >(argp1);
+      arg1 = const_cast< Ecostress::Resampler * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      (arg1)->clear();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Resampler_determine_range(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  blitz::Array< double,2 > *arg1 = 0 ;
+  blitz::Array< double,2 > *arg2 = 0 ;
+  GeoCal::MapInfo *arg3 = 0 ;
+  int arg4 ;
+  int *arg5 = 0 ;
+  int *arg6 = 0 ;
+  int *arg7 = 0 ;
+  int *arg8 = 0 ;
+  blitz::Array< double,2 > a1 ;
+  PythonObject numpy1 ;
+  blitz::Array< double,2 > a2 ;
+  PythonObject numpy2 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  boost::shared_ptr< GeoCal::MapInfo const > tempshared3 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  int temp5 ;
+  int res5 = SWIG_TMPOBJ ;
+  int temp6 ;
+  int res6 = SWIG_TMPOBJ ;
+  int temp7 ;
+  int res7 = SWIG_TMPOBJ ;
+  int temp8 ;
+  int res8 = SWIG_TMPOBJ ;
+  PyObject *swig_obj[4] ;
+  
+  arg5 = &temp5;
+  arg6 = &temp6;
+  arg7 = &temp7;
+  arg8 = &temp8;
+  (void)self;
+  if (!SWIG_Python_UnpackTuple(args, "Resampler_determine_range", 4, 4, swig_obj)) SWIG_fail;
+  {
+    int res = SWIG_ConvertPtr(swig_obj[0], (void**)(&arg1), SWIGTYPE_p_blitz__ArrayT_double_2_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy1.obj = to_numpy<double >(swig_obj[0]);
+      if(!numpy1.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'Resampler_determine_range', expecting type  Array<double,2>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy1.obj) !=2) {
+        SWIG_Error(SWIG_TypeError, "in method 'Resampler_determine_range', expecting type  Array<double,2>");
+        return NULL;
+      }
+      a1.reference(to_blitz_array<double, 2>(numpy1));
+      arg1 = &a1;
+    }
+  }
+  {
+    int res = SWIG_ConvertPtr(swig_obj[1], (void**)(&arg2), SWIGTYPE_p_blitz__ArrayT_double_2_t, 
+      0 );
+    if(!SWIG_IsOK(res)) {
+      numpy2.obj = to_numpy<double >(swig_obj[1]);
+      if(!numpy2.obj) {
+        SWIG_Error(SWIG_TypeError, "in method 'Resampler_determine_range', expecting type  Array<double,2>");
+        return NULL;
+      }
+      if(PyArray_NDIM((PyArrayObject*)numpy2.obj) !=2) {
+        SWIG_Error(SWIG_TypeError, "in method 'Resampler_determine_range', expecting type  Array<double,2>");
+        return NULL;
+      }
+      a2.reference(to_blitz_array<double, 2>(numpy2));
+      arg2 = &a2;
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::MapInfo *ptr;
+    res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], (void**)(&ptr), SWIGTYPE_p_GeoCal__MapInfo,  0 , &newmem);
+    if (SWIG_IsOK(res3)) {
+      arg3 = ptr;
+    } else {
+      res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__MapInfo_t,  0 , &newmem);
+      if (!SWIG_IsOK(res3)) {
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Resampler_determine_range" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'");
+      }
+      if (!argp3) {
+        SWIG_exception_fail(SWIG_NullReferenceError, "invalid null reference " "in method '" "Resampler_determine_range" "', argument " "3"" of type '" "GeoCal::MapInfo const &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared3 = *reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3);
+        delete reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3);
+        arg3 = const_cast< GeoCal::MapInfo * >(tempshared3.get());
+      } else {
+        arg3 = const_cast< GeoCal::MapInfo * >(reinterpret_cast< boost::shared_ptr< const GeoCal::MapInfo > * >(argp3)->get());
+      }
+    }
+  }
+  ecode4 = SWIG_AsVal_int(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Resampler_determine_range" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  {
+    try {
+      Ecostress::Resampler::determine_range((blitz::Array< double,2 > const &)*arg1,(blitz::Array< double,2 > const &)*arg2,(GeoCal::MapInfo const &)*arg3,arg4,*arg5,*arg6,*arg7,*arg8);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  if (SWIG_IsTmpObj(res5)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg5)), 1);
+  } else {
+    int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_int, new_flags), 1);
+  }
+  if (SWIG_IsTmpObj(res6)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg6)), 1);
+  } else {
+    int new_flags = SWIG_IsNewObj(res6) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg6), SWIGTYPE_p_int, new_flags), 1);
+  }
+  if (SWIG_IsTmpObj(res7)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg7)), 1);
+  } else {
+    int new_flags = SWIG_IsNewObj(res7) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg7), SWIGTYPE_p_int, new_flags), 1);
+  }
+  if (SWIG_IsTmpObj(res8)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg8)), 1);
+  } else {
+    int new_flags = SWIG_IsNewObj(res8) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg8), SWIGTYPE_p_int, new_flags), 1);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_Resampler_empty_resample__SWIG_0(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::Resampler *arg1 = (Ecostress::Resampler *) 0 ;
@@ -9107,6 +9290,32 @@ static PyMethodDef SwigMethods[] = {
 		"of the actually coverage of the lat/lon. This is useful if we are\n"
 		"producing output files to compare against some existing file. \n"
 		""},
+	 { "Resampler_clear", _wrap_Resampler_clear, METH_O, "\n"
+		"\n"
+		"void Resampler::clear()\n"
+		"Ecostress::Resampler::clear\n"
+		"Had an issue with python pool hanging.\n"
+		"Not sure of the exact reason, but we tracked this down to some\n"
+		"resource not being released. As a simple workaround, have a clear\n"
+		"function that empties data_index. You wouldn't normally call this, but\n"
+		"we do in python to work around this python multiprocessing pool issue.\n"
+		"\n"
+		"** Note this ended up being a red herring, and we don't actually use\n"
+		"this anymore. However leave this place in case we end up needing come\n"
+		"back to this ** \n"
+		""},
+	 { "Resampler_determine_range", _wrap_Resampler_determine_range, METH_VARARGS, "\n"
+		"\n"
+		"void Resampler::determine_range(const blitz::Array< double, 2 > &X_coor_interpolated, const\n"
+		"blitz::Array< double, 2 > &Y_coor_interpolated, const GeoCal::MapInfo\n"
+		"&Mi, int Num_sub_pixel, int &lstart, int &lend, int &sstart, int\n"
+		"&send)\n"
+		"Ecostress::Resampler::determine_range\n"
+		"Determine range of X and Y coordinate arrays that actually touch the\n"
+		"given MapInfo.\n"
+		"Used when we are producing the tiled product where lots of the data\n"
+		"isn't even used and can be skipped before we even start. \n"
+		""},
 	 { "Resampler_empty_resample", _wrap_Resampler_empty_resample, METH_VARARGS, "\n"
 		"\n"
 		"bool Resampler::empty_resample(const boost::shared_ptr< GeoCal::RasterImage > &Data) const\n"
@@ -9230,6 +9439,32 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"optionally specify that we exactly match the passed in Mi, regardless\n"
 		"of the actually coverage of the lat/lon. This is useful if we are\n"
 		"producing output files to compare against some existing file. \n"
+		""},
+	 { "Resampler_clear", _wrap_Resampler_clear, METH_O, "\n"
+		"\n"
+		"void Resampler::clear()\n"
+		"Ecostress::Resampler::clear\n"
+		"Had an issue with python pool hanging.\n"
+		"Not sure of the exact reason, but we tracked this down to some\n"
+		"resource not being released. As a simple workaround, have a clear\n"
+		"function that empties data_index. You wouldn't normally call this, but\n"
+		"we do in python to work around this python multiprocessing pool issue.\n"
+		"\n"
+		"** Note this ended up being a red herring, and we don't actually use\n"
+		"this anymore. However leave this place in case we end up needing come\n"
+		"back to this ** \n"
+		""},
+	 { "Resampler_determine_range", _wrap_Resampler_determine_range, METH_VARARGS, "\n"
+		"\n"
+		"void Resampler::determine_range(const blitz::Array< double, 2 > &X_coor_interpolated, const\n"
+		"blitz::Array< double, 2 > &Y_coor_interpolated, const GeoCal::MapInfo\n"
+		"&Mi, int Num_sub_pixel, int &lstart, int &lend, int &sstart, int\n"
+		"&send)\n"
+		"Ecostress::Resampler::determine_range\n"
+		"Determine range of X and Y coordinate arrays that actually touch the\n"
+		"given MapInfo.\n"
+		"Used when we are producing the tiled product where lots of the data\n"
+		"isn't even used and can be skipped before we even start. \n"
 		""},
 	 { "Resampler_empty_resample", _wrap_Resampler_empty_resample, METH_VARARGS, "\n"
 		"\n"
@@ -10150,6 +10385,7 @@ static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char_type = {"_p_char_type", "char_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_difference_type = {"_p_difference_type", "difference_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_fmtflags = {"_p_fmtflags", "fmtflags *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "int *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_int_type = {"_p_int_type", "int_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_iostate = {"_p_iostate", "iostate *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_off_type = {"_p_off_type", "off_type *", 0, 0, (void*)0, 0};
@@ -10375,6 +10611,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char_type,
   &_swigt__p_difference_type,
   &_swigt__p_fmtflags,
+  &_swigt__p_int,
   &_swigt__p_int_type,
   &_swigt__p_iostate,
   &_swigt__p_off_type,
@@ -10600,6 +10837,7 @@ static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0,
 static swig_cast_info _swigc__p_char_type[] = {  {&_swigt__p_char_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_difference_type[] = {  {&_swigt__p_difference_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_fmtflags[] = {  {&_swigt__p_fmtflags, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int_type[] = {  {&_swigt__p_int_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_iostate[] = {  {&_swigt__p_iostate, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_off_type[] = {  {&_swigt__p_off_type, 0, 0, 0},{0, 0, 0, 0}};
@@ -10825,6 +11063,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char_type,
   _swigc__p_difference_type,
   _swigc__p_fmtflags,
+  _swigc__p_int,
   _swigc__p_int_type,
   _swigc__p_iostate,
   _swigc__p_off_type,

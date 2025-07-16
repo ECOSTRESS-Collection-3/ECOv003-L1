@@ -27,6 +27,11 @@ public:
 	    const GeoCal::MapInfo& Mi, int Num_sub_pixel = 2,
 	    bool Exactly_match_mi = false,
 	    double Mark_missing=-1000.0);
+  void clear();
+  static void determine_range(const blitz::Array<double, 2>& X_coor_interpolated,
+			      const blitz::Array<double, 2>& Y_coor_interpolated,
+			      const GeoCal::MapInfo& Mi, int Num_sub_pixel,
+			      int& OUTPUT, int& OUTPUT, int& OUTPUT, int& OUTPUT);
   bool empty_resample() const;
   bool empty_resample(const boost::shared_ptr<GeoCal::RasterImage>& Data) const;
   blitz::Array<double, 2> resample_field

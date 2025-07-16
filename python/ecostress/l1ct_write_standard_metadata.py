@@ -81,6 +81,7 @@ Poor - No matches in the orbit. Expect largest geolocation errors.
             if d is not None:
                 jdict["StandardMetadata"][m] = d
         print(json.dumps(jdict, indent=2), file=fh)
+        fh.close()
 
 
 __all__ = ["L1ctWriteStandardMetadata"]

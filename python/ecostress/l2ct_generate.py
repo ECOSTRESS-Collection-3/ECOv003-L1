@@ -25,6 +25,7 @@ import os
 import subprocess
 import matplotlib.pyplot as plt
 import typing
+import gc
 
 if typing.TYPE_CHECKING:
     from multiprocessing.pool import Pool
@@ -210,6 +211,8 @@ class L2ctGenerate:
                     d[ky] = shp[ky]
                 shp_dict_list.append(d)
             self._utm_coor = {}
+            self.lat = None
+            self.lon = None
             _ = pool.map(self.process_tile, shp_dict_list)
 
     def utm_coor(self, epsg: int) -> tuple[geocal.OgrWrapper, np.ndarray, np.ndarray]:
@@ -219,9 +222,7 @@ class L2ctGenerate:
             cache_fname = Path(f"epsg_{epsg}.npy")
             owrap = geocal.OgrWrapper.from_epsg(epsg)
             if self.use_file_cache and cache_fname.exists():
-                with open(cache_fname, "rb") as f:
-                    x = np.load(f)
-                    y = np.load(f)
+                x, y = np.load(cache_fname, mmap_mode="r")
                 return (owrap, x, y)
             else:
                 logger.info(f"Calculating UTM coordinates for epsg {epsg}")
@@ -241,8 +242,7 @@ class L2ctGenerate:
                 y = scipy.ndimage.interpolation.zoom(y, self.number_subpixel, order=1)
                 if self.use_file_cache:
                     with open(cache_fname, "wb") as f:
-                        np.save(f, x)
-                        np.save(f, y)
+                        np.save(f, [x, y])
                     return (owrap, x, y)
                 else:
                     self._utm_coor[epsg] = (owrap, x, y)
@@ -327,7 +327,19 @@ class L2ctGenerate:
             npix,
             npix,
         )
-        res = Resampler(x, y, mi, self.number_subpixel, True)
+        lstart, lend, sstart, send = Resampler.determine_range(x, y, mi, self.number_subpixel)
+        if(lend < lstart or send < sstart):
+            logger.info("Tile is empty, skipping")
+            logger.info(f"Done with {shp['tile_id']}")
+            x = None
+            y = None
+            return False
+        lrange = slice(lstart,(lend+self.number_subpixel))
+        srange = slice(sstart,(send+self.number_subpixel))
+        res = Resampler(x[lrange,srange], y[lrange,srange], mi, self.number_subpixel, True)
+        # Range for data, before we expand to the number of subpixels
+        lrange = slice(lstart // self.number_subpixel, lend // self.number_subpixel + 1)
+        srange = slice(sstart // self.number_subpixel, send // self.number_subpixel + 1)
         # Free up memory
         x = None
         y = None
@@ -335,8 +347,8 @@ class L2ctGenerate:
         # Note in general we may get tiles in our search of the shape file that
         # don't actually end up having any data once we look in detail. Just
         # skip tiles that will be empty
-        fin_l1cg = h5py.File(self.l1cg)
-        din = fin_l1cg["/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/view_zenith"][:, :]
+        fin_l1cg = h5py.File(self.l1cg, "r")
+        din = fin_l1cg["/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/view_zenith"][lrange, srange]
         # Change nan to fill value
         din[np.isnan(din)] = FILL_VALUE_BAD_OR_MISSING
         data_in = MemoryRasterImageFloat(din.shape[0], din.shape[1])
@@ -345,6 +357,9 @@ class L2ctGenerate:
             logger.info("Tile is empty, skipping")
             logger.info(f"Done with {shp['tile_id']}")
             res = None
+            fin_l1cg.close()
+            din = None
+            data_in = None
             return False
         dirname = Path(str(self.output_pattern).replace("TILE", shp["tile_id"]))
         geocal.makedirs_p(dirname)
@@ -385,7 +400,7 @@ class L2ctGenerate:
         # Do rad 2, just to give a simple thing for us to compare against
         b = 2
         logger.info(f"Doing radiance band {b} - {shp['tile_id']}")
-        din = fin_l1cg[f"/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/radiance_{b}"][:, :]
+        din = fin_l1cg[f"/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/radiance_{b}"][lrange, srange]
         # Change nan to fill value
         din[np.isnan(din)] = FILL_VALUE_BAD_OR_MISSING
         data_in = MemoryRasterImageFloat(din.shape[0], din.shape[1])
@@ -422,8 +437,11 @@ class L2ctGenerate:
             vmax,
             vicar_fname=vicar_fname,
         )
-
         m.write()
+        fin_l1cg.close()
+        din = None
+        data_in = None
+        data = None
         res = None
         # Create zip file
         with ZipFile(str(dirname.parent / f"{dirname.name}.zip"), "w") as fh:

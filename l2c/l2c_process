@@ -9,7 +9,7 @@ with warnings.catch_warnings():
     import geocal
 import ecostress
 import os
-from multiprocessing import Pool
+from multiprocessing import Pool, get_context
 from loguru import logger
 from pathlib import Path
 
@@ -127,9 +127,14 @@ try:
             browse_size=l2c_config.l2t_browse_size,
         )
         if ncpu > 1:
+            #pool = Pool(ncpu, None, None, 1)
+            #pool = get_context("spawn").Pool(ncpu)
             pool = Pool(ncpu)
+            print(f"Creating pool of size {ncpu}")
+        #pool = None
         l2ct.run(pool=pool)
-        pool.close()
+        if pool is not None:
+            pool.close()
 except Exception:
     logger.info("L2C_PGE:ERROR-2-[Unexpected Error]")
     if pool is not None:

@@ -257,6 +257,7 @@ class WriteStandardMetadata(object):
                     file=fh,
                 )
         print("</cas:metadata>", file=fh)
+        fh.close()
 
     def write(self) -> None:
         """Actually write the metadata."""

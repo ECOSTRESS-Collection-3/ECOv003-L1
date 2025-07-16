@@ -210,6 +210,8 @@ class L1ctGenerate:
                     d[ky] = shp[ky]
                 shp_dict_list.append(d)
             self._utm_coor = {}
+            self.lon = None
+            self.lat = None
             _ = pool.map(self.process_tile, shp_dict_list)
 
     def utm_coor(self, epsg: int) -> tuple[geocal.OgrWrapper, np.ndarray, np.ndarray]:
@@ -219,9 +221,7 @@ class L1ctGenerate:
             cache_fname = Path(f"epsg_{epsg}.npy")
             owrap = geocal.OgrWrapper.from_epsg(epsg)
             if self.use_file_cache and cache_fname.exists():
-                with open(cache_fname, "rb") as f:
-                    x = np.load(f)
-                    y = np.load(f)
+                x, y = np.load(cache_fname, mmap_mode="r")
                 return (owrap, x, y)
             else:
                 logger.info(f"Calculating UTM coordinates for epsg {epsg}")
@@ -241,8 +241,7 @@ class L1ctGenerate:
                 y = scipy.ndimage.interpolation.zoom(y, self.number_subpixel, order=1)
                 if self.use_file_cache:
                     with open(cache_fname, "wb") as f:
-                        np.save(f, x)
-                        np.save(f, y)
+                        np.save(f, [x, y])
                     return (owrap, x, y)
                 else:
                     self._utm_coor[epsg] = (owrap, x, y)
@@ -327,7 +326,19 @@ class L1ctGenerate:
             npix,
             npix,
         )
-        res = Resampler(x, y, mi, self.number_subpixel, True)
+        lstart, lend, sstart, send = Resampler.determine_range(x, y, mi, self.number_subpixel)
+        if(lend < lstart or send < sstart):
+            logger.info("Tile is empty, skipping")
+            logger.info(f"Done with {shp['tile_id']}")
+            x = None
+            y = None
+            return False
+        lrange = slice(lstart,(lend+self.number_subpixel))
+        srange = slice(sstart,(send+self.number_subpixel))
+        res = Resampler(x[lrange,srange], y[lrange,srange], mi, self.number_subpixel, True)
+        # Range for data, before we expand to the number of subpixels
+        lrange = slice(lstart // self.number_subpixel, lend // self.number_subpixel + 1)
+        srange = slice(sstart // self.number_subpixel, send // self.number_subpixel + 1)
         # Free up memory
         x = None
         y = None
@@ -354,9 +365,9 @@ class L1ctGenerate:
         )
         for b in range(1, 6):
             logger.info(f"Doing radiance band {b} - {shp['tile_id']}")
-            data_in = geocal.GdalRasterImage(
+            data_in = geocal.SubRasterImage(geocal.GdalRasterImage(
                 f'HDF5:"{self.l1b_rad}"://Radiance/radiance_{b}'
-            )
+            ), lrange.start, lrange.stop-lrange.start-1, srange.start, srange.stop-srange.start-1)
             data = res.resample_field(data_in, 1.0, False, np.nan)
             # COG can only create on copy, so we first create this in memory and
             # then write out.
@@ -401,7 +412,7 @@ class L1ctGenerate:
             # GeoCal doesn't support the dqi type. We could update geocal,
             # but no strong reason to. Just read into memory
             logger.info(f"Doing DQI band {b} - {shp['tile_id']}")
-            din = h5py.File(self.l1b_rad)[f"Radiance/data_quality_{b}"][:, :]
+            din = h5py.File(self.l1b_rad)[f"Radiance/data_quality_{b}"][lrange, srange]
             data_in = geocal.MemoryRasterImage(din.shape[0], din.shape[1])
             data_in.write(0, 0, din)
             data = res.resample_dqi(data_in).astype(int)
@@ -449,7 +460,7 @@ class L1ctGenerate:
 
         # Cloud mask
         logger.info(f"Doing prelim_cloud_mask - {shp['tile_id']}")
-        din = fin_geo["Geolocation/prelim_cloud_mask"][:, :]
+        din = fin_geo["Geolocation/prelim_cloud_mask"][lrange, srange]
         # Remove fill value, treat as clear
         din[din > 1] = 0
         data_in = geocal.MemoryRasterImage(din.shape[0], din.shape[1])

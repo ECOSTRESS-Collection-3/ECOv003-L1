@@ -26,6 +26,7 @@ public:
 	    const GeoCal::MapInfo& Mi, int Num_sub_pixel = 2,
 	    bool Exactly_match_mi = false, double Mark_missing=-1000.0);
   virtual ~Resampler() {}
+  void clear();
   bool empty_resample() const;
   bool empty_resample(const boost::shared_ptr<GeoCal::RasterImage>& Data) const;
   const GeoCal::MapInfo& map_info() const { return mi; }
@@ -47,6 +48,10 @@ public:
 		  blitz::Array<double, 2>& Height) const;
   virtual void print(std::ostream& Os) const
   { Os << "ECOSTRESS Resampler";}
+  static void determine_range(const blitz::Array<double, 2>& X_coor_interpolated,
+			      const blitz::Array<double, 2>& Y_coor_interpolated,
+			      const GeoCal::MapInfo& Mi, int Num_sub_pixel,
+			      int& lstart, int& lend, int& sstart, int& send);
 private:
   void init(const blitz::Array<double, 2>& X_coor,
 	    const blitz::Array<double, 2>& Y_coor,

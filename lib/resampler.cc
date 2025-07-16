@@ -6,6 +6,7 @@
 #include "geocal/geodetic.h"
 #include "geocal/vicar_raster_image.h"
 #include <boost/make_shared.hpp>
+#include <cmath>
 using namespace Ecostress;
 using namespace GeoCal;
 
@@ -123,6 +124,62 @@ void Resampler::init(const blitz::Array<double, 2>& X_coor,
     for(int j = 0; j < X_coor.cols(); ++j)
       if(Y_coor(i, j) <= Mark_missing && X_coor(i, j) <= Mark_missing)
 	data_index(i,j,ra) = -9999;
+}
+
+//-------------------------------------------------------------------------
+/// Had an issue with python pool hanging. Not sure of the exact
+/// reason, but we tracked this down to some resource not being
+/// released. As a simple workaround, have a clear function that
+/// empties data_index. You wouldn't normally call this, but we do in
+/// python to work around this python multiprocessing pool issue.
+///
+/// ** Note this ended up being a red herring, and we don't actually use
+/// this anymore. However leave this place in case we end up needing
+/// come back to this **
+//-------------------------------------------------------------------------
+
+void Resampler::clear()
+{
+  blitz::Array<int, 3> empty;
+  data_index.reference(empty);
+  std::cerr << "Cleared data\n";
+}
+
+//-------------------------------------------------------------------------
+/// Determine range of X and Y coordinate arrays that actually touch
+/// the given MapInfo. Used when we are producing the tiled product
+/// where lots of the data isn't even used and can be skipped before
+/// we even start.
+//-------------------------------------------------------------------------
+
+void Resampler::determine_range(const blitz::Array<double, 2>& X_coor_interpolated,
+				const blitz::Array<double, 2>& Y_coor_interpolated,
+				const GeoCal::MapInfo& Mi, int Num_sub_pixel,
+				int& lstart, int& lend, int& sstart, int& send)
+{
+  lstart = X_coor_interpolated.rows();
+  lend = -1;
+  sstart = X_coor_interpolated.cols();
+  send = -1;
+  blitz::Array<double, 2> xindex, yindex;
+  Mi.coordinate_to_index(X_coor_interpolated, Y_coor_interpolated, xindex, yindex);
+  for(int i = 0; i < xindex.rows(); ++i)
+    for(int j = 0; j < xindex.cols(); ++j) {
+      int ln = (int) std::round(yindex(i,j));
+      int smp = (int) std::round(xindex(i,j));
+      if(ln >= 0 && ln < Mi.number_y_pixel() &&
+	 smp >=0 && smp < Mi.number_x_pixel()) {
+	lstart = std::min(lstart, i);
+	lend = std::max(lend, i);
+	sstart = std::min(sstart, j);
+	send = std::max(send, j);
+      }
+    }
+  // Tweak to make divisible by Num_sub_pixel
+  lstart = std::floor(double(lstart) / Num_sub_pixel) * Num_sub_pixel;
+  lend = std::ceil(double(lend) / Num_sub_pixel) * Num_sub_pixel;
+  sstart = std::floor(double(sstart) / Num_sub_pixel) * Num_sub_pixel;
+  send = std::ceil(double(send) / Num_sub_pixel) * Num_sub_pixel;
 }
 
 //-------------------------------------------------------------------------

@@ -26,7 +26,7 @@ def test_l1ct_generate(isolated_dir, test_data_latest, lwm):
         ],
     )
     if True:
-        pool = Pool(20)
+        pool = Pool(5)
     else:
         pool = None
     g.run(pool=pool)
