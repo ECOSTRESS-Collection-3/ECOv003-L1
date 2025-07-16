@@ -65,7 +65,7 @@ else:
 
 if args.run_config:
     ncpu = int(config["Process", "NumberCpu"])
-    dirname = config["ProductPathGroup", "ProductPath"]
+    dirname = os.path.abspath(config["ProductPathGroup", "ProductPath"])
     file_version = config["ProductPathGroup", "ProductCounter"]
     l1cg_fname = os.path.abspath(config["InputFileGroup", "L1CG"])
     l2g_cloud_fname = os.path.abspath(config["InputFileGroup", "L2G_CLOUD"])
@@ -94,6 +94,17 @@ ofile = ecostress.ecostress_file_name(
     build=build_id,
     version=file_version,
 )
+ofile2 = ecostress.ecostress_file_name(
+    "L2T_LSTE",
+    orbit,
+    scene,
+    acquisition_time,
+    collection_label=collection_label,
+    build=build_id,
+    version=file_version,
+    tile=True,
+    extension="",
+)
 logger.add(os.path.splitext(ofile)[0] + ".log", level="DEBUG")
 
 pool = None
@@ -105,7 +116,7 @@ try:
             l2g_cloud_fname,
             l2g_lste_fname,
             l1_osp_dir,
-            ofile,
+            ofile2,
             inlist,
             resolution=l2c_config.l2t_resolution,
             number_subpixel=l2c_config.l2t_number_subpixel,
