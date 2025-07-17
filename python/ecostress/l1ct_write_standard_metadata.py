@@ -25,6 +25,13 @@ class L1ctWriteStandardMetadata(WriteStandardMetadata):
         super().__init__(*args, **kwargs)
         self.orbit_corrected = orbit_corrected
         self.geolocation_accuracy_qa = geolocation_accuracy_qa
+        self.tcorr_before = tcorr_before
+        self.tcorr_after = tcorr_after
+        self.over_all_land_fraction = over_all_land_fraction
+        self.average_solar_zenith = average_solar_zenith
+        self.qa_precentage_missing = qa_precentage_missing
+        self.band_specification = band_specification
+        self.cal_correction = cal_correction
         if geolocation_accuracy_qa in (
             "Best",
             "Good",
@@ -69,6 +76,24 @@ Poor - No matches in the orbit. Expect largest geolocation errors.
         jdict = {}
         jdict["StandardMetadata"] = {}
         jdict["ProductMetadata"] = {"AncillaryFiles": 0}
+        pg = jdict["ProductMetadata"]
+        pg["OrbitCorrectionPerformed"] = "True" if self.orbit_corrected else "False"
+        pg["GeolocationAccuracyQA"] = self.geolocation_accuracy_qa
+        pg["DeltaTimeOfCorrectionBeforeScene"] = self.tcorr_before
+        pg["DeltaTimeOfCorrectionAfterScene"] = self.tcorr_after
+        txt = """Best - Image matching was performed for this scene, expect 
+       good geolocation accuracy.
+Good - Image matching was performed on a nearby scene, and correction 
+       has been interpolated/extrapolated. Expect good geolocation accuracy.
+Suspect - Matched somewhere in the orbit. Expect better geolocation 
+       than orbits w/o image matching, but may still have large errors.
+Poor - No matches in the orbit. Expect largest geolocation errors.
+"""
+        pg["GeolocationAccuracyQAExplanation"] = txt
+        pg["AverageSolarZenith"] = self.average_solar_zenith
+        pg["OverAllLandFraction"] = self.over_all_land_fraction
+        pg["CalibrationGainCorrection"] = list(self.cal_correction[0,:])
+        pg["CalibrationOffsetCorrection"] = list(self.cal_correction[1,:])
         klist = sorted([m for m, _ in self.mlist])
         for m in klist:
             d = self.data[m]
