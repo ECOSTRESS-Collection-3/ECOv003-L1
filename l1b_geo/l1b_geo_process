@@ -449,11 +449,20 @@ try:
                 "Scene %d is %s, matching ecostress band %d to Landsat band %d"
                 % (scenelist[i], "Day" if is_day[i] else "Night", eband, lband)
             )
-            igccol_initial.add_igc(
-                ecostress.EcostressImageGroundConnection(
-                    orb, tt, cam, sm, dem, ras, "Scene %d" % scenelist[i]
+            if True:
+                igccol_initial.add_igc(
+                    ecostress.EcostressImageGroundConnection(
+                        orb, tt, cam, sm, dem, ras, "Scene %d" % scenelist[i]
+                    )
                 )
-            )
+            else:
+                igccol_initial.add_igc(
+                    ecostress.EcostressImageGroundConnectionSubset(
+                        ecostress.EcostressImageGroundConnection(
+                            orb, tt, cam, sm, dem, ras, "Scene %d" % scenelist[i]
+                        ),
+                        1400, 2600)
+                )
 
         # Project data to surface
         t = ecostress.L1bTpCollect(
