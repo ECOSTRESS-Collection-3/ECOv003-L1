@@ -27,6 +27,7 @@ public:
    const GeoCal::AutoDerivative<double>& Ic_sample) const;
   %python_attribute(underlying_igc, boost::shared_ptr<EcostressImageGroundConnection>);
   %python_attribute(start_sample, int);
+  %python_attribute(sub_camera, boost::shared_ptr<GeoCal::Camera>);
   %pickle_serialization();
 };
 }

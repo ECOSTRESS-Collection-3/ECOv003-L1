@@ -77,6 +77,12 @@ public:
   virtual bool has_time() const { return true; }
   virtual GeoCal::Time pixel_time(const GeoCal::ImageCoordinate& Ic) const
   { return igc_->pixel_time(ic_from_subset(Ic)); }
+  boost::shared_ptr<GeoCal::Camera> sub_camera() const
+  {
+    boost::shared_ptr<GeoCal::Camera> cam = igc_->camera();
+    return boost::make_shared<GeoCal::SubCamera>(cam, 0, start_sample_, cam->number_line(0),
+						 num_sample_);
+  }
     
   const boost::shared_ptr<EcostressImageGroundConnection>& underlying_igc() const
   { return igc_;}

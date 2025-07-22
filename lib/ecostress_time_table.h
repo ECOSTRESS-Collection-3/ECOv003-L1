@@ -127,26 +127,44 @@ public:
     Lend = number_line_scan() * (Scan_index+1);
   }
 
+  const std::vector<GeoCal::Time>& tstart_scan() const { return tstart_scan_;}
+  
 //-------------------------------------------------------------------------
 /// Convert line to scan index
 //-------------------------------------------------------------------------
   int line_to_scan_index(double Line) const
   { return (int) floor(Line / number_line_scan()); }
-private:
+protected:
+  EcostressTimeTable() : mirror_rpm_(25.4), frame_time_(0.0000321875),
+			 number_filled_time_(0) { }
   bool averaging_done_;
   std::vector<GeoCal::Time> tstart_scan_;
   double mirror_rpm_, frame_time_;
   int number_filled_time_;
-  EcostressTimeTable() : mirror_rpm_(25.4), frame_time_(0.0000321875),
-			 number_filled_time_(0) { }
+private:
   friend class boost::serialization::access;
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version);
   void read_file(const std::string& Fname, double Toffset);
 };
+
+class EcostressTimeTableSubset: public EcostressTimeTable {
+public:
+  EcostressTimeTableSubset(const EcostressTimeTable& Tt, int Start_sample, int Number_sample);
+  virtual ~EcostressTimeTableSubset() {}
+  int start_sample() const { return start_sample_; }
+  virtual void print(std::ostream& Os) const;
+private:
+  int start_sample_, num_sample_;
+  EcostressTimeTableSubset() { }
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive & ar, const unsigned int version);
+};
 }
 
 BOOST_CLASS_EXPORT_KEY(Ecostress::EcostressTimeTable);
 BOOST_CLASS_VERSION(Ecostress::EcostressTimeTable, 2);
+BOOST_CLASS_EXPORT_KEY(Ecostress::EcostressTimeTableSubset);
 #endif
 

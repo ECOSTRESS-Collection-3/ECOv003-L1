@@ -10,6 +10,7 @@
 %geocal_base_import(time_table)
 
 %ecostress_shared_ptr(Ecostress::EcostressTimeTable);
+%ecostress_shared_ptr(Ecostress::EcostressTimeTableSubset);
 namespace Ecostress {
 class EcostressTimeTable : public GeoCal::TimeTable {
 public:
@@ -38,10 +39,18 @@ public:
   %python_attribute(mirror_rpm, double);
   %python_attribute(nominal_scan_time, double);
   %python_attribute(frame_time, double);
+  %python_attribute(tstart_scan, std::vector<GeoCal::Time>);
+  %pickle_serialization();
+};
+
+class EcostressTimeTableSubset : public EcostressTimeTable {
+public:
+  EcostressTimeTableSubset(const EcostressTimeTable& Tt, int Start_sample, int Number_sample);
+  %python_attribute(start_sample, int);
   %pickle_serialization();
 };
 }
 
 // List of things "import *" will include
-%python_export("EcostressTimeTable")
+%python_export("EcostressTimeTable", "EcostressTimeTableSubset")
 

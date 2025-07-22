@@ -173,7 +173,7 @@ class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
     def __init__(self, Igc, Include_angle=False, Nsub_line=1, Nsub_sample=1):
         r"""
 
-        Ecostress::GroundCoordinateArray::GroundCoordinateArray(const boost::shared_ptr< EcostressImageGroundConnection > &Igc, bool
+        Ecostress::GroundCoordinateArray::GroundCoordinateArray(const boost::shared_ptr< GeoCal::ImageGroundConnection > &Igc, bool
         Include_angle=false, int Nsub_line=1, int Nsub_sample=1)
         Ecostress::GroundCoordinateArray::GroundCoordinateArray
         Constructor.
