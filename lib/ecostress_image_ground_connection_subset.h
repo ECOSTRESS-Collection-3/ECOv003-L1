@@ -83,7 +83,13 @@ public:
     return boost::make_shared<GeoCal::SubCamera>(cam, 0, start_sample_, cam->number_line(0),
 						 num_sample_);
   }
-    
+  boost::shared_ptr<EcostressTimeTableSubset> sub_time_table() const
+  {
+    auto tt = boost::dynamic_pointer_cast<EcostressTimeTable>(igc_->time_table());
+    if(!tt)
+      throw GeoCal::Exception("Only work with EcostressTimeTable");
+    return boost::make_shared<EcostressTimeTableSubset>(*tt, start_sample_, num_sample_);
+  }
   const boost::shared_ptr<EcostressImageGroundConnection>& underlying_igc() const
   { return igc_;}
   int start_sample() const { return  start_sample_;}

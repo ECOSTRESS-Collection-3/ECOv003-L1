@@ -225,3 +225,45 @@ void EcostressTimeTableSubset::print(std::ostream& Os) const
   EcostressTimeTable::print(opad);
   opad.strict_sync();
 }
+
+GeoCal::ImageCoordinate EcostressTimeTableSubset::image_coordinate
+(GeoCal::Time T, const GeoCal::FrameCoordinate& F) const
+{
+  GeoCal::FrameCoordinate fc(F);
+  fc.sample += start_sample_;
+  auto ic = EcostressTimeTable::image_coordinate(T, fc);
+  ic.sample -= start_sample_;
+  return ic;
+}
+ 
+GeoCal::ImageCoordinateWithDerivative 
+EcostressTimeTableSubset::image_coordinate_with_derivative
+(const GeoCal::TimeWithDerivative& T, 
+ const GeoCal::FrameCoordinateWithDerivative& F) const
+{
+  GeoCal::FrameCoordinateWithDerivative fc(F);
+  fc.sample += start_sample_;
+  auto ic = EcostressTimeTable::image_coordinate_with_derivative(T, fc);
+  ic.sample -= start_sample_;
+  return ic;
+}
+ 
+void EcostressTimeTableSubset::time
+ (const GeoCal::ImageCoordinate& Ic, GeoCal::Time& T, GeoCal::FrameCoordinate& F) const
+{
+  GeoCal::ImageCoordinate ic(Ic);
+  ic.sample += start_sample_;
+  EcostressTimeTable::time(ic, T, F);
+  F.sample -= start_sample_;
+}
+
+void EcostressTimeTableSubset::time_with_derivative
+(const GeoCal::ImageCoordinateWithDerivative& Ic, 
+ GeoCal::TimeWithDerivative& T, 
+ GeoCal::FrameCoordinateWithDerivative& F) const
+{
+  GeoCal::ImageCoordinateWithDerivative ic(Ic);
+  ic.sample += start_sample_;
+  EcostressTimeTable::time_with_derivative(ic, T, F);
+  F.sample -= start_sample_;
+}

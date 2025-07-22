@@ -154,6 +154,20 @@ public:
   virtual ~EcostressTimeTableSubset() {}
   int start_sample() const { return start_sample_; }
   virtual void print(std::ostream& Os) const;
+
+  virtual GeoCal::ImageCoordinate image_coordinate(GeoCal::Time T,
+					   const GeoCal::FrameCoordinate& F)
+    const;
+  virtual GeoCal::ImageCoordinateWithDerivative 
+  image_coordinate_with_derivative
+  (const GeoCal::TimeWithDerivative& T, 
+   const GeoCal::FrameCoordinateWithDerivative& F) const;
+  virtual void time(const GeoCal::ImageCoordinate& Ic,
+		    GeoCal::Time& T, GeoCal::FrameCoordinate& F) const;
+  virtual void time_with_derivative
+  (const GeoCal::ImageCoordinateWithDerivative& Ic, 
+   GeoCal::TimeWithDerivative& T, 
+   GeoCal::FrameCoordinateWithDerivative& F) const;
 private:
   int start_sample_, num_sample_;
   EcostressTimeTableSubset() { }

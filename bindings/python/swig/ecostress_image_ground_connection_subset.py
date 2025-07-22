@@ -137,6 +137,7 @@ import geocal_swig.image_ground_connection
 import geocal_swig.generic_object
 import geocal_swig.with_parameter
 import geocal_swig.geocal_exception
+import geocal_swig.time_table
 import geocal_swig.observer
 class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGroundConnection):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -256,6 +257,102 @@ _ecostress_image_ground_connection_subset.EcostressImageGroundConnection_swigreg
 
 __all__ = ["EcostressImageGroundConnection"]
 
+class EcostressTimeTable(geocal_swig.time_table.TimeTable):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _ecostress_image_ground_connection_subset.EcostressTimeTable_swiginit(self, _ecostress_image_ground_connection_subset.new_EcostressTimeTable(*args))
+    scan_index_to_line = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressTimeTable_scan_index_to_line)
+    line_to_scan_index = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressTimeTable_line_to_scan_index)
+    close_to_scan_edge = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressTimeTable_close_to_scan_edge)
+    _v_averaging_done = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressTimeTable__v_averaging_done)
+
+    @property
+    def averaging_done(self):
+        return self._v_averaging_done()
+
+    _v_number_line_scan = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressTimeTable__v_number_line_scan)
+
+    @property
+    def number_line_scan(self):
+        return self._v_number_line_scan()
+
+    _v_number_good_scan = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressTimeTable__v_number_good_scan)
+
+    @property
+    def number_good_scan(self):
+        return self._v_number_good_scan()
+
+    _v_number_scan = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressTimeTable__v_number_scan)
+
+    @property
+    def number_scan(self):
+        return self._v_number_scan()
+
+    _v_mirror_rpm = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressTimeTable__v_mirror_rpm)
+
+    @property
+    def mirror_rpm(self):
+        return self._v_mirror_rpm()
+
+    _v_nominal_scan_time = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressTimeTable__v_nominal_scan_time)
+
+    @property
+    def nominal_scan_time(self):
+        return self._v_nominal_scan_time()
+
+    _v_frame_time = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressTimeTable__v_frame_time)
+
+    @property
+    def frame_time(self):
+        return self._v_frame_time()
+
+    _v_tstart_scan = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressTimeTable__v_tstart_scan)
+
+    @property
+    def tstart_scan(self):
+        return self._v_tstart_scan()
+
+
+    def __reduce__(self):
+    #Special handling for when we are doing boost serialization, we set
+    #"this" to None
+      if(self.this is None):
+        return super().__reduce__()
+      return _new_from_serialization, (geocal_swig.serialize_function.serialize_write_binary(self),)
+
+    __swig_destroy__ = _ecostress_image_ground_connection_subset.delete_EcostressTimeTable
+
+# Register EcostressTimeTable in _ecostress_image_ground_connection_subset:
+_ecostress_image_ground_connection_subset.EcostressTimeTable_swigregister(EcostressTimeTable)
+class EcostressTimeTableSubset(EcostressTimeTable):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, Tt, Start_sample, Number_sample):
+        _ecostress_image_ground_connection_subset.EcostressTimeTableSubset_swiginit(self, _ecostress_image_ground_connection_subset.new_EcostressTimeTableSubset(Tt, Start_sample, Number_sample))
+    _v_start_sample = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressTimeTableSubset__v_start_sample)
+
+    @property
+    def start_sample(self):
+        return self._v_start_sample()
+
+
+    def __reduce__(self):
+    #Special handling for when we are doing boost serialization, we set
+    #"this" to None
+      if(self.this is None):
+        return super().__reduce__()
+      return _new_from_serialization, (geocal_swig.serialize_function.serialize_write_binary(self),)
+
+    __swig_destroy__ = _ecostress_image_ground_connection_subset.delete_EcostressTimeTableSubset
+
+# Register EcostressTimeTableSubset in _ecostress_image_ground_connection_subset:
+_ecostress_image_ground_connection_subset.EcostressTimeTableSubset_swigregister(EcostressTimeTableSubset)
+
+__all__ = ["EcostressTimeTable","EcostressTimeTableSubset"]
+
 class EcostressImageGroundConnectionSubset(geocal_swig.image_ground_connection.ImageGroundConnection):
     r"""
 
@@ -298,6 +395,12 @@ class EcostressImageGroundConnectionSubset(geocal_swig.image_ground_connection.I
     @property
     def sub_camera(self):
         return self._v_sub_camera()
+
+    _v_sub_time_table = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnectionSubset__v_sub_time_table)
+
+    @property
+    def sub_time_table(self):
+        return self._v_sub_time_table()
 
 
     def __reduce__(self):

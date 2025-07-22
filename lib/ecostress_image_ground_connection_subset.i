@@ -7,7 +7,9 @@
 #include "ecostress_image_ground_connection_subset.h"
 %}
 %geocal_base_import(image_ground_connection)
+%geocal_base_import(time_table)
 %include "ecostress_image_ground_connection.i"
+%include "ecostress_time_table.i"
 %ecostress_shared_ptr(Ecostress::EcostressImageGroundConnectionSubset);
 namespace Ecostress {
 class EcostressImageGroundConnectionSubset : public GeoCal::ImageGroundConnection {
@@ -28,6 +30,7 @@ public:
   %python_attribute(underlying_igc, boost::shared_ptr<EcostressImageGroundConnection>);
   %python_attribute(start_sample, int);
   %python_attribute(sub_camera, boost::shared_ptr<GeoCal::Camera>);
+  %python_attribute(sub_time_table, boost::shared_ptr<EcostressTimeTableSubset>);
   %pickle_serialization();
 };
 }

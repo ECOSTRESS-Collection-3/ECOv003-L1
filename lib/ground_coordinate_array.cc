@@ -57,7 +57,7 @@ void GroundCoordinateArray::init()
     cam = igc2->sub_camera();
     resolution = igc3->resolution();
     max_height = igc3->max_height();
-    tt = boost::dynamic_pointer_cast<EcostressTimeTable>(igc3->time_table());
+    tt = igc2->sub_time_table();
   } else
     throw GeoCal::Exception("GroundCoordinateArray requires a EcostressImageGroundConnection o EcostressImageGroundConnectionSubset");
   if(!tt)
