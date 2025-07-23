@@ -797,4 +797,5 @@ __all__ = [
     "determine_rotated_map",
     "determine_rotated_map_igc",
     "create_igccol_from_qa",
+    "orb_to_path",
 ]
