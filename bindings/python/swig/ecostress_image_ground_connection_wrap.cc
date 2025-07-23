@@ -3924,25 +3924,26 @@ namespace Swig {
 #define SWIGTYPE_p_char_type swig_types[260]
 #define SWIGTYPE_p_difference_type swig_types[261]
 #define SWIGTYPE_p_fmtflags swig_types[262]
-#define SWIGTYPE_p_int_type swig_types[263]
-#define SWIGTYPE_p_iostate swig_types[264]
-#define SWIGTYPE_p_off_type swig_types[265]
-#define SWIGTYPE_p_openmode swig_types[266]
-#define SWIGTYPE_p_pos_type swig_types[267]
-#define SWIGTYPE_p_seekdir swig_types[268]
-#define SWIGTYPE_p_size_t swig_types[269]
-#define SWIGTYPE_p_size_type swig_types[270]
-#define SWIGTYPE_p_state_type swig_types[271]
-#define SWIGTYPE_p_std__basic_iosT_char_t swig_types[272]
-#define SWIGTYPE_p_std__basic_iostreamT_char_t swig_types[273]
-#define SWIGTYPE_p_std__basic_istreamT_char_t swig_types[274]
-#define SWIGTYPE_p_std__basic_ostreamT_char_t swig_types[275]
-#define SWIGTYPE_p_std__invalid_argument swig_types[276]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[277]
-#define SWIGTYPE_p_traits_type swig_types[278]
-#define SWIGTYPE_p_value_type swig_types[279]
-static swig_type_info *swig_types[281];
-static swig_module_info swig_module = {swig_types, 280, 0, 0, 0, 0};
+#define SWIGTYPE_p_int swig_types[263]
+#define SWIGTYPE_p_int_type swig_types[264]
+#define SWIGTYPE_p_iostate swig_types[265]
+#define SWIGTYPE_p_off_type swig_types[266]
+#define SWIGTYPE_p_openmode swig_types[267]
+#define SWIGTYPE_p_pos_type swig_types[268]
+#define SWIGTYPE_p_seekdir swig_types[269]
+#define SWIGTYPE_p_size_t swig_types[270]
+#define SWIGTYPE_p_size_type swig_types[271]
+#define SWIGTYPE_p_state_type swig_types[272]
+#define SWIGTYPE_p_std__basic_iosT_char_t swig_types[273]
+#define SWIGTYPE_p_std__basic_iostreamT_char_t swig_types[274]
+#define SWIGTYPE_p_std__basic_istreamT_char_t swig_types[275]
+#define SWIGTYPE_p_std__basic_ostreamT_char_t swig_types[276]
+#define SWIGTYPE_p_std__invalid_argument swig_types[277]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[278]
+#define SWIGTYPE_p_traits_type swig_types[279]
+#define SWIGTYPE_p_value_type swig_types[280]
+static swig_type_info *swig_types[282];
+static swig_module_info swig_module = {swig_types, 281, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -8094,6 +8095,76 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection_scan_index_to_line(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressImageGroundConnection *arg1 = (Ecostress::EcostressImageGroundConnection *) 0 ;
+  int arg2 ;
+  int *arg3 = 0 ;
+  int *arg4 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnection const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnection const > *smartarg1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int temp3 ;
+  int res3 = SWIG_TMPOBJ ;
+  int temp4 ;
+  int res4 = SWIG_TMPOBJ ;
+  PyObject *swig_obj[2] ;
+  
+  arg3 = &temp3;
+  arg4 = &temp4;
+  (void)self;
+  if (!SWIG_Python_UnpackTuple(args, "EcostressImageGroundConnection_scan_index_to_line", 2, 2, swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnection_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressImageGroundConnection_scan_index_to_line" "', argument " "1"" of type '" "Ecostress::EcostressImageGroundConnection const *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnection > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnection > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnection * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnection > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnection * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "EcostressImageGroundConnection_scan_index_to_line" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      ((Ecostress::EcostressImageGroundConnection const *)arg1)->scan_index_to_line(arg2,*arg3,*arg4);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  if (SWIG_IsTmpObj(res3)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg3)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res3) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_int, new_flags));
+  }
+  if (SWIG_IsTmpObj(res4)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg4)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_int, new_flags));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_crosses_dateline(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressImageGroundConnection *arg1 = (Ecostress::EcostressImageGroundConnection *) 0 ;
@@ -9302,6 +9373,11 @@ static PyMethodDef SwigMethods[] = {
 		"which can be different than the current value of band(). The default\n"
 		"value of -1 means to use the value of band() and not change this. \n"
 		""},
+	 { "EcostressImageGroundConnection_scan_index_to_line", _wrap_EcostressImageGroundConnection_scan_index_to_line, METH_VARARGS, "\n"
+		"\n"
+		"void Ecostress::EcostressImageGroundConnection::scan_index_to_line(int Scan_index, int &Lstart, int &Lend) const\n"
+		"Ecostress::EcostressImageGroundConnection::scan_index_to_line\n"
+		""},
 	 { "EcostressImageGroundConnection__v_crosses_dateline", _wrap_EcostressImageGroundConnection__v_crosses_dateline, METH_O, "\n"
 		"\n"
 		"bool EcostressImageGroundConnection::crosses_dateline() const\n"
@@ -9443,6 +9519,11 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"Because it is convenient, you can pass in a band to use if desired,\n"
 		"which can be different than the current value of band(). The default\n"
 		"value of -1 means to use the value of band() and not change this. \n"
+		""},
+	 { "EcostressImageGroundConnection_scan_index_to_line", _wrap_EcostressImageGroundConnection_scan_index_to_line, METH_VARARGS, "\n"
+		"\n"
+		"void Ecostress::EcostressImageGroundConnection::scan_index_to_line(int Scan_index, int &Lstart, int &Lend) const\n"
+		"Ecostress::EcostressImageGroundConnection::scan_index_to_line\n"
 		""},
 	 { "EcostressImageGroundConnection__v_crosses_dateline", _wrap_EcostressImageGroundConnection__v_crosses_dateline, METH_O, "\n"
 		"\n"
@@ -10820,6 +10901,7 @@ static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char_type = {"_p_char_type", "char_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_difference_type = {"_p_difference_type", "difference_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_fmtflags = {"_p_fmtflags", "fmtflags *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "int *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_int_type = {"_p_int_type", "int_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_iostate = {"_p_iostate", "iostate *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_off_type = {"_p_off_type", "off_type *", 0, 0, (void*)0, 0};
@@ -11102,6 +11184,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char_type,
   &_swigt__p_difference_type,
   &_swigt__p_fmtflags,
+  &_swigt__p_int,
   &_swigt__p_int_type,
   &_swigt__p_iostate,
   &_swigt__p_off_type,
@@ -11384,6 +11467,7 @@ static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0,
 static swig_cast_info _swigc__p_char_type[] = {  {&_swigt__p_char_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_difference_type[] = {  {&_swigt__p_difference_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_fmtflags[] = {  {&_swigt__p_fmtflags, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int_type[] = {  {&_swigt__p_int_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_iostate[] = {  {&_swigt__p_iostate, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_off_type[] = {  {&_swigt__p_off_type, 0, 0, 0},{0, 0, 0, 0}};
@@ -11666,6 +11750,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char_type,
   _swigc__p_difference_type,
   _swigc__p_fmtflags,
+  _swigc__p_int,
   _swigc__p_int_type,
   _swigc__p_iostate,
   _swigc__p_off_type,

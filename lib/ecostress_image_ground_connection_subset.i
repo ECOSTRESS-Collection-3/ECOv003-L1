@@ -27,9 +27,15 @@ public:
   boost::shared_ptr<GeoCal::QuaternionOrbitData> orbit_data
   (const GeoCal::TimeWithDerivative& T, double Ic_line,
    const GeoCal::AutoDerivative<double>& Ic_sample) const;
+  void scan_index_to_line(int Scan_index, int& OUTPUT, int& OUTPUT) const;
+  %python_attribute(crosses_dateline, bool);
+  %python_attribute(number_line_scan, int);
+  %python_attribute(number_scan, int);
+  %python_attribute(number_good_scan, int);
   %python_attribute(underlying_igc, boost::shared_ptr<EcostressImageGroundConnection>);
   %python_attribute(start_sample, int);
-  %python_attribute(sub_camera, boost::shared_ptr<GeoCal::Camera>);
+  %python_attribute(camera, boost::shared_ptr<GeoCal::Camera>);
+  %python_attribute(orbit, boost::shared_ptr<GeoCal::Orbit>);
   %python_attribute(sub_time_table, boost::shared_ptr<EcostressTimeTableSubset>);
   %pickle_serialization();
 };

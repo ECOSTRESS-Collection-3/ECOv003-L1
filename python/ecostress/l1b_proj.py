@@ -154,7 +154,7 @@ class L1bProj(object):
     def proj_scan(self, it: tuple[int, int]) -> bool:
         igc_ind, scan_index = it
         igc = self.igccol.image_ground_connection(igc_ind)
-        start_line, end_line = igc.time_table.scan_index_to_line(scan_index)
+        start_line, end_line = igc.scan_index_to_line(scan_index)
         nlinescan = igc.number_line_scan
         rad = geocal.SubRasterImage(
             igc.image, start_line, 0, nlinescan, igc.image.number_sample
@@ -196,7 +196,7 @@ class L1bProj(object):
                 )
                 self.scratch_file()[i, :, :, :] = -9999.0
             else:
-                for j in range(igc.time_table.number_scan):
+                for j in range(igc.number_scan):
                     it.append((i, j))
         if pool is None:
             list(map(self.proj_scan, it))

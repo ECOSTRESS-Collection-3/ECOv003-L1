@@ -148,6 +148,7 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
         _ecostress_image_ground_connection_subset.EcostressImageGroundConnection_swiginit(self, _ecostress_image_ground_connection_subset.new_EcostressImageGroundConnection(*args))
     orbit_data = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnection_orbit_data)
     image_coordinate_scan_index = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnection_image_coordinate_scan_index)
+    scan_index_to_line = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnection_scan_index_to_line)
     _v_crosses_dateline = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnection__v_crosses_dateline)
 
     @property
@@ -378,6 +379,31 @@ class EcostressImageGroundConnectionSubset(geocal_swig.image_ground_connection.I
         """
         _ecostress_image_ground_connection_subset.EcostressImageGroundConnectionSubset_swiginit(self, _ecostress_image_ground_connection_subset.new_EcostressImageGroundConnectionSubset(Igc, Start_sample, Num_sample))
     orbit_data = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnectionSubset_orbit_data)
+    scan_index_to_line = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnectionSubset_scan_index_to_line)
+    _v_crosses_dateline = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnectionSubset__v_crosses_dateline)
+
+    @property
+    def crosses_dateline(self):
+        return self._v_crosses_dateline()
+
+    _v_number_line_scan = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnectionSubset__v_number_line_scan)
+
+    @property
+    def number_line_scan(self):
+        return self._v_number_line_scan()
+
+    _v_number_scan = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnectionSubset__v_number_scan)
+
+    @property
+    def number_scan(self):
+        return self._v_number_scan()
+
+    _v_number_good_scan = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnectionSubset__v_number_good_scan)
+
+    @property
+    def number_good_scan(self):
+        return self._v_number_good_scan()
+
     _v_underlying_igc = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnectionSubset__v_underlying_igc)
 
     @property
@@ -390,11 +416,17 @@ class EcostressImageGroundConnectionSubset(geocal_swig.image_ground_connection.I
     def start_sample(self):
         return self._v_start_sample()
 
-    _v_sub_camera = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnectionSubset__v_sub_camera)
+    _v_camera = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnectionSubset__v_camera)
 
     @property
-    def sub_camera(self):
-        return self._v_sub_camera()
+    def camera(self):
+        return self._v_camera()
+
+    _v_orbit = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnectionSubset__v_orbit)
+
+    @property
+    def orbit(self):
+        return self._v_orbit()
 
     _v_sub_time_table = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnectionSubset__v_sub_time_table)
 

@@ -67,6 +67,12 @@ public:
   virtual int number_line() const { return igc_->number_line(); }
   virtual int number_sample() const { return num_sample_;}
   virtual int number_band() const { return igc_->number_band(); }
+  bool crosses_dateline() const { return igc_->crosses_dateline();}
+  int number_line_scan() const { return igc_->number_line_scan(); }
+  int number_scan() const { return igc_->number_scan();}
+  int number_good_scan() const { return igc_->number_good_scan();}
+  void scan_index_to_line(int Scan_index, int& Lstart, int& Lend) const
+  { igc_->scan_index_to_line(Scan_index, Lstart, Lend); }
   boost::shared_ptr<GeoCal::QuaternionOrbitData> orbit_data
   (const GeoCal::Time& T, double Ic_line, double Ic_sample) const
   { return igc_->orbit_data(T, Ic_line, Ic_sample + start_sample_); }
@@ -77,12 +83,10 @@ public:
   virtual bool has_time() const { return true; }
   virtual GeoCal::Time pixel_time(const GeoCal::ImageCoordinate& Ic) const
   { return igc_->pixel_time(ic_from_subset(Ic)); }
-  boost::shared_ptr<GeoCal::Camera> sub_camera() const
-  {
-    boost::shared_ptr<GeoCal::Camera> cam = igc_->camera();
-    return boost::make_shared<GeoCal::SubCamera>(cam, 0, start_sample_, cam->number_line(0),
-						 num_sample_);
-  }
+  boost::shared_ptr<GeoCal::Camera> camera() const
+  { return igc_->camera(); }
+  boost::shared_ptr<GeoCal::Orbit> orbit() const
+  { return igc_->orbit(); }
   boost::shared_ptr<EcostressTimeTableSubset> sub_time_table() const
   {
     auto tt = boost::dynamic_pointer_cast<EcostressTimeTable>(igc_->time_table());

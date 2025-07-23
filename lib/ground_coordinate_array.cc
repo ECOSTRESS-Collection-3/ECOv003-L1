@@ -54,7 +54,7 @@ void GroundCoordinateArray::init()
     auto igc2 = boost::dynamic_pointer_cast<EcostressImageGroundConnectionSubset>(igc_);
     auto igc3 = igc2->underlying_igc();
     b = igc3->band();
-    cam = igc2->sub_camera();
+    cam = igc2->camera();
     resolution = igc3->resolution();
     max_height = igc3->max_height();
     tt = igc2->sub_time_table();

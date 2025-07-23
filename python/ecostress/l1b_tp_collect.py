@@ -174,7 +174,11 @@ class L1bTpCollect(object):
         number_match_try = 0
         try:
             with logger.catch(reraise=True):
-                tt = self.igccol.image_ground_connection(i).time_table
+                igc = self.igccol.image_ground_connection(i)
+                if(hasattr(igc, "time_table")):
+                    tt = igc.time_table
+                else:
+                    tt = igc.sub_time_table
                 for i2, tpcol in enumerate(self.tpcollect):
                     tpcol.image_index1 = i
                     tpcol.ref_image_fname = self.ref_fname[i]

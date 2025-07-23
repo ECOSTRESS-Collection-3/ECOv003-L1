@@ -8576,6 +8576,76 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection_scan_index_to_line(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressImageGroundConnection *arg1 = (Ecostress::EcostressImageGroundConnection *) 0 ;
+  int arg2 ;
+  int *arg3 = 0 ;
+  int *arg4 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnection const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnection const > *smartarg1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int temp3 ;
+  int res3 = SWIG_TMPOBJ ;
+  int temp4 ;
+  int res4 = SWIG_TMPOBJ ;
+  PyObject *swig_obj[2] ;
+  
+  arg3 = &temp3;
+  arg4 = &temp4;
+  (void)self;
+  if (!SWIG_Python_UnpackTuple(args, "EcostressImageGroundConnection_scan_index_to_line", 2, 2, swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnection_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressImageGroundConnection_scan_index_to_line" "', argument " "1"" of type '" "Ecostress::EcostressImageGroundConnection const *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnection > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnection > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnection * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnection > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnection * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "EcostressImageGroundConnection_scan_index_to_line" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      ((Ecostress::EcostressImageGroundConnection const *)arg1)->scan_index_to_line(arg2,*arg3,*arg4);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  if (SWIG_IsTmpObj(res3)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg3)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res3) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_int, new_flags));
+  }
+  if (SWIG_IsTmpObj(res4)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg4)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_int, new_flags));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_crosses_dateline(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressImageGroundConnection *arg1 = (Ecostress::EcostressImageGroundConnection *) 0 ;
@@ -12077,6 +12147,252 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset_scan_index_to_line(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressImageGroundConnectionSubset *arg1 = (Ecostress::EcostressImageGroundConnectionSubset *) 0 ;
+  int arg2 ;
+  int *arg3 = 0 ;
+  int *arg4 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset const > *smartarg1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int temp3 ;
+  int res3 = SWIG_TMPOBJ ;
+  int temp4 ;
+  int res4 = SWIG_TMPOBJ ;
+  PyObject *swig_obj[2] ;
+  
+  arg3 = &temp3;
+  arg4 = &temp4;
+  (void)self;
+  if (!SWIG_Python_UnpackTuple(args, "EcostressImageGroundConnectionSubset_scan_index_to_line", 2, 2, swig_obj)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnectionSubset_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressImageGroundConnectionSubset_scan_index_to_line" "', argument " "1"" of type '" "Ecostress::EcostressImageGroundConnectionSubset const *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnectionSubset * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnectionSubset * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "EcostressImageGroundConnectionSubset_scan_index_to_line" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      ((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->scan_index_to_line(arg2,*arg3,*arg4);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  if (SWIG_IsTmpObj(res3)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg3)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res3) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_int, new_flags));
+  }
+  if (SWIG_IsTmpObj(res4)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg4)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_int, new_flags));
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_crosses_dateline(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressImageGroundConnectionSubset *arg1 = (Ecostress::EcostressImageGroundConnectionSubset *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset const > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  bool result;
+  
+  (void)self;
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnectionSubset_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressImageGroundConnectionSubset__v_crosses_dateline" "', argument " "1"" of type '" "Ecostress::EcostressImageGroundConnectionSubset const *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnectionSubset * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnectionSubset * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = (bool)((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->crosses_dateline();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_number_line_scan(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressImageGroundConnectionSubset *arg1 = (Ecostress::EcostressImageGroundConnectionSubset *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset const > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  int result;
+  
+  (void)self;
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnectionSubset_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressImageGroundConnectionSubset__v_number_line_scan" "', argument " "1"" of type '" "Ecostress::EcostressImageGroundConnectionSubset const *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnectionSubset * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnectionSubset * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = (int)((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->number_line_scan();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_number_scan(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressImageGroundConnectionSubset *arg1 = (Ecostress::EcostressImageGroundConnectionSubset *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset const > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  int result;
+  
+  (void)self;
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnectionSubset_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressImageGroundConnectionSubset__v_number_scan" "', argument " "1"" of type '" "Ecostress::EcostressImageGroundConnectionSubset const *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnectionSubset * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnectionSubset * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = (int)((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->number_scan();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_number_good_scan(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressImageGroundConnectionSubset *arg1 = (Ecostress::EcostressImageGroundConnectionSubset *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset const > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  int result;
+  
+  (void)self;
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnectionSubset_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressImageGroundConnectionSubset__v_number_good_scan" "', argument " "1"" of type '" "Ecostress::EcostressImageGroundConnectionSubset const *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnectionSubset * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnectionSubset * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = (int)((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->number_good_scan();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_underlying_igc(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressImageGroundConnectionSubset *arg1 = (Ecostress::EcostressImageGroundConnectionSubset *) 0 ;
@@ -12167,7 +12483,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_sub_camera(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_camera(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressImageGroundConnectionSubset *arg1 = (Ecostress::EcostressImageGroundConnectionSubset *) 0 ;
   void *argp1 = 0 ;
@@ -12184,7 +12500,7 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_sub_camera(Py
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnectionSubset_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressImageGroundConnectionSubset__v_sub_camera" "', argument " "1"" of type '" "Ecostress::EcostressImageGroundConnectionSubset const *""'");
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressImageGroundConnectionSubset__v_camera" "', argument " "1"" of type '" "Ecostress::EcostressImageGroundConnectionSubset const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
@@ -12197,7 +12513,53 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_sub_camera(Py
   }
   {
     try {
-      result = ((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->sub_camera();
+      result = ((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->camera();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    resultobj = GeoCal::swig_to_python(result);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_orbit(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressImageGroundConnectionSubset *arg1 = (Ecostress::EcostressImageGroundConnectionSubset *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset const > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  boost::shared_ptr< GeoCal::Orbit > result;
+  
+  (void)self;
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnectionSubset_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressImageGroundConnectionSubset__v_orbit" "', argument " "1"" of type '" "Ecostress::EcostressImageGroundConnectionSubset const *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnectionSubset * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnectionSubset * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = ((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->orbit();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
     } catch (const std::exception& e) {
@@ -12337,6 +12699,7 @@ static PyMethodDef SwigMethods[] = {
 	 { "new_EcostressImageGroundConnection", _wrap_new_EcostressImageGroundConnection, METH_VARARGS, NULL},
 	 { "EcostressImageGroundConnection_orbit_data", _wrap_EcostressImageGroundConnection_orbit_data, METH_VARARGS, NULL},
 	 { "EcostressImageGroundConnection_image_coordinate_scan_index", _wrap_EcostressImageGroundConnection_image_coordinate_scan_index, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection_scan_index_to_line", _wrap_EcostressImageGroundConnection_scan_index_to_line, METH_VARARGS, NULL},
 	 { "EcostressImageGroundConnection__v_crosses_dateline", _wrap_EcostressImageGroundConnection__v_crosses_dateline, METH_O, NULL},
 	 { "EcostressImageGroundConnection__v_number_line_scan", _wrap_EcostressImageGroundConnection__v_number_line_scan, METH_O, NULL},
 	 { "EcostressImageGroundConnection__v_number_scan", _wrap_EcostressImageGroundConnection__v_number_scan, METH_O, NULL},
@@ -12384,6 +12747,31 @@ static PyMethodDef SwigMethods[] = {
 		"GeoCal::AutoDerivative< double > &Ic_sample) const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::orbit_data\n"
 		""},
+	 { "EcostressImageGroundConnectionSubset_scan_index_to_line", _wrap_EcostressImageGroundConnectionSubset_scan_index_to_line, METH_VARARGS, "\n"
+		"\n"
+		"void Ecostress::EcostressImageGroundConnectionSubset::scan_index_to_line(int Scan_index, int &Lstart, int &Lend) const\n"
+		"Ecostress::EcostressImageGroundConnectionSubset::scan_index_to_line\n"
+		""},
+	 { "EcostressImageGroundConnectionSubset__v_crosses_dateline", _wrap_EcostressImageGroundConnectionSubset__v_crosses_dateline, METH_O, "\n"
+		"\n"
+		"bool Ecostress::EcostressImageGroundConnectionSubset::crosses_dateline() const\n"
+		"Ecostress::EcostressImageGroundConnectionSubset::crosses_dateline\n"
+		""},
+	 { "EcostressImageGroundConnectionSubset__v_number_line_scan", _wrap_EcostressImageGroundConnectionSubset__v_number_line_scan, METH_O, "\n"
+		"\n"
+		"int Ecostress::EcostressImageGroundConnectionSubset::number_line_scan() const\n"
+		"Ecostress::EcostressImageGroundConnectionSubset::number_line_scan\n"
+		""},
+	 { "EcostressImageGroundConnectionSubset__v_number_scan", _wrap_EcostressImageGroundConnectionSubset__v_number_scan, METH_O, "\n"
+		"\n"
+		"int Ecostress::EcostressImageGroundConnectionSubset::number_scan() const\n"
+		"Ecostress::EcostressImageGroundConnectionSubset::number_scan\n"
+		""},
+	 { "EcostressImageGroundConnectionSubset__v_number_good_scan", _wrap_EcostressImageGroundConnectionSubset__v_number_good_scan, METH_O, "\n"
+		"\n"
+		"int Ecostress::EcostressImageGroundConnectionSubset::number_good_scan() const\n"
+		"Ecostress::EcostressImageGroundConnectionSubset::number_good_scan\n"
+		""},
 	 { "EcostressImageGroundConnectionSubset__v_underlying_igc", _wrap_EcostressImageGroundConnectionSubset__v_underlying_igc, METH_O, "\n"
 		"\n"
 		"const boost::shared_ptr< EcostressImageGroundConnection > & Ecostress::EcostressImageGroundConnectionSubset::underlying_igc() const\n"
@@ -12394,10 +12782,15 @@ static PyMethodDef SwigMethods[] = {
 		"int Ecostress::EcostressImageGroundConnectionSubset::start_sample() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::start_sample\n"
 		""},
-	 { "EcostressImageGroundConnectionSubset__v_sub_camera", _wrap_EcostressImageGroundConnectionSubset__v_sub_camera, METH_O, "\n"
+	 { "EcostressImageGroundConnectionSubset__v_camera", _wrap_EcostressImageGroundConnectionSubset__v_camera, METH_O, "\n"
 		"\n"
-		"boost::shared_ptr< GeoCal::Camera > Ecostress::EcostressImageGroundConnectionSubset::sub_camera() const\n"
-		"Ecostress::EcostressImageGroundConnectionSubset::sub_camera\n"
+		"boost::shared_ptr< GeoCal::Camera > Ecostress::EcostressImageGroundConnectionSubset::camera() const\n"
+		"Ecostress::EcostressImageGroundConnectionSubset::camera\n"
+		""},
+	 { "EcostressImageGroundConnectionSubset__v_orbit", _wrap_EcostressImageGroundConnectionSubset__v_orbit, METH_O, "\n"
+		"\n"
+		"boost::shared_ptr< GeoCal::Orbit > Ecostress::EcostressImageGroundConnectionSubset::orbit() const\n"
+		"Ecostress::EcostressImageGroundConnectionSubset::orbit\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_sub_time_table", _wrap_EcostressImageGroundConnectionSubset__v_sub_time_table, METH_O, "\n"
 		"\n"
@@ -12439,6 +12832,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 	 { "new_EcostressImageGroundConnection", _wrap_new_EcostressImageGroundConnection, METH_VARARGS, NULL},
 	 { "EcostressImageGroundConnection_orbit_data", _wrap_EcostressImageGroundConnection_orbit_data, METH_VARARGS, NULL},
 	 { "EcostressImageGroundConnection_image_coordinate_scan_index", _wrap_EcostressImageGroundConnection_image_coordinate_scan_index, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection_scan_index_to_line", _wrap_EcostressImageGroundConnection_scan_index_to_line, METH_VARARGS, NULL},
 	 { "EcostressImageGroundConnection__v_crosses_dateline", _wrap_EcostressImageGroundConnection__v_crosses_dateline, METH_O, NULL},
 	 { "EcostressImageGroundConnection__v_number_line_scan", _wrap_EcostressImageGroundConnection__v_number_line_scan, METH_O, NULL},
 	 { "EcostressImageGroundConnection__v_number_scan", _wrap_EcostressImageGroundConnection__v_number_scan, METH_O, NULL},
@@ -12486,6 +12880,31 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"GeoCal::AutoDerivative< double > &Ic_sample) const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::orbit_data\n"
 		""},
+	 { "EcostressImageGroundConnectionSubset_scan_index_to_line", _wrap_EcostressImageGroundConnectionSubset_scan_index_to_line, METH_VARARGS, "\n"
+		"\n"
+		"void Ecostress::EcostressImageGroundConnectionSubset::scan_index_to_line(int Scan_index, int &Lstart, int &Lend) const\n"
+		"Ecostress::EcostressImageGroundConnectionSubset::scan_index_to_line\n"
+		""},
+	 { "EcostressImageGroundConnectionSubset__v_crosses_dateline", _wrap_EcostressImageGroundConnectionSubset__v_crosses_dateline, METH_O, "\n"
+		"\n"
+		"bool Ecostress::EcostressImageGroundConnectionSubset::crosses_dateline() const\n"
+		"Ecostress::EcostressImageGroundConnectionSubset::crosses_dateline\n"
+		""},
+	 { "EcostressImageGroundConnectionSubset__v_number_line_scan", _wrap_EcostressImageGroundConnectionSubset__v_number_line_scan, METH_O, "\n"
+		"\n"
+		"int Ecostress::EcostressImageGroundConnectionSubset::number_line_scan() const\n"
+		"Ecostress::EcostressImageGroundConnectionSubset::number_line_scan\n"
+		""},
+	 { "EcostressImageGroundConnectionSubset__v_number_scan", _wrap_EcostressImageGroundConnectionSubset__v_number_scan, METH_O, "\n"
+		"\n"
+		"int Ecostress::EcostressImageGroundConnectionSubset::number_scan() const\n"
+		"Ecostress::EcostressImageGroundConnectionSubset::number_scan\n"
+		""},
+	 { "EcostressImageGroundConnectionSubset__v_number_good_scan", _wrap_EcostressImageGroundConnectionSubset__v_number_good_scan, METH_O, "\n"
+		"\n"
+		"int Ecostress::EcostressImageGroundConnectionSubset::number_good_scan() const\n"
+		"Ecostress::EcostressImageGroundConnectionSubset::number_good_scan\n"
+		""},
 	 { "EcostressImageGroundConnectionSubset__v_underlying_igc", _wrap_EcostressImageGroundConnectionSubset__v_underlying_igc, METH_O, "\n"
 		"\n"
 		"const boost::shared_ptr< EcostressImageGroundConnection > & Ecostress::EcostressImageGroundConnectionSubset::underlying_igc() const\n"
@@ -12496,10 +12915,15 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"int Ecostress::EcostressImageGroundConnectionSubset::start_sample() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::start_sample\n"
 		""},
-	 { "EcostressImageGroundConnectionSubset__v_sub_camera", _wrap_EcostressImageGroundConnectionSubset__v_sub_camera, METH_O, "\n"
+	 { "EcostressImageGroundConnectionSubset__v_camera", _wrap_EcostressImageGroundConnectionSubset__v_camera, METH_O, "\n"
 		"\n"
-		"boost::shared_ptr< GeoCal::Camera > Ecostress::EcostressImageGroundConnectionSubset::sub_camera() const\n"
-		"Ecostress::EcostressImageGroundConnectionSubset::sub_camera\n"
+		"boost::shared_ptr< GeoCal::Camera > Ecostress::EcostressImageGroundConnectionSubset::camera() const\n"
+		"Ecostress::EcostressImageGroundConnectionSubset::camera\n"
+		""},
+	 { "EcostressImageGroundConnectionSubset__v_orbit", _wrap_EcostressImageGroundConnectionSubset__v_orbit, METH_O, "\n"
+		"\n"
+		"boost::shared_ptr< GeoCal::Orbit > Ecostress::EcostressImageGroundConnectionSubset::orbit() const\n"
+		"Ecostress::EcostressImageGroundConnectionSubset::orbit\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_sub_time_table", _wrap_EcostressImageGroundConnectionSubset__v_sub_time_table, METH_O, "\n"
 		"\n"

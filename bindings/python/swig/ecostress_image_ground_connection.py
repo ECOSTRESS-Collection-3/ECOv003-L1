@@ -176,6 +176,7 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
         _ecostress_image_ground_connection.EcostressImageGroundConnection_swiginit(self, _ecostress_image_ground_connection.new_EcostressImageGroundConnection(*args))
     orbit_data = _swig_new_instance_method(_ecostress_image_ground_connection.EcostressImageGroundConnection_orbit_data)
     image_coordinate_scan_index = _swig_new_instance_method(_ecostress_image_ground_connection.EcostressImageGroundConnection_image_coordinate_scan_index)
+    scan_index_to_line = _swig_new_instance_method(_ecostress_image_ground_connection.EcostressImageGroundConnection_scan_index_to_line)
     _v_crosses_dateline = _swig_new_instance_method(_ecostress_image_ground_connection.EcostressImageGroundConnection__v_crosses_dateline)
 
     @property
