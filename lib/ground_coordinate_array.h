@@ -43,7 +43,7 @@ public:
 /// solar_zenith and solar_azimuth in our calculation.
 //-------------------------------------------------------------------------
 
-  GroundCoordinateArray(const boost::shared_ptr<EcostressImageGroundConnection>& Igc,
+  GroundCoordinateArray(const boost::shared_ptr<GeoCal::ImageGroundConnection>& Igc,
 			bool Include_angle=false, int Nsub_line = 1,
 			int Nsub_sample = 1)
     : igc_(Igc), include_angle(Include_angle), nsub_line(Nsub_line),
@@ -55,7 +55,7 @@ public:
 /// The ImageGroundConnection we are working with.
 //-------------------------------------------------------------------------
   
-  const boost::shared_ptr<EcostressImageGroundConnection>&  igc() const
+  const boost::shared_ptr<GeoCal::ImageGroundConnection>&  igc() const
   { return igc_;}
   blitz::Array<double,5> ground_coor_arr() const;
   blitz::Array<double,5>
@@ -79,7 +79,7 @@ public:
   boost::shared_ptr<GeoCal::VicarLiteRasterImage>
   raster_cover_vicar(const std::string& Fname, const GeoCal::MapInfo& Mi) const;
 private:
-  boost::shared_ptr<EcostressImageGroundConnection> igc_;
+  boost::shared_ptr<GeoCal::ImageGroundConnection> igc_;
   bool include_angle;
   int nsub_line, nsub_sample;
   mutable blitz::Array<double, 5> res; // Cache of results for ground_coor_arr
@@ -95,6 +95,7 @@ private:
   int b;			// Band we are working with
   boost::shared_ptr<GeoCal::Camera> cam;
   boost::shared_ptr<EcostressTimeTable> tt;
+  double resolution, max_height;
   void init();
   void ground_coor_arr_samp(int Start_line, int Sample,
 			    bool initial_samp = false) const;

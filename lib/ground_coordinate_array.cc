@@ -1,4 +1,5 @@
 #include "ground_coordinate_array.h"
+#include "ecostress_image_ground_connection_subset.h"
 #include "ecostress_serialize_support.h"
 #include "ecostress_dqi.h"
 #include "geocal/ostream_pad.h"
@@ -35,9 +36,30 @@ inline double sqr(double x) { return x * x; }
 
 void GroundCoordinateArray::init()
 {
-  b = igc_->band();
-  cam = igc_->camera();
-  tt = boost::dynamic_pointer_cast<EcostressTimeTable>(igc_->time_table());
+  // The logic here is a bit awkward. We added in the
+  // EcostressImageGroundConnectionSubset after the initial design,
+  // and in most places we just use an ImageGroundConnection so this
+  // doesn't matter. In this specific instance, we require a
+  // EcostressImageGroundConnectionSubset or
+  // EcostressImageGroundConnection. Just use dynamic casting here, to
+  // replace what probably should have been a common base class.
+  if(boost::dynamic_pointer_cast<EcostressImageGroundConnection>(igc_)) {
+    auto igc2 = boost::dynamic_pointer_cast<EcostressImageGroundConnection>(igc_);
+    b = igc2->band();
+    cam = igc2->camera();
+    resolution = igc2->resolution();
+    max_height = igc2->max_height();
+    tt = boost::dynamic_pointer_cast<EcostressTimeTable>(igc2->time_table());
+  } else if(boost::dynamic_pointer_cast<EcostressImageGroundConnectionSubset>(igc_)) {
+    auto igc2 = boost::dynamic_pointer_cast<EcostressImageGroundConnectionSubset>(igc_);
+    auto igc3 = igc2->underlying_igc();
+    b = igc3->band();
+    cam = igc2->camera();
+    resolution = igc3->resolution();
+    max_height = igc3->max_height();
+    tt = igc2->sub_time_table();
+  } else
+    throw GeoCal::Exception("GroundCoordinateArray requires a EcostressImageGroundConnection o EcostressImageGroundConnectionSubset");
   if(!tt)
     throw GeoCal::Exception("GroundCoordinateArray only works with EcostressTimeTable");
   int nl = cam->number_line(b);
@@ -328,8 +350,15 @@ void GroundCoordinateArray::ground_coor_arr_samp(int Start_line, int Sample,
   Time t;
   FrameCoordinate fc;
   tt->time(ImageCoordinate(Start_line, Sample), t, fc);
-  boost::shared_ptr<QuaternionOrbitData> od =
-    igc_->orbit_data(t, tt->line_to_scan_index(Start_line), Sample);
+  boost::shared_ptr<QuaternionOrbitData> od;
+  auto igc1 = boost::dynamic_pointer_cast<EcostressImageGroundConnection>(igc_);
+  auto igc2 = boost::dynamic_pointer_cast<EcostressImageGroundConnectionSubset>(igc_);
+  if(igc1)
+    od = igc1->orbit_data(t, tt->line_to_scan_index(Start_line), Sample);
+  else if(igc2)
+    od = igc2->orbit_data(t, tt->line_to_scan_index(Start_line), Sample);
+  else
+    throw GeoCal::Exception("Need EcostressImageGroundConnection or EcostressImageGroundConnectionSubset");
   boost::shared_ptr<CartesianFixed> cf = od->position_cf();
   CartesianFixedLookVector slv;
   if(include_angle)
@@ -345,23 +374,23 @@ void GroundCoordinateArray::ground_coor_arr_samp(int Start_line, int Sample,
 	// that have this issue. See git Issue #138
 	try {	
 	  if(Initial_samp)
-	    pt = igc_->dem().intersect(*cf, lv, igc_->resolution(),
-				       igc_->max_height());
+	    pt = igc_->dem().intersect(*cf, lv, resolution,
+				       max_height);
 	  else {
 	    double start_dist = dist(i, j, k);
 	    if(i - 1 >= sl)
 	      start_dist = std::min(start_dist, dist(i-1, j, k));
 	    if(i + 1 < el)
 	      start_dist = std::min(start_dist, dist(i+1, j, k));
-	    pt = igc_->dem().intersect_start_length(*cf, lv, igc_->resolution(),
+	    pt = igc_->dem().intersect_start_length(*cf, lv, resolution,
 						    start_dist);
 	  }
 	} catch(const Exception& e) {
 	  // Work around error in SrtmDem
 	  if(std::string(e.what()).find("Out of range error") == std::string::npos)
 	    throw;
-	  pt = GeoCal::SimpleDem().intersect(*cf, lv, igc_->resolution(),
-					     igc_->max_height());
+	  pt = GeoCal::SimpleDem().intersect(*cf, lv, resolution,
+					     max_height);
 	}
 	pt->lat_lon_height(res(i, Sample, j, k, 0), res(i, Sample, j, k, 1),
 			   res(i, Sample, j, k, 2));

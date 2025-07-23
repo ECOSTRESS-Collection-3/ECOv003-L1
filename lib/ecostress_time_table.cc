@@ -1,6 +1,7 @@
 #include "ecostress_time_table.h"
 #include "ecostress_serialize_support.h"
 #include "geocal/hdf_file.h"
+#include "geocal/ostream_pad.h"
 #include <algorithm>
 using namespace Ecostress;
 using namespace GeoCal;
@@ -22,7 +23,15 @@ void EcostressTimeTable::serialize(Archive & ar, const unsigned int version)
     ar & GEOCAL_NVP_(number_filled_time);
 }
 
+template<class Archive>
+void EcostressTimeTableSubset::serialize(Archive & ar, const unsigned int version)
+{
+  ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(EcostressTimeTable)
+    & GEOCAL_NVP_(start_sample) & GEOCAL_NVP_(num_sample);
+}
+
 ECOSTRESS_IMPLEMENT(EcostressTimeTable);
+ECOSTRESS_IMPLEMENT(EcostressTimeTableSubset);
 
 //-------------------------------------------------------------------------
 /// Create a time table by reading the input file. The file should be
@@ -196,7 +205,59 @@ void EcostressTimeTable::print(std::ostream& Os) const
      << "  Frame time:           " << frame_time_ << " s\n";
 }
 
+EcostressTimeTableSubset::EcostressTimeTableSubset
+(const EcostressTimeTable& Tt, int Start_sample, int Number_sample)
+  : EcostressTimeTable(Tt.tstart_scan(), Tt.averaging_done(), Tt.mirror_rpm(),
+		       Tt.frame_time()),
+    start_sample_(Start_sample),
+    num_sample_(Number_sample)
+{
+  number_filled_time_ = Tt.number_filled_time();
+}
 
+void EcostressTimeTableSubset::print(std::ostream& Os) const
+{
+  GeoCal::OstreamPad opad(Os, "    ");
+  Os << "EcostressTimeTableSubset:\n"
+     << "  Start sample:  " << start_sample_ << "\n"
+     << "  Number sample: " << num_sample_ << "\n"
+     << "  EcostressTimeTable:\n";
+  EcostressTimeTable::print(opad);
+  opad.strict_sync();
+}
 
+GeoCal::ImageCoordinate EcostressTimeTableSubset::image_coordinate
+(GeoCal::Time T, const GeoCal::FrameCoordinate& F) const
+{
+  auto ic = EcostressTimeTable::image_coordinate(T, F);
+  ic.sample -= start_sample_;
+  return ic;
+}
+ 
+GeoCal::ImageCoordinateWithDerivative 
+EcostressTimeTableSubset::image_coordinate_with_derivative
+(const GeoCal::TimeWithDerivative& T, 
+ const GeoCal::FrameCoordinateWithDerivative& F) const
+{
+  auto ic = EcostressTimeTable::image_coordinate_with_derivative(T, F);
+  ic.sample -= start_sample_;
+  return ic;
+}
+ 
+void EcostressTimeTableSubset::time
+ (const GeoCal::ImageCoordinate& Ic, GeoCal::Time& T, GeoCal::FrameCoordinate& F) const
+{
+  GeoCal::ImageCoordinate ic(Ic);
+  ic.sample += start_sample_;
+  EcostressTimeTable::time(ic, T, F);
+}
 
-  
+void EcostressTimeTableSubset::time_with_derivative
+(const GeoCal::ImageCoordinateWithDerivative& Ic, 
+ GeoCal::TimeWithDerivative& T, 
+ GeoCal::FrameCoordinateWithDerivative& F) const
+{
+  GeoCal::ImageCoordinateWithDerivative ic(Ic);
+  ic.sample += start_sample_;
+  EcostressTimeTable::time_with_derivative(ic, T, F);
+}

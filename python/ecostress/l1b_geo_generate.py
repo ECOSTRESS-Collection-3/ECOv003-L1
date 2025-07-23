@@ -153,8 +153,8 @@ class L1bGeoGenerate(object):
     ]:
         """Determine locations"""
         it = []
-        for i in range(self.igc.time_table.number_scan):
-            ls, le = self.igc.time_table.scan_index_to_line(i)
+        for i in range(self.igc.number_scan):
+            ls, le = self.igc.scan_index_to_line(i)
             le2 = self.start_line + self.number_line
             if self.start_line < le and (self.number_line == -1 or le2 >= ls):
                 if self.number_line == -1:
@@ -182,6 +182,9 @@ class L1bGeoGenerate(object):
             self.loc(pool)
         )
         rad_band_4 = h5py.File(self.radfname, "r")["//Radiance/radiance_4"][:, :]
+        if(hasattr(self.igc, "start_sample")):
+            # Subset if we are working with subsetted data
+            rad_band_4 = rad_band_4[:,self.igc.start_sample:self.igc.start_sample+self.igc.number_sample]
         cloud, cloudconf = self.cprocess.process_cloud(
             rad_band_4, lat, lon, height, geocal.Time.time_j2000(tlinestart[0])
         )
@@ -205,6 +208,10 @@ class L1bGeoGenerate(object):
         )
         if self.run_config is not None:
             m.process_run_config_metadata(self.run_config)
+        if(hasattr(self.igc, "time_table")):
+            tt = self.igc.time_table
+        else:
+            tt = self.igc.sub_time_table
         m.set("CloudCover", self.cloud_cover)
         m.set("WestBoundingCoordinate", lon[lon > -998].min())
         m.set("EastBoundingCoordinate", lon[lon > -998].max())
@@ -213,10 +220,10 @@ class L1bGeoGenerate(object):
         m.set("FieldOfViewObstruction", self.field_of_view_obscured)
         m.set("ImageLines", lat.shape[0])
         m.set("ImagePixels", lat.shape[1])
-        dt, tm = time_split(self.igc.time_table.min_time)
+        dt, tm = time_split(tt.min_time)
         m.set("RangeBeginningDate", dt)
         m.set("RangeBeginningTime", tm)
-        dt, tm = time_split(self.igc.time_table.max_time)
+        dt, tm = time_split(tt.max_time)
         m.set("RangeEndingDate", dt)
         m.set("RangeEndingTime", tm)
         m.set("DayNightFlag", "Day" if self.is_day else "Night")

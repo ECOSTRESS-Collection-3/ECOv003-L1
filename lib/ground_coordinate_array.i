@@ -17,9 +17,9 @@ namespace Ecostress {
 class GroundCoordinateArray : public GeoCal::GenericObject {
 public:
   GroundCoordinateArray
-  (const boost::shared_ptr<EcostressImageGroundConnection>& Igc,
+  (const boost::shared_ptr<GeoCal::ImageGroundConnection>& Igc,
    bool Include_angle=false, int Nsub_line = 1, int Nsub_sample = 1);
-  %python_attribute(igc, boost::shared_ptr<EcostressImageGroundConnection>);
+  %python_attribute(igc, boost::shared_ptr<GeoCal::ImageGroundConnection>);
   blitz::Array<double,5> ground_coor_arr() const;
   blitz::Array<double,5>
   ground_coor_scan_arr(int Start_line, int Number_line=-1) const;

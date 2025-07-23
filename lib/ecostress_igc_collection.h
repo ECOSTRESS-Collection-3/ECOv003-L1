@@ -1,6 +1,7 @@
 #ifndef ECOSTRESS_IGC_COLLECTION_H
 #define ECOSTRESS_IGC_COLLECTION_H
 #include "ecostress_image_ground_connection.h"
+#include "ecostress_image_ground_connection_subset.h"
 #include "igc_array.h"
 
 namespace Ecostress {
@@ -22,6 +23,16 @@ public:
       add_object(Igc->camera());
       add_object(Igc->orbit());
       add_object(Igc->time_table());
+    }
+  }
+  virtual void add_igc
+  (const boost::shared_ptr<EcostressImageGroundConnectionSubset>& Igc)
+  { igc_list.push_back(Igc);
+    if((int) igc_list.size() == 1) {
+      add_object(Igc->underlying_igc()->scan_mirror());
+      add_object(Igc->underlying_igc()->camera());
+      add_object(Igc->underlying_igc()->orbit());
+      add_object(Igc->underlying_igc()->time_table());
     }
   }
   void nearest_attitude_time_point(const boost::shared_ptr<GeoCal::Time>& T,

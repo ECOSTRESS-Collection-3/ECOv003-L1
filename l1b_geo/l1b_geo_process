@@ -449,11 +449,23 @@ try:
                 "Scene %d is %s, matching ecostress band %d to Landsat band %d"
                 % (scenelist[i], "Day" if is_day[i] else "Night", eband, lband)
             )
-            igccol_initial.add_igc(
-                ecostress.EcostressImageGroundConnection(
-                    orb, tt, cam, sm, dem, ras, "Scene %d" % scenelist[i]
+            # Kludge to run with subsetted data. We only want to do this for the Landsat
+            # fill in white paper (at least for now), so not worth proving an actual interface
+            # here. We just hard code using subsetted data when we want that for testing.
+            if True:
+                igccol_initial.add_igc(
+                    ecostress.EcostressImageGroundConnection(
+                        orb, tt, cam, sm, dem, ras, "Scene %d" % scenelist[i]
+                    )
                 )
-            )
+            else:
+                igccol_initial.add_igc(
+                    ecostress.EcostressImageGroundConnectionSubset(
+                        ecostress.EcostressImageGroundConnection(
+                            orb, tt, cam, sm, dem, ras, "Scene %d" % scenelist[i]
+                        ),
+                        1400, 2600)
+                )
 
         # Project data to surface
         t = ecostress.L1bTpCollect(
@@ -529,7 +541,11 @@ try:
         tcorr_after = []
         geo_qa = []
         for i in range(len(radlist)):
-            tt = igccol_corrected.image_ground_connection(i).time_table
+            igc = igccol_corrected.image_ground_connection(i)
+            if(hasattr(igc, "time_table")):
+                tt = igc.time_table
+            else:
+                tt = igc.sub_time_table
             t = tt.min_time + (tt.max_time - tt.min_time)
             t1 = -9999
             t2 = -9999

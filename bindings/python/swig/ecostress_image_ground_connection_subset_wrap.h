@@ -6,8 +6,8 @@
  * the SWIG interface file instead.
  * ----------------------------------------------------------------------------- */
 
-#ifndef SWIG_ecostress_rad_apply_WRAP_H_
-#define SWIG_ecostress_rad_apply_WRAP_H_
+#ifndef SWIG_ecostress_image_ground_connection_subset_WRAP_H_
+#define SWIG_ecostress_image_ground_connection_subset_WRAP_H_
 
 #include <map>
 #include <string>

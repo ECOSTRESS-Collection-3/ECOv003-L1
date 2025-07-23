@@ -42,6 +42,7 @@ public:
   (const GeoCal::GroundCoordinate& Gc,
    int Scan_index, GeoCal::ImageCoordinate& OUTPUT, bool& OUTPUT,
    int Band=-1) const;
+  void scan_index_to_line(int Scan_index, int& OUTPUT, int& OUTPUT) const;
   %python_attribute(crosses_dateline, bool);
   %python_attribute(number_line_scan, int);
   %python_attribute(number_scan, int);

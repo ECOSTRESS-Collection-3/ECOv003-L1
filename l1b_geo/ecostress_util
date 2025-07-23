@@ -284,7 +284,7 @@ def summarize_qa(pandas_summary_pickle, pandas_qa_pickle, output_dir):
     print("Number scenes per orbit, orbits with no correction:")
     print(t("select Orbit, count(Scene) as cscene from df where df.Orbit not in (select Orbit from df_good) group by df.Orbit")["cscene"].describe([.25, .5, .75,0.9,0.95]))
     print("QA flags:")
-    print(t('select "QA Flag", count(Scene), count(Scene) * 100.0 / SUM(count(Scene)) OVER() as Percentage from df group by "QA Flag"'))
+    print(t('select QA, count(Scene), count(Scene) * 100.0 / SUM(count(Scene)) OVER() as Percentage from df group by QA'))
     print("Initial Accuracy (m):")
     print(df_good["initial_accuracy"].describe([.25, .5, .75,0.9,0.95]))
     print("Final Accuracy (m):")

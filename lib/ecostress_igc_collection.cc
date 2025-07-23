@@ -41,8 +41,16 @@ boost::shared_ptr<GeoCal::Time>& Tafter) const
   Tafter = boost::make_shared<GeoCal::Time>(GeoCal::Time::max_valid_time);
   if(number_image() == 0)
     return;
-  auto igc = boost::dynamic_pointer_cast<EcostressImageGroundConnection>(image_ground_connection(0));
-  auto orb = boost::dynamic_pointer_cast<GeoCal::OrbitOffsetCorrection>(igc->orbit());
+  boost::shared_ptr<GeoCal::OrbitOffsetCorrection> orb;
+  if(boost::dynamic_pointer_cast<EcostressImageGroundConnection>(image_ground_connection(0))) {
+    auto igc = boost::dynamic_pointer_cast<EcostressImageGroundConnection>(image_ground_connection(0));
+    orb = boost::dynamic_pointer_cast<GeoCal::OrbitOffsetCorrection>(igc->orbit());
+  } else if(boost::dynamic_pointer_cast<EcostressImageGroundConnectionSubset>(image_ground_connection(0))) {
+    auto igc = boost::dynamic_pointer_cast<EcostressImageGroundConnectionSubset>(image_ground_connection(0));
+    orb = boost::dynamic_pointer_cast<GeoCal::OrbitOffsetCorrection>(igc->orbit());
+  } else {
+    throw GeoCal::Exception("nearest_attitude_time_point only works with EcostressImageGroundConnection or EcostressImageGroundConnectionSubset");
+  }
   if(!orb)
     throw GeoCal::Exception("nearest_attitude_time_point only works with OrbitOffsetCorrection");
   std::vector<GeoCal::Time> att_tp = orb->attitude_time_point();
