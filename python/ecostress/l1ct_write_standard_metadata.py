@@ -92,8 +92,8 @@ Poor - No matches in the orbit. Expect largest geolocation errors.
         pg["GeolocationAccuracyQAExplanation"] = txt
         pg["AverageSolarZenith"] = self.average_solar_zenith
         pg["OverAllLandFraction"] = self.over_all_land_fraction
-        pg["CalibrationGainCorrection"] = list(self.cal_correction[0,:])
-        pg["CalibrationOffsetCorrection"] = list(self.cal_correction[1,:])
+        pg["CalibrationGainCorrection"] = list(self.cal_correction[0, :])
+        pg["CalibrationOffsetCorrection"] = list(self.cal_correction[1, :])
         klist = sorted([m for m, _ in self.mlist])
         for m in klist:
             d = self.data[m]
