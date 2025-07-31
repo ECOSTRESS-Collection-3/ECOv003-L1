@@ -99,6 +99,8 @@ Poor - No matches in the orbit. Expect largest geolocation errors.
             d = self.data[m]
             if isinstance(d, np.int32):
                 d = int(d)
+            elif isinstance(d, np.int64):
+                d = int(d)
             elif isinstance(d, np.float32):
                 d = float(d)
             elif isinstance(d, np.float64):
