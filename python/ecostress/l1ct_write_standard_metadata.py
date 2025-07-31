@@ -79,8 +79,8 @@ Poor - No matches in the orbit. Expect largest geolocation errors.
         pg = jdict["ProductMetadata"]
         pg["OrbitCorrectionPerformed"] = "True" if self.orbit_corrected else "False"
         pg["GeolocationAccuracyQA"] = self.geolocation_accuracy_qa
-        pg["DeltaTimeOfCorrectionBeforeScene"] = self.tcorr_before
-        pg["DeltaTimeOfCorrectionAfterScene"] = self.tcorr_after
+        pg["DeltaTimeOfCorrectionBeforeScene"] = float(self.tcorr_before)
+        pg["DeltaTimeOfCorrectionAfterScene"] = float(self.tcorr_after)
         txt = """Best - Image matching was performed for this scene, expect 
        good geolocation accuracy.
 Good - Image matching was performed on a nearby scene, and correction 
@@ -90,10 +90,10 @@ Suspect - Matched somewhere in the orbit. Expect better geolocation
 Poor - No matches in the orbit. Expect largest geolocation errors.
 """
         pg["GeolocationAccuracyQAExplanation"] = txt
-        pg["AverageSolarZenith"] = self.average_solar_zenith
-        pg["OverAllLandFraction"] = self.over_all_land_fraction
-        pg["CalibrationGainCorrection"] = list(self.cal_correction[0, :])
-        pg["CalibrationOffsetCorrection"] = list(self.cal_correction[1, :])
+        pg["AverageSolarZenith"] = float(self.average_solar_zenith)
+        pg["OverAllLandFraction"] = float(self.over_all_land_fraction)
+        pg["CalibrationGainCorrection"] = list(self.cal_correction[0, :].astype(float))
+        pg["CalibrationOffsetCorrection"] = list(self.cal_correction[1, :].astype(float))
         klist = sorted([m for m, _ in self.mlist])
         for m in klist:
             d = self.data[m]
