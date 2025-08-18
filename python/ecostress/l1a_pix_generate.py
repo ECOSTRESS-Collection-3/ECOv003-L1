@@ -7,6 +7,7 @@ from .exception import VicarRunError
 import re
 import os
 import subprocess
+import resource
 import typing
 
 if typing.TYPE_CHECKING:
@@ -64,6 +65,18 @@ class L1aPixGenerate(object):
         # to run in, and that Tom's code is on the TAE_PATH. This is try in
         # the way we run with the top level script
         curdir = os.getcwd()
+        # The old VICAR programs use a lot of stack space
+        # (specifically ibis calls). Linux usually has 8M, we need at
+        # least 32M.
+        #
+        # This usually gets set up in a bashrc or someplace like that,
+        # but go ahead and make sure here we have 32M of stack space.
+        #
+        # Note that VICAR just ends if it runs out of stack space, you
+        # don't get any kind of a useful error message.
+        # 
+        # This is the equivalent of "ulimit -s 32768"
+        resource.setrlimit(resource.RLIMIT_STACK, (33554432, 33554432))
         try:
             dirname = self._create_dir()
             os.chdir(dirname)

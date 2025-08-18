@@ -14,3 +14,10 @@ def test_l1b_geo_process(isolated_dir, test_data):
         Path("."), l1a_raw_att=l1a_raw_att, l1_osp_dir=l1_osp_dir, l1b_rad=l1b_rad
     )
     l1bgeo.run()
+
+# Version that uses a run config file. This isn't normally run (and duplicates
+# our end to end test anyways). But nice during development to be able to call
+# this version.
+@pytest.mark.long_test
+def test_l1b_geo_process_run_config():
+    run_config="/home/smyth/Local/"
