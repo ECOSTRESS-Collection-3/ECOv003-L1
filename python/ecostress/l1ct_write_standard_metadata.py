@@ -72,15 +72,17 @@ Poor - No matches in the orbit. Expect largest geolocation errors.
         self.write_json()
 
     def write_json(self) -> None:
+        if self.json_file is None:
+            raise RuntimeError("Need json_file to call write_json")
         fh = open(self.json_file, "w")
-        jdict = {}
+        jdict: dict[str, dict[str, int | str | float | list[float]]] = {}
         jdict["StandardMetadata"] = {}
         jdict["ProductMetadata"] = {"AncillaryFiles": 0}
         pg = jdict["ProductMetadata"]
         pg["OrbitCorrectionPerformed"] = "True" if self.orbit_corrected else "False"
         pg["GeolocationAccuracyQA"] = self.geolocation_accuracy_qa
-        pg["DeltaTimeOfCorrectionBeforeScene"] = self.tcorr_before
-        pg["DeltaTimeOfCorrectionAfterScene"] = self.tcorr_after
+        pg["DeltaTimeOfCorrectionBeforeScene"] = float(self.tcorr_before)
+        pg["DeltaTimeOfCorrectionAfterScene"] = float(self.tcorr_after)
         txt = """Best - Image matching was performed for this scene, expect 
        good geolocation accuracy.
 Good - Image matching was performed on a nearby scene, and correction 
@@ -90,14 +92,20 @@ Suspect - Matched somewhere in the orbit. Expect better geolocation
 Poor - No matches in the orbit. Expect largest geolocation errors.
 """
         pg["GeolocationAccuracyQAExplanation"] = txt
-        pg["AverageSolarZenith"] = self.average_solar_zenith
-        pg["OverAllLandFraction"] = self.over_all_land_fraction
-        pg["CalibrationGainCorrection"] = list(self.cal_correction[0,:])
-        pg["CalibrationOffsetCorrection"] = list(self.cal_correction[1,:])
+        pg["AverageSolarZenith"] = float(self.average_solar_zenith)
+        pg["OverAllLandFraction"] = float(self.over_all_land_fraction)
+        if self.cal_correction is None:
+            raise RuntimeError("Need cal_correction to call write")
+        pg["CalibrationGainCorrection"] = list(self.cal_correction[0, :].astype(float))
+        pg["CalibrationOffsetCorrection"] = list(
+            self.cal_correction[1, :].astype(float)
+        )
         klist = sorted([m for m, _ in self.mlist])
         for m in klist:
             d = self.data[m]
             if isinstance(d, np.int32):
+                d = int(d)
+            elif isinstance(d, np.int64):
                 d = int(d)
             elif isinstance(d, np.float32):
                 d = float(d)

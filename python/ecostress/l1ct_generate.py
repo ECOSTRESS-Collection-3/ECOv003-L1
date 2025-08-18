@@ -327,16 +327,20 @@ class L1ctGenerate:
             npix,
             npix,
         )
-        lstart, lend, sstart, send = Resampler.determine_range(x, y, mi, self.number_subpixel)
-        if(lend < lstart or send < sstart):
+        lstart, lend, sstart, send = Resampler.determine_range(
+            x, y, mi, self.number_subpixel
+        )
+        if lend < lstart or send < sstart:
             logger.info("Tile is empty, skipping")
             logger.info(f"Done with {shp['tile_id']}")
             x = None
             y = None
             return False
-        lrange = slice(lstart,(lend+self.number_subpixel))
-        srange = slice(sstart,(send+self.number_subpixel))
-        res = Resampler(x[lrange,srange], y[lrange,srange], mi, self.number_subpixel, True)
+        lrange = slice(lstart, (lend + self.number_subpixel))
+        srange = slice(sstart, (send + self.number_subpixel))
+        res = Resampler(
+            x[lrange, srange], y[lrange, srange], mi, self.number_subpixel, True
+        )
         # Range for data, before we expand to the number of subpixels
         lrange = slice(lstart // self.number_subpixel, lend // self.number_subpixel + 1)
         srange = slice(sstart // self.number_subpixel, send // self.number_subpixel + 1)

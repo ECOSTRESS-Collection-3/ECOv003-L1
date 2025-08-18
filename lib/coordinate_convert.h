@@ -6,6 +6,8 @@ namespace Ecostress {
 					     const blitz::Array<double, 1>& longitude,
 					     const boost::shared_ptr<GeoCal::OgrWrapper>& ogr);
   void set_fill_value(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img, double Fill_value);
+  void set_scale(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img, double Scale_value);
+  void set_offset(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img, double Offset_value);
   void write_data(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img, const blitz::Array<double, 2>& Data);
   void write_gdal(const std::string& Fname, const std::string& Driver_name,
 		  const GeoCal::GdalRasterImage& Img, const std::string& Options);

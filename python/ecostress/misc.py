@@ -706,6 +706,7 @@ def orbit_from_metadata(fname: str) -> tuple[int, int, geocal.Time]:
     acquisition_time = geocal.Time.parse_time("%sT%sZ" % (bdate, btime))
     return int(onum), int(sid), acquisition_time
 
+
 def orbit_from_grid_metadata(fname: str) -> tuple[int, int, geocal.Time]:
     """Read the standard metadata from the given file to return the orbit,
     scene, and acquisition_time for the given file."""

@@ -36,6 +36,26 @@ void Ecostress::set_fill_value(const boost::shared_ptr<GeoCal::GdalRasterImage>&
 
 //-----------------------------------------------------------------------
 /// This really belongs in geocal, but stick here for now. We will
+/// probably eventually migrate this to geocal.
+//-----------------------------------------------------------------------
+
+void Ecostress::set_scale(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img, double Scale_value)
+{
+  Img->raster_band().SetScale(Scale_value);
+}
+
+//-----------------------------------------------------------------------
+/// This really belongs in geocal, but stick here for now. We will
+/// probably eventually migrate this to geocal.
+//-----------------------------------------------------------------------
+
+void Ecostress::set_offset(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img, double Offset_value)
+{
+  Img->raster_band().SetOffset(Offset_value);
+}
+
+//-----------------------------------------------------------------------
+/// This really belongs in geocal, but stick here for now. We will
 /// probably eventually migrate this to geocal. The actual
 /// GdalRasterImage already handles writing double data, but we hadn't 
 /// put this into the python swig wrappers. No reason, just an
