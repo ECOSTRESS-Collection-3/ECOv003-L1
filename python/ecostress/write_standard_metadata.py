@@ -46,6 +46,8 @@ class WriteStandardMetadata(object):
             if hdf_file is not None:
                 local_granule_id = os.path.basename(hdf_file.filename)
             else:
+                if self.xml_file is None:
+                    raise RuntimeError("Need to supply either hdf_file or xml_file")
                 local_granule_id = self.xml_file.stem
         self.local_granule_id = local_granule_id
 
@@ -238,6 +240,8 @@ class WriteStandardMetadata(object):
         return mcopy
 
     def write_xml(self) -> None:
+        if self.xml_file is None:
+            raise RuntimeError("Need to have xml_file to call write_xml")
         fh = open(self.xml_file, "w")
         # Not sure what the significance of the xmls is here, but this comes
         # from Gregories' code (see ECOSTRESS-Collection-2/ECOSTRESS/XML_metadata.py)
@@ -264,6 +268,8 @@ class WriteStandardMetadata(object):
         if self.hdf_file is None and self.xml_file is not None:
             self.write_xml()
             return
+        if self.hdf_file is None:
+            raise RuntimeError("Need either hdf_file or xml_file to write")
         gname = "StandardMetadata"
         if self.hdfeos_file:
             gname = "/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/StandardMetadata"

@@ -41,6 +41,8 @@ class GeoWriteStandardMetadata(WriteStandardMetadata):
 
     def write(self) -> None:
         super().write()
+        if self.hdf_file is None:
+            raise RuntimeError("Need hdf_file to call write")
         g = self.hdf_file["StandardMetadata"]
         pg = self.hdf_file[self.product_specfic_group]
         pg["OrbitCorrectionPerformed"] = "True" if self.orbit_corrected else "False"

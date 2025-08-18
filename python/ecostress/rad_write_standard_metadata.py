@@ -20,6 +20,8 @@ class RadWriteStandardMetadata(WriteStandardMetadata):
 
     def write(self) -> None:
         super().write()
+        if self.hdf_file is None:
+            raise RuntimeError("Need hdf_file to call write")
         pg = self.hdf_file[self.product_specfic_group]
         pg["RadScanLineOrder"] = (
             "Reverse line order" if self.line_order_flipped else "Line order"

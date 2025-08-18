@@ -57,6 +57,8 @@ class L1cgWriteStandardMetadata(WriteStandardMetadata):
 
     def write(self) -> None:
         super().write()
+        if self.hdf_file is None:
+            raise RuntimeError("Need hdf_file to call write")
         g = self.hdf_file["/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/StandardMetadata"]
         pg = self.hdf_file[
             f"/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/{self.product_specfic_group}"

@@ -72,8 +72,10 @@ Poor - No matches in the orbit. Expect largest geolocation errors.
         self.write_json()
 
     def write_json(self) -> None:
+        if self.json_file is None:
+            raise RuntimeError("Need json_file to call write_json")
         fh = open(self.json_file, "w")
-        jdict = {}
+        jdict: dict[str, dict[str, int | str | float | list[float]]] = {}
         jdict["StandardMetadata"] = {}
         jdict["ProductMetadata"] = {"AncillaryFiles": 0}
         pg = jdict["ProductMetadata"]
@@ -92,8 +94,12 @@ Poor - No matches in the orbit. Expect largest geolocation errors.
         pg["GeolocationAccuracyQAExplanation"] = txt
         pg["AverageSolarZenith"] = float(self.average_solar_zenith)
         pg["OverAllLandFraction"] = float(self.over_all_land_fraction)
+        if self.cal_correction is None:
+            raise RuntimeError("Need cal_correction to call write")
         pg["CalibrationGainCorrection"] = list(self.cal_correction[0, :].astype(float))
-        pg["CalibrationOffsetCorrection"] = list(self.cal_correction[1, :].astype(float))
+        pg["CalibrationOffsetCorrection"] = list(
+            self.cal_correction[1, :].astype(float)
+        )
         klist = sorted([m for m, _ in self.mlist])
         for m in klist:
             d = self.data[m]

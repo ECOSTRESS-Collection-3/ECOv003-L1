@@ -1,29 +1,56 @@
 from __future__ import annotations
+from .run_config import RunConfig
+from pathlib import Path
 from loguru import logger
 import typing
 
 if typing.TYPE_CHECKING:
-    import types
+    pass
 
 
-class L1bGeoProcess:    
-    '''Top level process for l1b_geo_process.
+class L1bGeoProcess:
+    """Top level process for l1b_geo_process.
 
     Note that this is really just procedural process - do this, then do that sort of code.
     We use to have this just as a long script in l1b_geo_process, but it got to the point
-    that breaking this up and having this in the python library made sense.'''
-    def __init__(self,
-                 run_config: Path | None = None,
-                 l1a_raw_att: Path | None = None,
-                 l1_osp_dir: Path | None = None,
-                 l1b_rad: list[Path] | None = None,
-                 ecostress_band: int = -1,
-                 landsat_band: int = -1,
-                 number_cpu: int = 10,
-                 number_line: int = -1,
-                 orbit_offset: list[float] | None = None):
+    that breaking this up and having this in the python library made sense."""
+
+    def __init__(
+        self,
+        prod_dir: Path,
+        run_config: Path | None = None,
+        l1a_raw_att: Path | None = None,
+        l1_osp_dir: Path | None = None,
+        l1b_rad: list[Path] | None = None,
+        ecostress_band: int = -1,
+        landsat_band: int = -1,
+        number_cpu: int = 10,
+        number_line: int = -1,
+        orbit_offset: list[float] | None = None,
+    ):
+        self.prod_dir = prod_dir.absolute()
+        if run_config is not None:
+            self.process_run_config(run_config)
+        else:
+            if l1a_raw_att is None or l1_osp_dir is None or l1b_rad is None:
+                raise RuntimeError(
+                    "Need to supply either run_config or l1a_raw_att, l1_osp_dir and l1b_rad"
+                )
+            self.process_args(l1a_raw_att, l1_osp_dir, l1b_rad)
+
+    def process_run_config(self, run_config: Path) -> None:
+        """Set up things using run config, if supplied"""
+        config = RunConfig(run_config)
+
+    def process_args(
+        self,
+        l1a_raw_att: Path,
+        l1_osp_dir: Path,
+        l1b_rad: list[Path],
+    ) -> None:
+        """Set up things using command line arguments, if supplied"""
         pass
 
     def run(self) -> None:
-        '''Run the L1bGeoProcess'''
+        """Run the L1bGeoProcess"""
         pass

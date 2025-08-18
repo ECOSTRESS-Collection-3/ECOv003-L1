@@ -243,7 +243,7 @@ class L2ctGenerate:
                     self._utm_coor[epsg] = (owrap, x, y)
         return self._utm_coor[epsg]
 
-    def write_grid_browse(self):
+    def write_grid_browse(self) -> None:
         """L2 generate the grid file, but not the browse output. We go ahead
         and have code here to generate this. This doesn't really belong here,
         but as a convenience we put it here"""
@@ -334,7 +334,7 @@ class L2ctGenerate:
             # Get the range to use in the jpeg preview. We use the full range
             # of all the data, so we don't have weird changes in the color map from one
             # tile to the next
-            if np.count_nonzero(din > fill_value_threshold) > 0:
+            if din is not None and np.count_nonzero(din > fill_value_threshold) > 0:
                 mn = din[din > fill_value_threshold].min()
                 mx = din[din > fill_value_threshold].max()
                 mean = np.mean(din[din > fill_value_threshold])
@@ -392,14 +392,14 @@ class L2ctGenerate:
 
     def process_field(
         self,
-        field_name,
-        dirname,
-        mi,
-        res,
-        din_f,
-        lrange,
-        srange,
-    ):
+        field_name: str,
+        dirname: Path,
+        mi: geocal.MapInfo,
+        res: Resampler,
+        din_f: h5py.Group,
+        lrange: slice,
+        srange: slice,
+    ) -> None:
         din = din_f[lrange, srange]
         offset = None
         scale = None
