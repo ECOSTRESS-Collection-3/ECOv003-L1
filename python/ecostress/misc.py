@@ -18,6 +18,7 @@ from ecostress_swig import (  # type: ignore
     EcostressImageGroundConnection,
     EcostressIgcCollection,
 )
+from pathlib import Path
 import pickle
 from loguru import logger
 import typing
@@ -383,21 +384,19 @@ def create_dem(config: RunConfig) -> geocal.Dem:
     return dem
 
 
-def ortho_base_directory(config: RunConfig) -> str:
+def ortho_base_directory(config: RunConfig) -> Path:
     """Create the ortho base. In production, take the directory passed in
     from the configuration file. But for testing, if ECOSTRESS_USE_AFIDS_ENV
     is defined then look for the location of this on pistol"""
-    ortho_base_dir = os.path.abspath(
-        config.as_list("StaticAncillaryFileGroup", "OrthoBase")[0]
-    )
+    ortho_base_dir = Path(config.as_list("StaticAncillaryFileGroup", "OrthoBase")[0])
     if "ECOSTRESS_USE_AFIDS_ENV" in os.environ:
         # Location on pistol, use if found, otherwise use setting in
         # run config file
         if os.path.exists("/raid22/band5_VICAR"):
-            ortho_base_dir = "/raid22"
+            ortho_base_dir = Path("/raid22")
         elif os.path.exists("/data/smyth/Landsat/band5_VICAR"):
-            ortho_base_dir = "/data/smyth/Landsat"
-    return ortho_base_dir
+            ortho_base_dir = Path("/data/smyth/Landsat")
+    return ortho_base_dir.absolute()
 
 
 def band_to_landsat_band(lband: int) -> int:

@@ -74,7 +74,7 @@ class L1aPixGenerate(object):
         #
         # Note that VICAR just ends if it runs out of stack space, you
         # don't get any kind of a useful error message.
-        # 
+        #
         # This is the equivalent of "ulimit -s 32768"
         resource.setrlimit(resource.RLIMIT_STACK, (33554432, 33554432))
         try:

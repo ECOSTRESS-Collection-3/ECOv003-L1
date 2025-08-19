@@ -2,6 +2,7 @@ from geocal import ImageCoordinate
 import matplotlib.pyplot as plt
 import pytest
 
+
 @pytest.mark.skip
 def test_plot(isolated_dir, igc_hres):
     """This creates a IGC, and then creates a plot so we can check size,

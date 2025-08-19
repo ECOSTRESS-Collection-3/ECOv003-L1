@@ -175,7 +175,7 @@ class L1bTpCollect(object):
         try:
             with logger.catch(reraise=True):
                 igc = self.igccol.image_ground_connection(i)
-                if(hasattr(igc, "time_table")):
+                if hasattr(igc, "time_table"):
                     tt = igc.time_table
                 else:
                     tt = igc.sub_time_table

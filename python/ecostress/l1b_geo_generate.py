@@ -182,9 +182,12 @@ class L1bGeoGenerate(object):
             self.loc(pool)
         )
         rad_band_4 = h5py.File(self.radfname, "r")["//Radiance/radiance_4"][:, :]
-        if(hasattr(self.igc, "start_sample")):
+        if hasattr(self.igc, "start_sample"):
             # Subset if we are working with subsetted data
-            rad_band_4 = rad_band_4[:,self.igc.start_sample:self.igc.start_sample+self.igc.number_sample]
+            rad_band_4 = rad_band_4[
+                :,
+                self.igc.start_sample : self.igc.start_sample + self.igc.number_sample,
+            ]
         cloud, cloudconf = self.cprocess.process_cloud(
             rad_band_4, lat, lon, height, geocal.Time.time_j2000(tlinestart[0])
         )
@@ -208,7 +211,7 @@ class L1bGeoGenerate(object):
         )
         if self.run_config is not None:
             m.process_run_config_metadata(self.run_config)
-        if(hasattr(self.igc, "time_table")):
+        if hasattr(self.igc, "time_table"):
             tt = self.igc.time_table
         else:
             tt = self.igc.sub_time_table
