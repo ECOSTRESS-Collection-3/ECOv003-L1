@@ -18,6 +18,8 @@ from ecostress_swig import (  # type: ignore
     EcostressOrbit,
     EcostressOrbitL0Fix,
     EcostressImageGroundConnection,
+    EcostressImageGroundConnectionSubset,
+    EcostressIgcCollection,
 )
 from pathlib import Path
 from loguru import logger
@@ -55,8 +57,10 @@ class L1bGeoProcess:
         number_line: int = -1,
         # If supplied, should be yaw, pitch, roll to add in degrees
         orbit_offset: list[float] | None = None,
+        force_night: bool = False,
     ):
         self._line_order_reversed: bool | None = None
+        self.force_night = force_night
         if run_config is not None:
             self.process_run_config(run_config)
         else:
@@ -104,11 +108,11 @@ class L1bGeoProcess:
     def setup_orthobase(self, landsat_band: int, ecostress_band: int) -> None:
         """Setup self.ortho_base_night and self.ortho_base_day"""
         if landsat_band == -1:
-            lband_day = self.l1b_geo_config.landsat_day_band
-            lband_night = self.l1b_geo_config.landsat_night_band
+            self.lband_day = self.l1b_geo_config.landsat_day_band
+            self.lband_night = self.l1b_geo_config.landsat_night_band
         else:
-            lband_day = landsat_band
-            lband_night = lband_day
+            self.lband_day = landsat_band
+            self.lband_night = self.lband_day
         if ecostress_band == -1:
             self.eband_day = self.l1b_geo_config.ecostress_day_band
             self.eband_night = self.l1b_geo_config.ecostress_night_band
@@ -116,10 +120,10 @@ class L1bGeoProcess:
             self.eband_day = ecostress_band
             self.eband_night = self.eband_day
         self.ortho_base_day = geocal.Landsat7Global(
-            str(self.ortho_base_dir), band_to_landsat_band(lband_day)
+            str(self.ortho_base_dir), band_to_landsat_band(self.lband_day)
         )
         self.ortho_base_night = geocal.Landsat7Global(
-            str(self.ortho_base_dir), band_to_landsat_band(lband_night)
+            str(self.ortho_base_dir), band_to_landsat_band(self.lband_night)
         )
 
     def setup_orbit_offset(self, orbit_offset: list[float]) -> None:
@@ -272,7 +276,7 @@ class L1bGeoProcess:
         return self._line_order_reversed
 
     def igc(
-        self, radfname: Path, include_image: bool
+        self, radfname: Path, include_image: bool, eband: int
     ) -> EcostressImageGroundConnection:
         orbit, scene, acquisition_time = orbit_from_metadata(radfname)
         tt = create_time_table(
@@ -290,7 +294,13 @@ class L1bGeoProcess:
         self.cam.line_order_reversed = self.line_order_reversed(radfname)
         img: None | geocal.RasterImage = None
         if include_image:
-            raise NotImplementedError()
+            if eband == 0:
+                img = geocal.GdalRasterImage(f'HDF5:"{radfname}"://SWIR/swir_dn')
+            else:
+                img = geocal.GdalRasterImage(
+                    f'HDF5:"{radfname}"://Radiance/radiance_{eband}'
+                )
+                img = geocal.ScaleImage(img, 100.0)
         igc = EcostressImageGroundConnection(
             self.orb, tt, self.cam, sm, self.dem, img, f"Scene {scene}"
         )
@@ -303,7 +313,7 @@ class L1bGeoProcess:
         radfname_ok: list[Path] = []
         for radfname in radlist:
             orbit, scene, acquisition_time = orbit_from_metadata(radfname)
-            igc = self.igc(radfname, include_image=False)
+            igc = self.igc(radfname, include_image=False, eband=-1)
             # Check that we have no large gaps in the time
             nspace = int(
                 math.ceil(
@@ -403,6 +413,26 @@ class L1bGeoProcess:
                     )
                 )
             )
+            if (
+                not self.force_night
+                and as_string(
+                    h5py.File(radfname, "r")["StandardMetadata/DayNightFlag"][()]
+                )
+                == "Day"
+            ):
+                self.is_day.append(True)
+                eband = self.eband_day
+                lband = self.lband_day
+                self.ortho_base.append(self.ortho_base_day)
+            else:
+                self.is_day.append(False)
+                eband = self.eband_night
+                lband = self.lband_night
+                self.ortho_base.append(self.ortho_base_night)
+            logger.info(
+                "Scene %d is %s, matching ecostress band %d to Landsat band %d"
+                % (scene, "Day" if self.is_day[-1] else "Night", eband, lband)
+            )
             self.scenelist.append(scene)
             if first_file:
                 first_file = False
@@ -432,19 +462,45 @@ class L1bGeoProcess:
         self.qa_file = L1bGeoQaFile(self.qa_fname, self.log_string_handle)
         self.qa_file.input_list(self.inlist)
 
+    def create_igccol_initial(self) -> EcostressIgcCollection:
+        igccol = EcostressIgcCollection()
+        for i, radfname in enumerate(self.radlist):
+            igc = self.igc(
+                radfname,
+                include_image=True,
+                eband=(self.eband_day if self.is_day[i] else self.eband_night),
+            )
+            # Kludge to run with subsetted data. We only want to do this for the Landsat
+            # fill in white paper (at least for now), so not worth proving an actual interface
+            # here. We just hard code using subsetted data when we want that for testing.
+            if True:
+                igccol.add_igc(igc)
+            else:
+                igccol.add_igc(EcostressImageGroundConnectionSubset(igc, 1400, 2600))
+
     def run(self) -> None:
         """Run the L1bGeoProcess"""
         geocal.makedirs_p(str(self.prod_dir))
         curdir = os.getcwd()
         try:
             os.chdir(self.prod_dir)
+            # Create python needed so geocal can load ecostress objects
+            with open("extra_python_init.py", "w") as fh:
+                print("from ecostress import *\n", file=fh)
+
+            # Set up logger
             logger.add(self.log_file, level="DEBUG")
             # Capture log messages, we store this in the qa file
             self.log_string_handle = io.StringIO()
             logger.add(self.log_string_handle, level="DEBUG")
             if self.fix_l0_time_tag:
                 logger.info("Applying Fix to incorrect L0 time tags")
+
             self.radlist = self.filter_scene_failure(self.radlist)
             self.determine_output_file_name()
+
+            # We may pull this out into a "first pass" or something like
+            # that, but for now do inline until we get this cleaned up
+            igccol_initial = self.create_igccol_initial()
         finally:
             os.chdir(curdir)
