@@ -6,7 +6,10 @@ from .misc import (
     create_lwm,
     ortho_base_directory,
     band_to_landsat_band,
+    orbit_from_metadata,
+    ecostress_file_name
 )
+from .l1b_geo_qa_file import L1bGeoQaFile
 import geocal  # type: ignore
 from ecostress_swig import (  # type: ignore
     EcostressOrbit,
@@ -61,6 +64,28 @@ class L1bGeoProcess:
         self.setup_orthobase(landsat_band, ecostress_band)
         if orbit_offset is not None:
             self.setup_orbit_offset(orbit_offset)
+        self.orb : geocal.Orbit = geocal.OrbitOffsetCorrection(self.orb)
+        self.cam = geocal.read_shelve(str(self.l1_osp_dir / "camera.xml"))
+        # Don't fit any of the camera parameters, hold them all fixed
+        self.cam.mask_all_parameter()
+        # Update focal length. We may put this into the camera.xml file, but for now
+        # we track this separately.
+        self.cam.focal_length = self.l1b_geo_config.camera_focal_length
+        # Reorder radlist by acquisition_time, it isn't necessarily given to us
+        # in order.
+        self.radlist: list[Path] = sorted(self.radlist, key=lambda f: orbit_from_metadata(f)[2])
+        orbit, scene, acquisition_time = orbit_from_metadata(self.radlist[0])
+        self.ofile = ecostress_file_name(
+            "L1B_GEO",
+            orbit,
+            scene,
+            acquisition_time,
+            build=self.build_id,
+            collection_label=self.collection_label,
+            version=self.file_version,
+        )
+        self.qa_file : None | L1bGeoQaFile = None
+            
 
     def setup_orthobase(self, landsat_band: int, ecostress_band: int) -> None:
         """Setup self.ortho_base_night and self.ortho_base_day"""
@@ -89,7 +114,7 @@ class L1bGeoProcess:
         # Want this in arcseconds, because this is what OrbitOffsetCorrection
         # takes
         yaw, pitch, roll = [float(i) * 60 * 60 for i in orbit_offset]
-        self.orb: geocal.Orbit = geocal.OrbitOffsetCorrection(self.orb)
+        self.orb = geocal.OrbitOffsetCorrection(self.orb)
         self.orb.insert_attitude_time_point(self.orb.min_time)
         self.orb.insert_attitude_time_point(self.orb.max_time)
         self.orb.parameter = [yaw, pitch, roll] * 2
@@ -168,6 +193,7 @@ class L1bGeoProcess:
         """Set up things using command line arguments, if supplied"""
         self.l1_osp_dir = l1_osp_dir.absolute()
         self.ncpu = number_cpu
+        self.file_version = "01"
         fix_l0_time_tag = False
         if (
             hasattr(self.l1b_geo_config, "fix_l0_time_tag")

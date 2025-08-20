@@ -694,7 +694,7 @@ def as_string(t: bytes | str) -> str:
     return t
 
 
-def orbit_from_metadata(fname: str) -> tuple[int, int, geocal.Time]:
+def orbit_from_metadata(fname: str | Path) -> tuple[int, int, geocal.Time]:
     """Read the standard metadata from the given file to return the orbit,
     scene, and acquisition_time for the given file."""
     fin = h5py.File(fname, "r")
