@@ -18,6 +18,7 @@ from .l1b_geo_generate import L1bGeoGenerate
 from .l1b_geo_generate_map import L1bGeoGenerateMap
 from .l1b_geo_generate_kmz import L1bGeoGenerateKmz
 from .l1b_att_generate import L1bAttGenerate
+from .l1b_tp_collect import L1bTpCollect
 import geocal  # type: ignore
 from ecostress_swig import (  # type: ignore
     EcostressOrbit,
@@ -662,6 +663,36 @@ class L1bGeoProcess:
         )
         l1batt.run()
 
+    def collect_tp(
+        self, igccol: EcostressIgcCollection, pool: Pool | None
+    ) -> tuple[geocal.TiePointCollection, list[tuple[geocal.Time, geocal.Time]]]:
+        t = L1bTpCollect(
+            igccol,
+            self.ortho_base,
+            self.qa_file,
+            fftsize=self.l1b_geo_config.fftsize,
+            magnify=self.l1b_geo_config.magnify,
+            magmin=self.l1b_geo_config.magmin,
+            toler=self.l1b_geo_config.toler,
+            redo=self.l1b_geo_config.redo,
+            ffthalf=self.l1b_geo_config.ffthalf,
+            seed=self.l1b_geo_config.seed,
+            num_x=self.l1b_geo_config.num_x,
+            num_y=self.l1b_geo_config.num_y,
+            proj_number_subpixel=self.l1b_geo_config.proj_number_subpixel,
+            min_tp_per_scene=self.l1b_geo_config.min_tp_per_scene,
+            min_number_good_scan=self.l1b_geo_config.min_number_good_scan,
+        )
+        tpcol, time_range_tp = t.tpcol(pool=pool)
+        return tpcol, time_range_tp
+
+    def correct_igc(
+        self, igccol: EcostressIgcCollection, pool: Pool | None
+    ) -> tuple[EcostressIgcCollection, geocal.TiePointCollection]:
+        """Collect tie points, and used to correct the igccol"""
+        tpcol, time_range_tp = self.collect_tp(igccol, pool)
+        return igccol, tpcol
+
     def run(self) -> None:
         """Run the L1bGeoProcess"""
         geocal.makedirs_p(str(self.prod_dir))
@@ -688,10 +719,15 @@ class L1bGeoProcess:
             self.determine_output_file_name()
             tpcol: geocal.TiePointCollection | None = None
 
-            # We may pull this out into a "first pass" or something like
-            # that, but for now do inline until we get this cleaned up
             igccol_initial = self.create_igccol_initial()
-            self.generate_output(igccol_initial, tpcol, pool)
+
+            if not self.l1b_geo_config.skip_sba:
+                igccol_corrected, tpcol = self.correct_igc(igccol_initial, pool)
+            else:
+                igccol_corrected = igccol_initial
+
+            # Generate output once we have the final igccol
+            self.generate_output(igccol_corrected, tpcol, pool)
         finally:
             os.chdir(curdir)
             if pool is not None:
