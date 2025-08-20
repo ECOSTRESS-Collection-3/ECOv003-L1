@@ -27,7 +27,7 @@ class L1bAttGenerate(object):
         tatt: list[geocal.Time],
         teph: list[geocal.Time],
         inlist: list[str],
-        qa_file: L1bGeoQaFile,
+        qa_file: L1bGeoQaFile | None,
         run_config: RunConfig | None = None,
         local_granule_id: str | None = None,
         build_id: str = "0.30",
@@ -188,7 +188,8 @@ class L1bAttGenerate(object):
         t.attrs["Description"] = "ECI velocity (J2000 Inertial Frame)"
         t.attrs["Units"] = "m/s"
         m.write()
-        self.qa_file.write_standard_metadata(m)
+        if self.qa_file is not None:
+            self.qa_file.write_standard_metadata(m)
 
 
 __all__ = ["L1bAttGenerate"]

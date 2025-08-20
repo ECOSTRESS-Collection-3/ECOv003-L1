@@ -13,6 +13,11 @@ from .misc import (
     as_string,
 )
 from .l1b_geo_qa_file import L1bGeoQaFile
+from .cloud_processing import CloudProcessing
+from .l1b_geo_generate import L1bGeoGenerate
+from .l1b_geo_generate_map import L1bGeoGenerateMap
+from .l1b_geo_generate_kmz import L1bGeoGenerateKmz
+from .l1b_att_generate import L1bAttGenerate
 import geocal  # type: ignore
 from ecostress_swig import (  # type: ignore
     EcostressOrbit,
@@ -23,6 +28,7 @@ from ecostress_swig import (  # type: ignore
 )
 from pathlib import Path
 from loguru import logger
+from multiprocessing.pool import Pool
 from functools import cached_property
 import math
 import h5py  # type: ignore
@@ -61,6 +67,9 @@ class L1bGeoProcess:
     ):
         self._line_order_reversed: bool | None = None
         self.force_night = force_night
+        self.correction_done = False
+        self.number_line = number_line
+        self.config: None | RunConfig = None
         if run_config is not None:
             self.process_run_config(run_config)
         else:
@@ -166,11 +175,11 @@ class L1bGeoProcess:
 
     def process_run_config(self, run_config: Path) -> None:
         """Set up things using run config, if supplied"""
-        config = RunConfig(run_config)
+        self.config = RunConfig(run_config)
         self.l1_osp_dir = Path(
-            config.as_list("StaticAncillaryFileGroup", "L1_OSP_DIR")[0]
+            self.config.as_list("StaticAncillaryFileGroup", "L1_OSP_DIR")[0]
         ).absolute()
-        self.ncpu = int(config.as_list("Process", "NumberCpu")[0])
+        self.ncpu = int(self.config.as_list("Process", "NumberCpu")[0])
         self.fix_l0_time_tag = False
         if (
             hasattr(self.l1b_geo_config, "fix_l0_time_tag")
@@ -178,26 +187,28 @@ class L1bGeoProcess:
         ):
             self.fix_l0_time_tag = True
         self.orb = create_orbit_raw(
-            config,
+            self.config,
             pos_off=self.l1b_geo_config.x_offset_iss,
             extrapolation_pad=self.l1b_geo_config.extrapolation_pad,
             large_gap=self.l1b_geo_config.large_gap,
             fix_l0_time_tag=self.fix_l0_time_tag,
         )
-        self.dem = create_dem(config)
-        self.lwm = create_lwm(config)
-        self.ortho_base_dir: Path = ortho_base_directory(config)
+        self.dem = create_dem(self.config)
+        self.lwm = create_lwm(self.config)
+        self.ortho_base_dir: Path = ortho_base_directory(self.config)
         self.radlist = [
-            Path(i).absolute() for i in config.as_list("InputFileGroup", "L1B_RAD")
+            Path(i).absolute() for i in self.config.as_list("InputFileGroup", "L1B_RAD")
         ]
         self.prod_dir = Path(
-            config.as_list("ProductPathGroup", "ProductPath")[0]
+            self.config.as_list("ProductPathGroup", "ProductPath")[0]
         ).absolute()
-        self.file_version = config.as_list("ProductPathGroup", "ProductCounter")[0]
-        self.build_id = config.as_list("PrimaryExecutable", "BuildID")[0]
-        self.collection_label = config.as_list("ProductPathGroup", "CollectionLabel")[0]
+        self.file_version = self.config.as_list("ProductPathGroup", "ProductCounter")[0]
+        self.build_id = self.config.as_list("PrimaryExecutable", "BuildID")[0]
+        self.collection_label = self.config.as_list(
+            "ProductPathGroup", "CollectionLabel"
+        )[0]
         self.orbfname = Path(
-            config.as_list("TimeBasedFileGroup", "L1A_RAW_ATT")[0]
+            self.config.as_list("TimeBasedFileGroup", "L1A_RAW_ATT")[0]
         ).absolute()
 
     def process_args(
@@ -436,7 +447,7 @@ class L1bGeoProcess:
             self.scenelist.append(scene)
             if first_file:
                 first_file = False
-                self.l1b_att = Path(
+                self.l1b_att_fname = Path(
                     ecostress_file_name(
                         "L1B_ATT",
                         orbit,
@@ -477,11 +488,188 @@ class L1bGeoProcess:
                 igccol.add_igc(igc)
             else:
                 igccol.add_igc(EcostressImageGroundConnectionSubset(igc, 1400, 2600))
+        return igccol
+
+    def collect_qa(
+        self,
+        igccol: EcostressImageGroundConnection,
+        tpcol: geocal.TiePointCollection | None,
+    ) -> None:
+        """Collect information on the time of correction before and after scene,
+        and populate QA file with this."""
+        if self.qa_file is None:
+            return
+        self.tcorr_before = []
+        self.tcorr_after = []
+        self.geo_qa = []
+        for i in range(igccol.number_image):
+            igc = igccol.image_ground_connection(i)
+            if hasattr(igc, "time_table"):
+                tt = igc.time_table
+            else:
+                tt = igc.sub_time_table
+            t = tt.min_time + (tt.max_time - tt.min_time)
+            t1 = -9999.0
+            t2 = -9999.0
+            # Get points, but only if we actually have at
+            # least on correction point
+            atp, _, _, _ = igc.orbit.orbit_correction_parameter()
+            if len(atp) > 0:
+                tb, ta = igccol.nearest_attitude_time_point(t)
+                if tb < geocal.Time.max_valid_time - 1:
+                    t1 = t - tb
+                if ta < geocal.Time.max_valid_time - 1:
+                    t2 = ta - t
+            self.tcorr_before.append(t1)
+            self.tcorr_after.append(t2)
+            self.geo_qa.append(self.l1b_geo_config.geocal_accuracy_qa(t1, t2))
+            logger.info(
+                f"Scene {self.scenelist[i]} geolocation accuracy QA: {self.geo_qa[-1]}"
+            )
+
+        # Write out QA data
+        if tpcol:
+            self.qa_file.add_final_accuracy(
+                igccol, tpcol, self.tcorr_before, self.tcorr_after, self.geo_qa
+            )
+        self.qa_file.add_orbit(igccol.image_ground_connection(0).orbit)
+        self.qa_file.write_xml(
+            "igccol_initial.xml", "tpcol.xml", "igccol_sba.xml", "tpcol_sba.xml"
+        )
+
+    def generate_output(
+        self,
+        igccol: EcostressImageGroundConnection,
+        tpcol: geocal.TiePointCollection | None,
+        pool: Pool | None,
+    ) -> None:
+        """Once we have the final corrected igccol, generate all the output"""
+        self.collect_qa(igccol, tpcol)
+        avg_md = np.full((len(self.radlist), 3), -9999.0)
+        for i, radfname in enumerate(self.radlist):
+            # Generate output
+            logger.info(f"Doing scene number {self.scenelist[i]}")
+            fin = h5py.File(radfname, "r")
+            if "BandSpecification" in fin["L1B_RADMetadata"]:
+                nband = np.count_nonzero(
+                    fin["L1B_RADMetadata/BandSpecification"][:] > 0
+                )
+            else:
+                nband = 6
+            if (
+                igccol.image_ground_connection(i).number_good_scan
+                < self.l1b_geo_config.min_number_good_scan
+            ):
+                logger.info(
+                    f"Scene number {self.scenelist[i]} has only {igccol.image_ground_connection(i).number_good_scan} good scans. We require a minimum of {self.l1b_geo_config.min_number_good_scan}. Skipping output for this scene"
+                )
+            elif igccol.image_ground_connection(i).crosses_dateline:
+                logger.info(
+                    f"Scene number {self.scenelist[i]} crosses date line. We don't handle this. Skipping output for this scene"
+                )
+            else:
+                # Short term allow this to fail, just so we can process old data
+                # which didn't have FieldOfViewObstruction (added in B7)
+                try:
+                    field_of_view_obscured = h5py.File(radfname, "r")[
+                        "/StandardMetadata/FieldOfViewObstruction"
+                    ][()]
+                except KeyError:
+                    field_of_view_obscured = "NO"
+                # We actually want to generate the cloud mask upstream of this,
+                # when we are doing the original tiepoint collection. But for
+                # now tuck this in here, so we can get the basics of this running
+                # and make this part of our processing chain.
+                cprocess = CloudProcessing(
+                    self.l1_osp_dir / self.l1b_geo_config.rad_lut_fname,
+                    self.l1_osp_dir / self.l1b_geo_config.b11_lut_file_pattern,
+                )
+                l1bgeo = L1bGeoGenerate(
+                    igccol.image_ground_connection(i),
+                    cprocess,
+                    radfname,
+                    self.lwm,
+                    self.ofile[i],
+                    self.inlist,
+                    self.is_day[i],
+                    field_of_view_obscured=field_of_view_obscured,
+                    number_line=self.number_line,
+                    run_config=self.config,
+                    collection_label=self.collection_label,
+                    build_id=self.build_id,
+                    pge_version=self.pge_version["l1b_geo"],
+                    correction_done=self.correction_done,
+                    tcorr_before=self.tcorr_before[i],
+                    tcorr_after=self.tcorr_after[i],
+                    geolocation_accuracy_qa=self.geo_qa[i],
+                )
+                l1bgeo.run(pool)
+                avg_md[i, 0] = l1bgeo.avg_sz
+                avg_md[i, 1] = l1bgeo.oa_lf
+                avg_md[i, 2] = l1bgeo.cloud_cover
+                if self.l1b_geo_config.generate_map_product:
+                    logger.info(
+                        f"Generating Map Product scene number {self.scenelist[i]}"
+                    )
+                    l1bgeo_map = L1bGeoGenerateMap(
+                        l1bgeo,
+                        str(radfname),
+                        str(self.ofile_map[i]),
+                        north_up=self.l1b_geo_config.north_up,
+                        resolution=self.l1b_geo_config.map_resolution,
+                        number_subpixel=self.l1b_geo_config.map_number_subpixel,
+                    )
+                    l1bgeo_map.run()
+                if self.l1b_geo_config.generate_kmz_file:
+                    logger.info(f"Generating KMZ file scene number {self.scenelist[i]}")
+                    band_list = (
+                        self.l1b_geo_config.kmz_band_list_5band
+                        if (nband == 6)
+                        else self.l1b_geo_config.kmz_band_list_3band
+                    )
+                    l1bgeo_kmz = L1bGeoGenerateKmz(
+                        l1bgeo,
+                        str(radfname),
+                        str(self.ofile_kmz[i]),
+                        band_list=band_list,
+                        use_jpeg=self.l1b_geo_config.kmz_use_jpeg,
+                        resolution=self.l1b_geo_config.kmz_resolution,
+                        thumbnail_size=self.l1b_geo_config.kmz_thumbnail_size,
+                        number_subpixel=self.l1b_geo_config.kmz_number_subpixel,
+                    )
+                    l1bgeo_kmz.run()
+
+        if self.qa_file is not None:
+            self.qa_file.add_average_metadata(avg_md)
+
+        # Write out updated orbit data
+        fin = h5py.File(self.orbfname, "r")
+        tatt = [geocal.Time.time_j2000(t) for t in fin["Attitude/time_j2000"][:]]
+        teph = [geocal.Time.time_j2000(t) for t in fin["Ephemeris/time_j2000"][:]]
+        l1batt = L1bAttGenerate(
+            self.orbfname,
+            igccol.image_ground_connection(0).orbit,
+            str(self.l1b_att_fname),
+            tatt,
+            teph,
+            self.inlist,
+            self.qa_file,
+            run_config=self.config,
+            collection_label=self.collection_label,
+            build_id=self.build_id,
+            pge_version=self.pge_version["l1b_geo"],
+            correction_done=self.correction_done,
+        )
+        l1batt.run()
 
     def run(self) -> None:
         """Run the L1bGeoProcess"""
         geocal.makedirs_p(str(self.prod_dir))
         curdir = os.getcwd()
+        if self.ncpu > 1:
+            pool = Pool(self.ncpu)
+        else:
+            pool = None
         try:
             os.chdir(self.prod_dir)
             # Create python needed so geocal can load ecostress objects
@@ -498,9 +686,15 @@ class L1bGeoProcess:
 
             self.radlist = self.filter_scene_failure(self.radlist)
             self.determine_output_file_name()
+            tpcol: geocal.TiePointCollection | None = None
 
             # We may pull this out into a "first pass" or something like
             # that, but for now do inline until we get this cleaned up
             igccol_initial = self.create_igccol_initial()
+            self.generate_output(igccol_initial, tpcol, pool)
         finally:
             os.chdir(curdir)
+            if pool is not None:
+                pool.close()
+            if self.qa_file is not None:
+                self.qa_file.close()
