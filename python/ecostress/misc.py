@@ -477,14 +477,14 @@ def create_orbit_raw(
 
 
 def create_time_table(
-    fname: str, mirror_rpm: float, frame_time: float, time_offset: float = 0
+    fname: str | Path, mirror_rpm: float, frame_time: float, time_offset: float = 0
 ) -> geocal.TimeTable:
     """Create the time table using the data from the given input."""
-    return EcostressTimeTable(fname, mirror_rpm, frame_time, time_offset)
+    return EcostressTimeTable(str(fname), mirror_rpm, frame_time, time_offset)
 
 
 def create_scan_mirror(
-    fname: str,
+    fname: str | Path,
     max_encoder_value: int,
     first_encoder_value_0: float,
     second_encoder_value_0: float,

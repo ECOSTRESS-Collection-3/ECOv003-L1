@@ -4,20 +4,27 @@ from .misc import (
     create_orbit_raw,
     create_dem,
     create_lwm,
+    create_time_table,
+    create_scan_mirror,
     ortho_base_directory,
     band_to_landsat_band,
     orbit_from_metadata,
-    ecostress_file_name
+    ecostress_file_name,
+    as_string,
 )
 from .l1b_geo_qa_file import L1bGeoQaFile
 import geocal  # type: ignore
 from ecostress_swig import (  # type: ignore
     EcostressOrbit,
     EcostressOrbitL0Fix,
+    EcostressImageGroundConnection,
 )
 from pathlib import Path
 from loguru import logger
 from functools import cached_property
+import math
+import h5py  # type: ignore
+import numpy as np
 import sys
 import os
 import types
@@ -48,6 +55,7 @@ class L1bGeoProcess:
         # If supplied, should be yaw, pitch, roll to add in degrees
         orbit_offset: list[float] | None = None,
     ):
+        self._line_order_reversed: bool | None = None
         if run_config is not None:
             self.process_run_config(run_config)
         else:
@@ -64,7 +72,7 @@ class L1bGeoProcess:
         self.setup_orthobase(landsat_band, ecostress_band)
         if orbit_offset is not None:
             self.setup_orbit_offset(orbit_offset)
-        self.orb : geocal.Orbit = geocal.OrbitOffsetCorrection(self.orb)
+        self.orb: geocal.Orbit = geocal.OrbitOffsetCorrection(self.orb)
         self.cam = geocal.read_shelve(str(self.l1_osp_dir / "camera.xml"))
         # Don't fit any of the camera parameters, hold them all fixed
         self.cam.mask_all_parameter()
@@ -73,7 +81,9 @@ class L1bGeoProcess:
         self.cam.focal_length = self.l1b_geo_config.camera_focal_length
         # Reorder radlist by acquisition_time, it isn't necessarily given to us
         # in order.
-        self.radlist: list[Path] = sorted(self.radlist, key=lambda f: orbit_from_metadata(f)[2])
+        self.radlist: list[Path] = sorted(
+            self.radlist, key=lambda f: orbit_from_metadata(f)[2]
+        )
         orbit, scene, acquisition_time = orbit_from_metadata(self.radlist[0])
         self.ofile = ecostress_file_name(
             "L1B_GEO",
@@ -84,8 +94,7 @@ class L1bGeoProcess:
             collection_label=self.collection_label,
             version=self.file_version,
         )
-        self.qa_file : None | L1bGeoQaFile = None
-            
+        self.qa_file: None | L1bGeoQaFile = None
 
     def setup_orthobase(self, landsat_band: int, ecostress_band: int) -> None:
         """Setup self.ortho_base_night and self.ortho_base_day"""
@@ -153,18 +162,18 @@ class L1bGeoProcess:
             config.as_list("StaticAncillaryFileGroup", "L1_OSP_DIR")[0]
         ).absolute()
         self.ncpu = int(config.as_list("Process", "NumberCpu")[0])
-        fix_l0_time_tag = False
+        self.fix_l0_time_tag = False
         if (
             hasattr(self.l1b_geo_config, "fix_l0_time_tag")
             and self.l1b_geo_config.fix_l0_time_tag
         ):
-            fix_l0_time_tag = True
+            self.fix_l0_time_tag = True
         self.orb = create_orbit_raw(
             config,
             pos_off=self.l1b_geo_config.x_offset_iss,
             extrapolation_pad=self.l1b_geo_config.extrapolation_pad,
             large_gap=self.l1b_geo_config.large_gap,
-            fix_l0_time_tag=fix_l0_time_tag,
+            fix_l0_time_tag=self.fix_l0_time_tag,
         )
         self.dem = create_dem(config)
         self.lwm = create_lwm(config)
@@ -192,16 +201,17 @@ class L1bGeoProcess:
     ) -> None:
         """Set up things using command line arguments, if supplied"""
         self.l1_osp_dir = l1_osp_dir.absolute()
+        self.prod_dir = prod_dir.absolute()
         self.ncpu = number_cpu
         self.file_version = "01"
-        fix_l0_time_tag = False
+        self.fix_l0_time_tag = False
         if (
             hasattr(self.l1b_geo_config, "fix_l0_time_tag")
             and self.l1b_geo_config.fix_l0_time_tag
         ):
-            fix_l0_time_tag = True
+            self.fix_l0_time_tag = True
         self.orbfname = l1a_raw_att.absolute()
-        if fix_l0_time_tag:
+        if self.fix_l0_time_tag:
             self.orb = EcostressOrbitL0Fix(
                 str(self.orbfname),
                 self.l1b_geo_config.x_offset_iss,
@@ -237,6 +247,109 @@ class L1bGeoProcess:
         self.radlist = [Path(i).absolute() for i in l1b_rad]
         self.read_version()
 
+    def line_order_reversed(self, radfname: Path) -> bool:
+        """Determine if the line order is reversed in radfname. Also check that
+        this matches any previous line_order_reversed setting."""
+        line_order_reversed = False
+        if (
+            as_string(h5py.File(radfname, "r")["/L1B_RADMetadata/RadScanLineOrder"][()])
+            == "Reverse line order"
+        ):
+            line_order_reversed = True
+        if (
+            self._line_order_reversed is not None
+            and self._line_order_reversed != line_order_reversed
+        ):
+            raise RuntimeError(
+                "Currently require that all L1B_RAD given to l1b_geo_process have the same line ordering (/L1B_RADMetadata/RadScanLineOrder)"
+            )
+        self._line_order_reversed = line_order_reversed
+        return self._line_order_reversed
+
+    def igc(
+        self, radfname: Path, include_image: bool
+    ) -> EcostressImageGroundConnection:
+        orbit, scene, acquisition_time = orbit_from_metadata(radfname)
+        tt = create_time_table(
+            radfname, self.l1b_geo_config.mirror_rpm, self.l1b_geo_config.frame_time
+        )
+        sm = create_scan_mirror(
+            radfname,
+            self.l1b_geo_config.max_encoder_value,
+            self.l1b_geo_config.first_encoder_value_0,
+            self.l1b_geo_config.second_encoder_value_0,
+            self.l1b_geo_config.instrument_to_sc_euler,
+            self.l1b_geo_config.first_angle_per_encoder_value,
+            self.l1b_geo_config.second_angle_per_encoder_value,
+        )
+        self.cam.line_order_reversed = self.line_order_reversed(radfname)
+        img: None | geocal.RasterImage = None
+        if include_image:
+            raise NotImplementedError()
+        igc = EcostressImageGroundConnection(
+            self.orb, tt, self.cam, sm, self.dem, img, f"Scene {scene}"
+        )
+        return igc
+
+    def filter_scene_failure(self, radlist: list[Path]) -> list[Path]:
+        """We have a set of set of scene failures that we want to handle by
+        just skipping the scenes. Go through and remove these scenes before
+        we do anything else."""
+        radfname_ok: list[Path] = []
+        for radfname in radlist:
+            orbit, scene, acquisition_time = orbit_from_metadata(radfname)
+            igc = self.igc(radfname, include_image=False)
+            # Check that we have no large gaps in the time
+            nspace = int(
+                math.ceil(
+                    (igc.time_table.max_time - igc.time_table.min_time)
+                    / (self.l1b_geo_config.large_gap - 1.0)
+                )
+            )
+            try:
+                for tm in np.linspace(
+                    igc.time_table.min_time.j2000, igc.time_table.max_time.j2000, nspace
+                ):
+                    t = geocal.Time.time_j2000(tm)
+                    if t >= igc.orbit.min_time and t <= igc.orbit.max_time:
+                        _ = igc.orbit.orbit_data(t)
+            except RuntimeError as e:
+                if "Request time is in the middle of a large gap" in str(e):
+                    logger.warning(
+                        f"Large gap found in {igc.title}. Skipping this scene"
+                    )
+                    continue
+                else:
+                    raise
+            # Check if we cross the dateline. We don't currently handle this.
+            # We could possibly add support, but geotiff doesn't work across
+            # the dateline either so we would need to think carefully how to
+            # do this. For now just skip these scenes.
+            try:
+                if igc.crosses_dateline:
+                    logger.warning(f"Crossing dateline in {scene}. Skipping this scene")
+                    continue
+            except RuntimeError as e:
+                if "Out of range error" in str(e):
+                    logger.warning(f"Crossing dateline in {scene}. Skipping this scene")
+                    continue
+                else:
+                    raise
+
+            # Passed all the tests, to add to list of what we process
+            radfname_ok.append(radfname)
+
+        return radfname_ok
+
     def run(self) -> None:
         """Run the L1bGeoProcess"""
-        pass
+        geocal.makedirs_p(str(self.prod_dir))
+        curdir = os.getcwd()
+        try:
+            os.chdir(self.prod_dir)
+            logger.add(Path((Path(self.ofile).stem + ".log")).absolute(), level="DEBUG")
+            if self.fix_l0_time_tag:
+                logger.info("Applying Fix to incorrect L0 time tags")
+            self.radlist = self.filter_scene_failure(self.radlist)
+        finally:
+            os.chdir(curdir)
