@@ -27,6 +27,7 @@ import h5py  # type: ignore
 import numpy as np
 import sys
 import os
+import io
 import types
 import typing
 
@@ -85,15 +86,19 @@ class L1bGeoProcess:
             self.radlist, key=lambda f: orbit_from_metadata(f)[2]
         )
         orbit, scene, acquisition_time = orbit_from_metadata(self.radlist[0])
-        self.ofile = ecostress_file_name(
-            "L1B_GEO",
-            orbit,
-            scene,
-            acquisition_time,
-            build=self.build_id,
-            collection_label=self.collection_label,
-            version=self.file_version,
+        self.log_file = Path(
+            ecostress_file_name(
+                "L1B_GEO",
+                orbit,
+                scene,
+                acquisition_time,
+                build=self.build_id,
+                collection_label=self.collection_label,
+                version=self.file_version,
+            )
         )
+        self.log_file = self.prod_dir / (self.log_file.stem + ".log")
+        self.log_file = self.log_file.absolute()
         self.qa_file: None | L1bGeoQaFile = None
 
     def setup_orthobase(self, landsat_band: int, ecostress_band: int) -> None:
@@ -341,15 +346,105 @@ class L1bGeoProcess:
 
         return radfname_ok
 
+    def determine_output_file_name(self) -> None:
+        """Create the list of output files. Also set up the qa_file"""
+        self.inlist = [
+            str(self.orbfname),
+        ]
+        self.inlist.extend([str(i) for i in self.radlist])
+        self.inlist.append(str(self.l1_osp_dir / "l1b_geo_config.py"))
+        self.ofile: list[Path] = []
+        self.ofile_map: list[Path] = []
+        self.ofile_kmz: list[Path] = []
+        self.is_day: list[bool] = []
+        self.ortho_base: list[geocal.CartLabMultifile] = []
+        self.scenelist: list[int] = []
+        first_file = True
+        for radfname in self.radlist:
+            orbit, scene, acquisition_time = orbit_from_metadata(radfname)
+            self.ofile.append(
+                Path(
+                    ecostress_file_name(
+                        "L1B_GEO",
+                        orbit,
+                        scene,
+                        acquisition_time,
+                        build=self.build_id,
+                        collection_label=self.collection_label,
+                        version=self.file_version,
+                    )
+                )
+            )
+            self.ofile_map.append(
+                Path(
+                    ecostress_file_name(
+                        "L1B_MAP_RAD",
+                        orbit,
+                        scene,
+                        acquisition_time,
+                        build=self.build_id,
+                        collection_label=self.collection_label,
+                        version=self.file_version,
+                    )
+                )
+            )
+            self.ofile_kmz.append(
+                Path(
+                    ecostress_file_name(
+                        "L1B_KMZ_MAP",
+                        orbit,
+                        scene,
+                        acquisition_time,
+                        build=self.build_id,
+                        collection_label=self.collection_label,
+                        extension=".kmz",
+                        version=self.file_version,
+                        intermediate=True,
+                    )
+                )
+            )
+            self.scenelist.append(scene)
+            if first_file:
+                first_file = False
+                self.l1b_att = Path(
+                    ecostress_file_name(
+                        "L1B_ATT",
+                        orbit,
+                        None,
+                        acquisition_time,
+                        collection_label=self.collection_label,
+                        build=self.build_id,
+                        version=self.file_version,
+                    )
+                )
+                self.qa_fname = Path(
+                    ecostress_file_name(
+                        "L1B_GEO_QA",
+                        orbit,
+                        None,
+                        acquisition_time,
+                        collection_label=self.collection_label,
+                        build=self.build_id,
+                        version=self.file_version,
+                        intermediate=True,
+                    )
+                )
+        self.qa_file = L1bGeoQaFile(self.qa_fname, self.log_string_handle)
+        self.qa_file.input_list(self.inlist)
+
     def run(self) -> None:
         """Run the L1bGeoProcess"""
         geocal.makedirs_p(str(self.prod_dir))
         curdir = os.getcwd()
         try:
             os.chdir(self.prod_dir)
-            logger.add(Path((Path(self.ofile).stem + ".log")).absolute(), level="DEBUG")
+            logger.add(self.log_file, level="DEBUG")
+            # Capture log messages, we store this in the qa file
+            self.log_string_handle = io.StringIO()
+            logger.add(self.log_string_handle, level="DEBUG")
             if self.fix_l0_time_tag:
                 logger.info("Applying Fix to incorrect L0 time tags")
             self.radlist = self.filter_scene_failure(self.radlist)
+            self.determine_output_file_name()
         finally:
             os.chdir(curdir)

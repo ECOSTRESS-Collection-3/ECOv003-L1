@@ -1,6 +1,7 @@
 from __future__ import annotations
 import h5py  # type: ignore
 import os
+from pathlib import Path
 import gzip
 import numpy as np
 import subprocess
@@ -18,11 +19,11 @@ class L1bGeoQaFile(object):
 
     def __init__(
         self,
-        fname: str,
+        fname: str | os.PathLike[str],
         log_string_handle: io.StringIO,
         local_granule_id: str | None = None,
     ) -> None:
-        self.fname = fname
+        self.fname = Path(fname)
         self.log_string_handle = log_string_handle
         self.scene_name: list[str] | None = None
         self.tp_stat: np.ndarray | None = None
