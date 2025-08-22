@@ -101,6 +101,7 @@ class L1cgGenerate:
         cal_correction[1, :] = fin_rad["L1B_RADMetadata/CalibrationOffsetCorrection"][:]
         m = L1cgWriteStandardMetadata(
             fout,
+            xml_file=f"{self.output_name}.met",
             product_specfic_group="L1CGMetadata",
             proc_lev_desc="Level 1C Gridded Parameters",
             pge_name="L1C",

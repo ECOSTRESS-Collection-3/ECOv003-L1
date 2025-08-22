@@ -20,7 +20,7 @@ def test_l1b_rad_generate(
         igc_hres_latest,
         str(dn_latest_fname),
         str(gain_latest_fname),
-        "ECOv002_L1B_RAD_03663_001_20190227T101222_0100_01.h5",
+        "ECOv003_L1B_RAD_03663_001_20190227T101222_01.h5",
         "fake_osp",
         cal_correction,
         interpolate_stripe_data=True,
@@ -35,7 +35,7 @@ def test_l1b_rad_generate(
 def test_proj_band_to_band(igc_btob, test_data, ortho, aster_mosaic_surface_data):
     dn_fname = (
         test_data
-        + "band_to_band/ECOSTRESS_L1A_PIX_80005_001_20150124T204250_0100_01.h5"
+        + "band_to_band/ECOSTRESS_L1A_PIX_80005_001_20150124T204250_01.h5"
     )
     pool = Pool(20)
     igccol = EcostressIgcCollection()

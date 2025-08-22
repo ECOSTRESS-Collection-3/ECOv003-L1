@@ -253,10 +253,15 @@ class WriteStandardMetadata(object):
         klist = sorted([m for m, _ in self.mlist])
         for m in klist:
             if self.data[m] is not None:
+                val = self.data[m]
+                if m == "DayNightFlag":
+                    breakpoint()
+                if hasattr(val, "decode"):
+                    val = val.decode("utf-8")
                 print(
                     f"""   <keyval type="vector">
       <key>{m}</key>
-      <val>{self.data[m]}</val>
+      <val>{val}</val>
    </keyval>""",
                     file=fh,
                 )
@@ -265,10 +270,11 @@ class WriteStandardMetadata(object):
 
     def write(self) -> None:
         """Actually write the metadata."""
-        if self.hdf_file is None and self.xml_file is not None:
+        if(self.xml_file is not None):
             self.write_xml()
-            return
         if self.hdf_file is None:
+            if self.xml_file is not None:
+                return
             raise RuntimeError("Need either hdf_file or xml_file to write")
         gname = "StandardMetadata"
         if self.hdfeos_file:

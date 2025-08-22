@@ -7,12 +7,12 @@ import pytest
 @pytest.mark.long_test
 def test_l1b_geo_process(isolated_dir, test_data_latest):
     l1a_raw_att = (
-        test_data_latest / "L1A_RAW_ATT_03663_20190227T094659_0100_01.h5.expected"
+        test_data_latest / "L1A_RAW_ATT_03663_20190227T094659_01.h5.expected"
     )
     l1_osp_dir = test_data_latest / "l1_osp_dir"
     l1b_rad = [
         test_data_latest
-        / "ECOv002_L1B_RAD_03663_001_20190227T101222_0100_01.h5.expected",
+        / "ECOv003_L1B_RAD_03663_001_20190227T101222_01.h5.expected",
     ]
     l1bgeo = L1bGeoProcess(
         prod_dir=Path("."),
