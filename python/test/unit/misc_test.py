@@ -55,6 +55,9 @@ def test_ecostress_file_name():
         ecostress_file_name("L1B_RAD", 80001, 1, t)
         == "ECOSTRESS_L1B_RAD_80001_001_20150124T144318_0100_01.h5"
     )
+    assert ecostress_file_name("L1B_RAD", 80001, 1, t, collection_label="ECOv002") == "ECOv002_L1B_RAD_80001_001_20150124T144318_0100_01.h5"
+    # Build ID removed in collection 3
+    assert ecostress_file_name("L1B_RAD", 80001, 1, t, collection_label="ECOv003") == "ECOv003_L1B_RAD_80001_001_20150124T144318_01.h5"
 
 
 def test_determine_rotated_map_igc(igc_with_img):

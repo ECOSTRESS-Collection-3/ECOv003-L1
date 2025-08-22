@@ -588,21 +588,39 @@ def ecostress_file_name(
     extension: str = ".h5",
     intermediate: bool = False,
     tile: bool = False,
+    remove_build_id: bool | None = None
 ) -> str:
-    """Create an ecostress file name from the given components."""
+    """Create an ecostress file name from the given components.
+    Note in collection 3 we removed the build ID. We want backwards compatibility,
+    so if a collection_label is given that we recognize we extract out the version
+    and have collection 3 remove the build id, but older version not. Note you can
+    override this by explicitly passing remove_build_id is either True or False so
+    select one or the other."""
+    if remove_build_id is None:
+        if collection_label == "ECOSTRESS": # collection 1 name
+            remove_build_id = False
+        else:
+            m = re.match(r'^ECOv(\d+)$', collection_label)
+            if m is not None and int(m[1]) < 3:
+                remove_build_id = False
+            else:
+                # Default to remove_build_id
+                remove_build_id = True
     if intermediate:
         front = ""
     else:
         front = collection_label + "_"
+    if remove_build_id:
+        back = "_%s%s" %(version, extension)
+    else:
+        back = "_%s_%s%s" %(build, version, extension)
     if product_type == "L0B":
-        return "%s%s_%05d_%s_%s_%s%s" % (
+        return "%s%s_%05d_%s%s" % (
             front,
             product_type,
             orbit,
             time_to_file_string(acquisition_time),
-            build,
-            version,
-            extension,
+            back
         )
     elif product_type == "Scene":
         return "%s%s_%05d_%s_%s%s" % (
@@ -615,36 +633,30 @@ def ecostress_file_name(
         )
     elif scene is None:
         # Special handling for the couple of orbit based files
-        return "%s%s_%05d_%s_%s_%s%s" % (
+        return "%s%s_%05d_%s%s" % (
             front,
             product_type,
             orbit,
             time_to_file_string(acquisition_time),
-            build,
-            version,
-            extension,
+            back,
         )
     elif tile:
-        return "%s%s_%05d_%03d_TILE_%s_%s_%s%s" % (
+        return "%s%s_%05d_%03d_TILE_%s%s" % (
             front,
             product_type,
             orbit,
             scene,
             time_to_file_string(acquisition_time),
-            build,
-            version,
-            extension,
+            back,
         )
     else:
-        return "%s%s_%05d_%03d_%s_%s_%s%s" % (
+        return "%s%s_%05d_%03d_%s%s" % (
             front,
             product_type,
             orbit,
             scene,
             time_to_file_string(acquisition_time),
-            build,
-            version,
-            extension,
+            back,
         )
 
 

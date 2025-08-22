@@ -30,7 +30,7 @@ def test_process_cloud(isolated_dir, test_data_latest):
     osp_dir = test_data_latest / "l1_osp_dir"
     cloud_lut_fname = osp_dir / "ECOSTRESS_LUT_Cloud_BT11_v3_??.h5"
     rad_lut_fname = osp_dir / "ECOSTRESS_Rad_LUT_v4.txt"
-    cloud_fname = "ECOv002_L1_CLOUD_05675_016_20190706T235959.h5"
+    cloud_fname = "ECOv003_L1_CLOUD_05675_016_20190706T235959.h5"
     geo_fname = (
         test_data_latest / "ECOSTRESS_L1B_GEO_05675_016_20190706T235959_0601_02.h5"
     )
@@ -63,7 +63,7 @@ def test_process_cloud2(isolated_dir, test_data_latest):
     osp_dir = test_data_latest / "l1_osp_dir"
     cloud_lut_fname = osp_dir / "ECOSTRESS_LUT_Cloud_BT11_v3_??.h5"
     rad_lut_fname = osp_dir / "ECOSTRESS_Rad_LUT_v4.txt"
-    cloud_fname = "ECOv002_L1_CLOUD_27322_005_20230501T155850.h5"
+    cloud_fname = "ECOv003_L1_CLOUD_27322_005_20230501T155850.h5"
     geo_fname = (
         test_data_latest / "ECOv002_L1B_GEO_27322_005_20230501T155850_0710_01.h5"
     )

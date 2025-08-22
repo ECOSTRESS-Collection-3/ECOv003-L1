@@ -930,7 +930,7 @@ dist_installecostress_SCRIPTS = @l1a_raw_src@/L1A_RAW_PGE \
 # ================================================
 SWIG_FLAG = -O
 installecostress_SCRIPTS = ecostress_version.py
-l0b_file = $(end_to_end_test_data)/latest/L0B_03663_20190227T094659_0100_01.h5
+l0b_file = $(end_to_end_test_data)/latest/L0B_03663_20190227T094659_01.h5
 obst_file = $(end_to_end_test_data)/latest/ECO_058_078_Obst.2019
 scene_file = $(end_to_end_test_data)/latest/Scene_03663_20190227T094659_20190227T110441.txt
 l1a_raw_run_config = $(end_to_end_test_data)/latest/ECOSTRESS_L1A_RAW_RunConfig_20190227T0946.xml
@@ -3121,10 +3121,10 @@ end-to-end-check: installcheck-am
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1B_GEO_PGE $(l1b_geo_run_config)
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_ATT*.h5
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_GEO_0*.h5
-	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOv002_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv002_L1B_RAD_03663_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
+	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOv003_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv003_L1B_RAD_03663_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1C_PGE $(l1c_run_config)
 # Don't treat as an error yet, until get get this all sorted out
-	-$(H5DIFF) $(GH5DIFF_FLAG) end_to_end_test_l1c/ECOv002_L1CG_RAD_03663_001_20190227T101222_0100_01.h5 $(end_to_end_test_data)/latest/ECOv002_L1CG_RAD_03663_001_20190227T101222_0100_01.h5.expected
+	-$(H5DIFF) $(GH5DIFF_FLAG) end_to_end_test_l1c/ECOv003_L1CG_RAD_03663_001_20190227T101222_01.h5 $(end_to_end_test_data)/latest/ECOv003_L1CG_RAD_03663_001_20190227T101222_01.h5.expected
 
 # We should put a check in for the l1c products, but for now just skip since it will
 # probably take some time to figure out what to do here, in particular for the tile products
@@ -3146,30 +3146,30 @@ end-to-end-check-5band:
 
 l1b-rad-run: 
 	-rm -r ./l1b_rad_run
-	$(prefix)/L1B_RAD_PGE $(end_to_end_test_data)/latest/ECOv002_L1A_PIX_03663_001_20190227T101222_0100_02.h5.expected $(end_to_end_test_data)/latest/L1A_RAD_GAIN_03663_001_*_0100_02.h5.expected $(end_to_end_test_data)/latest/L1A_RAW_ATT_03663_*_0100_01.h5.expected $(end_to_end_test_data)/latest/l1_osp_dir ./l1b_rad_run
+	$(prefix)/L1B_RAD_PGE $(end_to_end_test_data)/latest/ECOv003_L1A_PIX_03663_001_20190227T101222_02.h5.expected $(end_to_end_test_data)/latest/L1A_RAD_GAIN_03663_001_*_02.h5.expected $(end_to_end_test_data)/latest/L1A_RAW_ATT_03663_*_01.h5.expected $(end_to_end_test_data)/latest/l1_osp_dir ./l1b_rad_run
 
 # Run l1b_geo on its own
 
 l1b-geo-run: 
 	-rm -r ./l1b_geo_run
-	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1B_GEO_PGE $(PROCESS_ARG) --number-cpu=20 $(end_to_end_test_data)/latest/L1A_RAW_ATT_03663_*_0100_01.h5.expected $(end_to_end_test_data)/latest/l1_osp_dir ./l1b_geo_run $(end_to_end_test_data)/latest/ECOv002_L1B_RAD_03663_00*.h5.expected
+	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1B_GEO_PGE $(PROCESS_ARG) --number-cpu=20 $(end_to_end_test_data)/latest/L1A_RAW_ATT_03663_*_01.h5.expected $(end_to_end_test_data)/latest/l1_osp_dir ./l1b_geo_run $(end_to_end_test_data)/latest/ECOv003_L1B_RAD_03663_00*.h5.expected
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_ATT*.h5
 	$(PARALLEL) --gnu "echo {}; $(H5DIFF) $(H5DIFF_FLAG) {} $(end_to_end_test_data)/latest/{/}.expected" ::: ./end_to_end_test_l1b_geo/*L1B_GEO_0*.h5
-#	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOv002_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv002_L1B_RAD_03663_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
+#	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOv003_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv003_L1B_RAD_03663_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
 #	source $(prefix)/setup_ecostress.sh && $(PYTHON) $(srcdir)/end_to_end_testing/diff_sba.py
-#	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band l1b_geo_run/ECOv002_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv002_L1B_RAD_03663_00{}_*.h5 l1b_geo_run/proj_final_{}" )
+#	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band l1b_geo_run/ECOv003_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv003_L1B_RAD_03663_00{}_*.h5 l1b_geo_run/proj_final_{}" )
 
 l1c-run: 
 	-rm -r ./l1c_run
-	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1C_PGE --number-cpu=20 $(end_to_end_test_data)/latest/ECOv002_L1B_RAD_03663_001_*.h5.expected $(end_to_end_test_data)/latest/ECOv002_L1B_GEO_03663_001_*.h5.expected $(end_to_end_test_data)/latest/l1_osp_dir ./l1c_run
+	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1C_PGE --number-cpu=20 $(end_to_end_test_data)/latest/ECOv003_L1B_RAD_03663_001_*.h5.expected $(end_to_end_test_data)/latest/ECOv003_L1B_GEO_03663_001_*.h5.expected $(end_to_end_test_data)/latest/l1_osp_dir ./l1c_run
 
 temp:
 	-rm -r ./end_to_end_test_l1c
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1C_PGE $(l1c_run_config)
-	$(H5DIFF) $(GH5DIFF_FLAG) end_to_end_test_l1c/ECOv002_L1CG_RAD_03663_001_20190227T101222_0100_01.h5 $(end_to_end_test_data)/latest/ECOv002_L1CG_RAD_03663_001_20190227T101222_0100_01.h5.expected
+	$(H5DIFF) $(GH5DIFF_FLAG) end_to_end_test_l1c/ECOv003_L1CG_RAD_03663_001_20190227T101222_01.h5 $(end_to_end_test_data)/latest/ECOv003_L1CG_RAD_03663_001_20190227T101222_01.h5.expected
 
 temp2:
-	$(H5DIFF) $(GH5DIFF_FLAG) end_to_end_test_l1c/ECOv002_L1CG_RAD_03663_001_20190227T101222_0100_01.h5 $(end_to_end_test_data)/latest/ECOv002_L1CG_RAD_03663_001_20190227T101222_0100_01.h5.expected
+	$(H5DIFF) $(GH5DIFF_FLAG) end_to_end_test_l1c/ECOv003_L1CG_RAD_03663_001_20190227T101222_01.h5 $(end_to_end_test_data)/latest/ECOv003_L1CG_RAD_03663_001_20190227T101222_01.h5.expected
 
 l2c-check: 
 	-rm -r ./end_to_end_test_l1and2_grid
