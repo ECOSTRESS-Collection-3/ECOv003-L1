@@ -33,6 +33,7 @@ class L1bTpCollect(object):
         proj_number_subpixel: int = 2,
         min_tp_per_scene: int = 20,
         min_number_good_scan: int = 41,
+        pass_number: int = 1,
     ) -> None:
         self.igccol = igccol
         self.ortho_base = ortho_base
@@ -40,16 +41,20 @@ class L1bTpCollect(object):
         self.num_x = num_x
         self.num_y = num_y
         self.proj_fname = [
-            "proj_initial_%d.img" % (i + 1) for i in range(self.igccol.number_image)
+            f"proj_initial_{i + 1}_pass_{pass_number}.img"
+            for i in range(self.igccol.number_image)
         ]
         self.ref_fname = [
-            "ref_%d.img" % (i + 1) for i in range(self.igccol.number_image)
+            f"ref_{i + 1}_pass_{pass_number}.img"
+            for i in range(self.igccol.number_image)
         ]
         self.log_file = [
-            "tpmatch_%d.log" % (i + 1) for i in range(self.igccol.number_image)
+            f"tpmatch_{i + 1}_pass_{pass_number}.log"
+            for i in range(self.igccol.number_image)
         ]
         self.run_dir_name = [
-            "tpmatch_%d" % (i + 1) for i in range(self.igccol.number_image)
+            f"tpmatch_{i + 1}_pass_{pass_number}"
+            for i in range(self.igccol.number_image)
         ]
         self.p = L1bProj(
             self.igccol,

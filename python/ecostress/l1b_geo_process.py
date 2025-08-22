@@ -11,6 +11,7 @@ from .misc import (
     orbit_from_metadata,
     ecostress_file_name,
     as_string,
+    process_run,
 )
 from .l1b_geo_qa_file import L1bGeoQaFile
 from .cloud_processing import CloudProcessing
@@ -203,6 +204,7 @@ class L1bGeoProcess:
         self.prod_dir = Path(
             self.config.as_list("ProductPathGroup", "ProductPath")[0]
         ).absolute()
+        self.read_version()
         self.file_version = self.config.as_list("ProductPathGroup", "ProductCounter")[0]
         self.build_id = self.config.as_list("PrimaryExecutable", "BuildID")[0]
         self.collection_label = self.config.as_list(
@@ -471,7 +473,7 @@ class L1bGeoProcess:
                         intermediate=True,
                     )
                 )
-        self.qa_file = L1bGeoQaFile(self.qa_fname, self.log_string_handle)
+        self.qa_file = L1bGeoQaFile(self.qa_fname.absolute(), self.log_string_handle)
         self.qa_file.input_list(self.inlist)
 
     def create_igccol_initial(self) -> EcostressIgcCollection:
@@ -534,8 +536,14 @@ class L1bGeoProcess:
                 igccol, tpcol, self.tcorr_before, self.tcorr_after, self.geo_qa
             )
         self.qa_file.add_orbit(igccol.image_ground_connection(0).orbit)
+        # TODO Add support for multiple passes. Although maybe it doesn't matter,
+        # we don't ever do anything with this. Maybe just the original igccol_initial
+        # and final tpcol, igcol_sba, tpcol_sba. Think about this
         self.qa_file.write_xml(
-            "igccol_initial.xml", "tpcol.xml", "igccol_sba.xml", "tpcol_sba.xml"
+            "igccol_initial_pass_1.xml",
+            "tpcol_pass_1.xml",
+            "igccol_sba_pass_1.xml",
+            "tpcol_sba_pass_1.xml",
         )
 
     def generate_output(
@@ -664,7 +672,7 @@ class L1bGeoProcess:
         l1batt.run()
 
     def collect_tp(
-        self, igccol: EcostressIgcCollection, pool: Pool | None
+        self, igccol: EcostressIgcCollection, pool: Pool | None, pass_number: int
     ) -> tuple[geocal.TiePointCollection, list[tuple[geocal.Time, geocal.Time]]]:
         t = L1bTpCollect(
             igccol,
@@ -682,27 +690,93 @@ class L1bGeoProcess:
             proj_number_subpixel=self.l1b_geo_config.proj_number_subpixel,
             min_tp_per_scene=self.l1b_geo_config.min_tp_per_scene,
             min_number_good_scan=self.l1b_geo_config.min_number_good_scan,
+            pass_number=pass_number,
         )
         tpcol, time_range_tp = t.tpcol(pool=pool)
         return tpcol, time_range_tp
 
+    def add_breakpoint(
+        self,
+        orb: geocal.OrbitOffsetCorrection,
+        time_range_tp: list[tuple[geocal.Time, geocal.Time]],
+        pass_number: int,
+    ) -> None:
+        """Add breakpoints for the scenes that we got good tiepoints from.
+        We may well tweak this, but right now we set breakpoints at the
+        beginning, middle and end of the scene, unless the beginning
+        is within one scene of another breakpoint."""
+        # TODO Add handling for multiple passes. Want to add points without breaking
+        # the setting for the current ones
+        tlast = None
+        for tmin, tmax in time_range_tp:
+            if tlast is None and pass_number == 1:
+                orb.insert_position_time_point(tmin)
+            if tlast is None or tmin - tlast > 52.0:
+                orb.insert_attitude_time_point(tmin)
+            orb.insert_attitude_time_point(tmin + (tmax - tmin) / 2)
+            orb.insert_attitude_time_point(tmax)
+            tlast = tmax
+        if tlast is not None and pass_number == 1:
+            orb.insert_position_time_point(tlast)
+
+    def run_sba(
+        self,
+        igccol: EcostressIgcCollection,
+        tpcol: geocal.TiePointCollection,
+        pass_number: int,
+    ) -> EcostressIgcCollection:
+        """Run the SBA to improve the orbit"""
+        try:
+            geocal.write_shelve(f"tpcol_pass_{pass_number}.xml", tpcol)
+            geocal.write_shelve(f"igccol_initial_pass_{pass_number}.xml", igccol)
+            with logger.catch(reraise=True):
+                process_run(
+                    [
+                        "sba",
+                        "--verbose",
+                        "--hold-gcp-fixed",
+                        "--gcp-sigma=50",
+                        f"igccol_initial_pass_{pass_number}.xml",
+                        f"tpcol_pass_{pass_number}.xml",
+                        f"igccol_sba_pass_{pass_number}.xml",
+                        f"tpcol_sba_pass_{pass_number}.xml",
+                    ],
+                )
+                self.correction_done = True
+                return geocal.read_shelve(f"igccol_sba_pass_{pass_number}.xml")
+        except Exception:
+            if not self.l1b_geo_config.continue_on_sba_fail:
+                raise
+            logger.warning(
+                "SBA/Tiepoint failed to correct orbit data. Continue processing without correction."
+            )
+            return igccol
+
     def correct_igc(
-        self, igccol: EcostressIgcCollection, pool: Pool | None
-    ) -> tuple[EcostressIgcCollection, geocal.TiePointCollection]:
+        self, igccol: EcostressIgcCollection, pool: Pool | None, pass_number: int
+    ) -> tuple[EcostressIgcCollection, geocal.TiePointCollection | None]:
         """Collect tie points, and used to correct the igccol"""
-        tpcol, time_range_tp = self.collect_tp(igccol, pool)
-        return igccol, tpcol
+        tpcol, time_range_tp = self.collect_tp(igccol, pool, pass_number)
+        if len(tpcol) == 0:
+            logger.info("No tie-points, so skipping SBA correction")
+            tpcol = None
+            return igccol, None
+        self.add_breakpoint(self.orb, time_range_tp, pass_number)
+        igccol_corrected = self.run_sba(igccol, tpcol, pass_number)
+        # Update orbit and camera, if we updated the igccol
+        self.orb = igccol_corrected.image_ground_connection(0).orbit
+        self.cam = igccol_corrected.image_ground_connection(0).camera
+        return igccol_corrected, tpcol
 
     def run(self) -> None:
         """Run the L1bGeoProcess"""
         geocal.makedirs_p(str(self.prod_dir))
         curdir = os.getcwd()
-        if self.ncpu > 1:
-            pool = Pool(self.ncpu)
-        else:
-            pool = None
+        pool = None
         try:
             os.chdir(self.prod_dir)
+            if self.ncpu > 1:
+                pool = Pool(self.ncpu)
             # Create python needed so geocal can load ecostress objects
             with open("extra_python_init.py", "w") as fh:
                 print("from ecostress import *\n", file=fh)
@@ -714,7 +788,6 @@ class L1bGeoProcess:
             logger.add(self.log_string_handle, level="DEBUG")
             if self.fix_l0_time_tag:
                 logger.info("Applying Fix to incorrect L0 time tags")
-
             self.radlist = self.filter_scene_failure(self.radlist)
             self.determine_output_file_name()
             tpcol: geocal.TiePointCollection | None = None
@@ -722,15 +795,22 @@ class L1bGeoProcess:
             igccol_initial = self.create_igccol_initial()
 
             if not self.l1b_geo_config.skip_sba:
-                igccol_corrected, tpcol = self.correct_igc(igccol_initial, pool)
+                igccol_corrected, tpcol = self.correct_igc(
+                    igccol_initial, pool, pass_number=1
+                )
             else:
                 igccol_corrected = igccol_initial
 
             # Generate output once we have the final igccol
             self.generate_output(igccol_corrected, tpcol, pool)
         finally:
-            os.chdir(curdir)
             if pool is not None:
                 pool.close()
             if self.qa_file is not None:
                 self.qa_file.close()
+            os.chdir(curdir)
+
+
+__all__ = [
+    "L1bGeoProcess",
+]
