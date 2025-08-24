@@ -25,8 +25,9 @@ blitz::Array<double, 2> Ecostress::coordinate_convert
 }
 
 //-----------------------------------------------------------------------
-/// This really belongs in geocal, but stick here for now. We will
-/// probably eventually migrate this to geocal.
+/// We have this in geocal as
+/// 4630b700ebbf6a9f22b5ab1cb5717fd01f718863,
+/// but leave this here for now so we can work with older version of geocal
 //-----------------------------------------------------------------------
 
 void Ecostress::set_fill_value(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img, double Fill_value)
@@ -35,8 +36,9 @@ void Ecostress::set_fill_value(const boost::shared_ptr<GeoCal::GdalRasterImage>&
 }
 
 //-----------------------------------------------------------------------
-/// This really belongs in geocal, but stick here for now. We will
-/// probably eventually migrate this to geocal.
+/// We have this in geocal as
+/// 4630b700ebbf6a9f22b5ab1cb5717fd01f718863,
+/// but leave this here for now so we can work with older version of geocal
 //-----------------------------------------------------------------------
 
 void Ecostress::set_scale(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img, double Scale_value)
@@ -45,8 +47,9 @@ void Ecostress::set_scale(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img,
 }
 
 //-----------------------------------------------------------------------
-/// This really belongs in geocal, but stick here for now. We will
-/// probably eventually migrate this to geocal.
+/// We have this in geocal as
+/// 4630b700ebbf6a9f22b5ab1cb5717fd01f718863,
+/// but leave this here for now so we can work with older version of geocal
 //-----------------------------------------------------------------------
 
 void Ecostress::set_offset(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img, double Offset_value)
@@ -55,12 +58,9 @@ void Ecostress::set_offset(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img
 }
 
 //-----------------------------------------------------------------------
-/// This really belongs in geocal, but stick here for now. We will
-/// probably eventually migrate this to geocal. The actual
-/// GdalRasterImage already handles writing double data, but we hadn't 
-/// put this into the python swig wrappers. No reason, just an
-/// oversight that never came up until now.
-
+/// Fixed in geocal 01dbca8b51048e80102bb70032561bf479a035a9. Leave
+/// this in place since we already have it, just so we work with older
+/// version of geocal.
 //-----------------------------------------------------------------------
 
 void Ecostress::write_data(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img, const blitz::Array<double, 2>& Data)
@@ -70,11 +70,9 @@ void Ecostress::write_data(const boost::shared_ptr<GeoCal::GdalRasterImage>& Img
 
 
 //-----------------------------------------------------------------------
-/// This really belongs in geocal, but stick here for now. We will
-/// probably eventually migrate this to geocal. This handles drivers
-/// that only support create_copy (like COG). We create using a
-/// different driver, often "MEM", and then pass to this to create the
-/// output file.
+/// We have this in geocal as
+/// 4630b700ebbf6a9f22b5ab1cb5717fd01f718863,
+/// but leave this here for now so we can work with older version of geocal
 //-----------------------------------------------------------------------
 
 
@@ -85,9 +83,9 @@ void Ecostress::write_gdal(const std::string& Fname, const std::string& Driver_n
 }
 
 //-----------------------------------------------------------------------
-/// This really belongs in geocal, but stick here for now. We will
-/// probably eventually migrate this to geocal. This returns the proj4
-/// string for the projection of the given coordinate.
+/// We have this in geocal as
+/// 4630b700ebbf6a9f22b5ab1cb5717fd01f718863,
+/// but leave this here for now so we can work with older version of geocal
 //-----------------------------------------------------------------------
 
 std::string Ecostress::to_proj4(const boost::shared_ptr<GeoCal::OgrCoordinate>& G)
