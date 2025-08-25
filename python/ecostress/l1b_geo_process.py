@@ -66,12 +66,16 @@ class L1bGeoProcess:
         # If supplied, should be yaw, pitch, roll to add in degrees
         orbit_offset: list[float] | None = None,
         force_night: bool = False,
+        igccol_use: Path | None = None,
+        tpcol_use: Path | None = None,
     ):
         self._line_order_reversed: bool | None = None
         self.force_night = force_night
         self.correction_done = False
         self.number_line = number_line
         self.config: None | RunConfig = None
+        self.igccol_use = igccol_use.absolute() if igccol_use is not None else None
+        self.tpcol_use = tpcol_use.absolute() if tpcol_use is not None else None
         if run_config is not None:
             self.process_run_config(run_config)
         else:
@@ -556,6 +560,9 @@ class L1bGeoProcess:
         self.collect_qa(igccol, tpcol)
         avg_md = np.full((len(self.radlist), 3), -9999.0)
         for i, radfname in enumerate(self.radlist):
+            continue
+            #if self.scenelist[i] != 8:
+            #    continue
             # Generate output
             logger.info(f"Doing scene number {self.scenelist[i]}")
             fin = h5py.File(radfname, "r")
@@ -775,17 +782,17 @@ class L1bGeoProcess:
         pool = None
         try:
             os.chdir(self.prod_dir)
+            # Set up logger
+            logger.add(self.log_file, level="DEBUG")
+            # Capture log messages, we store this in the qa file
+            self.log_string_handle = io.StringIO()
+            logger.add(self.log_string_handle, level="DEBUG")
             if self.ncpu > 1:
                 pool = Pool(self.ncpu)
             # Create python needed so geocal can load ecostress objects
             with open("extra_python_init.py", "w") as fh:
                 print("from ecostress import *\n", file=fh)
 
-            # Set up logger
-            logger.add(self.log_file, level="DEBUG")
-            # Capture log messages, we store this in the qa file
-            self.log_string_handle = io.StringIO()
-            logger.add(self.log_string_handle, level="DEBUG")
             if self.fix_l0_time_tag:
                 logger.info("Applying Fix to incorrect L0 time tags")
             self.radlist = self.filter_scene_failure(self.radlist)
@@ -794,7 +801,13 @@ class L1bGeoProcess:
 
             igccol_initial = self.create_igccol_initial()
 
-            if not self.l1b_geo_config.skip_sba:
+            if self.igccol_use is not None:
+                # For testing, skip actually doing image matching and
+                # use existing results
+                igccol_corrected = geocal.read_shelve(str(self.igccol_use))
+                if(self.tpcol_use is not None):
+                    tpcol = geocal.read_shelve(str(self.tpcol_use))
+            elif not self.l1b_geo_config.skip_sba:
                 igccol_corrected, tpcol = self.correct_igc(
                     igccol_initial, pool, pass_number=1
                 )
