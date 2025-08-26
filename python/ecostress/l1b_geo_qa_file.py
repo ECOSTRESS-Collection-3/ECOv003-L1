@@ -220,7 +220,11 @@ the reference image, in Ecr coordinates (in meters).
             ]
         )
         t[np.isnan(t)] = -9999
-        assert self.tp_stat is not None
+        # Normally already filled in, but in testing we might call add_final_accuracy
+        # without any of the add_tp_single_scene (e.g., we are skipping doing the
+        # image matching for a test
+        if self.tp_stat is None:
+            self.tp_stat = np.full((igccol_corrected.number_image, 9), -9999.0)
         self.tp_stat[:, 5] = t
         self.tp_stat[:, 6] = tcor_before
         self.tp_stat[:, 7] = tcor_after

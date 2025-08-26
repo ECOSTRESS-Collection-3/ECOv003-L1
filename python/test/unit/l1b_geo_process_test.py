@@ -19,6 +19,9 @@ def test_l1b_geo_process(isolated_dir, test_data_latest):
         l1a_raw_att=l1a_raw_att,
         l1_osp_dir=l1_osp_dir,
         l1b_rad=l1b_rad,
+        # When debugging, easier (although slower) to skip parallel processing
+        #number_cpu=1,
+        #skip_sba=True,
     )
     l1bgeo.run()
 

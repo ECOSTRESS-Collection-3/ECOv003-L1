@@ -66,11 +66,13 @@ class L1bGeoProcess:
         # If supplied, should be yaw, pitch, roll to add in degrees
         orbit_offset: list[float] | None = None,
         force_night: bool = False,
+        skip_sba: bool = False,
     ):
         self._line_order_reversed: bool | None = None
         self.force_night = force_night
         self.correction_done = False
         self.number_line = number_line
+        self.skip_sba = skip_sba
         self.config: None | RunConfig = None
         if run_config is not None:
             self.process_run_config(run_config)
@@ -794,7 +796,7 @@ class L1bGeoProcess:
 
             igccol_initial = self.create_igccol_initial()
 
-            if not self.l1b_geo_config.skip_sba:
+            if not (self.skip_sba or self.l1b_geo_config.skip_sba):
                 igccol_corrected, tpcol = self.correct_igc(
                     igccol_initial, pool, pass_number=1
                 )

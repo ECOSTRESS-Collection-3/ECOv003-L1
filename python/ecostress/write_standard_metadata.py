@@ -254,8 +254,6 @@ class WriteStandardMetadata(object):
         for m in klist:
             if self.data[m] is not None:
                 val = self.data[m]
-                if m == "DayNightFlag":
-                    breakpoint()
                 if hasattr(val, "decode"):
                     val = val.decode("utf-8")
                 print(
