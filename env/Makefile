@@ -22,6 +22,9 @@ CONDA_PACKAGE_DIR=../../afids-conda-package/afids-conda-channel
 ECOSTRESS_ANCILLARY=/project/ancillary
 AFIDS_DATA_ELEV_ROOT=$(ECOSTRESS_ANCILLARY)/SRTM/srtm_v3_dem_L2
 AFIDS_DATA_LWM=$(ECOSTRESS_ANCILLARY)/SRTM/srtm_v3_lwm
+AFIDS_COPERNICUS_DEM=$(ECOSTRESS_ANCILLARY)/Copernicus/copdem_v1_L2
+AFIDS_COPERNICUS_LWM=$(ECOSTRESS_ANCILLARY)/Copernicus/coplwm_v1_L2
+AFIDS_DATA_LWM=$(ECOSTRESS_ANCILLARY)/SRTM/srtm_v3_lwm
 AFIDS_DATA_SPICEDATA=/pkg/afids/afids_latest/data/cspice
 AFIDS_DATA_ORTHO=$(ECOSTRESS_ANCILLARY)/LANDSAT
 ECOSTRESS_OSP_DIR=/project/test/ASTER/EndToEndTest/8.00/l1_osp_dir
@@ -46,7 +49,7 @@ $(ENV_DIR): micromamba $(MUSES_ENVIRONMENT_FILE)
 	-rm -rf $(ENV_DIR)
 	./micromamba create --override-channels --channel conda-forge --channel $(CONDA_PACKAGE_DIR) -y -f $(ECOSTRESS_ENVIRONMENT_FILE) -p $(ENV_DIR)
 	./micromamba run -p $(ENV_DIR) conda env export --override-channels --channel conda-forge --channel $(CONDA_PACKAGE_DIR) > ecostress_environment_installed.yml
-	eval "$$($(ENV_DIR)/bin/conda shell.bash hook)" && conda activate $(ENV_DIR) && conda env config vars set AFIDS_DATA_ELEV_ROOT=$(AFIDS_DATA_ELEV_ROOT) AFIDS_DATA_LWM=$(AFIDS_DATA_LWM) AFIDS_DATA_SPICEDATA=$(AFIDS_DATA_SPICEDATA) SPICEDATA=$(AFIDS_DATA_SPICEDATA) AFIDS_DATA_ORTHO=$(AFIDS_DATA_ORTHO) LANDSAT_ROOT=$(AFIDS_DATA_ORTHO) ELEV_ROOT=$(AFIDS_DATA_ELEV_ROOT) ECOSTRESS_OSP_DIR=$(ECOSTRESS_OSP_DIR) ECOSTRESSTOP=$(ENV_DIR) TAE_PATH=$(ENV_DIR)/vicar_pdf:$${TAE_PATH} AFIDS_DATA=$(ENV_DIR)/data AFIDS_VDEV_DATA=$(ENV_DIR)/data/vdev
+	eval "$$($(ENV_DIR)/bin/conda shell.bash hook)" && conda activate $(ENV_DIR) && conda env config vars set AFIDS_DATA_ELEV_ROOT=$(AFIDS_DATA_ELEV_ROOT) AFIDS_DATA_LWM=$(AFIDS_DATA_LWM) AFIDS_DATA_SPICEDATA=$(AFIDS_DATA_SPICEDATA) SPICEDATA=$(AFIDS_DATA_SPICEDATA) AFIDS_DATA_ORTHO=$(AFIDS_DATA_ORTHO) AFIDS_COPERNICUS_DEM=$(AFIDS_COPERNICUS_DEM) AFIDS_COPERNICUS_LWM=$(AFIDS_COPERNICUS_LWM) LANDSAT_ROOT=$(AFIDS_DATA_ORTHO) ELEV_ROOT=$(AFIDS_DATA_ELEV_ROOT) ECOSTRESS_OSP_DIR=$(ECOSTRESS_OSP_DIR) ECOSTRESSTOP=$(ENV_DIR) TAE_PATH=$(ENV_DIR)/vicar_pdf:$${TAE_PATH} AFIDS_DATA=$(ENV_DIR)/data AFIDS_VDEV_DATA=$(ENV_DIR)/data/vdev
 
 # Recreate the environment, deleting if already there
 # ------------------------------------------------------------
