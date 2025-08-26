@@ -3749,128 +3749,130 @@ namespace Swig {
 #define SWIGTYPE_p_GeoCal__VicarImageCoordinate swig_types[19]
 #define SWIGTYPE_p_GeoCal__WithParameter swig_types[20]
 #define SWIGTYPE_p_GeoCal__WithParameterNested swig_types[21]
-#define SWIGTYPE_p_SwigDirector_WithParameter swig_types[22]
-#define SWIGTYPE_p_allocator_type swig_types[23]
-#define SWIGTYPE_p_blitz__ArrayT_bool_1_t swig_types[24]
-#define SWIGTYPE_p_blitz__ArrayT_bool_2_t swig_types[25]
-#define SWIGTYPE_p_blitz__ArrayT_bool_3_t swig_types[26]
-#define SWIGTYPE_p_blitz__ArrayT_bool_4_t swig_types[27]
-#define SWIGTYPE_p_blitz__ArrayT_bool_5_t swig_types[28]
-#define SWIGTYPE_p_blitz__ArrayT_bool_6_t swig_types[29]
-#define SWIGTYPE_p_blitz__ArrayT_bool_7_t swig_types[30]
-#define SWIGTYPE_p_blitz__ArrayT_bool_8_t swig_types[31]
-#define SWIGTYPE_p_blitz__ArrayT_char_1_t swig_types[32]
-#define SWIGTYPE_p_blitz__ArrayT_char_2_t swig_types[33]
-#define SWIGTYPE_p_blitz__ArrayT_char_3_t swig_types[34]
-#define SWIGTYPE_p_blitz__ArrayT_char_4_t swig_types[35]
-#define SWIGTYPE_p_blitz__ArrayT_char_5_t swig_types[36]
-#define SWIGTYPE_p_blitz__ArrayT_char_6_t swig_types[37]
-#define SWIGTYPE_p_blitz__ArrayT_char_7_t swig_types[38]
-#define SWIGTYPE_p_blitz__ArrayT_char_8_t swig_types[39]
-#define SWIGTYPE_p_blitz__ArrayT_double_1_t swig_types[40]
-#define SWIGTYPE_p_blitz__ArrayT_double_2_t swig_types[41]
-#define SWIGTYPE_p_blitz__ArrayT_double_3_t swig_types[42]
-#define SWIGTYPE_p_blitz__ArrayT_double_4_t swig_types[43]
-#define SWIGTYPE_p_blitz__ArrayT_double_5_t swig_types[44]
-#define SWIGTYPE_p_blitz__ArrayT_double_6_t swig_types[45]
-#define SWIGTYPE_p_blitz__ArrayT_double_7_t swig_types[46]
-#define SWIGTYPE_p_blitz__ArrayT_double_8_t swig_types[47]
-#define SWIGTYPE_p_blitz__ArrayT_float_1_t swig_types[48]
-#define SWIGTYPE_p_blitz__ArrayT_float_2_t swig_types[49]
-#define SWIGTYPE_p_blitz__ArrayT_float_3_t swig_types[50]
-#define SWIGTYPE_p_blitz__ArrayT_float_4_t swig_types[51]
-#define SWIGTYPE_p_blitz__ArrayT_float_5_t swig_types[52]
-#define SWIGTYPE_p_blitz__ArrayT_float_6_t swig_types[53]
-#define SWIGTYPE_p_blitz__ArrayT_float_7_t swig_types[54]
-#define SWIGTYPE_p_blitz__ArrayT_float_8_t swig_types[55]
-#define SWIGTYPE_p_blitz__ArrayT_int_1_t swig_types[56]
-#define SWIGTYPE_p_blitz__ArrayT_int_2_t swig_types[57]
-#define SWIGTYPE_p_blitz__ArrayT_int_3_t swig_types[58]
-#define SWIGTYPE_p_blitz__ArrayT_int_4_t swig_types[59]
-#define SWIGTYPE_p_blitz__ArrayT_int_5_t swig_types[60]
-#define SWIGTYPE_p_blitz__ArrayT_int_6_t swig_types[61]
-#define SWIGTYPE_p_blitz__ArrayT_int_7_t swig_types[62]
-#define SWIGTYPE_p_blitz__ArrayT_int_8_t swig_types[63]
-#define SWIGTYPE_p_blitz__ArrayT_short_1_t swig_types[64]
-#define SWIGTYPE_p_blitz__ArrayT_short_2_t swig_types[65]
-#define SWIGTYPE_p_blitz__ArrayT_short_3_t swig_types[66]
-#define SWIGTYPE_p_blitz__ArrayT_short_4_t swig_types[67]
-#define SWIGTYPE_p_blitz__ArrayT_short_5_t swig_types[68]
-#define SWIGTYPE_p_blitz__ArrayT_short_6_t swig_types[69]
-#define SWIGTYPE_p_blitz__ArrayT_short_7_t swig_types[70]
-#define SWIGTYPE_p_blitz__ArrayT_short_8_t swig_types[71]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_1_t swig_types[72]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_2_t swig_types[73]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_3_t swig_types[74]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_4_t swig_types[75]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_5_t swig_types[76]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_6_t swig_types[77]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_7_t swig_types[78]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_8_t swig_types[79]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_1_t swig_types[80]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_2_t swig_types[81]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_3_t swig_types[82]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_4_t swig_types[83]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_5_t swig_types[84]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_6_t swig_types[85]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_7_t swig_types[86]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_8_t swig_types[87]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_1_t swig_types[88]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_2_t swig_types[89]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_3_t swig_types[90]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_4_t swig_types[91]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_5_t swig_types[92]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_6_t swig_types[93]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_7_t swig_types[94]
-#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_8_t swig_types[95]
-#define SWIGTYPE_p_blitz__Range swig_types[96]
-#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressTimeTableSubset_t swig_types[97]
-#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressTimeTable_t swig_types[98]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t swig_types[99]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t swig_types[100]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_3_t_t swig_types[101]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_4_t_t swig_types[102]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t swig_types[103]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t swig_types[104]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ConstantSpacingFrameletTimeTable_t swig_types[105]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ConstantSpacingTimeTable_t swig_types[106]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__FrameCoordinateWithDerivative_t swig_types[107]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__FrameCoordinate_t swig_types[108]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GenericObject_t swig_types[109]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t swig_types[110]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageCoordinate_t swig_types[111]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__MeasuredTimeTable_t swig_types[112]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__TimeTable_t swig_types[113]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t swig_types[114]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t swig_types[115]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t swig_types[116]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameterNested_t swig_types[117]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameter_t swig_types[118]
-#define SWIGTYPE_p_boost__shared_ptrT_SwigDirector_WithParameter_t swig_types[119]
-#define SWIGTYPE_p_char swig_types[120]
-#define SWIGTYPE_p_char_type swig_types[121]
-#define SWIGTYPE_p_difference_type swig_types[122]
-#define SWIGTYPE_p_fmtflags swig_types[123]
-#define SWIGTYPE_p_int swig_types[124]
-#define SWIGTYPE_p_int_type swig_types[125]
-#define SWIGTYPE_p_iostate swig_types[126]
-#define SWIGTYPE_p_off_type swig_types[127]
-#define SWIGTYPE_p_openmode swig_types[128]
-#define SWIGTYPE_p_pos_type swig_types[129]
-#define SWIGTYPE_p_seekdir swig_types[130]
-#define SWIGTYPE_p_size_t swig_types[131]
-#define SWIGTYPE_p_size_type swig_types[132]
-#define SWIGTYPE_p_state_type swig_types[133]
-#define SWIGTYPE_p_std__basic_iosT_char_t swig_types[134]
-#define SWIGTYPE_p_std__basic_iostreamT_char_t swig_types[135]
-#define SWIGTYPE_p_std__basic_istreamT_char_t swig_types[136]
-#define SWIGTYPE_p_std__basic_ostreamT_char_t swig_types[137]
-#define SWIGTYPE_p_std__invalid_argument swig_types[138]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[139]
-#define SWIGTYPE_p_traits_type swig_types[140]
-#define SWIGTYPE_p_value_type swig_types[141]
-static swig_type_info *swig_types[143];
-static swig_module_info swig_module = {swig_types, 142, 0, 0, 0, 0};
+#define SWIGTYPE_p_GeoCal__WithParameterShare swig_types[22]
+#define SWIGTYPE_p_SwigDirector_WithParameter swig_types[23]
+#define SWIGTYPE_p_allocator_type swig_types[24]
+#define SWIGTYPE_p_blitz__ArrayT_bool_1_t swig_types[25]
+#define SWIGTYPE_p_blitz__ArrayT_bool_2_t swig_types[26]
+#define SWIGTYPE_p_blitz__ArrayT_bool_3_t swig_types[27]
+#define SWIGTYPE_p_blitz__ArrayT_bool_4_t swig_types[28]
+#define SWIGTYPE_p_blitz__ArrayT_bool_5_t swig_types[29]
+#define SWIGTYPE_p_blitz__ArrayT_bool_6_t swig_types[30]
+#define SWIGTYPE_p_blitz__ArrayT_bool_7_t swig_types[31]
+#define SWIGTYPE_p_blitz__ArrayT_bool_8_t swig_types[32]
+#define SWIGTYPE_p_blitz__ArrayT_char_1_t swig_types[33]
+#define SWIGTYPE_p_blitz__ArrayT_char_2_t swig_types[34]
+#define SWIGTYPE_p_blitz__ArrayT_char_3_t swig_types[35]
+#define SWIGTYPE_p_blitz__ArrayT_char_4_t swig_types[36]
+#define SWIGTYPE_p_blitz__ArrayT_char_5_t swig_types[37]
+#define SWIGTYPE_p_blitz__ArrayT_char_6_t swig_types[38]
+#define SWIGTYPE_p_blitz__ArrayT_char_7_t swig_types[39]
+#define SWIGTYPE_p_blitz__ArrayT_char_8_t swig_types[40]
+#define SWIGTYPE_p_blitz__ArrayT_double_1_t swig_types[41]
+#define SWIGTYPE_p_blitz__ArrayT_double_2_t swig_types[42]
+#define SWIGTYPE_p_blitz__ArrayT_double_3_t swig_types[43]
+#define SWIGTYPE_p_blitz__ArrayT_double_4_t swig_types[44]
+#define SWIGTYPE_p_blitz__ArrayT_double_5_t swig_types[45]
+#define SWIGTYPE_p_blitz__ArrayT_double_6_t swig_types[46]
+#define SWIGTYPE_p_blitz__ArrayT_double_7_t swig_types[47]
+#define SWIGTYPE_p_blitz__ArrayT_double_8_t swig_types[48]
+#define SWIGTYPE_p_blitz__ArrayT_float_1_t swig_types[49]
+#define SWIGTYPE_p_blitz__ArrayT_float_2_t swig_types[50]
+#define SWIGTYPE_p_blitz__ArrayT_float_3_t swig_types[51]
+#define SWIGTYPE_p_blitz__ArrayT_float_4_t swig_types[52]
+#define SWIGTYPE_p_blitz__ArrayT_float_5_t swig_types[53]
+#define SWIGTYPE_p_blitz__ArrayT_float_6_t swig_types[54]
+#define SWIGTYPE_p_blitz__ArrayT_float_7_t swig_types[55]
+#define SWIGTYPE_p_blitz__ArrayT_float_8_t swig_types[56]
+#define SWIGTYPE_p_blitz__ArrayT_int_1_t swig_types[57]
+#define SWIGTYPE_p_blitz__ArrayT_int_2_t swig_types[58]
+#define SWIGTYPE_p_blitz__ArrayT_int_3_t swig_types[59]
+#define SWIGTYPE_p_blitz__ArrayT_int_4_t swig_types[60]
+#define SWIGTYPE_p_blitz__ArrayT_int_5_t swig_types[61]
+#define SWIGTYPE_p_blitz__ArrayT_int_6_t swig_types[62]
+#define SWIGTYPE_p_blitz__ArrayT_int_7_t swig_types[63]
+#define SWIGTYPE_p_blitz__ArrayT_int_8_t swig_types[64]
+#define SWIGTYPE_p_blitz__ArrayT_short_1_t swig_types[65]
+#define SWIGTYPE_p_blitz__ArrayT_short_2_t swig_types[66]
+#define SWIGTYPE_p_blitz__ArrayT_short_3_t swig_types[67]
+#define SWIGTYPE_p_blitz__ArrayT_short_4_t swig_types[68]
+#define SWIGTYPE_p_blitz__ArrayT_short_5_t swig_types[69]
+#define SWIGTYPE_p_blitz__ArrayT_short_6_t swig_types[70]
+#define SWIGTYPE_p_blitz__ArrayT_short_7_t swig_types[71]
+#define SWIGTYPE_p_blitz__ArrayT_short_8_t swig_types[72]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_1_t swig_types[73]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_2_t swig_types[74]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_3_t swig_types[75]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_4_t swig_types[76]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_5_t swig_types[77]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_6_t swig_types[78]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_7_t swig_types[79]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_char_8_t swig_types[80]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_1_t swig_types[81]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_2_t swig_types[82]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_3_t swig_types[83]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_4_t swig_types[84]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_5_t swig_types[85]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_6_t swig_types[86]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_7_t swig_types[87]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_int_8_t swig_types[88]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_1_t swig_types[89]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_2_t swig_types[90]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_3_t swig_types[91]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_4_t swig_types[92]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_5_t swig_types[93]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_6_t swig_types[94]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_7_t swig_types[95]
+#define SWIGTYPE_p_blitz__ArrayT_unsigned_short_8_t swig_types[96]
+#define SWIGTYPE_p_blitz__Range swig_types[97]
+#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressTimeTableSubset_t swig_types[98]
+#define SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressTimeTable_t swig_types[99]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_1_t_t swig_types[100]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_2_t_t swig_types[101]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_3_t_t swig_types[102]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ArrayAdT_double_4_t_t swig_types[103]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t swig_types[104]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t swig_types[105]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ConstantSpacingFrameletTimeTable_t swig_types[106]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ConstantSpacingTimeTable_t swig_types[107]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__FrameCoordinateWithDerivative_t swig_types[108]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__FrameCoordinate_t swig_types[109]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__GenericObject_t swig_types[110]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t swig_types[111]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ImageCoordinate_t swig_types[112]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__MeasuredTimeTable_t swig_types[113]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__TimeTable_t swig_types[114]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t swig_types[115]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t swig_types[116]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t swig_types[117]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameterNested_t swig_types[118]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameterShare_t swig_types[119]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameter_t swig_types[120]
+#define SWIGTYPE_p_boost__shared_ptrT_SwigDirector_WithParameter_t swig_types[121]
+#define SWIGTYPE_p_char swig_types[122]
+#define SWIGTYPE_p_char_type swig_types[123]
+#define SWIGTYPE_p_difference_type swig_types[124]
+#define SWIGTYPE_p_fmtflags swig_types[125]
+#define SWIGTYPE_p_int swig_types[126]
+#define SWIGTYPE_p_int_type swig_types[127]
+#define SWIGTYPE_p_iostate swig_types[128]
+#define SWIGTYPE_p_off_type swig_types[129]
+#define SWIGTYPE_p_openmode swig_types[130]
+#define SWIGTYPE_p_pos_type swig_types[131]
+#define SWIGTYPE_p_seekdir swig_types[132]
+#define SWIGTYPE_p_size_t swig_types[133]
+#define SWIGTYPE_p_size_type swig_types[134]
+#define SWIGTYPE_p_state_type swig_types[135]
+#define SWIGTYPE_p_std__basic_iosT_char_t swig_types[136]
+#define SWIGTYPE_p_std__basic_iostreamT_char_t swig_types[137]
+#define SWIGTYPE_p_std__basic_istreamT_char_t swig_types[138]
+#define SWIGTYPE_p_std__basic_ostreamT_char_t swig_types[139]
+#define SWIGTYPE_p_std__invalid_argument swig_types[140]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[141]
+#define SWIGTYPE_p_traits_type swig_types[142]
+#define SWIGTYPE_p_value_type swig_types[143]
+static swig_type_info *swig_types[145];
+static swig_module_info swig_module = {swig_types, 144, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -5054,152 +5056,6 @@ public:
  
 
 
-
-//--------------------------------------------------------------
-/// The default conversion of a python sequence to a std::vector<T>
-/// doesn't work correctly for boost::shared_ptr types. This
-/// expression here does this correctly.
-//--------------------------------------------------------------
-
-// Code changed a little between SWIG 3 and SWIG 4, so have different
-// versions depending on swig version.  
-#if SWIG_VERSION < 0x040000  
-namespace swig {
-  template <class T>
-  struct traits_asptr<std::vector<boost::shared_ptr<T> > >  {
-    static int asptr(PyObject *obj, 
-		     std::vector<boost::shared_ptr<T> > **vec) {
-      // Long name, so shorten
-      typedef std::vector<boost::shared_ptr<T> > vtype;
-      if (obj == Py_None || SWIG_Python_GetSwigThis(obj)) {
-	vtype *p;
-	if (::SWIG_ConvertPtr(obj,(void**)&p,
-			      swig::type_info<vtype>(),0) == SWIG_OK) {
-	  if (vec) *vec = p;
-	  return SWIG_OLDOBJ;
-	}
-      } else if (PySequence_Check(obj)) {
-	try {
-	  if (vec) {
-	    vtype *pseq = new vtype();
-	    PyObject *iterator = PyObject_GetIter(obj);
-	    PyObject *item;
-	    typename std::vector< boost::shared_ptr<T > >::value_type temp2shared2;
-	    while((item = PyIter_Next(iterator))) {
-	      boost::shared_ptr<T> *itemp;
-	      int newmem = 0;
-	      int res = SWIG_ConvertPtrAndOwn(item, (void**) &itemp, 
-			swig::type_info<boost::shared_ptr<T> >(),  0, &newmem);
-	      if(!SWIG_IsOK(res)) {
-		Py_DECREF(item);
-		Py_DECREF(iterator);
-		return SWIG_ERROR;
-	      }
-	      // Added mms
-	      // Special handling if this is a director class. In that case, we
-	      // don't own the underlying python object. See
-	      // DirectorNotes.md for details.
-	      Swig::Director* dp = dynamic_cast<Swig::Director*>(itemp->get());
-	      if(dp) {
-		temp2shared2.reset(itemp->get(), PythonRefPtrCleanup(dp->swig_get_self()));
-		itemp = &temp2shared2;
-	      }
-	      pseq->push_back(*itemp);
-	      Py_DECREF(item);
-	    }
-	    Py_DECREF(iterator);
-	    *vec = pseq;
-	    return SWIG_NEWOBJ;
-	  } else {
-	    SwigPySequence_Cont<boost::shared_ptr<T> > swigpyseq(obj);
-	    return swigpyseq.check() ? SWIG_OK : SWIG_ERROR;
-	  }
-	} catch (std::exception& e) {
-	  if (vec) {
-	    if (!PyErr_Occurred()) {
-	      PyErr_SetString(PyExc_TypeError, e.what());
-	    }
-	  }
-	  return SWIG_ERROR;
-	}
-      }
-      return SWIG_ERROR;
-    }
-  };
-}
-#else
-namespace swig {
-  template <class SwigPySeq, class T>
-  inline void
-  assign(const SwigPySeq& swigpyseq, std::vector<boost::shared_ptr<T> >* seq) {
-    // seq->assign(swigpyseq.begin(), swigpyseq.end()); // not used as not always implemented
-    typedef typename SwigPySeq::value_type value_type;
-    typename SwigPySeq::const_iterator it = swigpyseq.begin();
-    for (;it != swigpyseq.end(); ++it) {
-      value_type itemp = (value_type)(*it);
-      // Added mms
-      // Special handling if this is a director class. In that case, we
-      // don't own the underlying python object. See
-      // DirectorNotes.md for details.
-      Swig::Director* dp = dynamic_cast<Swig::Director*>(itemp.get());
-      if(dp) {
-	// Diagnostic to make sure we end up here when we should
-	//std::cerr << "Setting up PythonRefPtrCleanup\n";
-      	itemp.reset(itemp.get(), PythonRefPtrCleanup(dp->swig_get_self()));
-      }
-      seq->insert(seq->end(),itemp);
-    }
-  }
-}
-#endif  
-
-
-#include "ecostress_time_table.h"
-
-
-SWIGINTERN int
-SWIG_AsVal_bool (PyObject *obj, bool *val)
-{
-  int r;
-  if (!PyBool_Check(obj))
-    return SWIG_ERROR;
-  r = PyObject_IsTrue(obj);
-  if (r == -1)
-    return SWIG_ERROR;
-  if (val) *val = r ? true : false;
-  return SWIG_OK;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_int (PyObject * obj, int *val)
-{
-  long v;
-  int res = SWIG_AsVal_long (obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v < INT_MIN || v > INT_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = static_cast< int >(v);
-    }
-  }  
-  return res;
-}
-
-
-struct SWIG_null_deleter {
-  void operator() (void const *) const {
-  }
-};
-#define SWIG_NO_NULL_DELETER_0 , SWIG_null_deleter()
-#define SWIG_NO_NULL_DELETER_1
-#define SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW
-#define SWIG_NO_NULL_DELETER_SWIG_POINTER_OWN
-
-
-#define SWIG_NO_NULL_DELETER_SWIG_BUILTIN_INIT
-
-
 namespace swig {
   template <class Type>
   struct noconst_traits {
@@ -5475,6 +5331,201 @@ namespace swig {
     return traits_check<Type, typename traits<Type>::category>::check(obj);
   }
 }
+
+
+
+//--------------------------------------------------------------
+/// The default conversion of a python sequence to a std::vector<T>
+/// doesn't work correctly for boost::shared_ptr types. This
+/// expression here does this correctly.
+//--------------------------------------------------------------
+
+// Code changed a little between SWIG 3 and SWIG 4, so have different
+// versions depending on swig version.  
+#if SWIG_VERSION < 0x040000  
+namespace swig {
+  template <class T>
+  struct traits_asptr<std::vector<boost::shared_ptr<T> > >  {
+    static int asptr(PyObject *obj, 
+		     std::vector<boost::shared_ptr<T> > **vec) {
+      // Long name, so shorten
+      typedef std::vector<boost::shared_ptr<T> > vtype;
+      if (obj == Py_None || SWIG_Python_GetSwigThis(obj)) {
+	vtype *p;
+	if (::SWIG_ConvertPtr(obj,(void**)&p,
+			      swig::type_info<vtype>(),0) == SWIG_OK) {
+	  if (vec) *vec = p;
+	  return SWIG_OLDOBJ;
+	}
+      } else if (PySequence_Check(obj)) {
+	try {
+	  if (vec) {
+	    vtype *pseq = new vtype();
+	    PyObject *iterator = PyObject_GetIter(obj);
+	    PyObject *item;
+	    typename std::vector< boost::shared_ptr<T > >::value_type temp2shared2;
+	    while((item = PyIter_Next(iterator))) {
+	      boost::shared_ptr<T> *itemp;
+	      int newmem = 0;
+	      int res = SWIG_ConvertPtrAndOwn(item, (void**) &itemp, 
+			swig::type_info<boost::shared_ptr<T> >(),  0, &newmem);
+	      if(!SWIG_IsOK(res)) {
+		Py_DECREF(item);
+		Py_DECREF(iterator);
+		return SWIG_ERROR;
+	      }
+	      // Added mms
+	      // Special handling if this is a director class. In that case, we
+	      // don't own the underlying python object. See
+	      // DirectorNotes.md for details.
+	      Swig::Director* dp = dynamic_cast<Swig::Director*>(itemp->get());
+	      if(dp) {
+		temp2shared2.reset(itemp->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+		itemp = &temp2shared2;
+	      }
+	      pseq->push_back(*itemp);
+	      Py_DECREF(item);
+	    }
+	    Py_DECREF(iterator);
+	    *vec = pseq;
+	    return SWIG_NEWOBJ;
+	  } else {
+	    SwigPySequence_Cont<boost::shared_ptr<T> > swigpyseq(obj);
+	    return swigpyseq.check() ? SWIG_OK : SWIG_ERROR;
+	  }
+	} catch (std::exception& e) {
+	  if (vec) {
+	    if (!PyErr_Occurred()) {
+	      PyErr_SetString(PyExc_TypeError, e.what());
+	    }
+	  }
+	  return SWIG_ERROR;
+	}
+      }
+      return SWIG_ERROR;
+    }
+  };
+}
+#else
+namespace swig {
+  template <class SwigPySeq, class T>
+  inline void
+  assign(const SwigPySeq& swigpyseq, std::vector<boost::shared_ptr<T> >* seq) {
+    // seq->assign(swigpyseq.begin(), swigpyseq.end()); // not used as not always implemented
+    typedef typename SwigPySeq::value_type value_type;
+    typename SwigPySeq::const_iterator it = swigpyseq.begin();
+    for (;it != swigpyseq.end(); ++it) {
+      value_type itemp = (value_type)(*it);
+      // Added mms
+      // Special handling if this is a director class. In that case, we
+      // don't own the underlying python object. See
+      // DirectorNotes.md for details.
+      Swig::Director* dp = dynamic_cast<Swig::Director*>(itemp.get());
+      if(dp) {
+	// Diagnostic to make sure we end up here when we should
+	//std::cerr << "Setting up PythonRefPtrCleanup\n";
+      	itemp.reset(itemp.get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      }
+      seq->insert(seq->end(),itemp);
+    }
+  }
+
+  template <class T>
+  struct traits_asptr<boost::shared_ptr<T> > {   
+    static int asptr(PyObject *obj, boost::shared_ptr<T> **val) {
+      int res = SWIG_ERROR;
+      swig_type_info *descriptor = swig::type_info<boost::shared_ptr<T> >();
+      if (val) {
+        boost::shared_ptr<T> *p = 0;
+        int newmem = 0;
+        res = descriptor ? SWIG_ConvertPtrAndOwn(obj, (void **)&p, descriptor, 0, &newmem) : SWIG_ERROR;
+        if (SWIG_IsOK(res)) {
+          if (newmem & SWIG_CAST_NEW_MEMORY) {
+            res |= SWIG_NEWOBJMASK;
+          }
+	  // Added mms
+	  // Special handling if this is a director class. In that case, we
+	  // don't own the underlying python object. See
+	  // DirectorNotes.md for details.
+	  Swig::Director* dp = dynamic_cast<Swig::Director*>(p->get());
+	  if(dp) {
+	    boost::shared_ptr<T> *p2 = new boost::shared_ptr<T>(p->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+	    p = p2;
+            res |= SWIG_NEWOBJMASK;
+	  }
+          *val = p;
+        }
+      } else {
+        res = descriptor ? SWIG_ConvertPtr(obj, 0, descriptor, 0) : SWIG_ERROR;
+      }
+      return res;
+    }
+  }; 
+}
+  
+#endif  
+
+
+#ifndef CMAKE_KLUDGE_QUOTE  
+#define CMAKE_KLUDGE_Q(x) #x
+#define CMAKE_KLUDGE_QUOTE(x) CMAKE_KLUDGE_Q(x)
+#endif
+
+// CMAKE unfortunately uses a different name for the wrapper file that
+// the standard SWIG convention. So we set up CMAKE ot pass in a
+// CMAKE_SWIG_FILE_NAMES to get the right inclusion file.  
+#ifndef CMAKE_SWIG_FILE_NAMES  
+  #define CMAKE_KLUDGE_INCLUDE_HEADER(x) CMAKE_KLUDGE_QUOTE(x ## _wrap.h)
+#else  
+  #define CMAKE_KLUDGE_INCLUDE_HEADER(x) CMAKE_KLUDGE_QUOTE(x ## PYTHON_wrap.h)
+#endif  
+  
+
+
+#include "ecostress_time_table.h"
+
+
+SWIGINTERN int
+SWIG_AsVal_bool (PyObject *obj, bool *val)
+{
+  int r;
+  if (!PyBool_Check(obj))
+    return SWIG_ERROR;
+  r = PyObject_IsTrue(obj);
+  if (r == -1)
+    return SWIG_ERROR;
+  if (val) *val = r ? true : false;
+  return SWIG_OK;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_int (PyObject * obj, int *val)
+{
+  long v;
+  int res = SWIG_AsVal_long (obj, &v);
+  if (SWIG_IsOK(res)) {
+    if ((v < INT_MIN || v > INT_MAX)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = static_cast< int >(v);
+    }
+  }  
+  return res;
+}
+
+
+struct SWIG_null_deleter {
+  void operator() (void const *) const {
+  }
+};
+#define SWIG_NO_NULL_DELETER_0 , SWIG_null_deleter()
+#define SWIG_NO_NULL_DELETER_1
+#define SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW
+#define SWIG_NO_NULL_DELETER_SWIG_POINTER_OWN
+
+
+#define SWIG_NO_NULL_DELETER_SWIG_BUILTIN_INIT
 
 
   namespace swig {
@@ -9237,6 +9288,9 @@ static void *_p_GeoCal__WithParameterTo_p_GeoCal__GenericObject(void *x, int *SW
 static void *_p_GeoCal__WithParameterNestedTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((GeoCal::GenericObject *) (GeoCal::WithParameter *) ((GeoCal::WithParameterNested *) x));
 }
+static void *_p_GeoCal__WithParameterShareTo_p_GeoCal__GenericObject(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::GenericObject *) (GeoCal::WithParameter *) ((GeoCal::WithParameterShare *) x));
+}
 static void *_p_Ecostress__EcostressTimeTableTo_p_GeoCal__TimeTable(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((GeoCal::TimeTable *)  ((Ecostress::EcostressTimeTable *) x));
 }
@@ -9272,6 +9326,9 @@ static void *_p_GeoCal__TimeTableTo_p_GeoCal__WithParameter(void *x, int *SWIGUN
 }
 static void *_p_GeoCal__WithParameterNestedTo_p_GeoCal__WithParameter(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((GeoCal::WithParameter *)  ((GeoCal::WithParameterNested *) x));
+}
+static void *_p_GeoCal__WithParameterShareTo_p_GeoCal__WithParameter(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((GeoCal::WithParameter *)  ((GeoCal::WithParameterShare *) x));
 }
 static void *_p_boost__shared_ptrT_Ecostress__EcostressTimeTableSubset_tTo_p_boost__shared_ptrT_Ecostress__EcostressTimeTable_t(void *x, int *newmemory) {
     *newmemory = SWIG_CAST_NEW_MEMORY;
@@ -9345,6 +9402,10 @@ static void *_p_boost__shared_ptrT_GeoCal__WithParameterNested_tTo_p_boost__shar
     *newmemory = SWIG_CAST_NEW_MEMORY;
     return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::WithParameterNested > *)x);
 }
+static void *_p_boost__shared_ptrT_GeoCal__WithParameterShare_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::GenericObject >(*(boost::shared_ptr< GeoCal::WithParameterShare > *)x);
+}
 static void *_p_boost__shared_ptrT_Ecostress__EcostressTimeTable_tTo_p_boost__shared_ptrT_GeoCal__TimeTable_t(void *x, int *newmemory) {
     *newmemory = SWIG_CAST_NEW_MEMORY;
     return (void *) new boost::shared_ptr< GeoCal::TimeTable >(*(boost::shared_ptr< Ecostress::EcostressTimeTable > *)x);
@@ -9393,6 +9454,10 @@ static void *_p_boost__shared_ptrT_GeoCal__WithParameterNested_tTo_p_boost__shar
     *newmemory = SWIG_CAST_NEW_MEMORY;
     return (void *) new boost::shared_ptr< GeoCal::WithParameter >(*(boost::shared_ptr< GeoCal::WithParameterNested > *)x);
 }
+static void *_p_boost__shared_ptrT_GeoCal__WithParameterShare_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new boost::shared_ptr< GeoCal::WithParameter >(*(boost::shared_ptr< GeoCal::WithParameterShare > *)x);
+}
 static void *_p_std__basic_iostreamT_char_tTo_p_std__basic_iosT_char_t(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((std::basic_ios< char,std::char_traits< char > > *) (std::basic_istream< char > *) ((std::basic_iostream< char,std::char_traits< char > > *) x));
 }
@@ -9430,6 +9495,7 @@ static swig_type_info _swigt__p_GeoCal__TimeWithDerivative = {"_p_GeoCal__TimeWi
 static swig_type_info _swigt__p_GeoCal__VicarImageCoordinate = {"_p_GeoCal__VicarImageCoordinate", "GeoCal::VicarImageCoordinate *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_GeoCal__WithParameter = {"_p_GeoCal__WithParameter", "GeoCal::WithParameter *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_GeoCal__WithParameterNested = {"_p_GeoCal__WithParameterNested", "GeoCal::WithParameterNested *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GeoCal__WithParameterShare = {"_p_GeoCal__WithParameterShare", "GeoCal::WithParameterShare *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_SwigDirector_WithParameter = {"_p_SwigDirector_WithParameter", "SwigDirector_WithParameter *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_allocator_type = {"_p_allocator_type", "allocator_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_blitz__ArrayT_bool_1_t = {"_p_blitz__ArrayT_bool_1_t", "blitz::Array< bool,1 > *", 0, 0, (void*)0, 0};
@@ -9526,6 +9592,7 @@ static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t 
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__Time_t = {"_p_boost__shared_ptrT_GeoCal__Time_t", "boost::shared_ptr< GeoCal::Time > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t = {"_p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t", "boost::shared_ptr< GeoCal::VicarImageCoordinate > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__WithParameterNested_t = {"_p_boost__shared_ptrT_GeoCal__WithParameterNested_t", "boost::shared_ptr< GeoCal::WithParameterNested > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__WithParameterShare_t = {"_p_boost__shared_ptrT_GeoCal__WithParameterShare_t", "boost::shared_ptr< GeoCal::WithParameterShare > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__WithParameter_t = {"_p_boost__shared_ptrT_GeoCal__WithParameter_t", "boost::shared_ptr< GeoCal::WithParameter > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_SwigDirector_WithParameter_t = {"_p_boost__shared_ptrT_SwigDirector_WithParameter_t", "boost::shared_ptr< SwigDirector_WithParameter > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
@@ -9574,6 +9641,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_GeoCal__VicarImageCoordinate,
   &_swigt__p_GeoCal__WithParameter,
   &_swigt__p_GeoCal__WithParameterNested,
+  &_swigt__p_GeoCal__WithParameterShare,
   &_swigt__p_SwigDirector_WithParameter,
   &_swigt__p_allocator_type,
   &_swigt__p_blitz__ArrayT_bool_1_t,
@@ -9670,6 +9738,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_boost__shared_ptrT_GeoCal__Time_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__WithParameterNested_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__WithParameterShare_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__WithParameter_t,
   &_swigt__p_boost__shared_ptrT_SwigDirector_WithParameter_t,
   &_swigt__p_char,
@@ -9708,7 +9777,7 @@ static swig_cast_info _swigc__p_GeoCal__ConstantSpacingFrameletTimeTable[] = {  
 static swig_cast_info _swigc__p_GeoCal__ConstantSpacingTimeTable[] = {  {&_swigt__p_GeoCal__ConstantSpacingTimeTable, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GeoCal__FrameCoordinate[] = {  {&_swigt__p_GeoCal__FrameCoordinate, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GeoCal__FrameCoordinateWithDerivative[] = {  {&_swigt__p_GeoCal__FrameCoordinateWithDerivative, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_GeoCal__GenericObject[] = {  {&_swigt__p_GeoCal__GenericObject, 0, 0, 0},  {&_swigt__p_Ecostress__EcostressTimeTable, _p_Ecostress__EcostressTimeTableTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_Ecostress__EcostressTimeTableSubset, _p_Ecostress__EcostressTimeTableSubsetTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__AutoDerivativeRefT_double_t, _p_GeoCal__AutoDerivativeRefT_double_tTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__AutoDerivativeT_double_t, _p_GeoCal__AutoDerivativeT_double_tTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__ConstantSpacingFrameletTimeTable, _p_GeoCal__ConstantSpacingFrameletTimeTableTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__ConstantSpacingTimeTable, _p_GeoCal__ConstantSpacingTimeTableTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__FrameCoordinate, _p_GeoCal__FrameCoordinateTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__FrameCoordinateWithDerivative, _p_GeoCal__FrameCoordinateWithDerivativeTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__ImageCoordinate, _p_GeoCal__ImageCoordinateTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__ImageCoordinateWithDerivative, _p_GeoCal__ImageCoordinateWithDerivativeTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__MeasuredTimeTable, _p_GeoCal__MeasuredTimeTableTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__Time, _p_GeoCal__TimeTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__TimeTable, _p_GeoCal__TimeTableTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__TimeWithDerivative, _p_GeoCal__TimeWithDerivativeTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__VicarImageCoordinate, _p_GeoCal__VicarImageCoordinateTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__WithParameter, _p_GeoCal__WithParameterTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__WithParameterNested, _p_GeoCal__WithParameterNestedTo_p_GeoCal__GenericObject, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__GenericObject[] = {  {&_swigt__p_GeoCal__GenericObject, 0, 0, 0},  {&_swigt__p_Ecostress__EcostressTimeTable, _p_Ecostress__EcostressTimeTableTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_Ecostress__EcostressTimeTableSubset, _p_Ecostress__EcostressTimeTableSubsetTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__AutoDerivativeRefT_double_t, _p_GeoCal__AutoDerivativeRefT_double_tTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__AutoDerivativeT_double_t, _p_GeoCal__AutoDerivativeT_double_tTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__ConstantSpacingFrameletTimeTable, _p_GeoCal__ConstantSpacingFrameletTimeTableTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__ConstantSpacingTimeTable, _p_GeoCal__ConstantSpacingTimeTableTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__FrameCoordinate, _p_GeoCal__FrameCoordinateTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__FrameCoordinateWithDerivative, _p_GeoCal__FrameCoordinateWithDerivativeTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__ImageCoordinate, _p_GeoCal__ImageCoordinateTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__ImageCoordinateWithDerivative, _p_GeoCal__ImageCoordinateWithDerivativeTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__MeasuredTimeTable, _p_GeoCal__MeasuredTimeTableTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__Time, _p_GeoCal__TimeTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__TimeTable, _p_GeoCal__TimeTableTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__TimeWithDerivative, _p_GeoCal__TimeWithDerivativeTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__VicarImageCoordinate, _p_GeoCal__VicarImageCoordinateTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__WithParameter, _p_GeoCal__WithParameterTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__WithParameterNested, _p_GeoCal__WithParameterNestedTo_p_GeoCal__GenericObject, 0, 0},  {&_swigt__p_GeoCal__WithParameterShare, _p_GeoCal__WithParameterShareTo_p_GeoCal__GenericObject, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GeoCal__ImageCoordinate[] = {  {&_swigt__p_GeoCal__ImageCoordinate, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GeoCal__ImageCoordinateWithDerivative[] = {  {&_swigt__p_GeoCal__ImageCoordinateWithDerivative, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GeoCal__MeasuredTimeTable[] = {  {&_swigt__p_GeoCal__MeasuredTimeTable, 0, 0, 0},{0, 0, 0, 0}};
@@ -9716,8 +9785,9 @@ static swig_cast_info _swigc__p_GeoCal__Time[] = {  {&_swigt__p_GeoCal__Time, 0,
 static swig_cast_info _swigc__p_GeoCal__TimeTable[] = {  {&_swigt__p_GeoCal__TimeTable, 0, 0, 0},  {&_swigt__p_Ecostress__EcostressTimeTable, _p_Ecostress__EcostressTimeTableTo_p_GeoCal__TimeTable, 0, 0},  {&_swigt__p_Ecostress__EcostressTimeTableSubset, _p_Ecostress__EcostressTimeTableSubsetTo_p_GeoCal__TimeTable, 0, 0},  {&_swigt__p_GeoCal__ConstantSpacingFrameletTimeTable, _p_GeoCal__ConstantSpacingFrameletTimeTableTo_p_GeoCal__TimeTable, 0, 0},  {&_swigt__p_GeoCal__ConstantSpacingTimeTable, _p_GeoCal__ConstantSpacingTimeTableTo_p_GeoCal__TimeTable, 0, 0},  {&_swigt__p_GeoCal__MeasuredTimeTable, _p_GeoCal__MeasuredTimeTableTo_p_GeoCal__TimeTable, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GeoCal__TimeWithDerivative[] = {  {&_swigt__p_GeoCal__TimeWithDerivative, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GeoCal__VicarImageCoordinate[] = {  {&_swigt__p_GeoCal__VicarImageCoordinate, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_GeoCal__WithParameter[] = {  {&_swigt__p_GeoCal__WithParameter, 0, 0, 0},  {&_swigt__p_Ecostress__EcostressTimeTable, _p_Ecostress__EcostressTimeTableTo_p_GeoCal__WithParameter, 0, 0},  {&_swigt__p_Ecostress__EcostressTimeTableSubset, _p_Ecostress__EcostressTimeTableSubsetTo_p_GeoCal__WithParameter, 0, 0},  {&_swigt__p_GeoCal__ConstantSpacingFrameletTimeTable, _p_GeoCal__ConstantSpacingFrameletTimeTableTo_p_GeoCal__WithParameter, 0, 0},  {&_swigt__p_GeoCal__ConstantSpacingTimeTable, _p_GeoCal__ConstantSpacingTimeTableTo_p_GeoCal__WithParameter, 0, 0},  {&_swigt__p_GeoCal__MeasuredTimeTable, _p_GeoCal__MeasuredTimeTableTo_p_GeoCal__WithParameter, 0, 0},  {&_swigt__p_GeoCal__TimeTable, _p_GeoCal__TimeTableTo_p_GeoCal__WithParameter, 0, 0},  {&_swigt__p_GeoCal__WithParameterNested, _p_GeoCal__WithParameterNestedTo_p_GeoCal__WithParameter, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__WithParameter[] = {  {&_swigt__p_GeoCal__WithParameter, 0, 0, 0},  {&_swigt__p_Ecostress__EcostressTimeTable, _p_Ecostress__EcostressTimeTableTo_p_GeoCal__WithParameter, 0, 0},  {&_swigt__p_Ecostress__EcostressTimeTableSubset, _p_Ecostress__EcostressTimeTableSubsetTo_p_GeoCal__WithParameter, 0, 0},  {&_swigt__p_GeoCal__ConstantSpacingFrameletTimeTable, _p_GeoCal__ConstantSpacingFrameletTimeTableTo_p_GeoCal__WithParameter, 0, 0},  {&_swigt__p_GeoCal__ConstantSpacingTimeTable, _p_GeoCal__ConstantSpacingTimeTableTo_p_GeoCal__WithParameter, 0, 0},  {&_swigt__p_GeoCal__MeasuredTimeTable, _p_GeoCal__MeasuredTimeTableTo_p_GeoCal__WithParameter, 0, 0},  {&_swigt__p_GeoCal__TimeTable, _p_GeoCal__TimeTableTo_p_GeoCal__WithParameter, 0, 0},  {&_swigt__p_GeoCal__WithParameterNested, _p_GeoCal__WithParameterNestedTo_p_GeoCal__WithParameter, 0, 0},  {&_swigt__p_GeoCal__WithParameterShare, _p_GeoCal__WithParameterShareTo_p_GeoCal__WithParameter, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GeoCal__WithParameterNested[] = {  {&_swigt__p_GeoCal__WithParameterNested, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GeoCal__WithParameterShare[] = {  {&_swigt__p_GeoCal__WithParameterShare, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_SwigDirector_WithParameter[] = {  {&_swigt__p_SwigDirector_WithParameter, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_allocator_type[] = {  {&_swigt__p_allocator_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_blitz__ArrayT_bool_1_t[] = {  {&_swigt__p_blitz__ArrayT_bool_1_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -9805,7 +9875,7 @@ static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ConstantSpacingFramel
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ConstantSpacingTimeTable_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ConstantSpacingTimeTable_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__FrameCoordinateWithDerivative_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__FrameCoordinateWithDerivative_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__FrameCoordinate_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__FrameCoordinate_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__GenericObject_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0, 0},  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressTimeTableSubset_t, _p_boost__shared_ptrT_Ecostress__EcostressTimeTableSubset_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressTimeTable_t, _p_boost__shared_ptrT_Ecostress__EcostressTimeTable_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t, _p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t, _p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ConstantSpacingFrameletTimeTable_t, _p_boost__shared_ptrT_GeoCal__ConstantSpacingFrameletTimeTable_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ConstantSpacingTimeTable_t, _p_boost__shared_ptrT_GeoCal__ConstantSpacingTimeTable_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__FrameCoordinateWithDerivative_t, _p_boost__shared_ptrT_GeoCal__FrameCoordinateWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__FrameCoordinate_t, _p_boost__shared_ptrT_GeoCal__FrameCoordinate_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t, _p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ImageCoordinate_t, _p_boost__shared_ptrT_GeoCal__ImageCoordinate_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__MeasuredTimeTable_t, _p_boost__shared_ptrT_GeoCal__MeasuredTimeTable_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__TimeTable_t, _p_boost__shared_ptrT_GeoCal__TimeTable_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t, _p_boost__shared_ptrT_GeoCal__TimeWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__Time_t, _p_boost__shared_ptrT_GeoCal__Time_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t, _p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__WithParameterNested_t, _p_boost__shared_ptrT_GeoCal__WithParameterNested_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__WithParameter_t, _p_boost__shared_ptrT_GeoCal__WithParameter_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__GenericObject_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0, 0},  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressTimeTableSubset_t, _p_boost__shared_ptrT_Ecostress__EcostressTimeTableSubset_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressTimeTable_t, _p_boost__shared_ptrT_Ecostress__EcostressTimeTable_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_t, _p_boost__shared_ptrT_GeoCal__AutoDerivativeRefT_double_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_t, _p_boost__shared_ptrT_GeoCal__AutoDerivativeT_double_t_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ConstantSpacingFrameletTimeTable_t, _p_boost__shared_ptrT_GeoCal__ConstantSpacingFrameletTimeTable_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ConstantSpacingTimeTable_t, _p_boost__shared_ptrT_GeoCal__ConstantSpacingTimeTable_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__FrameCoordinateWithDerivative_t, _p_boost__shared_ptrT_GeoCal__FrameCoordinateWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__FrameCoordinate_t, _p_boost__shared_ptrT_GeoCal__FrameCoordinate_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t, _p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ImageCoordinate_t, _p_boost__shared_ptrT_GeoCal__ImageCoordinate_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__MeasuredTimeTable_t, _p_boost__shared_ptrT_GeoCal__MeasuredTimeTable_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__TimeTable_t, _p_boost__shared_ptrT_GeoCal__TimeTable_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t, _p_boost__shared_ptrT_GeoCal__TimeWithDerivative_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__Time_t, _p_boost__shared_ptrT_GeoCal__Time_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t, _p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__WithParameterNested_t, _p_boost__shared_ptrT_GeoCal__WithParameterNested_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__WithParameterShare_t, _p_boost__shared_ptrT_GeoCal__WithParameterShare_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__WithParameter_t, _p_boost__shared_ptrT_GeoCal__WithParameter_tTo_p_boost__shared_ptrT_GeoCal__GenericObject_t, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ImageCoordinateWithDerivative_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ImageCoordinate_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ImageCoordinate_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__MeasuredTimeTable_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__MeasuredTimeTable_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -9814,7 +9884,8 @@ static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t[
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__Time_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__Time_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__WithParameterNested_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__WithParameterNested_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__WithParameter_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0, 0},  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressTimeTableSubset_t, _p_boost__shared_ptrT_Ecostress__EcostressTimeTableSubset_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressTimeTable_t, _p_boost__shared_ptrT_Ecostress__EcostressTimeTable_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ConstantSpacingFrameletTimeTable_t, _p_boost__shared_ptrT_GeoCal__ConstantSpacingFrameletTimeTable_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ConstantSpacingTimeTable_t, _p_boost__shared_ptrT_GeoCal__ConstantSpacingTimeTable_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__MeasuredTimeTable_t, _p_boost__shared_ptrT_GeoCal__MeasuredTimeTable_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__TimeTable_t, _p_boost__shared_ptrT_GeoCal__TimeTable_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__WithParameterNested_t, _p_boost__shared_ptrT_GeoCal__WithParameterNested_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__WithParameterShare_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__WithParameterShare_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__WithParameter_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0, 0},  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressTimeTableSubset_t, _p_boost__shared_ptrT_Ecostress__EcostressTimeTableSubset_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressTimeTable_t, _p_boost__shared_ptrT_Ecostress__EcostressTimeTable_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ConstantSpacingFrameletTimeTable_t, _p_boost__shared_ptrT_GeoCal__ConstantSpacingFrameletTimeTable_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__ConstantSpacingTimeTable_t, _p_boost__shared_ptrT_GeoCal__ConstantSpacingTimeTable_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__MeasuredTimeTable_t, _p_boost__shared_ptrT_GeoCal__MeasuredTimeTable_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__TimeTable_t, _p_boost__shared_ptrT_GeoCal__TimeTable_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__WithParameterNested_t, _p_boost__shared_ptrT_GeoCal__WithParameterNested_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__WithParameterShare_t, _p_boost__shared_ptrT_GeoCal__WithParameterShare_tTo_p_boost__shared_ptrT_GeoCal__WithParameter_t, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_SwigDirector_WithParameter_t[] = {  {&_swigt__p_boost__shared_ptrT_SwigDirector_WithParameter_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char_type[] = {  {&_swigt__p_char_type, 0, 0, 0},{0, 0, 0, 0}};
@@ -9862,6 +9933,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_GeoCal__VicarImageCoordinate,
   _swigc__p_GeoCal__WithParameter,
   _swigc__p_GeoCal__WithParameterNested,
+  _swigc__p_GeoCal__WithParameterShare,
   _swigc__p_SwigDirector_WithParameter,
   _swigc__p_allocator_type,
   _swigc__p_blitz__ArrayT_bool_1_t,
@@ -9958,6 +10030,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_boost__shared_ptrT_GeoCal__Time_t,
   _swigc__p_boost__shared_ptrT_GeoCal__VicarImageCoordinate_t,
   _swigc__p_boost__shared_ptrT_GeoCal__WithParameterNested_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__WithParameterShare_t,
   _swigc__p_boost__shared_ptrT_GeoCal__WithParameter_t,
   _swigc__p_boost__shared_ptrT_SwigDirector_WithParameter_t,
   _swigc__p_char,
