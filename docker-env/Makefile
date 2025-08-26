@@ -1,5 +1,5 @@
 ECOSTRESS_VERSION=8.00
-DOCKER_BASE_VERSION=20250214
+DOCKER_BASE_VERSION=20250825
 AFIDS_CONDA_PACKAGE=/home/smyth/Local/afids-conda-package
 ECOSTRESS_SOURCE=/home/smyth/Local/ecostress-level1
 BASE_DOCKER=oraclelinux:8
@@ -9,6 +9,8 @@ BASE_DOCKER=oraclelinux:8
 ECOSTRESS_ANCILLARY=/project/ancillary
 AFIDS_DATA_ELEV_ROOT=$(ECOSTRESS_ANCILLARY)/SRTM/srtm_v3_dem_L2
 AFIDS_DATA_LWM=$(ECOSTRESS_ANCILLARY)/SRTM/srtm_v3_lwm
+AFIDS_COPERNICUS_DEM=$(ECOSTRESS_ANCILLARY)/Copernicus/copdem_v1_L2
+AFIDS_COPERNICUS_LWM=$(ECOSTRESS_ANCILLARY)/Copernicus/coplwm_v1_L2
 AFIDS_DATA_SPICEDATA=/pkg/afids/afids_latest/data/cspice
 AFIDS_DATA_ORTHO=$(ECOSTRESS_ANCILLARY)/LANDSAT
 ECOSTRESS_OSP_DIR=/project/test/ASTER/EndToEndTest/8.00/l1_osp_dir
@@ -52,6 +54,8 @@ docker-start3:
           -v $(AFIDS_DATA_LWM):/project/ancillary/srtm_v3_lwm:z \
           -v $(AFIDS_DATA_SPICEDATA):/project/ancillary/cspice:z \
           -v $(AFIDS_DATA_ORTHO):/project/ancillary/ortho_lsat7:z \
+          -v $(AFIDS_COPERNICUS_DEM):/project/ancillary/Copernicus/copdem_v1_L2:z \
+          -v $(AFIDS_COPERNICUS_LWM):/project/ancillary/Copernicus/coplwm_v1_L2:z \
           -v $(ECOSTRESS_OSP_DIR):/project/ancillary/l1_osp_dir:z \
           -v $(ECOSTRESS_WORKDIR):/home/ecostress-workdir:z \
           -v $(END_TO_END_DIR):/home/EndToEndTest:Z \
@@ -74,6 +78,8 @@ ecostress-image-end-to-end-check:
           -v $(AFIDS_DATA_LWM):/project/ancillary/srtm_v3_lwm:z \
           -v $(AFIDS_DATA_SPICEDATA):/project/ancillary/cspice:z \
           -v $(AFIDS_DATA_ORTHO):/project/ancillary/ortho_lsat7:z \
+          -v $(AFIDS_COPERNICUS_DEM):/project/ancillary/Copernicus/copdem_v1_L2:z \
+          -v $(AFIDS_COPERNICUS_LWM):/project/ancillary/Copernicus/coplwm_v1_L2:z \
           -v $(ECOSTRESS_OSP_DIR):/project/ancillary/l1_osp_dir:z \
           -v $(ECOSTRESS_WORKDIR):/home/ecostress-workdir:z \
           -v $(END_TO_END_DIR):/home/EndToEndTest:Z \

@@ -1,7 +1,6 @@
 name: base
 channels:
   - conda-forge
-  - file:///ldata/smyth/afids-conda-package/afids-conda-channel
   - ../../afids-conda-package/afids-conda-channel
 dependencies:
   - _libgcc_mutex=0.1=conda_forge
