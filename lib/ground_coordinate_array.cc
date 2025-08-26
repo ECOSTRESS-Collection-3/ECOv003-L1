@@ -368,7 +368,15 @@ void GroundCoordinateArray::ground_coor_arr_samp(int Start_line, int Sample,
       for(int k = 0; k < nsub_sample; ++k) {
 	CartesianFixedLookVector lv = od->cf_look_vector(camera_slv(i, j, k));
 	boost::shared_ptr<CartesianFixed> pt;
-	//  Work around a bug in SrtmDem when we get very close to
+	// This was fixed in geocal
+	// (c5dfb5c487dd43eb07d49c93558eea1207ff0000).
+	// Leave this fix in place, although it really isn't needed
+	// any more. But no harm in having this to support working
+	// with older versions of geocal. With the newer version, the
+	// error case "Out of range error" should never actually
+	// happen, but no harm in having the handle
+	// 	
+	// Old note -  Work around a bug in SrtmDem when we get very close to
 	// longitude 180. We should fix this is geocal, but that is
 	// pretty involved. So for now, just use a 0 height for points
 	// that have this issue. See git Issue #138

@@ -6443,7 +6443,7 @@ SWIGINTERN PyObject *_wrap_MemoryRasterImageFloat__v_data(PyObject *self, PyObje
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/home/smyth/Local/ecostress-env/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
+    /*@SWIG:/dit/deploy/pge/L1/8.00/share/geocal/swig/swig_array.i,196,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {

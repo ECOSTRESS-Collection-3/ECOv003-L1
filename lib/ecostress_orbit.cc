@@ -78,8 +78,15 @@ void EcostressOrbit::interpolate_or_extrapolate_data
     }
     ++i;
     if(Q2->time() - T <= pad_ && i != orbit_data_map.end()) {
-      Q1 = Q2;
       ++i;
+      // We can have one last point after a large gap, need special
+      // handling for that
+      if(i == orbit_data_map.end()) {
+	// Just interpolate over the large gap. T needs to pretty
+	// close to Q2, so this is a reasonable fall back position
+	return;
+      }
+      Q1 = Q2;
       check_lazy_evaluation(i);
       Q2 = i->second;
       return;
