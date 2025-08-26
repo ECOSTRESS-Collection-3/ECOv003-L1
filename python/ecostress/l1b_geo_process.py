@@ -560,10 +560,6 @@ class L1bGeoProcess:
         self.collect_qa(igccol, tpcol)
         avg_md = np.full((len(self.radlist), 3), -9999.0)
         for i, radfname in enumerate(self.radlist):
-            continue
-            #if self.scenelist[i] != 8:
-            #    continue
-            # Generate output
             logger.info(f"Doing scene number {self.scenelist[i]}")
             fin = h5py.File(radfname, "r")
             if "BandSpecification" in fin["L1B_RADMetadata"]:
