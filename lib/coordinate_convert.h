@@ -15,8 +15,4 @@ namespace Ecostress {
       const boost::shared_ptr<GeoCal::GdalRasterImage>& G, int B)
   { return boost::make_shared<GeoCal::GdalRasterImage>(G->data_set(), B); }
   std::string to_proj4(const boost::shared_ptr<GeoCal::OgrCoordinate>& G);
-  // Geocal doesn't export copy to python. Probably should and just
-  // rename it, but for now we just do this here.
-  void copy_raster(const GeoCal::RasterImage& Img_in, GeoCal::RasterImage& Img_out, bool diagnostic = false, int Tile_nline = -1, int Tile_nsamp = -1)
-  { GeoCal::copy(Img_in, Img_out, diagnostic, Tile_nline, Tile_nsamp); }
 }
