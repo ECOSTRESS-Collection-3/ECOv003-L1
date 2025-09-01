@@ -29,4 +29,7 @@ print(geocal.quat_to_euler((sc_to_sc_corr.conj() * frame_to_sc)))
 
 results - [0.00024883728328547506, 0.0073246045637570655, -0.0013094213633778223]
 Note the original information about the tiepoint matching and the corrections
-quaterions is stored in the pickle file if we need  to go back to the original data
+quaternions is stored in the pickle file if we need  to go back to the original data
+
+The results go into the l1_osp_dir/l1b_geo_config.py file for use in processing.
+
