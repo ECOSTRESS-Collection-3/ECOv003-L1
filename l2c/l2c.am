@@ -1,3 +1,0 @@
-dist_installecostress_SCRIPTS += @l2c_src@/L2C_PGE
-dist_bin_SCRIPTS += @l2c_src@/l2c_process
-

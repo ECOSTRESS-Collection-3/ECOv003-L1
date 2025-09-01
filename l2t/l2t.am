@@ -1,0 +1,3 @@
+dist_installecostress_SCRIPTS += @l2t_src@/L2T_PGE
+dist_bin_SCRIPTS += @l2t_src@/l2t_process
+
