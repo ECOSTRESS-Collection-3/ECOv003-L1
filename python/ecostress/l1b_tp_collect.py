@@ -40,20 +40,21 @@ class L1bTpCollect(object):
         self.qa_file = qa_file
         self.num_x = num_x
         self.num_y = num_y
+        self.pass_number = pass_number
         self.proj_fname = [
-            f"proj_initial_{i + 1}_pass_{pass_number}.img"
+            f"proj_initial_{i + 1}_pass_{self.pass_number}.img"
             for i in range(self.igccol.number_image)
         ]
         self.ref_fname = [
-            f"ref_{i + 1}_pass_{pass_number}.img"
+            f"ref_{i + 1}_pass_{self.pass_number}.img"
             for i in range(self.igccol.number_image)
         ]
         self.log_file = [
-            f"tpmatch_{i + 1}_pass_{pass_number}.log"
+            f"tpmatch_{i + 1}_pass_{self.pass_number}.log"
             for i in range(self.igccol.number_image)
         ]
         self.run_dir_name = [
-            f"tpmatch_{i + 1}_pass_{pass_number}"
+            f"tpmatch_{i + 1}_pass_{self.pass_number}"
             for i in range(self.igccol.number_image)
         ]
         self.p = L1bProj(
@@ -271,7 +272,9 @@ class L1bTpCollect(object):
             for i2 in range(len(self.tpcollect)):
                 lf = self.log_file[i] + "_%d" % i2
                 if os.path.exists(lf) and self.qa_file is not None:
-                    self.qa_file.add_tp_log(self.igccol.title(i) + "_%d" % i2, lf)
+                    self.qa_file.add_tp_log(
+                        self.pass_number, self.igccol.title(i) + "_%d" % i2, lf
+                    )
         j = 0
         for i in range(self.igccol.number_image):
             if proj_res[i]:
@@ -286,6 +289,7 @@ class L1bTpCollect(object):
                 ) = tpcollist[j]
                 if self.qa_file is not None:
                     self.qa_file.add_tp_single_scene(
+                        self.pass_number,
                         i,
                         self.igccol,
                         tpcol,
@@ -300,7 +304,9 @@ class L1bTpCollect(object):
                 j += 1
             else:
                 if self.qa_file is not None:
-                    self.qa_file.add_tp_single_scene(i, self.igccol, [], 0, 0, 0, 0)
+                    self.qa_file.add_tp_single_scene(
+                        self.pass_number, i, self.igccol, [], 0, 0, 0, 0
+                    )
         for i in range(len(res)):
             res[i].id = i + 1
         return res, time_range_tp

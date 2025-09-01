@@ -3,6 +3,7 @@ import pytest
 from multiprocessing import Pool
 from pathlib import Path
 
+
 @pytest.mark.long_test
 def test_l2ct_generate(isolated_dir, test_data_latest, lwm):
     l1_osp_dir = test_data_latest / "l1_osp_dir"
@@ -28,11 +29,18 @@ def test_l2ct_generate(isolated_dir, test_data_latest, lwm):
     if pool is not None:
         pool.close()
 
+
 @pytest.mark.long_test
 def test_l2ct_hyun(isolated_dir, test_data_latest, lwm):
     l1_osp_dir = test_data_latest / "l1_osp_dir"
-    l1cg = Path("/home/smyth/Local/HyunTestCase") / "ECOv003_L1CG_RAD_15801_004_20210419T213526_01.h5"
-    l2cg_lste = Path("/home/smyth/Local/HyunTestCase") / "ECOv003_L2G_LSTE_15801_004_20210419T213526_01.h5"
+    l1cg = (
+        Path("/home/smyth/Local/HyunTestCase")
+        / "ECOv003_L1CG_RAD_15801_004_20210419T213526_01.h5"
+    )
+    l2cg_lste = (
+        Path("/home/smyth/Local/HyunTestCase")
+        / "ECOv003_L2G_LSTE_15801_004_20210419T213526_01.h5"
+    )
     out_pattern = "ECOv003_L2T_LSTE_15801_004_TILE_20210419T213526_01"
     g = L2ctGenerate(
         l1cg,
@@ -50,4 +58,3 @@ def test_l2ct_hyun(isolated_dir, test_data_latest, lwm):
     g.run(pool=pool)
     if pool is not None:
         pool.close()
-        

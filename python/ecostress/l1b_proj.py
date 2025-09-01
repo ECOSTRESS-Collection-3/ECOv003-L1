@@ -81,8 +81,9 @@ class L1bProj(object):
                     self.ortho_scale[igc_ind], self.ortho_scale[igc_ind]
                 )
                 if self.rotated:
-                    mi = determine_rotated_map_igc(self.igccol.image_ground_connection(igc_ind),
-                                                   mi)
+                    mi = determine_rotated_map_igc(
+                        self.igccol.image_ground_connection(igc_ind), mi
+                    )
                 f = self.scratch_file()
                 lat: np.ndarray | None = f[igc_ind, :, :, 0]
                 lon: np.ndarray | None = f[igc_ind, :, :, 1]
@@ -118,7 +119,7 @@ class L1bProj(object):
                             (i + 1) * nlscan * self.number_subpixel,
                         )
                         res_sub = Resampler(
-                           lon[s, :],
+                            lon[s, :],
                             lat[s, :],
                             res.map_info,
                             self.number_subpixel,
@@ -143,27 +144,30 @@ class L1bProj(object):
                 if not self.rotated:
                     # This only works for nonrotated images
                     ortho.create_subset_file(
-                        self.ref_fname_list[igc_ind], "VICAR", [], res.map_info, "-ot Int16"
+                        self.ref_fname_list[igc_ind],
+                        "VICAR",
+                        [],
+                        res.map_info,
+                        "-ot Int16",
                     )
                 else:
                     mi_norot = self.ortho_base[igc_ind].map_info.scale(
                         self.ortho_scale[igc_ind], self.ortho_scale[igc_ind]
                     )
                     mi_norot = mi_norot.intersection(res.map_info)
-                    f = Path(self.ref_fname_list[igc_ind])
-                    fnorot = f.parent / f"{f.stem}_norot.img"
+                    fnm = Path(self.ref_fname_list[igc_ind])
+                    fnorot = fnm.parent / f"{fnm.stem}_norot.img"
                     ortho.create_subset_file(
-                        str(fnorot), "VICAR", [], mi_norot,
-                        "-ot Int16"
+                        str(fnorot), "VICAR", [], mi_norot, "-ot Int16"
                     )
-                    ref = geocal.mmap_file(str(f), res.map_info)
+                    ref = geocal.mmap_file(str(fnm), res.map_info)
                     ortho_norot = geocal.VicarLiteRasterImage(str(fnorot))
                     # TODO Might be able to speed this up. Since we know this
                     # is just an affine transformation, can probably do something
                     # higher level than transforming every point. But have this
                     # in place for now.
                     ortho_rot = geocal.MapReprojectedImage(ortho_norot, res.map_info)
-                    ref[:,:] = ortho_rot.read_all()
+                    ref[:, :] = ortho_rot.read_all()
                     ref = None
                 logger.info(
                     "Done with reference image for %s" % self.igccol.title(igc_ind)

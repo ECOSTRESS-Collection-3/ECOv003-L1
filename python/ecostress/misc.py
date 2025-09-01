@@ -588,7 +588,7 @@ def ecostress_file_name(
     extension: str = ".h5",
     intermediate: bool = False,
     tile: bool = False,
-    remove_build_id: bool | None = None
+    remove_build_id: bool | None = None,
 ) -> str:
     """Create an ecostress file name from the given components.
     Note in collection 3 we removed the build ID. We want backwards compatibility,
@@ -597,10 +597,10 @@ def ecostress_file_name(
     override this by explicitly passing remove_build_id is either True or False so
     select one or the other."""
     if remove_build_id is None:
-        if collection_label == "ECOSTRESS": # collection 1 name
+        if collection_label == "ECOSTRESS":  # collection 1 name
             remove_build_id = False
         else:
-            m = re.match(r'^ECOv(\d+)$', collection_label)
+            m = re.match(r"^ECOv(\d+)$", collection_label)
             if m is not None and int(m[1]) < 3:
                 remove_build_id = False
             else:
@@ -611,16 +611,16 @@ def ecostress_file_name(
     else:
         front = collection_label + "_"
     if remove_build_id:
-        back = "_%s%s" %(version, extension)
+        back = "_%s%s" % (version, extension)
     else:
-        back = "_%s_%s%s" %(build, version, extension)
+        back = "_%s_%s%s" % (build, version, extension)
     if product_type == "L0B":
         return "%s%s_%05d_%s%s" % (
             front,
             product_type,
             orbit,
             time_to_file_string(acquisition_time),
-            back
+            back,
         )
     elif product_type == "Scene":
         return "%s%s_%05d_%s_%s%s" % (

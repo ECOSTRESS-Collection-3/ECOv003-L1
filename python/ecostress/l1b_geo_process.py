@@ -480,7 +480,11 @@ class L1bGeoProcess:
                     )
                 )
         self.qa_file = L1bGeoQaFile(self.qa_fname.absolute(), self.log_string_handle)
-        self.qa_file.input_list(self.inlist)
+        self.qa_file.input_list(
+            str(self.l1_osp_dir / "l1b_geo_config.py"),
+            str(self.orbfname),
+            [str(i) for i in self.radlist],
+        )
 
     def create_igccol_initial(self) -> EcostressIgcCollection:
         igccol = EcostressIgcCollection()
@@ -503,6 +507,7 @@ class L1bGeoProcess:
         self,
         igccol: EcostressImageGroundConnection,
         tpcol: geocal.TiePointCollection | None,
+        pass_number: int,
     ) -> None:
         """Collect information on the time of correction before and after scene,
         and populate QA file with this."""
@@ -539,17 +544,23 @@ class L1bGeoProcess:
         # Write out QA data
         if tpcol:
             self.qa_file.add_final_accuracy(
-                igccol, tpcol, self.tcorr_before, self.tcorr_after, self.geo_qa
+                pass_number,
+                igccol,
+                tpcol,
+                self.tcorr_before,
+                self.tcorr_after,
+                self.geo_qa,
             )
-        self.qa_file.add_orbit(igccol.image_ground_connection(0).orbit)
+        self.qa_file.add_orbit(pass_number, igccol.image_ground_connection(0).orbit)
         # TODO Add support for multiple passes. Although maybe it doesn't matter,
         # we don't ever do anything with this. Maybe just the original igccol_initial
         # and final tpcol, igcol_sba, tpcol_sba. Think about this
         self.qa_file.write_xml(
-            "igccol_initial_pass_1.xml",
-            "tpcol_pass_1.xml",
-            "igccol_sba_pass_1.xml",
-            "tpcol_sba_pass_1.xml",
+            pass_number,
+            f"igccol_initial_pass_{pass_number}.xml",
+            f"tpcol_pass_{pass_number}.xml",
+            f"igccol_sba_pass_{pass_number}.xml",
+            f"tpcol_sba_pass_{pass_number}.xml",
         )
 
     def generate_output(
@@ -559,7 +570,6 @@ class L1bGeoProcess:
         pool: Pool | None,
     ) -> None:
         """Once we have the final corrected igccol, generate all the output"""
-        self.collect_qa(igccol, tpcol)
         avg_md = np.full((len(self.radlist), 3), -9999.0)
         for i, radfname in enumerate(self.radlist):
             logger.info(f"Doing scene number {self.scenelist[i]}")
@@ -693,8 +703,10 @@ class L1bGeoProcess:
             num_x=self.l1b_geo_config.num_x,
             num_y=self.l1b_geo_config.num_y,
             proj_number_subpixel=self.l1b_geo_config.proj_number_subpixel,
-            #min_tp_per_scene=self.l1b_geo_config.min_tp_per_scene,
-            min_tp_per_scene=80 if pass_number == 1 else self.l1b_geo_config.min_tp_per_scene,
+            # min_tp_per_scene=self.l1b_geo_config.min_tp_per_scene,
+            min_tp_per_scene=80
+            if pass_number == 1
+            else self.l1b_geo_config.min_tp_per_scene,
             min_number_good_scan=self.l1b_geo_config.min_number_good_scan,
             pass_number=pass_number,
         )
@@ -716,6 +728,8 @@ class L1bGeoProcess:
         # Short term, just do correction at beginning and end. We will want to
         # update this logic
         if pass_number == 1:
+            # TODO Should perhaps have logic to skip second point unless we have
+            # matched scenes distributed far enough apart
             tlast = None
             for tmin, tmax in time_range_tp:
                 if tlast is None:
@@ -723,7 +737,10 @@ class L1bGeoProcess:
                 tlast = tmax
             if tlast is not None:
                 orb.insert_attitude_time_point(tlast)
-        if False:
+        else:
+            # For now, have pass 2 be like the previous pass 1. We'll want
+            # to change this but not a bad starting point
+            # if False:
             #  This was what we did in collection 2, keep as a reference here
             tlast = None
             for tmin, tmax in time_range_tp:
@@ -774,6 +791,7 @@ class L1bGeoProcess:
         self, igccol: EcostressIgcCollection, pool: Pool | None, pass_number: int
     ) -> tuple[EcostressIgcCollection, geocal.TiePointCollection | None]:
         """Collect tie points, and used to correct the igccol"""
+        logger.info(f"Starting pass {pass_number}")
         tpcol, time_range_tp = self.collect_tp(igccol, pool, pass_number)
         if len(tpcol) == 0:
             logger.info("No tie-points, so skipping SBA correction")
@@ -784,6 +802,7 @@ class L1bGeoProcess:
         # Update orbit and camera, if we updated the igccol
         self.orb = igccol_corrected.image_ground_connection(0).orbit
         self.cam = igccol_corrected.image_ground_connection(0).camera
+        logger.info(f"Done with pass {pass_number}")
         return igccol_corrected, tpcol
 
     def run(self) -> None:
@@ -816,14 +835,21 @@ class L1bGeoProcess:
                 # For testing, skip actually doing image matching and
                 # use existing results
                 igccol_corrected = geocal.read_shelve(str(self.igccol_use))
-                if(self.tpcol_use is not None):
+                if self.tpcol_use is not None:
                     tpcol = geocal.read_shelve(str(self.tpcol_use))
+                self.collect_qa(igccol_corrected, tpcol, pass_number=1)
             elif not (self.skip_sba or self.l1b_geo_config.skip_sba):
-                igccol_corrected, tpcol = self.correct_igc(
+                igccol_corrected_pass1, tpcol_pass1 = self.correct_igc(
                     igccol_initial, pool, pass_number=1
                 )
+                self.collect_qa(igccol_corrected_pass1, tpcol_pass1, pass_number=1)
+                igccol_corrected, tpcol = self.correct_igc(
+                    igccol_initial, pool, pass_number=2
+                )
+                self.collect_qa(igccol_corrected, tpcol, pass_number=2)
             else:
                 igccol_corrected = igccol_initial
+                self.collect_qa(igccol_corrected, tpcol, pass_number=1)
 
             # Generate output once we have the final igccol
             self.generate_output(igccol_corrected, tpcol, pool)

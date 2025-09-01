@@ -364,6 +364,7 @@ dependencies:
   - mpfr=4.2.1=h90cbb55_3
   - mpg123=1.32.9=hc50e24c_0
   - munkres=1.1.4=pyhd8ed1ab_1
+  - mypy=1.17.1=py311h49ec1c0_1
   - mypy_extensions=1.1.0=pyha770c72_0
   - mysql-common=9.0.1=h266115a_6
   - mysql-libs=9.0.1=he0572af_6

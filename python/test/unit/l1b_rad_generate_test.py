@@ -34,8 +34,7 @@ def test_l1b_rad_generate(
 @pytest.mark.skip
 def test_proj_band_to_band(igc_btob, test_data, ortho, aster_mosaic_surface_data):
     dn_fname = (
-        test_data
-        + "band_to_band/ECOSTRESS_L1A_PIX_80005_001_20150124T204250_01.h5"
+        test_data + "band_to_band/ECOSTRESS_L1A_PIX_80005_001_20150124T204250_01.h5"
     )
     pool = Pool(20)
     igccol = EcostressIgcCollection()
