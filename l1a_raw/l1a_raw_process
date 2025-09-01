@@ -19,7 +19,7 @@ from ecostress_version import pge_version, collection_label, build_id
 version = "1.0"
 usage = """Usage:
   l1a_raw_process [options] <run_config>
-  l1a_raw_process [options] <l0b> <scene_file> <osp_dir> <prod_dir>
+  l1a_raw_process [options] <l0b> <obst_path> <scene_file> <osp_dir> <prod_dir>
   l1a_raw_process -h | --help
   l1a_raw_process -v | --version
 
