@@ -693,7 +693,8 @@ class L1bGeoProcess:
             num_x=self.l1b_geo_config.num_x,
             num_y=self.l1b_geo_config.num_y,
             proj_number_subpixel=self.l1b_geo_config.proj_number_subpixel,
-            min_tp_per_scene=self.l1b_geo_config.min_tp_per_scene,
+            #min_tp_per_scene=self.l1b_geo_config.min_tp_per_scene,
+            min_tp_per_scene=80 if pass_number == 1 else self.l1b_geo_config.min_tp_per_scene,
             min_number_good_scan=self.l1b_geo_config.min_number_good_scan,
             pass_number=pass_number,
         )
@@ -712,17 +713,29 @@ class L1bGeoProcess:
         is within one scene of another breakpoint."""
         # TODO Add handling for multiple passes. Want to add points without breaking
         # the setting for the current ones
-        tlast = None
-        for tmin, tmax in time_range_tp:
-            if tlast is None and pass_number == 1:
-                orb.insert_position_time_point(tmin)
-            if tlast is None or tmin - tlast > 52.0:
-                orb.insert_attitude_time_point(tmin)
-            orb.insert_attitude_time_point(tmin + (tmax - tmin) / 2)
-            orb.insert_attitude_time_point(tmax)
-            tlast = tmax
-        if tlast is not None and pass_number == 1:
-            orb.insert_position_time_point(tlast)
+        # Short term, just do correction at beginning and end. We will want to
+        # update this logic
+        if pass_number == 1:
+            tlast = None
+            for tmin, tmax in time_range_tp:
+                if tlast is None:
+                    orb.insert_attitude_time_point(tmin)
+                tlast = tmax
+            if tlast is not None:
+                orb.insert_attitude_time_point(tlast)
+        if False:
+            #  This was what we did in collection 2, keep as a reference here
+            tlast = None
+            for tmin, tmax in time_range_tp:
+                if tlast is None and pass_number == 1:
+                    orb.insert_position_time_point(tmin)
+                if tlast is None or tmin - tlast > 52.0:
+                    orb.insert_attitude_time_point(tmin)
+                orb.insert_attitude_time_point(tmin + (tmax - tmin) / 2)
+                orb.insert_attitude_time_point(tmax)
+                tlast = tmax
+            if tlast is not None and pass_number == 1:
+                orb.insert_position_time_point(tlast)
 
     def run_sba(
         self,

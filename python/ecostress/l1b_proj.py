@@ -2,11 +2,13 @@ from __future__ import annotations
 from ecostress_swig import fill_value_threshold, Resampler, GroundCoordinateArray  # type: ignore
 import geocal  # type: ignore
 from .pickle_method import *
+from .misc import determine_rotated_map_igc
 import numpy as np
 import scipy.ndimage  # type: ignore
 import os
 from loguru import logger
 import typing
+from pathlib import Path
 
 if typing.TYPE_CHECKING:
     from multiprocessing.pool import Pool
@@ -30,6 +32,7 @@ class L1bProj(object):
         scratch_fname: str = "initial_lat_lon.dat",
         pass_through_error: bool = False,
         separate_file_per_scan: bool = False,
+        rotated: bool = True,
     ) -> None:
         """Project igc and generate a Vicar file fname."""
         self.igccol = igccol
@@ -43,6 +46,7 @@ class L1bProj(object):
         self.number_subpixel = number_subpixel
         self.pass_through_error = pass_through_error
         self.min_number_good_scan = min_number_good_scan
+        self.rotated = rotated
 
         # Want to scale to roughly 60 meters. Much of the landsat data is
         # at higher resolution, but ecostress is close to 70 meter pixel so
@@ -76,6 +80,9 @@ class L1bProj(object):
                 mi = self.ortho_base[igc_ind].map_info.scale(
                     self.ortho_scale[igc_ind], self.ortho_scale[igc_ind]
                 )
+                if self.rotated:
+                    mi = determine_rotated_map_igc(self.igccol.image_ground_connection(igc_ind),
+                                                   mi)
                 f = self.scratch_file()
                 lat: np.ndarray | None = f[igc_ind, :, :, 0]
                 lon: np.ndarray | None = f[igc_ind, :, :, 1]
@@ -111,7 +118,7 @@ class L1bProj(object):
                             (i + 1) * nlscan * self.number_subpixel,
                         )
                         res_sub = Resampler(
-                            lon[s, :],
+                           lon[s, :],
                             lat[s, :],
                             res.map_info,
                             self.number_subpixel,
@@ -133,10 +140,31 @@ class L1bProj(object):
                     "Starting reference image for %s" % self.igccol.title(igc_ind)
                 )
                 ortho = self.ortho_base[igc_ind]
-                ortho.create_subset_file(
-                    self.ref_fname_list[igc_ind], "VICAR", [], res.map_info, "-ot Int16"
-                )
-                #                                     "-ot Int16", 0 True)
+                if not self.rotated:
+                    # This only works for nonrotated images
+                    ortho.create_subset_file(
+                        self.ref_fname_list[igc_ind], "VICAR", [], res.map_info, "-ot Int16"
+                    )
+                else:
+                    mi_norot = self.ortho_base[igc_ind].map_info.scale(
+                        self.ortho_scale[igc_ind], self.ortho_scale[igc_ind]
+                    )
+                    mi_norot = mi_norot.intersection(res.map_info)
+                    f = Path(self.ref_fname_list[igc_ind])
+                    fnorot = f.parent / f"{f.stem}_norot.img"
+                    ortho.create_subset_file(
+                        str(fnorot), "VICAR", [], mi_norot,
+                        "-ot Int16"
+                    )
+                    ref = geocal.mmap_file(str(f), res.map_info)
+                    ortho_norot = geocal.VicarLiteRasterImage(str(fnorot))
+                    # TODO Might be able to speed this up. Since we know this
+                    # is just an affine transformation, can probably do something
+                    # higher level than transforming every point. But have this
+                    # in place for now.
+                    ortho_rot = geocal.MapReprojectedImage(ortho_norot, res.map_info)
+                    ref[:,:] = ortho_rot.read_all()
+                    ref = None
                 logger.info(
                     "Done with reference image for %s" % self.igccol.title(igc_ind)
                 )
