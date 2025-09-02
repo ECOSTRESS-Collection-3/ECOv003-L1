@@ -16,6 +16,7 @@ dependencies:
   - pytest-loguru
   - gdb
   - mypy
+  - pandas-stubs
   # Need to freeze blitz version to one we build. Should handle this in
   # our conda packages, but for now work around this
   - libblitz=1.0.1=h3fd9d12_0

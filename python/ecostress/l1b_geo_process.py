@@ -515,11 +515,14 @@ class L1bGeoProcess:
             return
         if pass_number == 1:
             for i in range(igccol.number_image):
+                assert self._line_order_reversed is not None
                 igc = igccol.image_ground_connection(i)
-                self.qa_file.write_igc_xml(f"Scene {self.scene_list[i]}",
-                                           igc.scan_mirror,
-                                           igc.time_table,
-                                           self._line_order_reversed)
+                self.qa_file.write_igc_xml(
+                    f"Scene {self.scene_list[i]}",
+                    igc.scan_mirror,
+                    igc.time_table,
+                    self._line_order_reversed,
+                )
         self.tcorr_before = []
         self.tcorr_after = []
         self.geo_qa = []
@@ -652,7 +655,9 @@ class L1bGeoProcess:
                     )
                     l1bgeo_map.run()
                 if self.l1b_geo_config.generate_kmz_file:
-                    logger.info(f"Generating KMZ file scene number {self.scene_list[i]}")
+                    logger.info(
+                        f"Generating KMZ file scene number {self.scene_list[i]}"
+                    )
                     band_list = (
                         self.l1b_geo_config.kmz_band_list_5band
                         if (nband == 6)
@@ -837,7 +842,6 @@ class L1bGeoProcess:
             tpcol: geocal.TiePointCollection | None = None
 
             igccol_initial = self.create_igccol_initial()
-            
 
             if self.igccol_use is not None:
                 # For testing, skip actually doing image matching and

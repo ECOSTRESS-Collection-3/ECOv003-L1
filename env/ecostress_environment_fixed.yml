@@ -396,6 +396,7 @@ dependencies:
   - overrides=7.7.0=pyhd8ed1ab_1
   - packaging=25.0=pyh29332c3_1
   - pandas=2.3.2=py311hed34c8f_0
+  - pandas-stubs=2.3.2.250827=pyhd8ed1ab_0
   - pandocfilters=1.5.0=pyhd8ed1ab_0
   - pango=1.56.3=h9ac818e_1
   - parallel=20250622=ha770c72_0
@@ -522,6 +523,7 @@ dependencies:
   - traitlets=5.14.3=pyhd8ed1ab_1
   - truststore=0.10.3=pyhe01879c_0
   - types-python-dateutil=2.9.0.20250822=pyhd8ed1ab_0
+  - types-pytz=2025.2.0.20250809=pyhd8ed1ab_0
   - typing-extensions=4.14.1=h4440ef1_0
   - typing_extensions=4.14.1=pyhe01879c_0
   - typing_utils=0.1.0=pyhd8ed1ab_1

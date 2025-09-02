@@ -6,7 +6,17 @@ import gzip
 import numpy as np
 import subprocess
 import geocal  # type: ignore
+from ecostress_swig import (  # type: ignore
+    EcostressScanMirror,
+    EcostressOrbit,
+    EcostressImageGroundConnection,
+    EcostressIgcCollection,
+)
+import pandas as pd
+import types
+import sys
 import typing
+from typing import Any
 
 if typing.TYPE_CHECKING:
     import io
@@ -43,20 +53,35 @@ class L1bGeoQaFile(object):
         fout.create_group("Accuracy Estimate")
         fout.close()
 
-    def write_igc_xml(self, scene_name : str, sm : EcostressScanMirror,
-                      tt : geocal.TimeTable, line_order_reversed : bool) -> None:
-        '''Store the scan mirror and time table as XML that we can reload.
+    def write_igc_xml(
+        self,
+        scene_name: str,
+        sm: EcostressScanMirror,
+        tt: geocal.TimeTable,
+        line_order_reversed: bool,
+    ) -> None:
+        """Store the scan mirror and time table as XML that we can reload.
         This is nice so we can create a Igc without the Raster Image without needing
         to open the relatively large L1B Radiance file. If you need the actual
         image data, you should just directly use the L1B Radiance file rather
-        than these objects'''
+        than these objects"""
         with h5py.File(self.fname, "a") as f:
             g = f["PythonObject"].create_group(scene_name)
             geocal.serialize_write_string(sm)
-            g.create_dataset("scan_mirror", data=np.void(gzip.compress(geocal.serialize_write_string(sm).encode('utf8'))))
-            g.create_dataset("time_table", data=np.void(gzip.compress(geocal.serialize_write_string(tt).encode('utf8'))))
+            g.create_dataset(
+                "scan_mirror",
+                data=np.void(
+                    gzip.compress(geocal.serialize_write_string(sm).encode("utf8"))
+                ),
+            )
+            g.create_dataset(
+                "time_table",
+                data=np.void(
+                    gzip.compress(geocal.serialize_write_string(tt).encode("utf8"))
+                ),
+            )
             g["Line Order Reversed"] = str(line_order_reversed)
-        
+
     def write_xml(
         self,
         pass_number: int,
@@ -387,6 +412,243 @@ Fourth column is the number to image matching tries we did."""
        than orbits w/o image matching, but may still have large errors.
 3: Poor - No matches in the orbit. Expect largest geolocation errors.
 9999: Unknown value"""
+
+    @classmethod
+    def _read_obj(
+        cls,
+        fname: str | os.PathLike[str],
+        name: str,
+        scene_number: int | None = None,
+        pass_number: int | None = None,
+    ) -> Any:
+        f = h5py.File(fname, "r")
+        if pass_number is None:
+            t = f[f"PythonObject/Scene {scene_number}/{name}"][()]
+        else:
+            t = f[f"PythonObject/Pass {pass_number}/{name}"][()]
+        return geocal.serialize_read_generic_string(
+            gzip.decompress(bytes(t)).decode("utf8")
+        )
+
+    @classmethod
+    def scan_mirror(
+        cls, fname: str | os.PathLike[str], scene_number: int
+    ) -> EcostressScanMirror:
+        return cls._read_obj(fname, "scan_mirror", scene_number=scene_number)
+
+    @classmethod
+    def time_table(
+        cls, fname: str | os.PathLike[str], scene_number: int
+    ) -> geocal.TimeTable:
+        return cls._read_obj(fname, "time_table", scene_number=scene_number)
+
+    @classmethod
+    def line_order_reversed(
+        cls, fname: str | os.PathLike[str], scene_number: int
+    ) -> bool:
+        f = h5py.File(fname, "r")
+        t = f[f"PythonObject/Scene {scene_number}/Line Order Reversed"][()].decode(
+            "utf8"
+        )
+        return t == "True"
+
+    @classmethod
+    def tpcol(
+        cls, fname: str | os.PathLike[str], pass_number: int = 2
+    ) -> geocal.TimeTable:
+        return cls._read_obj(fname, "tpcol", pass_number=pass_number)
+
+    @classmethod
+    def scene_list(cls, fname: str | os.PathLike[str]) -> list[int]:
+        f = h5py.File(fname, "r")
+        return [int(i[6:]) for i in f["/Accuracy Estimate/Scenes"][:]]
+
+    @classmethod
+    def config_filename(cls, fname: str | os.PathLike[str]) -> Path:
+        f = h5py.File(fname, "r")
+        return Path(f["/Input File/Config Filename"][()][0].decode("utf8"))
+
+    @classmethod
+    def orbit_filename(cls, fname: str | os.PathLike[str]) -> Path:
+        f = h5py.File(fname, "r")
+        return Path(f["/Input File/Orbit Filename"][()][0].decode("utf8"))
+
+    @classmethod
+    def l1b_rad_list(cls, fname: str | os.PathLike[str]) -> list[Path]:
+        f = h5py.File(fname, "r")
+        return [Path(i.decode("utf8")) for i in f["/Input File/Orbit Filename"][()]]
+
+    @classmethod
+    def l1b_geo_config(self, l1_osp_dir: str | os.PathLike[str]) -> types.ModuleType:
+        try:
+            sys.path.append(str(l1_osp_dir))
+            import l1b_geo_config  # type: ignore
+
+            return l1b_geo_config
+        finally:
+            sys.path.remove(str(l1_osp_dir))
+
+    @classmethod
+    def igccol(
+        cls,
+        fname: str | os.PathLike[str],
+        l1_osp_dir: str | os.PathLike[str] | None = None,
+        orbit_fname: str | os.PathLike[str] | None = None,
+        l1b_rad_list: list[Path] | None = None,
+        include_img: bool = False,
+    ) -> EcostressIgcCollection:
+        """This is the original igccol, without any breakpoints are updates.
+        The l1b_geo_qa file has a list of the input files used when it was run, but
+        often this is out of date. You can optionally supply a orbit_fname and/or l1b_rad_list.
+        The l1b_rad_list is only needed if include_img if True."""
+        # TODO Add support for including orbit corrections for each pass
+        if l1_osp_dir is None:
+            l1_osp_dir = cls.config_filename(fname).parent
+        l1b_geo_config = cls.l1b_geo_config(l1_osp_dir)
+        cam = geocal.read_shelve(str(Path(l1_osp_dir) / "camera.xml"))
+        cam.mask_all_parameter()
+        cam.focal_length = l1b_geo_config.camera_focal_length
+        if orbit_fname is None:
+            orbit_fname = cls.orbit_filename(fname)
+        orb = EcostressOrbit(
+            str(orbit_fname),
+            l1b_geo_config.x_offset_iss,
+            l1b_geo_config.extrapolation_pad,
+            l1b_geo_config.large_gap,
+        )
+        dem = geocal.SrtmDem("", False)
+        igccol = EcostressIgcCollection()
+        for scn in cls.scene_list(fname):
+            cam.line_order_reversed = cls.line_order_reversed(fname, scn)
+            tt = cls.time_table(fname, scn)
+            sm = cls.scan_mirror(fname, scn)
+            img = None
+            igc = EcostressImageGroundConnection(
+                orb, tt, cam, sm, dem, img, f"Scene {scn}"
+            )
+            igccol.add_igc(igc)
+        return igccol
+
+    @classmethod
+    def data_frame(cls, fname: str | os.PathLike[str]) -> pd.DataFrame:
+        """Return a pandas DataFrame with the contents of the QA file"""
+        t = pd.DataFrame(
+            cls.scene_list(fname),
+            columns=[
+                "Scene",
+            ],
+        )
+        fh = h5py.File(fname, "r")
+        t2 = pd.DataFrame(
+            fh["Tiepoint/Pass 1/Tiepoint Count"][:],
+            columns=[
+                "Initial Tiepoint Pass 1",
+                "Blunders Pass 1",
+                "Number Tiepoint Pass 1",
+                "Number Image Match Tries Pass 1",
+            ],
+        )
+        t3 = pd.DataFrame(
+            fh["Tiepoint/Pass 2/Tiepoint Count"][:],
+            columns=[
+                "Initial Tiepoint Pass 2",
+                "Blunders Pass 2",
+                "Number Tiepoint Pass 2",
+                "Number Image Match Tries Pass 2",
+            ],
+        )
+        qa_val = {0: "Best", 1: "Good", 2: "Suspect", 3: "Poor", -9999: "Unknown"}
+
+        d = fh["Accuracy Estimate/Pass 1/Accuracy Before Correction"][:]
+        d[d < -9990] = np.NaN
+        t4 = pd.DataFrame(
+            d,
+            columns=[
+                "Initial Accuracy Pass 1",
+            ],
+        )
+        d = fh["Accuracy Estimate/Pass 1/Final Accuracy"][:]
+        d[d < -9990] = np.NaN
+        t5 = pd.DataFrame(
+            d,
+            columns=[
+                "Accuracy Pass 1",
+            ],
+        )
+        d = fh["Accuracy Estimate/Pass 1/Delta time correction before scene"][:]
+        t6 = pd.DataFrame(
+            d,
+            columns=[
+                "Delta t before scene Pass 1",
+            ],
+        )
+        d = fh["Accuracy Estimate/Pass 1/Delta time correction after scene"][:]
+        t7 = pd.DataFrame(
+            d,
+            columns=[
+                "Delta t after scene Pass 1",
+            ],
+        )
+        t8 = pd.DataFrame(
+            [
+                qa_val[v]
+                for v in fh["Accuracy Estimate/Pass 1/Geolocation accuracy QA flag"][:]
+            ],
+            columns=[
+                "QA Flag Pass 1",
+            ],
+        )
+
+        d = fh["Accuracy Estimate/Pass 2/Accuracy Before Correction"][:]
+        d[d < -9990] = np.NaN
+        t9 = pd.DataFrame(
+            d,
+            columns=[
+                "Initial Accuracy Pass 2",
+            ],
+        )
+        d = fh["Accuracy Estimate/Pass 2/Final Accuracy"][:]
+        d[d < -9990] = np.NaN
+        t10 = pd.DataFrame(
+            d,
+            columns=[
+                "Accuracy Pass 2",
+            ],
+        )
+        d = fh["Accuracy Estimate/Pass 2/Delta time correction before scene"][:]
+        t11 = pd.DataFrame(
+            d,
+            columns=[
+                "Delta t before scene Pass 2",
+            ],
+        )
+        d = fh["Accuracy Estimate/Pass 2/Delta time correction after scene"][:]
+        t12 = pd.DataFrame(
+            d,
+            columns=[
+                "Delta t after scene Pass 2",
+            ],
+        )
+        t13 = pd.DataFrame(
+            [
+                qa_val[v]
+                for v in fh["Accuracy Estimate/Pass 2/Geolocation accuracy QA flag"][:]
+            ],
+            columns=[
+                "QA Flag Pass 2",
+            ],
+        )
+
+        d = fh["Average Metadata"][:]
+        t14 = pd.DataFrame(
+            d, columns=["Solar Zenith Angle", "Land Fraction", "Cloud Fraction"]
+        )
+
+        df = pd.concat(
+            [t, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14], axis=1
+        )
+        fh.close()
+        return df
 
 
 __all__ = ["L1bGeoQaFile"]
