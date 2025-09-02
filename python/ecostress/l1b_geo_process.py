@@ -388,7 +388,7 @@ class L1bGeoProcess:
         self.ofile_kmz: list[Path] = []
         self.is_day: list[bool] = []
         self.ortho_base: list[geocal.CartLabMultifile] = []
-        self.scenelist: list[int] = []
+        self.scene_list: list[int] = []
         first_file = True
         for radfname in self.radlist:
             orbit, scene, acquisition_time = orbit_from_metadata(radfname)
@@ -453,7 +453,7 @@ class L1bGeoProcess:
                 "Scene %d is %s, matching ecostress band %d to Landsat band %d"
                 % (scene, "Day" if self.is_day[-1] else "Night", eband, lband)
             )
-            self.scenelist.append(scene)
+            self.scene_list.append(scene)
             if first_file:
                 first_file = False
                 self.l1b_att_fname = Path(
@@ -513,6 +513,13 @@ class L1bGeoProcess:
         and populate QA file with this."""
         if self.qa_file is None:
             return
+        if pass_number == 1:
+            for i in range(igccol.number_image):
+                igc = igccol.image_ground_connection(i)
+                self.qa_file.write_igc_xml(f"Scene {self.scene_list[i]}",
+                                           igc.scan_mirror,
+                                           igc.time_table,
+                                           self._line_order_reversed)
         self.tcorr_before = []
         self.tcorr_after = []
         self.geo_qa = []
@@ -538,7 +545,7 @@ class L1bGeoProcess:
             self.tcorr_after.append(t2)
             self.geo_qa.append(self.l1b_geo_config.geocal_accuracy_qa(t1, t2))
             logger.info(
-                f"Scene {self.scenelist[i]} geolocation accuracy QA: {self.geo_qa[-1]}"
+                f"Scene {self.scene_list[i]} geolocation accuracy QA: {self.geo_qa[-1]}"
             )
 
         # Write out QA data
@@ -572,7 +579,7 @@ class L1bGeoProcess:
         """Once we have the final corrected igccol, generate all the output"""
         avg_md = np.full((len(self.radlist), 3), -9999.0)
         for i, radfname in enumerate(self.radlist):
-            logger.info(f"Doing scene number {self.scenelist[i]}")
+            logger.info(f"Doing scene number {self.scene_list[i]}")
             fin = h5py.File(radfname, "r")
             if "BandSpecification" in fin["L1B_RADMetadata"]:
                 nband = np.count_nonzero(
@@ -585,11 +592,11 @@ class L1bGeoProcess:
                 < self.l1b_geo_config.min_number_good_scan
             ):
                 logger.info(
-                    f"Scene number {self.scenelist[i]} has only {igccol.image_ground_connection(i).number_good_scan} good scans. We require a minimum of {self.l1b_geo_config.min_number_good_scan}. Skipping output for this scene"
+                    f"Scene number {self.scene_list[i]} has only {igccol.image_ground_connection(i).number_good_scan} good scans. We require a minimum of {self.l1b_geo_config.min_number_good_scan}. Skipping output for this scene"
                 )
             elif igccol.image_ground_connection(i).crosses_dateline:
                 logger.info(
-                    f"Scene number {self.scenelist[i]} crosses date line. We don't handle this. Skipping output for this scene"
+                    f"Scene number {self.scene_list[i]} crosses date line. We don't handle this. Skipping output for this scene"
                 )
             else:
                 # Short term allow this to fail, just so we can process old data
@@ -633,7 +640,7 @@ class L1bGeoProcess:
                 avg_md[i, 2] = l1bgeo.cloud_cover
                 if self.l1b_geo_config.generate_map_product:
                     logger.info(
-                        f"Generating Map Product scene number {self.scenelist[i]}"
+                        f"Generating Map Product scene number {self.scene_list[i]}"
                     )
                     l1bgeo_map = L1bGeoGenerateMap(
                         l1bgeo,
@@ -645,7 +652,7 @@ class L1bGeoProcess:
                     )
                     l1bgeo_map.run()
                 if self.l1b_geo_config.generate_kmz_file:
-                    logger.info(f"Generating KMZ file scene number {self.scenelist[i]}")
+                    logger.info(f"Generating KMZ file scene number {self.scene_list[i]}")
                     band_list = (
                         self.l1b_geo_config.kmz_band_list_5band
                         if (nband == 6)
@@ -830,6 +837,7 @@ class L1bGeoProcess:
             tpcol: geocal.TiePointCollection | None = None
 
             igccol_initial = self.create_igccol_initial()
+            
 
             if self.igccol_use is not None:
                 # For testing, skip actually doing image matching and

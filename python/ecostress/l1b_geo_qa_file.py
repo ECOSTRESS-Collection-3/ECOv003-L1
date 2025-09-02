@@ -43,6 +43,20 @@ class L1bGeoQaFile(object):
         fout.create_group("Accuracy Estimate")
         fout.close()
 
+    def write_igc_xml(self, scene_name : str, sm : EcostressScanMirror,
+                      tt : geocal.TimeTable, line_order_reversed : bool) -> None:
+        '''Store the scan mirror and time table as XML that we can reload.
+        This is nice so we can create a Igc without the Raster Image without needing
+        to open the relatively large L1B Radiance file. If you need the actual
+        image data, you should just directly use the L1B Radiance file rather
+        than these objects'''
+        with h5py.File(self.fname, "a") as f:
+            g = f["PythonObject"].create_group(scene_name)
+            geocal.serialize_write_string(sm)
+            g.create_dataset("scan_mirror", data=np.void(gzip.compress(geocal.serialize_write_string(sm).encode('utf8'))))
+            g.create_dataset("time_table", data=np.void(gzip.compress(geocal.serialize_write_string(tt).encode('utf8'))))
+            g["Line Order Reversed"] = str(line_order_reversed)
+        
     def write_xml(
         self,
         pass_number: int,
