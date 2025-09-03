@@ -704,6 +704,7 @@ class L1bGeoProcess:
         t = L1bTpCollect(
             igccol,
             self.ortho_base,
+            self.lwm,
             self.qa_file,
             fftsize=self.l1b_geo_config.fftsize,
             magnify=self.l1b_geo_config.magnify,

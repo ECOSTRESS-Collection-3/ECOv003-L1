@@ -20,6 +20,7 @@ class L1bTpCollect(object):
         self,
         igccol: geocal.IgcCollection,
         ortho_base: list[geocal.RasterImage],
+        lwm: geocal.RasterImage,
         qa_file: L1bGeoQaFile | None = None,
         fftsize: int = 256,
         magnify: float = 4.0,
@@ -30,13 +31,14 @@ class L1bTpCollect(object):
         seed: int = 562,
         num_x: int = 10,
         num_y: int = 10,
-        proj_number_subpixel: int = 2,
+        proj_number_subpixel: int = 3,
         min_tp_per_scene: int = 20,
         min_number_good_scan: int = 41,
         pass_number: int = 1,
     ) -> None:
         self.igccol = igccol
         self.ortho_base = ortho_base
+        self.lwm = lwm
         self.qa_file = qa_file
         self.num_x = num_x
         self.num_y = num_y
@@ -47,6 +49,10 @@ class L1bTpCollect(object):
         ]
         self.ref_fname = [
             f"ref_{i + 1}_pass_{self.pass_number}.img"
+            for i in range(self.igccol.number_image)
+        ]
+        self.lwm_fname = [
+            f"lwm_{i + 1}_pass_{self.pass_number}.img"
             for i in range(self.igccol.number_image)
         ]
         self.log_file = [
@@ -61,7 +67,9 @@ class L1bTpCollect(object):
             self.igccol,
             self.proj_fname,
             self.ref_fname,
+            self.lwm_fname,
             self.ortho_base,
+            self.lwm,
             qa_file=self.qa_file,
             min_number_good_scan=min_number_good_scan,
             number_subpixel=proj_number_subpixel,
