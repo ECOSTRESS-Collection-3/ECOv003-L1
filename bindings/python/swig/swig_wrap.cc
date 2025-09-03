@@ -9,6 +9,7 @@ extern "C" {
   INIT_TYPE INIT_FUNC(_ecostress_orbit_l0_fix)(void);
   INIT_TYPE INIT_FUNC(_ecostress_paraxial_transform)(void);
   INIT_TYPE INIT_FUNC(_ecostress_time_table)(void);
+  INIT_TYPE INIT_FUNC(_ecostress_orbit_offset_correction)(void);
   INIT_TYPE INIT_FUNC(_ecostress_scan_mirror)(void);
   INIT_TYPE INIT_FUNC(_resampler)(void);
   INIT_TYPE INIT_FUNC(_ecostress_image_ground_connection)(void);
@@ -35,6 +36,7 @@ static void module_init(PyObject* module)
   INIT_MODULE(module, "_ecostress_orbit_l0_fix", INIT_FUNC(_ecostress_orbit_l0_fix));
   INIT_MODULE(module, "_ecostress_paraxial_transform", INIT_FUNC(_ecostress_paraxial_transform));
   INIT_MODULE(module, "_ecostress_time_table", INIT_FUNC(_ecostress_time_table));
+  INIT_MODULE(module, "_ecostress_orbit_offset_correction", INIT_FUNC(_ecostress_orbit_offset_correction));
   INIT_MODULE(module, "_ecostress_scan_mirror", INIT_FUNC(_ecostress_scan_mirror));
   INIT_MODULE(module, "_resampler", INIT_FUNC(_resampler));
   INIT_MODULE(module, "_ecostress_image_ground_connection", INIT_FUNC(_ecostress_image_ground_connection));
