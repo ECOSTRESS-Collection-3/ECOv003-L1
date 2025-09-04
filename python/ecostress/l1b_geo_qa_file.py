@@ -218,7 +218,7 @@ offset."""
             if gname not in f["Logs"]:
                 tplog_group = f["Logs"].create_group(gname)
             else:
-                tplog_group = f[f"Logs/{gname}Tiepoint Logs"]
+                tplog_group = f[f"Logs/{gname}"]
             tplog_group.create_dataset(
                 scene_name, data=log, dtype=h5py.special_dtype(vlen=bytes)
             )

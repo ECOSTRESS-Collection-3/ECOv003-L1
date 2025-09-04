@@ -268,6 +268,7 @@ class L2ctGenerate:
         data_scaled[data_scaled < 0.0] = 0.0
         data_scaled[data_scaled > 1.0] = 1.0
         data_scaled[din == fill_value] = 0.0
+        #breakpoint()
         cmap = plt.get_cmap("jet")
         # Map to rgba, in the range 0.0 to 1.0
         image_array_norm = cmap(data_scaled)
@@ -330,6 +331,8 @@ class L2ctGenerate:
         Because it is so related, we optionally take a vicar file name. If this is
         supplied, the data is also saved to this file. This is then used in write_browse."""
         # If vmin and vmax aren't supplied, use a simple algorithm to calculate this
+        #print(fname)
+        #breakpoint()
         if vmax is None or vmin is None:
             # Get the range to use in the jpeg preview. We use the full range
             # of all the data, so we don't have weird changes in the color map from one
@@ -350,6 +353,8 @@ class L2ctGenerate:
         data_scaled = (data - float(vmin)) / (float(vmax) - float(vmin))
         data_scaled[data_scaled < 0.0] = 0.0
         data_scaled[data_scaled > 1.0] = 1.0
+        # Try this
+        data_scaled[np.isnan(data_scaled)] = 0.0
         cmap = plt.get_cmap("jet")
         # Map to rgba, in the range 0.0 to 1.0
         image_array_norm = cmap(data_scaled)
@@ -400,14 +405,16 @@ class L2ctGenerate:
         lrange: slice,
         srange: slice,
     ) -> None:
-        din = din_f[lrange, srange]
+        din = din_f[:,:]
         offset = None
         scale = None
+        #breakpoint()
         if "add_offset" in din_f.attrs:
             offset = din_f.attrs["add_offset"][0]
         if "scale_factor" in din_f.attrs:
             scale = din_f.attrs["scale_factor"][0]
         if offset is not None and scale is not None:
+            #breakpoint()
             # Scale the data
             din_scale = din.astype(np.float32) * scale + offset
             if "_FillValue" in din_f.attrs:
@@ -419,8 +426,9 @@ class L2ctGenerate:
             if "_FillValue" in din_f.attrs:
                 fill_value = din_f.attrs["_FillValue"][0]
         din[np.isnan(din)] = FILL_VALUE_BAD_OR_MISSING
-        data_in = MemoryRasterImageFloat(din.shape[0], din.shape[1])
-        data_in.write(0, 0, din)
+        din_sub = din[lrange, srange]
+        data_in = MemoryRasterImageFloat(din_sub.shape[0], din_sub.shape[1])
+        data_in.write(0, 0, din_sub)
         if din.dtype == np.uint8:
             dtype = geocal.GdalRasterImage.Byte
         elif din.dtype == np.uint16:
@@ -525,19 +533,19 @@ class L2ctGenerate:
         # don't actually end up having any data once we look in detail. Just
         # skip tiles that will be empty
         fin_l1cg = h5py.File(self.l1cg, "r")
-        din = fin_l1cg["/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/view_zenith"][
-            lrange, srange
-        ]
+        din = fin_l1cg["/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/view_zenith"][:,:]
         # Change nan to fill value
         din[np.isnan(din)] = FILL_VALUE_BAD_OR_MISSING
-        data_in = MemoryRasterImageFloat(din.shape[0], din.shape[1])
-        data_in.write(0, 0, din)
+        din_sub = din[lrange, srange]
+        data_in = MemoryRasterImageFloat(din_sub.shape[0], din_sub.shape[1])
+        data_in.write(0, 0, din_sub)
         if res.empty_resample(data_in):
             logger.info("Tile is empty, skipping")
             logger.info(f"Done with {shp['tile_id']}")
             res = None
             fin_l1cg.close()
             din = None
+            din_sub = None
             data_in = None
             return False
         dirname = Path(str(self.output_pattern).replace("TILE", shp["tile_id"]))
@@ -705,6 +713,7 @@ class L2ctGenerate:
         fin_l1cg.close()
         fin_l2cg_lste.close()
         din = None
+        din_sub = None
         data_in = None
         data = None
         res = None

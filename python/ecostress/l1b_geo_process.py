@@ -836,7 +836,7 @@ class L1bGeoProcess:
                 )
                 self.collect_qa(igccol_corrected_pass1, tpcol_pass1, pass_number=1)
                 igccol_corrected, tpcol = self.correct_igc(
-                    igccol_initial, pool, pass_number=2
+                    igccol_corrected_pass1, pool, pass_number=2
                 )
                 self.collect_qa(igccol_corrected, tpcol, pass_number=2)
             else:
