@@ -680,7 +680,7 @@ srclib
 srcpdf
 srcpython
 srcscript
-l2c_src
+l2t_src
 l1c_src
 l1b_geo_src
 l1b_rad_src
@@ -24711,7 +24711,7 @@ l1b_geo_src=l1b_geo
 
 l1c_src=l1c
 
-l2c_src=l2c
+l2t_src=l2t
 
 srcscript=script
 
