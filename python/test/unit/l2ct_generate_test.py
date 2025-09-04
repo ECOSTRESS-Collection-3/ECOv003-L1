@@ -50,6 +50,7 @@ def test_l2ct_hyun(isolated_dir, test_data_latest, lwm):
         [
             "fake_input.h5",
         ],
+        # tile_list = ["53SKV",]
     )
     if True:
         pool = Pool(5)
@@ -58,6 +59,7 @@ def test_l2ct_hyun(isolated_dir, test_data_latest, lwm):
     g.run(pool=pool)
     if pool is not None:
         pool.close()
+
 
 @pytest.mark.long_test
 def test_l2ct_hyun2(isolated_dir, test_data_latest, lwm):
@@ -79,12 +81,14 @@ def test_l2ct_hyun2(isolated_dir, test_data_latest, lwm):
         [
             "fake_input.h5",
         ],
+        tile_list=[
+            "55TFL",
+        ],
     )
-    if True:
+    if False:
         pool = Pool(5)
     else:
         pool = None
     g.run(pool=pool)
     if pool is not None:
         pool.close()
-        

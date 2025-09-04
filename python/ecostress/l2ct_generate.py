@@ -51,6 +51,10 @@ class L2ctGenerate:
         build_id: str = "0.30",
         pge_version: str = "0.30",
         browse_size: int = 1080,
+        # For testing an issue, can be useful to just run 1 or 2 tiles.
+        # If the tile list is supplied, we use that when processing
+        tile_list: list[str] | None = None,
+        generate_grid_browse: bool = True,
     ) -> None:
         """The output pattern should leave a portion called "TILE" in the name, that
         we fill in. Also leave the extension off, so a name like:
@@ -71,6 +75,8 @@ class L2ctGenerate:
         self.build_id = build_id
         self.pge_version = pge_version
         self.browse_size = browse_size
+        self.tile_list = tile_list
+        self.generate_grid_browse = generate_grid_browse
 
     def create_standard_metadata(
         self,
@@ -175,7 +181,8 @@ class L2ctGenerate:
         return m
 
     def run(self, pool: None | Pool = None) -> None:
-        self.write_grid_browse()
+        if self.generate_grid_browse:
+            self.write_grid_browse()
         vzen = geocal.GdalRasterImage(
             f'HDF5:"{self.l1cg}"://HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data_Fields/view_zenith'
         )
@@ -193,6 +200,9 @@ class L2ctGenerate:
             self.lon[self.lon > fill_value_threshold].max(),
             self.lat[self.lat > fill_value_threshold].min(),
         )
+        if self.tile_list is not None:
+            # Only process the named tiles, useful for testing
+            lay = [shp for shp in lay if shp["tile_id"] in self.tile_list]
         # Calculate all the UTM. We do this before starting the parallel step
         if pool is None:
             _ = list(map(self.process_tile, [shp for shp in lay]))
@@ -400,7 +410,7 @@ class L2ctGenerate:
         lrange: slice,
         srange: slice,
     ) -> None:
-        din = din_f[lrange, srange]
+        din = din_f[:, :]
         offset = None
         scale = None
         if "add_offset" in din_f.attrs:
@@ -419,8 +429,9 @@ class L2ctGenerate:
             if "_FillValue" in din_f.attrs:
                 fill_value = din_f.attrs["_FillValue"][0]
         din[np.isnan(din)] = FILL_VALUE_BAD_OR_MISSING
-        data_in = MemoryRasterImageFloat(din.shape[0], din.shape[1])
-        data_in.write(0, 0, din)
+        din_sub = din[lrange, srange]
+        data_in = MemoryRasterImageFloat(din_sub.shape[0], din_sub.shape[1])
+        data_in.write(0, 0, din_sub)
         if din.dtype == np.uint8:
             dtype = geocal.GdalRasterImage.Byte
         elif din.dtype == np.uint16:
@@ -443,6 +454,14 @@ class L2ctGenerate:
             fill_value,
             dtype != geocal.GdalRasterImage.Float32,
         )
+        # Useful diagnostic when testing. Leave in for a while
+        if self.diagnostic:
+            d2 = self.rasm.read_all_double()
+            if scale is not None and offset is not None:
+                print(d2 * scale + offset - data)
+            else:
+                print(d2 - data)
+            breakpoint()
         f = geocal.GdalRasterImage("", "MEM", mi, 1, dtype)
         if dtype == geocal.GdalRasterImage.Float32:
             set_fill_value(f, np.nan)
@@ -525,19 +544,19 @@ class L2ctGenerate:
         # don't actually end up having any data once we look in detail. Just
         # skip tiles that will be empty
         fin_l1cg = h5py.File(self.l1cg, "r")
-        din = fin_l1cg["/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/view_zenith"][
-            lrange, srange
-        ]
+        din = fin_l1cg["/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/view_zenith"][:, :]
         # Change nan to fill value
         din[np.isnan(din)] = FILL_VALUE_BAD_OR_MISSING
-        data_in = MemoryRasterImageFloat(din.shape[0], din.shape[1])
-        data_in.write(0, 0, din)
+        din_sub = din[lrange, srange]
+        data_in = MemoryRasterImageFloat(din_sub.shape[0], din_sub.shape[1])
+        data_in.write(0, 0, din_sub)
         if res.empty_resample(data_in):
             logger.info("Tile is empty, skipping")
             logger.info(f"Done with {shp['tile_id']}")
             res = None
             fin_l1cg.close()
             din = None
+            din_sub = None
             data_in = None
             return False
         dirname = Path(str(self.output_pattern).replace("TILE", shp["tile_id"]))
@@ -574,8 +593,20 @@ class L2ctGenerate:
             din=din,
         )
 
+        # Useful code that we used when initially validating things. This can
+        # go away in a bit, but leave in place for now in case there are issues.
+        # self.diagnostic=True
+        self.diagnostic = False
         # height
         logger.info(f"Doing height - {shp['tile_id']}")
+        if self.diagnostic:
+            # Useful when validating data. Leave in for a bit, we can
+            # remove this when no longer needed
+            ras = geocal.GdalRasterImage(
+                f'HDF5:"{self.l1cg}"://HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data_Fields/height'
+            )
+            ras_map_info = ras.map_info
+            self.rasm = geocal.MapReprojectedImage(ras, mi)
         self.process_field(
             "height",
             dirname,
@@ -589,6 +620,12 @@ class L2ctGenerate:
         fin_l2cg_lste = h5py.File(self.l2cg_lste, "r")
         # cloud
         logger.info(f"Doing cloud - {shp['tile_id']}")
+        if self.diagnostic:
+            ras = geocal.GdalRasterImage(
+                f'HDF5:"{self.l2cg_lste}"://HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data_Fields/cloud_mask'
+            )
+            ras.map_info = ras_map_info
+            self.rasm = geocal.MapReprojectedImage(ras, mi)
         self.process_field(
             "cloud",
             dirname,
@@ -601,6 +638,12 @@ class L2ctGenerate:
 
         # emiswb
         logger.info(f"Doing EmisWB - {shp['tile_id']}")
+        if self.diagnostic:
+            ras = geocal.GdalRasterImage(
+                f'HDF5:"{self.l2cg_lste}"://HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data_Fields/EmisWB'
+            )
+            ras.map_info = ras_map_info
+            self.rasm = geocal.MapReprojectedImage(ras, mi)
         self.process_field(
             "EmisWB",
             dirname,
@@ -614,6 +657,12 @@ class L2ctGenerate:
         # Emis, Emis_err
         for i in range(1, 6):
             logger.info(f"Doing Emis{i} - {shp['tile_id']}")
+            if self.diagnostic:
+                ras = geocal.GdalRasterImage(
+                    f'HDF5:"{self.l2cg_lste}"://HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data_Fields/Emis{i}'
+                )
+                ras.map_info = ras_map_info
+                self.rasm = geocal.MapReprojectedImage(ras, mi)
             self.process_field(
                 f"Emis{i}",
                 dirname,
@@ -624,6 +673,12 @@ class L2ctGenerate:
                 srange,
             )
             logger.info(f"Doing Emis{i}_err - {shp['tile_id']}")
+            if self.diagnostic:
+                ras = geocal.GdalRasterImage(
+                    f'HDF5:"{self.l2cg_lste}"://HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data_Fields/Emis{i}_err'
+                )
+                ras.map_info = ras_map_info
+                self.rasm = geocal.MapReprojectedImage(ras, mi)
             self.process_field(
                 f"Emis{i}_err",
                 dirname,
@@ -638,6 +693,12 @@ class L2ctGenerate:
 
         # LST
         logger.info(f"Doing LST - {shp['tile_id']}")
+        if self.diagnostic:
+            ras = geocal.GdalRasterImage(
+                f'HDF5:"{self.l2cg_lste}"://HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data_Fields/LST'
+            )
+            ras.map_info = ras_map_info
+            self.rasm = geocal.MapReprojectedImage(ras, mi)
         self.process_field(
             "LST",
             dirname,
@@ -650,8 +711,14 @@ class L2ctGenerate:
 
         # SST
         logger.info(f"Doing SST - {shp['tile_id']}")
+        if self.diagnostic:
+            ras = geocal.GdalRasterImage(
+                f'HDF5:"{self.l2cg_lste}"://HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data_Fields/SST'
+            )
+            ras.map_info = ras_map_info
+            self.rasm = geocal.MapReprojectedImage(ras, mi)
         self.process_field(
-            "LST",
+            "SST",
             dirname,
             mi,
             res,
@@ -662,6 +729,12 @@ class L2ctGenerate:
 
         # QC
         logger.info(f"Doing QC - {shp['tile_id']}")
+        if self.diagnostic:
+            ras = geocal.GdalRasterImage(
+                f'HDF5:"{self.l2cg_lste}"://HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data_Fields/QC'
+            )
+            ras.map_info = ras_map_info
+            self.rasm = geocal.MapReprojectedImage(ras, mi)
         self.process_field(
             "QC",
             dirname,
@@ -674,6 +747,12 @@ class L2ctGenerate:
 
         # water, byte
         logger.info(f"Doing water - {shp['tile_id']}")
+        if self.diagnostic:
+            ras = geocal.GdalRasterImage(
+                f'HDF5:"{self.l2cg_lste}"://HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data_Fields/water_mask'
+            )
+            ras.map_info = ras_map_info
+            self.rasm = geocal.MapReprojectedImage(ras, mi)
         self.process_field(
             "water",
             dirname,
@@ -684,27 +763,12 @@ class L2ctGenerate:
             srange,
         )
 
-        # We did radiance 2 just to give a simple thing for us to compare against with
-        # our l1ct code. Leave this in case we want to come back to this, but normally
-        # don't do this.
-        if False:
-            b = 2
-            logger.info(f"Doing radiance band {b} - {shp['tile_id']}")
-            self.process_field(
-                f"radiance_{b}",
-                dirname,
-                mi,
-                res,
-                fin_l1cg[f"/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/radiance_{b}"],
-                lrange,
-                srange,
-            )
-
         self.write_browse(dirname)
         m.write()
         fin_l1cg.close()
         fin_l2cg_lste.close()
         din = None
+        din_sub = None
         data_in = None
         data = None
         res = None

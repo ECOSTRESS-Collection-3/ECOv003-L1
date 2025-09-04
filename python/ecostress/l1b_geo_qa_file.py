@@ -179,7 +179,9 @@ The third column is the cloud cover, as a percentage."""
         """Add data about orbit. Note that this requires we use
         OrbitOffsetCorrection, it doesn't work otherwise."""
         if hasattr(orb, "orbit_offset_correction"):
-            atime, acorr, ptime, pcorr = orb.orbit_offset_correction.orbit_correction_parameter()
+            atime, acorr, ptime, pcorr = (
+                orb.orbit_offset_correction.orbit_correction_parameter()
+            )
         else:
             atime, acorr, ptime, pcorr = orb.orbit_correction_parameter()
         with h5py.File(self.fname, "a") as f:

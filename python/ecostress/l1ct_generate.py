@@ -370,9 +370,10 @@ class L1ctGenerate:
         )
         for b in range(1, 6):
             logger.info(f"Doing radiance band {b} - {shp['tile_id']}")
-            din = h5py.File(self.l1b_rad)[f"Radiance/radiance_{b}"][lrange, srange]
-            data_in = MemoryRasterImageFloat(din.shape[0], din.shape[1])
-            data_in.write(0, 0, din)
+            din = h5py.File(self.l1b_rad)[f"Radiance/radiance_{b}"][:, :]
+            din_sub = din[lrange, srange]
+            data_in = MemoryRasterImageFloat(din_sub.shape[0], din_sub.shape[1])
+            data_in.write(0, 0, din_sub)
             data = res.resample_field(data_in, 1.0, False, np.nan)
             # COG can only create on copy, so we first create this in memory and
             # then write out.
@@ -389,7 +390,6 @@ class L1ctGenerate:
             # Get the range to use in the jpeg preview. We use the full range
             # of all the data, so we don't have weird changes in the color map from one
             # tile to the next
-            din = data_in.read_all_double()
             if np.count_nonzero(din > fill_value_threshold) > 0:
                 mn = din[din > fill_value_threshold].min()
                 mx = din[din > fill_value_threshold].max()
@@ -417,9 +417,10 @@ class L1ctGenerate:
             # GeoCal doesn't support the dqi type. We could update geocal,
             # but no strong reason to. Just read into memory
             logger.info(f"Doing DQI band {b} - {shp['tile_id']}")
-            din = h5py.File(self.l1b_rad)[f"Radiance/data_quality_{b}"][lrange, srange]
-            data_in = geocal.MemoryRasterImage(din.shape[0], din.shape[1])
-            data_in.write(0, 0, din)
+            din = h5py.File(self.l1b_rad)[f"Radiance/data_quality_{b}"][:, :]
+            din_sub = din[lrange, srange]
+            data_in = geocal.MemoryRasterImage(din_sub.shape[0], din_sub.shape[1])
+            data_in.write(0, 0, din_sub)
             data = res.resample_dqi(data_in).astype(int)
             # COG can only create on copy, so we first create this in memory and
 
@@ -465,11 +466,12 @@ class L1ctGenerate:
 
         # Cloud mask
         logger.info(f"Doing prelim_cloud_mask - {shp['tile_id']}")
-        din = fin_geo["Geolocation/prelim_cloud_mask"][lrange, srange]
+        din = fin_geo["Geolocation/prelim_cloud_mask"][:, :]
         # Remove fill value, treat as clear
         din[din > 1] = 0
-        data_in = geocal.MemoryRasterImage(din.shape[0], din.shape[1])
-        data_in.write(0, 0, din)
+        din_sub = din[lrange, srange]
+        data_in = geocal.MemoryRasterImage(din_sub.shape[0], din_sub.shape[1])
+        data_in.write(0, 0, din_sub)
         data = res.resample_field(data_in, 1.0, False, 0)
         data = np.where(data < 0.5, 0, 1).astype(int)
         f = geocal.GdalRasterImage("", "MEM", mi, 1, geocal.GdalRasterImage.Byte)
