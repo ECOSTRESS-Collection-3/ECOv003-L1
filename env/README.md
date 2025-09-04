@@ -7,3 +7,7 @@ Makefile.local file to override any of the Makefile content.
 
 Note if you aren't a JPL developer, you can use the released versions of these
 environments, see [afids conda package](https://github.com/Cartography-jpl/afids-conda-package).
+
+Note when updating ecostress_environment_fixed.yml, make sure only the relative path
+to afids-conda-channel is there. conda likes to use hard coded paths, but this doesn't
+work anywhere else we delivery to because the full path isn't present.
