@@ -23,8 +23,6 @@ dependencies:
   # Useful, not strictly necessary
   - pandasql
   - git-annex
-  - pip:
-      - tflearn
 variables:
   AFIDS_DATA: /ldata/smyth/ecostress-env/data
   LANDSAT_ROOT: need_to_set

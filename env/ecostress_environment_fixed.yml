@@ -613,8 +613,6 @@ dependencies:
   - zlib=1.3.1=hb9d3cd8_2
   - zstandard=0.24.0=py311h4854a17_1
   - zstd=1.5.7=hb8e6e7a_2
-  - pip:
-      - tflearn==0.5.0
 variables:
   AFIDS_DATA: /ldata/smyth/ecostress-env/data
   LANDSAT_ROOT: need_to_set
