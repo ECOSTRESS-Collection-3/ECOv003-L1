@@ -255,11 +255,12 @@ class L1bTpCollect(object):
 
     def tpcol(
         self, pool: Pool | None = None
-    ) -> tuple[geocal.TiePointCollection, list[tuple[geocal.Time, geocal.Time]]]:
-        """Return tiepoints collected. We also return the time ranges for the
-        ImageGroundConnection that we got good tiepoint for. This
-        can be used by the calling program to determine such things
-        as the breakpoints on the orbit model
+    ) -> tuple[geocal.TiePointCollection, list[tuple[int, geocal.Time, geocal.Time]]]:
+        """Return tiepoints collected. We also return the image index
+        and time ranges for the ImageGroundConnection that we got good
+        tiepoint for. This can be used by the calling program to
+        determine such things as the breakpoints on the orbit model
+
         """
 
         # First project all the data.
@@ -308,7 +309,7 @@ class L1bTpCollect(object):
                     )
                 if len(tpcol) > 0:
                     res.extend(tpcol)
-                    time_range_tp.append((tmin, tmax))
+                    time_range_tp.append((i, tmin, tmax))
                 j += 1
             else:
                 if self.qa_file is not None:

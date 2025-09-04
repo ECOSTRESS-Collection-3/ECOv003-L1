@@ -21,23 +21,41 @@ public:
 
   boost::shared_ptr<GeoCal::Orbit> orbit_uncorrected() const 
   { return orb_corr->orbit_uncorrected(); }
+
+//-----------------------------------------------------------------------
+/// The OrbitOffsetCorrection orbit
+//-----------------------------------------------------------------------
+
+  boost::shared_ptr<GeoCal::OrbitOffsetCorrection> orbit_offset_correction() const 
+  { return orb_corr; }
   
   virtual boost::shared_ptr<GeoCal::OrbitData> orbit_data(GeoCal::Time T) const
   { return orb_corr->orbit_data(T); }
   virtual boost::shared_ptr<GeoCal::OrbitData> 
   orbit_data(const GeoCal::TimeWithDerivative& T) const
   { return orb_corr->orbit_data(T); }
-  void add_scene(int Scene_number, GeoCal::Time& Tstart, GeoCal::Time& Tend);
+  void add_scene(int Scene_number, GeoCal::Time& Tstart, GeoCal::Time& Tend,
+		 bool Init_value_match=false);
   std::vector<int> scene_list() const;
   virtual GeoCal::ArrayAd<double, 1> parameter_with_derivative() const;
   virtual void parameter_with_derivative(const GeoCal::ArrayAd<double, 1>& Parm);
   virtual std::vector<std::string> parameter_name() const;
   virtual blitz::Array<bool, 1> parameter_mask() const;
   virtual void print(std::ostream& Os) const;
-  struct CorrData {
+  class CorrData {
+  public:
+    CorrData() {}
+    CorrData(int Scene_number, const GeoCal::Time& Tstart,
+	     const GeoCal::Time& Tend)
+      : scene_number(Scene_number), tstart(Tstart), tend(Tend), ypr_corr(3, 0)
+    {
+      ypr_corr(0) = 0;
+      ypr_corr(1) = 0;
+      ypr_corr(2) = 0;
+    }
+    int scene_number;
     GeoCal::Time tstart;
     GeoCal::Time tend;
-    int scene_number;
     GeoCal::ArrayAd<double, 1> ypr_corr;
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version);

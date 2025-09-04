@@ -178,7 +178,10 @@ The third column is the cloud cover, as a percentage."""
     def add_orbit(self, pass_number: int, orb: geocal.Orbit) -> None:
         """Add data about orbit. Note that this requires we use
         OrbitOffsetCorrection, it doesn't work otherwise."""
-        atime, acorr, ptime, pcorr = orb.orbit_correction_parameter()
+        if hasattr(orb, "orbit_offset_correction"):
+            atime, acorr, ptime, pcorr = orb.orbit_offset_correction.orbit_correction_parameter()
+        else:
+            atime, acorr, ptime, pcorr = orb.orbit_correction_parameter()
         with h5py.File(self.fname, "a") as f:
             orb_group = f["Orbit"].create_group(f"Pass {pass_number}")
             d = orb_group.create_dataset(

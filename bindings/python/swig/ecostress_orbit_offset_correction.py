@@ -166,7 +166,18 @@ class EcostressOrbitOffsetCorrection(geocal_swig.orbit.Orbit):
     def orbit_uncorrected(self):
         return self._v_orbit_uncorrected()
 
-    scene_list = _swig_new_instance_method(_ecostress_orbit_offset_correction.EcostressOrbitOffsetCorrection_scene_list)
+    _v_orbit_offset_correction = _swig_new_instance_method(_ecostress_orbit_offset_correction.EcostressOrbitOffsetCorrection__v_orbit_offset_correction)
+
+    @property
+    def orbit_offset_correction(self):
+        return self._v_orbit_offset_correction()
+
+    _v_scene_list = _swig_new_instance_method(_ecostress_orbit_offset_correction.EcostressOrbitOffsetCorrection__v_scene_list)
+
+    @property
+    def scene_list(self):
+        return self._v_scene_list()
+
 
     def __reduce__(self):
     #Special handling for when we are doing boost serialization, we set

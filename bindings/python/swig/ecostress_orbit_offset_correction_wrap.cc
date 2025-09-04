@@ -3882,46 +3882,47 @@ namespace Swig {
 #define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Camera_t_t swig_types[152]
 #define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Orbit_t_t swig_types[153]
 #define SWIGTYPE_p_boost__shared_ptrT_GeoCal__OrbitData_t swig_types[154]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Orbit_t swig_types[155]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__QuaternionOrbitData_t swig_types[156]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Refraction_t swig_types[157]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_t swig_types[158]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVector_t swig_types[159]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__SimpleCamera_t swig_types[160]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__SubCamera_t swig_types[161]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t swig_types[162]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t swig_types[163]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__VelocityAberrationFirstOrder_t swig_types[164]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__VelocityAberration_t swig_types[165]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameterNested_t swig_types[166]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameterShare_t swig_types[167]
-#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameter_t swig_types[168]
-#define SWIGTYPE_p_boost__shared_ptrT_SwigDirector_Camera_t swig_types[169]
-#define SWIGTYPE_p_boost__shared_ptrT_SwigDirector_Orbit_t swig_types[170]
-#define SWIGTYPE_p_boost__shared_ptrT_SwigDirector_WithParameter_t swig_types[171]
-#define SWIGTYPE_p_char swig_types[172]
-#define SWIGTYPE_p_char_type swig_types[173]
-#define SWIGTYPE_p_difference_type swig_types[174]
-#define SWIGTYPE_p_fmtflags swig_types[175]
-#define SWIGTYPE_p_int_type swig_types[176]
-#define SWIGTYPE_p_iostate swig_types[177]
-#define SWIGTYPE_p_off_type swig_types[178]
-#define SWIGTYPE_p_openmode swig_types[179]
-#define SWIGTYPE_p_pos_type swig_types[180]
-#define SWIGTYPE_p_seekdir swig_types[181]
-#define SWIGTYPE_p_size_t swig_types[182]
-#define SWIGTYPE_p_size_type swig_types[183]
-#define SWIGTYPE_p_state_type swig_types[184]
-#define SWIGTYPE_p_std__basic_iosT_char_t swig_types[185]
-#define SWIGTYPE_p_std__basic_iostreamT_char_t swig_types[186]
-#define SWIGTYPE_p_std__basic_istreamT_char_t swig_types[187]
-#define SWIGTYPE_p_std__basic_ostreamT_char_t swig_types[188]
-#define SWIGTYPE_p_std__invalid_argument swig_types[189]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[190]
-#define SWIGTYPE_p_traits_type swig_types[191]
-#define SWIGTYPE_p_value_type swig_types[192]
-static swig_type_info *swig_types[194];
-static swig_module_info swig_module = {swig_types, 193, 0, 0, 0, 0};
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__OrbitOffsetCorrection_t swig_types[155]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Orbit_t swig_types[156]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__QuaternionOrbitData_t swig_types[157]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Refraction_t swig_types[158]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVectorWithDerivative_t swig_types[159]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__ScLookVector_t swig_types[160]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__SimpleCamera_t swig_types[161]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__SubCamera_t swig_types[162]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__TimeWithDerivative_t swig_types[163]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t swig_types[164]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__VelocityAberrationFirstOrder_t swig_types[165]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__VelocityAberration_t swig_types[166]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameterNested_t swig_types[167]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameterShare_t swig_types[168]
+#define SWIGTYPE_p_boost__shared_ptrT_GeoCal__WithParameter_t swig_types[169]
+#define SWIGTYPE_p_boost__shared_ptrT_SwigDirector_Camera_t swig_types[170]
+#define SWIGTYPE_p_boost__shared_ptrT_SwigDirector_Orbit_t swig_types[171]
+#define SWIGTYPE_p_boost__shared_ptrT_SwigDirector_WithParameter_t swig_types[172]
+#define SWIGTYPE_p_char swig_types[173]
+#define SWIGTYPE_p_char_type swig_types[174]
+#define SWIGTYPE_p_difference_type swig_types[175]
+#define SWIGTYPE_p_fmtflags swig_types[176]
+#define SWIGTYPE_p_int_type swig_types[177]
+#define SWIGTYPE_p_iostate swig_types[178]
+#define SWIGTYPE_p_off_type swig_types[179]
+#define SWIGTYPE_p_openmode swig_types[180]
+#define SWIGTYPE_p_pos_type swig_types[181]
+#define SWIGTYPE_p_seekdir swig_types[182]
+#define SWIGTYPE_p_size_t swig_types[183]
+#define SWIGTYPE_p_size_type swig_types[184]
+#define SWIGTYPE_p_state_type swig_types[185]
+#define SWIGTYPE_p_std__basic_iosT_char_t swig_types[186]
+#define SWIGTYPE_p_std__basic_iostreamT_char_t swig_types[187]
+#define SWIGTYPE_p_std__basic_istreamT_char_t swig_types[188]
+#define SWIGTYPE_p_std__basic_ostreamT_char_t swig_types[189]
+#define SWIGTYPE_p_std__invalid_argument swig_types[190]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[191]
+#define SWIGTYPE_p_traits_type swig_types[192]
+#define SWIGTYPE_p_value_type swig_types[193]
+static swig_type_info *swig_types[195];
+static swig_module_info swig_module = {swig_types, 194, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -5563,6 +5564,20 @@ SWIG_AsVal_int (PyObject * obj, int *val)
 }
 
 
+SWIGINTERN int
+SWIG_AsVal_bool (PyObject *obj, bool *val)
+{
+  int r;
+  if (!PyBool_Check(obj))
+    return SWIG_ERROR;
+  r = PyObject_IsTrue(obj);
+  if (r == -1)
+    return SWIG_ERROR;
+  if (val) *val = r ? true : false;
+  return SWIG_OK;
+}
+
+
 namespace swig {
   template <> struct traits< int > {
     typedef value_category category;
@@ -7054,7 +7069,122 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_EcostressOrbitOffsetCorrection_add_scene(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_EcostressOrbitOffsetCorrection_add_scene__SWIG_0(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressOrbitOffsetCorrection *arg1 = (Ecostress::EcostressOrbitOffsetCorrection *) 0 ;
+  int arg2 ;
+  GeoCal::Time *arg3 = 0 ;
+  GeoCal::Time *arg4 = 0 ;
+  bool arg5 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressOrbitOffsetCorrection > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressOrbitOffsetCorrection > *smartarg1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  boost::shared_ptr< GeoCal::Time > tempshared3 ;
+  void *argp4 = 0 ;
+  int res4 = 0 ;
+  boost::shared_ptr< GeoCal::Time > tempshared4 ;
+  bool val5 ;
+  int ecode5 = 0 ;
+  
+  (void)self;
+  if ((nobjs < 5) || (nobjs > 5)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressOrbitOffsetCorrection_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressOrbitOffsetCorrection_add_scene" "', argument " "1"" of type '" "Ecostress::EcostressOrbitOffsetCorrection *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressOrbitOffsetCorrection > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressOrbitOffsetCorrection > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressOrbitOffsetCorrection * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressOrbitOffsetCorrection > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressOrbitOffsetCorrection * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "EcostressOrbitOffsetCorrection_add_scene" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::Time *ptr;
+    res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], (void**)(&ptr), SWIGTYPE_p_GeoCal__Time,  0 , &newmem);
+    if (SWIG_IsOK(res3)) {
+      arg3 = ptr;
+    } else {
+      res3 = SWIG_ConvertPtrAndOwn(swig_obj[2], &argp3, SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t,  0 , &newmem);
+      if (!SWIG_IsOK(res3)) {
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "EcostressOrbitOffsetCorrection_add_scene" "', argument " "3"" of type '" "GeoCal::Time &""'");
+      }
+      if (!argp3) {
+        SWIG_exception_fail(SWIG_NullReferenceError, "invalid null reference " "in method '" "EcostressOrbitOffsetCorrection_add_scene" "', argument " "3"" of type '" "GeoCal::Time &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared3 = *reinterpret_cast< boost::shared_ptr<  GeoCal::Time > * >(argp3);
+        delete reinterpret_cast< boost::shared_ptr<  GeoCal::Time > * >(argp3);
+        arg3 = const_cast< GeoCal::Time * >(tempshared3.get());
+      } else {
+        arg3 = const_cast< GeoCal::Time * >(reinterpret_cast< boost::shared_ptr<  GeoCal::Time > * >(argp3)->get());
+      }
+    }
+  }
+  {
+    int newmem = 0;
+    // Added mms
+    // First check to see if all ready pointer type
+    GeoCal::Time *ptr;
+    res4 = SWIG_ConvertPtrAndOwn(swig_obj[3], (void**)(&ptr), SWIGTYPE_p_GeoCal__Time,  0 , &newmem);
+    if (SWIG_IsOK(res4)) {
+      arg4 = ptr;
+    } else {
+      res4 = SWIG_ConvertPtrAndOwn(swig_obj[3], &argp4, SWIGTYPE_p_boost__shared_ptrT_GeoCal__Time_t,  0 , &newmem);
+      if (!SWIG_IsOK(res4)) {
+        SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "EcostressOrbitOffsetCorrection_add_scene" "', argument " "4"" of type '" "GeoCal::Time &""'");
+      }
+      if (!argp4) {
+        SWIG_exception_fail(SWIG_NullReferenceError, "invalid null reference " "in method '" "EcostressOrbitOffsetCorrection_add_scene" "', argument " "4"" of type '" "GeoCal::Time &""'"); 
+      }
+      if (newmem & SWIG_CAST_NEW_MEMORY) {
+        tempshared4 = *reinterpret_cast< boost::shared_ptr<  GeoCal::Time > * >(argp4);
+        delete reinterpret_cast< boost::shared_ptr<  GeoCal::Time > * >(argp4);
+        arg4 = const_cast< GeoCal::Time * >(tempshared4.get());
+      } else {
+        arg4 = const_cast< GeoCal::Time * >(reinterpret_cast< boost::shared_ptr<  GeoCal::Time > * >(argp4)->get());
+      }
+    }
+  }
+  ecode5 = SWIG_AsVal_bool(swig_obj[4], &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "EcostressOrbitOffsetCorrection_add_scene" "', argument " "5"" of type '" "bool""'");
+  } 
+  arg5 = static_cast< bool >(val5);
+  {
+    try {
+      (arg1)->add_scene(arg2,*arg3,*arg4,arg5);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressOrbitOffsetCorrection_add_scene__SWIG_1(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::EcostressOrbitOffsetCorrection *arg1 = (Ecostress::EcostressOrbitOffsetCorrection *) 0 ;
   int arg2 ;
@@ -7072,10 +7202,9 @@ SWIGINTERN PyObject *_wrap_EcostressOrbitOffsetCorrection_add_scene(PyObject *se
   void *argp4 = 0 ;
   int res4 = 0 ;
   boost::shared_ptr< GeoCal::Time > tempshared4 ;
-  PyObject *swig_obj[4] ;
   
   (void)self;
-  if (!SWIG_Python_UnpackTuple(args, "EcostressOrbitOffsetCorrection_add_scene", 4, 4, swig_obj)) SWIG_fail;
+  if ((nobjs < 4) || (nobjs > 4)) SWIG_fail;
   {
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressOrbitOffsetCorrection_t, 0 |  0 , &newmem);
@@ -7162,6 +7291,34 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_EcostressOrbitOffsetCorrection_add_scene(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[6] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args, "EcostressOrbitOffsetCorrection_add_scene", 0, 5, argv))) SWIG_fail;
+  --argc;
+  if (argc == 4) {
+    PyObject *retobj = _wrap_EcostressOrbitOffsetCorrection_add_scene__SWIG_1(self, argc, argv);
+    if (!SWIG_Python_TypeErrorOccurred(retobj)) return retobj;
+    SWIG_fail;
+  }
+  if (argc == 5) {
+    PyObject *retobj = _wrap_EcostressOrbitOffsetCorrection_add_scene__SWIG_0(self, argc, argv);
+    if (!SWIG_Python_TypeErrorOccurred(retobj)) return retobj;
+    SWIG_fail;
+  }
+  
+fail:
+  SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'EcostressOrbitOffsetCorrection_add_scene'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressOrbitOffsetCorrection::add_scene(int,GeoCal::Time &,GeoCal::Time &,bool)\n"
+    "    Ecostress::EcostressOrbitOffsetCorrection::add_scene(int,GeoCal::Time &,GeoCal::Time &)\n");
+  return 0;
+}
+
+
 SWIGINTERN PyObject *_wrap_EcostressOrbitOffsetCorrection__v_orbit_uncorrected(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressOrbitOffsetCorrection *arg1 = (Ecostress::EcostressOrbitOffsetCorrection *) 0 ;
@@ -7208,7 +7365,51 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_EcostressOrbitOffsetCorrection_scene_list(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_EcostressOrbitOffsetCorrection__v_orbit_offset_correction(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressOrbitOffsetCorrection *arg1 = (Ecostress::EcostressOrbitOffsetCorrection *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressOrbitOffsetCorrection const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressOrbitOffsetCorrection const > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  SwigValueWrapper< boost::shared_ptr< GeoCal::OrbitOffsetCorrection > > result;
+  
+  (void)self;
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressOrbitOffsetCorrection_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressOrbitOffsetCorrection__v_orbit_offset_correction" "', argument " "1"" of type '" "Ecostress::EcostressOrbitOffsetCorrection const *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressOrbitOffsetCorrection > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressOrbitOffsetCorrection > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressOrbitOffsetCorrection * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressOrbitOffsetCorrection > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressOrbitOffsetCorrection * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = ((Ecostress::EcostressOrbitOffsetCorrection const *)arg1)->orbit_offset_correction();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new boost::shared_ptr< GeoCal::OrbitOffsetCorrection >(result)), SWIGTYPE_p_boost__shared_ptrT_GeoCal__OrbitOffsetCorrection_t, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressOrbitOffsetCorrection__v_scene_list(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressOrbitOffsetCorrection *arg1 = (Ecostress::EcostressOrbitOffsetCorrection *) 0 ;
   void *argp1 = 0 ;
@@ -7225,7 +7426,7 @@ SWIGINTERN PyObject *_wrap_EcostressOrbitOffsetCorrection_scene_list(PyObject *s
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressOrbitOffsetCorrection_t, 0 |  0 , &newmem);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressOrbitOffsetCorrection_scene_list" "', argument " "1"" of type '" "Ecostress::EcostressOrbitOffsetCorrection const *""'");
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressOrbitOffsetCorrection__v_scene_list" "', argument " "1"" of type '" "Ecostress::EcostressOrbitOffsetCorrection const *""'");
     }
     if (newmem & SWIG_CAST_NEW_MEMORY) {
       tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressOrbitOffsetCorrection > * >(argp1);
@@ -7340,11 +7541,14 @@ static PyMethodDef SwigMethods[] = {
 		""},
 	 { "EcostressOrbitOffsetCorrection_add_scene", _wrap_EcostressOrbitOffsetCorrection_add_scene, METH_VARARGS, "\n"
 		"\n"
-		"void EcostressOrbitOffsetCorrection::add_scene(int Scene_number, GeoCal::Time &Tstart, GeoCal::Time &Tend)\n"
+		"void EcostressOrbitOffsetCorrection::add_scene(int Scene_number, GeoCal::Time &Tstart, GeoCal::Time &Tend, bool\n"
+		"Init_value_match=false)\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::add_scene\n"
 		"Add breakpoints for a given scene, with the given time range for the\n"
 		"scene.\n"
-		"\n"
+		"If Init_value_match is false, we initialize the offset to 0. If it is\n"
+		"true, then we match whatever the current correction we would have\n"
+		"calculated for Tstart + (Tend - Tstart) / 2. \n"
 		""},
 	 { "EcostressOrbitOffsetCorrection__v_orbit_uncorrected", _wrap_EcostressOrbitOffsetCorrection__v_orbit_uncorrected, METH_O, "\n"
 		"\n"
@@ -7353,7 +7557,14 @@ static PyMethodDef SwigMethods[] = {
 		"The uncorrected orbit.\n"
 		"\n"
 		""},
-	 { "EcostressOrbitOffsetCorrection_scene_list", _wrap_EcostressOrbitOffsetCorrection_scene_list, METH_O, "\n"
+	 { "EcostressOrbitOffsetCorrection__v_orbit_offset_correction", _wrap_EcostressOrbitOffsetCorrection__v_orbit_offset_correction, METH_O, "\n"
+		"\n"
+		"boost::shared_ptr< GeoCal::OrbitOffsetCorrection > Ecostress::EcostressOrbitOffsetCorrection::orbit_offset_correction() const\n"
+		"Ecostress::EcostressOrbitOffsetCorrection::orbit_offset_correction\n"
+		"The OrbitOffsetCorrection orbit.\n"
+		"\n"
+		""},
+	 { "EcostressOrbitOffsetCorrection__v_scene_list", _wrap_EcostressOrbitOffsetCorrection__v_scene_list, METH_O, "\n"
 		"\n"
 		"std::vector< int > EcostressOrbitOffsetCorrection::scene_list() const\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::scene_list\n"
@@ -7405,11 +7616,14 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		""},
 	 { "EcostressOrbitOffsetCorrection_add_scene", _wrap_EcostressOrbitOffsetCorrection_add_scene, METH_VARARGS, "\n"
 		"\n"
-		"void EcostressOrbitOffsetCorrection::add_scene(int Scene_number, GeoCal::Time &Tstart, GeoCal::Time &Tend)\n"
+		"void EcostressOrbitOffsetCorrection::add_scene(int Scene_number, GeoCal::Time &Tstart, GeoCal::Time &Tend, bool\n"
+		"Init_value_match=false)\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::add_scene\n"
 		"Add breakpoints for a given scene, with the given time range for the\n"
 		"scene.\n"
-		"\n"
+		"If Init_value_match is false, we initialize the offset to 0. If it is\n"
+		"true, then we match whatever the current correction we would have\n"
+		"calculated for Tstart + (Tend - Tstart) / 2. \n"
 		""},
 	 { "EcostressOrbitOffsetCorrection__v_orbit_uncorrected", _wrap_EcostressOrbitOffsetCorrection__v_orbit_uncorrected, METH_O, "\n"
 		"\n"
@@ -7418,7 +7632,14 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"The uncorrected orbit.\n"
 		"\n"
 		""},
-	 { "EcostressOrbitOffsetCorrection_scene_list", _wrap_EcostressOrbitOffsetCorrection_scene_list, METH_O, "\n"
+	 { "EcostressOrbitOffsetCorrection__v_orbit_offset_correction", _wrap_EcostressOrbitOffsetCorrection__v_orbit_offset_correction, METH_O, "\n"
+		"\n"
+		"boost::shared_ptr< GeoCal::OrbitOffsetCorrection > Ecostress::EcostressOrbitOffsetCorrection::orbit_offset_correction() const\n"
+		"Ecostress::EcostressOrbitOffsetCorrection::orbit_offset_correction\n"
+		"The OrbitOffsetCorrection orbit.\n"
+		"\n"
+		""},
+	 { "EcostressOrbitOffsetCorrection__v_scene_list", _wrap_EcostressOrbitOffsetCorrection__v_scene_list, METH_O, "\n"
 		"\n"
 		"std::vector< int > EcostressOrbitOffsetCorrection::scene_list() const\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::scene_list\n"
@@ -8120,6 +8341,7 @@ static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__ObservableT_GeoCal__O
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Camera_t_t = {"_p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Camera_t_t", "boost::shared_ptr< GeoCal::Observer< GeoCal::Camera > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Orbit_t_t = {"_p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Orbit_t_t", "boost::shared_ptr< GeoCal::Observer< GeoCal::Orbit > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__OrbitData_t = {"_p_boost__shared_ptrT_GeoCal__OrbitData_t", "boost::shared_ptr< GeoCal::OrbitData > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__OrbitOffsetCorrection_t = {"_p_boost__shared_ptrT_GeoCal__OrbitOffsetCorrection_t", "boost::shared_ptr< GeoCal::OrbitOffsetCorrection > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__Orbit_t = {"_p_boost__shared_ptrT_GeoCal__Orbit_t", "boost::shared_ptr< GeoCal::Orbit > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__QuaternionOrbitData_t = {"_p_boost__shared_ptrT_GeoCal__QuaternionOrbitData_t", "boost::shared_ptr< GeoCal::QuaternionOrbitData > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__shared_ptrT_GeoCal__Refraction_t = {"_p_boost__shared_ptrT_GeoCal__Refraction_t", "boost::shared_ptr< GeoCal::Refraction > *", 0, 0, (void*)0, 0};
@@ -8315,6 +8537,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Camera_t_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Orbit_t_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__OrbitData_t,
+  &_swigt__p_boost__shared_ptrT_GeoCal__OrbitOffsetCorrection_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__Orbit_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__QuaternionOrbitData_t,
   &_swigt__p_boost__shared_ptrT_GeoCal__Refraction_t,
@@ -8510,6 +8733,7 @@ static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ObservableT_GeoCal__O
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Camera_t_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Camera_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Orbit_t_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Orbit_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__OrbitData_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__OrbitData_t, 0, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__QuaternionOrbitData_t, _p_boost__shared_ptrT_GeoCal__QuaternionOrbitData_tTo_p_boost__shared_ptrT_GeoCal__OrbitData_t, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__OrbitOffsetCorrection_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__OrbitOffsetCorrection_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__Orbit_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__Orbit_t, 0, 0, 0},  {&_swigt__p_boost__shared_ptrT_Ecostress__EcostressOrbitOffsetCorrection_t, _p_boost__shared_ptrT_Ecostress__EcostressOrbitOffsetCorrection_tTo_p_boost__shared_ptrT_GeoCal__Orbit_t, 0, 0},  {&_swigt__p_boost__shared_ptrT_GeoCal__KeplerOrbit_t, _p_boost__shared_ptrT_GeoCal__KeplerOrbit_tTo_p_boost__shared_ptrT_GeoCal__Orbit_t, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__QuaternionOrbitData_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__QuaternionOrbitData_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__shared_ptrT_GeoCal__Refraction_t[] = {  {&_swigt__p_boost__shared_ptrT_GeoCal__Refraction_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -8705,6 +8929,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Camera_t_t,
   _swigc__p_boost__shared_ptrT_GeoCal__ObserverT_GeoCal__Orbit_t_t,
   _swigc__p_boost__shared_ptrT_GeoCal__OrbitData_t,
+  _swigc__p_boost__shared_ptrT_GeoCal__OrbitOffsetCorrection_t,
   _swigc__p_boost__shared_ptrT_GeoCal__Orbit_t,
   _swigc__p_boost__shared_ptrT_GeoCal__QuaternionOrbitData_t,
   _swigc__p_boost__shared_ptrT_GeoCal__Refraction_t,

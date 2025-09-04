@@ -1,5 +1,6 @@
 #include "ecostress_igc_collection.h"
 #include "ecostress_serialize_support.h"
+#include "ecostress_orbit_offset_correction.h"
 #include "geocal/orbit_offset_correction.h"
 using namespace Ecostress;
 
@@ -45,14 +46,24 @@ boost::shared_ptr<GeoCal::Time>& Tafter) const
   if(boost::dynamic_pointer_cast<EcostressImageGroundConnection>(image_ground_connection(0))) {
     auto igc = boost::dynamic_pointer_cast<EcostressImageGroundConnection>(image_ground_connection(0));
     orb = boost::dynamic_pointer_cast<GeoCal::OrbitOffsetCorrection>(igc->orbit());
+    if(!orb) {
+      auto orb2 = boost::dynamic_pointer_cast<EcostressOrbitOffsetCorrection>(igc->orbit());
+      if(orb2)
+	orb = orb2->orbit_offset_correction();
+    }
   } else if(boost::dynamic_pointer_cast<EcostressImageGroundConnectionSubset>(image_ground_connection(0))) {
     auto igc = boost::dynamic_pointer_cast<EcostressImageGroundConnectionSubset>(image_ground_connection(0));
     orb = boost::dynamic_pointer_cast<GeoCal::OrbitOffsetCorrection>(igc->orbit());
+    if(!orb) {
+      auto orb2 = boost::dynamic_pointer_cast<EcostressOrbitOffsetCorrection>(igc->orbit());
+      if(orb2)
+	orb = orb2->orbit_offset_correction();
+    }
   } else {
     throw GeoCal::Exception("nearest_attitude_time_point only works with EcostressImageGroundConnection or EcostressImageGroundConnectionSubset");
   }
   if(!orb)
-    throw GeoCal::Exception("nearest_attitude_time_point only works with OrbitOffsetCorrection");
+    throw GeoCal::Exception("nearest_attitude_time_point only works with EcostressOrbitOffsetCorrection or OrbitOffsetCorrection");
   std::vector<GeoCal::Time> att_tp = orb->attitude_time_point();
   auto lb = std::lower_bound(att_tp.begin(), att_tp.end(), *T);
   if(lb == att_tp.end() && lb == att_tp.begin())

@@ -17,9 +17,11 @@ public:
   virtual boost::shared_ptr<GeoCal::OrbitData> orbit_data(GeoCal::Time T) const;
   virtual boost::shared_ptr<GeoCal::OrbitData> orbit_data(const GeoCal::TimeWithDerivative& T) 
     const;
-  void add_scene(int Scene_number, GeoCal::Time& Tstart, GeoCal::Time& Tend);
+  void add_scene(int Scene_number, GeoCal::Time& Tstart, GeoCal::Time& Tend,
+		 bool Init_value_match=false);
   %python_attribute(orbit_uncorrected, boost::shared_ptr<GeoCal::Orbit>);
-  std::vector<int> scene_list() const;
+  %python_attribute(orbit_offset_correction, boost::shared_ptr<GeoCal::OrbitOffsetCorrection>);
+  %python_attribute(scene_list, std::vector<int>);
   %pickle_serialization();
 };
 

@@ -23,6 +23,7 @@ from .l1b_tp_collect import L1bTpCollect
 import geocal  # type: ignore
 from ecostress_swig import (  # type: ignore
     EcostressOrbit,
+    EcostressOrbitOffsetCorrection,
     EcostressOrbitL0Fix,
     EcostressImageGroundConnection,
     EcostressImageGroundConnectionSubset,
@@ -94,7 +95,7 @@ class L1bGeoProcess:
         self.setup_orthobase(landsat_band, ecostress_band)
         if orbit_offset is not None:
             self.setup_orbit_offset(orbit_offset)
-        self.orb: geocal.Orbit = geocal.OrbitOffsetCorrection(self.orb)
+        self.orb: geocal.Orbit = EcostressOrbitOffsetCorrection(self.orb)
         self.cam = geocal.read_shelve(str(self.l1_osp_dir / "camera.xml"))
         # Don't fit any of the camera parameters, hold them all fixed
         self.cam.mask_all_parameter()
@@ -537,8 +538,7 @@ class L1bGeoProcess:
             t2 = -9999.0
             # Get points, but only if we actually have at
             # least on correction point
-            atp, _, _, _ = igc.orbit.orbit_correction_parameter()
-            if len(atp) > 0:
+            if len(igc.orbit.parameter) > 0:
                 tb, ta = igccol.nearest_attitude_time_point(t)
                 if tb < geocal.Time.max_valid_time - 1:
                     t1 = t - tb
@@ -700,7 +700,7 @@ class L1bGeoProcess:
 
     def collect_tp(
         self, igccol: EcostressIgcCollection, pool: Pool | None, pass_number: int
-    ) -> tuple[geocal.TiePointCollection, list[tuple[geocal.Time, geocal.Time]]]:
+    ) -> tuple[geocal.TiePointCollection, list[tuple[int, geocal.Time, geocal.Time]]]:
         t = L1bTpCollect(
             igccol,
             self.ortho_base,
@@ -729,43 +729,22 @@ class L1bGeoProcess:
     def add_breakpoint(
         self,
         orb: geocal.OrbitOffsetCorrection,
-        time_range_tp: list[tuple[geocal.Time, geocal.Time]],
+        time_range_tp: list[tuple[int, geocal.Time, geocal.Time]],
         pass_number: int,
     ) -> None:
         """Add breakpoints for the scenes that we got good tiepoints from.
         We may well tweak this, but right now we set breakpoints at the
         beginning, middle and end of the scene, unless the beginning
         is within one scene of another breakpoint."""
-        # TODO Add handling for multiple passes. Want to add points without breaking
-        # the setting for the current ones
-        # Short term, just do correction at beginning and end. We will want to
-        # update this logic
         if pass_number == 1:
-            # TODO Should perhaps have logic to skip second point unless we have
-            # matched scenes distributed far enough apart
-            tlast = None
-            for tmin, tmax in time_range_tp:
-                if tlast is None:
-                    orb.insert_attitude_time_point(tmin)
-                tlast = tmax
-            if tlast is not None:
-                orb.insert_attitude_time_point(tlast)
+            for i, tmin, tmax in time_range_tp:
+                orb.add_scene(self.scene_list[i], tmin, tmax)
         else:
-            # For now, have pass 2 be like the previous pass 1. We'll want
-            # to change this but not a bad starting point
-            # if False:
-            #  This was what we did in collection 2, keep as a reference here
-            tlast = None
-            for tmin, tmax in time_range_tp:
-                if tlast is None and pass_number == 1:
-                    orb.insert_position_time_point(tmin)
-                if tlast is None or tmin - tlast > 52.0:
-                    orb.insert_attitude_time_point(tmin)
-                orb.insert_attitude_time_point(tmin + (tmax - tmin) / 2)
-                orb.insert_attitude_time_point(tmax)
-                tlast = tmax
-            if tlast is not None and pass_number == 1:
-                orb.insert_position_time_point(tlast)
+            # For further passes, add any new scenes we have tiepoints for,
+            # but start with the value we current have at those time points
+            for i, tmin, tmax in time_range_tp:
+                if self.scene_list[i] not in orb.scene_list:
+                    orb.add_scene(self.scene_list[i], tmin, tmax, True)
 
     def run_sba(
         self,
