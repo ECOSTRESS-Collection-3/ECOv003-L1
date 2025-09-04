@@ -91,9 +91,9 @@ def find_orbit_file(
 
 
 def create_igc(
-    rad_fname: str,
-    orb_fname: str,
-    l1_osp_dir: str | None = None,
+    rad_fname: str | os.PathLike[str],
+    orb_fname: str | os.PathLike[str],
+    l1_osp_dir: str | os.PathLike[str] | None = None,
     dem: geocal.Dem | None = None,
     title: str = "",
 ) -> geocal.ImageGroundConnection:
@@ -107,7 +107,7 @@ def create_igc(
                 "Need to either set L1_OSP_DIR environment variable, or pass the directory in."
             )
         l1_osp_dir = os.environ["L1_OSP_DIR"]
-    sys.path.append(l1_osp_dir)
+    sys.path.append(str(l1_osp_dir))
     try:
         import l1b_geo_config  # type: ignore
 
@@ -116,14 +116,14 @@ def create_igc(
             and l1b_geo_config.fix_l0_time_tag
         ):
             orb = EcostressOrbitL0Fix(
-                orb_fname,
+                str(orb_fname),
                 l1b_geo_config.x_offset_iss,
                 l1b_geo_config.extrapolation_pad,
                 l1b_geo_config.large_gap,
             )
         else:
             orb = EcostressOrbit(
-                orb_fname,
+                str(orb_fname),
                 l1b_geo_config.x_offset_iss,
                 l1b_geo_config.extrapolation_pad,
                 l1b_geo_config.large_gap,
@@ -194,180 +194,6 @@ def create_igccol(
         )
     )
     return igccol
-
-
-def create_igccol_from_qa(
-    qa_fname: str,
-    l1_osp_dir: str | None = None,
-    dem: geocal.Dem | None = None,
-    raw_att: bool = False,
-    include_tie_point: bool = False,
-) -> geocal.IgcCollection:
-    """Create a IgcCollection from a given qa file, using the same input files as it has
-    listed. By default we use the corrected llb_att file, but you can optionally select the
-    raw l1a_raw_att file.  We add the attribute "scene_list" to the igccol for convenience.
-
-    If include_tie_point is True, we add the attribute "tiepoint_list". This
-    is a list for each scene, and is either None (if we didn't collect tiepoints)
-    or the TiePointCollection if we had that. We also include "tiepoint_collection"
-    which is one TiePointCollection for the full IgcCollection.
-    """
-    if l1_osp_dir is None:
-        if "L1_OSP_DIR" not in os.environ:
-            raise RuntimeError(
-                "Need to either set L1_OSP_DIR environment variable, or pass the directory in."
-            )
-        l1_osp_dir = os.environ["L1_OSP_DIR"]
-
-    f = h5py.File(qa_fname, "r")
-    t = f["StandardMetadata/InputPointer"][()].decode("utf-8").split(",")
-    radlist = [
-        fname for fname in t if re.match(r"ECOSTRESS_L1B_RAD|ECOv002_L1B_RAD", fname)
-    ]
-    l1a_att_fname = [fname for fname in t if re.match(r"L1A_RAW_ATT", fname)][0]
-    m = re.match(r"L1B_GEO_QA_(\d{5})_(\d{8})T\d+_(.*\.h5)", os.path.basename(qa_fname))
-    if not m:
-        raise RuntimeError(f"Don't recognize QA file name {qa_fname}")
-    orbnum = int(m[1])
-    qa_fstem = m[3]
-    datelist = set()
-    for fname in radlist:
-        m = re.match(
-            r"(ECOSTRESS_L1B_RAD|ECOv002_L1B_RAD)_(\d{5})_\d{3}_(\d{8})T\d+_(.*\.h5)",
-            fname,
-        )
-        if not m:
-            raise RuntimeError(f"Don't recognize file name {fname}")
-        fbase = m[1]
-        orbnum = int(m[2])
-        datelist.add(f"{m[3][:4]}/{m[3][4:6]}/{m[3][6:]}")
-    flist = []
-    for d in datelist:
-        flist.extend(
-            glob.glob(f"/ops/store*/PRODUCTS/L1B_RAD/{d}/{fbase}_{orbnum:05d}_*.h5")
-        )
-    # Might be extra files found on the system not used in the run
-    radlist = [fname for fname in flist if os.path.basename(fname) in radlist]
-
-    def scene_from_fname(fname: str) -> int:
-        m = re.match(
-            r"(ECOSTRESS_L1B_RAD|ECOv002_L1B_RAD)_\d{5}_(\d{3})",
-            os.path.basename(fname),
-        )
-        if m is None:
-            raise RuntimeError("Couldn't parse file name")
-        return int(m[2])
-
-    radlist.sort(key=scene_from_fname)
-    scene_list = [scene_from_fname(fname) for fname in radlist]
-    flist = []
-    for d in datelist:
-        flist.extend(glob.glob(f"/ops/store*/PRODUCTS/L1A_RAW_ATT/{d}/{l1a_att_fname}"))
-    l1a_att_fname = flist[0]
-    flist = []
-    for d in datelist:
-        flist.extend(
-            glob.glob(f"/ops/store*/PRODUCTS/L1B_ATT/{d}/*_{orbnum:05d}_*_{qa_fstem}")
-        )
-    l1b_att_fname = flist[0]
-    orb_fname = l1a_att_fname if raw_att else l1b_att_fname
-    try:
-        sys.path.append(l1_osp_dir)
-        import l1b_geo_config
-
-        if (
-            hasattr(l1b_geo_config, "fix_l0_time_tag")
-            and l1b_geo_config.fix_l0_time_tag
-        ):
-            orb = EcostressOrbitL0Fix(
-                orb_fname,
-                l1b_geo_config.x_offset_iss,
-                l1b_geo_config.extrapolation_pad,
-                l1b_geo_config.large_gap,
-            )
-        else:
-            orb = EcostressOrbit(
-                orb_fname,
-                l1b_geo_config.x_offset_iss,
-                l1b_geo_config.extrapolation_pad,
-                l1b_geo_config.large_gap,
-            )
-        cam = geocal.read_shelve(f"{l1_osp_dir}/camera.xml")
-        if dem is None:
-            dem = geocal.SrtmDem("", False)
-        igccol = EcostressIgcCollection()
-        for rad_fname, scene in zip(radlist, scene_list):
-            tt = create_time_table(
-                rad_fname, l1b_geo_config.mirror_rpm, l1b_geo_config.frame_time
-            )
-            sm = create_scan_mirror(
-                rad_fname,
-                l1b_geo_config.max_encoder_value,
-                l1b_geo_config.first_encoder_value_0,
-                l1b_geo_config.second_encoder_value_0,
-                l1b_geo_config.instrument_to_sc_euler,
-                l1b_geo_config.first_angle_per_encoder_value,
-                l1b_geo_config.second_angle_per_encoder_value,
-            )
-            line_order_reversed = False
-            if (
-                as_string(
-                    h5py.File(rad_fname, "r")["/L1B_RADMetadata/RadScanLineOrder"][()]
-                )
-                == "Reverse line order"
-            ):
-                line_order_reversed = True
-            cam.line_order_reversed = line_order_reversed
-            cam.focal_length = l1b_geo_config.camera_focal_length
-            is_day = (
-                as_string(
-                    h5py.File(rad_fname, "r")["StandardMetadata/DayNightFlag"][()]
-                )
-                == "Day"
-            )
-            b = (
-                l1b_geo_config.ecostress_day_band
-                if is_day
-                else l1b_geo_config.ecostress_night_band
-            )
-            ras = geocal.GdalRasterImage(
-                'HDF5:"%s"://Radiance/radiance_%d' % (rad_fname, b)
-            )
-            ras = geocal.ScaleImage(ras, 100.0)
-            igccol.add_igc(
-                EcostressImageGroundConnection(
-                    orb, tt, cam, sm, dem, ras, f"Scene {scene}"
-                )
-            )
-        igccol.scene_list = scene_list
-        if include_tie_point:
-            res = []
-            tpcolfull = geocal.TiePointCollection()
-            for iscene, scene in enumerate(scene_list):
-                if ("Tiepoints") in f[f"Tiepoint/Scene {scene}"]:
-                    tpdata = f[f"Tiepoint/Scene {scene}/Tiepoints"][:]
-                    tpcol = geocal.TiePointCollection()
-                    for i in range(tpdata.shape[0]):
-                        tp = geocal.TiePoint(1)
-                        tp.is_gcp = True
-                        tp.ground_location = geocal.Ecr(*tpdata[i, 2:6])
-                        tp.image_coordinate(0, geocal.ImageCoordinate(*tpdata[i, 0:2]))
-                        tpcol.push_back(tp)
-                        tp2 = geocal.TiePoint(len(scene_list))
-                        tp2.is_gcp = True
-                        tp2.ground_location = geocal.Ecr(*tpdata[i, 2:6])
-                        tp2.image_coordinate(
-                            iscene, geocal.ImageCoordinate(*tpdata[i, 0:2])
-                        )
-                        tpcolfull.append(tp2)
-                    res.append(tpcol)
-                else:
-                    res.append(None)
-            igccol.tiepoint_list = res
-            igccol.tiepoint_collection = tpcolfull
-        return igccol
-    finally:
-        sys.path.pop()
 
 
 def create_dem(config: RunConfig) -> geocal.Dem:
@@ -477,14 +303,17 @@ def create_orbit_raw(
 
 
 def create_time_table(
-    fname: str | Path, mirror_rpm: float, frame_time: float, time_offset: float = 0
+    fname: str | os.PathLike[str],
+    mirror_rpm: float,
+    frame_time: float,
+    time_offset: float = 0,
 ) -> geocal.TimeTable:
     """Create the time table using the data from the given input."""
     return EcostressTimeTable(str(fname), mirror_rpm, frame_time, time_offset)
 
 
 def create_scan_mirror(
-    fname: str | Path,
+    fname: str | os.PathLike[str],
     max_encoder_value: int,
     first_encoder_value_0: float,
     second_encoder_value_0: float,
@@ -588,7 +417,7 @@ def ecostress_file_name(
     extension: str = ".h5",
     intermediate: bool = False,
     tile: bool = False,
-    remove_build_id: bool | None = None
+    remove_build_id: bool | None = None,
 ) -> str:
     """Create an ecostress file name from the given components.
     Note in collection 3 we removed the build ID. We want backwards compatibility,
@@ -597,10 +426,10 @@ def ecostress_file_name(
     override this by explicitly passing remove_build_id is either True or False so
     select one or the other."""
     if remove_build_id is None:
-        if collection_label == "ECOSTRESS": # collection 1 name
+        if collection_label == "ECOSTRESS":  # collection 1 name
             remove_build_id = False
         else:
-            m = re.match(r'^ECOv(\d+)$', collection_label)
+            m = re.match(r"^ECOv(\d+)$", collection_label)
             if m is not None and int(m[1]) < 3:
                 remove_build_id = False
             else:
@@ -611,16 +440,16 @@ def ecostress_file_name(
     else:
         front = collection_label + "_"
     if remove_build_id:
-        back = "_%s%s" %(version, extension)
+        back = "_%s%s" % (version, extension)
     else:
-        back = "_%s_%s%s" %(build, version, extension)
+        back = "_%s_%s%s" % (build, version, extension)
     if product_type == "L0B":
         return "%s%s_%05d_%s%s" % (
             front,
             product_type,
             orbit,
             time_to_file_string(acquisition_time),
-            back
+            back,
         )
     elif product_type == "Scene":
         return "%s%s_%05d_%s_%s%s" % (
@@ -706,7 +535,7 @@ def as_string(t: bytes | str) -> str:
     return t
 
 
-def orbit_from_metadata(fname: str | Path) -> tuple[int, int, geocal.Time]:
+def orbit_from_metadata(fname: str | os.PathLike[str]) -> tuple[int, int, geocal.Time]:
     """Read the standard metadata from the given file to return the orbit,
     scene, and acquisition_time for the given file."""
     fin = h5py.File(fname, "r")
@@ -808,6 +637,5 @@ __all__ = [
     "orbit_from_grid_metadata",
     "determine_rotated_map",
     "determine_rotated_map_igc",
-    "create_igccol_from_qa",
     "orb_to_path",
 ]

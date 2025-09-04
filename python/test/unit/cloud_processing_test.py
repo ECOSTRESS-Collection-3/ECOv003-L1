@@ -5,27 +5,6 @@ import h5py
 import subprocess
 
 
-def load_geolocation_data(geo_file):
-    """
-    Load latitude and longitude data from the GEO file.
-
-    Parameters:
-        geo_file (str): Path to the GEO HDF5 file.
-
-    Returns:
-        tuple: (Latitude array, Longitude array, Elevation array)
-    """
-    try:
-        with h5py.File(geo_file, "r") as geo_hdf:
-            lat = geo_hdf["/Geolocation/latitude"][:]
-            lon = geo_hdf["/Geolocation/longitude"][:]
-            el = geo_hdf["/Geolocation/height"][:] / 1000.0  # convert to km
-            return lat, lon, el
-    except Exception as e:
-        print(f"Error loading geolocation data from {geo_file}: {e}")
-        return None, None
-
-
 def test_process_cloud(isolated_dir, test_data_latest):
     osp_dir = test_data_latest / "l1_osp_dir"
     cloud_lut_fname = osp_dir / "ECOSTRESS_LUT_Cloud_BT11_v3_??.h5"
@@ -42,7 +21,7 @@ def test_process_cloud(isolated_dir, test_data_latest):
     lat = f["/Geolocation/latitude"][:]
     lon = f["/Geolocation/longitude"][:]
     height_meter = f["/Geolocation/height"][:]
-    tstart = geocal.Time.parse_time("2019-07-06T23:59:59Z")
+    tstart = geocal.Time.parse_time("2019-07-07T00:00:26.221089Z")
 
     cprocess = CloudProcessing(rad_lut_fname, cloud_lut_fname)
     cloud, cloudconf = cprocess.process_cloud(rad, lat, lon, height_meter, tstart)

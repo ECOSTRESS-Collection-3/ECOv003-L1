@@ -7,12 +7,10 @@ from multiprocessing import Pool
 def test_l1ct_generate(isolated_dir, test_data_latest, lwm):
     l1_osp_dir = test_data_latest / "l1_osp_dir"
     l1b_geo_fname = (
-        test_data_latest
-        / "ECOv003_L1B_GEO_03663_001_20190227T101222_01.h5.expected"
+        test_data_latest / "ECOv003_L1B_GEO_03663_001_20190227T101222_01.h5.expected"
     )
     l1b_rad_fname = (
-        test_data_latest
-        / "ECOv003_L1B_RAD_03663_001_20190227T101222_01.h5.expected"
+        test_data_latest / "ECOv003_L1B_RAD_03663_001_20190227T101222_01.h5.expected"
     )
     out_pattern = "ECOv003_L1CT_RAD_03663_001_TILE_20190227T101222_01"
     g = L1ctGenerate(

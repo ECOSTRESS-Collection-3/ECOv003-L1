@@ -1,5 +1,7 @@
-from ecostress.l1b_geo_qa_file import L1bGeoQaFile
+from ecostress import L1bGeoQaFile
 import io
+from pathlib import Path
+import pytest
 
 
 def test_l1b_geo_qa_file(isolated_dir):
@@ -12,3 +14,28 @@ def test_l1b_geo_qa_file(isolated_dir):
     # orb = read_shelve(dname + "igccol_sba.xml").image_ground_connection(0).orbit
     # f.add_orbit(orb)
     f.close()
+
+
+# We don't normally run this, since it depends on having run the end to end run
+# plus having a hard coded path. But useful to keep this around in case we
+# run into some sort of issue that we need to debug
+@pytest.mark.skip
+def test_read_l1b_geo_qa_file():
+    bpath = Path("/home/smyth/Local/ecostress-build/build_conda")
+    fname = bpath / "end_to_end_test_l1b_geo" / "L1B_GEO_QA_03663_20190227T101222_01.h5"
+    sm = L1bGeoQaFile.scan_mirror(fname, 1)
+    print(sm)
+    tt = L1bGeoQaFile.time_table(fname, 1)
+    print(tt)
+    tpcol = L1bGeoQaFile.tpcol(fname)
+    print(tpcol)
+    scene_list = L1bGeoQaFile.scene_list(fname)
+    print(scene_list)
+    ofile = L1bGeoQaFile.orbit_filename(fname)
+    print(ofile)
+    l1bfname = L1bGeoQaFile.l1b_rad_list(fname)
+    print(l1bfname)
+    igccol = L1bGeoQaFile.igccol(fname)
+    print(igccol)
+    df = L1bGeoQaFile.data_frame(fname)
+    print(df)
