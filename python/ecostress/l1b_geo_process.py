@@ -388,7 +388,7 @@ class L1bGeoProcess:
         self.ofile_kmz: list[Path] = []
         self.is_day: list[bool] = []
         self.ortho_base: list[geocal.CartLabMultifile] = []
-        self.scenelist: list[int] = []
+        self.scene_list: list[int] = []
         first_file = True
         for radfname in self.radlist:
             orbit, scene, acquisition_time = orbit_from_metadata(radfname)
@@ -453,7 +453,7 @@ class L1bGeoProcess:
                 "Scene %d is %s, matching ecostress band %d to Landsat band %d"
                 % (scene, "Day" if self.is_day[-1] else "Night", eband, lband)
             )
-            self.scenelist.append(scene)
+            self.scene_list.append(scene)
             if first_file:
                 first_file = False
                 self.l1b_att_fname = Path(
@@ -480,7 +480,11 @@ class L1bGeoProcess:
                     )
                 )
         self.qa_file = L1bGeoQaFile(self.qa_fname.absolute(), self.log_string_handle)
-        self.qa_file.input_list(self.inlist)
+        self.qa_file.input_list(
+            str(self.l1_osp_dir / "l1b_geo_config.py"),
+            str(self.orbfname),
+            [str(i) for i in self.radlist],
+        )
 
     def create_igccol_initial(self) -> EcostressIgcCollection:
         igccol = EcostressIgcCollection()
@@ -503,11 +507,22 @@ class L1bGeoProcess:
         self,
         igccol: EcostressImageGroundConnection,
         tpcol: geocal.TiePointCollection | None,
+        pass_number: int,
     ) -> None:
         """Collect information on the time of correction before and after scene,
         and populate QA file with this."""
         if self.qa_file is None:
             return
+        if pass_number == 1:
+            for i in range(igccol.number_image):
+                assert self._line_order_reversed is not None
+                igc = igccol.image_ground_connection(i)
+                self.qa_file.write_igc_xml(
+                    f"Scene {self.scene_list[i]}",
+                    igc.scan_mirror,
+                    igc.time_table,
+                    self._line_order_reversed,
+                )
         self.tcorr_before = []
         self.tcorr_after = []
         self.geo_qa = []
@@ -533,23 +548,29 @@ class L1bGeoProcess:
             self.tcorr_after.append(t2)
             self.geo_qa.append(self.l1b_geo_config.geocal_accuracy_qa(t1, t2))
             logger.info(
-                f"Scene {self.scenelist[i]} geolocation accuracy QA: {self.geo_qa[-1]}"
+                f"Scene {self.scene_list[i]} geolocation accuracy QA: {self.geo_qa[-1]}"
             )
 
         # Write out QA data
         if tpcol:
             self.qa_file.add_final_accuracy(
-                igccol, tpcol, self.tcorr_before, self.tcorr_after, self.geo_qa
+                pass_number,
+                igccol,
+                tpcol,
+                self.tcorr_before,
+                self.tcorr_after,
+                self.geo_qa,
             )
-        self.qa_file.add_orbit(igccol.image_ground_connection(0).orbit)
+        self.qa_file.add_orbit(pass_number, igccol.image_ground_connection(0).orbit)
         # TODO Add support for multiple passes. Although maybe it doesn't matter,
         # we don't ever do anything with this. Maybe just the original igccol_initial
         # and final tpcol, igcol_sba, tpcol_sba. Think about this
         self.qa_file.write_xml(
-            "igccol_initial_pass_1.xml",
-            "tpcol_pass_1.xml",
-            "igccol_sba_pass_1.xml",
-            "tpcol_sba_pass_1.xml",
+            pass_number,
+            f"igccol_initial_pass_{pass_number}.xml",
+            f"tpcol_pass_{pass_number}.xml",
+            f"igccol_sba_pass_{pass_number}.xml",
+            f"tpcol_sba_pass_{pass_number}.xml",
         )
 
     def generate_output(
@@ -559,10 +580,9 @@ class L1bGeoProcess:
         pool: Pool | None,
     ) -> None:
         """Once we have the final corrected igccol, generate all the output"""
-        self.collect_qa(igccol, tpcol)
         avg_md = np.full((len(self.radlist), 3), -9999.0)
         for i, radfname in enumerate(self.radlist):
-            logger.info(f"Doing scene number {self.scenelist[i]}")
+            logger.info(f"Doing scene number {self.scene_list[i]}")
             fin = h5py.File(radfname, "r")
             if "BandSpecification" in fin["L1B_RADMetadata"]:
                 nband = np.count_nonzero(
@@ -575,11 +595,11 @@ class L1bGeoProcess:
                 < self.l1b_geo_config.min_number_good_scan
             ):
                 logger.info(
-                    f"Scene number {self.scenelist[i]} has only {igccol.image_ground_connection(i).number_good_scan} good scans. We require a minimum of {self.l1b_geo_config.min_number_good_scan}. Skipping output for this scene"
+                    f"Scene number {self.scene_list[i]} has only {igccol.image_ground_connection(i).number_good_scan} good scans. We require a minimum of {self.l1b_geo_config.min_number_good_scan}. Skipping output for this scene"
                 )
             elif igccol.image_ground_connection(i).crosses_dateline:
                 logger.info(
-                    f"Scene number {self.scenelist[i]} crosses date line. We don't handle this. Skipping output for this scene"
+                    f"Scene number {self.scene_list[i]} crosses date line. We don't handle this. Skipping output for this scene"
                 )
             else:
                 # Short term allow this to fail, just so we can process old data
@@ -623,7 +643,7 @@ class L1bGeoProcess:
                 avg_md[i, 2] = l1bgeo.cloud_cover
                 if self.l1b_geo_config.generate_map_product:
                     logger.info(
-                        f"Generating Map Product scene number {self.scenelist[i]}"
+                        f"Generating Map Product scene number {self.scene_list[i]}"
                     )
                     l1bgeo_map = L1bGeoGenerateMap(
                         l1bgeo,
@@ -635,7 +655,9 @@ class L1bGeoProcess:
                     )
                     l1bgeo_map.run()
                 if self.l1b_geo_config.generate_kmz_file:
-                    logger.info(f"Generating KMZ file scene number {self.scenelist[i]}")
+                    logger.info(
+                        f"Generating KMZ file scene number {self.scene_list[i]}"
+                    )
                     band_list = (
                         self.l1b_geo_config.kmz_band_list_5band
                         if (nband == 6)
@@ -678,10 +700,11 @@ class L1bGeoProcess:
 
     def collect_tp(
         self, igccol: EcostressIgcCollection, pool: Pool | None, pass_number: int
-    ) -> tuple[geocal.TiePointCollection, list[tuple[geocal.Time, geocal.Time]]]:
+    ) -> tuple[geocal.TiePointCollection, list[tuple[int, geocal.Time, geocal.Time]]]:
         t = L1bTpCollect(
             igccol,
             self.ortho_base,
+            self.lwm,
             self.qa_file,
             fftsize=self.l1b_geo_config.fftsize,
             magnify=self.l1b_geo_config.magnify,
@@ -703,7 +726,7 @@ class L1bGeoProcess:
     def add_breakpoint(
         self,
         orb: geocal.OrbitOffsetCorrection,
-        time_range_tp: list[tuple[geocal.Time, geocal.Time]],
+        time_range_tp: list[tuple[int, geocal.Time, geocal.Time]],
         pass_number: int,
     ) -> None:
         """Add breakpoints for the scenes that we got good tiepoints from.
@@ -713,7 +736,7 @@ class L1bGeoProcess:
         # TODO Add handling for multiple passes. Want to add points without breaking
         # the setting for the current ones
         tlast = None
-        for tmin, tmax in time_range_tp:
+        for i, tmin, tmax in time_range_tp:
             if tlast is None and pass_number == 1:
                 orb.insert_position_time_point(tmin)
             if tlast is None or tmin - tlast > 52.0:
@@ -761,6 +784,7 @@ class L1bGeoProcess:
         self, igccol: EcostressIgcCollection, pool: Pool | None, pass_number: int
     ) -> tuple[EcostressIgcCollection, geocal.TiePointCollection | None]:
         """Collect tie points, and used to correct the igccol"""
+        logger.info(f"Starting pass {pass_number}")
         tpcol, time_range_tp = self.collect_tp(igccol, pool, pass_number)
         if len(tpcol) == 0:
             logger.info("No tie-points, so skipping SBA correction")
@@ -771,6 +795,7 @@ class L1bGeoProcess:
         # Update orbit and camera, if we updated the igccol
         self.orb = igccol_corrected.image_ground_connection(0).orbit
         self.cam = igccol_corrected.image_ground_connection(0).camera
+        logger.info(f"Done with pass {pass_number}")
         return igccol_corrected, tpcol
 
     def run(self) -> None:
@@ -803,14 +828,17 @@ class L1bGeoProcess:
                 # For testing, skip actually doing image matching and
                 # use existing results
                 igccol_corrected = geocal.read_shelve(str(self.igccol_use))
-                if(self.tpcol_use is not None):
+                if self.tpcol_use is not None:
                     tpcol = geocal.read_shelve(str(self.tpcol_use))
+                self.collect_qa(igccol_corrected, tpcol, pass_number=1)
             elif not (self.skip_sba or self.l1b_geo_config.skip_sba):
                 igccol_corrected, tpcol = self.correct_igc(
                     igccol_initial, pool, pass_number=1
                 )
+                self.collect_qa(igccol_corrected, tpcol, pass_number=1)
             else:
                 igccol_corrected = igccol_initial
+                self.collect_qa(igccol_corrected, tpcol, pass_number=1)
 
             # Generate output once we have the final igccol
             self.generate_output(igccol_corrected, tpcol, pool)

@@ -2,11 +2,14 @@ from __future__ import annotations
 from ecostress_swig import fill_value_threshold, Resampler, GroundCoordinateArray  # type: ignore
 import geocal  # type: ignore
 from .pickle_method import *
+from .misc import determine_rotated_map_igc
 import numpy as np
 import scipy.ndimage  # type: ignore
 import os
 from loguru import logger
+from functools import partial
 import typing
+from pathlib import Path
 
 if typing.TYPE_CHECKING:
     from multiprocessing.pool import Pool
@@ -23,19 +26,24 @@ class L1bProj(object):
         igccol: geocal.IgcCollection,
         fname_list: list[str],
         ref_fname_list: list[str],
+        lwm_fname_list: list[str],
         ortho_base: list[geocal.RasterImage],
+        lwm: geocal.RasterImage,
         qa_file: L1bGeoQaFile | None = None,
-        number_subpixel: int = 2,
+        number_subpixel: int = 3,
         min_number_good_scan: int = 41,
         scratch_fname: str = "initial_lat_lon.dat",
         pass_through_error: bool = False,
         separate_file_per_scan: bool = False,
+        rotated: bool = True,
     ) -> None:
         """Project igc and generate a Vicar file fname."""
         self.igccol = igccol
         self.gc_arr = list()
         self.qa_file = qa_file
         self.ortho_base = ortho_base
+        self.lwm = lwm
+        self.lwm_fname_list = lwm_fname_list
         self.ref_fname_list = ref_fname_list
         self.fname_list = fname_list
         self.scratch_fname = scratch_fname
@@ -43,6 +51,7 @@ class L1bProj(object):
         self.number_subpixel = number_subpixel
         self.pass_through_error = pass_through_error
         self.min_number_good_scan = min_number_good_scan
+        self.rotated = rotated
 
         # Want to scale to roughly 60 meters. Much of the landsat data is
         # at higher resolution, but ecostress is close to 70 meter pixel so
@@ -70,12 +79,16 @@ class L1bProj(object):
             ),
         )
 
-    def resample_data(self, igc_ind: int) -> bool:
+    def resample_data(self, igc_ind: int, include_mask: bool = False) -> bool:
         try:
             with logger.catch(reraise=True):
                 mi = self.ortho_base[igc_ind].map_info.scale(
                     self.ortho_scale[igc_ind], self.ortho_scale[igc_ind]
                 )
+                if self.rotated:
+                    mi = determine_rotated_map_igc(
+                        self.igccol.image_ground_connection(igc_ind), mi
+                    )
                 f = self.scratch_file()
                 lat: np.ndarray | None = f[igc_ind, :, :, 0]
                 lon: np.ndarray | None = f[igc_ind, :, :, 1]
@@ -132,11 +145,66 @@ class L1bProj(object):
                 logger.info(
                     "Starting reference image for %s" % self.igccol.title(igc_ind)
                 )
+                if include_mask:
+                    logger.info(
+                        "Starting lwm image for %s" % self.igccol.title(igc_ind)
+                    )
                 ortho = self.ortho_base[igc_ind]
-                ortho.create_subset_file(
-                    self.ref_fname_list[igc_ind], "VICAR", [], res.map_info, "-ot Int16"
-                )
-                #                                     "-ot Int16", 0 True)
+                if not self.rotated:
+                    # This only works for nonrotated images
+                    ortho.create_subset_file(
+                        self.ref_fname_list[igc_ind],
+                        "VICAR",
+                        [],
+                        res.map_info,
+                        "-ot Int16",
+                    )
+                    if include_mask:
+                        self.lwm.create_subset_file(
+                            self.lwm_fname_list[igc_ind],
+                            "VICAR",
+                            [],
+                            res.map_info,
+                            "-ot Int16",
+                        )
+                else:
+                    mi_norot = self.ortho_base[igc_ind].map_info.scale(
+                        self.ortho_scale[igc_ind], self.ortho_scale[igc_ind]
+                    )
+                    mi_norot = mi_norot.intersection(res.map_info)
+                    fnm = Path(self.ref_fname_list[igc_ind])
+                    fnorot = fnm.parent / f"{fnm.stem}_norot.img"
+                    ortho.create_subset_file(
+                        str(fnorot), "VICAR", [], mi_norot, "-ot Int16"
+                    )
+                    ref = geocal.mmap_file(str(fnm), res.map_info)
+                    ortho_norot = geocal.VicarLiteRasterImage(str(fnorot))
+                    # TODO Might be able to speed this up. Since we know this
+                    # is just an affine transformation, can probably do something
+                    # higher level than transforming every point. But have this
+                    # in place for now.
+                    ortho_rot = geocal.MapReprojectedImage(ortho_norot, res.map_info)
+                    ref[:, :] = ortho_rot.read_all()
+                    ref = None
+                    if include_mask:
+                        # TODO Get handling of edges here, we should use doubles and
+                        # rounding. But get basic in place first
+                        fnm = Path(self.lwm_fname_list[igc_ind])
+                        fnorot = fnm.parent / f"{fnm.stem}_norot.img"
+                        self.lwm.create_subset_file(
+                            str(fnorot), "VICAR", [], mi_norot, "-ot Int16"
+                        )
+                        lwmf = geocal.mmap_file(str(fnm), res.map_info)
+                        lwm_norot = geocal.VicarLiteRasterImage(str(fnorot))
+                        lwm_rot = geocal.MapReprojectedImage(lwm_norot, res.map_info)
+                        # In original image, 1 is land, 0 is water. If a pixel is
+                        # more than half land, we mark the resampled as land otherwise
+                        # water
+                        lwmf[:, :] = np.where(
+                            lwm_rot.read_all_double() > 0.5, 1, 0
+                        ).astype(int)
+                        lwmf = None
+
                 logger.info(
                     "Done with reference image for %s" % self.igccol.title(igc_ind)
                 )
@@ -169,7 +237,7 @@ class L1bProj(object):
         logger.info("Done with [%d, %d, %d]" % (igc_ind, start_line, end_line))
         return True
 
-    def proj(self, pool: Pool | None = None) -> list[bool]:
+    def proj(self, pool: Pool | None = None, include_mask: bool = False) -> list[bool]:
         # Create file, but then close. We reopen in each process. Without
         # this, numpy seems to create some sort of lock where only one
         # process acts at a time.
@@ -211,7 +279,7 @@ class L1bProj(object):
         # to reduce resample_data memory use somehow. This step is quick
         # enough that this probably isn't much of an actual problem in
         # practice
-        return list(map(self.resample_data, it2))
+        return list(map(partial(self.resample_data, include_mask=include_mask), it2))
         # if(pool is None):
         #    list(map(self.resample_data, it))
         # else:

@@ -20,6 +20,7 @@ class L1bTpCollect(object):
         self,
         igccol: geocal.IgcCollection,
         ortho_base: list[geocal.RasterImage],
+        lwm: geocal.RasterImage,
         qa_file: L1bGeoQaFile | None = None,
         fftsize: int = 256,
         magnify: float = 4.0,
@@ -30,37 +31,45 @@ class L1bTpCollect(object):
         seed: int = 562,
         num_x: int = 10,
         num_y: int = 10,
-        proj_number_subpixel: int = 2,
+        proj_number_subpixel: int = 3,
         min_tp_per_scene: int = 20,
         min_number_good_scan: int = 41,
         pass_number: int = 1,
     ) -> None:
         self.igccol = igccol
         self.ortho_base = ortho_base
+        self.lwm = lwm
         self.qa_file = qa_file
         self.num_x = num_x
         self.num_y = num_y
+        self.pass_number = pass_number
         self.proj_fname = [
-            f"proj_initial_{i + 1}_pass_{pass_number}.img"
+            f"proj_initial_{i + 1}_pass_{self.pass_number}.img"
             for i in range(self.igccol.number_image)
         ]
         self.ref_fname = [
-            f"ref_{i + 1}_pass_{pass_number}.img"
+            f"ref_{i + 1}_pass_{self.pass_number}.img"
+            for i in range(self.igccol.number_image)
+        ]
+        self.lwm_fname = [
+            f"lwm_{i + 1}_pass_{self.pass_number}.img"
             for i in range(self.igccol.number_image)
         ]
         self.log_file = [
-            f"tpmatch_{i + 1}_pass_{pass_number}.log"
+            f"tpmatch_{i + 1}_pass_{self.pass_number}.log"
             for i in range(self.igccol.number_image)
         ]
         self.run_dir_name = [
-            f"tpmatch_{i + 1}_pass_{pass_number}"
+            f"tpmatch_{i + 1}_pass_{self.pass_number}"
             for i in range(self.igccol.number_image)
         ]
         self.p = L1bProj(
             self.igccol,
             self.proj_fname,
             self.ref_fname,
+            self.lwm_fname,
             self.ortho_base,
+            self.lwm,
             qa_file=self.qa_file,
             min_number_good_scan=min_number_good_scan,
             number_subpixel=proj_number_subpixel,
@@ -246,11 +255,12 @@ class L1bTpCollect(object):
 
     def tpcol(
         self, pool: Pool | None = None
-    ) -> tuple[geocal.TiePointCollection, list[tuple[geocal.Time, geocal.Time]]]:
-        """Return tiepoints collected. We also return the time ranges for the
-        ImageGroundConnection that we got good tiepoint for. This
-        can be used by the calling program to determine such things
-        as the breakpoints on the orbit model
+    ) -> tuple[geocal.TiePointCollection, list[tuple[int, geocal.Time, geocal.Time]]]:
+        """Return tiepoints collected. We also return the image index
+        and time ranges for the ImageGroundConnection that we got good
+        tiepoint for. This can be used by the calling program to
+        determine such things as the breakpoints on the orbit model
+
         """
 
         # First project all the data.
@@ -271,7 +281,9 @@ class L1bTpCollect(object):
             for i2 in range(len(self.tpcollect)):
                 lf = self.log_file[i] + "_%d" % i2
                 if os.path.exists(lf) and self.qa_file is not None:
-                    self.qa_file.add_tp_log(self.igccol.title(i) + "_%d" % i2, lf)
+                    self.qa_file.add_tp_log(
+                        self.pass_number, self.igccol.title(i) + "_%d" % i2, lf
+                    )
         j = 0
         for i in range(self.igccol.number_image):
             if proj_res[i]:
@@ -286,6 +298,7 @@ class L1bTpCollect(object):
                 ) = tpcollist[j]
                 if self.qa_file is not None:
                     self.qa_file.add_tp_single_scene(
+                        self.pass_number,
                         i,
                         self.igccol,
                         tpcol,
@@ -296,11 +309,13 @@ class L1bTpCollect(object):
                     )
                 if len(tpcol) > 0:
                     res.extend(tpcol)
-                    time_range_tp.append((tmin, tmax))
+                    time_range_tp.append((i, tmin, tmax))
                 j += 1
             else:
                 if self.qa_file is not None:
-                    self.qa_file.add_tp_single_scene(i, self.igccol, [], 0, 0, 0, 0)
+                    self.qa_file.add_tp_single_scene(
+                        self.pass_number, i, self.igccol, [], 0, 0, 0, 0
+                    )
         for i in range(len(res)):
             res[i].id = i + 1
         return res, time_range_tp

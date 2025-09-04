@@ -5,7 +5,8 @@ import re
 import copy
 import typing
 from pathlib import Path
-from typing import Any, Self
+from typing import Any
+from typing_extensions import Self
 
 if typing.TYPE_CHECKING:
     import h5py  # type: ignore
@@ -268,7 +269,7 @@ class WriteStandardMetadata(object):
 
     def write(self) -> None:
         """Actually write the metadata."""
-        if(self.xml_file is not None):
+        if self.xml_file is not None:
             self.write_xml()
         if self.hdf_file is None:
             if self.xml_file is not None:
