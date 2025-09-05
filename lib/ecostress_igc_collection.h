@@ -15,6 +15,8 @@ public:
   EcostressIgcCollection()
   { assume_igc_independent_ = false; }
   virtual ~EcostressIgcCollection() {}
+  const boost::shared_ptr<GeoCal::Orbit>& orbit() const;
+  const boost::shared_ptr<GeoCal::Camera>& camera() const;
   virtual void add_igc
   (const boost::shared_ptr<EcostressImageGroundConnection>& Igc)
   { igc_list.push_back(Igc);

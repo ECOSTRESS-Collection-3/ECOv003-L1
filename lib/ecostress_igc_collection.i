@@ -22,6 +22,8 @@ public:
   void nearest_attitude_time_point(const boost::shared_ptr<GeoCal::Time>& T,
 				   boost::shared_ptr<GeoCal::Time>& OUTPUT,
 				   boost::shared_ptr<GeoCal::Time>& OUTPUT) const;
+  %python_attribute(orbit, boost::shared_ptr<GeoCal::Orbit>);
+  %python_attribute(camera, boost::shared_ptr<GeoCal::Camera>);
   %pickle_serialization();
 };
 }

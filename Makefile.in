@@ -918,6 +918,9 @@ AM_CPPFLAGS = -I$(srcdir)/@srclib@
 INSTALL_EXEC_HOOK = python-install
 INSTALL_DATA_HOOK = 
 UNINSTALL_HOOK = 
+
+# Make sure we don't have any pyc or pycache files floating around
+DIST_HOOK = dist-clean-up-python
 CLEAN_HOOK = 
 INSTALLCHECK_HOOK = python-check
 CHECK_HOOK = 
@@ -2642,6 +2645,9 @@ distdir-am: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
+	$(MAKE) $(AM_MAKEFLAGS) \
+	  top_distdir="$(top_distdir)" distdir="$(distdir)" \
+	  dist-hook
 	-test -n "$(am__skip_mode_fix)" \
 	|| find "$(distdir)" -type d ! -perm -755 \
 		-exec chmod u+rwx,go+rx {} \; -o \
@@ -3057,8 +3063,8 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 	clean-libLTLIBRARIES clean-libtool clean-local \
 	clean-noinstLTLIBRARIES clean-pkgpythonswigLTLIBRARIES cscope \
 	cscopelist-am ctags ctags-am dist dist-all dist-bzip2 \
-	dist-gzip dist-lzip dist-shar dist-tarZ dist-xz dist-zip \
-	dist-zstd distcheck distclean distclean-compile \
+	dist-gzip dist-hook dist-lzip dist-shar dist-tarZ dist-xz \
+	dist-zip dist-zstd distcheck distclean distclean-compile \
 	distclean-generic distclean-libtool distclean-tags \
 	distcleancheck distdir distuninstallcheck dvi dvi-am html \
 	html-am info info-am install install-am install-binPROGRAMS \
@@ -3091,6 +3097,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
 install-exec-hook: $(INSTALL_EXEC_HOOK)
 install-data-hook: $(INSTALL_DATA_HOOK)
 uninstall-hook: $(UNINSTALL_HOOK)
+dist-hook: $(DIST_HOOK)
 clean-local: $(CLEAN_HOOK)
 installcheck-local: $(INSTALLCHECK_HOOK)
 check-local: $(CHECK_HOOK)
@@ -3219,6 +3226,10 @@ python-install:
 
 python-check:
 	source $(prefix)/setup_ecostress.sh && pytest -n 10 $(srcdir)/@srcpython@/test
+
+dist-clean-up-python:
+	rm -rf `find $(distdir) -name '__pycache__'`
+	rm -f `find $(distdir) -name '*.pyc'`
 
 # Noe that this is a little more complicated than maybe we need. Cython
 # will by default create a library file per module. However, we inheritted

@@ -6740,6 +6740,98 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_EcostressIgcCollection__v_orbit(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressIgcCollection *arg1 = (Ecostress::EcostressIgcCollection *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressIgcCollection const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressIgcCollection const > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  boost::shared_ptr< GeoCal::Orbit > result;
+  
+  (void)self;
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressIgcCollection_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressIgcCollection__v_orbit" "', argument " "1"" of type '" "Ecostress::EcostressIgcCollection const *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressIgcCollection > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressIgcCollection > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressIgcCollection * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressIgcCollection > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressIgcCollection * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = ((Ecostress::EcostressIgcCollection const *)arg1)->orbit();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    resultobj = GeoCal::swig_to_python(result);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressIgcCollection__v_camera(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressIgcCollection *arg1 = (Ecostress::EcostressIgcCollection *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressIgcCollection const > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressIgcCollection const > *smartarg1 = 0 ;
+  PyObject *swig_obj[1] ;
+  boost::shared_ptr< GeoCal::Camera > result;
+  
+  (void)self;
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressIgcCollection_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressIgcCollection__v_camera" "', argument " "1"" of type '" "Ecostress::EcostressIgcCollection const *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressIgcCollection > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressIgcCollection > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressIgcCollection * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr< const Ecostress::EcostressIgcCollection > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressIgcCollection * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    try {
+      result = ((Ecostress::EcostressIgcCollection const *)arg1)->camera();
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    resultobj = GeoCal::swig_to_python(result);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_delete_EcostressIgcCollection(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   Ecostress::EcostressIgcCollection *arg1 = (Ecostress::EcostressIgcCollection *) 0 ;
@@ -6836,6 +6928,22 @@ static PyMethodDef SwigMethods[] = {
 		"Note that Tbefore or Tafter will be returned as Time::max_valid_time()\n"
 		"if there isn't a before/after time. \n"
 		""},
+	 { "EcostressIgcCollection__v_orbit", _wrap_EcostressIgcCollection__v_orbit, METH_O, "\n"
+		"\n"
+		"const boost::shared_ptr< GeoCal::Orbit > & EcostressIgcCollection::orbit() const\n"
+		"Ecostress::EcostressIgcCollection::orbit\n"
+		"The Orbit is shared between all the EcostressImageGroundConnection,\n"
+		"return this shared orbit.\n"
+		"\n"
+		""},
+	 { "EcostressIgcCollection__v_camera", _wrap_EcostressIgcCollection__v_camera, METH_O, "\n"
+		"\n"
+		"const boost::shared_ptr< GeoCal::Camera > & EcostressIgcCollection::camera() const\n"
+		"Ecostress::EcostressIgcCollection::camera\n"
+		"The Camera is shared between all the EcostressImageGroundConnection,\n"
+		"return this shared camera.\n"
+		"\n"
+		""},
 	 { "delete_EcostressIgcCollection", _wrap_delete_EcostressIgcCollection, METH_O, "\n"
 		"\n"
 		"virtual Ecostress::EcostressIgcCollection::~EcostressIgcCollection()\n"
@@ -6887,6 +6995,22 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"Tafter.\n"
 		"Note that Tbefore or Tafter will be returned as Time::max_valid_time()\n"
 		"if there isn't a before/after time. \n"
+		""},
+	 { "EcostressIgcCollection__v_orbit", _wrap_EcostressIgcCollection__v_orbit, METH_O, "\n"
+		"\n"
+		"const boost::shared_ptr< GeoCal::Orbit > & EcostressIgcCollection::orbit() const\n"
+		"Ecostress::EcostressIgcCollection::orbit\n"
+		"The Orbit is shared between all the EcostressImageGroundConnection,\n"
+		"return this shared orbit.\n"
+		"\n"
+		""},
+	 { "EcostressIgcCollection__v_camera", _wrap_EcostressIgcCollection__v_camera, METH_O, "\n"
+		"\n"
+		"const boost::shared_ptr< GeoCal::Camera > & EcostressIgcCollection::camera() const\n"
+		"Ecostress::EcostressIgcCollection::camera\n"
+		"The Camera is shared between all the EcostressImageGroundConnection,\n"
+		"return this shared camera.\n"
+		"\n"
 		""},
 	 { "delete_EcostressIgcCollection", _wrap_delete_EcostressIgcCollection, METH_O, "\n"
 		"\n"

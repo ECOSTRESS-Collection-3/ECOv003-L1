@@ -20,6 +20,7 @@ from .l1b_geo_generate_map import L1bGeoGenerateMap
 from .l1b_geo_generate_kmz import L1bGeoGenerateKmz
 from .l1b_att_generate import L1bAttGenerate
 from .l1b_tp_collect import L1bTpCollect
+from .l1b_geo_strategy import L1bCollection2GeoStrategy
 import geocal  # type: ignore
 from ecostress_swig import (  # type: ignore
     EcostressOrbit,
@@ -42,7 +43,7 @@ import types
 import typing
 
 if typing.TYPE_CHECKING:
-    pass
+    from .l1b_geo_strategy import L1bGeoStrategy
 
 
 class L1bGeoProcess:
@@ -70,6 +71,7 @@ class L1bGeoProcess:
         igccol_use: Path | None = None,
         tpcol_use: Path | None = None,
     ):
+        self.strategy: L1bGeoStrategy = L1bCollection2GeoStrategy()
         self._line_order_reversed: bool | None = None
         self.force_night = force_night
         self.correction_done = False
@@ -94,13 +96,13 @@ class L1bGeoProcess:
         self.setup_orthobase(landsat_band, ecostress_band)
         if orbit_offset is not None:
             self.setup_orbit_offset(orbit_offset)
-        self.orb: geocal.Orbit = geocal.OrbitOffsetCorrection(self.orb)
-        self.cam = geocal.read_shelve(str(self.l1_osp_dir / "camera.xml"))
+        self.orb_initial: geocal.Orbit = self.strategy.modify_orbit(self.orb_initial)
+        self.cam_initial = geocal.read_shelve(str(self.l1_osp_dir / "camera.xml"))
         # Don't fit any of the camera parameters, hold them all fixed
-        self.cam.mask_all_parameter()
+        self.cam_initial.mask_all_parameter()
         # Update focal length. We may put this into the camera.xml file, but for now
         # we track this separately.
-        self.cam.focal_length = self.l1b_geo_config.camera_focal_length
+        self.cam_initial.focal_length = self.l1b_geo_config.camera_focal_length
         # Reorder radlist by acquisition_time, it isn't necessarily given to us
         # in order.
         self.radlist: list[Path] = sorted(
@@ -149,16 +151,16 @@ class L1bGeoProcess:
         # Want this in arcseconds, because this is what OrbitOffsetCorrection
         # takes
         yaw, pitch, roll = [float(i) * 60 * 60 for i in orbit_offset]
-        self.orb = geocal.OrbitOffsetCorrection(self.orb)
-        self.orb.insert_attitude_time_point(self.orb.min_time)
-        self.orb.insert_attitude_time_point(self.orb.max_time)
-        self.orb.parameter = [yaw, pitch, roll] * 2
-        self.orb.fit_position_x = False
-        self.orb.fit_position_y = False
-        self.orb.fit_position_z = False
-        self.orb.fit_yaw = False
-        self.orb.fit_pitch = False
-        self.orb.fit_roll = False
+        self.orb_initial = geocal.OrbitOffsetCorrection(self.orb_initial)
+        self.orb_initial.insert_attitude_time_point(self.orb_initial.min_time)
+        self.orb_initial.insert_attitude_time_point(self.orb_initial.max_time)
+        self.orb_initial.parameter = [yaw, pitch, roll] * 2
+        self.orb_initial.fit_position_x = False
+        self.orb_initial.fit_position_y = False
+        self.orb_initial.fit_position_z = False
+        self.orb_initial.fit_yaw = False
+        self.orb_initial.fit_pitch = False
+        self.orb_initial.fit_roll = False
 
     @cached_property
     def l1b_geo_config(self) -> types.ModuleType:
@@ -194,7 +196,7 @@ class L1bGeoProcess:
             and self.l1b_geo_config.fix_l0_time_tag
         ):
             self.fix_l0_time_tag = True
-        self.orb = create_orbit_raw(
+        self.orb_initial = create_orbit_raw(
             self.config,
             pos_off=self.l1b_geo_config.x_offset_iss,
             extrapolation_pad=self.l1b_geo_config.extrapolation_pad,
@@ -211,7 +213,9 @@ class L1bGeoProcess:
             self.config.as_list("ProductPathGroup", "ProductPath")[0]
         ).absolute()
         self.read_version()
-        self.file_version = self.config.as_list("ProductPathGroup", "ProductCounter")[0]
+        self.file_version: str = self.config.as_list(
+            "ProductPathGroup", "ProductCounter"
+        )[0]
         self.build_id = self.config.as_list("PrimaryExecutable", "BuildID")[0]
         self.collection_label = self.config.as_list(
             "ProductPathGroup", "CollectionLabel"
@@ -241,14 +245,14 @@ class L1bGeoProcess:
             self.fix_l0_time_tag = True
         self.orbfname = l1a_raw_att.absolute()
         if self.fix_l0_time_tag:
-            self.orb = EcostressOrbitL0Fix(
+            self.orb_initial = EcostressOrbitL0Fix(
                 str(self.orbfname),
                 self.l1b_geo_config.x_offset_iss,
                 self.l1b_geo_config.extrapolation_pad,
                 self.l1b_geo_config.large_gap,
             )
         else:
-            self.orb = EcostressOrbit(
+            self.orb_initial = EcostressOrbit(
                 str(self.orbfname),
                 self.l1b_geo_config.x_offset_iss,
                 self.l1b_geo_config.extrapolation_pad,
@@ -311,7 +315,7 @@ class L1bGeoProcess:
             self.l1b_geo_config.first_angle_per_encoder_value,
             self.l1b_geo_config.second_angle_per_encoder_value,
         )
-        self.cam.line_order_reversed = self.line_order_reversed(radfname)
+        self.cam_initial.line_order_reversed = self.line_order_reversed(radfname)
         img: None | geocal.RasterImage = None
         if include_image:
             if eband == 0:
@@ -322,7 +326,7 @@ class L1bGeoProcess:
                 )
                 img = geocal.ScaleImage(img, 100.0)
         igc = EcostressImageGroundConnection(
-            self.orb, tt, self.cam, sm, self.dem, img, f"Scene {scene}"
+            self.orb_initial, tt, self.cam_initial, sm, self.dem, img, f"Scene {scene}"
         )
         return igc
 
@@ -723,30 +727,6 @@ class L1bGeoProcess:
         tpcol, time_range_tp = t.tpcol(pool=pool)
         return tpcol, time_range_tp
 
-    def add_breakpoint(
-        self,
-        orb: geocal.OrbitOffsetCorrection,
-        time_range_tp: list[tuple[int, geocal.Time, geocal.Time]],
-        pass_number: int,
-    ) -> None:
-        """Add breakpoints for the scenes that we got good tiepoints from.
-        We may well tweak this, but right now we set breakpoints at the
-        beginning, middle and end of the scene, unless the beginning
-        is within one scene of another breakpoint."""
-        # TODO Add handling for multiple passes. Want to add points without breaking
-        # the setting for the current ones
-        tlast = None
-        for i, tmin, tmax in time_range_tp:
-            if tlast is None and pass_number == 1:
-                orb.insert_position_time_point(tmin)
-            if tlast is None or tmin - tlast > 52.0:
-                orb.insert_attitude_time_point(tmin)
-            orb.insert_attitude_time_point(tmin + (tmax - tmin) / 2)
-            orb.insert_attitude_time_point(tmax)
-            tlast = tmax
-        if tlast is not None and pass_number == 1:
-            orb.insert_position_time_point(tlast)
-
     def run_sba(
         self,
         igccol: EcostressIgcCollection,
@@ -779,24 +759,6 @@ class L1bGeoProcess:
                 "SBA/Tiepoint failed to correct orbit data. Continue processing without correction."
             )
             return igccol
-
-    def correct_igc(
-        self, igccol: EcostressIgcCollection, pool: Pool | None, pass_number: int
-    ) -> tuple[EcostressIgcCollection, geocal.TiePointCollection | None]:
-        """Collect tie points, and used to correct the igccol"""
-        logger.info(f"Starting pass {pass_number}")
-        tpcol, time_range_tp = self.collect_tp(igccol, pool, pass_number)
-        if len(tpcol) == 0:
-            logger.info("No tie-points, so skipping SBA correction")
-            tpcol = None
-            return igccol, None
-        self.add_breakpoint(self.orb, time_range_tp, pass_number)
-        igccol_corrected = self.run_sba(igccol, tpcol, pass_number)
-        # Update orbit and camera, if we updated the igccol
-        self.orb = igccol_corrected.image_ground_connection(0).orbit
-        self.cam = igccol_corrected.image_ground_connection(0).camera
-        logger.info(f"Done with pass {pass_number}")
-        return igccol_corrected, tpcol
 
     def run(self) -> None:
         """Run the L1bGeoProcess"""
@@ -832,10 +794,9 @@ class L1bGeoProcess:
                     tpcol = geocal.read_shelve(str(self.tpcol_use))
                 self.collect_qa(igccol_corrected, tpcol, pass_number=1)
             elif not (self.skip_sba or self.l1b_geo_config.skip_sba):
-                igccol_corrected, tpcol = self.correct_igc(
-                    igccol_initial, pool, pass_number=1
+                igccol_corrected, tpcol = self.strategy.correct_igc(
+                    self, igccol_initial, pool
                 )
-                self.collect_qa(igccol_corrected, tpcol, pass_number=1)
             else:
                 igccol_corrected = igccol_initial
                 self.collect_qa(igccol_corrected, tpcol, pass_number=1)
