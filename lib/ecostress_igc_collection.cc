@@ -86,3 +86,44 @@ boost::shared_ptr<GeoCal::Time>& Tafter) const
   --lb;
   Tbefore = boost::make_shared<GeoCal::Time>(*lb);
 }
+
+//-----------------------------------------------------------------------
+/// The Orbit is shared between all the
+/// EcostressImageGroundConnection, return this shared orbit.
+//-----------------------------------------------------------------------
+
+const boost::shared_ptr<GeoCal::Orbit>& EcostressIgcCollection::orbit() const
+{
+  if(igc_list.size() < 1)
+    throw GeoCal::Exception("Don't have any EcostressImageGroundConnection, so no orbit");
+  if(boost::dynamic_pointer_cast<EcostressImageGroundConnection>(image_ground_connection(0))) {
+    auto igc = boost::dynamic_pointer_cast<EcostressImageGroundConnection>(image_ground_connection(0));
+    return igc->orbit();
+  } else if(boost::dynamic_pointer_cast<EcostressImageGroundConnectionSubset>(image_ground_connection(0))) {
+    auto igc = boost::dynamic_pointer_cast<EcostressImageGroundConnectionSubset>(image_ground_connection(0));
+    return igc->orbit();
+  }
+  throw GeoCal::Exception("Need a EcostressImageGroundConnection or EcostressImageGroundConnectionSubset");
+  
+}
+
+//-----------------------------------------------------------------------
+/// The Camera is shared between all the
+/// EcostressImageGroundConnection, return this shared camera.
+//-----------------------------------------------------------------------
+
+const boost::shared_ptr<GeoCal::Camera>& EcostressIgcCollection::camera() const
+{
+  if(igc_list.size() < 1)
+    throw GeoCal::Exception("Don't have any EcostressImageGroundConnection, so no camera");
+  if(boost::dynamic_pointer_cast<EcostressImageGroundConnection>(image_ground_connection(0))) {
+    auto igc = boost::dynamic_pointer_cast<EcostressImageGroundConnection>(image_ground_connection(0));
+    return igc->camera();
+  } else if(boost::dynamic_pointer_cast<EcostressImageGroundConnectionSubset>(image_ground_connection(0))) {
+    auto igc = boost::dynamic_pointer_cast<EcostressImageGroundConnectionSubset>(image_ground_connection(0));
+    return igc->camera();
+  }
+  throw GeoCal::Exception("Need a EcostressImageGroundConnection or EcostressImageGroundConnectionSubset");
+  
+}
+

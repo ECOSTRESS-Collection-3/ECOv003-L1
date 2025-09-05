@@ -9,3 +9,10 @@ python-check:
 	source $(prefix)/setup_ecostress.sh && pytest -n 10 $(srcdir)/@srcpython@/test
 
 INSTALLCHECK_HOOK+= python-check
+
+# Make sure we don't have any pyc or pycache files floating around
+DIST_HOOK += dist-clean-up-python
+
+dist-clean-up-python:
+	rm -rf `find $(distdir) -name '__pycache__'`
+	rm -f `find $(distdir) -name '*.pyc'`

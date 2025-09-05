@@ -12838,12 +12838,12 @@ static PyMethodDef SwigMethods[] = {
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_camera", _wrap_EcostressImageGroundConnectionSubset__v_camera, METH_O, "\n"
 		"\n"
-		"boost::shared_ptr< GeoCal::Camera > Ecostress::EcostressImageGroundConnectionSubset::camera() const\n"
+		"const boost::shared_ptr< GeoCal::Camera > & Ecostress::EcostressImageGroundConnectionSubset::camera() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::camera\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_orbit", _wrap_EcostressImageGroundConnectionSubset__v_orbit, METH_O, "\n"
 		"\n"
-		"boost::shared_ptr< GeoCal::Orbit > Ecostress::EcostressImageGroundConnectionSubset::orbit() const\n"
+		"const boost::shared_ptr< GeoCal::Orbit > & Ecostress::EcostressImageGroundConnectionSubset::orbit() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::orbit\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_sub_time_table", _wrap_EcostressImageGroundConnectionSubset__v_sub_time_table, METH_O, "\n"
@@ -12971,12 +12971,12 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_camera", _wrap_EcostressImageGroundConnectionSubset__v_camera, METH_O, "\n"
 		"\n"
-		"boost::shared_ptr< GeoCal::Camera > Ecostress::EcostressImageGroundConnectionSubset::camera() const\n"
+		"const boost::shared_ptr< GeoCal::Camera > & Ecostress::EcostressImageGroundConnectionSubset::camera() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::camera\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_orbit", _wrap_EcostressImageGroundConnectionSubset__v_orbit, METH_O, "\n"
 		"\n"
-		"boost::shared_ptr< GeoCal::Orbit > Ecostress::EcostressImageGroundConnectionSubset::orbit() const\n"
+		"const boost::shared_ptr< GeoCal::Orbit > & Ecostress::EcostressImageGroundConnectionSubset::orbit() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::orbit\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_sub_time_table", _wrap_EcostressImageGroundConnectionSubset__v_sub_time_table, METH_O, "\n"

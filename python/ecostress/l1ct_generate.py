@@ -370,7 +370,7 @@ class L1ctGenerate:
         )
         for b in range(1, 6):
             logger.info(f"Doing radiance band {b} - {shp['tile_id']}")
-            din = h5py.File(self.l1b_rad)[f"Radiance/radiance_{b}"][:,:]
+            din = h5py.File(self.l1b_rad)[f"Radiance/radiance_{b}"][:, :]
             din_sub = din[lrange, srange]
             data_in = MemoryRasterImageFloat(din_sub.shape[0], din_sub.shape[1])
             data_in.write(0, 0, din_sub)
@@ -417,7 +417,7 @@ class L1ctGenerate:
             # GeoCal doesn't support the dqi type. We could update geocal,
             # but no strong reason to. Just read into memory
             logger.info(f"Doing DQI band {b} - {shp['tile_id']}")
-            din = h5py.File(self.l1b_rad)[f"Radiance/data_quality_{b}"][:,:]
+            din = h5py.File(self.l1b_rad)[f"Radiance/data_quality_{b}"][:, :]
             din_sub = din[lrange, srange]
             data_in = geocal.MemoryRasterImage(din_sub.shape[0], din_sub.shape[1])
             data_in.write(0, 0, din_sub)
@@ -466,7 +466,7 @@ class L1ctGenerate:
 
         # Cloud mask
         logger.info(f"Doing prelim_cloud_mask - {shp['tile_id']}")
-        din = fin_geo["Geolocation/prelim_cloud_mask"][:,:]
+        din = fin_geo["Geolocation/prelim_cloud_mask"][:, :]
         # Remove fill value, treat as clear
         din[din > 1] = 0
         din_sub = din[lrange, srange]

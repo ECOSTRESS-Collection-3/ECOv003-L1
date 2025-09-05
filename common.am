@@ -65,6 +65,9 @@ install-data-hook: $(INSTALL_DATA_HOOK)
 UNINSTALL_HOOK=
 uninstall-hook: $(UNINSTALL_HOOK)
 
+DIST_HOOK=
+dist-hook: $(DIST_HOOK)
+
 CLEAN_HOOK=
 clean-local: $(CLEAN_HOOK)
 
