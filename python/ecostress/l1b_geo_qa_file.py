@@ -3,6 +3,7 @@ import h5py  # type: ignore
 import os
 from pathlib import Path
 import gzip
+import re
 import numpy as np
 import subprocess
 import geocal  # type: ignore
@@ -419,6 +420,11 @@ Fourth column is the number to image matching tries we did."""
 9999: Unknown value"""
 
     @classmethod
+    def _older_format(cls, fname: str | os.PathLike[str]) -> bool:
+        f = h5py.File(fname, "r")
+        return "Pass 1" not in f["PythonObject"]
+        
+    @classmethod
     def _read_obj(
         cls,
         fname: str | os.PathLike[str],
@@ -427,9 +433,13 @@ Fourth column is the number to image matching tries we did."""
         pass_number: int | None = None,
     ) -> Any:
         f = h5py.File(fname, "r")
-        if pass_number is None:
+        if cls._older_format(fname):
+            t = f[f"PythonObject/{name}"][()]
+        elif pass_number is None:
             t = f[f"PythonObject/Scene {scene_number}/{name}"][()]
         else:
+            if f"Pass {pass_number}" not in f["PythonObject"]:
+                raise RuntimeError(f"Pass {pass_number} not found in l1b_geo_qa file")
             t = f[f"PythonObject/Pass {pass_number}/{name}"][()]
         return geocal.serialize_read_generic_string(
             gzip.decompress(bytes(t)).decode("utf8")
@@ -439,18 +449,24 @@ Fourth column is the number to image matching tries we did."""
     def scan_mirror(
         cls, fname: str | os.PathLike[str], scene_number: int
     ) -> EcostressScanMirror:
+        if cls._older_format(fname):
+            raise RuntimeError("scan_mirror is not available in collection 2 l1b_geo_qa")
         return cls._read_obj(fname, "scan_mirror", scene_number=scene_number)
 
     @classmethod
     def time_table(
         cls, fname: str | os.PathLike[str], scene_number: int
     ) -> geocal.TimeTable:
+        if cls._older_format(fname):
+            raise RuntimeError("time_table is not available in collection 2 l1b_geo_qa")
         return cls._read_obj(fname, "time_table", scene_number=scene_number)
 
     @classmethod
     def line_order_reversed(
         cls, fname: str | os.PathLike[str], scene_number: int
     ) -> bool:
+        if cls._older_format(fname):
+            raise RuntimeError("line_order_reversed is not available in collection 2 l1b_geo_qa")
         f = h5py.File(fname, "r")
         t = f[f"PythonObject/Scene {scene_number}/Line Order Reversed"][()].decode(
             "utf8"
@@ -476,11 +492,19 @@ Fourth column is the number to image matching tries we did."""
     @classmethod
     def orbit_filename(cls, fname: str | os.PathLike[str]) -> Path:
         f = h5py.File(fname, "r")
+        if cls._older_format(fname):
+            # Make use of specific order in input file list
+            flist = f["/Input File List"]
+            return Path(flist[0].decode("utf8"))
         return Path(f["/Input File/Orbit Filename"][()][0].decode("utf8"))
 
     @classmethod
     def l1b_rad_list(cls, fname: str | os.PathLike[str]) -> list[Path]:
         f = h5py.File(fname, "r")
+        if cls._older_format(fname):
+            # Make use of specific order in input file list
+            flist = f["/Input File List"]
+            return [Path(flist[i].decode("utf8")) for i in range(1,flist.shape[0]-1)]
         return [Path(i.decode("utf8")) for i in f["/Input File/Orbit Filename"][()]]
 
     @classmethod
@@ -507,6 +531,8 @@ Fourth column is the number to image matching tries we did."""
         often this is out of date. You can optionally supply a orbit_fname and/or l1b_rad_list.
         The l1b_rad_list is only needed if include_img if True."""
         # TODO Add support for including orbit corrections for each pass
+        if cls._older_format(fname):
+            raise RuntimeError("igccol is not available in collection 2 l1b_geo_qa")
         if l1_osp_dir is None:
             l1_osp_dir = cls.config_filename(fname).parent
         l1b_geo_config = cls.l1b_geo_config(l1_osp_dir)
@@ -535,123 +561,113 @@ Fourth column is the number to image matching tries we did."""
         return igccol
 
     @classmethod
+    def pass_list(cls, fname: str | os.PathLike[str]):
+        if cls._older_format(fname):
+            return ["Pass 1",]
+        fh = h5py.File(fname, "r")
+        return [i for i in list(fh["Accuracy Estimate"].keys()) if re.match(r"Pass", i)]
+
+    @classmethod
     def data_frame(cls, fname: str | os.PathLike[str]) -> pd.DataFrame:
         """Return a pandas DataFrame with the contents of the QA file"""
+        is_older = cls._older_format(fname)
+        tlist = []
         t = pd.DataFrame(
             cls.scene_list(fname),
             columns=[
                 "Scene",
             ],
         )
+        tlist.append(t)
         fh = h5py.File(fname, "r")
-        t2 = pd.DataFrame(
-            fh["Tiepoint/Pass 1/Tiepoint Count"][:],
-            columns=[
-                "Initial Tiepoint Pass 1",
-                "Blunders Pass 1",
-                "Number Tiepoint Pass 1",
-                "Number Image Match Tries Pass 1",
-            ],
-        )
-        t3 = pd.DataFrame(
-            fh["Tiepoint/Pass 2/Tiepoint Count"][:],
-            columns=[
-                "Initial Tiepoint Pass 2",
-                "Blunders Pass 2",
-                "Number Tiepoint Pass 2",
-                "Number Image Match Tries Pass 2",
-            ],
-        )
         qa_val = {0: "Best", 1: "Good", 2: "Suspect", 3: "Poor", -9999: "Unknown"}
-
-        d = fh["Accuracy Estimate/Pass 1/Accuracy Before Correction"][:]
-        d[d < -9990] = np.NaN
-        t4 = pd.DataFrame(
-            d,
-            columns=[
-                "Initial Accuracy Pass 1",
-            ],
-        )
-        d = fh["Accuracy Estimate/Pass 1/Final Accuracy"][:]
-        d[d < -9990] = np.NaN
-        t5 = pd.DataFrame(
-            d,
-            columns=[
-                "Accuracy Pass 1",
-            ],
-        )
-        d = fh["Accuracy Estimate/Pass 1/Delta time correction before scene"][:]
-        t6 = pd.DataFrame(
-            d,
-            columns=[
-                "Delta t before scene Pass 1",
-            ],
-        )
-        d = fh["Accuracy Estimate/Pass 1/Delta time correction after scene"][:]
-        t7 = pd.DataFrame(
-            d,
-            columns=[
-                "Delta t after scene Pass 1",
-            ],
-        )
-        t8 = pd.DataFrame(
-            [
-                qa_val[v]
-                for v in fh["Accuracy Estimate/Pass 1/Geolocation accuracy QA flag"][:]
-            ],
-            columns=[
-                "QA Flag Pass 1",
-            ],
-        )
-
-        d = fh["Accuracy Estimate/Pass 2/Accuracy Before Correction"][:]
-        d[d < -9990] = np.NaN
-        t9 = pd.DataFrame(
-            d,
-            columns=[
-                "Initial Accuracy Pass 2",
-            ],
-        )
-        d = fh["Accuracy Estimate/Pass 2/Final Accuracy"][:]
-        d[d < -9990] = np.NaN
-        t10 = pd.DataFrame(
-            d,
-            columns=[
-                "Accuracy Pass 2",
-            ],
-        )
-        d = fh["Accuracy Estimate/Pass 2/Delta time correction before scene"][:]
-        t11 = pd.DataFrame(
-            d,
-            columns=[
-                "Delta t before scene Pass 2",
-            ],
-        )
-        d = fh["Accuracy Estimate/Pass 2/Delta time correction after scene"][:]
-        t12 = pd.DataFrame(
-            d,
-            columns=[
-                "Delta t after scene Pass 2",
-            ],
-        )
-        t13 = pd.DataFrame(
-            [
-                qa_val[v]
-                for v in fh["Accuracy Estimate/Pass 2/Geolocation accuracy QA flag"][:]
-            ],
-            columns=[
-                "QA Flag Pass 2",
-            ],
-        )
+        plist = cls.pass_list(fname)
+        for ps in plist:
+            if is_older:
+                d = fh["Tiepoint/Tiepoint Count"][:]
+            else:
+                d = fh[f"Tiepoint/{ps}/Tiepoint Count"][:]
+            t2 = pd.DataFrame(
+                d,
+                columns=[
+                    f"Initial Tiepoint {ps}",
+                    f"Blunders {ps}",
+                    f"Number Tiepoint {ps}",
+                    f"Number Image Match Tries {ps}",
+                ],
+            )
+            tlist.append(t2)
+        for ps in plist:
+            if is_older:
+                d = fh["Accuracy Estimate/Accuracy Before Correction"][:]
+            else:
+                d = fh[f"Accuracy Estimate/{ps}/Accuracy Before Correction"][:]
+            d[d < -9990] = np.NaN
+            t3 = pd.DataFrame(
+                d,
+                columns=[
+                    f"Initial Accuracy {ps}",
+                ],
+            )
+            tlist.append(t3)
+            if is_older:
+                d = fh["Accuracy Estimate/Final Accuracy"][:]
+            else:
+                d = fh[f"Accuracy Estimate/{ps}/Final Accuracy"][:]
+            d[d < -9990] = np.NaN
+            t4 = pd.DataFrame(
+                d,
+                columns=[
+                    f"Accuracy {ps}",
+                ],
+            )
+            tlist.append(t4)
+            if is_older:
+                d = fh["Accuracy Estimate/Delta time correction before scene"][:]
+            else:
+                d = fh[f"Accuracy Estimate/{ps}/Delta time correction before scene"][:]
+            t5 = pd.DataFrame(
+                d,
+                columns=[
+                    f"Delta t before scene {ps}",
+                ],
+            )
+            tlist.append(t5)
+            if is_older:
+                d = fh["Accuracy Estimate/Delta time correction after scene"][:]
+            else:
+                d = fh[f"Accuracy Estimate/{ps}/Delta time correction after scene"][:]
+            t6 = pd.DataFrame(
+                d,
+                columns=[
+                    f"Delta t after scene {ps}",
+                ],
+            )
+            tlist.append(t6)
+            if is_older:
+                dv = fh["Accuracy Estimate/Geolocation accuracy QA flag"][:]
+            else:
+                dv = fh[f"Accuracy Estimate/{ps}/Geolocation accuracy QA flag"][:]
+            t7 = pd.DataFrame(
+                [
+                    qa_val[v]
+                    for v in dv
+                ],
+                columns=[
+                    f"QA Flag {ps}",
+                ],
+            )
+            tlist.append(t7)
 
         d = fh["Average Metadata"][:]
-        t14 = pd.DataFrame(
+        if is_older:
+            d = np.concatenate((d, np.full((d.shape[0],1),-999.0)), axis=1)
+        t8 = pd.DataFrame(
             d, columns=["Solar Zenith Angle", "Land Fraction", "Cloud Fraction"]
         )
+        tlist.append(t8)
 
-        df = pd.concat(
-            [t, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14], axis=1
-        )
+        df = pd.concat(tlist, axis=1)
         fh.close()
         return df
 
