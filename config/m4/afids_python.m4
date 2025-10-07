@@ -72,7 +72,7 @@ if test "x$want_python" = "xyes"; then
 	if test "x$PYTHON" != "x"; then
           pythondir=`$PYTHON -c "from distutils.sysconfig import *; print(get_python_lib(False,False,''))"`
           platpythondir=`$PYTHON -c "from distutils.sysconfig import *; print(get_python_lib(True,False,''))"`
-          PYTHON_NUMPY_CPPFLAGS=`$PYTHON -c "from numpy.distutils.misc_util import *; print('-I' + ' -I'.join(get_numpy_include_dirs()))"`
+          PYTHON_NUMPY_CPPFLAGS=`$PYTHON -c "import numpy as np; print('-I' + np.get_include())"`
 	fi
 	LD_LIBRARY_PATH=$old_ld_library_path
         AC_SUBST([PYTHON_NUMPY_CPPFLAGS])

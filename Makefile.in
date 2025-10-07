@@ -689,6 +689,7 @@ EGREP = @EGREP@
 ETAGS = @ETAGS@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
+FILECMD = @FILECMD@
 GEOCAL_CFLAGS = @GEOCAL_CFLAGS@
 GEOCAL_LIBS = @GEOCAL_LIBS@
 GEOCAL_SWIG_CFLAGS = @GEOCAL_SWIG_CFLAGS@
@@ -1013,11 +1014,12 @@ _swig_wrap_la_SOURCES = $(INCLUDE_SWIG_SRC) @swigsrc@/swig_wrap.cc
 
 # SWIG doesn't like the GCC extension -isystem (which is like -I, but lets
 # GCC know not to complain about things in the header files we can't change).
-# Just replace -isystem with -I for swig
+# Just replace -isystem with -I for swig. Also phthread isn't something it
+# recognizes, so strip that out also
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@comma := ,
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@empty := 
 @HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@space := $(empty) $(empty)
-@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@GSWIG_FLAGS = $(subst -I$(space),-I,$(patsubst -O2,,$(patsubst -isystem%,-I%, $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS))))
+@HAVE_SWIG_TRUE@@MAINTAINER_MODE_TRUE@GSWIG_FLAGS = $(subst -pthread,,$(subst -I$(space),-I,$(patsubst -O2,,$(patsubst -isystem%,-I%, $(GEOCAL_CFLAGS) $(GEOCAL_SWIG_CFLAGS)))))
 ecostressincdir = @includedir@/ecostress
 ecostressswigincdir = @prefix@/share/ecostress/swig
 libecostress_la_SOURCES = @srclib@/ecostress_camera.cc \

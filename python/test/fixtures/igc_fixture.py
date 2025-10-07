@@ -6,12 +6,12 @@ import h5py
 
 @pytest.fixture(scope="function")
 def orb_fname(test_data):
-    yield test_data / "L1A_RAW_ATT_80005_20150124T204250_0100_01.h5.expected"
+    yield test_data / "L1A_RAW_ATT_80005_20150124T204250_01.h5.expected"
 
 
 @pytest.fixture(scope="function")
 def rad_fname(test_data):
-    yield test_data / "ECOSTRESS_L1B_RAD_80005_001_20150124T204250_0100_01.h5.expected"
+    yield test_data / "ECOSTRESS_L1B_RAD_80005_001_20150124T204250_01.h5.expected"
 
 
 @pytest.fixture(scope="function")
@@ -90,11 +90,11 @@ def igc_hres_latest(test_data_latest):
     (so 256 rows per scan)"""
     cam = geocal.read_shelve(str(test_data_latest / "l1_osp_dir" / "camera.xml"))
     orb_fname = (
-        test_data_latest / "L1A_RAW_ATT_03663_20190227T094659_0100_01.h5.expected"
+        test_data_latest / "L1A_RAW_ATT_03663_20190227T094659_01.h5.expected"
     )
     rad_fname = (
         test_data_latest
-        / "ECOv002_L1B_RAD_03663_001_20190227T101222_0100_01.h5.expected"
+        / "ECOv003_L1B_RAD_03663_001_20190227T101222_01.h5.expected"
     )
     orb = geocal.HdfOrbit_Eci_TimeJ2000(
         str(orb_fname),

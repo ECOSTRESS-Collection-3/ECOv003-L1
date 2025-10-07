@@ -1,0 +1,30 @@
+[workspace]
+authors = ["Mike Smyth <Mike.M.Smyth@jpl.nasa.gov>"]
+channels = ["conda-forge", "/home/smyth/Local/afids-conda-package/afids-conda-channel"]
+name = "build-pixi"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+geocal = "*"
+afids-development-tools = "*"
+afids = "*"
+#tensorflow = "*"
+scikit-learn = "*"
+loguru = "*"
+loguru-config = "*"
+pytest-loguru = "*"
+gdb = "*"
+mypy = "*"
+pandas-stubs = "*"
+# Useful, not strictly necessary
+pandasql = "*"
+git-annex = "*"
+
+[pypi-dependencies]
+# There isn't  currently a conda-forge package for the
+# python 3.13 verions we are using. So for now, grab the
+# pip package. Can change to conda-forge when it is available.
+tensorflow = "*"
