@@ -4186,6 +4186,12 @@ SWIGINTERNINLINE PyObject*
 
 #include <boost/shared_ptr.hpp>
 #include <boost/rational.hpp>
+#if defined(__clang__)
+// For some reason, the configuration of blitz on the mac (1.0.2 from
+// conda-forge) doesn't have BZ_HAVE_IEEE_MATH defined. However, this
+// is actually true of clang. So set this, so we get blitz_isnan available.
+#define BZ_HAVE_IEEE_MATH 1
+#endif
 
 
 #include <iostream>
@@ -7000,7 +7006,7 @@ SWIGINTERN PyObject *_wrap_SimulatedRadiance_radiance_scan__SWIG_0(PyObject *sel
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/home/smyth/Local/ecostress-env/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/ldata/smyth/ecostress-build/build-pixi/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -7071,7 +7077,7 @@ SWIGINTERN PyObject *_wrap_SimulatedRadiance_radiance_scan__SWIG_1(PyObject *sel
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/home/smyth/Local/ecostress-env/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/ldata/smyth/ecostress-build/build-pixi/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
