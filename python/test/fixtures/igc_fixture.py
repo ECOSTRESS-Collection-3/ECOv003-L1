@@ -6,12 +6,12 @@ import h5py
 
 @pytest.fixture(scope="function")
 def orb_fname(test_data):
-    yield test_data / "L1A_RAW_ATT_80005_20150124T204250_01.h5.expected"
+    yield test_data / "L1A_RAW_ATT_80005_20150124T204250_0100_01.h5.expected"
 
 
 @pytest.fixture(scope="function")
 def rad_fname(test_data):
-    yield test_data / "ECOSTRESS_L1B_RAD_80005_001_20150124T204250_01.h5.expected"
+    yield test_data / "ECOSTRESS_L1B_RAD_80005_001_20150124T204250_0100_01.h5.expected"
 
 
 @pytest.fixture(scope="function")

@@ -87,12 +87,12 @@ def vicar_path():
 
 @pytest.fixture(scope="function")
 def dn_fname(test_data):
-    yield test_data / "ECOSTRESS_L1A_PIX_80005_001_20150124T204250_02.h5.expected"
+    yield test_data / "ECOSTRESS_L1A_PIX_80005_001_20150124T204250_0100_02.h5.expected"
 
 
 @pytest.fixture(scope="function")
 def gain_fname(test_data):
-    yield test_data / "L1A_RAD_GAIN_80005_001_20150124T204250_02.h5.expected"
+    yield test_data / "L1A_RAD_GAIN_80005_001_20150124T204250_0100_02.h5.expected"
 
 
 @pytest.fixture(scope="function")
