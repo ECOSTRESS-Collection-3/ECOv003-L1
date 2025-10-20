@@ -6,6 +6,7 @@ platforms = ["linux-64"]
 version = "0.1.0"
 
 [tasks]
+configure = "/ldata/smyth/ecostress-level1/configure --prefix=$CONDA_PREFIX --with-test-data=/home/smyth/Local/ecostress-test-data --enable-maintainer-mode"
 
 [dependencies]
 geocal = "*"

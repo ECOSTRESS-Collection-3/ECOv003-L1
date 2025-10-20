@@ -13,11 +13,11 @@ PIXI_LOCKED=yes
 
 mkfile_dir := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 # Location of environment we create
-ENV_DIR=$(mkfile_dir)/../../ecostress-build/build-pixi
+ENV_DIR=$(abspath $(mkfile_dir)../../ecostress-build/build-pixi)
 
 # Location of afids conda packages (you can check this out from
 # git@github.jpl.nasa.gov:Cartography/afids-conda-package.git
-CONDA_PACKAGE_DIR=$(mkfile_dir)/../../afids-conda-package/afids-conda-channel
+CONDA_PACKAGE_DIR=$(abspath $(mkfile_dir)../../afids-conda-package/afids-conda-channel)
 
 # Location of various datasets
 ECOSTRESS_ANCILLARY=/project/ancillary
@@ -44,15 +44,41 @@ else
   PIXI_LOCK_DIR:=$(mkfile_dir)/linux
 endif
 
-PIXI_FILE_INSTALL:=$(if $(filter $(PIXI_LOCKED),yes), $(PIXI_LOCK_DIR)/pixi.toml $(PIXI_LOCK_DIR)/pixi.lock, $(mkfile_dir)/pixi.toml)
+ifeq '$(PIXI_LOCKED)' 'yes'
+$(ENV_DIR)/pixi.toml: $(PIXI_LOCK_DIR)/pixi.toml
+	sed s"|fake-afids-conda-channel|$(CONDA_PACKAGE_DIR)|"g $< > $@
 
-$(ENV_DIR): $(PIXI_FILE_INSTALL)
+$(ENV_DIR)/pixi.lock: $(PIXI_LOCK_DIR)/pixi.lock
+	sed s"|fake-afids-conda-channel|$(CONDA_PACKAGE_DIR)|"g $< > $@
+
+PIXI_FILE_INSTALL= $(ENV_DIR)/pixi.toml $(ENV_DIR)/pixi.lock
+
+PIXI_FILE_DEPEND=$(PIXI_LOCK_DIR)/pixi.toml $(PIXI_LOCK_DIR)/pixi.lock
+
+PIXI_INSTALL_COMMAND= pixi install --frozen --manifest-path $(ENV_DIR) 
+else
+$(ENV_DIR)/pixi.toml: $(mkfile_dir)pixi.toml
+	sed s"|fake-afids-conda-channel|$(CONDA_PACKAGE_DIR)|"g $< > $@
+
+PIXI_FILE_INSTALL= $(ENV_DIR)/pixi.toml
+
+PIXI_FILE_DEPEND=$(mkfile_dir)pixi.toml
+
+PIXI_INSTALL_COMMAND= pixi install --manifest-path $(ENV_DIR) 
+
+endif
+
+PIXI_INSTALL_COMMAND+= && pixi run --manifest-path $(ENV_DIR) bash -c "\$$CONDA_PREFIX/bin/conda env config vars set AFIDS_DATA_ELEV_ROOT=$(AFIDS_DATA_ELEV_ROOT) AFIDS_DATA_LWM=$(AFIDS_DATA_LWM) AFIDS_DATA_SPICEDATA=$(AFIDS_DATA_SPICEDATA) SPICEDATA=$(AFIDS_DATA_SPICEDATA) AFIDS_DATA_ORTHO=$(AFIDS_DATA_ORTHO) AFIDS_COPERNICUS_DEM=$(AFIDS_COPERNICUS_DEM) AFIDS_COPERNICUS_LWM=$(AFIDS_COPERNICUS_LWM) LANDSAT_ROOT=$(AFIDS_DATA_ORTHO) ELEV_ROOT=$(AFIDS_DATA_ELEV_ROOT) ECOSTRESS_OSP_DIR=$(ECOSTRESS_OSP_DIR) ECOSTRESSTOP=$(ENV_DIR) TAE_PATH=$(ENV_DIR)/vicar_pdf:$${TAE_PATH} AFIDS_DATA=$(ENV_DIR)/data AFIDS_VDEV_DATA=$(ENV_DIR)/data/vdev ECOSTRESS_TEST_DATA=$(ECOSTRESS_TEST_DATA)"
+
+$(ENV_DIR): $(PIXI_FILE_DEPEND)
 	-rm -rf $(ENV_DIR)
 	pixi init -c conda-forge -c $(CONDA_PACKAGE_DIR) $(ENV_DIR)
-	cd $(ENV_DIR) && pixi config set --local run-post-link-scripts insecure && cp $(PIXI_FILE_INSTALL) . && pixi install
+	rm $(ENV_DIR)/pixi.toml
+	$(MAKE) $(PIXI_FILE_INSTALL)
+	pixi config set --local run-post-link-scripts insecure --manifest-path $(ENV_DIR)
+	$(PIXI_INSTALL_COMMAND)
 	- cd $(ENV_DIR) && pixi task rm configure
-	cd $(ENV_DIR) && pixi task add configure "$(mkfile_dir)/../configure --prefix=\$$CONDA_PREFIX --with-test-data=$(ECOSTRESS_TEST_DATA) --enable-maintainer-mode"
-#	eval "$$($(ENV_DIR)/bin/conda shell.bash hook)" && conda activate $(ENV_DIR) && conda env config vars set AFIDS_DATA_ELEV_ROOT=$(AFIDS_DATA_ELEV_ROOT) AFIDS_DATA_LWM=$(AFIDS_DATA_LWM) AFIDS_DATA_SPICEDATA=$(AFIDS_DATA_SPICEDATA) SPICEDATA=$(AFIDS_DATA_SPICEDATA) AFIDS_DATA_ORTHO=$(AFIDS_DATA_ORTHO) AFIDS_COPERNICUS_DEM=$(AFIDS_COPERNICUS_DEM) AFIDS_COPERNICUS_LWM=$(AFIDS_COPERNICUS_LWM) LANDSAT_ROOT=$(AFIDS_DATA_ORTHO) ELEV_ROOT=$(AFIDS_DATA_ELEV_ROOT) ECOSTRESS_OSP_DIR=$(ECOSTRESS_OSP_DIR) ECOSTRESSTOP=$(ENV_DIR) TAE_PATH=$(ENV_DIR)/vicar_pdf:$${TAE_PATH} AFIDS_DATA=$(ENV_DIR)/data AFIDS_VDEV_DATA=$(ENV_DIR)/data/vdev
+	cd $(ENV_DIR) && pixi task add configure "$(abspath $(mkfile_dir)/../configure) --prefix=\$$CONDA_PREFIX --with-test-data=$(ECOSTRESS_TEST_DATA) --enable-maintainer-mode"
 
 # Recreate the environment, deleting if already there
 # ------------------------------------------------------------
@@ -67,5 +93,6 @@ create-env: $(ENV_DIR)
 # Update lock files, from existing environment
 # --------------------------------------------
 update-lock:
-	cp -f $(ENV_DIR)/pixi.toml $(ENV_DIR)/pixi.lock $(PIXI_LOCK_DIR)/
+	sed "s|$(CONDA_PACKAGE_DIR)|fake-afids-conda-channel|"g $(ENV_DIR)/pixi.toml > $(PIXI_LOCK_DIR)/pixi.toml
+	sed "s|$(CONDA_PACKAGE_DIR)|fake-afids-conda-channel|"g $(ENV_DIR)/pixi.lock > $(PIXI_LOCK_DIR)/pixi.lock
 
