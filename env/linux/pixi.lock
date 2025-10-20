@@ -523,7 +523,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/statsmodels-0.14.5-py313h29aa505_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/suitesparse-7.10.1-h5b2951e_7100101.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/svt-av1-3.1.2-hecca717_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/linux-64/swig-4.4.0-hf1419ba_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/swig-4.3.1-hf1419ba_3.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sysroot_linux-64-2.28-h4ee821c_8.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/tabulate-0.9.0-pyhd8ed1ab_2.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/tbb-2022.2.0-hb60516a_1.conda
@@ -8494,9 +8494,9 @@ packages:
   purls: []
   size: 2741200
   timestamp: 1756086702093
-- conda: https://conda.anaconda.org/conda-forge/linux-64/swig-4.4.0-hf1419ba_0.conda
-  sha256: 2da8e01bf089ff0f93262b67ab58c82ee96cd8b3e42a7e19378f2ad245da99c2
-  md5: 93ad461c3758ab40154530a224789495
+- conda: https://conda.anaconda.org/conda-forge/linux-64/swig-4.3.1-hf1419ba_3.conda
+  sha256: 4e1c32b13e790c34c2b326303e223aad3f9c734c5287bbb6d02e5f89540e3c28
+  md5: a71ad798d537468803f2c1da3f310e50
   depends:
   - __glibc >=2.17,<3.0.a0
   - libgcc >=14
@@ -8505,8 +8505,8 @@ packages:
   license: GPL-3.0-or-later
   license_family: GPL
   purls: []
-  size: 1252374
-  timestamp: 1760991077333
+  size: 1253971
+  timestamp: 1756815097702
 - conda: https://conda.anaconda.org/conda-forge/noarch/sysroot_linux-64-2.28-h4ee821c_8.conda
   sha256: 0053c17ffbd9f8af1a7f864995d70121c292e317804120be4667f37c92805426
   md5: 1bad93f0aa428d618875ef3a588a889e
