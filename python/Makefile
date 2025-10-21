@@ -28,17 +28,17 @@ install2:
 # ------------------------------------------------------------------
 
 lint:
-	ruff check ecostress test
+	ruff check ecostress tests
 
 # Add some extra rules
 lint-strict:
-	ruff check --extend-select N ecostress test
+	ruff check --extend-select N ecostress tests
 
 lint-fix:
-	ruff check --fix ecostress test
+	ruff check --fix ecostress tests
 
 format:
-	ruff format ecostress test
+	ruff format ecostress tests
 
 # Note that PYTHONPATH is required, at least as of pip 24.3.1. The py.typed file needed to
 # tell mypy that our modules have types doesn't get translated through using
@@ -55,6 +55,6 @@ mypy:
 	PYTHONPATH=$(PWD) mypy --disallow-untyped-defs ecostress
 
 check:
-	pytest -n 10 test
+	pytest -n 10 tests
 
 

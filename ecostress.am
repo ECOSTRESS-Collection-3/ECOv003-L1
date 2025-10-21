@@ -72,6 +72,8 @@ end-to-end-check: installcheck-am
 	-rm -r ./end_to_end_test_l1b_rad
 	-rm -r ./end_to_end_test_l1b_geo
 	-rm -r ./end_to_end_test_l1c
+	-rm -r ./end_to_end_test_l1and2_grid
+	-rm -r ./end_to_end_test_l2t
 	-rm ./l1_osp_dir
 	$(LN_S) $(end_to_end_test_data)/latest/l1_osp_dir l1_osp_dir
 	$(MKDIR_P) ./end_to_end_test_l0_input
@@ -91,10 +93,18 @@ end-to-end-check: installcheck-am
 	source $(prefix)/setup_ecostress.sh && ( seq 1 | $(PARALLEL) --gnu "echo {}; l1b_project --erdas --all-band end_to_end_test_l1b_geo/ECOv003_L1B_GEO_03663_00{}_*.h5 end_to_end_test_l1b_rad/ECOv003_L1B_RAD_03663_00{}_*.h5 end_to_end_test_l1b_geo/proj_final_{}" )
 	ECOSTRESS_USE_AFIDS_ENV=t ECOSTRESS_END_TO_END_TEST=t $(prefix)/L1C_PGE $(l1c_run_config)
 # Don't treat as an error yet, until get get this all sorted out
-	-$(H5DIFF) $(GH5DIFF_FLAG) end_to_end_test_l1c/ECOv003_L1CG_RAD_03663_001_20190227T101222_01.h5 $(end_to_end_test_data)/latest/ECOv003_L1CG_RAD_03663_001_20190227T101222_01.h5.expected
-
 # We should put a check in for the l1c products, but for now just skip since it will
 # probably take some time to figure out what to do here, in particular for the tile products
+	-$(H5DIFF) $(GH5DIFF_FLAG) end_to_end_test_l1c/ECOv003_L1CG_RAD_03663_001_20190227T101222_01.h5 $(end_to_end_test_data)/latest/ECOv003_L1CG_RAD_03663_001_20190227T101222_01.h5.expected
+# For now, tack on L2T test just to make sure it works. We have a separate test for that,
+# so at some point we may remove this. Note this is for a different orbit than the rest
+# of the tests above
+	$(MKDIR_P) ./end_to_end_test_l1and2_grid
+	$(LN_S) $(l1cg_file) ./end_to_end_test_l1and2_grid
+	$(LN_S) $(l2g_cloud_file) ./end_to_end_test_l1and2_grid
+	$(LN_S) $(l2g_lste_file) ./end_to_end_test_l1and2_grid
+	ECOSTRESS_END_TO_END_TEST=t $(prefix)/L2T_PGE $(l2t_run_config)
+
 
 # Run l1a_cal and l1b_rad using 5 band data. These are the only PGEs that
 # change with 3 vs 5 bands, so we only run these two only. The data is

@@ -24,7 +24,7 @@ pandas-stubs = "*"
 pandasql = "*"
 git-annex = "*"
 # Swig 4.4.0 just came out, and doesn't seem to work. We'll fix this
-# at some point, for for now restrict ourselves to the older version of swig
+# at some point, but for now restrict ourselves to the older version of swig
 swig = "<4.4.0"
 
 [pypi-dependencies]

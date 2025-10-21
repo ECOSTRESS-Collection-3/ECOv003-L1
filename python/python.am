@@ -6,7 +6,7 @@ python-install:
 INSTALL_EXEC_HOOK+= python-install
 
 python-check:
-	source $(prefix)/setup_ecostress.sh && pytest -n 10 $(srcdir)/@srcpython@/test
+	source $(prefix)/setup_ecostress.sh && pytest -n 10 $(srcdir)/@srcpython@/tests
 
 INSTALLCHECK_HOOK+= python-check
 
