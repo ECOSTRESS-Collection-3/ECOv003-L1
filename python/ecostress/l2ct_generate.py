@@ -423,12 +423,13 @@ class L2ctGenerate:
             if "_FillValue" in din_f.attrs:
                 fill_value = din_f.attrs["_FillValue"][0]
                 din_scale[din == fill_value] = np.nan
-            din = din_scale
+            din = din_scale.astype(np.float32)
         else:
             fill_value = 0
             if "_FillValue" in din_f.attrs:
                 fill_value = din_f.attrs["_FillValue"][0]
-        din[np.isnan(din)] = FILL_VALUE_BAD_OR_MISSING
+        if din.dtype == np.float32:
+            din[np.isnan(din)] = FILL_VALUE_BAD_OR_MISSING
         din_sub = din[lrange, srange]
         data_in = MemoryRasterImageFloat(din_sub.shape[0], din_sub.shape[1])
         data_in.write(0, 0, din_sub)
