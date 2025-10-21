@@ -77,7 +77,16 @@ class L1aPixGenerate(object):
         #
         # This is the equivalent of "ulimit -s 32768"
         resource.setrlimit(resource.RLIMIT_STACK, (33554432, 33554432))
+        # Add our code to the TAE_PATH
         try:
+            tae_path_old = os.environ.get("TAE_PATH")
+            ecostress_top = os.environ.get("ECOSTRESSTOP")
+            if ecostress_top is None:
+                raise RuntimeError("Need to set ECOSTRESSTOP environment variable before running l1a_pix_generate.py")
+            if tae_path_old is not None:
+                os.environ["TAE_PATH"] = f"{ecostress_top}/vicar_pdf:{tae_path_old}"
+            else:
+                os.environ["TAE_PATH"] = f"{ecostress_top}/vicar_pdf"
             dirname = self._create_dir()
             os.chdir(dirname)
             res = process_run(
@@ -94,6 +103,11 @@ class L1aPixGenerate(object):
             raise VicarRunError("VICAR call failed")
         finally:
             os.chdir(curdir)
+            if tae_path_old is not None:
+                os.environ["TAE_PATH"] = tae_path_old
+            else:
+                del os.environ["TAE_PATH"]
+                
         # Search through log output for success message, or throw an
         # exception if we don't find it
         mtch = re.search(
