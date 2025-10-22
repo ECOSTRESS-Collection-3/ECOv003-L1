@@ -147,7 +147,7 @@ class WriteStandardMetadata(object):
         else:
             raise RuntimeError("Unrecognized type")
 
-    def pad_string(self, s: bytes, ln: int) -> np.string_:
+    def pad_string(self, s: bytes, ln: int) -> np.bytes_:
         """Create a fixed length string. Note not currently used, but we'll
         leave the function here in case we end up needing it."""
         if len(s) > ln:
@@ -155,8 +155,8 @@ class WriteStandardMetadata(object):
                 "String '%s' is longer than allowed size %d" % (s.decode("utf-8"), ln)
             )
         if len(s) == ln:
-            return np.string_(s)
-        return np.string_(s + b"\0" * (ln - len(s)))
+            return np.bytes_(s)
+        return np.bytes_(s + b"\0" * (ln - len(s)))
 
     @property
     def mlist(self) -> list[tuple[str, str]]:

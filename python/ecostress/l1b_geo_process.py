@@ -587,8 +587,8 @@ class L1bGeoProcess:
             logger.info(f"Doing scene number {self.scene_list[i]}")
             fin = h5py.File(radfname, "r")
             if "BandSpecification" in fin["L1B_RADMetadata"]:
-                nband = np.count_nonzero(
-                    fin["L1B_RADMetadata/BandSpecification"][:] > 0
+                nband = int(
+                    np.count_nonzero(fin["L1B_RADMetadata/BandSpecification"][:] > 0)
                 )
             else:
                 nband = 6

@@ -58,8 +58,10 @@ class L1bRadGenerate(object):
         self.l1a_pix_fname = l1a_pix
         self.l1a_pix = h5py.File(l1a_pix, "r")
         if "BandSpecification" in self.l1a_pix["L1A_PIXMetadata"]:
-            self.nband = np.count_nonzero(
-                self.l1a_pix["L1A_PIXMetadata/BandSpecification"][:] > 0
+            self.nband = int(
+                np.count_nonzero(
+                    self.l1a_pix["L1A_PIXMetadata/BandSpecification"][:] > 0
+                )
             )
             # The earliest data still had the SWIR on. So we might see "6".
             # For the purpose of EcostressAeDeepEnsembleInterpolate, this is

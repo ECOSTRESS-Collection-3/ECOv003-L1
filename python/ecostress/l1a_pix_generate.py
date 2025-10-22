@@ -82,7 +82,9 @@ class L1aPixGenerate(object):
             tae_path_old = os.environ.get("TAE_PATH")
             ecostress_top = os.environ.get("ECOSTRESSTOP")
             if ecostress_top is None:
-                raise RuntimeError("Need to set ECOSTRESSTOP environment variable before running l1a_pix_generate.py")
+                raise RuntimeError(
+                    "Need to set ECOSTRESSTOP environment variable before running l1a_pix_generate.py"
+                )
             if tae_path_old is not None:
                 os.environ["TAE_PATH"] = f"{ecostress_top}/vicar_pdf:{tae_path_old}"
             else:
@@ -107,11 +109,11 @@ class L1aPixGenerate(object):
                 os.environ["TAE_PATH"] = tae_path_old
             else:
                 del os.environ["TAE_PATH"]
-                
+
         # Search through log output for success message, or throw an
         # exception if we don't find it
         mtch = re.search(
-            "^VICAR_RESULT-(\d+)-\[(.*)\]", res.decode("utf-8"), re.MULTILINE
+            r"^VICAR_RESULT-(\d+)-\[(.*)\]", res.decode("utf-8"), re.MULTILINE
         )
         if mtch:
             if mtch.group(1) != "0":

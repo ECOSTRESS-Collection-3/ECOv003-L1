@@ -232,7 +232,7 @@ class L1aRawPixGenerate(object):
         for file_name in glob.glob(obst_files):
             found_file += 1
             fn = os.path.basename(file_name)
-            pre, doy1, doy2, post, year = re.split("\_|\.", fn)
+            pre, doy1, doy2, post, year = re.split(r"\_|\.", fn)
             d1 = year + "::" + doy1
             yr = int(year)
             if int(doy2) < int(doy1):
@@ -251,7 +251,7 @@ class L1aRawPixGenerate(object):
                 for lbuf in ifd:
                     if "OBSTRUCTED" not in lbuf:  #  Look for "OBSTRUCTED"
                         continue
-                    a, b, c, doy1, t1, d, doy2, t2 = re.split(" |\,|\/", lbuf)
+                    a, b, c, doy1, t1, d, doy2, t2 = re.split(r" |\,|\/", lbuf)
                     # print("%s/%s %s/%s" %(doy1,t1,doy2,t2), end=" ")
                     yr = int(year)
                     if int(doy2) < int(doy1):

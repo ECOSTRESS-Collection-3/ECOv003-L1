@@ -423,7 +423,7 @@ Fourth column is the number to image matching tries we did."""
     def _older_format(cls, fname: str | os.PathLike[str]) -> bool:
         f = h5py.File(fname, "r")
         return "Pass 1" not in f["PythonObject"]
-        
+
     @classmethod
     def _read_obj(
         cls,
@@ -450,7 +450,9 @@ Fourth column is the number to image matching tries we did."""
         cls, fname: str | os.PathLike[str], scene_number: int
     ) -> EcostressScanMirror:
         if cls._older_format(fname):
-            raise RuntimeError("scan_mirror is not available in collection 2 l1b_geo_qa")
+            raise RuntimeError(
+                "scan_mirror is not available in collection 2 l1b_geo_qa"
+            )
         return cls._read_obj(fname, "scan_mirror", scene_number=scene_number)
 
     @classmethod
@@ -466,7 +468,9 @@ Fourth column is the number to image matching tries we did."""
         cls, fname: str | os.PathLike[str], scene_number: int
     ) -> bool:
         if cls._older_format(fname):
-            raise RuntimeError("line_order_reversed is not available in collection 2 l1b_geo_qa")
+            raise RuntimeError(
+                "line_order_reversed is not available in collection 2 l1b_geo_qa"
+            )
         f = h5py.File(fname, "r")
         t = f[f"PythonObject/Scene {scene_number}/Line Order Reversed"][()].decode(
             "utf8"
@@ -504,7 +508,7 @@ Fourth column is the number to image matching tries we did."""
         if cls._older_format(fname):
             # Make use of specific order in input file list
             flist = f["/Input File List"]
-            return [Path(flist[i].decode("utf8")) for i in range(1,flist.shape[0]-1)]
+            return [Path(flist[i].decode("utf8")) for i in range(1, flist.shape[0] - 1)]
         return [Path(i.decode("utf8")) for i in f["/Input File/Orbit Filename"][()]]
 
     @classmethod
@@ -561,9 +565,11 @@ Fourth column is the number to image matching tries we did."""
         return igccol
 
     @classmethod
-    def pass_list(cls, fname: str | os.PathLike[str]):
+    def pass_list(cls, fname: str | os.PathLike[str]) -> list[str]:
         if cls._older_format(fname):
-            return ["Pass 1",]
+            return [
+                "Pass 1",
+            ]
         fh = h5py.File(fname, "r")
         return [i for i in list(fh["Accuracy Estimate"].keys()) if re.match(r"Pass", i)]
 
@@ -602,7 +608,7 @@ Fourth column is the number to image matching tries we did."""
                 d = fh["Accuracy Estimate/Accuracy Before Correction"][:]
             else:
                 d = fh[f"Accuracy Estimate/{ps}/Accuracy Before Correction"][:]
-            d[d < -9990] = np.NaN
+            d[d < -9990] = np.nan
             t3 = pd.DataFrame(
                 d,
                 columns=[
@@ -614,7 +620,7 @@ Fourth column is the number to image matching tries we did."""
                 d = fh["Accuracy Estimate/Final Accuracy"][:]
             else:
                 d = fh[f"Accuracy Estimate/{ps}/Final Accuracy"][:]
-            d[d < -9990] = np.NaN
+            d[d < -9990] = np.nan
             t4 = pd.DataFrame(
                 d,
                 columns=[
@@ -649,10 +655,7 @@ Fourth column is the number to image matching tries we did."""
             else:
                 dv = fh[f"Accuracy Estimate/{ps}/Geolocation accuracy QA flag"][:]
             t7 = pd.DataFrame(
-                [
-                    qa_val[v]
-                    for v in dv
-                ],
+                [qa_val[v] for v in dv],
                 columns=[
                     f"QA Flag {ps}",
                 ],
@@ -661,7 +664,7 @@ Fourth column is the number to image matching tries we did."""
 
         d = fh["Average Metadata"][:]
         if is_older:
-            d = np.concatenate((d, np.full((d.shape[0],1),-999.0)), axis=1)
+            d = np.concatenate((d, np.full((d.shape[0], 1), -999.0)), axis=1)
         t8 = pd.DataFrame(
             d, columns=["Solar Zenith Angle", "Land Fraction", "Cloud Fraction"]
         )

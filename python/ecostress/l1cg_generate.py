@@ -78,8 +78,8 @@ class L1cgGenerate:
         self.pge_version = pge_version
         fin_rad = h5py.File(self.l1b_rad, "r")
         if "BandSpecification" in fin_rad["L1B_RADMetadata"]:
-            nband = np.count_nonzero(
-                fin_rad["L1B_RADMetadata/BandSpecification"][:] > 0
+            nband = int(
+                np.count_nonzero(fin_rad["L1B_RADMetadata/BandSpecification"][:] > 0)
             )
         else:
             nband = 6

@@ -41,16 +41,21 @@ def test_read_l1b_geo_qa_file():
     df = L1bGeoQaFile.data_frame(fname)
     print(df)
 
-# Read collection 2 data    
+
+# Read collection 2 data
 @pytest.mark.skip
 def test_read_collection2_l1b_geo_qa_file():
     bpath = Path("/arcdata/smyth/L1B_GEO_QA/2025/04/01")
     fname = bpath / "L1B_GEO_QA_38184_20250401T001052_0713_01.h5"
     # Not in collection 2
-    with pytest.raises(RuntimeError, match="scan_mirror is not available in collection 2 l1b_geo_qa"):
+    with pytest.raises(
+        RuntimeError, match="scan_mirror is not available in collection 2 l1b_geo_qa"
+    ):
         sm = L1bGeoQaFile.scan_mirror(fname, 1)
         print(sm)
-    with pytest.raises(RuntimeError, match="time_table is not available in collection 2 l1b_geo_qa"):
+    with pytest.raises(
+        RuntimeError, match="time_table is not available in collection 2 l1b_geo_qa"
+    ):
         tt = L1bGeoQaFile.time_table(fname, 1)
         print(tt)
     tpcol = L1bGeoQaFile.tpcol(fname)
@@ -61,7 +66,9 @@ def test_read_collection2_l1b_geo_qa_file():
     print(ofile)
     l1bfname = L1bGeoQaFile.l1b_rad_list(fname)
     print(l1bfname)
-    with pytest.raises(RuntimeError, match="igccol is not available in collection 2 l1b_geo_qa"):
+    with pytest.raises(
+        RuntimeError, match="igccol is not available in collection 2 l1b_geo_qa"
+    ):
         igccol = L1bGeoQaFile.igccol(fname)
         print(igccol)
     df = L1bGeoQaFile.data_frame(fname)

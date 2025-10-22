@@ -4,25 +4,31 @@
 # Steffen.Mauceri@jpl.nasa.gov
 
 
-
 # Updated to use the current ecostress module
-import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'python'))
-from ecostress.ecostress_interpolate import (EcostressLocalWindowKNNInterpolator, find_horizontal_stripes)
-# from test_support import *
+from ecostress import EcostressLocalWindowKNNInterpolator, find_horizontal_stripes
+from ecostress_swig import (  # type: ignore
+    DQI_INTERPOLATED,
+    DQI_STRIPE_NOT_INTERPOLATED,
+    DQI_GOOD,
+    DQI_NOT_SEEN,
+    FILL_VALUE_BAD_OR_MISSING,
+    DQI_BAD_OR_MISSING,
+    FILL_VALUE_STRIPED,
+    FILL_VALUE_NOT_SEEN,
+    fill_value_threshold,
+)
 import h5py
 import numpy as np
 import matplotlib
-matplotlib.use('Agg')  # Use non-interactive backend for headless environments
+
+matplotlib.use("Agg")  # Use non-interactive backend for headless environments
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
-import os
 from scipy.special import erfinv
 import time
 from glob import glob
 import shutil
-
 
 
 # # Remove in operational pipeline -------------------------------
@@ -58,27 +64,32 @@ def ecostress_radiance_to_brightness_temperature(radiance, band):
         1: 8.285e-6,  # 8.285 µm (unavailable after May 15, 2019)
         2: 8.785e-6,  # 8.785 µm
         3: 9.060e-6,  # 9.060 µm (unavailable after May 15, 2019)
-        4: 10.522e-6, # 10.522 µm
-        5: 12.001e-6  # 12.001 µm
+        4: 10.522e-6,  # 10.522 µm
+        5: 12.001e-6,  # 12.001 µm
     }
 
     if band not in ECOSTRESS_WAVELENGTHS:
-        raise ValueError(f"Invalid ECOSTRESS band: {band}. Choose from {list(ECOSTRESS_WAVELENGTHS.keys())}")
+        raise ValueError(
+            f"Invalid ECOSTRESS band: {band}. Choose from {list(ECOSTRESS_WAVELENGTHS.keys())}"
+        )
 
     wavelength = ECOSTRESS_WAVELENGTHS[band]
 
     # Constants
     h = 6.626e-34  # Planck's constant (J·s)
-    c = 3.0e8      # Speed of light (m/s)
+    c = 3.0e8  # Speed of light (m/s)
     k = 1.381e-23  # Boltzmann's constant (J/K)
 
     # Convert radiance from W/(m²·sr·µm) to W/(m²·sr·m)
     radiance = radiance * 1e6
 
     # Compute brightness temperature
-    Tb = (h * c) / (k * wavelength * np.log((2 * h * c**2) / (radiance * wavelength**5) + 1))
+    Tb = (h * c) / (
+        k * wavelength * np.log((2 * h * c**2) / (radiance * wavelength**5) + 1)
+    )
 
     return Tb
+
 
 def ecostress_uq_to_brightness_temperature(uq, base_radiance, band):
     """
@@ -96,8 +107,19 @@ def ecostress_uq_to_brightness_temperature(uq, base_radiance, band):
     T_with_uq = ecostress_radiance_to_brightness_temperature(base_radiance + uq, band)
     return T_with_uq - T_base
 
-def vis_interpolation_results(original_data, interpolated_data, data_quality_original, data_quality, save_dir, convert_to_BT=True ,title="", uq=None, remove_poor_quality=True):
-    """ Visualize the original and interpolated scene for each band. Add visualization of UQ if available.
+
+def vis_interpolation_results(
+    original_data,
+    interpolated_data,
+    data_quality_original,
+    data_quality,
+    save_dir,
+    convert_to_BT=True,
+    title="",
+    uq=None,
+    remove_poor_quality=True,
+):
+    """Visualize the original and interpolated scene for each band. Add visualization of UQ if available.
     :param original_data: np.array: The original dataset.
     :param interpolated_data: np.array: The interpolated dataset.
     :param save_dir: str: Directory where the plot will be saved.
@@ -118,12 +140,17 @@ def vis_interpolation_results(original_data, interpolated_data, data_quality_ori
     for band in range(5):
         if convert_to_BT:
             # convert radiance to temperature for visualization
-            original_data[..., band] = ecostress_radiance_to_brightness_temperature(original_data[..., band], band)
-            interpolated_data[..., band] = ecostress_radiance_to_brightness_temperature(interpolated_data[..., band], band)
+            original_data[..., band] = ecostress_radiance_to_brightness_temperature(
+                original_data[..., band], band
+            )
+            interpolated_data[..., band] = ecostress_radiance_to_brightness_temperature(
+                interpolated_data[..., band], band
+            )
 
             if uq is not None:
-                uq[..., band] = ecostress_uq_to_brightness_temperature(uq[..., band], interpolated_data[..., band],band)
-
+                uq[..., band] = ecostress_uq_to_brightness_temperature(
+                    uq[..., band], interpolated_data[..., band], band
+                )
 
         # Plot the interpolated dataset vs the original dataset
         # Create a figure with two subplots side by side
@@ -146,35 +173,37 @@ def vis_interpolation_results(original_data, interpolated_data, data_quality_ori
             vmax = np.nanpercentile(original_data_good[:, :, band], 98)
 
         # Plot the original dataset
-        cmap = plt.get_cmap('viridis').copy()
-        cmap.set_bad('grey')
+        cmap = plt.get_cmap("viridis").copy()
+        cmap.set_bad("grey")
 
         im1 = axes[0].imshow(original_data[:, :, band], vmin=vmin, vmax=vmax, cmap=cmap)
         axes[0].set_title(f"Original Data - Band {band + 1}")
-        axes[0].axis('off')  # Hide axis ticks
+        axes[0].axis("off")  # Hide axis ticks
 
         # Add a colorbar for the original data
         cbar1 = fig.colorbar(im1, ax=axes[0], fraction=0.046, pad=0.04)
         if convert_to_BT:
-            cbar1.set_label('Brightness Temperature (K)')
+            cbar1.set_label("Brightness Temperature (K)")
         else:
-            cbar1.set_label('Radiance (W/(m²·sr·µm))')
+            cbar1.set_label("Radiance (W/(m²·sr·µm))")
 
         # Plot the interpolated dataset
-        im2 = axes[1].imshow(interpolated_data[:, :, band], vmin=vmin, vmax=vmax, cmap=cmap)
+        im2 = axes[1].imshow(
+            interpolated_data[:, :, band], vmin=vmin, vmax=vmax, cmap=cmap
+        )
         axes[1].set_title(f"Interpolated Data - Band {band + 1}")
-        axes[1].axis('off')  # Hide axis ticks
+        axes[1].axis("off")  # Hide axis ticks
 
         # Add a colorbar for the interpolated data
         cbar2 = fig.colorbar(im2, ax=axes[1], fraction=0.046, pad=0.04)
         if convert_to_BT:
-            cbar2.set_label('Brightness Temperature (K)')
+            cbar2.set_label("Brightness Temperature (K)")
         else:
-            cbar2.set_label('Radiance (W/(m²·sr·µm))')
+            cbar2.set_label("Radiance (W/(m²·sr·µm))")
 
         if uq is not None:
-            cmap = plt.get_cmap('Reds').copy()
-            cmap.set_bad('grey')
+            cmap = plt.get_cmap("Reds").copy()
+            cmap.set_bad("grey")
             uq_non_zero = uq[:, :, band][uq[:, :, band] > 0]
             vmin = np.nanpercentile(uq_non_zero, 2)
             vmax = np.nanpercentile(uq_non_zero, 98)
@@ -184,21 +213,22 @@ def vis_interpolation_results(original_data, interpolated_data, data_quality_ori
             uq_nan[uq == 0] = np.nan
             im3 = axes[2].imshow(uq_nan[:, :, band], vmin=vmin, vmax=vmax, cmap=cmap)
             axes[2].set_title(f"Interpolation Uncertainty - Band {band + 1}")
-            axes[2].axis('off')  # Hide axis ticks
+            axes[2].axis("off")  # Hide axis ticks
 
             # Add a colorbar for the uncertainty
             cbar3 = fig.colorbar(im3, ax=axes[2], fraction=0.046, pad=0.04)
             if convert_to_BT:
-                cbar3.set_label('Uncertainty (K)')
+                cbar3.set_label("Uncertainty (K)")
             else:
-                cbar3.set_label('Uncertainty (W/(m²·sr·µm))')
+                cbar3.set_label("Uncertainty (W/(m²·sr·µm))")
 
         plt.tight_layout()
         plt.savefig(os.path.join(save_dir, f"{title}_band_{band + 1}.png"), dpi=300)
         plt.close()
 
-def vis_data_quality(data_quality, save_dir,title=""):
-    """ Visualize the data quality for each band.
+
+def vis_data_quality(data_quality, save_dir, title=""):
+    """Visualize the data quality for each band.
     :param data_quality: np.array, 3D array containing data quality information for each band.
     :param save_dir: str, Directory where the plot will be saved.
     :param title: str, Title for the plot.
@@ -212,17 +242,20 @@ def vis_data_quality(data_quality, save_dir,title=""):
     vmin = 0
     vmax = 3
     # reverse the color map and only preserve the first 3 colors
-    cmap = ListedColormap(plt.get_cmap('Set1').colors[:4][::-1])
+    cmap = ListedColormap(plt.get_cmap("Set1").colors[:4][::-1])
 
     for band in range(5):
-        im1 = axes[band].imshow(data_quality[:, :, band], vmin=vmin, vmax=vmax, cmap=cmap)
+        im1 = axes[band].imshow(
+            data_quality[:, :, band], vmin=vmin, vmax=vmax, cmap=cmap
+        )
         axes[band].set_title(f"Data Quality - Band {band + 1}")
-        axes[band].axis('off')  # Hide axis ticks
-        cbar = fig.colorbar(im1, ax=axes[band], fraction=0.046, pad=0.04)
+        axes[band].axis("off")  # Hide axis ticks
+        _ = fig.colorbar(im1, ax=axes[band], fraction=0.046, pad=0.04)
 
     plt.tight_layout()
     plt.savefig(os.path.join(save_dir, f"{title}.png"), dpi=300)
     plt.close()
+
 
 def load_data(data_path, size=None):
     """Load the ECOSTRESS dataset and data quality information from an HDF5 file.
@@ -256,12 +289,12 @@ def load_data(data_path, size=None):
         # Try to find any radiance_1 dataset
         all_keys = []
         f.visit(all_keys.append)
-        radiance_keys = [k for k in all_keys if k.endswith('radiance_1')]
+        radiance_keys = [k for k in all_keys if k.endswith("radiance_1")]
         if radiance_keys:
             # Use the first found radiance_1 path as template
-            base_path = radiance_keys[0].replace('radiance_1', '%s')
-            radiance_path = base_path % 'radiance_%d'
-            data_quality_path = base_path % 'data_quality_%d'
+            base_path = radiance_keys[0].replace("radiance_1", "%s")
+            radiance_path = base_path % "radiance_%d"
+            data_quality_path = base_path % "data_quality_%d"
             print(f"Auto-detected format: using {radiance_path} paths")
         else:
             raise ValueError(f"Could not find radiance data in file: {data_path}")
@@ -280,19 +313,27 @@ def load_data(data_path, size=None):
     # based on the data quality flags from the original file
     nan_mask = np.isnan(dataset)
     if np.any(nan_mask):
-        print(f"Found {np.sum(nan_mask)} NaN values, converting based on data quality flags...")
-        
+        print(
+            f"Found {np.sum(nan_mask)} NaN values, converting based on data quality flags..."
+        )
+
         # Convert NaN values to fill values based on original data quality
         for b in range(5):
             band_nan_mask = nan_mask[:, :, b]
             band_dq = data_quality[:, :, b]
-            
+
             # Map data quality flags to appropriate fill values
             dataset[band_nan_mask & (band_dq == DQI_NOT_SEEN), b] = FILL_VALUE_NOT_SEEN
-            dataset[band_nan_mask & (band_dq == DQI_BAD_OR_MISSING), b] = FILL_VALUE_BAD_OR_MISSING
-            dataset[band_nan_mask & (band_dq == DQI_STRIPE_NOT_INTERPOLATED), b] = FILL_VALUE_STRIPED
-            dataset[band_nan_mask & (band_dq == DQI_INTERPOLATED), b] = FILL_VALUE_STRIPED
-            
+            dataset[band_nan_mask & (band_dq == DQI_BAD_OR_MISSING), b] = (
+                FILL_VALUE_BAD_OR_MISSING
+            )
+            dataset[band_nan_mask & (band_dq == DQI_STRIPE_NOT_INTERPOLATED), b] = (
+                FILL_VALUE_STRIPED
+            )
+            dataset[band_nan_mask & (band_dq == DQI_INTERPOLATED), b] = (
+                FILL_VALUE_STRIPED
+            )
+
             # Handle any remaining NaN values (fallback)
             remaining_nan = np.isnan(dataset[:, :, b])
             if np.any(remaining_nan):
@@ -301,7 +342,9 @@ def load_data(data_path, size=None):
     # Handle fill values below threshold (for old format compatibility)
     fill_mask = dataset < fill_value_threshold
     if np.any(fill_mask):
-        print(f"Found {np.sum(fill_mask)} fill values below threshold ({fill_value_threshold})...")
+        print(
+            f"Found {np.sum(fill_mask)} fill values below threshold ({fill_value_threshold})..."
+        )
         dataset[fill_mask] = FILL_VALUE_BAD_OR_MISSING
 
     # make sure we remove the previously interpolated data
@@ -323,6 +366,7 @@ def load_data(data_path, size=None):
         data_quality = data_quality[:size, :size, :]
 
     return dataset, data_quality
+
 
 def expected_calibration_error(mean_preds, std_preds, test_y, save_dir, title=""):
     """
@@ -370,22 +414,28 @@ def expected_calibration_error(mean_preds, std_preds, test_y, save_dir, title=""
 
     # Plot the coverage calibration curve
     plt.figure(figsize=(6, 6))
-    plt.plot(coverage_levels, observed_coverage, marker='o', label='Observed Coverage')
+    plt.plot(coverage_levels, observed_coverage, marker="o", label="Observed Coverage")
     # Perfect calibration line
-    plt.plot([0, 1], [0, 1], 'r--', label='Ideal')
-    plt.xlabel('Expected Coverage')
-    plt.ylabel('Observed Coverage')
-    plt.title('Coverage Calibration Curve')
+    plt.plot([0, 1], [0, 1], "r--", label="Ideal")
+    plt.xlabel("Expected Coverage")
+    plt.ylabel("Observed Coverage")
+    plt.title("Coverage Calibration Curve")
     plt.legend()
     plt.grid(True)
-    plt.savefig(os.path.join(save_dir, f"{title}_coverage_calibration_curve.png"), dpi=300)
+    plt.savefig(
+        os.path.join(save_dir, f"{title}_coverage_calibration_curve.png"), dpi=300
+    )
     plt.close()
 
     return ece
 
-def scatter_plot_true_vs_predicted(pred_data, true_data,  bands_to_process,save_dir, unit_label, title=""):
 
-    fig, axs = plt.subplots(1, len(bands_to_process), figsize=(5 * len(bands_to_process), 5))
+def scatter_plot_true_vs_predicted(
+    pred_data, true_data, bands_to_process, save_dir, unit_label, title=""
+):
+    fig, axs = plt.subplots(
+        1, len(bands_to_process), figsize=(5 * len(bands_to_process), 5)
+    )
     fig.suptitle(title, fontsize=16)
 
     i = 0
@@ -404,7 +454,9 @@ def scatter_plot_true_vs_predicted(pred_data, true_data,  bands_to_process,save_
             pred_band = pred_band[idx]
 
         # Scatter plot of true vs. predicted values
-        axs[i].scatter(true_band, pred_band, alpha=0.1, color='blue', label="Data", s=2, marker='.')
+        axs[i].scatter(
+            true_band, pred_band, alpha=0.1, color="blue", label="Data", s=2, marker="."
+        )
 
         # Only fit a line if we have enough points
         if len(true_band) >= 2:
@@ -421,8 +473,12 @@ def scatter_plot_true_vs_predicted(pred_data, true_data,  bands_to_process,save_
             sorted_idx = np.argsort(true_band)
             sorted_true = true_band[sorted_idx]
             sorted_fit = fit_func(sorted_true)
-            axs[i].plot(sorted_true, sorted_fit, color='red',
-                        label=f"Fit: slope={slope:.2f}, intercept={intercept:.2f}")
+            axs[i].plot(
+                sorted_true,
+                sorted_fit,
+                color="red",
+                label=f"Fit: slope={slope:.2f}, intercept={intercept:.2f}",
+            )
             axs[i].set_title(f"Band {band + 1} (R²={r2:.2f})")
         else:
             axs[i].set_title(f"Band {band + 1} (no test pixels)")
@@ -437,22 +493,36 @@ def scatter_plot_true_vs_predicted(pred_data, true_data,  bands_to_process,save_
                 axs[i].set_ylim(lim)
         axs[i].legend()
 
-        i+=1
+        i += 1
 
     plt.tight_layout()
     plt.savefig(os.path.join(save_dir, f"{title}_scatter_plot.png"), dpi=300)
     plt.close()
 
-def plot_combined_histogram(combined_errors, save_dir, unit_label="(K)", title="Combined Interpolation Errors by Band", filename="combined_interpolation_error_histogram.png"):
+
+def plot_combined_histogram(
+    combined_errors,
+    save_dir,
+    unit_label="(K)",
+    title="Combined Interpolation Errors by Band",
+    filename="combined_interpolation_error_histogram.png",
+):
     plt.figure(figsize=(8, 6))
     aggregated_rmse_dict = {}
     for band, error_list in combined_errors.items():
         all_errors = np.concatenate(error_list)
-        aggregated_rmse = np.sqrt(np.mean(all_errors ** 2))
+        aggregated_rmse = np.sqrt(np.mean(all_errors**2))
         aggregated_rmse_dict[band] = aggregated_rmse
         print(f"Aggregated RMSE for Band {band}: {aggregated_rmse:.3f}")
-        plt.hist(all_errors, bins=50, alpha=0.5, label=f"Band {band}", density=True, histtype='step')
-    plt.axvline(0, color='black', linestyle='--', linewidth=1)
+        plt.hist(
+            all_errors,
+            bins=50,
+            alpha=0.5,
+            label=f"Band {band}",
+            density=True,
+            histtype="step",
+        )
+    plt.axvline(0, color="black", linestyle="--", linewidth=1)
     plt.xlabel("Interpolation Error " + unit_label)
     plt.ylabel("Probability Density")
     plt.title(title)
@@ -464,26 +534,31 @@ def plot_combined_histogram(combined_errors, save_dir, unit_label="(K)", title="
     return aggregated_rmse_dict
 
 
-def save_interpolated_file(interpolated_dataset, data_quality, input_file_path, output_file_path, interpolation_uncertainty=None):
+def save_interpolated_file(
+    interpolated_dataset,
+    data_quality,
+    input_file_path,
+    output_file_path,
+    interpolation_uncertainty=None,
+):
     """
     Save interpolated results by copying the input file and updating only the radiance and data_quality datasets.
     This preserves all original metadata and file structure.
-    
+
     Args:
         interpolated_dataset: np.array, interpolated radiance data (height x width x bands)
-        data_quality: np.array, updated data quality flags (height x width x bands)  
+        data_quality: np.array, updated data quality flags (height x width x bands)
         input_file_path: str, path to original input file
         output_file_path: str, path for output file
         interpolation_uncertainty: np.array, optional uncertainty data (height x width x bands)
     """
-    
-    
+
     # Copy the entire input file to preserve structure and metadata
     shutil.copy2(input_file_path, output_file_path)
     print(f"Copied {input_file_path} to {output_file_path}")
-    
+
     # Open the copied file and update only the radiance and data_quality datasets
-    with h5py.File(output_file_path, 'r+') as f:
+    with h5py.File(output_file_path, "r+") as f:
         # Auto-detect file format (same logic as load_data function)
         if "/Radiance/radiance_1" in f:
             # Old format (L1B_RAD files)
@@ -494,38 +569,41 @@ def save_interpolated_file(interpolated_dataset, data_quality, input_file_path, 
         elif "/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/radiance_1" in f:
             # New format (L1CG files)
             radiance_path = "/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/radiance_%d"
-            data_quality_path = "/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/data_quality_%d"
+            data_quality_path = (
+                "/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/data_quality_%d"
+            )
             uncertainty_path = "/HDFEOS/GRIDS/ECO_L1CG_RAD_70m/Data Fields/interpolation_uncertainty_%d"
             print("Detected new format: updating /HDFEOS/GRIDS/ paths")
         else:
             # Try to find any radiance_1 dataset
             all_keys = []
             f.visit(all_keys.append)
-            radiance_keys = [k for k in all_keys if k.endswith('radiance_1')]
+            radiance_keys = [k for k in all_keys if k.endswith("radiance_1")]
             if radiance_keys:
                 # Use the first found radiance_1 path as template
-                base_path = radiance_keys[0].replace('radiance_1', '%s')
-                radiance_path = base_path % 'radiance_%d'
-                data_quality_path = base_path % 'data_quality_%d'
-                uncertainty_path = base_path % 'interpolation_uncertainty_%d'
+                base_path = radiance_keys[0].replace("radiance_1", "%s")
+                radiance_path = base_path % "radiance_%d"
+                data_quality_path = base_path % "data_quality_%d"
+                uncertainty_path = base_path % "interpolation_uncertainty_%d"
                 print(f"Auto-detected format: updating {radiance_path} paths")
             else:
-                raise ValueError(f"Could not find radiance data in file: {output_file_path}")
-        
+                raise ValueError(
+                    f"Could not find radiance data in file: {output_file_path}"
+                )
+
         # Update radiance and data_quality datasets for each band
         n_bands = interpolated_dataset.shape[2]
         for b in range(n_bands):
             band_num = b + 1
-            
+
             # Update radiance data
             rad_path = radiance_path % band_num
             if rad_path in f:
                 # Preserve original dataset properties (compression, chunking, etc.)
                 orig_rad_dataset = f[rad_path]
                 orig_dtype = orig_rad_dataset.dtype
-                orig_shape = orig_rad_dataset.shape
                 orig_attrs = dict(orig_rad_dataset.attrs)
-                
+
                 # Get compression and chunking settings
                 compression = orig_rad_dataset.compression
                 compression_opts = orig_rad_dataset.compression_opts
@@ -533,36 +611,35 @@ def save_interpolated_file(interpolated_dataset, data_quality, input_file_path, 
                 shuffle = orig_rad_dataset.shuffle
                 fletcher32 = orig_rad_dataset.fletcher32
                 fillvalue = orig_rad_dataset.fillvalue
-                
+
                 # Delete existing dataset and create new one with same properties
                 del f[rad_path]
                 rad_dataset = f.create_dataset(
-                    rad_path, 
+                    rad_path,
                     data=interpolated_dataset[:, :, b].astype(orig_dtype),
                     compression=compression,
                     compression_opts=compression_opts,
                     chunks=chunks,
                     shuffle=shuffle,
                     fletcher32=fletcher32,
-                    fillvalue=fillvalue
+                    fillvalue=fillvalue,
                 )
-                
+
                 # Restore original attributes
                 for attr_name, attr_value in orig_attrs.items():
                     rad_dataset.attrs[attr_name] = attr_value
-                    
+
             else:
                 print(f"Warning: {rad_path} not found in file")
-            
+
             # Update data quality data
             dq_path = data_quality_path % band_num
             if dq_path in f:
                 # Preserve original dataset properties
                 orig_dq_dataset = f[dq_path]
                 orig_dtype = orig_dq_dataset.dtype
-                orig_shape = orig_dq_dataset.shape
                 orig_attrs = dict(orig_dq_dataset.attrs)
-                
+
                 # Get compression and chunking settings
                 compression = orig_dq_dataset.compression
                 compression_opts = orig_dq_dataset.compression_opts
@@ -570,27 +647,27 @@ def save_interpolated_file(interpolated_dataset, data_quality, input_file_path, 
                 shuffle = orig_dq_dataset.shuffle
                 fletcher32 = orig_dq_dataset.fletcher32
                 fillvalue = orig_dq_dataset.fillvalue
-                
+
                 # Delete existing dataset and create new one with same properties
                 del f[dq_path]
                 dq_dataset = f.create_dataset(
-                    dq_path, 
+                    dq_path,
                     data=data_quality[:, :, b].astype(orig_dtype),
                     compression=compression,
                     compression_opts=compression_opts,
                     chunks=chunks,
                     shuffle=shuffle,
                     fletcher32=fletcher32,
-                    fillvalue=fillvalue
+                    fillvalue=fillvalue,
                 )
-                
+
                 # Restore original attributes
                 for attr_name, attr_value in orig_attrs.items():
                     dq_dataset.attrs[attr_name] = attr_value
-                    
+
             else:
                 print(f"Warning: {dq_path} not found in file")
-            
+
             # Add uncertainty data if provided (this may be a new dataset)
             if interpolation_uncertainty is not None:
                 unc_path = uncertainty_path % band_num
@@ -598,27 +675,39 @@ def save_interpolated_file(interpolated_dataset, data_quality, input_file_path, 
                 if unc_path in f:
                     del f[unc_path]
                 # Create uncertainty dataset
-                unc_dataset = f.create_dataset(unc_path, data=interpolation_uncertainty[:, :, b].astype(np.float32))
+                unc_dataset = f.create_dataset(
+                    unc_path, data=interpolation_uncertainty[:, :, b].astype(np.float32)
+                )
                 unc_dataset.attrs["Units"] = "W/m^2/sr/um"
-                unc_dataset.attrs["Description"] = "Interpolation uncertainty from KNN Window"
+                unc_dataset.attrs["Description"] = (
+                    "Interpolation uncertainty from KNN Window"
+                )
                 # quiet
-        
+
         # Add a note to indicate this file has been interpolated
         if "ProcessingInformation" not in f:
             proc_info = f.create_group("ProcessingInformation")
         else:
             proc_info = f["ProcessingInformation"]
-        
+
         if "InterpolationApplied" in proc_info:
             del proc_info["InterpolationApplied"]
         proc_info["InterpolationApplied"] = "ECOSTRESS KNN Window Interpolation"
-        
+
         print(f"Successfully saved interpolated file: {output_file_path}")
         print(f"Updated {n_bands} bands with interpolated radiance and data quality")
 
-        
 
-def benchmark_interpolate(save_dir, data_path, convert_to_BT=False, size=None, local_window_size=201, local_knn_neighbors=10, feature_selection_scope="center", min_train_per_window=15):
+def benchmark_interpolate(
+    save_dir,
+    data_path,
+    convert_to_BT=False,
+    size=None,
+    local_window_size=201,
+    local_knn_neighbors=10,
+    feature_selection_scope="center",
+    min_train_per_window=15,
+):
     """
     Benchmark the interpolation code on the given data path. Compared to run_interpolate,
     this function will remove good data so we can quantify interpolation errors.
@@ -629,8 +718,6 @@ def benchmark_interpolate(save_dir, data_path, convert_to_BT=False, size=None, l
         convert_to_BT (bool): If True, compute errors in brightness temperature (using
                               ecostress_radiance_to_brightness_temperature) instead of radiance.
     """
-
-
 
     scene = data_path.split("/")[-1].split(".")[0]
     # Load the dataset and data quality information
@@ -647,7 +734,6 @@ def benchmark_interpolate(save_dir, data_path, convert_to_BT=False, size=None, l
     else:
         raise ValueError(f"Invalid number of bands: {N_BANDS}. Choose 3 or 5.")
 
-
     # Make a copy of the original dataset for visualization later
     dataset_original = np.copy(dataset)
     data_quality_original = np.copy(data_quality)
@@ -655,7 +741,9 @@ def benchmark_interpolate(save_dir, data_path, convert_to_BT=False, size=None, l
     data_quality = find_horizontal_stripes(dataset, data_quality, N_BANDS)
     # dataset[data_quality == DQI_STRIPE_NOT_INTERPOLATED] = FILL_VALUE_STRIPED  # remove the identified stripes
 
-    vis_data_quality(data_quality, save_dir, title=f"Data Quality before processing: {scene}")
+    vis_data_quality(
+        data_quality, save_dir, title=f"Data Quality before processing: {scene}"
+    )
 
     # # visualize the identified stripes
     # vis_interpolation_results(dataset_original, dataset, data_quality_original, data_quality, save_dir, convert_to_BT=convert_to_BT,
@@ -664,18 +752,20 @@ def benchmark_interpolate(save_dir, data_path, convert_to_BT=False, size=None, l
     # Remove good data so we can later quantify interpolation errors:
     # randomly add stripes of varying width
     data_testing = np.zeros_like(data_quality, dtype=bool)
-    widths = [1, 1,1, 2, 2, 2,2, 8, 8]
-    edge = 50 # avoid edges. Important for missing data on edges
+    widths = [1, 1, 1, 2, 2, 2, 2, 8, 8]
+    edge = 50  # avoid edges. Important for missing data on edges
     for width in widths:
         # choose a random starting row
         row = np.random.randint(1, dataset.shape[0] - 10)
         # choose up to 3 random bands if we have 5 bands
-        n_bands_choice = np.random.randint(1, N_BANDS-1) # high is not included in random choice
+        n_bands_choice = np.random.randint(
+            1, N_BANDS - 1
+        )  # high is not included in random choice
         bands = np.random.choice(bands_to_process, n_bands_choice, replace=False)
 
         # check that the stripe does not overlap with existing bad data
         i = 0
-        while np.any(data_quality[row:row + 10, edge:-edge, bands_to_process] > 0):
+        while np.any(data_quality[row : row + 10, edge:-edge, bands_to_process] > 0):
             row = np.random.randint(1, dataset.shape[0] - 10)
             i += 1
             if i > 100:
@@ -683,17 +773,19 @@ def benchmark_interpolate(save_dir, data_path, convert_to_BT=False, size=None, l
                 return
 
         # set the stripe to FILL_VALUE_STRIPED
-        dataset[row:row + width, edge:-edge, bands] = FILL_VALUE_STRIPED
-        data_quality[row:row + width, edge:-edge, bands] = DQI_STRIPE_NOT_INTERPOLATED
-        data_testing[row:row + width, edge:-edge, bands] = True
+        dataset[row : row + width, edge:-edge, bands] = FILL_VALUE_STRIPED
+        data_quality[row : row + width, edge:-edge, bands] = DQI_STRIPE_NOT_INTERPOLATED
+        data_testing[row : row + width, edge:-edge, bands] = True
 
-    vis_data_quality(data_quality, save_dir, title=f"Data Quality with Removed Test Data: {scene}")
-
-        
+    vis_data_quality(
+        data_quality, save_dir, title=f"Data Quality with Removed Test Data: {scene}"
+    )
 
     # Train the model and perform interpolation
 
-    print(f"Performing interpolation (Local KNN_WINDOW, window={local_window_size}, k={local_knn_neighbors})")
+    print(
+        f"Performing interpolation (Local KNN_WINDOW, window={local_window_size}, k={local_knn_neighbors})"
+    )
     tik = time.time()
     interpolator = EcostressLocalWindowKNNInterpolator(
         n_bands=N_BANDS,
@@ -704,20 +796,38 @@ def benchmark_interpolate(save_dir, data_path, convert_to_BT=False, size=None, l
         allow_relaxed_center_drop=True,
         center_drop_max_fraction=0.10,
     )
-    interpolated_dataset, interpolation_uncertainty, data_quality = interpolator.interpolate_missing(dataset.copy(), data_quality)
-   
+    interpolated_dataset, interpolation_uncertainty, data_quality = (
+        interpolator.interpolate_missing(dataset.copy(), data_quality)
+    )
+
     # visualize the results
-    vis_interpolation_results(dataset_original, interpolated_dataset, data_quality_original, data_quality, save_dir, convert_to_BT=convert_to_BT,
-                              uq=interpolation_uncertainty, title=f"KNN_WINDOW Interpolator: {scene}")
+    vis_interpolation_results(
+        dataset_original,
+        interpolated_dataset,
+        data_quality_original,
+        data_quality,
+        save_dir,
+        convert_to_BT=convert_to_BT,
+        uq=interpolation_uncertainty,
+        title=f"KNN_WINDOW Interpolator: {scene}",
+    )
     if size is None:
         print(f"Interpolation took {time.time() - tik:.2f} seconds.")
 
-    vis_data_quality(data_quality, save_dir, title=f"Data Quality after Interpolation: {scene}")
-    
+    vis_data_quality(
+        data_quality, save_dir, title=f"Data Quality after Interpolation: {scene}"
+    )
+
     # Save the interpolated results to file (skip when running on a cropped subset)
     if size is None:
         output_file = os.path.join(save_dir, f"{scene}_interpolated.h5")
-        save_interpolated_file(interpolated_dataset, data_quality, data_path, output_file, interpolation_uncertainty)
+        save_interpolated_file(
+            interpolated_dataset,
+            data_quality,
+            data_path,
+            output_file,
+            interpolation_uncertainty,
+        )
         print(f"Saved interpolated file: {output_file}")
     else:
         print("Cropped run detected (size set): skipping HDF5 write.")
@@ -728,10 +838,24 @@ def benchmark_interpolate(save_dir, data_path, convert_to_BT=False, size=None, l
     if convert_to_BT:
         unit_label = "(Brightness Temperature, K)"
         for band in range(5):
-            dataset_original[..., band] = ecostress_radiance_to_brightness_temperature(dataset_original[..., band], band)
-            dataset[..., band] = ecostress_radiance_to_brightness_temperature(dataset[..., band], band)
-            interpolation_uncertainty[..., band] = ecostress_uq_to_brightness_temperature(interpolation_uncertainty[..., band], interpolated_dataset[..., band], band)
-            interpolated_dataset[..., band] = ecostress_radiance_to_brightness_temperature(interpolated_dataset[..., band], band)
+            dataset_original[..., band] = ecostress_radiance_to_brightness_temperature(
+                dataset_original[..., band], band
+            )
+            dataset[..., band] = ecostress_radiance_to_brightness_temperature(
+                dataset[..., band], band
+            )
+            interpolation_uncertainty[..., band] = (
+                ecostress_uq_to_brightness_temperature(
+                    interpolation_uncertainty[..., band],
+                    interpolated_dataset[..., band],
+                    band,
+                )
+            )
+            interpolated_dataset[..., band] = (
+                ecostress_radiance_to_brightness_temperature(
+                    interpolated_dataset[..., band], band
+                )
+            )
     else:
         unit_label = "(Radiance, W/(m²·sr·µm))"
 
@@ -743,18 +867,25 @@ def benchmark_interpolate(save_dir, data_path, convert_to_BT=False, size=None, l
     with open(error_file, "w") as f:
         f.write("Interpolation Errors by Band:\n")
         print("\nInterpolation Errors by Band:")
-        mask_all = (data_testing[:, :, :] & (data_quality[:, :, :] == DQI_INTERPOLATED))
+        mask_all = data_testing[:, :, :] & (data_quality[:, :, :] == DQI_INTERPOLATED)
         for band in bands_to_process:
             mask_band = mask_all[:, :, band]
             if np.any(mask_band):
                 # Calculate error on the selected pixels
                 # need to use dataset_original since it contains true values before test stripes were added
-                errors = dataset_original[:, :, band][mask_band] - interpolated_dataset[:, :, band][mask_band]
-                rmse_band = np.sqrt(np.mean(errors ** 2))
-                scene_band_errors[band + 1] = errors  # Store errors for this scene and band
-                scene_rmse_by_band[band + 1] = rmse_band # Store RMSE for this scene and band
+                errors = (
+                    dataset_original[:, :, band][mask_band]
+                    - interpolated_dataset[:, :, band][mask_band]
+                )
+                rmse_band = np.sqrt(np.mean(errors**2))
+                scene_band_errors[band + 1] = (
+                    errors  # Store errors for this scene and band
+                )
+                scene_rmse_by_band[band + 1] = (
+                    rmse_band  # Store RMSE for this scene and band
+                )
                 n_points = np.sum(mask_band)
-                line = (f"Band {band + 1}: {n_points} test pixels, RMSE: {rmse_band:.3f} {unit_label}")
+                line = f"Band {band + 1}: {n_points} test pixels, RMSE: {rmse_band:.3f} {unit_label}"
                 print(line)
                 f.write(line + "\n")
                 overall_errors.append((band + 1, errors))
@@ -766,28 +897,35 @@ def benchmark_interpolate(save_dir, data_path, convert_to_BT=False, size=None, l
     # Compute overall RMSE across all bands with test pixels
     if overall_errors:
         all_errors = np.concatenate([err for (_, err) in overall_errors])
-        overall_rmse = np.sqrt(np.mean(all_errors ** 2))
+        overall_rmse = np.sqrt(np.mean(all_errors**2))
         print(f"\nOverall RMSE: {overall_rmse:.3f}")
         with open(error_file, "a") as f:
             f.write(f"\nOverall RMSE: {overall_rmse:.3f}")
     else:
         print("\nNo interpolation errors to compute overall RMSE.")
 
-
     # Plot a histogram of errors for each band. *********************************************************************
     plt.figure(figsize=(6, 4))
     for band, errors in overall_errors:
-        plt.hist(errors, bins=50, alpha=0.5, label=f"Band {band}", density=True, histtype='step')
+        plt.hist(
+            errors,
+            bins=50,
+            alpha=0.5,
+            label=f"Band {band}",
+            density=True,
+            histtype="step",
+        )
     # add a vertical line at 0
-    plt.axvline(0, color='black', linestyle='--', linewidth=1)
+    plt.axvline(0, color="black", linestyle="--", linewidth=1)
     plt.xlabel("Interpolation Error " + unit_label)
     plt.ylabel("Probability Density")
     plt.title("Interpolation Errors by Band")
     plt.legend()
     plt.tight_layout()
-    plt.savefig(os.path.join(save_dir, f"interpolation_error_histogram_{scene}.png"), dpi=300)
+    plt.savefig(
+        os.path.join(save_dir, f"interpolation_error_histogram_{scene}.png"), dpi=300
+    )
     plt.close()
-
 
     # Quantify interpolation errors by number of available good bands. ******************************************
     # Group errors by number of valid bands
@@ -799,7 +937,9 @@ def benchmark_interpolate(save_dir, data_path, convert_to_BT=False, size=None, l
         # Get the boolean mask for the current band
         band_mask = mask_all[:, :, b]
         # Compute the errors at pixels where the current band was a test pixel
-        band_errors = (dataset_original[:, :, b] - interpolated_dataset[:, :, b])[band_mask]
+        band_errors = (dataset_original[:, :, b] - interpolated_dataset[:, :, b])[
+            band_mask
+        ]
         # For those pixels, count how many other bands had valid data.
         # (Subtract 1 because the current band is included in the valid count.)
         other_valid = N_BANDS - n_band_interpolated[band_mask]
@@ -809,18 +949,32 @@ def benchmark_interpolate(save_dir, data_path, convert_to_BT=False, size=None, l
     # Plot histogram for each group
     plt.figure(figsize=(8, 6))
     for n_other, errs in sorted(error_groups.items()):
-        plt.hist(errs, bins=50, alpha=0.5, label=f"{n_other} valid bands", density=True, histtype='step')
-    plt.axvline(0, color='black', linestyle='--', linewidth=1)
+        plt.hist(
+            errs,
+            bins=50,
+            alpha=0.5,
+            label=f"{n_other} valid bands",
+            density=True,
+            histtype="step",
+        )
+    plt.axvline(0, color="black", linestyle="--", linewidth=1)
     plt.xlabel("Interpolation Error " + unit_label)
     plt.ylabel("Probability Density")
     plt.title("Interpolation Errors Grouped by Number of Good Bands")
     plt.legend()
     plt.tight_layout()
-    plt.savefig(os.path.join(save_dir, f"interpolation_error_histogram_by_valid_bands_{scene}.png"), dpi=300)
+    plt.savefig(
+        os.path.join(
+            save_dir, f"interpolation_error_histogram_by_valid_bands_{scene}.png"
+        ),
+        dpi=300,
+    )
     plt.close()
 
     # only keep the test pixels
-    dataset_masked = np.copy(dataset_original) # need to use dataset_original since it contains true values before test stripes were added
+    dataset_masked = np.copy(
+        dataset_original
+    )  # need to use dataset_original since it contains true values before test stripes were added
     interpolated_masked = np.copy(interpolated_dataset)
     uncertainty_masked = np.copy(interpolation_uncertainty)
 
@@ -828,26 +982,45 @@ def benchmark_interpolate(save_dir, data_path, convert_to_BT=False, size=None, l
     interpolated_masked[~mask_all] = np.nan
     uncertainty_masked[~mask_all] = np.nan
 
-    ece = expected_calibration_error(interpolated_masked, uncertainty_masked, dataset_masked, save_dir, title=scene)
+    ece = expected_calibration_error(
+        interpolated_masked, uncertainty_masked, dataset_masked, save_dir, title=scene
+    )
     print(f"Expected calibration error: {ece:.3f}")
     with open(error_file, "a") as f:
         f.write(f"\nExpected Calibration Error: {ece:.3f}")
 
     # Make a scatter plot of true vs predicted for each band to visualize the interpolation errors *******************
-    scatter_plot_true_vs_predicted(interpolated_masked, dataset_masked, bands_to_process, save_dir, unit_label,  title=scene)
+    scatter_plot_true_vs_predicted(
+        interpolated_masked,
+        dataset_masked,
+        bands_to_process,
+        save_dir,
+        unit_label,
+        title=scene,
+    )
 
     print(f"Benchmarking complete for {scene}")
     return overall_rmse, scene_band_errors, scene_rmse_by_band
 
-def run_interpolate(save_dir, data_path, convert_to_BT=False, size=None, local_window_size=201, local_knn_neighbors=10, feature_selection_scope="center", min_train_per_window=15):
-    '''Run the interpolation and visualization code on the given data path'''
+
+def run_interpolate(
+    save_dir,
+    data_path,
+    convert_to_BT=False,
+    size=None,
+    local_window_size=201,
+    local_knn_neighbors=10,
+    feature_selection_scope="center",
+    min_train_per_window=15,
+):
+    """Run the interpolation and visualization code on the given data path"""
 
     scene = data_path.split("/")[-1].split(".")[0]
     # Load the dataset and data quality information
     dataset, data_quality = load_data(data_path, size=size)
 
     # Make a copy of the original dataset for visualization later
-    dataset_original = np.copy(dataset) # no stripes will be added to this dataset
+    dataset_original = np.copy(dataset)  # no stripes will be added to this dataset
     data_quality_original = np.copy(data_quality)
 
     # get number of bands by checking how many bands are not all bad (data_quality == BAD_OR_MISSING)
@@ -858,10 +1031,11 @@ def run_interpolate(save_dir, data_path, convert_to_BT=False, size=None, local_w
     # update data quality mask
     data_quality = find_horizontal_stripes(dataset, data_quality, N_BANDS)
 
-
     # check if we have any negative radiances with a good DQI
     if np.any((dataset < 0) & (data_quality == DQI_GOOD)):
-        print(f"Found negative radiances with good DQI in {scene}. Setting to FILL_VALUE_BAD_OR_MISSING")
+        print(
+            f"Found negative radiances with good DQI in {scene}. Setting to FILL_VALUE_BAD_OR_MISSING"
+        )
         # set any negative radiances to FILL_VALUE_BAD_OR_MISSING
         data_quality[dataset < 0] = DQI_BAD_OR_MISSING
         dataset[dataset < 0] = FILL_VALUE_BAD_OR_MISSING
@@ -869,7 +1043,9 @@ def run_interpolate(save_dir, data_path, convert_to_BT=False, size=None, local_w
     vis_data_quality(data_quality, save_dir, title=f"Stripes Identified: {scene}")
 
     # Train the model and perform interpolation
-    print(f"Performing interpolation (Local KNN_WINDOW, window={local_window_size}, k={local_knn_neighbors})")
+    print(
+        f"Performing interpolation (Local KNN_WINDOW, window={local_window_size}, k={local_knn_neighbors})"
+    )
     interpolator = EcostressLocalWindowKNNInterpolator(
         n_bands=N_BANDS,
         window_size=local_window_size,
@@ -879,43 +1055,71 @@ def run_interpolate(save_dir, data_path, convert_to_BT=False, size=None, local_w
         allow_relaxed_center_drop=True,
         center_drop_max_fraction=0.10,
     )
-    interpolated_dataset, interpolation_uncertainty, data_quality = interpolator.interpolate_missing(dataset, data_quality)
-    
-    vis_interpolation_results(dataset_original, interpolated_dataset, data_quality_original, data_quality,
-                              save_dir, convert_to_BT=convert_to_BT, uq = interpolation_uncertainty, title=f"KNN_WINDOW Interpolator: {scene}")
+    interpolated_dataset, interpolation_uncertainty, data_quality = (
+        interpolator.interpolate_missing(dataset, data_quality)
+    )
+
+    vis_interpolation_results(
+        dataset_original,
+        interpolated_dataset,
+        data_quality_original,
+        data_quality,
+        save_dir,
+        convert_to_BT=convert_to_BT,
+        uq=interpolation_uncertainty,
+        title=f"KNN_WINDOW Interpolator: {scene}",
+    )
     print(f"Interpolation complete for {scene}")
     vis_data_quality(data_quality, save_dir, title=f"Final DQ: {scene}")
-    
+
     # Save the interpolated results to file (skip when running on a cropped subset)
     if size is None:
         output_file = os.path.join(save_dir, f"{scene}_interpolated.h5")
-        save_interpolated_file(interpolated_dataset, data_quality, data_path, output_file, interpolation_uncertainty)
+        save_interpolated_file(
+            interpolated_dataset,
+            data_quality,
+            data_path,
+            output_file,
+            interpolation_uncertainty,
+        )
         print(f"Saved interpolated file: {output_file}")
     else:
         print("Cropped run detected (size set): skipping HDF5 write.")
 
 
+save_dir = (
+    "/Users/smauceri/Projects/ECOSTRESS/code/plots/"  # Directory for test outputs/logs
+)
+data_path = "/Users/smauceri/Projects/ECOSTRESS/data/3_band/*.h5"  # Path to directory containing HDF5 file
 
-save_dir = "/Users/smauceri/Projects/ECOSTRESS/code/plots/"  # Directory for test outputs/logs
-data_path = "/Users/smauceri/Projects/ECOSTRESS/data/3_band/*.h5" # Path to directory containing HDF5 file
 
-
-local_window_size = 201 # Size of the window for the KNN interpolation. Must be odd. Value affects speed [strongly] and accuracy [weakly]. Tune this knob first for speed.
-min_train_per_window = 15 # Minimum number of training pixels per window required for interpolation
-local_knn_neighbors = 10 # Number of neighbors for the KNN interpolation. [10] Value affects speed [weakly] and accuracy [weakly].
+local_window_size = 201  # Size of the window for the KNN interpolation. Must be odd. Value affects speed [strongly] and accuracy [weakly]. Tune this knob first for speed.
+min_train_per_window = (
+    15  # Minimum number of training pixels per window required for interpolation
+)
+local_knn_neighbors = 10  # Number of neighbors for the KNN interpolation. [10] Value affects speed [weakly] and accuracy [weakly].
 feature_selection_scope = "center"  # or "window_best"
 
-Benchmark = False # Set to True to run benchmarking mode otherwise we just run the interpolation
-convert_to_BT = True # If True, convert to brightness temperature for error analysis and visualization
-size = None # None for full scene, otherwise size of crop for faster processing and better visualization
+Benchmark = False  # Set to True to run benchmarking mode otherwise we just run the interpolation
+convert_to_BT = True  # If True, convert to brightness temperature for error analysis and visualization
+size = None  # None for full scene, otherwise size of crop for faster processing and better visualization
 
-save_dir_unit = "BT" if convert_to_BT else "Rad" # Append to save_dir to indicate BT or radiance
+save_dir_unit = (
+    "BT" if convert_to_BT else "Rad"
+)  # Append to save_dir to indicate BT or radiance
 save_dir_model = f"KNN_WINDOW_{local_window_size}win_k{local_knn_neighbors}"
 
-save_dir_mode = "Bench" if Benchmark else "Interp"  # Append to save_dir to indicate benchmark or test mode
-save_dir_bands = "3_band" if '3_band' in data_path else "5_band"  # Append to save_dir to indicate 3-band or 5-band
+save_dir_mode = (
+    "Bench" if Benchmark else "Interp"
+)  # Append to save_dir to indicate benchmark or test mode
+save_dir_bands = (
+    "3_band" if "3_band" in data_path else "5_band"
+)  # Append to save_dir to indicate 3-band or 5-band
 
-save_dir = os.path.join(save_dir, f"{save_dir_model}_{save_dir_mode}_{save_dir_unit}_{save_dir_bands}_{size}")
+save_dir = os.path.join(
+    save_dir,
+    f"{save_dir_model}_{save_dir_mode}_{save_dir_unit}_{save_dir_bands}_{size}",
+)
 
 
 # make save directory if it does not exist
@@ -927,26 +1131,24 @@ files = glob(data_path)
 
 # **Aggregate metrics across scenes**
 combined_errors = {}  # key: band, value: list of error arrays from each scene
-combined_rmse = {}    # key: band, value: list of RMSE values from each scene
+combined_rmse = {}  # key: band, value: list of RMSE values from each scene
 overall_start_time = time.time()
 for file_path in files:
     scene_name_timer = os.path.basename(file_path).split(".")[0]
     scene_start_time = time.time()
     interpolate_kwargs = {
-        'convert_to_BT': convert_to_BT,
-        'size': size,
-        'local_window_size': local_window_size,
-        'local_knn_neighbors': local_knn_neighbors,
-        'feature_selection_scope': feature_selection_scope,
-        'min_train_per_window': min_train_per_window,
+        "convert_to_BT": convert_to_BT,
+        "size": size,
+        "local_window_size": local_window_size,
+        "local_knn_neighbors": local_knn_neighbors,
+        "feature_selection_scope": feature_selection_scope,
+        "min_train_per_window": min_train_per_window,
     }
     if Benchmark:
-        overall_rmse, scene_errors, scene_rmse = (
-            benchmark_interpolate(
-                save_dir,
-                file_path,
-                **interpolate_kwargs,
-            )
+        overall_rmse, scene_errors, scene_rmse = benchmark_interpolate(
+            save_dir,
+            file_path,
+            **interpolate_kwargs,
         )
     else:
         run_interpolate(
@@ -969,7 +1171,9 @@ if Benchmark:
         unit_label = "(Brightness Temperature, K)"
     else:
         unit_label = "(Radiance, W/(m²·sr·µm))"
-    aggregated_rmse = plot_combined_histogram(combined_errors, save_dir, unit_label=unit_label)
+    aggregated_rmse = plot_combined_histogram(
+        combined_errors, save_dir, unit_label=unit_label
+    )
     # write aggregated RMSE to file
     with open(os.path.join(save_dir, "aggregated_rmse.txt"), "w") as f:
         f.write("Aggregated RMSE by Band:\n")

@@ -98,13 +98,10 @@ def gain_fname(test_data):
 @pytest.fixture(scope="function")
 def dn_latest_fname(test_data_latest):
     yield (
-        test_data_latest
-        / "ECOv003_L1A_PIX_03663_001_20190227T101222_02.h5.expected"
+        test_data_latest / "ECOv003_L1A_PIX_03663_001_20190227T101222_02.h5.expected"
     )
 
 
 @pytest.fixture(scope="function")
 def gain_latest_fname(test_data_latest):
-    yield (
-        test_data_latest / "L1A_RAD_GAIN_03663_001_20190227T101222_02.h5.expected"
-    )
+    yield (test_data_latest / "L1A_RAD_GAIN_03663_001_20190227T101222_02.h5.expected")
