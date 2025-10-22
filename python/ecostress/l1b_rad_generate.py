@@ -17,7 +17,10 @@ from ecostress_swig import (  # type: ignore
 import h5py  # type: ignore
 from .rad_write_standard_metadata import RadWriteStandardMetadata
 from .misc import is_day
-from .ecostress_interpolate import EcostressAeDeepEnsembleInterpolate
+from .ecostress_interpolate import (
+    EcostressAeDeepEnsembleInterpolate,
+    EcostressLocalWindowKNNInterpolator,
+)
 import numpy as np
 from loguru import logger
 import typing
@@ -169,69 +172,7 @@ class L1bRadGenerate(object):
         dqi[dataset == FILL_VALUE_NOT_SEEN] = DQI_NOT_SEEN
         dqi[dataset == FILL_VALUE_STRIPED] = DQI_STRIPE_NOT_INTERPOLATED
         dqi[dataset == FILL_VALUE_BAD_OR_MISSING] = DQI_BAD_OR_MISSING
-        # Only do interpolation if we are directed to,
-        # and we have enough data present (e.g., skip
-        # if too little of the scene actually has imagery)
-        frac_data_present = (
-            self.total_possible_scan - self.missing_scan
-        ) / self.total_possible_scan
-        if (
-            self.interpolate_stripe_data
-            and frac_data_present < self.frac_to_do_interpolation
-        ):
-            logger.info(
-                "Skipping interpolation because fraction of scans present is too small (e.g., short scene)"
-            )
-        elif self.interpolate_stripe_data:
-            inter = EcostressAeDeepEnsembleInterpolate(
-                seed=self.seed,
-                n_bands=self.nband,
-                verbose=False,
-                grid_size=self.interpolator_parameters.get("grid_size", 1),
-                latent_dim=self.interpolator_parameters.get("latent_dim", 16),
-                encoder_layers=self.interpolator_parameters.get("encoder_layers", [32]),
-                decoder_layers=self.interpolator_parameters.get("decoder_layers", [32]),
-                activation=self.interpolator_parameters.get("activation", "elu"),
-                n_ensemble=self.interpolator_parameters.get("n_ensemble", 3),
-                n_good_bands_required=self.interpolator_parameters.get(
-                    "n_good_bands_required", 2
-                ),
-            )
-            # identify horizontal stripes and update data quality mask (if turned on)
-            if self.find_horizontal_stripes:
-                dqi = inter.find_horizontal_stripes(
-                    dataset,
-                    dqi,
-                    threshold=self.interpolator_parameters.get(
-                        "horizontal_threshold", 5
-                    ),
-                )
-
-            # Prediction apparently doesn't work with negative radiance. We can
-            # actually legitimately have negative radiance (physical radiance isn't,
-            # but measured can be if we happen to have a small DN). But this isn't
-            # overly important, so just go ahead and filter out before we do our training
-            # and fill in.
-            if np.any((dataset < 0) & (dqi == DQI_GOOD)):
-                logger.info(
-                    "Found negative radiances with good DQI. Setting to FILL_VALUE_BAD_OR_MISSING"
-                )
-                dqi[(dataset < 0) & (dqi == DQI_GOOD)] = DQI_BAD_OR_MISSING
-                dataset[(dataset < 0) & (dqi == DQI_GOOD)] = FILL_VALUE_BAD_OR_MISSING
-
-            logger.info("Starting model training")
-            inter.train(
-                dataset,
-                dqi,
-                epochs=self.interpolator_parameters.get("epochs", 25),
-                batch_size=self.interpolator_parameters.get("batch_size", 32),
-                n_samples=self.interpolator_parameters.get("n_samples", 100_000),
-                validate=self.interpolator_parameters.get("validate", False),
-                validate_threshold=self.interpolator_parameters.get(
-                    "validate_threshold", 5
-                ),
-            )
-            dataset, inter_uncer, dqi = inter.interpolate_missing(dataset, dqi)
+        dataset, inter_uncer, dqi = self.interpolate_missing(dataset, inter_uncer, dqi)
         g = fout.create_group("Radiance")
         for b in range(5):
             t = g.create_dataset(
@@ -364,6 +305,118 @@ Data quality indicator.
             ]
         )
         m.write()
+
+    def interpolate_missing(
+        self, dataset: np.ndarray, inter_uncer: np.ndarray, dqi: np.ndarray
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """Interpolate missing data. We pull this out, just because it is a bit long
+        and it makes run above a little cleaner"""
+        # Only do interpolation if we are directed to,
+        # and we have enough data present (e.g., skip
+        # if too little of the scene actually has imagery)
+        frac_data_present = (
+            self.total_possible_scan - self.missing_scan
+        ) / self.total_possible_scan
+        if (
+            self.interpolate_stripe_data
+            and frac_data_present < self.frac_to_do_interpolation
+        ):
+            logger.info(
+                "Skipping interpolation because fraction of scans present is too small (e.g., short scene)"
+            )
+            return dataset, inter_uncer, dqi
+        elif not self.interpolate_stripe_data:
+            return dataset, inter_uncer, dqi
+
+        if False:
+            # Old interpolator
+            inter = EcostressAeDeepEnsembleInterpolate(
+                seed=self.seed,
+                n_bands=self.nband,
+                verbose=False,
+                grid_size=self.interpolator_parameters.get("grid_size", 1),
+                latent_dim=self.interpolator_parameters.get("latent_dim", 16),
+                encoder_layers=self.interpolator_parameters.get("encoder_layers", [32]),
+                decoder_layers=self.interpolator_parameters.get("decoder_layers", [32]),
+                activation=self.interpolator_parameters.get("activation", "elu"),
+                n_ensemble=self.interpolator_parameters.get("n_ensemble", 3),
+                n_good_bands_required=self.interpolator_parameters.get(
+                    "n_good_bands_required", 2
+                ),
+            )
+        else:
+            # New interpolator
+            inter = EcostressLocalWindowKNNInterpolator(
+                n_bands=self.nband,
+                # must be odd
+                window_size=self.interpolator_parameters.get("window_size", 201),
+                n_neighbors=self.interpolator_parameters.get("n_neighbors", 10),
+                max_train_samples=self.interpolator_parameters.get(
+                    "max_train_samples", 5000
+                ),
+                min_feature_bands_for_prediction=self.interpolator_parameters.get(
+                    "min_feature_bands_for_prediction", 2
+                ),
+                max_feature_bands_for_prediction=self.interpolator_parameters.get(
+                    "max_feature_bands_for_prediction", 3
+                ),
+                feature_selection_scope=self.interpolator_parameters.get(
+                    "feature_selection_scope", "center"
+                ),
+                random_state=self.interpolator_parameters.get("random_state", 1234),
+                min_train_per_window=self.interpolator_parameters.get(
+                    "min_train_per_window", 15
+                ),
+                block_step=self.interpolator_parameters.get("block_step", None),
+                inner_size=self.interpolator_parameters.get("inner_size", None),
+                knn_n_jobs=self.interpolator_parameters.get("knn_n_jobs", 1),
+                exclude_full_bad_edge_columns=self.interpolator_parameters.get(
+                    "exclude_full_bad_edge_columns", True
+                ),
+                allow_relaxed_center_drop=self.interpolator_parameters.get(
+                    "allow_relaxed_center_drop", True
+                ),
+                center_drop_max_fraction=self.interpolator_parameters.get(
+                    "center_drop_max_fraction", 0.10
+                ),
+            )
+
+        # identify horizontal stripes and update data quality mask (if turned on)
+        if self.find_horizontal_stripes:
+            dqi = inter.find_horizontal_stripes(
+                dataset,
+                dqi,
+                threshold=self.interpolator_parameters.get("horizontal_threshold", 5),
+            )
+
+        # Prediction apparently doesn't work with negative radiance. We can
+        # actually legitimately have negative radiance (physical radiance isn't,
+        # but measured can be if we happen to have a small DN). But this isn't
+        # overly important, so just go ahead and filter out before we do our training
+        # and fill in.
+        if np.any((dataset < 0) & (dqi == DQI_GOOD)):
+            logger.info(
+                "Found negative radiances with good DQI. Setting to FILL_VALUE_BAD_OR_MISSING"
+            )
+            dqi[(dataset < 0) & (dqi == DQI_GOOD)] = DQI_BAD_OR_MISSING
+            dataset[(dataset < 0) & (dqi == DQI_GOOD)] = FILL_VALUE_BAD_OR_MISSING
+
+        if False:
+            # New interpolator doesn't need training
+            logger.info("Starting model training")
+            inter.train(
+                dataset,
+                dqi,
+                epochs=self.interpolator_parameters.get("epochs", 25),
+                batch_size=self.interpolator_parameters.get("batch_size", 32),
+                n_samples=self.interpolator_parameters.get("n_samples", 100_000),
+                validate=self.interpolator_parameters.get("validate", False),
+                validate_threshold=self.interpolator_parameters.get(
+                    "validate_threshold", 5
+                ),
+            )
+        logger.info("Interpolating missing data")
+        return inter.interpolate_missing(dataset, dqi)
 
 
 __all__ = ["L1bRadGenerate"]

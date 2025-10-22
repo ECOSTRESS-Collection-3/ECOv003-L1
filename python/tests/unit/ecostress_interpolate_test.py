@@ -1,4 +1,4 @@
-from ecostress import EcostressAeDeepEnsembleInterpolate
+from ecostress import EcostressLocalWindowKNNInterpolator
 from ecostress_swig import (  # type: ignore
     FILL_VALUE_BAD_OR_MISSING,
     FILL_VALUE_STRIPED,
@@ -81,7 +81,7 @@ def test_interpolate(isolated_dir, test_data_latest):
 
         # START of minimal example of how to use the EcostressAeDeepEnsembleInterpolate class ----------------------------------
         # Create an instance of the EcostressAeDeepEnsembleInterpolate class
-        interpolator = EcostressAeDeepEnsembleInterpolate(n_bands=n_bands)
+        interpolator = EcostressLocalWindowKNNInterpolator(n_bands=n_bands)
 
         # identify horizontal stripes and update data quality mask
         data_quality = interpolator.find_horizontal_stripes(dataset, data_quality)
@@ -96,16 +96,6 @@ def test_interpolate(isolated_dir, test_data_latest):
             dataset[dataset < 0] = FILL_VALUE_BAD_OR_MISSING
 
         # Train the model and perform interpolation
-        print("Starting model training")
-        interpolator.train(
-            dataset,
-            data_quality,
-            epochs=epochs,
-            batch_size=batch_size,
-            n_samples=n_samples,
-            validate=True,
-            validate_threshold=0.2,
-        )
 
         print("Performing interpolation")
         interpolated_dataset, interpolation_uncertainty, data_quality = (

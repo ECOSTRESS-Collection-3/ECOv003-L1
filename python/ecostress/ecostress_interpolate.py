@@ -876,6 +876,27 @@ class EcostressLocalWindowKNNInterpolator(object):
             uq_val = float(np.sqrt(max(0.0, var_pred)))
             return y_pred, uq_val
 
+    def find_horizontal_stripes(
+        self,
+        dataset: np.ndarray,
+        data_quality: np.ndarray,
+        threshold: int = 5,
+    ) -> np.ndarray:
+        """analyzes ECOSTRESS scene and looks for missing, high, or
+        low horizontal stripes that are not identified in data_quality
+        mask. Currently constrained to identifying horizontal stripes
+        with a width of 1 to 2 px.  Could be readily modified to
+        identify wider stripes if needed.
+
+        :param dataset: input dataset (ECOSTRESS scene)
+        :param data_quality: data quality mask
+        :param threshold: threshold for identifying stripes (defined as multiple of MAD)
+
+        :return: updated data quality mask
+
+        """
+        return _find_horizontal_stripes(dataset, data_quality, self.n_bands, threshold)
+
     def interpolate_missing(
         self, dataset: np.ndarray, data_quality: np.ndarray
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
