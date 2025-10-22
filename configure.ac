@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([ecostress-level1], [8.00])
+AC_INIT([ecostress-level1], [8.01])
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([config/m4])
 AC_CONFIG_FILES([script/setup_ecostress.csh script/setup_ecostress.sh])

@@ -1,5 +1,5 @@
-ECOSTRESS_VERSION=8.00
-DOCKER_BASE_VERSION=20250825
+ECOSTRESS_VERSION=8.01
+DOCKER_BASE_VERSION=20251022
 AFIDS_CONDA_PACKAGE=/home/smyth/Local/afids-conda-package
 ECOSTRESS_SOURCE=/home/smyth/Local/ecostress-level1
 BASE_DOCKER=oraclelinux:8
@@ -24,7 +24,7 @@ END_TO_END_DIR=/project/test/ASTER/EndToEndTest
 create-base:
 	docker run -t -d --cidfile=docker_run.id -v $(AFIDS_CONDA_PACKAGE):/home/afids-conda-package:z -v $(ECOSTRESS_SOURCE):/home/ecostress-level1:z $(BASE_DOCKER) /bin/bash
 	-cp ../env/Makefile.local ../env/Makefile.local.backup
-	docker exec $$(cat docker_run.id) bash --login -c "dnf install -y make csh wget && cd /home/ecostress-level1/env && cp /home/ecostress-level1/docker-env/env_makefile.local Makefile.local && make create-env && /home/ecostress-env/bin/conda init && mkdir -p /project/ancillary/srtm_v3_dem_L2 /project/ancillary/srtm_v3_lwm /project/ancillary/cspice /project/ancillary/ortho_lsat7 /project/ancillary/l1_osp_dir /home/ecostress-workdir && mkdir -p /pkg/afids/afids_latest/data && ln -s /project/ancillary/cspice /pkg/afids/afids_latest/data && ln -s /home/ecostress-env/data/vdev /pkg/afids/afids_latest/data && mkdir -p /project/ancillary/SRTM && ln -s /project/ancillary/srtm_v3_dem_L2 /project/ancillary/SRTM && ln -s /project/ancillary/srtm_v3_lwm /project/ancillary/SRTM && mkdir -p /opt/afids/data && ln -s /project/ancillary/cspice /opt/afids/data && ln -s /project/ancillary/ortho_lsat7 /project/ancillary/LANDSAT && rm Makefile.local"
+	docker exec $$(cat docker_run.id) bash --login -c "dnf install -y make csh && curl -fsSL https://pixi.sh/install.sh | sh && cd /home/ecostress-level1/env && source ~/.bashrc && cp /home/ecostress-level1/docker-env/env_makefile.local Makefile.local && make create-env && ( pixi shell-hook --shell bash --manifest-path /home/ecostress-env > /etc/profile.d/pixi.sh ) && source /etc/profile.d/pixi.sh mkdir -p /project/ancillary/srtm_v3_dem_L2 /project/ancillary/srtm_v3_lwm /project/ancillary/cspice /project/ancillary/ortho_lsat7 /project/ancillary/l1_osp_dir /home/ecostress-workdir && mkdir -p /pkg/afids/afids_latest/data && ln -s /project/ancillary/cspice /pkg/afids/afids_latest/data && ln -s \$$CONDA_PREFIX/data/vdev /pkg/afids/afids_latest/data && mkdir -p /project/ancillary/SRTM && ln -s /project/ancillary/srtm_v3_dem_L2 /project/ancillary/SRTM && ln -s /project/ancillary/srtm_v3_lwm /project/ancillary/SRTM && mkdir -p /opt/afids/data && ln -s /project/ancillary/cspice /opt/afids/data && ln -s /project/ancillary/ortho_lsat7 /project/ancillary/LANDSAT && rm Makefile.local"
 	-mv ../env/Makefile.local.backup ../env/Makefile.local
 	docker commit $$(cat docker_run.id) ecostress/conda-base:$(DOCKER_BASE_VERSION)
 	docker container stop $$(cat docker_run.id)
@@ -32,7 +32,7 @@ create-base:
 
 create-ecostress:
 	docker run -t -d --cidfile=docker_run.id -v $(ECOSTRESS_SOURCE):/home/ecostress-level1:z ecostress/conda-base:$(DOCKER_BASE_VERSION) /bin/bash
-	docker exec $$(cat docker_run.id) bash --login -c "mkdir /home/ecostress-level1-build && cd /home/ecostress-level1-build && ../ecostress-level1/configure --prefix=/home/ecostress-env && make -j 20 all && make install && rm -r /home/ecostress-level1-build /home/afids-conda-package && ( echo 'will cite' | parallel --citation )"
+	docker exec $$(cat docker_run.id) bash --login -c "mkdir /home/ecostress-level1-build && cd /home/ecostress-level1-build && ../ecostress-level1/configure --prefix=\$$CONDA_PREFIX && make -j 20 all && make install && rm -r /home/ecostress-level1-build /home/afids-conda-package && ( echo 'will cite' | parallel --citation )"
 	docker commit $$(cat docker_run.id) ecostress/ecostress-level1:$(ECOSTRESS_VERSION)
 	docker container stop $$(cat docker_run.id)
 	rm docker_run.id

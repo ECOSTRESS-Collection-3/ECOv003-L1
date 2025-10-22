@@ -3,6 +3,8 @@
 # Things the user can change. Note you can change this by creating a Makefile.local
 # to set these variables
 
+ECOSTRESS_VERSION=8.01
+
 # Should we install the latest conda packages, or the "pixi.lock" set known to
 # work (which will often lag the latest conda packages). Most of the time
 # latest should work fine, but there might be the occasional breakage (e.g.,
@@ -96,3 +98,13 @@ update-lock:
 	sed "s|$(CONDA_PACKAGE_DIR)|fake-afids-conda-channel|"g $(ENV_DIR)/pixi.toml > $(PIXI_LOCK_DIR)/pixi.toml
 	sed "s|$(CONDA_PACKAGE_DIR)|fake-afids-conda-channel|"g $(ENV_DIR)/pixi.lock > $(PIXI_LOCK_DIR)/pixi.lock
 
+# Create a pixi pack file, that can be used to recreate the environment.
+# Useful to do when we make a delivery, so we have a copy of what is
+# needed to create everything. Should have already created the ENV
+# Note we can compress this, but we don't get much from that.
+# This is a tar file of a bunch of compressed data, so compressing
+# a second time really isn't needed.
+# --------------------------------------------
+
+pixi-pack:
+	pixi-pack $(ENV_DIR) --output-file env-pixi-pack-$(ECOSTRESS_VERSION).tar

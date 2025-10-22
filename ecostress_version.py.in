@@ -7,14 +7,14 @@ import os
 # Note, build_id is just a default version for a stand alone run. If we
 # have a run config file, this gets replaced with the build_id from that
 # run config file
-build_id = "0800"
+build_id = "0801"
 collection_label = "ECOv003"
-pge_version = {"l1a_raw" : "8.00",
-               "l1a_cal" : "8.00",
-               "l1b_rad" : "8.00",
-               "l1b_geo" : "8.00",
-               "l1c"     : "8.00",
-               "l2t"     : "8.00",
+pge_version = {"l1a_raw" : "8.01",
+               "l1a_cal" : "8.01",
+               "l1b_rad" : "8.01",
+               "l1b_geo" : "8.01",
+               "l1c"     : "8.01",
+               "l2t"     : "8.01",
                }
 
 # For end to end testing, fake having the final 5.00 version. This allows us

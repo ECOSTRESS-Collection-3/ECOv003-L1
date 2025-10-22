@@ -1,5 +1,5 @@
 # These are what are used in the docker image
-CONDA_FIXED=yes
+PIXI_LOCKED=yes
 ECOSTRESS_ANCILLARY=/project/ancillary
 AFIDS_DATA_ELEV_ROOT=$(ECOSTRESS_ANCILLARY)/srtm_v3_dem_L2
 AFIDS_DATA_LWM=$(ECOSTRESS_ANCILLARY)/srtm_v3_lwm
