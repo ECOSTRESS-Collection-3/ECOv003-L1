@@ -11,17 +11,30 @@ ECOSTRESS_VERSION=8.01
 # conda moves to a newer version of python and our various packages haven't
 # been rebuilt yet the newer python, a python package update breaks
 # something).
+# --------------------------------------
 PIXI_LOCKED=yes
 
 mkfile_dir := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+
 # Location of environment we create
+# --------------------------------------
+
 ENV_DIR=$(abspath $(mkfile_dir)../../ecostress-build/build-pixi)
+
+# Location of pixi unpack directory, if different
+# --------------------------------------
+
+UNPACK_ENV_DIR=$(ENV_DIR)
 
 # Location of afids conda packages (you can check this out from
 # git@github.jpl.nasa.gov:Cartography/afids-conda-package.git
+# --------------------------------------
+
 CONDA_PACKAGE_DIR=$(abspath $(mkfile_dir)../../afids-conda-package/afids-conda-channel)
 
 # Location of various datasets
+# --------------------------------------
+
 ECOSTRESS_ANCILLARY=/project/ancillary
 AFIDS_DATA_ELEV_ROOT=$(ECOSTRESS_ANCILLARY)/SRTM/srtm_v3_dem_L2
 AFIDS_DATA_LWM=$(ECOSTRESS_ANCILLARY)/SRTM/srtm_v3_lwm
@@ -33,7 +46,10 @@ ECOSTRESS_OSP_DIR=/project/test/ASTER/EndToEndTest/8.00/l1_osp_dir
 ECOSTRESS_TEST_DATA=/project/test/ASTER/EndToEndTest
 
 # Include a Makefile.local to override things, if found
+# --------------------------------------
+
 -include Makefile.local
+
 # ---------------------------------------------------------------------------
 # Past this point are the rules, shouldn't need to modify these
 # ---------------------------------------------------------------------------
@@ -108,3 +124,18 @@ update-lock:
 
 pixi-pack:
 	pixi-pack $(ENV_DIR) --output-file env-pixi-pack-$(ECOSTRESS_VERSION).tar
+
+
+# Unpack the pixi pack file. Note we have some packages that require post
+# link scripts, which pixi unpack doesn't run. This might get fixed at
+# some point, put for now we just manually run these
+# --------------------------------------------
+
+pixi-unpack:
+	-rm -r $(UNPACK_ENV_DIR)
+	pixi-unpack --output-directory $(UNPACK_ENV_DIR) env-pixi-pack-$(ECOSTRESS_VERSION).tar
+	UNPACK_ENV_DIR=$(UNPACK_ENV_DIR) bash run-post-link.sh
+
+
+
+
