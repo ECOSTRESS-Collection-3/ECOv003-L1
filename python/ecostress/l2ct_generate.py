@@ -710,6 +710,23 @@ class L2ctGenerate:
             srange,
         )
 
+        # LST_err
+        logger.info(f"Doing LST_err - {shp['tile_id']}")
+        if self.diagnostic:
+            ras = geocal.GdalRasterImage(
+                f'HDF5:"{self.l2cg_lste}"://HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data_Fields/LST_err'
+            )
+            ras.map_info = ras_map_info
+            self.rasm = geocal.MapReprojectedImage(ras, mi)
+        self.process_field(
+            "LST_err",
+            dirname,
+            mi,
+            res,
+            fin_l2cg_lste["/HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data Fields/LST_err"],
+            lrange,
+            srange,
+        )
         # SST
         logger.info(f"Doing SST - {shp['tile_id']}")
         if self.diagnostic:
