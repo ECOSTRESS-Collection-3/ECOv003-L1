@@ -271,8 +271,10 @@ def summarize_qa(pandas_summary_pickle, pandas_qa_pickle, output_dir):
     df1 = pd.read_pickle(pandas_summary_pickle)
     df2 = pd.read_pickle(pandas_qa_pickle)
     t = pds.PandaSQL(persist=True)
-    df = t("select df2.Orbit, df2.Scene, df2.QA, df1.initial_accuracy, df1.final_accuracy from df2 left join df1 on df2.Orbit = df1.orbnum and df2.Scene = df1.scene")
+    df = t("select df2.Orbit, df2.Scene, df2.QA, df1.initial_accuracy, df1.final_accuracy, df1.solar_zenith from df2 left join df1 on df2.Orbit = df1.orbnum and df2.Scene = df1.scene")
     df_good = t("select * from df where final_accuracy > -1")
+    df_good_day = t("select * from df where final_accuracy > -1 and solar_zenith < 90")
+    df_good_night = t("select * from df where final_accuracy > -1 and solar_zenith >= 90")
     norbit_no_corr = np.array(t("select count(distinct(Orbit)) from df where df.Orbit not in (select Orbit from df_good)"))[0,0]
     ntotal_orb = np.array(t("select count(distinct(Orbit)) from df"))[0,0]
     nscene_no_corr = np.array(t("select count(Scene) from df where df.Orbit not in (select Orbit from df_good)"))[0,0]
@@ -286,9 +288,13 @@ def summarize_qa(pandas_summary_pickle, pandas_qa_pickle, output_dir):
     print("QA flags:")
     print(t('select QA, count(Scene), count(Scene) * 100.0 / SUM(count(Scene)) OVER() as Percentage from df group by QA'))
     print("Initial Accuracy (m):")
-    print(df_good["initial_accuracy"].describe([.25, .5, .75,0.9,0.95]))
+    print(df_good["initial_accuracy"].describe([.25, .5, .68, .75,0.9,0.95]))
     print("Final Accuracy (m):")
-    print(df_good["final_accuracy"].describe([.25, .5, .75,0.9,0.95]))
+    print(df_good["final_accuracy"].describe([.25, .5, .68, .75,0.9,0.95]))
+    print("Final Accuracy (m), day:")
+    print(df_good_day["final_accuracy"].describe([.25, .5, .68, .75,0.9,0.95]))
+    print("Final Accuracy (m), night:")
+    print(df_good_night["final_accuracy"].describe([.25, .5, .68, .75,0.9,0.95]))
     subprocess.run(f"mkdir -p {output_dir}", shell=True)
     df3 = t("select Orbit, count(Scene) as cscene from df group by Orbit")
     pd.DataFrame.hist(df3, column="cscene")

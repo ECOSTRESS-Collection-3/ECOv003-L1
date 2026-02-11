@@ -9991,7 +9991,7 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_euler__SWIG_0(PyObject *self, 
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-build/build-pixi/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[1], stride[1];
     for(int i = 0; i < 1; ++i) {
@@ -11570,7 +11570,7 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_encoder_value(PyObject *self, 
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-build/build-pixi/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {

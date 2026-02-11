@@ -480,7 +480,7 @@ Fourth column is the number to image matching tries we did."""
     @classmethod
     def tpcol(
         cls, fname: str | os.PathLike[str], pass_number: int = 2
-    ) -> geocal.TimeTable:
+    ) -> geocal.TiePointCollection:
         return cls._read_obj(fname, "tpcol", pass_number=pass_number)
 
     @classmethod

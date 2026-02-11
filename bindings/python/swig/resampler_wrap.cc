@@ -8024,7 +8024,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_0(PyObject *self, Py_s
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-build/build-pixi/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -8138,7 +8138,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_1(PyObject *self, Py_s
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-build/build-pixi/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -8244,7 +8244,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_2(PyObject *self, Py_s
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-build/build-pixi/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -8342,7 +8342,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_3(PyObject *self, Py_s
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-build/build-pixi/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -8432,7 +8432,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_4(PyObject *self, Py_s
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-build/build-pixi/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -8523,7 +8523,7 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_dqi(PyObject *self, PyObject *args
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-build/build-pixi/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -9312,7 +9312,7 @@ SWIGINTERN PyObject *_wrap_Resampler_map_values(PyObject *self, PyObject *args) 
   resultobj = SWIG_Py_Void();
   {
     PyObject *res;
-    /*@SWIG:/ldata/smyth/ecostress-build/build-pixi/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -9335,7 +9335,7 @@ SWIGINTERN PyObject *_wrap_Resampler_map_values(PyObject *self, PyObject *args) 
   }
   {
     PyObject *res;
-    /*@SWIG:/ldata/smyth/ecostress-build/build-pixi/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -9358,7 +9358,7 @@ SWIGINTERN PyObject *_wrap_Resampler_map_values(PyObject *self, PyObject *args) 
   }
   {
     PyObject *res;
-    /*@SWIG:/ldata/smyth/ecostress-build/build-pixi/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
