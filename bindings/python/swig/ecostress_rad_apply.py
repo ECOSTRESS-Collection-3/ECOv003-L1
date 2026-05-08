@@ -61,6 +61,8 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _ecostress_rad_apply.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
+    r"""Proxy of C++ swig::SwigPyIterator class."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -89,6 +91,7 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _ecostress_rad_apply:
 _ecostress_rad_apply.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _ecostress_rad_apply.SHARED_PTR_DISOWN
+
 
 import os
 
@@ -163,6 +166,7 @@ class EcostressRadApply(geocal_swig.calc_raster.CalcRaster):
 
     def __init__(self, Dn_fname, Gain_fname, Band):
         r"""
+        __init__(EcostressRadApply self, std::string const & Dn_fname, std::string const & Gain_fname, int Band) -> EcostressRadApply
 
         EcostressRadApply::EcostressRadApply(const std::string &Dn_fname, const std::string &Gain_fname, int Band)
         Ecostress::EcostressRadApply::EcostressRadApply

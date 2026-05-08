@@ -7,6 +7,7 @@ from ecostress.misc import (
     find_orbit_file,
     find_radiance_file,
     create_igc,
+    create_orbit_raw,
 )
 from geocal import Time, ImageCoordinate, cib01_mapinfo
 
@@ -79,3 +80,11 @@ def test_determine_rotated_map_igc(igc_with_img):
     x2, y2 = mi2.coordinate(gc2)
     assert x1 == pytest.approx(x2)
     assert mi2.resolution_meter == pytest.approx(70.0, abs=1e-2)
+
+
+def create_orbit_raw_(test_data_latest):
+    orb = create_orbit_raw(
+        test_data_latest / "L1A_RAW_ATT_05675_20190706T224819_0601_02.h5",
+        test_data_latest / "l1_osp_dir",
+    )
+    print(orb)

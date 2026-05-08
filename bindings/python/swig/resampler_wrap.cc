@@ -4645,14 +4645,14 @@ SWIG_AsVal_ptrdiff_t (PyObject * obj, ptrdiff_t *val)
 #include <boost/make_shared.hpp>
 
 
-  // This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
-  std::string parse_python_exception();
+  // This is defined in swig_wrap.tmpl, so it gets put into
+  // swig_wrap.cc
+  #include "python_exception.h"
 
 
 #include "serialize_function.h"
+#include "python_exception.h"  
 #include <stdexcept>
-// This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
-std::string parse_python_exception();
 
 
 //--------------------------------------------------------------
@@ -4673,7 +4673,7 @@ inline std::string cpickle_dumps(PyObject* obj)
 					     PyString_FromString("dumps"),
 					     obj, NULL);
   if(PyErr_Occurred()) {
-    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
+    throw PythonException();
   }
   char *buf;
   Py_ssize_t len;
@@ -4688,7 +4688,7 @@ inline PyObject* cpickle_loads(const std::string& S)
 					     PyBytes_FromStringAndSize(S.c_str(), S.size()), 
 					     NULL);
   if(PyErr_Occurred()) {
-    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
+    throw PythonException();
   }
   return res;
 }
@@ -6705,6 +6705,9 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_0(PyObject *self, Py_ssize_t nobj
       result = (Ecostress::Resampler *)new Ecostress::Resampler((boost::shared_ptr< GeoCal::RasterImage > const &)*arg1,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg2,(GeoCal::MapInfo const &)*arg3,arg4,arg5,arg6);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6829,6 +6832,9 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_1(PyObject *self, Py_ssize_t nobj
       result = (Ecostress::Resampler *)new Ecostress::Resampler((boost::shared_ptr< GeoCal::RasterImage > const &)*arg1,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg2,(GeoCal::MapInfo const &)*arg3,arg4,arg5);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6945,6 +6951,9 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_2(PyObject *self, Py_ssize_t nobj
       result = (Ecostress::Resampler *)new Ecostress::Resampler((boost::shared_ptr< GeoCal::RasterImage > const &)*arg1,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg2,(GeoCal::MapInfo const &)*arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7052,6 +7061,9 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_3(PyObject *self, Py_ssize_t nobj
     try {
       result = (Ecostress::Resampler *)new Ecostress::Resampler((boost::shared_ptr< GeoCal::RasterImage > const &)*arg1,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg2,(GeoCal::MapInfo const &)*arg3);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7171,6 +7183,9 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_4(PyObject *self, Py_ssize_t nobj
       result = (Ecostress::Resampler *)new Ecostress::Resampler((blitz::Array< double,2 > const &)*arg1,(blitz::Array< double,2 > const &)*arg2,(GeoCal::MapInfo const &)*arg3,arg4,arg5,arg6);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7281,6 +7296,9 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_5(PyObject *self, Py_ssize_t nobj
       result = (Ecostress::Resampler *)new Ecostress::Resampler((blitz::Array< double,2 > const &)*arg1,(blitz::Array< double,2 > const &)*arg2,(GeoCal::MapInfo const &)*arg3,arg4,arg5);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7383,6 +7401,9 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_6(PyObject *self, Py_ssize_t nobj
       result = (Ecostress::Resampler *)new Ecostress::Resampler((blitz::Array< double,2 > const &)*arg1,(blitz::Array< double,2 > const &)*arg2,(GeoCal::MapInfo const &)*arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7476,6 +7497,9 @@ SWIGINTERN PyObject *_wrap_new_Resampler__SWIG_7(PyObject *self, Py_ssize_t nobj
     try {
       result = (Ecostress::Resampler *)new Ecostress::Resampler((blitz::Array< double,2 > const &)*arg1,(blitz::Array< double,2 > const &)*arg2,(GeoCal::MapInfo const &)*arg3);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7639,6 +7663,9 @@ SWIGINTERN PyObject *_wrap_Resampler_clear(PyObject *self, PyObject *args) {
       (arg1)->clear();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7754,6 +7781,9 @@ SWIGINTERN PyObject *_wrap_Resampler_determine_range(PyObject *self, PyObject *a
       Ecostress::Resampler::determine_range((blitz::Array< double,2 > const &)*arg1,(blitz::Array< double,2 > const &)*arg2,(GeoCal::MapInfo const &)*arg3,arg4,*arg5,*arg6,*arg7,*arg8);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7819,6 +7849,9 @@ SWIGINTERN PyObject *_wrap_Resampler_empty_resample__SWIG_0(PyObject *self, Py_s
     try {
       result = (bool)((Ecostress::Resampler const *)arg1)->empty_resample();
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7888,6 +7921,9 @@ SWIGINTERN PyObject *_wrap_Resampler_empty_resample__SWIG_1(PyObject *self, Py_s
     try {
       result = (bool)((Ecostress::Resampler const *)arg1)->empty_resample((boost::shared_ptr< GeoCal::RasterImage > const &)*arg2);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8018,6 +8054,9 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_0(PyObject *self, Py_s
       result = ((Ecostress::Resampler const *)arg1)->resample_field((boost::shared_ptr< GeoCal::RasterImage > const &)*arg2,arg3,arg4,arg5,arg6);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8132,6 +8171,9 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_1(PyObject *self, Py_s
       result = ((Ecostress::Resampler const *)arg1)->resample_field((boost::shared_ptr< GeoCal::RasterImage > const &)*arg2,arg3,arg4,arg5);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8238,6 +8280,9 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_2(PyObject *self, Py_s
       result = ((Ecostress::Resampler const *)arg1)->resample_field((boost::shared_ptr< GeoCal::RasterImage > const &)*arg2,arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8336,6 +8381,9 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_3(PyObject *self, Py_s
       result = ((Ecostress::Resampler const *)arg1)->resample_field((boost::shared_ptr< GeoCal::RasterImage > const &)*arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8425,6 +8473,9 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_4(PyObject *self, Py_s
     try {
       result = ((Ecostress::Resampler const *)arg1)->resample_field((boost::shared_ptr< GeoCal::RasterImage > const &)*arg2);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8516,6 +8567,9 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_dqi(PyObject *self, PyObject *args
     try {
       result = ((Ecostress::Resampler const *)arg1)->resample_dqi((boost::shared_ptr< GeoCal::RasterImage > const &)*arg2);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8656,6 +8710,9 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_5(PyObject *self, Py_s
       ((Ecostress::Resampler const *)arg1)->resample_field((std::string const &)*arg2,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg3,arg4,(std::string const &)*arg5,arg6,arg7);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8770,6 +8827,9 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_6(PyObject *self, Py_s
       ((Ecostress::Resampler const *)arg1)->resample_field((std::string const &)*arg2,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg3,arg4,(std::string const &)*arg5,arg6);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8876,6 +8936,9 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_7(PyObject *self, Py_s
       ((Ecostress::Resampler const *)arg1)->resample_field((std::string const &)*arg2,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg3,arg4,(std::string const &)*arg5);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8969,6 +9032,9 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_8(PyObject *self, Py_s
       ((Ecostress::Resampler const *)arg1)->resample_field((std::string const &)*arg2,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -9051,6 +9117,9 @@ SWIGINTERN PyObject *_wrap_Resampler_resample_field__SWIG_9(PyObject *self, Py_s
     try {
       ((Ecostress::Resampler const *)arg1)->resample_field((std::string const &)*arg2,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg3);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9305,6 +9374,9 @@ SWIGINTERN PyObject *_wrap_Resampler_map_values(PyObject *self, PyObject *args) 
       ((Ecostress::Resampler const *)arg1)->map_values((GeoCal::Dem const &)*arg2,*arg3,*arg4,*arg5);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -9418,6 +9490,9 @@ SWIGINTERN PyObject *_wrap_Resampler__v_map_info(PyObject *self, PyObject *args)
       result = (GeoCal::MapInfo *) &((Ecostress::Resampler const *)arg1)->map_info();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -9465,6 +9540,9 @@ SWIGINTERN PyObject *_wrap_Resampler__v_number_sub_pixel(PyObject *self, PyObjec
       result = (int)((Ecostress::Resampler const *)arg1)->number_sub_pixel();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -9509,6 +9587,9 @@ SWIGINTERN PyObject *_wrap_Resampler___str__(PyObject *self, PyObject *args) {
       result = ((Ecostress::Resampler const *)arg1)->print_to_string();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -9552,6 +9633,9 @@ SWIGINTERN PyObject *_wrap_delete_Resampler(PyObject *self, PyObject *args) {
       (void)arg1; delete smartarg1;
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -9577,25 +9661,30 @@ SWIGINTERN PyObject *Resampler_swiginit(PyObject *SWIGUNUSEDPARM(self), PyObject
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "SwigPyIterator_value(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "SwigPyIterator_incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "SwigPyIterator_decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "SwigPyIterator_distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "SwigPyIterator_equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "SwigPyIterator_copy(SwigPyIterator self) -> SwigPyIterator"},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "SwigPyIterator_next(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "SwigPyIterator___next__(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "SwigPyIterator_previous(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "SwigPyIterator_advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "SwigPyIterator___eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "SwigPyIterator___ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "SwigPyIterator___iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "SwigPyIterator___isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "SwigPyIterator___add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
+		"SwigPyIterator___sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
+		"SwigPyIterator___sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
+		""},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "new_Resampler", _wrap_new_Resampler, METH_VARARGS, "\n"
+		"Resampler(boost::shared_ptr< GeoCal::RasterImage > const & X_coor, boost::shared_ptr< GeoCal::RasterImage > const & Y_coor, MapInfo Mi, int Num_sub_pixel=2, bool Exactly_match_mi=False, double Mark_missing=-1000.0)\n"
+		"Resampler(BlitzArray_double_2 X_coor_interpolated, BlitzArray_double_2 Y_coor_interpolated, MapInfo Mi, int Num_sub_pixel=2, bool Exactly_match_mi=False, double Mark_missing=-1000.0)\n"
 		"\n"
 		"Resampler::Resampler(const boost::shared_ptr< GeoCal::RasterImage > &X_coor, const\n"
 		"boost::shared_ptr< GeoCal::RasterImage > &Y_coor, const\n"
@@ -9627,6 +9716,7 @@ static PyMethodDef SwigMethods[] = {
 		"producing output files to compare against some existing file. \n"
 		""},
 	 { "Resampler_clear", _wrap_Resampler_clear, METH_O, "\n"
+		"Resampler_clear(Resampler self)\n"
 		"\n"
 		"void Resampler::clear()\n"
 		"Ecostress::Resampler::clear\n"
@@ -9641,6 +9731,7 @@ static PyMethodDef SwigMethods[] = {
 		"back to this ** \n"
 		""},
 	 { "Resampler_determine_range", _wrap_Resampler_determine_range, METH_VARARGS, "\n"
+		"Resampler_determine_range(BlitzArray_double_2 X_coor_interpolated, BlitzArray_double_2 Y_coor_interpolated, MapInfo Mi, int Num_sub_pixel)\n"
 		"\n"
 		"void Resampler::determine_range(const blitz::Array< double, 2 > &X_coor_interpolated, const\n"
 		"blitz::Array< double, 2 > &Y_coor_interpolated, const GeoCal::MapInfo\n"
@@ -9653,6 +9744,8 @@ static PyMethodDef SwigMethods[] = {
 		"isn't even used and can be skipped before we even start. \n"
 		""},
 	 { "Resampler_empty_resample", _wrap_Resampler_empty_resample, METH_VARARGS, "\n"
+		"Resampler_empty_resample(Resampler self) -> bool\n"
+		"Resampler_empty_resample(Resampler self, boost::shared_ptr< GeoCal::RasterImage > const & Data) -> bool\n"
 		"\n"
 		"bool Resampler::empty_resample(const boost::shared_ptr< GeoCal::RasterImage > &Data) const\n"
 		"Ecostress::Resampler::empty_resample\n"
@@ -9660,6 +9753,7 @@ static PyMethodDef SwigMethods[] = {
 		"Checks a field also to exclude fill data \n"
 		""},
 	 { "Resampler_resample_dqi", _wrap_Resampler_resample_dqi, METH_VARARGS, "\n"
+		"Resampler_resample_dqi(Resampler self, boost::shared_ptr< GeoCal::RasterImage > const & Data) -> BlitzArray_int_2\n"
 		"\n"
 		"blitz::Array< int, 2 > Resampler::resample_dqi(const boost::shared_ptr< GeoCal::RasterImage > &Data) const\n"
 		"Ecostress::Resampler::resample_dqi\n"
@@ -9679,6 +9773,8 @@ static PyMethodDef SwigMethods[] = {
 		"DQI_INTERPOLATED we set it to this value. \n"
 		""},
 	 { "Resampler_resample_field", _wrap_Resampler_resample_field, METH_VARARGS, "\n"
+		"Resampler_resample_field(Resampler self, boost::shared_ptr< GeoCal::RasterImage > const & Data, double Scale_data=1.0, bool Negative_to_zero=False, double Fill_value=0.0, bool Use_smallest_ic=False) -> BlitzArray_double_2\n"
+		"Resampler_resample_field(Resampler self, std::string const & Fname, boost::shared_ptr< GeoCal::RasterImage > const & Data, double Scale_data=1.0, std::string const & File_type=\"REAL\", bool Negative_to_zero=False, double Fill_value=0.0)\n"
 		"\n"
 		"void Resampler::resample_field(const std::string &Fname, const boost::shared_ptr<\n"
 		"GeoCal::RasterImage > &Data, double Scale_data=1.0, const std::string\n"
@@ -9695,6 +9791,7 @@ static PyMethodDef SwigMethods[] = {
 		"data without large negative fill values (e.g., -9999) \n"
 		""},
 	 { "Resampler_map_values", _wrap_Resampler_map_values, METH_VARARGS, "\n"
+		"Resampler_map_values(Resampler self, Dem d)\n"
 		"\n"
 		"void Resampler::map_values(const GeoCal::Dem &d, blitz::Array< double, 2 > &Lat, blitz::Array<\n"
 		"double, 2 > &Lon, blitz::Array< double, 2 > &Height) const\n"
@@ -9704,17 +9801,20 @@ static PyMethodDef SwigMethods[] = {
 		"C++ vs. looping in python. \n"
 		""},
 	 { "Resampler__v_map_info", _wrap_Resampler__v_map_info, METH_O, "\n"
+		"Resampler__v_map_info(Resampler self) -> MapInfo\n"
 		"\n"
 		"const GeoCal::MapInfo & Ecostress::Resampler::map_info() const\n"
 		"Ecostress::Resampler::map_info\n"
 		""},
 	 { "Resampler__v_number_sub_pixel", _wrap_Resampler__v_number_sub_pixel, METH_O, "\n"
+		"Resampler__v_number_sub_pixel(Resampler self) -> int\n"
 		"\n"
 		"int Ecostress::Resampler::number_sub_pixel() const\n"
 		"Ecostress::Resampler::number_sub_pixel\n"
 		""},
-	 { "Resampler___str__", _wrap_Resampler___str__, METH_O, NULL},
+	 { "Resampler___str__", _wrap_Resampler___str__, METH_O, "Resampler___str__(Resampler self) -> std::string"},
 	 { "delete_Resampler", _wrap_delete_Resampler, METH_O, "\n"
+		"delete_Resampler(Resampler self)\n"
 		"\n"
 		"virtual Ecostress::Resampler::~Resampler()\n"
 		"Ecostress::Resampler::~Resampler\n"
@@ -9727,25 +9827,30 @@ static PyMethodDef SwigMethods[] = {
 static PyMethodDef SwigMethods_proxydocs[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "value(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "copy(SwigPyIterator self) -> SwigPyIterator"},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "next(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "__next__(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "previous(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "__eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "__ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "__iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "__isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "__add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
+		"__sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
+		"__sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
+		""},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "new_Resampler", _wrap_new_Resampler, METH_VARARGS, "\n"
+		"Resampler(boost::shared_ptr< GeoCal::RasterImage > const & X_coor, boost::shared_ptr< GeoCal::RasterImage > const & Y_coor, MapInfo Mi, int Num_sub_pixel=2, bool Exactly_match_mi=False, double Mark_missing=-1000.0)\n"
+		"Resampler(BlitzArray_double_2 X_coor_interpolated, BlitzArray_double_2 Y_coor_interpolated, MapInfo Mi, int Num_sub_pixel=2, bool Exactly_match_mi=False, double Mark_missing=-1000.0)\n"
 		"\n"
 		"Resampler::Resampler(const boost::shared_ptr< GeoCal::RasterImage > &X_coor, const\n"
 		"boost::shared_ptr< GeoCal::RasterImage > &Y_coor, const\n"
@@ -9777,6 +9882,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"producing output files to compare against some existing file. \n"
 		""},
 	 { "Resampler_clear", _wrap_Resampler_clear, METH_O, "\n"
+		"clear(Resampler self)\n"
 		"\n"
 		"void Resampler::clear()\n"
 		"Ecostress::Resampler::clear\n"
@@ -9791,6 +9897,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"back to this ** \n"
 		""},
 	 { "Resampler_determine_range", _wrap_Resampler_determine_range, METH_VARARGS, "\n"
+		"determine_range(BlitzArray_double_2 X_coor_interpolated, BlitzArray_double_2 Y_coor_interpolated, MapInfo Mi, int Num_sub_pixel)\n"
 		"\n"
 		"void Resampler::determine_range(const blitz::Array< double, 2 > &X_coor_interpolated, const\n"
 		"blitz::Array< double, 2 > &Y_coor_interpolated, const GeoCal::MapInfo\n"
@@ -9803,6 +9910,8 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"isn't even used and can be skipped before we even start. \n"
 		""},
 	 { "Resampler_empty_resample", _wrap_Resampler_empty_resample, METH_VARARGS, "\n"
+		"empty_resample(Resampler self) -> bool\n"
+		"empty_resample(Resampler self, boost::shared_ptr< GeoCal::RasterImage > const & Data) -> bool\n"
 		"\n"
 		"bool Resampler::empty_resample(const boost::shared_ptr< GeoCal::RasterImage > &Data) const\n"
 		"Ecostress::Resampler::empty_resample\n"
@@ -9810,6 +9919,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"Checks a field also to exclude fill data \n"
 		""},
 	 { "Resampler_resample_dqi", _wrap_Resampler_resample_dqi, METH_VARARGS, "\n"
+		"resample_dqi(Resampler self, boost::shared_ptr< GeoCal::RasterImage > const & Data) -> BlitzArray_int_2\n"
 		"\n"
 		"blitz::Array< int, 2 > Resampler::resample_dqi(const boost::shared_ptr< GeoCal::RasterImage > &Data) const\n"
 		"Ecostress::Resampler::resample_dqi\n"
@@ -9829,6 +9939,8 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"DQI_INTERPOLATED we set it to this value. \n"
 		""},
 	 { "Resampler_resample_field", _wrap_Resampler_resample_field, METH_VARARGS, "\n"
+		"resample_field(Resampler self, boost::shared_ptr< GeoCal::RasterImage > const & Data, double Scale_data=1.0, bool Negative_to_zero=False, double Fill_value=0.0, bool Use_smallest_ic=False) -> BlitzArray_double_2\n"
+		"resample_field(Resampler self, std::string const & Fname, boost::shared_ptr< GeoCal::RasterImage > const & Data, double Scale_data=1.0, std::string const & File_type=\"REAL\", bool Negative_to_zero=False, double Fill_value=0.0)\n"
 		"\n"
 		"void Resampler::resample_field(const std::string &Fname, const boost::shared_ptr<\n"
 		"GeoCal::RasterImage > &Data, double Scale_data=1.0, const std::string\n"
@@ -9845,6 +9957,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"data without large negative fill values (e.g., -9999) \n"
 		""},
 	 { "Resampler_map_values", _wrap_Resampler_map_values, METH_VARARGS, "\n"
+		"map_values(Resampler self, Dem d)\n"
 		"\n"
 		"void Resampler::map_values(const GeoCal::Dem &d, blitz::Array< double, 2 > &Lat, blitz::Array<\n"
 		"double, 2 > &Lon, blitz::Array< double, 2 > &Height) const\n"
@@ -9854,17 +9967,20 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"C++ vs. looping in python. \n"
 		""},
 	 { "Resampler__v_map_info", _wrap_Resampler__v_map_info, METH_O, "\n"
+		"_v_map_info(Resampler self) -> MapInfo\n"
 		"\n"
 		"const GeoCal::MapInfo & Ecostress::Resampler::map_info() const\n"
 		"Ecostress::Resampler::map_info\n"
 		""},
 	 { "Resampler__v_number_sub_pixel", _wrap_Resampler__v_number_sub_pixel, METH_O, "\n"
+		"_v_number_sub_pixel(Resampler self) -> int\n"
 		"\n"
 		"int Ecostress::Resampler::number_sub_pixel() const\n"
 		"Ecostress::Resampler::number_sub_pixel\n"
 		""},
-	 { "Resampler___str__", _wrap_Resampler___str__, METH_O, NULL},
+	 { "Resampler___str__", _wrap_Resampler___str__, METH_O, "__str__(Resampler self) -> std::string"},
 	 { "delete_Resampler", _wrap_delete_Resampler, METH_O, "\n"
+		"delete_Resampler(Resampler self)\n"
 		"\n"
 		"virtual Ecostress::Resampler::~Resampler()\n"
 		"Ecostress::Resampler::~Resampler\n"

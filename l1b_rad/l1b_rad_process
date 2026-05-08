@@ -68,11 +68,14 @@ if args.verbose:
 else:
     logger.add(sys.stderr, level="INFO")
 
-if hasattr(l1b_geo_config, "fix_l0_time_tag") and l1b_geo_config.fix_l0_time_tag:
-    fix_l0_time_tag = True
-else:
-    fix_l0_time_tag = False
-
+# We don't set up the log file until later. We were loosing the log messages
+# about creating things, so now we do ahead and set up a memory buffer to
+# save this
+log_memory_buffer : list[str] = []
+def buffer_sink(message : str) -> None:
+    log_memory_buffer.append(message)
+log_memory_buffer_hid = logger.add(buffer_sink)
+    
 # Explicitly list input file
 if args.run_config:
     l1a_pix = os.path.abspath(config["InputFileGroup", "L1A_PIX"])
@@ -81,12 +84,8 @@ if args.run_config:
     file_version = config["ProductPathGroup", "ProductCounter"]
     build_id = config["PrimaryExecutable", "BuildID"]
     collection_label = config["ProductPathGroup", "CollectionLabel"]
-    orb = ecostress.create_orbit_raw(
-        config,
-        pos_off=l1b_geo_config.x_offset_iss,
-        extrapolation_pad=l1b_geo_config.extrapolation_pad,
-        large_gap=l1b_geo_config.large_gap,
-        fix_l0_time_tag=fix_l0_time_tag,
+    orb = ecostress.create_orbit_raw_from_config(
+        config, l1b_geo_config
     )
     dem = ecostress.create_dem(config)
 else:
@@ -95,20 +94,7 @@ else:
     dirname = os.path.abspath(args.prod_dir)
     file_version = "01"
     orbfname = os.path.abspath(args.l1a_raw_att)
-    if fix_l0_time_tag:
-        orb = ecostress.EcostressOrbitL0Fix(
-            orbfname,
-            l1b_geo_config.x_offset_iss,
-            l1b_geo_config.extrapolation_pad,
-            l1b_geo_config.large_gap,
-        )
-    else:
-        orb = ecostress.EcostressOrbit(
-            orbfname,
-            l1b_geo_config.x_offset_iss,
-            l1b_geo_config.extrapolation_pad,
-            l1b_geo_config.large_gap,
-        )
+    orb = ecostress.create_orbit_raw(orbfname, l1b_geo_config)
     dem = geocal.SrtmDem(
         os.environ["ELEV_ROOT"],
         False,
@@ -148,8 +134,12 @@ ofile = ecostress.ecostress_file_name(
     build=build_id,
     version=file_version,
 )
-
-logger.add(os.path.splitext(ofile)[0] + ".log", level="DEBUG")
+log_file = os.path.splitext(ofile)[0] + ".log"
+logger.add(log_file, level="DEBUG")
+with open(log_file, "a") as fh:
+    for msg in log_memory_buffer:
+        fh.write(msg)
+logger.remove(log_memory_buffer_hid)
 
 # Determine if we should flip lines so data appears right side up.
 line_order_flipped = False

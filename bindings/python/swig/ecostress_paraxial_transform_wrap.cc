@@ -4521,14 +4521,14 @@ SWIG_AsVal_ptrdiff_t (PyObject * obj, ptrdiff_t *val)
 #include <boost/make_shared.hpp>
 
 
-  // This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
-  std::string parse_python_exception();
+  // This is defined in swig_wrap.tmpl, so it gets put into
+  // swig_wrap.cc
+  #include "python_exception.h"
 
 
 #include "serialize_function.h"
+#include "python_exception.h"  
 #include <stdexcept>
-// This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
-std::string parse_python_exception();
 
 
 //--------------------------------------------------------------
@@ -4549,7 +4549,7 @@ inline std::string cpickle_dumps(PyObject* obj)
 					     PyString_FromString("dumps"),
 					     obj, NULL);
   if(PyErr_Occurred()) {
-    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
+    throw PythonException();
   }
   char *buf;
   Py_ssize_t len;
@@ -4564,7 +4564,7 @@ inline PyObject* cpickle_loads(const std::string& S)
 					     PyBytes_FromStringAndSize(S.c_str(), S.size()), 
 					     NULL);
   if(PyErr_Occurred()) {
-    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
+    throw PythonException();
   }
   return res;
 }
@@ -6332,6 +6332,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressParaxialTransform(PyObject *self, PyObje
       result = (Ecostress::EcostressParaxialTransform *)new Ecostress::EcostressParaxialTransform();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6399,6 +6402,9 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_paraxial_to_real__SWIG_0(P
     try {
       ((Ecostress::EcostressParaxialTransform const *)arg1)->paraxial_to_real(arg2,arg3,*arg4,*arg5);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6569,6 +6575,9 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_paraxial_to_real__SWIG_1(P
       ((Ecostress::EcostressParaxialTransform const *)arg1)->paraxial_to_real((GeoCal::AutoDerivative< double > const &)*arg2,(GeoCal::AutoDerivative< double > const &)*arg3,*arg4,*arg5);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6661,6 +6670,9 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_real_to_paraxial__SWIG_0(P
     try {
       ((Ecostress::EcostressParaxialTransform const *)arg1)->real_to_paraxial(arg2,arg3,*arg4,*arg5);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6831,6 +6843,9 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform_real_to_paraxial__SWIG_1(P
       ((Ecostress::EcostressParaxialTransform const *)arg1)->real_to_paraxial((GeoCal::AutoDerivative< double > const &)*arg2,(GeoCal::AutoDerivative< double > const &)*arg3,*arg4,*arg5);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6903,6 +6918,9 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform___str__(PyObject *self, Py
       result = ((Ecostress::EcostressParaxialTransform const *)arg1)->print_to_string();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6946,6 +6964,9 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform__v_real_to_par(PyObject *s
     try {
       result = (blitz::Array< double,2 > *) &((Ecostress::EcostressParaxialTransform const *)arg1)->real_to_par();
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7006,6 +7027,9 @@ SWIGINTERN PyObject *_wrap_EcostressParaxialTransform__v_par_to_real(PyObject *s
       result = (blitz::Array< double,2 > *) &((Ecostress::EcostressParaxialTransform const *)arg1)->par_to_real();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7064,6 +7088,9 @@ SWIGINTERN PyObject *_wrap_delete_EcostressParaxialTransform(PyObject *self, PyO
       (void)arg1; delete smartarg1;
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7089,25 +7116,29 @@ SWIGINTERN PyObject *EcostressParaxialTransform_swiginit(PyObject *SWIGUNUSEDPAR
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "SwigPyIterator_value(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "SwigPyIterator_incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "SwigPyIterator_decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "SwigPyIterator_distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "SwigPyIterator_equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "SwigPyIterator_copy(SwigPyIterator self) -> SwigPyIterator"},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "SwigPyIterator_next(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "SwigPyIterator___next__(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "SwigPyIterator_previous(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "SwigPyIterator_advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "SwigPyIterator___eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "SwigPyIterator___ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "SwigPyIterator___iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "SwigPyIterator___isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "SwigPyIterator___add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
+		"SwigPyIterator___sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
+		"SwigPyIterator___sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
+		""},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "new_EcostressParaxialTransform", _wrap_new_EcostressParaxialTransform, METH_NOARGS, "\n"
+		"new_EcostressParaxialTransform() -> EcostressParaxialTransform\n"
 		"\n"
 		"Ecostress::EcostressParaxialTransform::EcostressParaxialTransform()\n"
 		"Ecostress::EcostressParaxialTransform::EcostressParaxialTransform\n"
@@ -7117,6 +7148,8 @@ static PyMethodDef SwigMethods[] = {
 		"ecostress_camera_generate.py). \n"
 		""},
 	 { "EcostressParaxialTransform_paraxial_to_real", _wrap_EcostressParaxialTransform_paraxial_to_real, METH_VARARGS, "\n"
+		"EcostressParaxialTransform_paraxial_to_real(EcostressParaxialTransform self, double Paraxial_x, double Paraxial_y)\n"
+		"EcostressParaxialTransform_paraxial_to_real(EcostressParaxialTransform self, AutoDerivativeDouble Paraxial_x, AutoDerivativeDouble Paraxial_y, AutoDerivativeDouble arg4, AutoDerivativeDouble arg5)\n"
 		"\n"
 		"void EcostressParaxialTransform::paraxial_to_real(double Paraxial_x, double Paraxial_y, double &Real_x, double &Real_y)\n"
 		"const\n"
@@ -7125,6 +7158,8 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressParaxialTransform_real_to_paraxial", _wrap_EcostressParaxialTransform_real_to_paraxial, METH_VARARGS, "\n"
+		"EcostressParaxialTransform_real_to_paraxial(EcostressParaxialTransform self, double Real_x, double Real_y)\n"
+		"EcostressParaxialTransform_real_to_paraxial(EcostressParaxialTransform self, AutoDerivativeDouble Real_x, AutoDerivativeDouble Real_y, AutoDerivativeDouble arg4, AutoDerivativeDouble arg5)\n"
 		"\n"
 		"void EcostressParaxialTransform::real_to_paraxial(double Real_x, double Real_y, double &Paraxial_x, double &Paraxial_y)\n"
 		"const\n"
@@ -7132,8 +7167,9 @@ static PyMethodDef SwigMethods[] = {
 		"Convert real to pariaxial coordinates.\n"
 		"\n"
 		""},
-	 { "EcostressParaxialTransform___str__", _wrap_EcostressParaxialTransform___str__, METH_O, NULL},
+	 { "EcostressParaxialTransform___str__", _wrap_EcostressParaxialTransform___str__, METH_O, "EcostressParaxialTransform___str__(EcostressParaxialTransform self) -> std::string"},
 	 { "EcostressParaxialTransform__v_real_to_par", _wrap_EcostressParaxialTransform__v_real_to_par, METH_O, "\n"
+		"EcostressParaxialTransform__v_real_to_par(EcostressParaxialTransform self) -> BlitzArray_double_2\n"
 		"\n"
 		"const blitz::Array< double, 2 > & Ecostress::EcostressParaxialTransform::real_to_par() const\n"
 		"Ecostress::EcostressParaxialTransform::real_to_par\n"
@@ -7141,6 +7177,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressParaxialTransform__v_par_to_real", _wrap_EcostressParaxialTransform__v_par_to_real, METH_O, "\n"
+		"EcostressParaxialTransform__v_par_to_real(EcostressParaxialTransform self) -> BlitzArray_double_2\n"
 		"\n"
 		"const blitz::Array< double, 2 > & Ecostress::EcostressParaxialTransform::par_to_real() const\n"
 		"Ecostress::EcostressParaxialTransform::par_to_real\n"
@@ -7148,6 +7185,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "delete_EcostressParaxialTransform", _wrap_delete_EcostressParaxialTransform, METH_O, "\n"
+		"delete_EcostressParaxialTransform(EcostressParaxialTransform self)\n"
 		"\n"
 		"virtual Ecostress::EcostressParaxialTransform::~EcostressParaxialTransform()\n"
 		"Ecostress::EcostressParaxialTransform::~EcostressParaxialTransform\n"
@@ -7160,25 +7198,29 @@ static PyMethodDef SwigMethods[] = {
 static PyMethodDef SwigMethods_proxydocs[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "value(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "copy(SwigPyIterator self) -> SwigPyIterator"},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "next(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "__next__(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "previous(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "__eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "__ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "__iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "__isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "__add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
+		"__sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
+		"__sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
+		""},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "new_EcostressParaxialTransform", _wrap_new_EcostressParaxialTransform, METH_NOARGS, "\n"
+		"new_EcostressParaxialTransform() -> EcostressParaxialTransform\n"
 		"\n"
 		"Ecostress::EcostressParaxialTransform::EcostressParaxialTransform()\n"
 		"Ecostress::EcostressParaxialTransform::EcostressParaxialTransform\n"
@@ -7188,6 +7230,8 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"ecostress_camera_generate.py). \n"
 		""},
 	 { "EcostressParaxialTransform_paraxial_to_real", _wrap_EcostressParaxialTransform_paraxial_to_real, METH_VARARGS, "\n"
+		"paraxial_to_real(EcostressParaxialTransform self, double Paraxial_x, double Paraxial_y)\n"
+		"paraxial_to_real(EcostressParaxialTransform self, AutoDerivativeDouble Paraxial_x, AutoDerivativeDouble Paraxial_y, AutoDerivativeDouble arg4, AutoDerivativeDouble arg5)\n"
 		"\n"
 		"void EcostressParaxialTransform::paraxial_to_real(double Paraxial_x, double Paraxial_y, double &Real_x, double &Real_y)\n"
 		"const\n"
@@ -7196,6 +7240,8 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressParaxialTransform_real_to_paraxial", _wrap_EcostressParaxialTransform_real_to_paraxial, METH_VARARGS, "\n"
+		"real_to_paraxial(EcostressParaxialTransform self, double Real_x, double Real_y)\n"
+		"real_to_paraxial(EcostressParaxialTransform self, AutoDerivativeDouble Real_x, AutoDerivativeDouble Real_y, AutoDerivativeDouble arg4, AutoDerivativeDouble arg5)\n"
 		"\n"
 		"void EcostressParaxialTransform::real_to_paraxial(double Real_x, double Real_y, double &Paraxial_x, double &Paraxial_y)\n"
 		"const\n"
@@ -7203,8 +7249,9 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"Convert real to pariaxial coordinates.\n"
 		"\n"
 		""},
-	 { "EcostressParaxialTransform___str__", _wrap_EcostressParaxialTransform___str__, METH_O, NULL},
+	 { "EcostressParaxialTransform___str__", _wrap_EcostressParaxialTransform___str__, METH_O, "__str__(EcostressParaxialTransform self) -> std::string"},
 	 { "EcostressParaxialTransform__v_real_to_par", _wrap_EcostressParaxialTransform__v_real_to_par, METH_O, "\n"
+		"_v_real_to_par(EcostressParaxialTransform self) -> BlitzArray_double_2\n"
 		"\n"
 		"const blitz::Array< double, 2 > & Ecostress::EcostressParaxialTransform::real_to_par() const\n"
 		"Ecostress::EcostressParaxialTransform::real_to_par\n"
@@ -7212,6 +7259,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressParaxialTransform__v_par_to_real", _wrap_EcostressParaxialTransform__v_par_to_real, METH_O, "\n"
+		"_v_par_to_real(EcostressParaxialTransform self) -> BlitzArray_double_2\n"
 		"\n"
 		"const blitz::Array< double, 2 > & Ecostress::EcostressParaxialTransform::par_to_real() const\n"
 		"Ecostress::EcostressParaxialTransform::par_to_real\n"
@@ -7219,6 +7267,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "delete_EcostressParaxialTransform", _wrap_delete_EcostressParaxialTransform, METH_O, "\n"
+		"delete_EcostressParaxialTransform(EcostressParaxialTransform self)\n"
 		"\n"
 		"virtual Ecostress::EcostressParaxialTransform::~EcostressParaxialTransform()\n"
 		"Ecostress::EcostressParaxialTransform::~EcostressParaxialTransform\n"

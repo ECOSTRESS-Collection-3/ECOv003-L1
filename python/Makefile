@@ -9,6 +9,9 @@ install:
 install2:
 	pip install --prefix=$(ECOSTRESSTOP) .
 
+update-init:
+	cd ecostress && mkinit . -w --black --nomods --relative
+
 # ------------------------------------------------------------------
 # See notes in README_developer.md about the
 # use of linters and type checkers.

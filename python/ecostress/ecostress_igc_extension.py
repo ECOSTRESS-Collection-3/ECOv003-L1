@@ -115,5 +115,6 @@ def _match_all_overlap(
 
 ecostress_swig.EcostressImageGroundConnection.match_all_overlap = _match_all_overlap
 
+ecostress_igc_extension_loaded = True
 
-__all__: list[str] = []
+__all__ = [ "ecostress_igc_extension_loaded", ]

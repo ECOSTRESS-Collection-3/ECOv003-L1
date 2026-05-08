@@ -21,6 +21,7 @@ from ecostress_swig import (  # type: ignore
 from pathlib import Path
 import pickle
 from loguru import logger
+import types
 import typing
 
 if typing.TYPE_CHECKING:
@@ -90,6 +91,84 @@ def find_orbit_file(
     return f[0]
 
 
+def create_orbit_raw_from_config(
+    config: RunConfig,
+    l1b_geo_config: types.ModuleType,
+) -> EcostressOrbitL0Fix | EcostressOrbit:
+    """Create orbit from L1A_RAW_ATT file"""
+    # Spice is needed to work with the orbit data.
+    setup_spice(config)
+    orbfname = Path(config.as_list("TimeBasedFileGroup", "L1A_RAW_ATT")[0]).absolute()
+    return create_orbit_raw(orbfname, l1b_geo_config)
+
+
+def create_orbit_raw(
+    orb_fname: str | os.PathLike[str],
+    l1b_geo_config: types.ModuleType,
+) -> EcostressOrbitL0Fix | EcostressOrbit:
+    """We use to just rely on our build version to determine if we need to
+    apply the LO fix code or not. However, it turns out that SDS sometimes runs
+    with older versions of L0 data. So, we now use the following logic:
+
+    1. If l1_osp file has fix_l0_time_tag True, then we always do this fix
+       (so allow us to force an override).
+    2. Otherwise, we look at the /StandardMetadata/InputPointer and pick out
+       the L0B file name.
+    3. If the L0B file name as a build <= 0712, then we apply the fix, otherwise
+       we don't
+    4. If there is any problem parsing the input pointer, we assume we don't need
+       to make the fix (although we log a warning).
+    """
+    force_fix = False
+    if hasattr(l1b_geo_config, "fix_l0_time_tag") and l1b_geo_config.fix_l0_time_tag:
+        force_fix = True
+    if force_fix:
+        logger.info(
+            "Applying L0 time tag fix, since fix_l0_time_tag is true in l1b_geo_config file"
+        )
+        return EcostressOrbitL0Fix(
+            str(orb_fname),
+            l1b_geo_config.x_offset_iss,
+            l1b_geo_config.extrapolation_pad,
+            l1b_geo_config.large_gap,
+        )
+    have_match = False
+    with h5py.File(orb_fname, "r") as fh:
+        for t in re.split(
+            ",", fh["/StandardMetadata/InputPointer"][()].decode("utf-8")
+        ):
+            m = re.match(r"L0B_.*_(\d\d\d\d)_(\d\d)\.h5", t)
+            if m:
+                have_match = True
+                version = m[1]
+    if not have_match:
+        logger.warning(
+            "Couldn't find L0B build version for /StandardMetadata/InputPointer. Assume we do not need to do the L0 time tag fix"
+        )
+        return EcostressOrbit(
+            str(orb_fname),
+            l1b_geo_config.x_offset_iss,
+            l1b_geo_config.extrapolation_pad,
+            l1b_geo_config.large_gap,
+        )
+    logger.info(f"Build version of L0B is {version}")
+    if version <= "0712":
+        logger.info("Applying L0 time tag fix")
+        return EcostressOrbitL0Fix(
+            str(orb_fname),
+            l1b_geo_config.x_offset_iss,
+            l1b_geo_config.extrapolation_pad,
+            l1b_geo_config.large_gap,
+        )
+    logger.info("LOB is new enough that we don't need the L0 time tag fix")
+    return EcostressOrbit(
+        str(orb_fname),
+        l1b_geo_config.x_offset_iss,
+        l1b_geo_config.extrapolation_pad,
+        l1b_geo_config.large_gap,
+    )
+
+
 def create_igc(
     rad_fname: str | os.PathLike[str],
     orb_fname: str | os.PathLike[str],
@@ -111,23 +190,7 @@ def create_igc(
     try:
         import l1b_geo_config  # type: ignore
 
-        if (
-            hasattr(l1b_geo_config, "fix_l0_time_tag")
-            and l1b_geo_config.fix_l0_time_tag
-        ):
-            orb = EcostressOrbitL0Fix(
-                str(orb_fname),
-                l1b_geo_config.x_offset_iss,
-                l1b_geo_config.extrapolation_pad,
-                l1b_geo_config.large_gap,
-            )
-        else:
-            orb = EcostressOrbit(
-                str(orb_fname),
-                l1b_geo_config.x_offset_iss,
-                l1b_geo_config.extrapolation_pad,
-                l1b_geo_config.large_gap,
-            )
+        orb = create_orbit_raw(orb_fname, l1b_geo_config)
         cam = geocal.read_shelve(f"{l1_osp_dir}/camera.xml")
         if dem is None:
             dem = geocal.SrtmDem("", False)
@@ -275,31 +338,6 @@ def setup_spice(config: RunConfig) -> None:
     )
     if "ECOSTRESS_USE_AFIDS_ENV" not in os.environ:
         os.environ["SPICEDATA"] = spice_data
-
-
-def create_orbit_raw(
-    config: RunConfig,
-    pos_off: None | np.ndarray = None,
-    extrapolation_pad: float = 5,
-    large_gap: float = 10,
-    fix_l0_time_tag: bool = False,
-) -> geocal.Orbit:
-    """Create orbit from L1A_RAW_ATT file"""
-    # Spice is needed to work with the orbit data.
-    setup_spice(config)
-    orbfname = os.path.abspath(config.as_list("TimeBasedFileGroup", "L1A_RAW_ATT")[0])
-    # Create orbit.
-    if pos_off is not None:
-        if fix_l0_time_tag:
-            orb = EcostressOrbitL0Fix(orbfname, pos_off, extrapolation_pad, large_gap)
-        else:
-            orb = EcostressOrbit(orbfname, pos_off, extrapolation_pad, large_gap)
-    else:
-        if fix_l0_time_tag:
-            orb = EcostressOrbitL0Fix(orbfname, extrapolation_pad, large_gap)
-        else:
-            orb = EcostressOrbit(orbfname, extrapolation_pad, large_gap)
-    return orb
 
 
 def create_time_table(
@@ -621,6 +659,7 @@ __all__ = [
     "setup_spice",
     "as_string",
     "create_orbit_raw",
+    "create_orbit_raw_from_config",
     "create_time_table",
     "create_scan_mirror",
     "is_day",

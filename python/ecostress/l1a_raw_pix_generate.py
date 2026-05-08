@@ -1534,3 +1534,8 @@ class L1aRawPixGenerate(object):
         # self.log.flush()
         print("====  End Orbit %s" % orb, datetime.now(), "jumps=%d  ====" % jumps)
         return jumps
+
+
+__all__ = [
+    "L1aRawPixGenerate",
+]

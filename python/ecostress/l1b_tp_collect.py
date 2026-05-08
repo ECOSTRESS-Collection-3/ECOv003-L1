@@ -5,6 +5,7 @@ from .pickle_method import *
 import shutil
 import os
 from loguru import logger
+from pathlib import Path
 import typing
 
 if typing.TYPE_CHECKING:
@@ -197,7 +198,7 @@ class L1bTpCollect(object):
                     tpcol.image_index1 = i
                     tpcol.ref_image_fname = self.ref_fname[i]
                     tpcol.log_file = self.log_file[i] + "_%d" % i2
-                    tpcol.run_dir_name = self.run_dir_name[i] + "_%d" % i2
+                    tpcol.run_dir_name = Path(self.run_dir_name[i] + "_%d" % i2)
                     shutil.rmtree(tpcol.run_dir_name, ignore_errors=True)
                     logger.info(
                         "Collecting tp for %s try %d" % (self.igccol.title(i), i2 + 1)

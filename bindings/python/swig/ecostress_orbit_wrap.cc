@@ -4650,14 +4650,14 @@ SWIG_AsVal_ptrdiff_t (PyObject * obj, ptrdiff_t *val)
 #include <boost/make_shared.hpp>
 
 
-  // This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
-  std::string parse_python_exception();
+  // This is defined in swig_wrap.tmpl, so it gets put into
+  // swig_wrap.cc
+  #include "python_exception.h"
 
 
 #include "serialize_function.h"
+#include "python_exception.h"  
 #include <stdexcept>
-// This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
-std::string parse_python_exception();
 
 
 //--------------------------------------------------------------
@@ -4678,7 +4678,7 @@ inline std::string cpickle_dumps(PyObject* obj)
 					     PyString_FromString("dumps"),
 					     obj, NULL);
   if(PyErr_Occurred()) {
-    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
+    throw PythonException();
   }
   char *buf;
   Py_ssize_t len;
@@ -4693,7 +4693,7 @@ inline PyObject* cpickle_loads(const std::string& S)
 					     PyBytes_FromStringAndSize(S.c_str(), S.size()), 
 					     NULL);
   if(PyErr_Occurred()) {
-    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
+    throw PythonException();
   }
   return res;
 }
@@ -6572,6 +6572,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressOrbit__SWIG_0(PyObject *self, Py_ssize_t
       result = (Ecostress::EcostressOrbit *)new Ecostress::EcostressOrbit((std::string const &)*arg1,arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6620,6 +6623,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressOrbit__SWIG_1(PyObject *self, Py_ssize_t
       result = (Ecostress::EcostressOrbit *)new Ecostress::EcostressOrbit((std::string const &)*arg1,arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6659,6 +6665,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressOrbit__SWIG_2(PyObject *self, Py_ssize_t
     try {
       result = (Ecostress::EcostressOrbit *)new Ecostress::EcostressOrbit((std::string const &)*arg1);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6736,6 +6745,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressOrbit__SWIG_3(PyObject *self, Py_ssize_t
       result = (Ecostress::EcostressOrbit *)new Ecostress::EcostressOrbit((std::string const &)*arg1,(blitz::Array< double,1 > const &)*arg2,arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6804,6 +6816,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressOrbit__SWIG_4(PyObject *self, Py_ssize_t
       result = (Ecostress::EcostressOrbit *)new Ecostress::EcostressOrbit((std::string const &)*arg1,(blitz::Array< double,1 > const &)*arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6863,6 +6878,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressOrbit__SWIG_5(PyObject *self, Py_ssize_t
     try {
       result = (Ecostress::EcostressOrbit *)new Ecostress::EcostressOrbit((std::string const &)*arg1,(blitz::Array< double,1 > const &)*arg2);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6998,6 +7016,9 @@ SWIGINTERN PyObject *_wrap_EcostressOrbit_spacecraft_x_mostly_in_velocity_direct
       result = (bool)((Ecostress::EcostressOrbit const *)arg1)->spacecraft_x_mostly_in_velocity_direction(SWIG_STD_MOVE(arg2));
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7039,6 +7060,9 @@ SWIGINTERN PyObject *_wrap_EcostressOrbit__v_large_gap__SWIG_0(PyObject *self, P
     try {
       result = (double)((Ecostress::EcostressOrbit const *)arg1)->large_gap();
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7090,6 +7114,9 @@ SWIGINTERN PyObject *_wrap_EcostressOrbit__v_large_gap__SWIG_1(PyObject *self, P
     try {
       (arg1)->large_gap((double const &)*arg2);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7161,6 +7188,9 @@ SWIGINTERN PyObject *_wrap_EcostressOrbit__v_extrapolation_pad__SWIG_0(PyObject 
       result = (double)((Ecostress::EcostressOrbit const *)arg1)->extrapolation_pad();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7211,6 +7241,9 @@ SWIGINTERN PyObject *_wrap_EcostressOrbit__v_extrapolation_pad__SWIG_1(PyObject 
     try {
       (arg1)->extrapolation_pad((double const &)*arg2);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7283,6 +7316,9 @@ SWIGINTERN PyObject *_wrap_delete_EcostressOrbit(PyObject *self, PyObject *args)
       (void)arg1; delete smartarg1;
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7308,25 +7344,30 @@ SWIGINTERN PyObject *EcostressOrbit_swiginit(PyObject *SWIGUNUSEDPARM(self), PyO
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "SwigPyIterator_value(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "SwigPyIterator_incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "SwigPyIterator_decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "SwigPyIterator_distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "SwigPyIterator_equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "SwigPyIterator_copy(SwigPyIterator self) -> SwigPyIterator"},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "SwigPyIterator_next(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "SwigPyIterator___next__(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "SwigPyIterator_previous(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "SwigPyIterator_advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "SwigPyIterator___eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "SwigPyIterator___ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "SwigPyIterator___iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "SwigPyIterator___isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "SwigPyIterator___add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
+		"SwigPyIterator___sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
+		"SwigPyIterator___sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
+		""},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "new_EcostressOrbit", _wrap_new_EcostressOrbit, METH_VARARGS, "\n"
+		"EcostressOrbit(std::string const & Fname, double Extrapolation_pad=5.0, double Large_gap=10.0)\n"
+		"EcostressOrbit(std::string const & Fname, BlitzArray_double_1 Pos_off, double Extrapolation_pad=5.0, double Large_gap=10.0)\n"
 		"\n"
 		"Ecostress::EcostressOrbit::EcostressOrbit(const std::string &Fname, double Extrapolation_pad=5.0, double\n"
 		"Large_gap=10.0)\n"
@@ -7336,6 +7377,7 @@ static PyMethodDef SwigMethods[] = {
 		"Treat gaps in the data > Large_gap as a large gap. \n"
 		""},
 	 { "EcostressOrbit_spacecraft_x_mostly_in_velocity_direction", _wrap_EcostressOrbit_spacecraft_x_mostly_in_velocity_direction, METH_VARARGS, "\n"
+		"EcostressOrbit_spacecraft_x_mostly_in_velocity_direction(EcostressOrbit self, Time T) -> bool\n"
 		"\n"
 		"bool EcostressOrbit::spacecraft_x_mostly_in_velocity_direction(GeoCal::Time T) const\n"
 		"Ecostress::EcostressOrbit::spacecraft_x_mostly_in_velocity_direction\n"
@@ -7345,16 +7387,21 @@ static PyMethodDef SwigMethods[] = {
 		"true than it is upside down and l1b_rad should flip this. \n"
 		""},
 	 { "EcostressOrbit__v_large_gap", _wrap_EcostressOrbit__v_large_gap, METH_VARARGS, "\n"
+		"EcostressOrbit__v_large_gap(EcostressOrbit self) -> double\n"
+		"EcostressOrbit__v_large_gap(EcostressOrbit self, double const & V)\n"
 		"\n"
 		"void Ecostress::EcostressOrbit::large_gap(double v)\n"
 		"Ecostress::EcostressOrbit::large_gap\n"
 		""},
 	 { "EcostressOrbit__v_extrapolation_pad", _wrap_EcostressOrbit__v_extrapolation_pad, METH_VARARGS, "\n"
+		"EcostressOrbit__v_extrapolation_pad(EcostressOrbit self) -> double\n"
+		"EcostressOrbit__v_extrapolation_pad(EcostressOrbit self, double const & V)\n"
 		"\n"
 		"void Ecostress::EcostressOrbit::extrapolation_pad(double v)\n"
 		"Ecostress::EcostressOrbit::extrapolation_pad\n"
 		""},
 	 { "delete_EcostressOrbit", _wrap_delete_EcostressOrbit, METH_O, "\n"
+		"delete_EcostressOrbit(EcostressOrbit self)\n"
 		"\n"
 		"virtual Ecostress::EcostressOrbit::~EcostressOrbit()\n"
 		"Ecostress::EcostressOrbit::~EcostressOrbit\n"
@@ -7367,25 +7414,30 @@ static PyMethodDef SwigMethods[] = {
 static PyMethodDef SwigMethods_proxydocs[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "value(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "copy(SwigPyIterator self) -> SwigPyIterator"},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "next(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "__next__(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "previous(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "__eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "__ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "__iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "__isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "__add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
+		"__sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
+		"__sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
+		""},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "new_EcostressOrbit", _wrap_new_EcostressOrbit, METH_VARARGS, "\n"
+		"EcostressOrbit(std::string const & Fname, double Extrapolation_pad=5.0, double Large_gap=10.0)\n"
+		"EcostressOrbit(std::string const & Fname, BlitzArray_double_1 Pos_off, double Extrapolation_pad=5.0, double Large_gap=10.0)\n"
 		"\n"
 		"Ecostress::EcostressOrbit::EcostressOrbit(const std::string &Fname, double Extrapolation_pad=5.0, double\n"
 		"Large_gap=10.0)\n"
@@ -7395,6 +7447,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"Treat gaps in the data > Large_gap as a large gap. \n"
 		""},
 	 { "EcostressOrbit_spacecraft_x_mostly_in_velocity_direction", _wrap_EcostressOrbit_spacecraft_x_mostly_in_velocity_direction, METH_VARARGS, "\n"
+		"spacecraft_x_mostly_in_velocity_direction(EcostressOrbit self, Time T) -> bool\n"
 		"\n"
 		"bool EcostressOrbit::spacecraft_x_mostly_in_velocity_direction(GeoCal::Time T) const\n"
 		"Ecostress::EcostressOrbit::spacecraft_x_mostly_in_velocity_direction\n"
@@ -7404,16 +7457,21 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"true than it is upside down and l1b_rad should flip this. \n"
 		""},
 	 { "EcostressOrbit__v_large_gap", _wrap_EcostressOrbit__v_large_gap, METH_VARARGS, "\n"
+		"_v_large_gap(EcostressOrbit self) -> double\n"
+		"_v_large_gap(EcostressOrbit self, double const & V)\n"
 		"\n"
 		"void Ecostress::EcostressOrbit::large_gap(double v)\n"
 		"Ecostress::EcostressOrbit::large_gap\n"
 		""},
 	 { "EcostressOrbit__v_extrapolation_pad", _wrap_EcostressOrbit__v_extrapolation_pad, METH_VARARGS, "\n"
+		"_v_extrapolation_pad(EcostressOrbit self) -> double\n"
+		"_v_extrapolation_pad(EcostressOrbit self, double const & V)\n"
 		"\n"
 		"void Ecostress::EcostressOrbit::extrapolation_pad(double v)\n"
 		"Ecostress::EcostressOrbit::extrapolation_pad\n"
 		""},
 	 { "delete_EcostressOrbit", _wrap_delete_EcostressOrbit, METH_O, "\n"
+		"delete_EcostressOrbit(EcostressOrbit self)\n"
 		"\n"
 		"virtual Ecostress::EcostressOrbit::~EcostressOrbit()\n"
 		"Ecostress::EcostressOrbit::~EcostressOrbit\n"

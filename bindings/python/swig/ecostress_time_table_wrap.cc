@@ -4561,14 +4561,14 @@ SWIG_AsVal_ptrdiff_t (PyObject * obj, ptrdiff_t *val)
 #include <boost/make_shared.hpp>
 
 
-  // This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
-  std::string parse_python_exception();
+  // This is defined in swig_wrap.tmpl, so it gets put into
+  // swig_wrap.cc
+  #include "python_exception.h"
 
 
 #include "serialize_function.h"
+#include "python_exception.h"  
 #include <stdexcept>
-// This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
-std::string parse_python_exception();
 
 
 //--------------------------------------------------------------
@@ -4589,7 +4589,7 @@ inline std::string cpickle_dumps(PyObject* obj)
 					     PyString_FromString("dumps"),
 					     obj, NULL);
   if(PyErr_Occurred()) {
-    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
+    throw PythonException();
   }
   char *buf;
   Py_ssize_t len;
@@ -4604,7 +4604,7 @@ inline PyObject* cpickle_loads(const std::string& S)
 					     PyBytes_FromStringAndSize(S.c_str(), S.size()), 
 					     NULL);
   if(PyErr_Occurred()) {
-    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
+    throw PythonException();
   }
   return res;
 }
@@ -6987,6 +6987,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_0(PyObject *self, Py_ssi
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1),arg2,arg3,arg4,arg5);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7052,6 +7055,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_1(PyObject *self, Py_ssi
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1),arg2,arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7109,6 +7115,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_2(PyObject *self, Py_ssi
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1),arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7158,6 +7167,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_3(PyObject *self, Py_ssi
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1),arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7198,6 +7210,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_4(PyObject *self, Py_ssi
     try {
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1));
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7258,6 +7273,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_5(PyObject *self, Py_ssi
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1),arg2,arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7309,6 +7327,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_6(PyObject *self, Py_ssi
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1),arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7352,6 +7373,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_7(PyObject *self, Py_ssi
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1),arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7386,6 +7410,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_8(PyObject *self, Py_ssi
     try {
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1));
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7449,6 +7476,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_9(PyObject *self, Py_ssi
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1,arg2,arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7505,6 +7535,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_10(PyObject *self, Py_ss
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1,arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7553,6 +7586,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_11(PyObject *self, Py_ss
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1,arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7592,6 +7628,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_12(PyObject *self, Py_ss
     try {
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7665,6 +7704,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_13(PyObject *self, Py_ss
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1,arg2,arg3,arg4,arg5);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7729,6 +7771,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_14(PyObject *self, Py_ss
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1,arg2,arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7785,6 +7830,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_15(PyObject *self, Py_ss
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1,arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7832,6 +7880,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_16(PyObject *self, Py_ss
     try {
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1,arg2);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8182,6 +8233,9 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable_scan_index_to_line(PyObject *self,
       ((Ecostress::EcostressTimeTable const *)arg1)->scan_index_to_line(arg2,*arg3,*arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8245,6 +8299,9 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable_line_to_scan_index(PyObject *self,
       result = (int)((Ecostress::EcostressTimeTable const *)arg1)->line_to_scan_index(arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8303,6 +8360,9 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable_close_to_scan_edge__SWIG_0(PyObjec
       result = (bool)((Ecostress::EcostressTimeTable const *)arg1)->close_to_scan_edge(arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8352,6 +8412,9 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable_close_to_scan_edge__SWIG_1(PyObjec
     try {
       result = (bool)((Ecostress::EcostressTimeTable const *)arg1)->close_to_scan_edge(arg2);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8425,6 +8488,9 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_averaging_done(PyObject *self, 
       result = (bool)((Ecostress::EcostressTimeTable const *)arg1)->averaging_done();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8468,6 +8534,9 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_number_line_scan(PyObject *self
     try {
       result = (int)((Ecostress::EcostressTimeTable const *)arg1)->number_line_scan();
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8513,6 +8582,9 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_number_good_scan(PyObject *self
       result = (int)((Ecostress::EcostressTimeTable const *)arg1)->number_good_scan();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8556,6 +8628,9 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_number_scan(PyObject *self, PyO
     try {
       result = (int)((Ecostress::EcostressTimeTable const *)arg1)->number_scan();
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8601,6 +8676,9 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_mirror_rpm(PyObject *self, PyOb
       result = (double)((Ecostress::EcostressTimeTable const *)arg1)->mirror_rpm();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8644,6 +8722,9 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_nominal_scan_time(PyObject *sel
     try {
       result = (double)((Ecostress::EcostressTimeTable const *)arg1)->nominal_scan_time();
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8689,6 +8770,9 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_frame_time(PyObject *self, PyOb
       result = (double)((Ecostress::EcostressTimeTable const *)arg1)->frame_time();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8733,6 +8817,9 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_tstart_scan(PyObject *self, PyO
       result = ((Ecostress::EcostressTimeTable const *)arg1)->tstart_scan();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8775,6 +8862,9 @@ SWIGINTERN PyObject *_wrap_delete_EcostressTimeTable(PyObject *self, PyObject *a
     try {
       (void)arg1; delete smartarg1;
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8855,6 +8945,9 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTableSubset(PyObject *self, PyObject
       result = (Ecostress::EcostressTimeTableSubset *)new Ecostress::EcostressTimeTableSubset((Ecostress::EcostressTimeTable const &)*arg1,arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8902,6 +8995,9 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTableSubset__v_start_sample(PyObject *se
       result = (int)((Ecostress::EcostressTimeTableSubset const *)arg1)->start_sample();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8945,6 +9041,9 @@ SWIGINTERN PyObject *_wrap_delete_EcostressTimeTableSubset(PyObject *self, PyObj
       (void)arg1; delete smartarg1;
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8970,25 +9069,32 @@ SWIGINTERN PyObject *EcostressTimeTableSubset_swiginit(PyObject *SWIGUNUSEDPARM(
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "SwigPyIterator_value(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "SwigPyIterator_incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "SwigPyIterator_decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "SwigPyIterator_distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "SwigPyIterator_equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "SwigPyIterator_copy(SwigPyIterator self) -> SwigPyIterator"},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "SwigPyIterator_next(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "SwigPyIterator___next__(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "SwigPyIterator_previous(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "SwigPyIterator_advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "SwigPyIterator___eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "SwigPyIterator___ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "SwigPyIterator___iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "SwigPyIterator___isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "SwigPyIterator___add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
+		"SwigPyIterator___sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
+		"SwigPyIterator___sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
+		""},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "new_EcostressTimeTable", _wrap_new_EcostressTimeTable, METH_VARARGS, "\n"
+		"EcostressTimeTable(Time Tstart, bool Averaging_done=True, int Num_scan=44, double Mirror_rpm=25.4, double Frame_time=0.0000321875)\n"
+		"EcostressTimeTable(Vector_Time Tstart_scan, bool Averaging_done=True, double Mirror_rpm=25.4, double Frame_time=0.0000321875)\n"
+		"EcostressTimeTable(std::string const & Fname, double Mirror_rpm=25.4, double Frame_time=0.0000321875, double Toffset=0)\n"
+		"EcostressTimeTable(std::string const & Fname, bool Averaging_done, double Mirror_rpm=25.4, double Frame_time=0.0000321875, double Toffset=0)\n"
 		"\n"
 		"EcostressTimeTable::EcostressTimeTable(GeoCal::Time Tstart, bool Averaging_done=true, int Num_scan=44,\n"
 		"double Mirror_rpm=25.4, double Frame_time=0.0000321875)\n"
@@ -8998,6 +9104,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressTimeTable_scan_index_to_line", _wrap_EcostressTimeTable_scan_index_to_line, METH_VARARGS, "\n"
+		"EcostressTimeTable_scan_index_to_line(EcostressTimeTable self, int Scan_index)\n"
 		"\n"
 		"void Ecostress::EcostressTimeTable::scan_index_to_line(int Scan_index, int &Lstart, int &Lend) const\n"
 		"Ecostress::EcostressTimeTable::scan_index_to_line\n"
@@ -9006,6 +9113,7 @@ static PyMethodDef SwigMethods[] = {
 		"the end, so Lstart <= L < Lend for L in scan Scan_index \n"
 		""},
 	 { "EcostressTimeTable_line_to_scan_index", _wrap_EcostressTimeTable_line_to_scan_index, METH_VARARGS, "\n"
+		"EcostressTimeTable_line_to_scan_index(EcostressTimeTable self, double Line) -> int\n"
 		"\n"
 		"int Ecostress::EcostressTimeTable::line_to_scan_index(double Line) const\n"
 		"Ecostress::EcostressTimeTable::line_to_scan_index\n"
@@ -9013,6 +9121,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressTimeTable_close_to_scan_edge", _wrap_EcostressTimeTable_close_to_scan_edge, METH_VARARGS, "\n"
+		"EcostressTimeTable_close_to_scan_edge(EcostressTimeTable self, int Line, int Width=3) -> bool\n"
 		"\n"
 		"bool Ecostress::EcostressTimeTable::close_to_scan_edge(int Line, int Width=3) const\n"
 		"Ecostress::EcostressTimeTable::close_to_scan_edge\n"
@@ -9021,6 +9130,7 @@ static PyMethodDef SwigMethods[] = {
 		"crosses a scan region, since this data has discontinuities. \n"
 		""},
 	 { "EcostressTimeTable__v_averaging_done", _wrap_EcostressTimeTable__v_averaging_done, METH_O, "\n"
+		"EcostressTimeTable__v_averaging_done(EcostressTimeTable self) -> bool\n"
 		"\n"
 		"bool Ecostress::EcostressTimeTable::averaging_done() const\n"
 		"Ecostress::EcostressTimeTable::averaging_done\n"
@@ -9028,11 +9138,13 @@ static PyMethodDef SwigMethods[] = {
 		"Each scan is 256 lines if this is false, 128 if it is true. \n"
 		""},
 	 { "EcostressTimeTable__v_number_line_scan", _wrap_EcostressTimeTable__v_number_line_scan, METH_O, "\n"
+		"EcostressTimeTable__v_number_line_scan(EcostressTimeTable self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressTimeTable::number_line_scan() const\n"
 		"Ecostress::EcostressTimeTable::number_line_scan\n"
 		""},
 	 { "EcostressTimeTable__v_number_good_scan", _wrap_EcostressTimeTable__v_number_good_scan, METH_O, "\n"
+		"EcostressTimeTable__v_number_good_scan(EcostressTimeTable self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressTimeTable::number_good_scan() const\n"
 		"Ecostress::EcostressTimeTable::number_good_scan\n"
@@ -9041,6 +9153,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressTimeTable__v_number_scan", _wrap_EcostressTimeTable__v_number_scan, METH_O, "\n"
+		"EcostressTimeTable__v_number_scan(EcostressTimeTable self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressTimeTable::number_scan() const\n"
 		"Ecostress::EcostressTimeTable::number_scan\n"
@@ -9048,6 +9161,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressTimeTable__v_mirror_rpm", _wrap_EcostressTimeTable__v_mirror_rpm, METH_O, "\n"
+		"EcostressTimeTable__v_mirror_rpm(EcostressTimeTable self) -> double\n"
 		"\n"
 		"double Ecostress::EcostressTimeTable::mirror_rpm() const\n"
 		"Ecostress::EcostressTimeTable::mirror_rpm\n"
@@ -9056,6 +9170,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressTimeTable__v_nominal_scan_time", _wrap_EcostressTimeTable__v_nominal_scan_time, METH_O, "\n"
+		"EcostressTimeTable__v_nominal_scan_time(EcostressTimeTable self) -> double\n"
 		"\n"
 		"double Ecostress::EcostressTimeTable::nominal_scan_time() const\n"
 		"Ecostress::EcostressTimeTable::nominal_scan_time\n"
@@ -9064,6 +9179,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressTimeTable__v_frame_time", _wrap_EcostressTimeTable__v_frame_time, METH_O, "\n"
+		"EcostressTimeTable__v_frame_time(EcostressTimeTable self) -> double\n"
 		"\n"
 		"double Ecostress::EcostressTimeTable::frame_time() const\n"
 		"Ecostress::EcostressTimeTable::frame_time\n"
@@ -9071,11 +9187,13 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressTimeTable__v_tstart_scan", _wrap_EcostressTimeTable__v_tstart_scan, METH_O, "\n"
+		"EcostressTimeTable__v_tstart_scan(EcostressTimeTable self) -> Vector_Time\n"
 		"\n"
 		"const std::vector< GeoCal::Time > & Ecostress::EcostressTimeTable::tstart_scan() const\n"
 		"Ecostress::EcostressTimeTable::tstart_scan\n"
 		""},
 	 { "delete_EcostressTimeTable", _wrap_delete_EcostressTimeTable, METH_O, "\n"
+		"delete_EcostressTimeTable(EcostressTimeTable self)\n"
 		"\n"
 		"virtual Ecostress::EcostressTimeTable::~EcostressTimeTable()\n"
 		"Ecostress::EcostressTimeTable::~EcostressTimeTable\n"
@@ -9083,16 +9201,19 @@ static PyMethodDef SwigMethods[] = {
 	 { "EcostressTimeTable_swigregister", EcostressTimeTable_swigregister, METH_O, NULL},
 	 { "EcostressTimeTable_swiginit", EcostressTimeTable_swiginit, METH_VARARGS, NULL},
 	 { "new_EcostressTimeTableSubset", _wrap_new_EcostressTimeTableSubset, METH_VARARGS, "\n"
+		"new_EcostressTimeTableSubset(EcostressTimeTable Tt, int Start_sample, int Number_sample) -> EcostressTimeTableSubset\n"
 		"\n"
 		"EcostressTimeTableSubset::EcostressTimeTableSubset(const EcostressTimeTable &Tt, int Start_sample, int Number_sample)\n"
 		"Ecostress::EcostressTimeTableSubset::EcostressTimeTableSubset\n"
 		""},
 	 { "EcostressTimeTableSubset__v_start_sample", _wrap_EcostressTimeTableSubset__v_start_sample, METH_O, "\n"
+		"EcostressTimeTableSubset__v_start_sample(EcostressTimeTableSubset self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressTimeTableSubset::start_sample() const\n"
 		"Ecostress::EcostressTimeTableSubset::start_sample\n"
 		""},
 	 { "delete_EcostressTimeTableSubset", _wrap_delete_EcostressTimeTableSubset, METH_O, "\n"
+		"delete_EcostressTimeTableSubset(EcostressTimeTableSubset self)\n"
 		"\n"
 		"virtual Ecostress::EcostressTimeTableSubset::~EcostressTimeTableSubset()\n"
 		"Ecostress::EcostressTimeTableSubset::~EcostressTimeTableSubset\n"
@@ -9105,25 +9226,32 @@ static PyMethodDef SwigMethods[] = {
 static PyMethodDef SwigMethods_proxydocs[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "value(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "copy(SwigPyIterator self) -> SwigPyIterator"},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "next(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "__next__(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "previous(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "__eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "__ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "__iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "__isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "__add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
+		"__sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
+		"__sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
+		""},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "new_EcostressTimeTable", _wrap_new_EcostressTimeTable, METH_VARARGS, "\n"
+		"EcostressTimeTable(Time Tstart, bool Averaging_done=True, int Num_scan=44, double Mirror_rpm=25.4, double Frame_time=0.0000321875)\n"
+		"EcostressTimeTable(Vector_Time Tstart_scan, bool Averaging_done=True, double Mirror_rpm=25.4, double Frame_time=0.0000321875)\n"
+		"EcostressTimeTable(std::string const & Fname, double Mirror_rpm=25.4, double Frame_time=0.0000321875, double Toffset=0)\n"
+		"EcostressTimeTable(std::string const & Fname, bool Averaging_done, double Mirror_rpm=25.4, double Frame_time=0.0000321875, double Toffset=0)\n"
 		"\n"
 		"EcostressTimeTable::EcostressTimeTable(GeoCal::Time Tstart, bool Averaging_done=true, int Num_scan=44,\n"
 		"double Mirror_rpm=25.4, double Frame_time=0.0000321875)\n"
@@ -9133,6 +9261,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressTimeTable_scan_index_to_line", _wrap_EcostressTimeTable_scan_index_to_line, METH_VARARGS, "\n"
+		"scan_index_to_line(EcostressTimeTable self, int Scan_index)\n"
 		"\n"
 		"void Ecostress::EcostressTimeTable::scan_index_to_line(int Scan_index, int &Lstart, int &Lend) const\n"
 		"Ecostress::EcostressTimeTable::scan_index_to_line\n"
@@ -9141,6 +9270,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"the end, so Lstart <= L < Lend for L in scan Scan_index \n"
 		""},
 	 { "EcostressTimeTable_line_to_scan_index", _wrap_EcostressTimeTable_line_to_scan_index, METH_VARARGS, "\n"
+		"line_to_scan_index(EcostressTimeTable self, double Line) -> int\n"
 		"\n"
 		"int Ecostress::EcostressTimeTable::line_to_scan_index(double Line) const\n"
 		"Ecostress::EcostressTimeTable::line_to_scan_index\n"
@@ -9148,6 +9278,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressTimeTable_close_to_scan_edge", _wrap_EcostressTimeTable_close_to_scan_edge, METH_VARARGS, "\n"
+		"close_to_scan_edge(EcostressTimeTable self, int Line, int Width=3) -> bool\n"
 		"\n"
 		"bool Ecostress::EcostressTimeTable::close_to_scan_edge(int Line, int Width=3) const\n"
 		"Ecostress::EcostressTimeTable::close_to_scan_edge\n"
@@ -9156,6 +9287,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"crosses a scan region, since this data has discontinuities. \n"
 		""},
 	 { "EcostressTimeTable__v_averaging_done", _wrap_EcostressTimeTable__v_averaging_done, METH_O, "\n"
+		"_v_averaging_done(EcostressTimeTable self) -> bool\n"
 		"\n"
 		"bool Ecostress::EcostressTimeTable::averaging_done() const\n"
 		"Ecostress::EcostressTimeTable::averaging_done\n"
@@ -9163,11 +9295,13 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"Each scan is 256 lines if this is false, 128 if it is true. \n"
 		""},
 	 { "EcostressTimeTable__v_number_line_scan", _wrap_EcostressTimeTable__v_number_line_scan, METH_O, "\n"
+		"_v_number_line_scan(EcostressTimeTable self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressTimeTable::number_line_scan() const\n"
 		"Ecostress::EcostressTimeTable::number_line_scan\n"
 		""},
 	 { "EcostressTimeTable__v_number_good_scan", _wrap_EcostressTimeTable__v_number_good_scan, METH_O, "\n"
+		"_v_number_good_scan(EcostressTimeTable self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressTimeTable::number_good_scan() const\n"
 		"Ecostress::EcostressTimeTable::number_good_scan\n"
@@ -9176,6 +9310,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressTimeTable__v_number_scan", _wrap_EcostressTimeTable__v_number_scan, METH_O, "\n"
+		"_v_number_scan(EcostressTimeTable self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressTimeTable::number_scan() const\n"
 		"Ecostress::EcostressTimeTable::number_scan\n"
@@ -9183,6 +9318,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressTimeTable__v_mirror_rpm", _wrap_EcostressTimeTable__v_mirror_rpm, METH_O, "\n"
+		"_v_mirror_rpm(EcostressTimeTable self) -> double\n"
 		"\n"
 		"double Ecostress::EcostressTimeTable::mirror_rpm() const\n"
 		"Ecostress::EcostressTimeTable::mirror_rpm\n"
@@ -9191,6 +9327,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressTimeTable__v_nominal_scan_time", _wrap_EcostressTimeTable__v_nominal_scan_time, METH_O, "\n"
+		"_v_nominal_scan_time(EcostressTimeTable self) -> double\n"
 		"\n"
 		"double Ecostress::EcostressTimeTable::nominal_scan_time() const\n"
 		"Ecostress::EcostressTimeTable::nominal_scan_time\n"
@@ -9199,6 +9336,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressTimeTable__v_frame_time", _wrap_EcostressTimeTable__v_frame_time, METH_O, "\n"
+		"_v_frame_time(EcostressTimeTable self) -> double\n"
 		"\n"
 		"double Ecostress::EcostressTimeTable::frame_time() const\n"
 		"Ecostress::EcostressTimeTable::frame_time\n"
@@ -9206,11 +9344,13 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressTimeTable__v_tstart_scan", _wrap_EcostressTimeTable__v_tstart_scan, METH_O, "\n"
+		"_v_tstart_scan(EcostressTimeTable self) -> Vector_Time\n"
 		"\n"
 		"const std::vector< GeoCal::Time > & Ecostress::EcostressTimeTable::tstart_scan() const\n"
 		"Ecostress::EcostressTimeTable::tstart_scan\n"
 		""},
 	 { "delete_EcostressTimeTable", _wrap_delete_EcostressTimeTable, METH_O, "\n"
+		"delete_EcostressTimeTable(EcostressTimeTable self)\n"
 		"\n"
 		"virtual Ecostress::EcostressTimeTable::~EcostressTimeTable()\n"
 		"Ecostress::EcostressTimeTable::~EcostressTimeTable\n"
@@ -9218,16 +9358,19 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 	 { "EcostressTimeTable_swigregister", EcostressTimeTable_swigregister, METH_O, NULL},
 	 { "EcostressTimeTable_swiginit", EcostressTimeTable_swiginit, METH_VARARGS, NULL},
 	 { "new_EcostressTimeTableSubset", _wrap_new_EcostressTimeTableSubset, METH_VARARGS, "\n"
+		"new_EcostressTimeTableSubset(EcostressTimeTable Tt, int Start_sample, int Number_sample) -> EcostressTimeTableSubset\n"
 		"\n"
 		"EcostressTimeTableSubset::EcostressTimeTableSubset(const EcostressTimeTable &Tt, int Start_sample, int Number_sample)\n"
 		"Ecostress::EcostressTimeTableSubset::EcostressTimeTableSubset\n"
 		""},
 	 { "EcostressTimeTableSubset__v_start_sample", _wrap_EcostressTimeTableSubset__v_start_sample, METH_O, "\n"
+		"_v_start_sample(EcostressTimeTableSubset self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressTimeTableSubset::start_sample() const\n"
 		"Ecostress::EcostressTimeTableSubset::start_sample\n"
 		""},
 	 { "delete_EcostressTimeTableSubset", _wrap_delete_EcostressTimeTableSubset, METH_O, "\n"
+		"delete_EcostressTimeTableSubset(EcostressTimeTableSubset self)\n"
 		"\n"
 		"virtual Ecostress::EcostressTimeTableSubset::~EcostressTimeTableSubset()\n"
 		"Ecostress::EcostressTimeTableSubset::~EcostressTimeTableSubset\n"

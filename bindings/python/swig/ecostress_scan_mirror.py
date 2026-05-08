@@ -61,6 +61,8 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _ecostress_scan_mirror.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
+    r"""Proxy of C++ swig::SwigPyIterator class."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -89,6 +91,7 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _ecostress_scan_mirror:
 _ecostress_scan_mirror.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _ecostress_scan_mirror.SHARED_PTR_DISOWN
+
 
 import os
 
@@ -137,6 +140,8 @@ import geocal_swig.observer
 import geocal_swig.generic_object
 import geocal_swig.with_parameter
 class ObservableEcostressScanMirror(geocal_swig.generic_object.GenericObject):
+    r"""Proxy of C++ GeoCal::Observable< Ecostress::EcostressScanMirror > class."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -150,10 +155,13 @@ class ObservableEcostressScanMirror(geocal_swig.generic_object.GenericObject):
 # Register ObservableEcostressScanMirror in _ecostress_scan_mirror:
 _ecostress_scan_mirror.ObservableEcostressScanMirror_swigregister(ObservableEcostressScanMirror)
 class ObserverEcostressScanMirror(geocal_swig.generic_object.GenericObject):
+    r"""Proxy of C++ GeoCal::Observer< Ecostress::EcostressScanMirror > class."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
     def __init__(self):
+        r"""__init__(ObserverEcostressScanMirror self) -> ObserverEcostressScanMirror"""
         _ecostress_scan_mirror.ObserverEcostressScanMirror_swiginit(self, _ecostress_scan_mirror.new_ObserverEcostressScanMirror())
     __swig_destroy__ = _ecostress_scan_mirror.delete_ObserverEcostressScanMirror
     notify_update = _swig_new_instance_method(_ecostress_scan_mirror.ObserverEcostressScanMirror_notify_update)
@@ -198,6 +206,8 @@ class EcostressScanMirror(ObservableEcostressScanMirror, geocal_swig.with_parame
 
     def __init__(self, *args):
         r"""
+        __init__(EcostressScanMirror self, double Scan_start=-26.488105667851173, double Scan_end=26.488105667851173, int Number_sample=5400, int Number_scan=44, int Max_encoder_value=1749248, double First_encoder_value_at_0=401443, double Second_encoder_value_at_0=1275903, double Epsilon=0, double Beta=0, double Delta=0, double First_angle_per_ev=360.0/1749248*2, double Second_angle_per_ev=360.0/1749248*2) -> EcostressScanMirror
+        __init__(EcostressScanMirror self, BlitzArray_int_2 Encoder_value, int Max_encoder_value=1749248, double First_encoder_value_at_0=401443, double Second_encoder_value_at_0=1275903, double Epsilon=0, double Beta=0, double Delta=0, double First_angle_per_ev=360.0/1749248*2, double Second_angle_per_ev=360.0/1749248*2) -> EcostressScanMirror
 
         EcostressScanMirror::EcostressScanMirror(double Scan_start=-26.488105667851173, double
         Scan_end=26.488105667851173, int Number_sample=5400, int

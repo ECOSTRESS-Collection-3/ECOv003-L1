@@ -1,6 +1,7 @@
 from __future__ import annotations
 from .run_config import RunConfig
 from .misc import (
+    create_orbit_raw_from_config,
     create_orbit_raw,
     create_dem,
     create_lwm,
@@ -22,8 +23,6 @@ from .l1b_att_generate import L1bAttGenerate
 from .l1b_geo_strategy import L1bCollection2GeoStrategy
 import geocal  # type: ignore
 from ecostress_swig import (  # type: ignore
-    EcostressOrbit,
-    EcostressOrbitL0Fix,
     EcostressImageGroundConnection,
     EcostressImageGroundConnectionSubset,
     EcostressIgcCollection,
@@ -70,6 +69,13 @@ class L1bGeoProcess:
         igccol_use: Path | None = None,
         tpcol_use: Path | None = None,
     ):
+        # We don't set up the log file until later. We were loosing the log messages
+        # about creating things, so now we do ahead and set up a memory buffer to
+        # save this
+        self.log_memory_buffer : list[str] = []
+        def buffer_sink(message : str) -> None:
+            self.log_memory_buffer.append(message)
+        self.log_memory_buffer_hid = logger.add(buffer_sink)
         self.strategy: L1bGeoStrategy = L1bCollection2GeoStrategy()
         self._line_order_reversed: bool | None = None
         self.force_night = force_night
@@ -189,18 +195,8 @@ class L1bGeoProcess:
             self.config.as_list("StaticAncillaryFileGroup", "L1_OSP_DIR")[0]
         ).absolute()
         self.ncpu = int(self.config.as_list("Process", "NumberCpu")[0])
-        self.fix_l0_time_tag = False
-        if (
-            hasattr(self.l1b_geo_config, "fix_l0_time_tag")
-            and self.l1b_geo_config.fix_l0_time_tag
-        ):
-            self.fix_l0_time_tag = True
-        self.orb_initial = create_orbit_raw(
-            self.config,
-            pos_off=self.l1b_geo_config.x_offset_iss,
-            extrapolation_pad=self.l1b_geo_config.extrapolation_pad,
-            large_gap=self.l1b_geo_config.large_gap,
-            fix_l0_time_tag=self.fix_l0_time_tag,
+        self.orb_initial = create_orbit_raw_from_config(
+            self.config, self.l1b_geo_config
         )
         self.dem = create_dem(self.config)
         self.lwm = create_lwm(self.config)
@@ -236,27 +232,8 @@ class L1bGeoProcess:
         self.prod_dir = prod_dir.absolute()
         self.ncpu = number_cpu
         self.file_version = "01"
-        self.fix_l0_time_tag = False
-        if (
-            hasattr(self.l1b_geo_config, "fix_l0_time_tag")
-            and self.l1b_geo_config.fix_l0_time_tag
-        ):
-            self.fix_l0_time_tag = True
         self.orbfname = l1a_raw_att.absolute()
-        if self.fix_l0_time_tag:
-            self.orb_initial = EcostressOrbitL0Fix(
-                str(self.orbfname),
-                self.l1b_geo_config.x_offset_iss,
-                self.l1b_geo_config.extrapolation_pad,
-                self.l1b_geo_config.large_gap,
-            )
-        else:
-            self.orb_initial = EcostressOrbit(
-                str(self.orbfname),
-                self.l1b_geo_config.x_offset_iss,
-                self.l1b_geo_config.extrapolation_pad,
-                self.l1b_geo_config.large_gap,
-            )
+        self.orb_initial = create_orbit_raw(self.orbfname, self.l1b_geo_config)
         self.dem = geocal.SrtmDem(
             os.environ["ELEV_ROOT"],
             False,
@@ -742,17 +719,24 @@ class L1bGeoProcess:
             os.chdir(self.prod_dir)
             # Set up logger
             logger.add(self.log_file, level="DEBUG")
+            # Add log messages from before we created this
+            with open(self.log_file, "a") as fh:
+                for msg in self.log_memory_buffer:
+                    fh.write(msg)
             # Capture log messages, we store this in the qa file
             self.log_string_handle = io.StringIO()
             logger.add(self.log_string_handle, level="DEBUG")
+            for msg in self.log_memory_buffer:
+                self.log_string_handle.write(msg)
+            logger.remove(self.log_memory_buffer_hid)
+            self.log_memory_buffer = []
+            self.log_memory_buffer_hid = -1
             if self.ncpu > 1:
                 pool = Pool(self.ncpu)
             # Create python needed so geocal can load ecostress objects
             with open("extra_python_init.py", "w") as fh:
                 print("from ecostress import *\n", file=fh)
 
-            if self.fix_l0_time_tag:
-                logger.info("Applying Fix to incorrect L0 time tags")
             self.radlist = self.filter_scene_failure(self.radlist)
             self.determine_output_file_name()
             tpcol: geocal.TiePointCollection | None = None

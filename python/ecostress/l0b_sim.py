@@ -654,3 +654,8 @@ class L0BSimulate(object):
         # done...close L0B file
         l0b_fd.close()
         print("====  End time  ", datetime.now(), "  ====")
+
+
+__all__ = [
+    "L0BSimulate",
+]

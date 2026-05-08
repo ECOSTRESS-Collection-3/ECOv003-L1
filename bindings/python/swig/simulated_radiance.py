@@ -61,6 +61,8 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _simulated_radiance.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
+    r"""Proxy of C++ swig::SwigPyIterator class."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -89,6 +91,7 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _simulated_radiance:
 _simulated_radiance.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _simulated_radiance.SHARED_PTR_DISOWN
+
 
 import os
 
@@ -159,6 +162,7 @@ class SimulatedRadiance(geocal_swig.generic_object.GenericObject):
 
     def __init__(self, Gca, Map_projected_image, Avg_fact=-1, Read_into_memory=False, Fill_value=0.0):
         r"""
+        __init__(SimulatedRadiance self, boost::shared_ptr< Ecostress::GroundCoordinateArray > const & Gca, boost::shared_ptr< GeoCal::RasterImage > const & Map_projected_image, int Avg_fact=-1, bool Read_into_memory=False, double Fill_value=0.0) -> SimulatedRadiance
 
         Ecostress::SimulatedRadiance::SimulatedRadiance(const boost::shared_ptr< GroundCoordinateArray > &Gca, const
         boost::shared_ptr< GeoCal::RasterImage > &Map_projected_image, int

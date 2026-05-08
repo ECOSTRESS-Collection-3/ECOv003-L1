@@ -61,6 +61,8 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _ecostress_time_table.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
+    r"""Proxy of C++ swig::SwigPyIterator class."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -89,6 +91,7 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _ecostress_time_table:
 _ecostress_time_table.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _ecostress_time_table.SHARED_PTR_DISOWN
+
 
 import os
 
@@ -158,6 +161,10 @@ class EcostressTimeTable(geocal_swig.time_table.TimeTable):
 
     def __init__(self, *args):
         r"""
+        __init__(EcostressTimeTable self, Time Tstart, bool Averaging_done=True, int Num_scan=44, double Mirror_rpm=25.4, double Frame_time=0.0000321875) -> EcostressTimeTable
+        __init__(EcostressTimeTable self, Vector_Time Tstart_scan, bool Averaging_done=True, double Mirror_rpm=25.4, double Frame_time=0.0000321875) -> EcostressTimeTable
+        __init__(EcostressTimeTable self, std::string const & Fname, double Mirror_rpm=25.4, double Frame_time=0.0000321875, double Toffset=0) -> EcostressTimeTable
+        __init__(EcostressTimeTable self, std::string const & Fname, bool Averaging_done, double Mirror_rpm=25.4, double Frame_time=0.0000321875, double Toffset=0) -> EcostressTimeTable
 
         EcostressTimeTable::EcostressTimeTable(GeoCal::Time Tstart, bool Averaging_done=true, int Num_scan=44,
         double Mirror_rpm=25.4, double Frame_time=0.0000321875)
@@ -242,6 +249,7 @@ class EcostressTimeTableSubset(EcostressTimeTable):
 
     def __init__(self, Tt, Start_sample, Number_sample):
         r"""
+        __init__(EcostressTimeTableSubset self, EcostressTimeTable Tt, int Start_sample, int Number_sample) -> EcostressTimeTableSubset
 
         EcostressTimeTableSubset::EcostressTimeTableSubset(const EcostressTimeTable &Tt, int Start_sample, int Number_sample)
         Ecostress::EcostressTimeTableSubset::EcostressTimeTableSubset

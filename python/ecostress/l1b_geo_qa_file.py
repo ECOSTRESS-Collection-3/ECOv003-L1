@@ -9,10 +9,10 @@ import subprocess
 import geocal  # type: ignore
 from ecostress_swig import (  # type: ignore
     EcostressScanMirror,
-    EcostressOrbit,
     EcostressImageGroundConnection,
     EcostressIgcCollection,
 )
+from .misc import create_orbit_raw
 import pandas as pd
 import types
 import sys
@@ -545,12 +545,7 @@ Fourth column is the number to image matching tries we did."""
         cam.focal_length = l1b_geo_config.camera_focal_length
         if orbit_fname is None:
             orbit_fname = cls.orbit_filename(fname)
-        orb = EcostressOrbit(
-            str(orbit_fname),
-            l1b_geo_config.x_offset_iss,
-            l1b_geo_config.extrapolation_pad,
-            l1b_geo_config.large_gap,
-        )
+        orb = create_orbit_raw(orbit_fname, l1b_geo_config)
         dem = geocal.SrtmDem("", False)
         igccol = EcostressIgcCollection()
         for scn in cls.scene_list(fname):
