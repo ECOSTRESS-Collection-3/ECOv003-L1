@@ -3,11 +3,11 @@
 
 # We generally want to install in editable mode, so make default
 install:
-	pip install --prefix=$(ECOSTRESSTOP) -e .
+	pip install -e .
 
 # Without editable mode
 install2:
-	pip install --prefix=$(ECOSTRESSTOP) .
+	pip install .
 
 update-init:
 	cd ecostress && mkinit . -w --black --nomods --relative
