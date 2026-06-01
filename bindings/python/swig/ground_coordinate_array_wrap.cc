@@ -7057,7 +7057,7 @@ SWIGINTERN PyObject *_wrap_GroundCoordinateArray_ground_coor_arr(PyObject *self,
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-build/build-pixi/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[5], stride[5];
     for(int i = 0; i < 5; ++i) {
@@ -7139,7 +7139,7 @@ SWIGINTERN PyObject *_wrap_GroundCoordinateArray_ground_coor_scan_arr__SWIG_0(Py
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-build/build-pixi/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[5], stride[5];
     for(int i = 0; i < 5; ++i) {
@@ -7213,7 +7213,7 @@ SWIGINTERN PyObject *_wrap_GroundCoordinateArray_ground_coor_scan_arr__SWIG_1(Py
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-build/build-pixi/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[5], stride[5];
     for(int i = 0; i < 5; ++i) {
@@ -8282,7 +8282,7 @@ SWIGINTERN PyObject *_wrap_GroundCoordinateArray_interpolate(PyObject *self, PyO
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/ldata/smyth/ecostress-build/build-pixi/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {

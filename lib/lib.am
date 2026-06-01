@@ -24,6 +24,8 @@ EXTRA_DIST+= @srclib@/test_all.sh
 
 #=================================================================
 # List of source files
+ecostressinc_HEADERS+= @srclib@/combine_orbit.h
+libecostress_la_SOURCES+= @srclib@/combine_orbit.cc
 ecostressinc_HEADERS+= @srclib@/ecostress_serialize_support.h
 ecostressinc_HEADERS+= @srclib@/ecostress_camera.h
 libecostress_la_SOURCES+= @srclib@/ecostress_camera.cc
@@ -71,6 +73,8 @@ libecostress_la_SOURCES+= @srclib@/memory_raster_image_float.cc
 
 # Files that contain SWIG wrapper information.
 ecostressswiginc_HEADERS+= @srclib@/ecostress_common.i
+SWIG_SRC += @swigsrc@/combine_orbit_wrap.cc
+ecostressswiginc_HEADERS+= @srclib@/combine_orbit.i
 SWIG_SRC += @swigsrc@/ecostress_swig_array_wrap.cc
 ecostressswiginc_HEADERS+= @srclib@/ecostress_swig_array.i
 SWIG_SRC += @swigsrc@/ecostress_dqi_wrap.cc
