@@ -4658,14 +4658,14 @@ SWIG_AsVal_ptrdiff_t (PyObject * obj, ptrdiff_t *val)
 #include <boost/make_shared.hpp>
 
 
-  // This is defined in swig_wrap.tmpl, so it gets put into
-  // swig_wrap.cc
-  #include "python_exception.h"
+  // This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
+  std::string parse_python_exception();
 
 
 #include "serialize_function.h"
-#include "python_exception.h"  
 #include <stdexcept>
+// This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
+std::string parse_python_exception();
 
 
 //--------------------------------------------------------------
@@ -4686,7 +4686,7 @@ inline std::string cpickle_dumps(PyObject* obj)
 					     PyString_FromString("dumps"),
 					     obj, NULL);
   if(PyErr_Occurred()) {
-    throw PythonException();
+    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
   }
   char *buf;
   Py_ssize_t len;
@@ -4701,7 +4701,7 @@ inline PyObject* cpickle_loads(const std::string& S)
 					     PyBytes_FromStringAndSize(S.c_str(), S.size()), 
 					     NULL);
   if(PyErr_Occurred()) {
-    throw PythonException();
+    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
   }
   return res;
 }
@@ -6523,9 +6523,6 @@ SWIGINTERN PyObject *_wrap_new_GeometricModelImageHandleFill__SWIG_0(PyObject *s
       result = (Ecostress::GeometricModelImageHandleFill *)new Ecostress::GeometricModelImageHandleFill((boost::shared_ptr< GeoCal::RasterImage > const &)*arg1,(boost::shared_ptr< GeoCal::GeometricModel > const &)*arg2,arg3,arg4,arg5);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6621,9 +6618,6 @@ SWIGINTERN PyObject *_wrap_new_GeometricModelImageHandleFill__SWIG_1(PyObject *s
       result = (Ecostress::GeometricModelImageHandleFill *)new Ecostress::GeometricModelImageHandleFill((boost::shared_ptr< GeoCal::RasterImage > const &)*arg1,(boost::shared_ptr< GeoCal::GeometricModel > const &)*arg2,arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6699,9 +6693,6 @@ SWIGINTERN PyObject *_wrap_GeometricModelImageHandleFill__v_raw_data(PyObject *s
       result = ((Ecostress::GeometricModelImageHandleFill const *)arg1)->raw_data();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6747,9 +6738,6 @@ SWIGINTERN PyObject *_wrap_GeometricModelImageHandleFill__v_geometric_model(PyOb
     try {
       result = ((Ecostress::GeometricModelImageHandleFill const *)arg1)->geometric_model();
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6797,9 +6785,6 @@ SWIGINTERN PyObject *_wrap_GeometricModelImageHandleFill__v_fill_value(PyObject 
       result = (double)((Ecostress::GeometricModelImageHandleFill const *)arg1)->fill_value();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6843,9 +6828,6 @@ SWIGINTERN PyObject *_wrap_delete_GeometricModelImageHandleFill(PyObject *self, 
       (void)arg1; delete smartarg1;
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6871,29 +6853,25 @@ SWIGINTERN PyObject *GeometricModelImageHandleFill_swiginit(PyObject *SWIGUNUSED
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "SwigPyIterator_value(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "SwigPyIterator_incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "SwigPyIterator_decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "SwigPyIterator_distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "SwigPyIterator_equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "SwigPyIterator_copy(SwigPyIterator self) -> SwigPyIterator"},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "SwigPyIterator_next(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "SwigPyIterator___next__(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "SwigPyIterator_previous(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "SwigPyIterator_advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "SwigPyIterator___eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "SwigPyIterator___ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "SwigPyIterator___iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "SwigPyIterator___isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "SwigPyIterator___add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
-		"SwigPyIterator___sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
-		"SwigPyIterator___sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
-		""},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "new_GeometricModelImageHandleFill", _wrap_new_GeometricModelImageHandleFill, METH_VARARGS, "\n"
-		"GeometricModelImageHandleFill(boost::shared_ptr< GeoCal::RasterImage > const & Data, boost::shared_ptr< GeoCal::GeometricModel > const & Geom_model, int Number_line, int Number_sample, double Fill_value=0.0)\n"
 		"\n"
 		"Ecostress::GeometricModelImageHandleFill::GeometricModelImageHandleFill(const boost::shared_ptr< GeoCal::RasterImage > &Data, const\n"
 		"boost::shared_ptr< GeoCal::GeometricModel > &Geom_model, int\n"
@@ -6908,25 +6886,21 @@ static PyMethodDef SwigMethods[] = {
 		"image can be any size. So the size desired needs to be passed in. \n"
 		""},
 	 { "GeometricModelImageHandleFill__v_raw_data", _wrap_GeometricModelImageHandleFill__v_raw_data, METH_O, "\n"
-		"GeometricModelImageHandleFill__v_raw_data(GeometricModelImageHandleFill self) -> boost::shared_ptr< GeoCal::RasterImage >\n"
 		"\n"
 		"const boost::shared_ptr< GeoCal::RasterImage > & Ecostress::GeometricModelImageHandleFill::raw_data() const\n"
 		"Ecostress::GeometricModelImageHandleFill::raw_data\n"
 		""},
 	 { "GeometricModelImageHandleFill__v_geometric_model", _wrap_GeometricModelImageHandleFill__v_geometric_model, METH_O, "\n"
-		"GeometricModelImageHandleFill__v_geometric_model(GeometricModelImageHandleFill self) -> boost::shared_ptr< GeoCal::GeometricModel >\n"
 		"\n"
 		"const boost::shared_ptr< GeoCal::GeometricModel > & Ecostress::GeometricModelImageHandleFill::geometric_model() const\n"
 		"Ecostress::GeometricModelImageHandleFill::geometric_model\n"
 		""},
 	 { "GeometricModelImageHandleFill__v_fill_value", _wrap_GeometricModelImageHandleFill__v_fill_value, METH_O, "\n"
-		"GeometricModelImageHandleFill__v_fill_value(GeometricModelImageHandleFill self) -> double\n"
 		"\n"
 		"double Ecostress::GeometricModelImageHandleFill::fill_value() const\n"
 		"Ecostress::GeometricModelImageHandleFill::fill_value\n"
 		""},
 	 { "delete_GeometricModelImageHandleFill", _wrap_delete_GeometricModelImageHandleFill, METH_O, "\n"
-		"delete_GeometricModelImageHandleFill(GeometricModelImageHandleFill self)\n"
 		"\n"
 		"virtual Ecostress::GeometricModelImageHandleFill::~GeometricModelImageHandleFill()\n"
 		"Ecostress::GeometricModelImageHandleFill::~GeometricModelImageHandleFi\n"
@@ -6940,29 +6914,25 @@ static PyMethodDef SwigMethods[] = {
 static PyMethodDef SwigMethods_proxydocs[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "value(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "copy(SwigPyIterator self) -> SwigPyIterator"},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "next(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "__next__(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "previous(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "__eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "__ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "__iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "__isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "__add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
-		"__sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
-		"__sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
-		""},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "new_GeometricModelImageHandleFill", _wrap_new_GeometricModelImageHandleFill, METH_VARARGS, "\n"
-		"GeometricModelImageHandleFill(boost::shared_ptr< GeoCal::RasterImage > const & Data, boost::shared_ptr< GeoCal::GeometricModel > const & Geom_model, int Number_line, int Number_sample, double Fill_value=0.0)\n"
 		"\n"
 		"Ecostress::GeometricModelImageHandleFill::GeometricModelImageHandleFill(const boost::shared_ptr< GeoCal::RasterImage > &Data, const\n"
 		"boost::shared_ptr< GeoCal::GeometricModel > &Geom_model, int\n"
@@ -6977,25 +6947,21 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"image can be any size. So the size desired needs to be passed in. \n"
 		""},
 	 { "GeometricModelImageHandleFill__v_raw_data", _wrap_GeometricModelImageHandleFill__v_raw_data, METH_O, "\n"
-		"_v_raw_data(GeometricModelImageHandleFill self) -> boost::shared_ptr< GeoCal::RasterImage >\n"
 		"\n"
 		"const boost::shared_ptr< GeoCal::RasterImage > & Ecostress::GeometricModelImageHandleFill::raw_data() const\n"
 		"Ecostress::GeometricModelImageHandleFill::raw_data\n"
 		""},
 	 { "GeometricModelImageHandleFill__v_geometric_model", _wrap_GeometricModelImageHandleFill__v_geometric_model, METH_O, "\n"
-		"_v_geometric_model(GeometricModelImageHandleFill self) -> boost::shared_ptr< GeoCal::GeometricModel >\n"
 		"\n"
 		"const boost::shared_ptr< GeoCal::GeometricModel > & Ecostress::GeometricModelImageHandleFill::geometric_model() const\n"
 		"Ecostress::GeometricModelImageHandleFill::geometric_model\n"
 		""},
 	 { "GeometricModelImageHandleFill__v_fill_value", _wrap_GeometricModelImageHandleFill__v_fill_value, METH_O, "\n"
-		"_v_fill_value(GeometricModelImageHandleFill self) -> double\n"
 		"\n"
 		"double Ecostress::GeometricModelImageHandleFill::fill_value() const\n"
 		"Ecostress::GeometricModelImageHandleFill::fill_value\n"
 		""},
 	 { "delete_GeometricModelImageHandleFill", _wrap_delete_GeometricModelImageHandleFill, METH_O, "\n"
-		"delete_GeometricModelImageHandleFill(GeometricModelImageHandleFill self)\n"
 		"\n"
 		"virtual Ecostress::GeometricModelImageHandleFill::~GeometricModelImageHandleFill()\n"
 		"Ecostress::GeometricModelImageHandleFill::~GeometricModelImageHandleFi\n"

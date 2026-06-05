@@ -61,8 +61,6 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _ecostress_dqi.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
-    r"""Proxy of C++ swig::SwigPyIterator class."""
-
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -91,7 +89,6 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _ecostress_dqi:
 _ecostress_dqi.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _ecostress_dqi.SHARED_PTR_DISOWN
-
 
 import os
 
@@ -137,21 +134,13 @@ def _new_from_set(cls, version, *args):
     return inst
 
 DQI_GOOD = _ecostress_dqi.DQI_GOOD
-
 DQI_INTERPOLATED = _ecostress_dqi.DQI_INTERPOLATED
-
 DQI_STRIPE_NOT_INTERPOLATED = _ecostress_dqi.DQI_STRIPE_NOT_INTERPOLATED
-
 DQI_BAD_OR_MISSING = _ecostress_dqi.DQI_BAD_OR_MISSING
-
 DQI_NOT_SEEN = _ecostress_dqi.DQI_NOT_SEEN
-
 FILL_VALUE_BAD_OR_MISSING = _ecostress_dqi.FILL_VALUE_BAD_OR_MISSING
-
 FILL_VALUE_STRIPED = _ecostress_dqi.FILL_VALUE_STRIPED
-
 FILL_VALUE_NOT_SEEN = _ecostress_dqi.FILL_VALUE_NOT_SEEN
-
 
 __all__ = ["DQI_GOOD","DQI_INTERPOLATED","DQI_STRIPE_NOT_INTERPOLATED","DQI_BAD_OR_MISSING","DQI_NOT_SEEN","FILL_VALUE_BAD_OR_MISSING","FILL_VALUE_STRIPED","FILL_VALUE_NOT_SEEN","fill_value_threshold"]
 

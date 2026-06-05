@@ -61,8 +61,6 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _resampler.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
-    r"""Proxy of C++ swig::SwigPyIterator class."""
-
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -91,7 +89,6 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _resampler:
 _resampler.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _resampler.SHARED_PTR_DISOWN
-
 
 import os
 
@@ -159,8 +156,6 @@ class Resampler(geocal_swig.generic_object.GenericObject):
 
     def __init__(self, *args):
         r"""
-        __init__(Resampler self, boost::shared_ptr< GeoCal::RasterImage > const & X_coor, boost::shared_ptr< GeoCal::RasterImage > const & Y_coor, MapInfo Mi, int Num_sub_pixel=2, bool Exactly_match_mi=False, double Mark_missing=-1000.0) -> Resampler
-        __init__(Resampler self, BlitzArray_double_2 X_coor_interpolated, BlitzArray_double_2 Y_coor_interpolated, MapInfo Mi, int Num_sub_pixel=2, bool Exactly_match_mi=False, double Mark_missing=-1000.0) -> Resampler
 
         Resampler::Resampler(const boost::shared_ptr< GeoCal::RasterImage > &X_coor, const
         boost::shared_ptr< GeoCal::RasterImage > &Y_coor, const

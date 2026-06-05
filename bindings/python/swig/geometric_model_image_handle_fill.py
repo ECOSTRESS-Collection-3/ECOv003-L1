@@ -61,8 +61,6 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _geometric_model_image_handle_fill.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
-    r"""Proxy of C++ swig::SwigPyIterator class."""
-
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -91,7 +89,6 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _geometric_model_image_handle_fill:
 _geometric_model_image_handle_fill.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _geometric_model_image_handle_fill.SHARED_PTR_DISOWN
-
 
 import os
 
@@ -156,7 +153,6 @@ class GeometricModelImageHandleFill(geocal_swig.calc_raster.CalcRaster):
 
     def __init__(self, Data, Geom_model, Number_line, Number_sample, Fill_value=0.0):
         r"""
-        __init__(GeometricModelImageHandleFill self, boost::shared_ptr< GeoCal::RasterImage > const & Data, boost::shared_ptr< GeoCal::GeometricModel > const & Geom_model, int Number_line, int Number_sample, double Fill_value=0.0) -> GeometricModelImageHandleFill
 
         Ecostress::GeometricModelImageHandleFill::GeometricModelImageHandleFill(const boost::shared_ptr< GeoCal::RasterImage > &Data, const
         boost::shared_ptr< GeoCal::GeometricModel > &Geom_model, int

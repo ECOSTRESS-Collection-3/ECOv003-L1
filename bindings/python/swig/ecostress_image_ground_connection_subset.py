@@ -61,8 +61,6 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _ecostress_image_ground_connection_subset.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
-    r"""Proxy of C++ swig::SwigPyIterator class."""
-
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -91,7 +89,6 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _ecostress_image_ground_connection_subset:
 _ecostress_image_ground_connection_subset.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _ecostress_image_ground_connection_subset.SHARED_PTR_DISOWN
-
 
 import os
 
@@ -143,15 +140,11 @@ import geocal_swig.geocal_exception
 import geocal_swig.time_table
 import geocal_swig.observer
 class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGroundConnection):
-    r"""Proxy of C++ Ecostress::EcostressImageGroundConnection class."""
-
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
     REF_BAND = _ecostress_image_ground_connection_subset.EcostressImageGroundConnection_REF_BAND
-    
 
     def __init__(self, *args):
-        r"""__init__(EcostressImageGroundConnection self, boost::shared_ptr< GeoCal::Orbit > const & Orb, boost::shared_ptr< GeoCal::TimeTable > const & Tt, boost::shared_ptr< GeoCal::Camera > const & Cam, boost::shared_ptr< Ecostress::EcostressScanMirror > const & Scan_mirror, boost::shared_ptr< GeoCal::Dem > const & D, boost::shared_ptr< GeoCal::RasterImage > const & Img, std::string const & Title="", double Resolution=30, int Band=REF_BAND, double Max_height=9000) -> EcostressImageGroundConnection"""
         _ecostress_image_ground_connection_subset.EcostressImageGroundConnection_swiginit(self, _ecostress_image_ground_connection_subset.new_EcostressImageGroundConnection(*args))
     orbit_data = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnection_orbit_data)
     image_coordinate_scan_index = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnection_image_coordinate_scan_index)
@@ -266,18 +259,10 @@ _ecostress_image_ground_connection_subset.EcostressImageGroundConnection_swigreg
 __all__ = ["EcostressImageGroundConnection"]
 
 class EcostressTimeTable(geocal_swig.time_table.TimeTable):
-    r"""Proxy of C++ Ecostress::EcostressTimeTable class."""
-
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
     def __init__(self, *args):
-        r"""
-        __init__(EcostressTimeTable self, Time Tstart, bool Averaging_done=True, int Num_scan=44, double Mirror_rpm=25.4, double Frame_time=0.0000321875) -> EcostressTimeTable
-        __init__(EcostressTimeTable self, Vector_Time Tstart_scan, bool Averaging_done=True, double Mirror_rpm=25.4, double Frame_time=0.0000321875) -> EcostressTimeTable
-        __init__(EcostressTimeTable self, std::string const & Fname, double Mirror_rpm=25.4, double Frame_time=0.0000321875, double Toffset=0) -> EcostressTimeTable
-        __init__(EcostressTimeTable self, std::string const & Fname, bool Averaging_done, double Mirror_rpm=25.4, double Frame_time=0.0000321875, double Toffset=0) -> EcostressTimeTable
-        """
         _ecostress_image_ground_connection_subset.EcostressTimeTable_swiginit(self, _ecostress_image_ground_connection_subset.new_EcostressTimeTable(*args))
     scan_index_to_line = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressTimeTable_scan_index_to_line)
     line_to_scan_index = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressTimeTable_line_to_scan_index)
@@ -343,13 +328,10 @@ class EcostressTimeTable(geocal_swig.time_table.TimeTable):
 # Register EcostressTimeTable in _ecostress_image_ground_connection_subset:
 _ecostress_image_ground_connection_subset.EcostressTimeTable_swigregister(EcostressTimeTable)
 class EcostressTimeTableSubset(EcostressTimeTable):
-    r"""Proxy of C++ Ecostress::EcostressTimeTableSubset class."""
-
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
     def __init__(self, Tt, Start_sample, Number_sample):
-        r"""__init__(EcostressTimeTableSubset self, EcostressTimeTable Tt, int Start_sample, int Number_sample) -> EcostressTimeTableSubset"""
         _ecostress_image_ground_connection_subset.EcostressTimeTableSubset_swiginit(self, _ecostress_image_ground_connection_subset.new_EcostressTimeTableSubset(Tt, Start_sample, Number_sample))
     _v_start_sample = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressTimeTableSubset__v_start_sample)
 
@@ -389,7 +371,6 @@ class EcostressImageGroundConnectionSubset(geocal_swig.image_ground_connection.I
 
     def __init__(self, Igc, Start_sample, Num_sample):
         r"""
-        __init__(EcostressImageGroundConnectionSubset self, boost::shared_ptr< Ecostress::EcostressImageGroundConnection > const & Igc, int Start_sample, int Num_sample) -> EcostressImageGroundConnectionSubset
 
         Ecostress::EcostressImageGroundConnectionSubset::EcostressImageGroundConnectionSubset(const boost::shared_ptr< EcostressImageGroundConnection > &Igc, int
         Start_sample, int Num_sample)

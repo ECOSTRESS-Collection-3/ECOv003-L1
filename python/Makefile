@@ -3,11 +3,11 @@
 
 # We generally want to install in editable mode, so make default
 install:
-	pip install -e .
+	python -m pip install -e .
 
 # Without editable mode
 install2:
-	pip install .
+	python -m pip install .
 
 update-init:
 	cd ecostress && mkinit . -w --black --nomods --relative

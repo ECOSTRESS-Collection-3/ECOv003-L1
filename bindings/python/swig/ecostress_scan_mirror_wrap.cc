@@ -4549,14 +4549,14 @@ SWIG_AsVal_ptrdiff_t (PyObject * obj, ptrdiff_t *val)
 #include <boost/make_shared.hpp>
 
 
-  // This is defined in swig_wrap.tmpl, so it gets put into
-  // swig_wrap.cc
-  #include "python_exception.h"
+  // This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
+  std::string parse_python_exception();
 
 
 #include "serialize_function.h"
-#include "python_exception.h"  
 #include <stdexcept>
+// This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
+std::string parse_python_exception();
 
 
 //--------------------------------------------------------------
@@ -4577,7 +4577,7 @@ inline std::string cpickle_dumps(PyObject* obj)
 					     PyString_FromString("dumps"),
 					     obj, NULL);
   if(PyErr_Occurred()) {
-    throw PythonException();
+    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
   }
   char *buf;
   Py_ssize_t len;
@@ -4592,7 +4592,7 @@ inline PyObject* cpickle_loads(const std::string& S)
 					     PyBytes_FromStringAndSize(S.c_str(), S.size()), 
 					     NULL);
   if(PyErr_Occurred()) {
-    throw PythonException();
+    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
   }
   return res;
 }
@@ -6411,9 +6411,6 @@ SWIGINTERN PyObject *_wrap_delete_ObservableEcostressScanMirror(PyObject *self, 
       (void)arg1; delete smartarg1;
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6482,9 +6479,6 @@ SWIGINTERN PyObject *_wrap_ObservableEcostressScanMirror_add_observer_and_keep_r
     try {
       (arg1)->add_observer_and_keep_reference(*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6557,9 +6551,6 @@ SWIGINTERN PyObject *_wrap_ObservableEcostressScanMirror_add_observer(PyObject *
       (arg1)->add_observer(*arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6631,9 +6622,6 @@ SWIGINTERN PyObject *_wrap_ObservableEcostressScanMirror_remove_observer(PyObjec
       (arg1)->remove_observer(*arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6662,9 +6650,6 @@ SWIGINTERN PyObject *_wrap_new_ObserverEcostressScanMirror(PyObject *self, PyObj
     try {
       result = (GeoCal::Observer< Ecostress::EcostressScanMirror > *)new GeoCal::Observer< Ecostress::EcostressScanMirror >();
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6711,9 +6696,6 @@ SWIGINTERN PyObject *_wrap_delete_ObserverEcostressScanMirror(PyObject *self, Py
     try {
       (void)arg1; delete smartarg1;
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6786,9 +6768,6 @@ SWIGINTERN PyObject *_wrap_ObserverEcostressScanMirror_notify_update(PyObject *s
       (arg1)->notify_update((Ecostress::EcostressScanMirror const &)*arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6860,9 +6839,6 @@ SWIGINTERN PyObject *_wrap_ObserverEcostressScanMirror_notify_add(PyObject *self
       (arg1)->notify_add(*arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6933,9 +6909,6 @@ SWIGINTERN PyObject *_wrap_ObserverEcostressScanMirror_notify_remove(PyObject *s
     try {
       (arg1)->notify_remove(*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7066,9 +7039,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_0(PyObject *self, Py_ss
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10,arg11,arg12);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7182,9 +7152,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_1(PyObject *self, Py_ss
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10,arg11);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7290,9 +7257,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_2(PyObject *self, Py_ss
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7390,9 +7354,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_3(PyObject *self, Py_ss
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7482,9 +7443,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_4(PyObject *self, Py_ss
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7566,9 +7524,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_5(PyObject *self, Py_ss
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7642,9 +7597,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_6(PyObject *self, Py_ss
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror(arg1,arg2,arg3,arg4,arg5,arg6);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7710,9 +7662,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_7(PyObject *self, Py_ss
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror(arg1,arg2,arg3,arg4,arg5);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7770,9 +7719,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_8(PyObject *self, Py_ss
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror(arg1,arg2,arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7822,9 +7768,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_9(PyObject *self, Py_ss
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror(arg1,arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7866,9 +7809,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_10(PyObject *self, Py_s
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror(arg1,arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7902,9 +7842,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_11(PyObject *self, Py_s
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror(arg1);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7929,9 +7866,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_12(PyObject *self, Py_s
     try {
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror();
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8042,9 +7976,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_13(PyObject *self, Py_s
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror((blitz::Array< int,2 > const &)*arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8146,9 +8077,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_14(PyObject *self, Py_s
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror((blitz::Array< int,2 > const &)*arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8242,9 +8170,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_15(PyObject *self, Py_s
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror((blitz::Array< int,2 > const &)*arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8330,9 +8255,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_16(PyObject *self, Py_s
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror((blitz::Array< int,2 > const &)*arg1,arg2,arg3,arg4,arg5,arg6);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8410,9 +8332,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_17(PyObject *self, Py_s
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror((blitz::Array< int,2 > const &)*arg1,arg2,arg3,arg4,arg5);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8482,9 +8401,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_18(PyObject *self, Py_s
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror((blitz::Array< int,2 > const &)*arg1,arg2,arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8546,9 +8462,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_19(PyObject *self, Py_s
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror((blitz::Array< int,2 > const &)*arg1,arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8602,9 +8515,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_20(PyObject *self, Py_s
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror((blitz::Array< int,2 > const &)*arg1,arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8649,9 +8559,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressScanMirror__SWIG_21(PyObject *self, Py_s
     try {
       result = (Ecostress::EcostressScanMirror *)new Ecostress::EcostressScanMirror((blitz::Array< int,2 > const &)*arg1);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9124,9 +9031,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror_scan_mirror_angle__SWIG_0(PyObjec
       result = (double)((Ecostress::EcostressScanMirror const *)arg1)->scan_mirror_angle(arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -9205,9 +9109,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror_scan_mirror_angle__SWIG_1(PyObjec
     try {
       result = ((Ecostress::EcostressScanMirror const *)arg1)->scan_mirror_angle(arg2,(GeoCal::AutoDerivative< double > const &)*arg3);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9305,9 +9206,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror_rotation_quaternion__SWIG_0(PyObj
       result = ((Ecostress::EcostressScanMirror const *)arg1)->rotation_quaternion(arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -9386,9 +9284,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror_rotation_quaternion__SWIG_1(PyObj
     try {
       result = ((Ecostress::EcostressScanMirror const *)arg1)->rotation_quaternion(arg2,(GeoCal::AutoDerivative< double > const &)*arg3);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9474,9 +9369,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror_angle_from_encoder_value__SWIG_0(
       result = (double)((Ecostress::EcostressScanMirror const *)arg1)->angle_from_encoder_value(arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -9547,9 +9439,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror_angle_from_encoder_value__SWIG_1(
     try {
       result = ((Ecostress::EcostressScanMirror const *)arg1)->angle_from_encoder_value((GeoCal::AutoDerivative< double > const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9648,9 +9537,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror_angle_to_encoder_value(PyObject *
       result = (int)((Ecostress::EcostressScanMirror const *)arg1)->angle_to_encoder_value(arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -9708,9 +9594,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror_encoder_value_interpolate__SWIG_0
     try {
       result = (double)((Ecostress::EcostressScanMirror const *)arg1)->encoder_value_interpolate(arg2,arg3);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9777,9 +9660,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror_encoder_value_interpolate__SWIG_1
     try {
       result = ((Ecostress::EcostressScanMirror const *)arg1)->encoder_value_interpolate(arg2,SWIG_STD_MOVE(arg3));
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9861,9 +9741,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_instrument_to_sc__SWIG_0(PyObj
       result = ((Ecostress::EcostressScanMirror const *)arg1)->instrument_to_sc();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -9915,9 +9792,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_instrument_to_sc__SWIG_1(PyObj
     try {
       (arg1)->instrument_to_sc((boost::math::quaternion< double > const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9989,9 +9863,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_instrument_to_sc_with_derivati
       result = ((Ecostress::EcostressScanMirror const *)arg1)->instrument_to_sc_with_derivative();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10043,9 +9914,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_instrument_to_sc_with_derivati
     try {
       (arg1)->instrument_to_sc_with_derivative((boost::math::quaternion< GeoCal::AutoDerivative< double > > const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10117,16 +9985,13 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_euler__SWIG_0(PyObject *self, 
       result = ((Ecostress::EcostressScanMirror const *)arg1)->euler();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build-fresh/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[1], stride[1];
     for(int i = 0; i < 1; ++i) {
@@ -10202,9 +10067,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_euler__SWIG_1(PyObject *self, 
       (arg1)->euler((blitz::Array< double,1 > const &)*arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10275,9 +10137,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_euler_with_derivative__SWIG_0(
       result = ((Ecostress::EcostressScanMirror const *)arg1)->euler_with_derivative();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10329,9 +10188,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_euler_with_derivative__SWIG_1(
     try {
       (arg1)->euler_with_derivative((blitz::Array< GeoCal::AutoDerivative< double >,1 > const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10403,9 +10259,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_epsilon__SWIG_0(PyObject *
       result = (bool)((Ecostress::EcostressScanMirror const *)arg1)->fit_epsilon();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10456,9 +10309,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_epsilon__SWIG_1(PyObject *
     try {
       (arg1)->fit_epsilon((bool const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10530,9 +10380,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_beta__SWIG_0(PyObject *sel
       result = (bool)((Ecostress::EcostressScanMirror const *)arg1)->fit_beta();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10583,9 +10430,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_beta__SWIG_1(PyObject *sel
     try {
       (arg1)->fit_beta((bool const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10657,9 +10501,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_delta__SWIG_0(PyObject *se
       result = (bool)((Ecostress::EcostressScanMirror const *)arg1)->fit_delta();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10710,9 +10551,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_delta__SWIG_1(PyObject *se
     try {
       (arg1)->fit_delta((bool const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10784,9 +10622,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_first_encoder_value_at_0__
       result = (bool)((Ecostress::EcostressScanMirror const *)arg1)->fit_first_encoder_value_at_0();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10837,9 +10672,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_first_encoder_value_at_0__
     try {
       (arg1)->fit_first_encoder_value_at_0((bool const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10911,9 +10743,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_second_encoder_value_at_0_
       result = (bool)((Ecostress::EcostressScanMirror const *)arg1)->fit_second_encoder_value_at_0();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10964,9 +10793,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_second_encoder_value_at_0_
     try {
       (arg1)->fit_second_encoder_value_at_0((bool const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11038,9 +10864,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_first_angle_per_encoder_va
       result = (bool)((Ecostress::EcostressScanMirror const *)arg1)->fit_first_angle_per_encoder_value();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11091,9 +10914,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_first_angle_per_encoder_va
     try {
       (arg1)->fit_first_angle_per_encoder_value((bool const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11165,9 +10985,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_second_angle_per_encoder_v
       result = (bool)((Ecostress::EcostressScanMirror const *)arg1)->fit_second_angle_per_encoder_value();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11218,9 +11035,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_fit_second_angle_per_encoder_v
     try {
       (arg1)->fit_second_angle_per_encoder_value((bool const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11294,9 +11108,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_first_encoder_value_at_0(PyObj
       result = (double)((Ecostress::EcostressScanMirror const *)arg1)->first_encoder_value_at_0();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11340,9 +11151,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_first_encoder_value_at_0_with_
     try {
       result = ((Ecostress::EcostressScanMirror const *)arg1)->first_encoder_value_at_0_with_derivative();
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11392,9 +11200,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_second_encoder_value_at_0(PyOb
       result = (double)((Ecostress::EcostressScanMirror const *)arg1)->second_encoder_value_at_0();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11438,9 +11243,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_second_encoder_value_at_0_with
     try {
       result = ((Ecostress::EcostressScanMirror const *)arg1)->second_encoder_value_at_0_with_derivative();
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11490,9 +11292,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_first_angle_per_encoder_value(
       result = (double)((Ecostress::EcostressScanMirror const *)arg1)->first_angle_per_encoder_value();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11537,9 +11336,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_second_angle_per_encoder_value
       result = (double)((Ecostress::EcostressScanMirror const *)arg1)->second_angle_per_encoder_value();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11583,9 +11379,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_first_angle_per_encoder_value_
     try {
       result = ((Ecostress::EcostressScanMirror const *)arg1)->first_angle_per_encoder_value_with_derivative();
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11635,9 +11428,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_second_angle_per_encoder_value
       result = ((Ecostress::EcostressScanMirror const *)arg1)->second_angle_per_encoder_value_with_derivative();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11686,9 +11476,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_number_sample(PyObject *self, 
       result = (int)((Ecostress::EcostressScanMirror const *)arg1)->number_sample();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11732,9 +11519,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_number_scan(PyObject *self, Py
     try {
       result = (int)((Ecostress::EcostressScanMirror const *)arg1)->number_scan();
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11780,16 +11564,13 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror__v_encoder_value(PyObject *self, 
       result = ((Ecostress::EcostressScanMirror const *)arg1)->encoder_value();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build-fresh/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -11848,9 +11629,6 @@ SWIGINTERN PyObject *_wrap_EcostressScanMirror___str__(PyObject *self, PyObject 
       result = ((Ecostress::EcostressScanMirror const *)arg1)->print_to_string();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11894,9 +11672,6 @@ SWIGINTERN PyObject *_wrap_delete_EcostressScanMirror(PyObject *self, PyObject *
       (void)arg1; delete smartarg1;
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11922,42 +11697,37 @@ SWIGINTERN PyObject *EcostressScanMirror_swiginit(PyObject *SWIGUNUSEDPARM(self)
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "SwigPyIterator_value(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "SwigPyIterator_incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "SwigPyIterator_decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "SwigPyIterator_distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "SwigPyIterator_equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "SwigPyIterator_copy(SwigPyIterator self) -> SwigPyIterator"},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "SwigPyIterator_next(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "SwigPyIterator___next__(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "SwigPyIterator_previous(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "SwigPyIterator_advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "SwigPyIterator___eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "SwigPyIterator___ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "SwigPyIterator___iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "SwigPyIterator___isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "SwigPyIterator___add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
-		"SwigPyIterator___sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
-		"SwigPyIterator___sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
-		""},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
-	 { "delete_ObservableEcostressScanMirror", _wrap_delete_ObservableEcostressScanMirror, METH_O, "delete_ObservableEcostressScanMirror(ObservableEcostressScanMirror self)"},
-	 { "ObservableEcostressScanMirror_add_observer_and_keep_reference", _wrap_ObservableEcostressScanMirror_add_observer_and_keep_reference, METH_VARARGS, "ObservableEcostressScanMirror_add_observer_and_keep_reference(ObservableEcostressScanMirror self, boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > & Obs)"},
-	 { "ObservableEcostressScanMirror_add_observer", _wrap_ObservableEcostressScanMirror_add_observer, METH_VARARGS, "ObservableEcostressScanMirror_add_observer(ObservableEcostressScanMirror self, ObserverEcostressScanMirror Obs)"},
-	 { "ObservableEcostressScanMirror_remove_observer", _wrap_ObservableEcostressScanMirror_remove_observer, METH_VARARGS, "ObservableEcostressScanMirror_remove_observer(ObservableEcostressScanMirror self, ObserverEcostressScanMirror Obs)"},
+	 { "delete_ObservableEcostressScanMirror", _wrap_delete_ObservableEcostressScanMirror, METH_O, NULL},
+	 { "ObservableEcostressScanMirror_add_observer_and_keep_reference", _wrap_ObservableEcostressScanMirror_add_observer_and_keep_reference, METH_VARARGS, NULL},
+	 { "ObservableEcostressScanMirror_add_observer", _wrap_ObservableEcostressScanMirror_add_observer, METH_VARARGS, NULL},
+	 { "ObservableEcostressScanMirror_remove_observer", _wrap_ObservableEcostressScanMirror_remove_observer, METH_VARARGS, NULL},
 	 { "ObservableEcostressScanMirror_swigregister", ObservableEcostressScanMirror_swigregister, METH_O, NULL},
-	 { "new_ObserverEcostressScanMirror", _wrap_new_ObserverEcostressScanMirror, METH_NOARGS, "new_ObserverEcostressScanMirror() -> ObserverEcostressScanMirror"},
-	 { "delete_ObserverEcostressScanMirror", _wrap_delete_ObserverEcostressScanMirror, METH_O, "delete_ObserverEcostressScanMirror(ObserverEcostressScanMirror self)"},
-	 { "ObserverEcostressScanMirror_notify_update", _wrap_ObserverEcostressScanMirror_notify_update, METH_VARARGS, "ObserverEcostressScanMirror_notify_update(ObserverEcostressScanMirror self, EcostressScanMirror Observed_object)"},
-	 { "ObserverEcostressScanMirror_notify_add", _wrap_ObserverEcostressScanMirror_notify_add, METH_VARARGS, "ObserverEcostressScanMirror_notify_add(ObserverEcostressScanMirror self, EcostressScanMirror Observed_object)"},
-	 { "ObserverEcostressScanMirror_notify_remove", _wrap_ObserverEcostressScanMirror_notify_remove, METH_VARARGS, "ObserverEcostressScanMirror_notify_remove(ObserverEcostressScanMirror self, EcostressScanMirror Observed_object)"},
+	 { "new_ObserverEcostressScanMirror", _wrap_new_ObserverEcostressScanMirror, METH_NOARGS, NULL},
+	 { "delete_ObserverEcostressScanMirror", _wrap_delete_ObserverEcostressScanMirror, METH_O, NULL},
+	 { "ObserverEcostressScanMirror_notify_update", _wrap_ObserverEcostressScanMirror_notify_update, METH_VARARGS, NULL},
+	 { "ObserverEcostressScanMirror_notify_add", _wrap_ObserverEcostressScanMirror_notify_add, METH_VARARGS, NULL},
+	 { "ObserverEcostressScanMirror_notify_remove", _wrap_ObserverEcostressScanMirror_notify_remove, METH_VARARGS, NULL},
 	 { "ObserverEcostressScanMirror_swigregister", ObserverEcostressScanMirror_swigregister, METH_O, NULL},
 	 { "ObserverEcostressScanMirror_swiginit", ObserverEcostressScanMirror_swiginit, METH_VARARGS, NULL},
 	 { "new_EcostressScanMirror", _wrap_new_EcostressScanMirror, METH_VARARGS, "\n"
-		"EcostressScanMirror(double Scan_start=-26.488105667851173, double Scan_end=26.488105667851173, int Number_sample=5400, int Number_scan=44, int Max_encoder_value=1749248, double First_encoder_value_at_0=401443, double Second_encoder_value_at_0=1275903, double Epsilon=0, double Beta=0, double Delta=0, double First_angle_per_ev=360.0/1749248*2, double Second_angle_per_ev=360.0/1749248*2)\n"
-		"EcostressScanMirror(BlitzArray_int_2 Encoder_value, int Max_encoder_value=1749248, double First_encoder_value_at_0=401443, double Second_encoder_value_at_0=1275903, double Epsilon=0, double Beta=0, double Delta=0, double First_angle_per_ev=360.0/1749248*2, double Second_angle_per_ev=360.0/1749248*2)\n"
 		"\n"
 		"EcostressScanMirror::EcostressScanMirror(double Scan_start=-26.488105667851173, double\n"
 		"Scan_end=26.488105667851173, int Number_sample=5400, int\n"
@@ -11977,8 +11747,6 @@ static PyMethodDef SwigMethods[] = {
 		"ecostress-test-data \n"
 		""},
 	 { "EcostressScanMirror_scan_mirror_angle", _wrap_EcostressScanMirror_scan_mirror_angle, METH_VARARGS, "\n"
-		"EcostressScanMirror_scan_mirror_angle(EcostressScanMirror self, int Scan_index, double Ic_sample) -> double\n"
-		"EcostressScanMirror_scan_mirror_angle(EcostressScanMirror self, int Scan_index, AutoDerivativeDouble Ic_sample) -> AutoDerivativeDouble\n"
 		"\n"
 		"double Ecostress::EcostressScanMirror::scan_mirror_angle(int Scan_index, double Ic_sample) const\n"
 		"Ecostress::EcostressScanMirror::scan_mirror_angle\n"
@@ -11986,8 +11754,6 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror_rotation_quaternion", _wrap_EcostressScanMirror_rotation_quaternion, METH_VARARGS, "\n"
-		"EcostressScanMirror_rotation_quaternion(EcostressScanMirror self, int Scan_index, double Ic_sample) -> Quaternion_double\n"
-		"EcostressScanMirror_rotation_quaternion(EcostressScanMirror self, int Scan_index, AutoDerivativeDouble Ic_sample) -> boost::math::quaternion< GeoCal::AutoDerivative< double > >\n"
 		"\n"
 		"boost::math::quaternion< double > Ecostress::EcostressScanMirror::rotation_quaternion(int Scan_index, double Ic_sample) const\n"
 		"Ecostress::EcostressScanMirror::rotation_quaternion\n"
@@ -11996,8 +11762,6 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror_angle_from_encoder_value", _wrap_EcostressScanMirror_angle_from_encoder_value, METH_VARARGS, "\n"
-		"EcostressScanMirror_angle_from_encoder_value(EcostressScanMirror self, double Evalue) -> double\n"
-		"EcostressScanMirror_angle_from_encoder_value(EcostressScanMirror self, AutoDerivativeDouble Evalue) -> AutoDerivativeDouble\n"
 		"\n"
 		"double Ecostress::EcostressScanMirror::angle_from_encoder_value(double Evalue) const\n"
 		"Ecostress::EcostressScanMirror::angle_from_encoder_value\n"
@@ -12005,7 +11769,6 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror_angle_to_encoder_value", _wrap_EcostressScanMirror_angle_to_encoder_value, METH_VARARGS, "\n"
-		"EcostressScanMirror_angle_to_encoder_value(EcostressScanMirror self, double Angle_deg, int Mirror_side) -> int\n"
 		"\n"
 		"int Ecostress::EcostressScanMirror::angle_to_encoder_value(double Angle_deg, int Mirror_side) const\n"
 		"Ecostress::EcostressScanMirror::angle_to_encoder_value\n"
@@ -12013,8 +11776,6 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror_encoder_value_interpolate", _wrap_EcostressScanMirror_encoder_value_interpolate, METH_VARARGS, "\n"
-		"EcostressScanMirror_encoder_value_interpolate(EcostressScanMirror self, int Scan_index, double Ic_sample) -> double\n"
-		"EcostressScanMirror_encoder_value_interpolate(EcostressScanMirror self, int Scan_index, AutoDerivativeDouble Ic_sample) -> AutoDerivativeDouble\n"
 		"\n"
 		"double Ecostress::EcostressScanMirror::encoder_value_interpolate(int Scan_index, double Ic_sample) const\n"
 		"Ecostress::EcostressScanMirror::encoder_value_interpolate\n"
@@ -12023,8 +11784,6 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_instrument_to_sc", _wrap_EcostressScanMirror__v_instrument_to_sc, METH_VARARGS, "\n"
-		"EcostressScanMirror__v_instrument_to_sc(EcostressScanMirror self) -> Quaternion_double\n"
-		"EcostressScanMirror__v_instrument_to_sc(EcostressScanMirror self, Quaternion_double V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::instrument_to_sc(const boost::math::quaternion< double > &inst_to_sc_q)\n"
 		"Ecostress::EcostressScanMirror::instrument_to_sc\n"
@@ -12032,8 +11791,6 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_instrument_to_sc_with_derivative", _wrap_EcostressScanMirror__v_instrument_to_sc_with_derivative, METH_VARARGS, "\n"
-		"EcostressScanMirror__v_instrument_to_sc_with_derivative(EcostressScanMirror self) -> boost::math::quaternion< GeoCal::AutoDerivative< double > >\n"
-		"EcostressScanMirror__v_instrument_to_sc_with_derivative(EcostressScanMirror self, boost::math::quaternion< GeoCal::AutoDerivative< double > > const & V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::instrument_to_sc_with_derivative(const boost::math::quaternion< GeoCal::AutoDerivative< double > >\n"
 		"&inst_to_sc_q)\n"
@@ -12042,8 +11799,6 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_euler", _wrap_EcostressScanMirror__v_euler, METH_VARARGS, "\n"
-		"EcostressScanMirror__v_euler(EcostressScanMirror self) -> BlitzArray_double_1\n"
-		"EcostressScanMirror__v_euler(EcostressScanMirror self, BlitzArray_double_1 V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::euler(const blitz::Array< double, 1 > &Euler)\n"
 		"Ecostress::EcostressScanMirror::euler\n"
@@ -12052,63 +11807,46 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_euler_with_derivative", _wrap_EcostressScanMirror__v_euler_with_derivative, METH_VARARGS, "\n"
-		"EcostressScanMirror__v_euler_with_derivative(EcostressScanMirror self) -> ArrayAutoDerivativeDouble_1\n"
-		"EcostressScanMirror__v_euler_with_derivative(EcostressScanMirror self, ArrayAutoDerivativeDouble_1 V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::euler_with_derivative(const GeoCal::ArrayAd< double, 1 > &Euler)\n"
 		"Ecostress::EcostressScanMirror::euler_with_derivative\n"
 		""},
 	 { "EcostressScanMirror__v_fit_epsilon", _wrap_EcostressScanMirror__v_fit_epsilon, METH_VARARGS, "\n"
-		"EcostressScanMirror__v_fit_epsilon(EcostressScanMirror self) -> bool\n"
-		"EcostressScanMirror__v_fit_epsilon(EcostressScanMirror self, bool const & V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::fit_epsilon(bool V)\n"
 		"Ecostress::EcostressScanMirror::fit_epsilon\n"
 		""},
 	 { "EcostressScanMirror__v_fit_beta", _wrap_EcostressScanMirror__v_fit_beta, METH_VARARGS, "\n"
-		"EcostressScanMirror__v_fit_beta(EcostressScanMirror self) -> bool\n"
-		"EcostressScanMirror__v_fit_beta(EcostressScanMirror self, bool const & V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::fit_beta(bool V)\n"
 		"Ecostress::EcostressScanMirror::fit_beta\n"
 		""},
 	 { "EcostressScanMirror__v_fit_delta", _wrap_EcostressScanMirror__v_fit_delta, METH_VARARGS, "\n"
-		"EcostressScanMirror__v_fit_delta(EcostressScanMirror self) -> bool\n"
-		"EcostressScanMirror__v_fit_delta(EcostressScanMirror self, bool const & V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::fit_delta(bool V)\n"
 		"Ecostress::EcostressScanMirror::fit_delta\n"
 		""},
 	 { "EcostressScanMirror__v_fit_first_encoder_value_at_0", _wrap_EcostressScanMirror__v_fit_first_encoder_value_at_0, METH_VARARGS, "\n"
-		"EcostressScanMirror__v_fit_first_encoder_value_at_0(EcostressScanMirror self) -> bool\n"
-		"EcostressScanMirror__v_fit_first_encoder_value_at_0(EcostressScanMirror self, bool const & V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::fit_first_encoder_value_at_0(bool V)\n"
 		"Ecostress::EcostressScanMirror::fit_first_encoder_value_at_0\n"
 		""},
 	 { "EcostressScanMirror__v_fit_second_encoder_value_at_0", _wrap_EcostressScanMirror__v_fit_second_encoder_value_at_0, METH_VARARGS, "\n"
-		"EcostressScanMirror__v_fit_second_encoder_value_at_0(EcostressScanMirror self) -> bool\n"
-		"EcostressScanMirror__v_fit_second_encoder_value_at_0(EcostressScanMirror self, bool const & V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::fit_second_encoder_value_at_0(bool V)\n"
 		"Ecostress::EcostressScanMirror::fit_second_encoder_value_at_0\n"
 		""},
 	 { "EcostressScanMirror__v_fit_first_angle_per_encoder_value", _wrap_EcostressScanMirror__v_fit_first_angle_per_encoder_value, METH_VARARGS, "\n"
-		"EcostressScanMirror__v_fit_first_angle_per_encoder_value(EcostressScanMirror self) -> bool\n"
-		"EcostressScanMirror__v_fit_first_angle_per_encoder_value(EcostressScanMirror self, bool const & V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::fit_first_angle_per_encoder_value(bool V)\n"
 		"Ecostress::EcostressScanMirror::fit_first_angle_per_encoder_value\n"
 		""},
 	 { "EcostressScanMirror__v_fit_second_angle_per_encoder_value", _wrap_EcostressScanMirror__v_fit_second_angle_per_encoder_value, METH_VARARGS, "\n"
-		"EcostressScanMirror__v_fit_second_angle_per_encoder_value(EcostressScanMirror self) -> bool\n"
-		"EcostressScanMirror__v_fit_second_angle_per_encoder_value(EcostressScanMirror self, bool const & V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::fit_second_angle_per_encoder_value(bool V)\n"
 		"Ecostress::EcostressScanMirror::fit_second_angle_per_encoder_value\n"
 		""},
 	 { "EcostressScanMirror__v_first_encoder_value_at_0", _wrap_EcostressScanMirror__v_first_encoder_value_at_0, METH_O, "\n"
-		"EcostressScanMirror__v_first_encoder_value_at_0(EcostressScanMirror self) -> double\n"
 		"\n"
 		"double Ecostress::EcostressScanMirror::first_encoder_value_at_0() const\n"
 		"Ecostress::EcostressScanMirror::first_encoder_value_at_0\n"
@@ -12116,14 +11854,12 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_first_encoder_value_at_0_with_derivative", _wrap_EcostressScanMirror__v_first_encoder_value_at_0_with_derivative, METH_O, "\n"
-		"EcostressScanMirror__v_first_encoder_value_at_0_with_derivative(EcostressScanMirror self) -> AutoDerivativeDouble\n"
 		"\n"
 		"GeoCal::AutoDerivative< double > Ecostress::EcostressScanMirror::first_encoder_value_at_0_with_derivative() const\n"
 		"Ecostress::EcostressScanMirror::first_encoder_value_at_0_with_derivati\n"
 		"ve\n"
 		""},
 	 { "EcostressScanMirror__v_second_encoder_value_at_0", _wrap_EcostressScanMirror__v_second_encoder_value_at_0, METH_O, "\n"
-		"EcostressScanMirror__v_second_encoder_value_at_0(EcostressScanMirror self) -> double\n"
 		"\n"
 		"double Ecostress::EcostressScanMirror::second_encoder_value_at_0() const\n"
 		"Ecostress::EcostressScanMirror::second_encoder_value_at_0\n"
@@ -12131,14 +11867,12 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_second_encoder_value_at_0_with_derivative", _wrap_EcostressScanMirror__v_second_encoder_value_at_0_with_derivative, METH_O, "\n"
-		"EcostressScanMirror__v_second_encoder_value_at_0_with_derivative(EcostressScanMirror self) -> AutoDerivativeDouble\n"
 		"\n"
 		"GeoCal::AutoDerivative< double > Ecostress::EcostressScanMirror::second_encoder_value_at_0_with_derivative() const\n"
 		"Ecostress::EcostressScanMirror::second_encoder_value_at_0_with_derivat\n"
 		"ive\n"
 		""},
 	 { "EcostressScanMirror__v_first_angle_per_encoder_value", _wrap_EcostressScanMirror__v_first_angle_per_encoder_value, METH_O, "\n"
-		"EcostressScanMirror__v_first_angle_per_encoder_value(EcostressScanMirror self) -> double\n"
 		"\n"
 		"double Ecostress::EcostressScanMirror::first_angle_per_encoder_value() const\n"
 		"Ecostress::EcostressScanMirror::first_angle_per_encoder_value\n"
@@ -12146,27 +11880,23 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_second_angle_per_encoder_value", _wrap_EcostressScanMirror__v_second_angle_per_encoder_value, METH_O, "\n"
-		"EcostressScanMirror__v_second_angle_per_encoder_value(EcostressScanMirror self) -> double\n"
 		"\n"
 		"double Ecostress::EcostressScanMirror::second_angle_per_encoder_value() const\n"
 		"Ecostress::EcostressScanMirror::second_angle_per_encoder_value\n"
 		""},
 	 { "EcostressScanMirror__v_first_angle_per_encoder_value_with_derivative", _wrap_EcostressScanMirror__v_first_angle_per_encoder_value_with_derivative, METH_O, "\n"
-		"EcostressScanMirror__v_first_angle_per_encoder_value_with_derivative(EcostressScanMirror self) -> AutoDerivativeDouble\n"
 		"\n"
 		"GeoCal::AutoDerivative< double > Ecostress::EcostressScanMirror::first_angle_per_encoder_value_with_derivative() const\n"
 		"Ecostress::EcostressScanMirror::first_angle_per_encoder_value_with_der\n"
 		"ivative\n"
 		""},
 	 { "EcostressScanMirror__v_second_angle_per_encoder_value_with_derivative", _wrap_EcostressScanMirror__v_second_angle_per_encoder_value_with_derivative, METH_O, "\n"
-		"EcostressScanMirror__v_second_angle_per_encoder_value_with_derivative(EcostressScanMirror self) -> AutoDerivativeDouble\n"
 		"\n"
 		"GeoCal::AutoDerivative< double > Ecostress::EcostressScanMirror::second_angle_per_encoder_value_with_derivative() const\n"
 		"Ecostress::EcostressScanMirror::second_angle_per_encoder_value_with_de\n"
 		"rivative\n"
 		""},
 	 { "EcostressScanMirror__v_number_sample", _wrap_EcostressScanMirror__v_number_sample, METH_O, "\n"
-		"EcostressScanMirror__v_number_sample(EcostressScanMirror self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressScanMirror::number_sample() const\n"
 		"Ecostress::EcostressScanMirror::number_sample\n"
@@ -12174,7 +11904,6 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_number_scan", _wrap_EcostressScanMirror__v_number_scan, METH_O, "\n"
-		"EcostressScanMirror__v_number_scan(EcostressScanMirror self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressScanMirror::number_scan() const\n"
 		"Ecostress::EcostressScanMirror::number_scan\n"
@@ -12182,16 +11911,14 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_encoder_value", _wrap_EcostressScanMirror__v_encoder_value, METH_O, "\n"
-		"EcostressScanMirror__v_encoder_value(EcostressScanMirror self) -> BlitzArray_int_2\n"
 		"\n"
 		"const blitz::Array< int, 2 > & Ecostress::EcostressScanMirror::encoder_value() const\n"
 		"Ecostress::EcostressScanMirror::encoder_value\n"
 		"Angle encoder values.\n"
 		"\n"
 		""},
-	 { "EcostressScanMirror___str__", _wrap_EcostressScanMirror___str__, METH_O, "EcostressScanMirror___str__(EcostressScanMirror self) -> std::string"},
+	 { "EcostressScanMirror___str__", _wrap_EcostressScanMirror___str__, METH_O, NULL},
 	 { "delete_EcostressScanMirror", _wrap_delete_EcostressScanMirror, METH_O, "\n"
-		"delete_EcostressScanMirror(EcostressScanMirror self)\n"
 		"\n"
 		"virtual Ecostress::EcostressScanMirror::~EcostressScanMirror()\n"
 		"Ecostress::EcostressScanMirror::~EcostressScanMirror\n"
@@ -12204,42 +11931,37 @@ static PyMethodDef SwigMethods[] = {
 static PyMethodDef SwigMethods_proxydocs[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "value(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "copy(SwigPyIterator self) -> SwigPyIterator"},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "next(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "__next__(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "previous(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "__eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "__ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "__iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "__isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "__add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
-		"__sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
-		"__sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
-		""},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
-	 { "delete_ObservableEcostressScanMirror", _wrap_delete_ObservableEcostressScanMirror, METH_O, "delete_ObservableEcostressScanMirror(ObservableEcostressScanMirror self)"},
-	 { "ObservableEcostressScanMirror_add_observer_and_keep_reference", _wrap_ObservableEcostressScanMirror_add_observer_and_keep_reference, METH_VARARGS, "add_observer_and_keep_reference(ObservableEcostressScanMirror self, boost::shared_ptr< GeoCal::Observer< Ecostress::EcostressScanMirror > > & Obs)"},
-	 { "ObservableEcostressScanMirror_add_observer", _wrap_ObservableEcostressScanMirror_add_observer, METH_VARARGS, "add_observer(ObservableEcostressScanMirror self, ObserverEcostressScanMirror Obs)"},
-	 { "ObservableEcostressScanMirror_remove_observer", _wrap_ObservableEcostressScanMirror_remove_observer, METH_VARARGS, "remove_observer(ObservableEcostressScanMirror self, ObserverEcostressScanMirror Obs)"},
+	 { "delete_ObservableEcostressScanMirror", _wrap_delete_ObservableEcostressScanMirror, METH_O, NULL},
+	 { "ObservableEcostressScanMirror_add_observer_and_keep_reference", _wrap_ObservableEcostressScanMirror_add_observer_and_keep_reference, METH_VARARGS, NULL},
+	 { "ObservableEcostressScanMirror_add_observer", _wrap_ObservableEcostressScanMirror_add_observer, METH_VARARGS, NULL},
+	 { "ObservableEcostressScanMirror_remove_observer", _wrap_ObservableEcostressScanMirror_remove_observer, METH_VARARGS, NULL},
 	 { "ObservableEcostressScanMirror_swigregister", ObservableEcostressScanMirror_swigregister, METH_O, NULL},
-	 { "new_ObserverEcostressScanMirror", _wrap_new_ObserverEcostressScanMirror, METH_NOARGS, "new_ObserverEcostressScanMirror() -> ObserverEcostressScanMirror"},
-	 { "delete_ObserverEcostressScanMirror", _wrap_delete_ObserverEcostressScanMirror, METH_O, "delete_ObserverEcostressScanMirror(ObserverEcostressScanMirror self)"},
-	 { "ObserverEcostressScanMirror_notify_update", _wrap_ObserverEcostressScanMirror_notify_update, METH_VARARGS, "notify_update(ObserverEcostressScanMirror self, EcostressScanMirror Observed_object)"},
-	 { "ObserverEcostressScanMirror_notify_add", _wrap_ObserverEcostressScanMirror_notify_add, METH_VARARGS, "notify_add(ObserverEcostressScanMirror self, EcostressScanMirror Observed_object)"},
-	 { "ObserverEcostressScanMirror_notify_remove", _wrap_ObserverEcostressScanMirror_notify_remove, METH_VARARGS, "notify_remove(ObserverEcostressScanMirror self, EcostressScanMirror Observed_object)"},
+	 { "new_ObserverEcostressScanMirror", _wrap_new_ObserverEcostressScanMirror, METH_NOARGS, NULL},
+	 { "delete_ObserverEcostressScanMirror", _wrap_delete_ObserverEcostressScanMirror, METH_O, NULL},
+	 { "ObserverEcostressScanMirror_notify_update", _wrap_ObserverEcostressScanMirror_notify_update, METH_VARARGS, NULL},
+	 { "ObserverEcostressScanMirror_notify_add", _wrap_ObserverEcostressScanMirror_notify_add, METH_VARARGS, NULL},
+	 { "ObserverEcostressScanMirror_notify_remove", _wrap_ObserverEcostressScanMirror_notify_remove, METH_VARARGS, NULL},
 	 { "ObserverEcostressScanMirror_swigregister", ObserverEcostressScanMirror_swigregister, METH_O, NULL},
 	 { "ObserverEcostressScanMirror_swiginit", ObserverEcostressScanMirror_swiginit, METH_VARARGS, NULL},
 	 { "new_EcostressScanMirror", _wrap_new_EcostressScanMirror, METH_VARARGS, "\n"
-		"EcostressScanMirror(double Scan_start=-26.488105667851173, double Scan_end=26.488105667851173, int Number_sample=5400, int Number_scan=44, int Max_encoder_value=1749248, double First_encoder_value_at_0=401443, double Second_encoder_value_at_0=1275903, double Epsilon=0, double Beta=0, double Delta=0, double First_angle_per_ev=360.0/1749248*2, double Second_angle_per_ev=360.0/1749248*2)\n"
-		"EcostressScanMirror(BlitzArray_int_2 Encoder_value, int Max_encoder_value=1749248, double First_encoder_value_at_0=401443, double Second_encoder_value_at_0=1275903, double Epsilon=0, double Beta=0, double Delta=0, double First_angle_per_ev=360.0/1749248*2, double Second_angle_per_ev=360.0/1749248*2)\n"
 		"\n"
 		"EcostressScanMirror::EcostressScanMirror(double Scan_start=-26.488105667851173, double\n"
 		"Scan_end=26.488105667851173, int Number_sample=5400, int\n"
@@ -12259,8 +11981,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"ecostress-test-data \n"
 		""},
 	 { "EcostressScanMirror_scan_mirror_angle", _wrap_EcostressScanMirror_scan_mirror_angle, METH_VARARGS, "\n"
-		"scan_mirror_angle(EcostressScanMirror self, int Scan_index, double Ic_sample) -> double\n"
-		"scan_mirror_angle(EcostressScanMirror self, int Scan_index, AutoDerivativeDouble Ic_sample) -> AutoDerivativeDouble\n"
 		"\n"
 		"double Ecostress::EcostressScanMirror::scan_mirror_angle(int Scan_index, double Ic_sample) const\n"
 		"Ecostress::EcostressScanMirror::scan_mirror_angle\n"
@@ -12268,8 +11988,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror_rotation_quaternion", _wrap_EcostressScanMirror_rotation_quaternion, METH_VARARGS, "\n"
-		"rotation_quaternion(EcostressScanMirror self, int Scan_index, double Ic_sample) -> Quaternion_double\n"
-		"rotation_quaternion(EcostressScanMirror self, int Scan_index, AutoDerivativeDouble Ic_sample) -> boost::math::quaternion< GeoCal::AutoDerivative< double > >\n"
 		"\n"
 		"boost::math::quaternion< double > Ecostress::EcostressScanMirror::rotation_quaternion(int Scan_index, double Ic_sample) const\n"
 		"Ecostress::EcostressScanMirror::rotation_quaternion\n"
@@ -12278,8 +11996,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror_angle_from_encoder_value", _wrap_EcostressScanMirror_angle_from_encoder_value, METH_VARARGS, "\n"
-		"angle_from_encoder_value(EcostressScanMirror self, double Evalue) -> double\n"
-		"angle_from_encoder_value(EcostressScanMirror self, AutoDerivativeDouble Evalue) -> AutoDerivativeDouble\n"
 		"\n"
 		"double Ecostress::EcostressScanMirror::angle_from_encoder_value(double Evalue) const\n"
 		"Ecostress::EcostressScanMirror::angle_from_encoder_value\n"
@@ -12287,7 +12003,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror_angle_to_encoder_value", _wrap_EcostressScanMirror_angle_to_encoder_value, METH_VARARGS, "\n"
-		"angle_to_encoder_value(EcostressScanMirror self, double Angle_deg, int Mirror_side) -> int\n"
 		"\n"
 		"int Ecostress::EcostressScanMirror::angle_to_encoder_value(double Angle_deg, int Mirror_side) const\n"
 		"Ecostress::EcostressScanMirror::angle_to_encoder_value\n"
@@ -12295,8 +12010,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror_encoder_value_interpolate", _wrap_EcostressScanMirror_encoder_value_interpolate, METH_VARARGS, "\n"
-		"encoder_value_interpolate(EcostressScanMirror self, int Scan_index, double Ic_sample) -> double\n"
-		"encoder_value_interpolate(EcostressScanMirror self, int Scan_index, AutoDerivativeDouble Ic_sample) -> AutoDerivativeDouble\n"
 		"\n"
 		"double Ecostress::EcostressScanMirror::encoder_value_interpolate(int Scan_index, double Ic_sample) const\n"
 		"Ecostress::EcostressScanMirror::encoder_value_interpolate\n"
@@ -12305,8 +12018,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_instrument_to_sc", _wrap_EcostressScanMirror__v_instrument_to_sc, METH_VARARGS, "\n"
-		"_v_instrument_to_sc(EcostressScanMirror self) -> Quaternion_double\n"
-		"_v_instrument_to_sc(EcostressScanMirror self, Quaternion_double V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::instrument_to_sc(const boost::math::quaternion< double > &inst_to_sc_q)\n"
 		"Ecostress::EcostressScanMirror::instrument_to_sc\n"
@@ -12314,8 +12025,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_instrument_to_sc_with_derivative", _wrap_EcostressScanMirror__v_instrument_to_sc_with_derivative, METH_VARARGS, "\n"
-		"_v_instrument_to_sc_with_derivative(EcostressScanMirror self) -> boost::math::quaternion< GeoCal::AutoDerivative< double > >\n"
-		"_v_instrument_to_sc_with_derivative(EcostressScanMirror self, boost::math::quaternion< GeoCal::AutoDerivative< double > > const & V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::instrument_to_sc_with_derivative(const boost::math::quaternion< GeoCal::AutoDerivative< double > >\n"
 		"&inst_to_sc_q)\n"
@@ -12324,8 +12033,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_euler", _wrap_EcostressScanMirror__v_euler, METH_VARARGS, "\n"
-		"_v_euler(EcostressScanMirror self) -> BlitzArray_double_1\n"
-		"_v_euler(EcostressScanMirror self, BlitzArray_double_1 V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::euler(const blitz::Array< double, 1 > &Euler)\n"
 		"Ecostress::EcostressScanMirror::euler\n"
@@ -12334,63 +12041,46 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_euler_with_derivative", _wrap_EcostressScanMirror__v_euler_with_derivative, METH_VARARGS, "\n"
-		"_v_euler_with_derivative(EcostressScanMirror self) -> ArrayAutoDerivativeDouble_1\n"
-		"_v_euler_with_derivative(EcostressScanMirror self, ArrayAutoDerivativeDouble_1 V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::euler_with_derivative(const GeoCal::ArrayAd< double, 1 > &Euler)\n"
 		"Ecostress::EcostressScanMirror::euler_with_derivative\n"
 		""},
 	 { "EcostressScanMirror__v_fit_epsilon", _wrap_EcostressScanMirror__v_fit_epsilon, METH_VARARGS, "\n"
-		"_v_fit_epsilon(EcostressScanMirror self) -> bool\n"
-		"_v_fit_epsilon(EcostressScanMirror self, bool const & V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::fit_epsilon(bool V)\n"
 		"Ecostress::EcostressScanMirror::fit_epsilon\n"
 		""},
 	 { "EcostressScanMirror__v_fit_beta", _wrap_EcostressScanMirror__v_fit_beta, METH_VARARGS, "\n"
-		"_v_fit_beta(EcostressScanMirror self) -> bool\n"
-		"_v_fit_beta(EcostressScanMirror self, bool const & V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::fit_beta(bool V)\n"
 		"Ecostress::EcostressScanMirror::fit_beta\n"
 		""},
 	 { "EcostressScanMirror__v_fit_delta", _wrap_EcostressScanMirror__v_fit_delta, METH_VARARGS, "\n"
-		"_v_fit_delta(EcostressScanMirror self) -> bool\n"
-		"_v_fit_delta(EcostressScanMirror self, bool const & V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::fit_delta(bool V)\n"
 		"Ecostress::EcostressScanMirror::fit_delta\n"
 		""},
 	 { "EcostressScanMirror__v_fit_first_encoder_value_at_0", _wrap_EcostressScanMirror__v_fit_first_encoder_value_at_0, METH_VARARGS, "\n"
-		"_v_fit_first_encoder_value_at_0(EcostressScanMirror self) -> bool\n"
-		"_v_fit_first_encoder_value_at_0(EcostressScanMirror self, bool const & V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::fit_first_encoder_value_at_0(bool V)\n"
 		"Ecostress::EcostressScanMirror::fit_first_encoder_value_at_0\n"
 		""},
 	 { "EcostressScanMirror__v_fit_second_encoder_value_at_0", _wrap_EcostressScanMirror__v_fit_second_encoder_value_at_0, METH_VARARGS, "\n"
-		"_v_fit_second_encoder_value_at_0(EcostressScanMirror self) -> bool\n"
-		"_v_fit_second_encoder_value_at_0(EcostressScanMirror self, bool const & V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::fit_second_encoder_value_at_0(bool V)\n"
 		"Ecostress::EcostressScanMirror::fit_second_encoder_value_at_0\n"
 		""},
 	 { "EcostressScanMirror__v_fit_first_angle_per_encoder_value", _wrap_EcostressScanMirror__v_fit_first_angle_per_encoder_value, METH_VARARGS, "\n"
-		"_v_fit_first_angle_per_encoder_value(EcostressScanMirror self) -> bool\n"
-		"_v_fit_first_angle_per_encoder_value(EcostressScanMirror self, bool const & V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::fit_first_angle_per_encoder_value(bool V)\n"
 		"Ecostress::EcostressScanMirror::fit_first_angle_per_encoder_value\n"
 		""},
 	 { "EcostressScanMirror__v_fit_second_angle_per_encoder_value", _wrap_EcostressScanMirror__v_fit_second_angle_per_encoder_value, METH_VARARGS, "\n"
-		"_v_fit_second_angle_per_encoder_value(EcostressScanMirror self) -> bool\n"
-		"_v_fit_second_angle_per_encoder_value(EcostressScanMirror self, bool const & V)\n"
 		"\n"
 		"void Ecostress::EcostressScanMirror::fit_second_angle_per_encoder_value(bool V)\n"
 		"Ecostress::EcostressScanMirror::fit_second_angle_per_encoder_value\n"
 		""},
 	 { "EcostressScanMirror__v_first_encoder_value_at_0", _wrap_EcostressScanMirror__v_first_encoder_value_at_0, METH_O, "\n"
-		"_v_first_encoder_value_at_0(EcostressScanMirror self) -> double\n"
 		"\n"
 		"double Ecostress::EcostressScanMirror::first_encoder_value_at_0() const\n"
 		"Ecostress::EcostressScanMirror::first_encoder_value_at_0\n"
@@ -12398,14 +12088,12 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_first_encoder_value_at_0_with_derivative", _wrap_EcostressScanMirror__v_first_encoder_value_at_0_with_derivative, METH_O, "\n"
-		"_v_first_encoder_value_at_0_with_derivative(EcostressScanMirror self) -> AutoDerivativeDouble\n"
 		"\n"
 		"GeoCal::AutoDerivative< double > Ecostress::EcostressScanMirror::first_encoder_value_at_0_with_derivative() const\n"
 		"Ecostress::EcostressScanMirror::first_encoder_value_at_0_with_derivati\n"
 		"ve\n"
 		""},
 	 { "EcostressScanMirror__v_second_encoder_value_at_0", _wrap_EcostressScanMirror__v_second_encoder_value_at_0, METH_O, "\n"
-		"_v_second_encoder_value_at_0(EcostressScanMirror self) -> double\n"
 		"\n"
 		"double Ecostress::EcostressScanMirror::second_encoder_value_at_0() const\n"
 		"Ecostress::EcostressScanMirror::second_encoder_value_at_0\n"
@@ -12413,14 +12101,12 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_second_encoder_value_at_0_with_derivative", _wrap_EcostressScanMirror__v_second_encoder_value_at_0_with_derivative, METH_O, "\n"
-		"_v_second_encoder_value_at_0_with_derivative(EcostressScanMirror self) -> AutoDerivativeDouble\n"
 		"\n"
 		"GeoCal::AutoDerivative< double > Ecostress::EcostressScanMirror::second_encoder_value_at_0_with_derivative() const\n"
 		"Ecostress::EcostressScanMirror::second_encoder_value_at_0_with_derivat\n"
 		"ive\n"
 		""},
 	 { "EcostressScanMirror__v_first_angle_per_encoder_value", _wrap_EcostressScanMirror__v_first_angle_per_encoder_value, METH_O, "\n"
-		"_v_first_angle_per_encoder_value(EcostressScanMirror self) -> double\n"
 		"\n"
 		"double Ecostress::EcostressScanMirror::first_angle_per_encoder_value() const\n"
 		"Ecostress::EcostressScanMirror::first_angle_per_encoder_value\n"
@@ -12428,27 +12114,23 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_second_angle_per_encoder_value", _wrap_EcostressScanMirror__v_second_angle_per_encoder_value, METH_O, "\n"
-		"_v_second_angle_per_encoder_value(EcostressScanMirror self) -> double\n"
 		"\n"
 		"double Ecostress::EcostressScanMirror::second_angle_per_encoder_value() const\n"
 		"Ecostress::EcostressScanMirror::second_angle_per_encoder_value\n"
 		""},
 	 { "EcostressScanMirror__v_first_angle_per_encoder_value_with_derivative", _wrap_EcostressScanMirror__v_first_angle_per_encoder_value_with_derivative, METH_O, "\n"
-		"_v_first_angle_per_encoder_value_with_derivative(EcostressScanMirror self) -> AutoDerivativeDouble\n"
 		"\n"
 		"GeoCal::AutoDerivative< double > Ecostress::EcostressScanMirror::first_angle_per_encoder_value_with_derivative() const\n"
 		"Ecostress::EcostressScanMirror::first_angle_per_encoder_value_with_der\n"
 		"ivative\n"
 		""},
 	 { "EcostressScanMirror__v_second_angle_per_encoder_value_with_derivative", _wrap_EcostressScanMirror__v_second_angle_per_encoder_value_with_derivative, METH_O, "\n"
-		"_v_second_angle_per_encoder_value_with_derivative(EcostressScanMirror self) -> AutoDerivativeDouble\n"
 		"\n"
 		"GeoCal::AutoDerivative< double > Ecostress::EcostressScanMirror::second_angle_per_encoder_value_with_derivative() const\n"
 		"Ecostress::EcostressScanMirror::second_angle_per_encoder_value_with_de\n"
 		"rivative\n"
 		""},
 	 { "EcostressScanMirror__v_number_sample", _wrap_EcostressScanMirror__v_number_sample, METH_O, "\n"
-		"_v_number_sample(EcostressScanMirror self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressScanMirror::number_sample() const\n"
 		"Ecostress::EcostressScanMirror::number_sample\n"
@@ -12456,7 +12138,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_number_scan", _wrap_EcostressScanMirror__v_number_scan, METH_O, "\n"
-		"_v_number_scan(EcostressScanMirror self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressScanMirror::number_scan() const\n"
 		"Ecostress::EcostressScanMirror::number_scan\n"
@@ -12464,16 +12145,14 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressScanMirror__v_encoder_value", _wrap_EcostressScanMirror__v_encoder_value, METH_O, "\n"
-		"_v_encoder_value(EcostressScanMirror self) -> BlitzArray_int_2\n"
 		"\n"
 		"const blitz::Array< int, 2 > & Ecostress::EcostressScanMirror::encoder_value() const\n"
 		"Ecostress::EcostressScanMirror::encoder_value\n"
 		"Angle encoder values.\n"
 		"\n"
 		""},
-	 { "EcostressScanMirror___str__", _wrap_EcostressScanMirror___str__, METH_O, "__str__(EcostressScanMirror self) -> std::string"},
+	 { "EcostressScanMirror___str__", _wrap_EcostressScanMirror___str__, METH_O, NULL},
 	 { "delete_EcostressScanMirror", _wrap_delete_EcostressScanMirror, METH_O, "\n"
-		"delete_EcostressScanMirror(EcostressScanMirror self)\n"
 		"\n"
 		"virtual Ecostress::EcostressScanMirror::~EcostressScanMirror()\n"
 		"Ecostress::EcostressScanMirror::~EcostressScanMirror\n"

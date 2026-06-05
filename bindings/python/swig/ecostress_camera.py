@@ -61,8 +61,6 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _ecostress_camera.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
-    r"""Proxy of C++ swig::SwigPyIterator class."""
-
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -91,7 +89,6 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _ecostress_camera:
 _ecostress_camera.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _ecostress_camera.SHARED_PTR_DISOWN
-
 
 import os
 
@@ -142,13 +139,10 @@ import geocal_swig.observer
 import geocal_swig.camera
 import geocal_swig.with_parameter
 class EcostressParaxialTransform(geocal_swig.generic_object.GenericObject):
-    r"""Proxy of C++ Ecostress::EcostressParaxialTransform class."""
-
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
     def __init__(self):
-        r"""__init__(EcostressParaxialTransform self) -> EcostressParaxialTransform"""
         _ecostress_camera.EcostressParaxialTransform_swiginit(self, _ecostress_camera.new_EcostressParaxialTransform())
     paraxial_to_real = _swig_new_instance_method(_ecostress_camera.EcostressParaxialTransform_paraxial_to_real)
     real_to_paraxial = _swig_new_instance_method(_ecostress_camera.EcostressParaxialTransform_real_to_paraxial)
@@ -207,7 +201,6 @@ class EcostressCamera(geocal_swig.quaternion_camera.QuaternionCamera):
 
     def __init__(self, Focal_length, Y_scale, Y_offset, Frame_to_sc_q, Line_order_reversed=False):
         r"""
-        __init__(EcostressCamera self, double Focal_length, double Y_scale, double Y_offset, Quaternion_double Frame_to_sc_q, bool Line_order_reversed=False) -> EcostressCamera
 
         EcostressCamera::EcostressCamera(double Focal_length=427.6, double Y_scale=1.0, double Y_offset=0,
         boost::math::quaternion< double >

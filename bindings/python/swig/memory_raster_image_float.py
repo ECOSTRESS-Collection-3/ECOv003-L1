@@ -61,8 +61,6 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _memory_raster_image_float.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
-    r"""Proxy of C++ swig::SwigPyIterator class."""
-
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -91,7 +89,6 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _memory_raster_image_float:
 _memory_raster_image_float.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _memory_raster_image_float.SHARED_PTR_DISOWN
-
 
 import os
 
@@ -154,7 +151,6 @@ class MemoryRasterImageFloat(geocal_swig.raster_image_variable.RasterImageVariab
 
     def __init__(self, Number_line=0, Number_sample=0):
         r"""
-        __init__(MemoryRasterImageFloat self, int Number_line=0, int Number_sample=0) -> MemoryRasterImageFloat
 
         Ecostress::MemoryRasterImageFloat::MemoryRasterImageFloat(int Number_line=0, int Number_sample=0)
         Ecostress::MemoryRasterImageFloat::MemoryRasterImageFloat

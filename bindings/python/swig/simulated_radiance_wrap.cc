@@ -4719,14 +4719,14 @@ SWIG_AsVal_ptrdiff_t (PyObject * obj, ptrdiff_t *val)
 #include <boost/make_shared.hpp>
 
 
-  // This is defined in swig_wrap.tmpl, so it gets put into
-  // swig_wrap.cc
-  #include "python_exception.h"
+  // This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
+  std::string parse_python_exception();
 
 
 #include "serialize_function.h"
-#include "python_exception.h"  
 #include <stdexcept>
+// This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
+std::string parse_python_exception();
 
 
 //--------------------------------------------------------------
@@ -4747,7 +4747,7 @@ inline std::string cpickle_dumps(PyObject* obj)
 					     PyString_FromString("dumps"),
 					     obj, NULL);
   if(PyErr_Occurred()) {
-    throw PythonException();
+    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
   }
   char *buf;
   Py_ssize_t len;
@@ -4762,7 +4762,7 @@ inline PyObject* cpickle_loads(const std::string& S)
 					     PyBytes_FromStringAndSize(S.c_str(), S.size()), 
 					     NULL);
   if(PyErr_Occurred()) {
-    throw PythonException();
+    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
   }
   return res;
 }
@@ -6638,9 +6638,6 @@ SWIGINTERN PyObject *_wrap_new_SimulatedRadiance__SWIG_0(PyObject *self, Py_ssiz
       result = (Ecostress::SimulatedRadiance *)new Ecostress::SimulatedRadiance((boost::shared_ptr< Ecostress::GroundCoordinateArray > const &)*arg1,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg2,arg3,arg4,arg5);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6736,9 +6733,6 @@ SWIGINTERN PyObject *_wrap_new_SimulatedRadiance__SWIG_1(PyObject *self, Py_ssiz
       result = (Ecostress::SimulatedRadiance *)new Ecostress::SimulatedRadiance((boost::shared_ptr< Ecostress::GroundCoordinateArray > const &)*arg1,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg2,arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6826,9 +6820,6 @@ SWIGINTERN PyObject *_wrap_new_SimulatedRadiance__SWIG_2(PyObject *self, Py_ssiz
       result = (Ecostress::SimulatedRadiance *)new Ecostress::SimulatedRadiance((boost::shared_ptr< Ecostress::GroundCoordinateArray > const &)*arg1,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6907,9 +6898,6 @@ SWIGINTERN PyObject *_wrap_new_SimulatedRadiance__SWIG_3(PyObject *self, Py_ssiz
     try {
       result = (Ecostress::SimulatedRadiance *)new Ecostress::SimulatedRadiance((boost::shared_ptr< Ecostress::GroundCoordinateArray > const &)*arg1,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7012,16 +7000,13 @@ SWIGINTERN PyObject *_wrap_SimulatedRadiance_radiance_scan__SWIG_0(PyObject *sel
       result = ((Ecostress::SimulatedRadiance const *)arg1)->radiance_scan(arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build-fresh/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -7086,16 +7071,13 @@ SWIGINTERN PyObject *_wrap_SimulatedRadiance_radiance_scan__SWIG_1(PyObject *sel
       result = ((Ecostress::SimulatedRadiance const *)arg1)->radiance_scan(arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/project/sandbox/smyth/ecostress-build/build/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/project/sandbox/smyth/ecostress-build/build-fresh/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -7182,9 +7164,6 @@ SWIGINTERN PyObject *_wrap_SimulatedRadiance__v_ground_coordinate_array(PyObject
       result = ((Ecostress::SimulatedRadiance const *)arg1)->ground_coordinate_array();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7231,9 +7210,6 @@ SWIGINTERN PyObject *_wrap_SimulatedRadiance__v_avg_factor(PyObject *self, PyObj
       result = (int)((Ecostress::SimulatedRadiance const *)arg1)->avg_factor();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7277,9 +7253,6 @@ SWIGINTERN PyObject *_wrap_SimulatedRadiance__v_fill_value(PyObject *self, PyObj
     try {
       result = (double)((Ecostress::SimulatedRadiance const *)arg1)->fill_value();
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7325,9 +7298,6 @@ SWIGINTERN PyObject *_wrap_SimulatedRadiance__v_read_into_memory(PyObject *self,
       result = (bool)((Ecostress::SimulatedRadiance const *)arg1)->read_into_memory();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7371,9 +7341,6 @@ SWIGINTERN PyObject *_wrap_SimulatedRadiance__v_map_projected_image(PyObject *se
     try {
       result = ((Ecostress::SimulatedRadiance const *)arg1)->map_projected_image();
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7421,9 +7388,6 @@ SWIGINTERN PyObject *_wrap_SimulatedRadiance___str__(PyObject *self, PyObject *a
       result = ((Ecostress::SimulatedRadiance const *)arg1)->print_to_string();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7467,9 +7431,6 @@ SWIGINTERN PyObject *_wrap_delete_SimulatedRadiance(PyObject *self, PyObject *ar
       (void)arg1; delete smartarg1;
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7495,29 +7456,25 @@ SWIGINTERN PyObject *SimulatedRadiance_swiginit(PyObject *SWIGUNUSEDPARM(self), 
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "SwigPyIterator_value(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "SwigPyIterator_incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "SwigPyIterator_decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "SwigPyIterator_distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "SwigPyIterator_equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "SwigPyIterator_copy(SwigPyIterator self) -> SwigPyIterator"},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "SwigPyIterator_next(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "SwigPyIterator___next__(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "SwigPyIterator_previous(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "SwigPyIterator_advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "SwigPyIterator___eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "SwigPyIterator___ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "SwigPyIterator___iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "SwigPyIterator___isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "SwigPyIterator___add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
-		"SwigPyIterator___sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
-		"SwigPyIterator___sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
-		""},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "new_SimulatedRadiance", _wrap_new_SimulatedRadiance, METH_VARARGS, "\n"
-		"SimulatedRadiance(boost::shared_ptr< Ecostress::GroundCoordinateArray > const & Gca, boost::shared_ptr< GeoCal::RasterImage > const & Map_projected_image, int Avg_fact=-1, bool Read_into_memory=False, double Fill_value=0.0)\n"
 		"\n"
 		"Ecostress::SimulatedRadiance::SimulatedRadiance(const boost::shared_ptr< GroundCoordinateArray > &Gca, const\n"
 		"boost::shared_ptr< GeoCal::RasterImage > &Map_projected_image, int\n"
@@ -7525,7 +7482,6 @@ static PyMethodDef SwigMethods[] = {
 		"Ecostress::SimulatedRadiance::SimulatedRadiance\n"
 		""},
 	 { "SimulatedRadiance_radiance_scan", _wrap_SimulatedRadiance_radiance_scan, METH_VARARGS, "\n"
-		"SimulatedRadiance_radiance_scan(SimulatedRadiance self, int Start_line, int Number_line=-1) -> BlitzArray_double_2\n"
 		"\n"
 		"blitz::Array< double, 2 > SimulatedRadiance::radiance_scan(int Start_line, int Number_line=-1) const\n"
 		"Ecostress::SimulatedRadiance::radiance_scan\n"
@@ -7536,7 +7492,6 @@ static PyMethodDef SwigMethods[] = {
 		"L1aPixSimulate for the use of this. \n"
 		""},
 	 { "SimulatedRadiance__v_ground_coordinate_array", _wrap_SimulatedRadiance__v_ground_coordinate_array, METH_O, "\n"
-		"SimulatedRadiance__v_ground_coordinate_array(SimulatedRadiance self) -> boost::shared_ptr< Ecostress::GroundCoordinateArray >\n"
 		"\n"
 		"const boost::shared_ptr< GroundCoordinateArray > & Ecostress::SimulatedRadiance::ground_coordinate_array() const\n"
 		"Ecostress::SimulatedRadiance::ground_coordinate_array\n"
@@ -7544,7 +7499,6 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "SimulatedRadiance__v_avg_factor", _wrap_SimulatedRadiance__v_avg_factor, METH_O, "\n"
-		"SimulatedRadiance__v_avg_factor(SimulatedRadiance self) -> int\n"
 		"\n"
 		"int Ecostress::SimulatedRadiance::avg_factor() const\n"
 		"Ecostress::SimulatedRadiance::avg_factor\n"
@@ -7552,7 +7506,6 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "SimulatedRadiance__v_fill_value", _wrap_SimulatedRadiance__v_fill_value, METH_O, "\n"
-		"SimulatedRadiance__v_fill_value(SimulatedRadiance self) -> double\n"
 		"\n"
 		"double Ecostress::SimulatedRadiance::fill_value() const\n"
 		"Ecostress::SimulatedRadiance::fill_value\n"
@@ -7560,7 +7513,6 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "SimulatedRadiance__v_read_into_memory", _wrap_SimulatedRadiance__v_read_into_memory, METH_O, "\n"
-		"SimulatedRadiance__v_read_into_memory(SimulatedRadiance self) -> bool\n"
 		"\n"
 		"bool Ecostress::SimulatedRadiance::read_into_memory() const\n"
 		"Ecostress::SimulatedRadiance::read_into_memory\n"
@@ -7568,16 +7520,14 @@ static PyMethodDef SwigMethods[] = {
 		"Otherwise we read as needed. \n"
 		""},
 	 { "SimulatedRadiance__v_map_projected_image", _wrap_SimulatedRadiance__v_map_projected_image, METH_O, "\n"
-		"SimulatedRadiance__v_map_projected_image(SimulatedRadiance self) -> boost::shared_ptr< GeoCal::RasterImage >\n"
 		"\n"
 		"const boost::shared_ptr< GeoCal::RasterImage > & Ecostress::SimulatedRadiance::map_projected_image() const\n"
 		"Ecostress::SimulatedRadiance::map_projected_image\n"
 		"Underlying radiance data.\n"
 		"\n"
 		""},
-	 { "SimulatedRadiance___str__", _wrap_SimulatedRadiance___str__, METH_O, "SimulatedRadiance___str__(SimulatedRadiance self) -> std::string"},
+	 { "SimulatedRadiance___str__", _wrap_SimulatedRadiance___str__, METH_O, NULL},
 	 { "delete_SimulatedRadiance", _wrap_delete_SimulatedRadiance, METH_O, "\n"
-		"delete_SimulatedRadiance(SimulatedRadiance self)\n"
 		"\n"
 		"virtual Ecostress::SimulatedRadiance::~SimulatedRadiance()\n"
 		"Ecostress::SimulatedRadiance::~SimulatedRadiance\n"
@@ -7590,29 +7540,25 @@ static PyMethodDef SwigMethods[] = {
 static PyMethodDef SwigMethods_proxydocs[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "value(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "copy(SwigPyIterator self) -> SwigPyIterator"},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "next(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "__next__(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "previous(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "__eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "__ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "__iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "__isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "__add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
-		"__sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
-		"__sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
-		""},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "new_SimulatedRadiance", _wrap_new_SimulatedRadiance, METH_VARARGS, "\n"
-		"SimulatedRadiance(boost::shared_ptr< Ecostress::GroundCoordinateArray > const & Gca, boost::shared_ptr< GeoCal::RasterImage > const & Map_projected_image, int Avg_fact=-1, bool Read_into_memory=False, double Fill_value=0.0)\n"
 		"\n"
 		"Ecostress::SimulatedRadiance::SimulatedRadiance(const boost::shared_ptr< GroundCoordinateArray > &Gca, const\n"
 		"boost::shared_ptr< GeoCal::RasterImage > &Map_projected_image, int\n"
@@ -7620,7 +7566,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"Ecostress::SimulatedRadiance::SimulatedRadiance\n"
 		""},
 	 { "SimulatedRadiance_radiance_scan", _wrap_SimulatedRadiance_radiance_scan, METH_VARARGS, "\n"
-		"radiance_scan(SimulatedRadiance self, int Start_line, int Number_line=-1) -> BlitzArray_double_2\n"
 		"\n"
 		"blitz::Array< double, 2 > SimulatedRadiance::radiance_scan(int Start_line, int Number_line=-1) const\n"
 		"Ecostress::SimulatedRadiance::radiance_scan\n"
@@ -7631,7 +7576,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"L1aPixSimulate for the use of this. \n"
 		""},
 	 { "SimulatedRadiance__v_ground_coordinate_array", _wrap_SimulatedRadiance__v_ground_coordinate_array, METH_O, "\n"
-		"_v_ground_coordinate_array(SimulatedRadiance self) -> boost::shared_ptr< Ecostress::GroundCoordinateArray >\n"
 		"\n"
 		"const boost::shared_ptr< GroundCoordinateArray > & Ecostress::SimulatedRadiance::ground_coordinate_array() const\n"
 		"Ecostress::SimulatedRadiance::ground_coordinate_array\n"
@@ -7639,7 +7583,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "SimulatedRadiance__v_avg_factor", _wrap_SimulatedRadiance__v_avg_factor, METH_O, "\n"
-		"_v_avg_factor(SimulatedRadiance self) -> int\n"
 		"\n"
 		"int Ecostress::SimulatedRadiance::avg_factor() const\n"
 		"Ecostress::SimulatedRadiance::avg_factor\n"
@@ -7647,7 +7590,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "SimulatedRadiance__v_fill_value", _wrap_SimulatedRadiance__v_fill_value, METH_O, "\n"
-		"_v_fill_value(SimulatedRadiance self) -> double\n"
 		"\n"
 		"double Ecostress::SimulatedRadiance::fill_value() const\n"
 		"Ecostress::SimulatedRadiance::fill_value\n"
@@ -7655,7 +7597,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "SimulatedRadiance__v_read_into_memory", _wrap_SimulatedRadiance__v_read_into_memory, METH_O, "\n"
-		"_v_read_into_memory(SimulatedRadiance self) -> bool\n"
 		"\n"
 		"bool Ecostress::SimulatedRadiance::read_into_memory() const\n"
 		"Ecostress::SimulatedRadiance::read_into_memory\n"
@@ -7663,16 +7604,14 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"Otherwise we read as needed. \n"
 		""},
 	 { "SimulatedRadiance__v_map_projected_image", _wrap_SimulatedRadiance__v_map_projected_image, METH_O, "\n"
-		"_v_map_projected_image(SimulatedRadiance self) -> boost::shared_ptr< GeoCal::RasterImage >\n"
 		"\n"
 		"const boost::shared_ptr< GeoCal::RasterImage > & Ecostress::SimulatedRadiance::map_projected_image() const\n"
 		"Ecostress::SimulatedRadiance::map_projected_image\n"
 		"Underlying radiance data.\n"
 		"\n"
 		""},
-	 { "SimulatedRadiance___str__", _wrap_SimulatedRadiance___str__, METH_O, "__str__(SimulatedRadiance self) -> std::string"},
+	 { "SimulatedRadiance___str__", _wrap_SimulatedRadiance___str__, METH_O, NULL},
 	 { "delete_SimulatedRadiance", _wrap_delete_SimulatedRadiance, METH_O, "\n"
-		"delete_SimulatedRadiance(SimulatedRadiance self)\n"
 		"\n"
 		"virtual Ecostress::SimulatedRadiance::~SimulatedRadiance()\n"
 		"Ecostress::SimulatedRadiance::~SimulatedRadiance\n"

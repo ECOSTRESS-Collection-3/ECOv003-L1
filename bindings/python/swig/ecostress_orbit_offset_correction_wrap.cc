@@ -4611,14 +4611,14 @@ SWIG_AsVal_ptrdiff_t (PyObject * obj, ptrdiff_t *val)
 #include <boost/make_shared.hpp>
 
 
-  // This is defined in swig_wrap.tmpl, so it gets put into
-  // swig_wrap.cc
-  #include "python_exception.h"
+  // This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
+  std::string parse_python_exception();
 
 
 #include "serialize_function.h"
-#include "python_exception.h"  
 #include <stdexcept>
+// This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
+std::string parse_python_exception();
 
 
 //--------------------------------------------------------------
@@ -4639,7 +4639,7 @@ inline std::string cpickle_dumps(PyObject* obj)
 					     PyString_FromString("dumps"),
 					     obj, NULL);
   if(PyErr_Occurred()) {
-    throw PythonException();
+    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
   }
   char *buf;
   Py_ssize_t len;
@@ -4654,7 +4654,7 @@ inline PyObject* cpickle_loads(const std::string& S)
 					     PyBytes_FromStringAndSize(S.c_str(), S.size()), 
 					     NULL);
   if(PyErr_Occurred()) {
-    throw PythonException();
+    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
   }
   return res;
 }
@@ -6894,9 +6894,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressOrbitOffsetCorrection(PyObject *self, Py
       result = (Ecostress::EcostressOrbitOffsetCorrection *)new Ecostress::EcostressOrbitOffsetCorrection(SWIG_STD_MOVE(arg1));
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6957,9 +6954,6 @@ SWIGINTERN PyObject *_wrap_EcostressOrbitOffsetCorrection_orbit_data__SWIG_0(PyO
     try {
       result = ((Ecostress::EcostressOrbitOffsetCorrection const *)arg1)->orbit_data(SWIG_STD_MOVE(arg2));
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7033,9 +7027,6 @@ SWIGINTERN PyObject *_wrap_EcostressOrbitOffsetCorrection_orbit_data__SWIG_1(PyO
     try {
       result = ((Ecostress::EcostressOrbitOffsetCorrection const *)arg1)->orbit_data((GeoCal::TimeWithDerivative const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7188,9 +7179,6 @@ SWIGINTERN PyObject *_wrap_EcostressOrbitOffsetCorrection_add_scene__SWIG_0(PyOb
       (arg1)->add_scene(arg2,*arg3,*arg4,arg5);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7298,9 +7286,6 @@ SWIGINTERN PyObject *_wrap_EcostressOrbitOffsetCorrection_add_scene__SWIG_1(PyOb
       (arg1)->add_scene(arg2,*arg3,*arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7373,9 +7358,6 @@ SWIGINTERN PyObject *_wrap_EcostressOrbitOffsetCorrection__v_orbit_uncorrected(P
       result = ((Ecostress::EcostressOrbitOffsetCorrection const *)arg1)->orbit_uncorrected();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7422,9 +7404,6 @@ SWIGINTERN PyObject *_wrap_EcostressOrbitOffsetCorrection__v_orbit_offset_correc
       result = ((Ecostress::EcostressOrbitOffsetCorrection const *)arg1)->orbit_offset_correction();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7469,9 +7448,6 @@ SWIGINTERN PyObject *_wrap_EcostressOrbitOffsetCorrection__v_scene_list(PyObject
       result = ((Ecostress::EcostressOrbitOffsetCorrection const *)arg1)->scene_list();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7515,9 +7491,6 @@ SWIGINTERN PyObject *_wrap_delete_EcostressOrbitOffsetCorrection(PyObject *self,
       (void)arg1; delete smartarg1;
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7543,43 +7516,36 @@ SWIGINTERN PyObject *EcostressOrbitOffsetCorrection_swiginit(PyObject *SWIGUNUSE
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "SwigPyIterator_value(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "SwigPyIterator_incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "SwigPyIterator_decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "SwigPyIterator_distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "SwigPyIterator_equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "SwigPyIterator_copy(SwigPyIterator self) -> SwigPyIterator"},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "SwigPyIterator_next(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "SwigPyIterator___next__(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "SwigPyIterator_previous(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "SwigPyIterator_advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "SwigPyIterator___eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "SwigPyIterator___ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "SwigPyIterator___iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "SwigPyIterator___isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "SwigPyIterator___add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
-		"SwigPyIterator___sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
-		"SwigPyIterator___sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
-		""},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "new_EcostressOrbitOffsetCorrection", _wrap_new_EcostressOrbitOffsetCorrection, METH_O, "\n"
-		"new_EcostressOrbitOffsetCorrection(boost::shared_ptr< GeoCal::Orbit > const Orb_uncorr) -> EcostressOrbitOffsetCorrection\n"
 		"\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::EcostressOrbitOffsetCorrection(const boost::shared_ptr< GeoCal::Orbit > Orb_uncorr)\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::EcostressOrbitOffsetCorrect\n"
 		"ion\n"
 		""},
 	 { "EcostressOrbitOffsetCorrection_orbit_data", _wrap_EcostressOrbitOffsetCorrection_orbit_data, METH_VARARGS, "\n"
-		"EcostressOrbitOffsetCorrection_orbit_data(EcostressOrbitOffsetCorrection self, Time T) -> boost::shared_ptr< GeoCal::OrbitData >\n"
-		"EcostressOrbitOffsetCorrection_orbit_data(EcostressOrbitOffsetCorrection self, TimeWithDerivative T) -> boost::shared_ptr< GeoCal::OrbitData >\n"
 		"\n"
 		"virtual boost::shared_ptr< GeoCal::OrbitData > Ecostress::EcostressOrbitOffsetCorrection::orbit_data(GeoCal::Time T) const\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::orbit_data\n"
 		""},
 	 { "EcostressOrbitOffsetCorrection_add_scene", _wrap_EcostressOrbitOffsetCorrection_add_scene, METH_VARARGS, "\n"
-		"EcostressOrbitOffsetCorrection_add_scene(EcostressOrbitOffsetCorrection self, int Scene_number, Time Tstart, Time Tend, bool Init_value_match=False)\n"
 		"\n"
 		"void EcostressOrbitOffsetCorrection::add_scene(int Scene_number, GeoCal::Time &Tstart, GeoCal::Time &Tend, bool\n"
 		"Init_value_match=false)\n"
@@ -7591,7 +7557,6 @@ static PyMethodDef SwigMethods[] = {
 		"calculated for Tstart + (Tend - Tstart) / 2. \n"
 		""},
 	 { "EcostressOrbitOffsetCorrection__v_orbit_uncorrected", _wrap_EcostressOrbitOffsetCorrection__v_orbit_uncorrected, METH_O, "\n"
-		"EcostressOrbitOffsetCorrection__v_orbit_uncorrected(EcostressOrbitOffsetCorrection self) -> boost::shared_ptr< GeoCal::Orbit >\n"
 		"\n"
 		"boost::shared_ptr< GeoCal::Orbit > Ecostress::EcostressOrbitOffsetCorrection::orbit_uncorrected() const\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::orbit_uncorrected\n"
@@ -7599,7 +7564,6 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressOrbitOffsetCorrection__v_orbit_offset_correction", _wrap_EcostressOrbitOffsetCorrection__v_orbit_offset_correction, METH_O, "\n"
-		"EcostressOrbitOffsetCorrection__v_orbit_offset_correction(EcostressOrbitOffsetCorrection self) -> boost::shared_ptr< GeoCal::OrbitOffsetCorrection >\n"
 		"\n"
 		"boost::shared_ptr< GeoCal::OrbitOffsetCorrection > Ecostress::EcostressOrbitOffsetCorrection::orbit_offset_correction() const\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::orbit_offset_correction\n"
@@ -7607,7 +7571,6 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "EcostressOrbitOffsetCorrection__v_scene_list", _wrap_EcostressOrbitOffsetCorrection__v_scene_list, METH_O, "\n"
-		"EcostressOrbitOffsetCorrection__v_scene_list(EcostressOrbitOffsetCorrection self) -> vector_int\n"
 		"\n"
 		"std::vector< int > EcostressOrbitOffsetCorrection::scene_list() const\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::scene_list\n"
@@ -7615,7 +7578,6 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "delete_EcostressOrbitOffsetCorrection", _wrap_delete_EcostressOrbitOffsetCorrection, METH_O, "\n"
-		"delete_EcostressOrbitOffsetCorrection(EcostressOrbitOffsetCorrection self)\n"
 		"\n"
 		"virtual Ecostress::EcostressOrbitOffsetCorrection::~EcostressOrbitOffsetCorrection()\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::~EcostressOrbitOffsetCorrec\n"
@@ -7629,43 +7591,36 @@ static PyMethodDef SwigMethods[] = {
 static PyMethodDef SwigMethods_proxydocs[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "value(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "copy(SwigPyIterator self) -> SwigPyIterator"},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "next(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "__next__(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "previous(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "__eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "__ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "__iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "__isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "__add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
-		"__sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
-		"__sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
-		""},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "new_EcostressOrbitOffsetCorrection", _wrap_new_EcostressOrbitOffsetCorrection, METH_O, "\n"
-		"new_EcostressOrbitOffsetCorrection(boost::shared_ptr< GeoCal::Orbit > const Orb_uncorr) -> EcostressOrbitOffsetCorrection\n"
 		"\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::EcostressOrbitOffsetCorrection(const boost::shared_ptr< GeoCal::Orbit > Orb_uncorr)\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::EcostressOrbitOffsetCorrect\n"
 		"ion\n"
 		""},
 	 { "EcostressOrbitOffsetCorrection_orbit_data", _wrap_EcostressOrbitOffsetCorrection_orbit_data, METH_VARARGS, "\n"
-		"orbit_data(EcostressOrbitOffsetCorrection self, Time T) -> boost::shared_ptr< GeoCal::OrbitData >\n"
-		"orbit_data(EcostressOrbitOffsetCorrection self, TimeWithDerivative T) -> boost::shared_ptr< GeoCal::OrbitData >\n"
 		"\n"
 		"virtual boost::shared_ptr< GeoCal::OrbitData > Ecostress::EcostressOrbitOffsetCorrection::orbit_data(GeoCal::Time T) const\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::orbit_data\n"
 		""},
 	 { "EcostressOrbitOffsetCorrection_add_scene", _wrap_EcostressOrbitOffsetCorrection_add_scene, METH_VARARGS, "\n"
-		"add_scene(EcostressOrbitOffsetCorrection self, int Scene_number, Time Tstart, Time Tend, bool Init_value_match=False)\n"
 		"\n"
 		"void EcostressOrbitOffsetCorrection::add_scene(int Scene_number, GeoCal::Time &Tstart, GeoCal::Time &Tend, bool\n"
 		"Init_value_match=false)\n"
@@ -7677,7 +7632,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"calculated for Tstart + (Tend - Tstart) / 2. \n"
 		""},
 	 { "EcostressOrbitOffsetCorrection__v_orbit_uncorrected", _wrap_EcostressOrbitOffsetCorrection__v_orbit_uncorrected, METH_O, "\n"
-		"_v_orbit_uncorrected(EcostressOrbitOffsetCorrection self) -> boost::shared_ptr< GeoCal::Orbit >\n"
 		"\n"
 		"boost::shared_ptr< GeoCal::Orbit > Ecostress::EcostressOrbitOffsetCorrection::orbit_uncorrected() const\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::orbit_uncorrected\n"
@@ -7685,7 +7639,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressOrbitOffsetCorrection__v_orbit_offset_correction", _wrap_EcostressOrbitOffsetCorrection__v_orbit_offset_correction, METH_O, "\n"
-		"_v_orbit_offset_correction(EcostressOrbitOffsetCorrection self) -> boost::shared_ptr< GeoCal::OrbitOffsetCorrection >\n"
 		"\n"
 		"boost::shared_ptr< GeoCal::OrbitOffsetCorrection > Ecostress::EcostressOrbitOffsetCorrection::orbit_offset_correction() const\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::orbit_offset_correction\n"
@@ -7693,7 +7646,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "EcostressOrbitOffsetCorrection__v_scene_list", _wrap_EcostressOrbitOffsetCorrection__v_scene_list, METH_O, "\n"
-		"_v_scene_list(EcostressOrbitOffsetCorrection self) -> vector_int\n"
 		"\n"
 		"std::vector< int > EcostressOrbitOffsetCorrection::scene_list() const\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::scene_list\n"
@@ -7701,7 +7653,6 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "delete_EcostressOrbitOffsetCorrection", _wrap_delete_EcostressOrbitOffsetCorrection, METH_O, "\n"
-		"delete_EcostressOrbitOffsetCorrection(EcostressOrbitOffsetCorrection self)\n"
 		"\n"
 		"virtual Ecostress::EcostressOrbitOffsetCorrection::~EcostressOrbitOffsetCorrection()\n"
 		"Ecostress::EcostressOrbitOffsetCorrection::~EcostressOrbitOffsetCorrec\n"

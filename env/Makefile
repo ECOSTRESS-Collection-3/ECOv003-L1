@@ -96,7 +96,11 @@ $(ENV_DIR): $(PIXI_FILE_DEPEND)
 	pixi config set --local run-post-link-scripts insecure --manifest-path $(ENV_DIR)
 	$(PIXI_INSTALL_COMMAND)
 	- cd $(ENV_DIR) && pixi task rm configure
-	cd $(ENV_DIR) && pixi task add configure "$(abspath $(mkfile_dir)/../configure) --prefix=\$$CONDA_PREFIX --with-test-data=$(ECOSTRESS_TEST_DATA) --enable-maintainer-mode"
+	cd $(ENV_DIR) && pixi task add configure-maintainer "$(abspath $(mkfile_dir)/../configure) --prefix=\$$CONDA_PREFIX --with-test-data=$(ECOSTRESS_TEST_DATA) --enable-maintainer-mode"
+	cd $(ENV_DIR) && pixi task add configure "$(abspath $(mkfile_dir)/../configure) --prefix=\$$CONDA_PREFIX --with-test-data=$(ECOSTRESS_TEST_DATA)"
+	cd $(ENV_DIR) && pixi task add build "make -j 10 all && make install"
+	cd $(ENV_DIR) && pixi task add install-editmode "cd $(abspath $(mkfile_dir)/../python) && make install"
+
 
 # Recreate the environment, deleting if already there
 # ------------------------------------------------------------

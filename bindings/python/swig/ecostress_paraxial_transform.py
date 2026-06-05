@@ -61,8 +61,6 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _ecostress_paraxial_transform.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
-    r"""Proxy of C++ swig::SwigPyIterator class."""
-
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -91,7 +89,6 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _ecostress_paraxial_transform:
 _ecostress_paraxial_transform.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _ecostress_paraxial_transform.SHARED_PTR_DISOWN
-
 
 import os
 
@@ -164,7 +161,6 @@ class EcostressParaxialTransform(geocal_swig.generic_object.GenericObject):
 
     def __init__(self):
         r"""
-        __init__(EcostressParaxialTransform self) -> EcostressParaxialTransform
 
         Ecostress::EcostressParaxialTransform::EcostressParaxialTransform()
         Ecostress::EcostressParaxialTransform::EcostressParaxialTransform

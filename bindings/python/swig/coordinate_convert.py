@@ -61,8 +61,6 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _coordinate_convert.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
-    r"""Proxy of C++ swig::SwigPyIterator class."""
-
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -91,7 +89,6 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _coordinate_convert:
 _coordinate_convert.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _coordinate_convert.SHARED_PTR_DISOWN
-
 
 import os
 

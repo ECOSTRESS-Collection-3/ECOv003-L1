@@ -4704,14 +4704,14 @@ SWIG_AsVal_ptrdiff_t (PyObject * obj, ptrdiff_t *val)
 #include <boost/make_shared.hpp>
 
 
-  // This is defined in swig_wrap.tmpl, so it gets put into
-  // swig_wrap.cc
-  #include "python_exception.h"
+  // This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
+  std::string parse_python_exception();
 
 
 #include "serialize_function.h"
-#include "python_exception.h"  
 #include <stdexcept>
+// This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
+std::string parse_python_exception();
 
 
 //--------------------------------------------------------------
@@ -4732,7 +4732,7 @@ inline std::string cpickle_dumps(PyObject* obj)
 					     PyString_FromString("dumps"),
 					     obj, NULL);
   if(PyErr_Occurred()) {
-    throw PythonException();
+    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
   }
   char *buf;
   Py_ssize_t len;
@@ -4747,7 +4747,7 @@ inline PyObject* cpickle_loads(const std::string& S)
 					     PyBytes_FromStringAndSize(S.c_str(), S.size()), 
 					     NULL);
   if(PyErr_Occurred()) {
-    throw PythonException();
+    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
   }
   return res;
 }
@@ -7287,9 +7287,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressImageGroundConnection__SWIG_0(PyObject *
       result = (Ecostress::EcostressImageGroundConnection *)new Ecostress::EcostressImageGroundConnection((boost::shared_ptr< GeoCal::Orbit > const &)*arg1,(boost::shared_ptr< GeoCal::TimeTable > const &)*arg2,(boost::shared_ptr< GeoCal::Camera > const &)*arg3,(boost::shared_ptr< Ecostress::EcostressScanMirror > const &)*arg4,(boost::shared_ptr< GeoCal::Dem > const &)*arg5,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg6,(std::string const &)*arg7,arg8,arg9,arg10);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7508,9 +7505,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressImageGroundConnection__SWIG_1(PyObject *
       result = (Ecostress::EcostressImageGroundConnection *)new Ecostress::EcostressImageGroundConnection((boost::shared_ptr< GeoCal::Orbit > const &)*arg1,(boost::shared_ptr< GeoCal::TimeTable > const &)*arg2,(boost::shared_ptr< GeoCal::Camera > const &)*arg3,(boost::shared_ptr< Ecostress::EcostressScanMirror > const &)*arg4,(boost::shared_ptr< GeoCal::Dem > const &)*arg5,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg6,(std::string const &)*arg7,arg8,arg9);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7721,9 +7715,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressImageGroundConnection__SWIG_2(PyObject *
       result = (Ecostress::EcostressImageGroundConnection *)new Ecostress::EcostressImageGroundConnection((boost::shared_ptr< GeoCal::Orbit > const &)*arg1,(boost::shared_ptr< GeoCal::TimeTable > const &)*arg2,(boost::shared_ptr< GeoCal::Camera > const &)*arg3,(boost::shared_ptr< Ecostress::EcostressScanMirror > const &)*arg4,(boost::shared_ptr< GeoCal::Dem > const &)*arg5,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg6,(std::string const &)*arg7,arg8);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7926,9 +7917,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressImageGroundConnection__SWIG_3(PyObject *
       result = (Ecostress::EcostressImageGroundConnection *)new Ecostress::EcostressImageGroundConnection((boost::shared_ptr< GeoCal::Orbit > const &)*arg1,(boost::shared_ptr< GeoCal::TimeTable > const &)*arg2,(boost::shared_ptr< GeoCal::Camera > const &)*arg3,(boost::shared_ptr< Ecostress::EcostressScanMirror > const &)*arg4,(boost::shared_ptr< GeoCal::Dem > const &)*arg5,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg6,(std::string const &)*arg7);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8118,9 +8106,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressImageGroundConnection__SWIG_4(PyObject *
       result = (Ecostress::EcostressImageGroundConnection *)new Ecostress::EcostressImageGroundConnection((boost::shared_ptr< GeoCal::Orbit > const &)*arg1,(boost::shared_ptr< GeoCal::TimeTable > const &)*arg2,(boost::shared_ptr< GeoCal::Camera > const &)*arg3,(boost::shared_ptr< Ecostress::EcostressScanMirror > const &)*arg4,(boost::shared_ptr< GeoCal::Dem > const &)*arg5,(boost::shared_ptr< GeoCal::RasterImage > const &)*arg6);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8257,9 +8242,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection_orbit_data__SWIG_0(PyO
       result = ((Ecostress::EcostressImageGroundConnection const *)arg1)->orbit_data((GeoCal::Time const &)*arg2,arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8369,9 +8351,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection_orbit_data__SWIG_1(PyO
     try {
       result = ((Ecostress::EcostressImageGroundConnection const *)arg1)->orbit_data((GeoCal::TimeWithDerivative const &)*arg2,arg3,(GeoCal::AutoDerivative< double > const &)*arg4);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8511,9 +8490,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection_image_coordinate_scan_
       ((Ecostress::EcostressImageGroundConnection const *)arg1)->image_coordinate_scan_index((GeoCal::GroundCoordinate const &)*arg2,arg3,*arg4,*arg5,arg6);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8611,9 +8587,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection_image_coordinate_scan_
       ((Ecostress::EcostressImageGroundConnection const *)arg1)->image_coordinate_scan_index((GeoCal::GroundCoordinate const &)*arg2,arg3,*arg4,*arg5);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8710,9 +8683,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection_scan_index_to_line(PyO
       ((Ecostress::EcostressImageGroundConnection const *)arg1)->scan_index_to_line(arg2,*arg3,*arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8769,9 +8739,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_crosses_dateline(Py
       result = (bool)((Ecostress::EcostressImageGroundConnection const *)arg1)->crosses_dateline();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8815,9 +8782,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_number_line_scan(Py
     try {
       result = (int)((Ecostress::EcostressImageGroundConnection const *)arg1)->number_line_scan();
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8863,9 +8827,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_number_scan(PyObjec
       result = (int)((Ecostress::EcostressImageGroundConnection const *)arg1)->number_scan();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8910,9 +8871,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_number_good_scan(Py
       result = (int)((Ecostress::EcostressImageGroundConnection const *)arg1)->number_good_scan();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -8954,9 +8912,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_band__SWIG_0(PyObje
     try {
       result = (int)((Ecostress::EcostressImageGroundConnection const *)arg1)->band();
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9008,9 +8963,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_band__SWIG_1(PyObje
     try {
       (arg1)->band((int const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9082,9 +9034,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_resolution__SWIG_0(
       result = (double)((Ecostress::EcostressImageGroundConnection const *)arg1)->resolution();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -9135,9 +9084,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_resolution__SWIG_1(
     try {
       (arg1)->resolution((double const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9209,9 +9155,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_max_height__SWIG_0(
       result = (double)((Ecostress::EcostressImageGroundConnection const *)arg1)->max_height();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -9262,9 +9205,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_max_height__SWIG_1(
     try {
       (arg1)->max_height((double const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9336,9 +9276,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_orbit__SWIG_0(PyObj
       result = ((Ecostress::EcostressImageGroundConnection const *)arg1)->orbit();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -9408,9 +9345,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_orbit__SWIG_1(PyObj
     try {
       (arg1)->orbit((boost::shared_ptr< GeoCal::Orbit > const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9482,9 +9416,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_time_table__SWIG_0(
       result = ((Ecostress::EcostressImageGroundConnection const *)arg1)->time_table();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -9554,9 +9485,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_time_table__SWIG_1(
     try {
       (arg1)->time_table((boost::shared_ptr< GeoCal::TimeTable > const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9628,9 +9556,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_camera__SWIG_0(PyOb
       result = ((Ecostress::EcostressImageGroundConnection const *)arg1)->camera();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -9700,9 +9625,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_camera__SWIG_1(PyOb
     try {
       (arg1)->camera((boost::shared_ptr< GeoCal::Camera > const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9774,9 +9696,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_scan_mirror__SWIG_0
       result = ((Ecostress::EcostressImageGroundConnection const *)arg1)->scan_mirror();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -9846,9 +9765,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnection__v_scan_mirror__SWIG_1
     try {
       (arg1)->scan_mirror((boost::shared_ptr< Ecostress::EcostressScanMirror > const &)*arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -9920,9 +9836,6 @@ SWIGINTERN PyObject *_wrap_delete_EcostressImageGroundConnection(PyObject *self,
     try {
       (void)arg1; delete smartarg1;
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10005,9 +9918,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_0(PyObject *self, Py_ssi
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1),arg2,arg3,arg4,arg5);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10073,9 +9983,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_1(PyObject *self, Py_ssi
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1),arg2,arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10133,9 +10040,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_2(PyObject *self, Py_ssi
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1),arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10185,9 +10089,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_3(PyObject *self, Py_ssi
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1),arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10228,9 +10129,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_4(PyObject *self, Py_ssi
     try {
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1));
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10291,9 +10189,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_5(PyObject *self, Py_ssi
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1),arg2,arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10345,9 +10240,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_6(PyObject *self, Py_ssi
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1),arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10391,9 +10283,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_7(PyObject *self, Py_ssi
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1),arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10428,9 +10317,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_8(PyObject *self, Py_ssi
     try {
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable(SWIG_STD_MOVE(arg1));
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10494,9 +10380,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_9(PyObject *self, Py_ssi
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1,arg2,arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10553,9 +10436,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_10(PyObject *self, Py_ss
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1,arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10604,9 +10484,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_11(PyObject *self, Py_ss
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1,arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10646,9 +10523,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_12(PyObject *self, Py_ss
     try {
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -10722,9 +10596,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_13(PyObject *self, Py_ss
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1,arg2,arg3,arg4,arg5);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10789,9 +10660,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_14(PyObject *self, Py_ss
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1,arg2,arg3,arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10848,9 +10716,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_15(PyObject *self, Py_ss
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1,arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -10898,9 +10763,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTable__SWIG_16(PyObject *self, Py_ss
     try {
       result = (Ecostress::EcostressTimeTable *)new Ecostress::EcostressTimeTable((std::string const &)*arg1,arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11251,9 +11113,6 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable_scan_index_to_line(PyObject *self,
       ((Ecostress::EcostressTimeTable const *)arg1)->scan_index_to_line(arg2,*arg3,*arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11317,9 +11176,6 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable_line_to_scan_index(PyObject *self,
       result = (int)((Ecostress::EcostressTimeTable const *)arg1)->line_to_scan_index(arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11378,9 +11234,6 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable_close_to_scan_edge__SWIG_0(PyObjec
       result = (bool)((Ecostress::EcostressTimeTable const *)arg1)->close_to_scan_edge(arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11430,9 +11283,6 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable_close_to_scan_edge__SWIG_1(PyObjec
     try {
       result = (bool)((Ecostress::EcostressTimeTable const *)arg1)->close_to_scan_edge(arg2);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11506,9 +11356,6 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_averaging_done(PyObject *self, 
       result = (bool)((Ecostress::EcostressTimeTable const *)arg1)->averaging_done();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11552,9 +11399,6 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_number_line_scan(PyObject *self
     try {
       result = (int)((Ecostress::EcostressTimeTable const *)arg1)->number_line_scan();
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11600,9 +11444,6 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_number_good_scan(PyObject *self
       result = (int)((Ecostress::EcostressTimeTable const *)arg1)->number_good_scan();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11646,9 +11487,6 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_number_scan(PyObject *self, PyO
     try {
       result = (int)((Ecostress::EcostressTimeTable const *)arg1)->number_scan();
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11694,9 +11532,6 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_mirror_rpm(PyObject *self, PyOb
       result = (double)((Ecostress::EcostressTimeTable const *)arg1)->mirror_rpm();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11740,9 +11575,6 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_nominal_scan_time(PyObject *sel
     try {
       result = (double)((Ecostress::EcostressTimeTable const *)arg1)->nominal_scan_time();
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11788,9 +11620,6 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_frame_time(PyObject *self, PyOb
       result = (double)((Ecostress::EcostressTimeTable const *)arg1)->frame_time();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11835,9 +11664,6 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTable__v_tstart_scan(PyObject *self, PyO
       result = ((Ecostress::EcostressTimeTable const *)arg1)->tstart_scan();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -11880,9 +11706,6 @@ SWIGINTERN PyObject *_wrap_delete_EcostressTimeTable(PyObject *self, PyObject *a
     try {
       (void)arg1; delete smartarg1;
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -11963,9 +11786,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressTimeTableSubset(PyObject *self, PyObject
       result = (Ecostress::EcostressTimeTableSubset *)new Ecostress::EcostressTimeTableSubset((Ecostress::EcostressTimeTable const &)*arg1,arg2,arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -12013,9 +11833,6 @@ SWIGINTERN PyObject *_wrap_EcostressTimeTableSubset__v_start_sample(PyObject *se
       result = (int)((Ecostress::EcostressTimeTableSubset const *)arg1)->start_sample();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -12058,9 +11875,6 @@ SWIGINTERN PyObject *_wrap_delete_EcostressTimeTableSubset(PyObject *self, PyObj
     try {
       (void)arg1; delete smartarg1;
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12138,9 +11952,6 @@ SWIGINTERN PyObject *_wrap_new_EcostressImageGroundConnectionSubset(PyObject *se
     try {
       result = (Ecostress::EcostressImageGroundConnectionSubset *)new Ecostress::EcostressImageGroundConnectionSubset((boost::shared_ptr< Ecostress::EcostressImageGroundConnection > const &)*arg1,arg2,arg3);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12231,9 +12042,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset_orbit_data__SWIG
     try {
       result = ((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->orbit_data((GeoCal::Time const &)*arg2,arg3,arg4);
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12345,9 +12153,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset_orbit_data__SWIG
       result = ((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->orbit_data((GeoCal::TimeWithDerivative const &)*arg2,arg3,(GeoCal::AutoDerivative< double > const &)*arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -12449,9 +12254,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset_scan_index_to_li
       ((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->scan_index_to_line(arg2,*arg3,*arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -12508,9 +12310,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_crosses_datel
       result = (bool)((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->crosses_dateline();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -12554,9 +12353,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_number_line_s
     try {
       result = (int)((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->number_line_scan();
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12602,9 +12398,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_number_scan(P
       result = (int)((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->number_scan();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -12649,9 +12442,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_number_good_s
       result = (int)((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->number_good_scan();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -12695,9 +12485,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_underlying_ig
     try {
       result = ((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->underlying_igc();
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12745,9 +12532,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_start_sample(
       result = (int)((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->start_sample();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -12791,9 +12575,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_camera(PyObje
     try {
       result = ((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->camera();
     } catch (Swig::DirectorException &e) {
-      SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -12841,9 +12622,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_orbit(PyObjec
       result = ((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->orbit();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -12890,9 +12668,6 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_sub_time_tabl
       result = ((Ecostress::EcostressImageGroundConnectionSubset const *)arg1)->sub_time_table();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -12938,9 +12713,6 @@ SWIGINTERN PyObject *_wrap_delete_EcostressImageGroundConnectionSubset(PyObject 
       (void)arg1; delete smartarg1;
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
-    } catch (const PythonException& e) {
-      e.restore_python_exception();
-      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -12966,96 +12738,63 @@ SWIGINTERN PyObject *EcostressImageGroundConnectionSubset_swiginit(PyObject *SWI
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "SwigPyIterator_value(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "SwigPyIterator_incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "SwigPyIterator_decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "SwigPyIterator_distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "SwigPyIterator_equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "SwigPyIterator_copy(SwigPyIterator self) -> SwigPyIterator"},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "SwigPyIterator_next(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "SwigPyIterator___next__(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "SwigPyIterator_previous(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "SwigPyIterator_advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "SwigPyIterator___eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "SwigPyIterator___ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "SwigPyIterator___iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "SwigPyIterator___isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "SwigPyIterator___add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
-		"SwigPyIterator___sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
-		"SwigPyIterator___sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
-		""},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
-	 { "new_EcostressImageGroundConnection", _wrap_new_EcostressImageGroundConnection, METH_VARARGS, "EcostressImageGroundConnection(boost::shared_ptr< GeoCal::Orbit > const & Orb, boost::shared_ptr< GeoCal::TimeTable > const & Tt, boost::shared_ptr< GeoCal::Camera > const & Cam, boost::shared_ptr< Ecostress::EcostressScanMirror > const & Scan_mirror, boost::shared_ptr< GeoCal::Dem > const & D, boost::shared_ptr< GeoCal::RasterImage > const & Img, std::string const & Title=\"\", double Resolution=30, int Band=REF_BAND, double Max_height=9000)"},
-	 { "EcostressImageGroundConnection_orbit_data", _wrap_EcostressImageGroundConnection_orbit_data, METH_VARARGS, "\n"
-		"EcostressImageGroundConnection_orbit_data(EcostressImageGroundConnection self, Time T, double Ic_line, double Ic_sample) -> boost::shared_ptr< GeoCal::QuaternionOrbitData >\n"
-		"EcostressImageGroundConnection_orbit_data(EcostressImageGroundConnection self, TimeWithDerivative T, double Ic_line, AutoDerivativeDouble Ic_sample) -> boost::shared_ptr< GeoCal::QuaternionOrbitData >\n"
-		""},
-	 { "EcostressImageGroundConnection_image_coordinate_scan_index", _wrap_EcostressImageGroundConnection_image_coordinate_scan_index, METH_VARARGS, "EcostressImageGroundConnection_image_coordinate_scan_index(EcostressImageGroundConnection self, GroundCoordinate Gc, int Scan_index, int Band=-1)"},
-	 { "EcostressImageGroundConnection_scan_index_to_line", _wrap_EcostressImageGroundConnection_scan_index_to_line, METH_VARARGS, "EcostressImageGroundConnection_scan_index_to_line(EcostressImageGroundConnection self, int Scan_index)"},
-	 { "EcostressImageGroundConnection__v_crosses_dateline", _wrap_EcostressImageGroundConnection__v_crosses_dateline, METH_O, "EcostressImageGroundConnection__v_crosses_dateline(EcostressImageGroundConnection self) -> bool"},
-	 { "EcostressImageGroundConnection__v_number_line_scan", _wrap_EcostressImageGroundConnection__v_number_line_scan, METH_O, "EcostressImageGroundConnection__v_number_line_scan(EcostressImageGroundConnection self) -> int"},
-	 { "EcostressImageGroundConnection__v_number_scan", _wrap_EcostressImageGroundConnection__v_number_scan, METH_O, "EcostressImageGroundConnection__v_number_scan(EcostressImageGroundConnection self) -> int"},
-	 { "EcostressImageGroundConnection__v_number_good_scan", _wrap_EcostressImageGroundConnection__v_number_good_scan, METH_O, "EcostressImageGroundConnection__v_number_good_scan(EcostressImageGroundConnection self) -> int"},
-	 { "EcostressImageGroundConnection__v_band", _wrap_EcostressImageGroundConnection__v_band, METH_VARARGS, "\n"
-		"EcostressImageGroundConnection__v_band(EcostressImageGroundConnection self) -> int\n"
-		"EcostressImageGroundConnection__v_band(EcostressImageGroundConnection self, int const & V)\n"
-		""},
-	 { "EcostressImageGroundConnection__v_resolution", _wrap_EcostressImageGroundConnection__v_resolution, METH_VARARGS, "\n"
-		"EcostressImageGroundConnection__v_resolution(EcostressImageGroundConnection self) -> double\n"
-		"EcostressImageGroundConnection__v_resolution(EcostressImageGroundConnection self, double const & V)\n"
-		""},
-	 { "EcostressImageGroundConnection__v_max_height", _wrap_EcostressImageGroundConnection__v_max_height, METH_VARARGS, "\n"
-		"EcostressImageGroundConnection__v_max_height(EcostressImageGroundConnection self) -> double\n"
-		"EcostressImageGroundConnection__v_max_height(EcostressImageGroundConnection self, double const & V)\n"
-		""},
-	 { "EcostressImageGroundConnection__v_orbit", _wrap_EcostressImageGroundConnection__v_orbit, METH_VARARGS, "\n"
-		"EcostressImageGroundConnection__v_orbit(EcostressImageGroundConnection self) -> boost::shared_ptr< GeoCal::Orbit >\n"
-		"EcostressImageGroundConnection__v_orbit(EcostressImageGroundConnection self, boost::shared_ptr< GeoCal::Orbit > const & V)\n"
-		""},
-	 { "EcostressImageGroundConnection__v_time_table", _wrap_EcostressImageGroundConnection__v_time_table, METH_VARARGS, "\n"
-		"EcostressImageGroundConnection__v_time_table(EcostressImageGroundConnection self) -> boost::shared_ptr< GeoCal::TimeTable >\n"
-		"EcostressImageGroundConnection__v_time_table(EcostressImageGroundConnection self, boost::shared_ptr< GeoCal::TimeTable > const & V)\n"
-		""},
-	 { "EcostressImageGroundConnection__v_camera", _wrap_EcostressImageGroundConnection__v_camera, METH_VARARGS, "\n"
-		"EcostressImageGroundConnection__v_camera(EcostressImageGroundConnection self) -> boost::shared_ptr< GeoCal::Camera >\n"
-		"EcostressImageGroundConnection__v_camera(EcostressImageGroundConnection self, boost::shared_ptr< GeoCal::Camera > const & V)\n"
-		""},
-	 { "EcostressImageGroundConnection__v_scan_mirror", _wrap_EcostressImageGroundConnection__v_scan_mirror, METH_VARARGS, "\n"
-		"EcostressImageGroundConnection__v_scan_mirror(EcostressImageGroundConnection self) -> boost::shared_ptr< Ecostress::EcostressScanMirror >\n"
-		"EcostressImageGroundConnection__v_scan_mirror(EcostressImageGroundConnection self, boost::shared_ptr< Ecostress::EcostressScanMirror > const & V)\n"
-		""},
-	 { "delete_EcostressImageGroundConnection", _wrap_delete_EcostressImageGroundConnection, METH_O, "delete_EcostressImageGroundConnection(EcostressImageGroundConnection self)"},
+	 { "new_EcostressImageGroundConnection", _wrap_new_EcostressImageGroundConnection, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection_orbit_data", _wrap_EcostressImageGroundConnection_orbit_data, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection_image_coordinate_scan_index", _wrap_EcostressImageGroundConnection_image_coordinate_scan_index, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection_scan_index_to_line", _wrap_EcostressImageGroundConnection_scan_index_to_line, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection__v_crosses_dateline", _wrap_EcostressImageGroundConnection__v_crosses_dateline, METH_O, NULL},
+	 { "EcostressImageGroundConnection__v_number_line_scan", _wrap_EcostressImageGroundConnection__v_number_line_scan, METH_O, NULL},
+	 { "EcostressImageGroundConnection__v_number_scan", _wrap_EcostressImageGroundConnection__v_number_scan, METH_O, NULL},
+	 { "EcostressImageGroundConnection__v_number_good_scan", _wrap_EcostressImageGroundConnection__v_number_good_scan, METH_O, NULL},
+	 { "EcostressImageGroundConnection__v_band", _wrap_EcostressImageGroundConnection__v_band, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection__v_resolution", _wrap_EcostressImageGroundConnection__v_resolution, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection__v_max_height", _wrap_EcostressImageGroundConnection__v_max_height, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection__v_orbit", _wrap_EcostressImageGroundConnection__v_orbit, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection__v_time_table", _wrap_EcostressImageGroundConnection__v_time_table, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection__v_camera", _wrap_EcostressImageGroundConnection__v_camera, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection__v_scan_mirror", _wrap_EcostressImageGroundConnection__v_scan_mirror, METH_VARARGS, NULL},
+	 { "delete_EcostressImageGroundConnection", _wrap_delete_EcostressImageGroundConnection, METH_O, NULL},
 	 { "EcostressImageGroundConnection_swigregister", EcostressImageGroundConnection_swigregister, METH_O, NULL},
 	 { "EcostressImageGroundConnection_swiginit", EcostressImageGroundConnection_swiginit, METH_VARARGS, NULL},
-	 { "new_EcostressTimeTable", _wrap_new_EcostressTimeTable, METH_VARARGS, "\n"
-		"EcostressTimeTable(Time Tstart, bool Averaging_done=True, int Num_scan=44, double Mirror_rpm=25.4, double Frame_time=0.0000321875)\n"
-		"EcostressTimeTable(Vector_Time Tstart_scan, bool Averaging_done=True, double Mirror_rpm=25.4, double Frame_time=0.0000321875)\n"
-		"EcostressTimeTable(std::string const & Fname, double Mirror_rpm=25.4, double Frame_time=0.0000321875, double Toffset=0)\n"
-		"EcostressTimeTable(std::string const & Fname, bool Averaging_done, double Mirror_rpm=25.4, double Frame_time=0.0000321875, double Toffset=0)\n"
-		""},
-	 { "EcostressTimeTable_scan_index_to_line", _wrap_EcostressTimeTable_scan_index_to_line, METH_VARARGS, "EcostressTimeTable_scan_index_to_line(EcostressTimeTable self, int Scan_index)"},
-	 { "EcostressTimeTable_line_to_scan_index", _wrap_EcostressTimeTable_line_to_scan_index, METH_VARARGS, "EcostressTimeTable_line_to_scan_index(EcostressTimeTable self, double Line) -> int"},
-	 { "EcostressTimeTable_close_to_scan_edge", _wrap_EcostressTimeTable_close_to_scan_edge, METH_VARARGS, "EcostressTimeTable_close_to_scan_edge(EcostressTimeTable self, int Line, int Width=3) -> bool"},
-	 { "EcostressTimeTable__v_averaging_done", _wrap_EcostressTimeTable__v_averaging_done, METH_O, "EcostressTimeTable__v_averaging_done(EcostressTimeTable self) -> bool"},
-	 { "EcostressTimeTable__v_number_line_scan", _wrap_EcostressTimeTable__v_number_line_scan, METH_O, "EcostressTimeTable__v_number_line_scan(EcostressTimeTable self) -> int"},
-	 { "EcostressTimeTable__v_number_good_scan", _wrap_EcostressTimeTable__v_number_good_scan, METH_O, "EcostressTimeTable__v_number_good_scan(EcostressTimeTable self) -> int"},
-	 { "EcostressTimeTable__v_number_scan", _wrap_EcostressTimeTable__v_number_scan, METH_O, "EcostressTimeTable__v_number_scan(EcostressTimeTable self) -> int"},
-	 { "EcostressTimeTable__v_mirror_rpm", _wrap_EcostressTimeTable__v_mirror_rpm, METH_O, "EcostressTimeTable__v_mirror_rpm(EcostressTimeTable self) -> double"},
-	 { "EcostressTimeTable__v_nominal_scan_time", _wrap_EcostressTimeTable__v_nominal_scan_time, METH_O, "EcostressTimeTable__v_nominal_scan_time(EcostressTimeTable self) -> double"},
-	 { "EcostressTimeTable__v_frame_time", _wrap_EcostressTimeTable__v_frame_time, METH_O, "EcostressTimeTable__v_frame_time(EcostressTimeTable self) -> double"},
-	 { "EcostressTimeTable__v_tstart_scan", _wrap_EcostressTimeTable__v_tstart_scan, METH_O, "EcostressTimeTable__v_tstart_scan(EcostressTimeTable self) -> Vector_Time"},
-	 { "delete_EcostressTimeTable", _wrap_delete_EcostressTimeTable, METH_O, "delete_EcostressTimeTable(EcostressTimeTable self)"},
+	 { "new_EcostressTimeTable", _wrap_new_EcostressTimeTable, METH_VARARGS, NULL},
+	 { "EcostressTimeTable_scan_index_to_line", _wrap_EcostressTimeTable_scan_index_to_line, METH_VARARGS, NULL},
+	 { "EcostressTimeTable_line_to_scan_index", _wrap_EcostressTimeTable_line_to_scan_index, METH_VARARGS, NULL},
+	 { "EcostressTimeTable_close_to_scan_edge", _wrap_EcostressTimeTable_close_to_scan_edge, METH_VARARGS, NULL},
+	 { "EcostressTimeTable__v_averaging_done", _wrap_EcostressTimeTable__v_averaging_done, METH_O, NULL},
+	 { "EcostressTimeTable__v_number_line_scan", _wrap_EcostressTimeTable__v_number_line_scan, METH_O, NULL},
+	 { "EcostressTimeTable__v_number_good_scan", _wrap_EcostressTimeTable__v_number_good_scan, METH_O, NULL},
+	 { "EcostressTimeTable__v_number_scan", _wrap_EcostressTimeTable__v_number_scan, METH_O, NULL},
+	 { "EcostressTimeTable__v_mirror_rpm", _wrap_EcostressTimeTable__v_mirror_rpm, METH_O, NULL},
+	 { "EcostressTimeTable__v_nominal_scan_time", _wrap_EcostressTimeTable__v_nominal_scan_time, METH_O, NULL},
+	 { "EcostressTimeTable__v_frame_time", _wrap_EcostressTimeTable__v_frame_time, METH_O, NULL},
+	 { "EcostressTimeTable__v_tstart_scan", _wrap_EcostressTimeTable__v_tstart_scan, METH_O, NULL},
+	 { "delete_EcostressTimeTable", _wrap_delete_EcostressTimeTable, METH_O, NULL},
 	 { "EcostressTimeTable_swigregister", EcostressTimeTable_swigregister, METH_O, NULL},
 	 { "EcostressTimeTable_swiginit", EcostressTimeTable_swiginit, METH_VARARGS, NULL},
-	 { "new_EcostressTimeTableSubset", _wrap_new_EcostressTimeTableSubset, METH_VARARGS, "new_EcostressTimeTableSubset(EcostressTimeTable Tt, int Start_sample, int Number_sample) -> EcostressTimeTableSubset"},
-	 { "EcostressTimeTableSubset__v_start_sample", _wrap_EcostressTimeTableSubset__v_start_sample, METH_O, "EcostressTimeTableSubset__v_start_sample(EcostressTimeTableSubset self) -> int"},
-	 { "delete_EcostressTimeTableSubset", _wrap_delete_EcostressTimeTableSubset, METH_O, "delete_EcostressTimeTableSubset(EcostressTimeTableSubset self)"},
+	 { "new_EcostressTimeTableSubset", _wrap_new_EcostressTimeTableSubset, METH_VARARGS, NULL},
+	 { "EcostressTimeTableSubset__v_start_sample", _wrap_EcostressTimeTableSubset__v_start_sample, METH_O, NULL},
+	 { "delete_EcostressTimeTableSubset", _wrap_delete_EcostressTimeTableSubset, METH_O, NULL},
 	 { "EcostressTimeTableSubset_swigregister", EcostressTimeTableSubset_swigregister, METH_O, NULL},
 	 { "EcostressTimeTableSubset_swiginit", EcostressTimeTableSubset_swiginit, METH_VARARGS, NULL},
 	 { "new_EcostressImageGroundConnectionSubset", _wrap_new_EcostressImageGroundConnectionSubset, METH_VARARGS, "\n"
-		"new_EcostressImageGroundConnectionSubset(boost::shared_ptr< Ecostress::EcostressImageGroundConnection > const & Igc, int Start_sample, int Num_sample) -> EcostressImageGroundConnectionSubset\n"
 		"\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::EcostressImageGroundConnectionSubset(const boost::shared_ptr< EcostressImageGroundConnection > &Igc, int\n"
 		"Start_sample, int Num_sample)\n"
@@ -13063,75 +12802,62 @@ static PyMethodDef SwigMethods[] = {
 		"onnectionSubset\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset_orbit_data", _wrap_EcostressImageGroundConnectionSubset_orbit_data, METH_VARARGS, "\n"
-		"EcostressImageGroundConnectionSubset_orbit_data(EcostressImageGroundConnectionSubset self, Time T, double Ic_line, double Ic_sample) -> boost::shared_ptr< GeoCal::QuaternionOrbitData >\n"
-		"EcostressImageGroundConnectionSubset_orbit_data(EcostressImageGroundConnectionSubset self, TimeWithDerivative T, double Ic_line, AutoDerivativeDouble Ic_sample) -> boost::shared_ptr< GeoCal::QuaternionOrbitData >\n"
 		"\n"
 		"boost::shared_ptr< GeoCal::QuaternionOrbitData > Ecostress::EcostressImageGroundConnectionSubset::orbit_data(const GeoCal::TimeWithDerivative &T, double Ic_line, const\n"
 		"GeoCal::AutoDerivative< double > &Ic_sample) const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::orbit_data\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset_scan_index_to_line", _wrap_EcostressImageGroundConnectionSubset_scan_index_to_line, METH_VARARGS, "\n"
-		"EcostressImageGroundConnectionSubset_scan_index_to_line(EcostressImageGroundConnectionSubset self, int Scan_index)\n"
 		"\n"
 		"void Ecostress::EcostressImageGroundConnectionSubset::scan_index_to_line(int Scan_index, int &Lstart, int &Lend) const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::scan_index_to_line\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_crosses_dateline", _wrap_EcostressImageGroundConnectionSubset__v_crosses_dateline, METH_O, "\n"
-		"EcostressImageGroundConnectionSubset__v_crosses_dateline(EcostressImageGroundConnectionSubset self) -> bool\n"
 		"\n"
 		"bool Ecostress::EcostressImageGroundConnectionSubset::crosses_dateline() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::crosses_dateline\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_number_line_scan", _wrap_EcostressImageGroundConnectionSubset__v_number_line_scan, METH_O, "\n"
-		"EcostressImageGroundConnectionSubset__v_number_line_scan(EcostressImageGroundConnectionSubset self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressImageGroundConnectionSubset::number_line_scan() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::number_line_scan\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_number_scan", _wrap_EcostressImageGroundConnectionSubset__v_number_scan, METH_O, "\n"
-		"EcostressImageGroundConnectionSubset__v_number_scan(EcostressImageGroundConnectionSubset self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressImageGroundConnectionSubset::number_scan() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::number_scan\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_number_good_scan", _wrap_EcostressImageGroundConnectionSubset__v_number_good_scan, METH_O, "\n"
-		"EcostressImageGroundConnectionSubset__v_number_good_scan(EcostressImageGroundConnectionSubset self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressImageGroundConnectionSubset::number_good_scan() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::number_good_scan\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_underlying_igc", _wrap_EcostressImageGroundConnectionSubset__v_underlying_igc, METH_O, "\n"
-		"EcostressImageGroundConnectionSubset__v_underlying_igc(EcostressImageGroundConnectionSubset self) -> boost::shared_ptr< Ecostress::EcostressImageGroundConnection >\n"
 		"\n"
 		"const boost::shared_ptr< EcostressImageGroundConnection > & Ecostress::EcostressImageGroundConnectionSubset::underlying_igc() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::underlying_igc\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_start_sample", _wrap_EcostressImageGroundConnectionSubset__v_start_sample, METH_O, "\n"
-		"EcostressImageGroundConnectionSubset__v_start_sample(EcostressImageGroundConnectionSubset self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressImageGroundConnectionSubset::start_sample() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::start_sample\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_camera", _wrap_EcostressImageGroundConnectionSubset__v_camera, METH_O, "\n"
-		"EcostressImageGroundConnectionSubset__v_camera(EcostressImageGroundConnectionSubset self) -> boost::shared_ptr< GeoCal::Camera >\n"
 		"\n"
 		"const boost::shared_ptr< GeoCal::Camera > & Ecostress::EcostressImageGroundConnectionSubset::camera() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::camera\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_orbit", _wrap_EcostressImageGroundConnectionSubset__v_orbit, METH_O, "\n"
-		"EcostressImageGroundConnectionSubset__v_orbit(EcostressImageGroundConnectionSubset self) -> boost::shared_ptr< GeoCal::Orbit >\n"
 		"\n"
 		"const boost::shared_ptr< GeoCal::Orbit > & Ecostress::EcostressImageGroundConnectionSubset::orbit() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::orbit\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_sub_time_table", _wrap_EcostressImageGroundConnectionSubset__v_sub_time_table, METH_O, "\n"
-		"EcostressImageGroundConnectionSubset__v_sub_time_table(EcostressImageGroundConnectionSubset self) -> boost::shared_ptr< Ecostress::EcostressTimeTableSubset >\n"
 		"\n"
 		"boost::shared_ptr< EcostressTimeTableSubset > Ecostress::EcostressImageGroundConnectionSubset::sub_time_table() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::sub_time_table\n"
 		""},
 	 { "delete_EcostressImageGroundConnectionSubset", _wrap_delete_EcostressImageGroundConnectionSubset, METH_O, "\n"
-		"delete_EcostressImageGroundConnectionSubset(EcostressImageGroundConnectionSubset self)\n"
 		"\n"
 		"virtual Ecostress::EcostressImageGroundConnectionSubset::~EcostressImageGroundConnectionSubset()\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::~EcostressImageGround\n"
@@ -13145,96 +12871,63 @@ static PyMethodDef SwigMethods[] = {
 static PyMethodDef SwigMethods_proxydocs[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "value(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "copy(SwigPyIterator self) -> SwigPyIterator"},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "next(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "__next__(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "previous(SwigPyIterator self) -> PyObject *"},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "__eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "__ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "__iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "__isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "__add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
-		"__sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
-		"__sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
-		""},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
-	 { "new_EcostressImageGroundConnection", _wrap_new_EcostressImageGroundConnection, METH_VARARGS, "EcostressImageGroundConnection(boost::shared_ptr< GeoCal::Orbit > const & Orb, boost::shared_ptr< GeoCal::TimeTable > const & Tt, boost::shared_ptr< GeoCal::Camera > const & Cam, boost::shared_ptr< Ecostress::EcostressScanMirror > const & Scan_mirror, boost::shared_ptr< GeoCal::Dem > const & D, boost::shared_ptr< GeoCal::RasterImage > const & Img, std::string const & Title=\"\", double Resolution=30, int Band=REF_BAND, double Max_height=9000)"},
-	 { "EcostressImageGroundConnection_orbit_data", _wrap_EcostressImageGroundConnection_orbit_data, METH_VARARGS, "\n"
-		"orbit_data(EcostressImageGroundConnection self, Time T, double Ic_line, double Ic_sample) -> boost::shared_ptr< GeoCal::QuaternionOrbitData >\n"
-		"orbit_data(EcostressImageGroundConnection self, TimeWithDerivative T, double Ic_line, AutoDerivativeDouble Ic_sample) -> boost::shared_ptr< GeoCal::QuaternionOrbitData >\n"
-		""},
-	 { "EcostressImageGroundConnection_image_coordinate_scan_index", _wrap_EcostressImageGroundConnection_image_coordinate_scan_index, METH_VARARGS, "image_coordinate_scan_index(EcostressImageGroundConnection self, GroundCoordinate Gc, int Scan_index, int Band=-1)"},
-	 { "EcostressImageGroundConnection_scan_index_to_line", _wrap_EcostressImageGroundConnection_scan_index_to_line, METH_VARARGS, "scan_index_to_line(EcostressImageGroundConnection self, int Scan_index)"},
-	 { "EcostressImageGroundConnection__v_crosses_dateline", _wrap_EcostressImageGroundConnection__v_crosses_dateline, METH_O, "_v_crosses_dateline(EcostressImageGroundConnection self) -> bool"},
-	 { "EcostressImageGroundConnection__v_number_line_scan", _wrap_EcostressImageGroundConnection__v_number_line_scan, METH_O, "_v_number_line_scan(EcostressImageGroundConnection self) -> int"},
-	 { "EcostressImageGroundConnection__v_number_scan", _wrap_EcostressImageGroundConnection__v_number_scan, METH_O, "_v_number_scan(EcostressImageGroundConnection self) -> int"},
-	 { "EcostressImageGroundConnection__v_number_good_scan", _wrap_EcostressImageGroundConnection__v_number_good_scan, METH_O, "_v_number_good_scan(EcostressImageGroundConnection self) -> int"},
-	 { "EcostressImageGroundConnection__v_band", _wrap_EcostressImageGroundConnection__v_band, METH_VARARGS, "\n"
-		"_v_band(EcostressImageGroundConnection self) -> int\n"
-		"_v_band(EcostressImageGroundConnection self, int const & V)\n"
-		""},
-	 { "EcostressImageGroundConnection__v_resolution", _wrap_EcostressImageGroundConnection__v_resolution, METH_VARARGS, "\n"
-		"_v_resolution(EcostressImageGroundConnection self) -> double\n"
-		"_v_resolution(EcostressImageGroundConnection self, double const & V)\n"
-		""},
-	 { "EcostressImageGroundConnection__v_max_height", _wrap_EcostressImageGroundConnection__v_max_height, METH_VARARGS, "\n"
-		"_v_max_height(EcostressImageGroundConnection self) -> double\n"
-		"_v_max_height(EcostressImageGroundConnection self, double const & V)\n"
-		""},
-	 { "EcostressImageGroundConnection__v_orbit", _wrap_EcostressImageGroundConnection__v_orbit, METH_VARARGS, "\n"
-		"_v_orbit(EcostressImageGroundConnection self) -> boost::shared_ptr< GeoCal::Orbit >\n"
-		"_v_orbit(EcostressImageGroundConnection self, boost::shared_ptr< GeoCal::Orbit > const & V)\n"
-		""},
-	 { "EcostressImageGroundConnection__v_time_table", _wrap_EcostressImageGroundConnection__v_time_table, METH_VARARGS, "\n"
-		"_v_time_table(EcostressImageGroundConnection self) -> boost::shared_ptr< GeoCal::TimeTable >\n"
-		"_v_time_table(EcostressImageGroundConnection self, boost::shared_ptr< GeoCal::TimeTable > const & V)\n"
-		""},
-	 { "EcostressImageGroundConnection__v_camera", _wrap_EcostressImageGroundConnection__v_camera, METH_VARARGS, "\n"
-		"_v_camera(EcostressImageGroundConnection self) -> boost::shared_ptr< GeoCal::Camera >\n"
-		"_v_camera(EcostressImageGroundConnection self, boost::shared_ptr< GeoCal::Camera > const & V)\n"
-		""},
-	 { "EcostressImageGroundConnection__v_scan_mirror", _wrap_EcostressImageGroundConnection__v_scan_mirror, METH_VARARGS, "\n"
-		"_v_scan_mirror(EcostressImageGroundConnection self) -> boost::shared_ptr< Ecostress::EcostressScanMirror >\n"
-		"_v_scan_mirror(EcostressImageGroundConnection self, boost::shared_ptr< Ecostress::EcostressScanMirror > const & V)\n"
-		""},
-	 { "delete_EcostressImageGroundConnection", _wrap_delete_EcostressImageGroundConnection, METH_O, "delete_EcostressImageGroundConnection(EcostressImageGroundConnection self)"},
+	 { "new_EcostressImageGroundConnection", _wrap_new_EcostressImageGroundConnection, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection_orbit_data", _wrap_EcostressImageGroundConnection_orbit_data, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection_image_coordinate_scan_index", _wrap_EcostressImageGroundConnection_image_coordinate_scan_index, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection_scan_index_to_line", _wrap_EcostressImageGroundConnection_scan_index_to_line, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection__v_crosses_dateline", _wrap_EcostressImageGroundConnection__v_crosses_dateline, METH_O, NULL},
+	 { "EcostressImageGroundConnection__v_number_line_scan", _wrap_EcostressImageGroundConnection__v_number_line_scan, METH_O, NULL},
+	 { "EcostressImageGroundConnection__v_number_scan", _wrap_EcostressImageGroundConnection__v_number_scan, METH_O, NULL},
+	 { "EcostressImageGroundConnection__v_number_good_scan", _wrap_EcostressImageGroundConnection__v_number_good_scan, METH_O, NULL},
+	 { "EcostressImageGroundConnection__v_band", _wrap_EcostressImageGroundConnection__v_band, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection__v_resolution", _wrap_EcostressImageGroundConnection__v_resolution, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection__v_max_height", _wrap_EcostressImageGroundConnection__v_max_height, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection__v_orbit", _wrap_EcostressImageGroundConnection__v_orbit, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection__v_time_table", _wrap_EcostressImageGroundConnection__v_time_table, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection__v_camera", _wrap_EcostressImageGroundConnection__v_camera, METH_VARARGS, NULL},
+	 { "EcostressImageGroundConnection__v_scan_mirror", _wrap_EcostressImageGroundConnection__v_scan_mirror, METH_VARARGS, NULL},
+	 { "delete_EcostressImageGroundConnection", _wrap_delete_EcostressImageGroundConnection, METH_O, NULL},
 	 { "EcostressImageGroundConnection_swigregister", EcostressImageGroundConnection_swigregister, METH_O, NULL},
 	 { "EcostressImageGroundConnection_swiginit", EcostressImageGroundConnection_swiginit, METH_VARARGS, NULL},
-	 { "new_EcostressTimeTable", _wrap_new_EcostressTimeTable, METH_VARARGS, "\n"
-		"EcostressTimeTable(Time Tstart, bool Averaging_done=True, int Num_scan=44, double Mirror_rpm=25.4, double Frame_time=0.0000321875)\n"
-		"EcostressTimeTable(Vector_Time Tstart_scan, bool Averaging_done=True, double Mirror_rpm=25.4, double Frame_time=0.0000321875)\n"
-		"EcostressTimeTable(std::string const & Fname, double Mirror_rpm=25.4, double Frame_time=0.0000321875, double Toffset=0)\n"
-		"EcostressTimeTable(std::string const & Fname, bool Averaging_done, double Mirror_rpm=25.4, double Frame_time=0.0000321875, double Toffset=0)\n"
-		""},
-	 { "EcostressTimeTable_scan_index_to_line", _wrap_EcostressTimeTable_scan_index_to_line, METH_VARARGS, "scan_index_to_line(EcostressTimeTable self, int Scan_index)"},
-	 { "EcostressTimeTable_line_to_scan_index", _wrap_EcostressTimeTable_line_to_scan_index, METH_VARARGS, "line_to_scan_index(EcostressTimeTable self, double Line) -> int"},
-	 { "EcostressTimeTable_close_to_scan_edge", _wrap_EcostressTimeTable_close_to_scan_edge, METH_VARARGS, "close_to_scan_edge(EcostressTimeTable self, int Line, int Width=3) -> bool"},
-	 { "EcostressTimeTable__v_averaging_done", _wrap_EcostressTimeTable__v_averaging_done, METH_O, "_v_averaging_done(EcostressTimeTable self) -> bool"},
-	 { "EcostressTimeTable__v_number_line_scan", _wrap_EcostressTimeTable__v_number_line_scan, METH_O, "_v_number_line_scan(EcostressTimeTable self) -> int"},
-	 { "EcostressTimeTable__v_number_good_scan", _wrap_EcostressTimeTable__v_number_good_scan, METH_O, "_v_number_good_scan(EcostressTimeTable self) -> int"},
-	 { "EcostressTimeTable__v_number_scan", _wrap_EcostressTimeTable__v_number_scan, METH_O, "_v_number_scan(EcostressTimeTable self) -> int"},
-	 { "EcostressTimeTable__v_mirror_rpm", _wrap_EcostressTimeTable__v_mirror_rpm, METH_O, "_v_mirror_rpm(EcostressTimeTable self) -> double"},
-	 { "EcostressTimeTable__v_nominal_scan_time", _wrap_EcostressTimeTable__v_nominal_scan_time, METH_O, "_v_nominal_scan_time(EcostressTimeTable self) -> double"},
-	 { "EcostressTimeTable__v_frame_time", _wrap_EcostressTimeTable__v_frame_time, METH_O, "_v_frame_time(EcostressTimeTable self) -> double"},
-	 { "EcostressTimeTable__v_tstart_scan", _wrap_EcostressTimeTable__v_tstart_scan, METH_O, "_v_tstart_scan(EcostressTimeTable self) -> Vector_Time"},
-	 { "delete_EcostressTimeTable", _wrap_delete_EcostressTimeTable, METH_O, "delete_EcostressTimeTable(EcostressTimeTable self)"},
+	 { "new_EcostressTimeTable", _wrap_new_EcostressTimeTable, METH_VARARGS, NULL},
+	 { "EcostressTimeTable_scan_index_to_line", _wrap_EcostressTimeTable_scan_index_to_line, METH_VARARGS, NULL},
+	 { "EcostressTimeTable_line_to_scan_index", _wrap_EcostressTimeTable_line_to_scan_index, METH_VARARGS, NULL},
+	 { "EcostressTimeTable_close_to_scan_edge", _wrap_EcostressTimeTable_close_to_scan_edge, METH_VARARGS, NULL},
+	 { "EcostressTimeTable__v_averaging_done", _wrap_EcostressTimeTable__v_averaging_done, METH_O, NULL},
+	 { "EcostressTimeTable__v_number_line_scan", _wrap_EcostressTimeTable__v_number_line_scan, METH_O, NULL},
+	 { "EcostressTimeTable__v_number_good_scan", _wrap_EcostressTimeTable__v_number_good_scan, METH_O, NULL},
+	 { "EcostressTimeTable__v_number_scan", _wrap_EcostressTimeTable__v_number_scan, METH_O, NULL},
+	 { "EcostressTimeTable__v_mirror_rpm", _wrap_EcostressTimeTable__v_mirror_rpm, METH_O, NULL},
+	 { "EcostressTimeTable__v_nominal_scan_time", _wrap_EcostressTimeTable__v_nominal_scan_time, METH_O, NULL},
+	 { "EcostressTimeTable__v_frame_time", _wrap_EcostressTimeTable__v_frame_time, METH_O, NULL},
+	 { "EcostressTimeTable__v_tstart_scan", _wrap_EcostressTimeTable__v_tstart_scan, METH_O, NULL},
+	 { "delete_EcostressTimeTable", _wrap_delete_EcostressTimeTable, METH_O, NULL},
 	 { "EcostressTimeTable_swigregister", EcostressTimeTable_swigregister, METH_O, NULL},
 	 { "EcostressTimeTable_swiginit", EcostressTimeTable_swiginit, METH_VARARGS, NULL},
-	 { "new_EcostressTimeTableSubset", _wrap_new_EcostressTimeTableSubset, METH_VARARGS, "new_EcostressTimeTableSubset(EcostressTimeTable Tt, int Start_sample, int Number_sample) -> EcostressTimeTableSubset"},
-	 { "EcostressTimeTableSubset__v_start_sample", _wrap_EcostressTimeTableSubset__v_start_sample, METH_O, "_v_start_sample(EcostressTimeTableSubset self) -> int"},
-	 { "delete_EcostressTimeTableSubset", _wrap_delete_EcostressTimeTableSubset, METH_O, "delete_EcostressTimeTableSubset(EcostressTimeTableSubset self)"},
+	 { "new_EcostressTimeTableSubset", _wrap_new_EcostressTimeTableSubset, METH_VARARGS, NULL},
+	 { "EcostressTimeTableSubset__v_start_sample", _wrap_EcostressTimeTableSubset__v_start_sample, METH_O, NULL},
+	 { "delete_EcostressTimeTableSubset", _wrap_delete_EcostressTimeTableSubset, METH_O, NULL},
 	 { "EcostressTimeTableSubset_swigregister", EcostressTimeTableSubset_swigregister, METH_O, NULL},
 	 { "EcostressTimeTableSubset_swiginit", EcostressTimeTableSubset_swiginit, METH_VARARGS, NULL},
 	 { "new_EcostressImageGroundConnectionSubset", _wrap_new_EcostressImageGroundConnectionSubset, METH_VARARGS, "\n"
-		"new_EcostressImageGroundConnectionSubset(boost::shared_ptr< Ecostress::EcostressImageGroundConnection > const & Igc, int Start_sample, int Num_sample) -> EcostressImageGroundConnectionSubset\n"
 		"\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::EcostressImageGroundConnectionSubset(const boost::shared_ptr< EcostressImageGroundConnection > &Igc, int\n"
 		"Start_sample, int Num_sample)\n"
@@ -13242,75 +12935,62 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"onnectionSubset\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset_orbit_data", _wrap_EcostressImageGroundConnectionSubset_orbit_data, METH_VARARGS, "\n"
-		"orbit_data(EcostressImageGroundConnectionSubset self, Time T, double Ic_line, double Ic_sample) -> boost::shared_ptr< GeoCal::QuaternionOrbitData >\n"
-		"orbit_data(EcostressImageGroundConnectionSubset self, TimeWithDerivative T, double Ic_line, AutoDerivativeDouble Ic_sample) -> boost::shared_ptr< GeoCal::QuaternionOrbitData >\n"
 		"\n"
 		"boost::shared_ptr< GeoCal::QuaternionOrbitData > Ecostress::EcostressImageGroundConnectionSubset::orbit_data(const GeoCal::TimeWithDerivative &T, double Ic_line, const\n"
 		"GeoCal::AutoDerivative< double > &Ic_sample) const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::orbit_data\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset_scan_index_to_line", _wrap_EcostressImageGroundConnectionSubset_scan_index_to_line, METH_VARARGS, "\n"
-		"scan_index_to_line(EcostressImageGroundConnectionSubset self, int Scan_index)\n"
 		"\n"
 		"void Ecostress::EcostressImageGroundConnectionSubset::scan_index_to_line(int Scan_index, int &Lstart, int &Lend) const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::scan_index_to_line\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_crosses_dateline", _wrap_EcostressImageGroundConnectionSubset__v_crosses_dateline, METH_O, "\n"
-		"_v_crosses_dateline(EcostressImageGroundConnectionSubset self) -> bool\n"
 		"\n"
 		"bool Ecostress::EcostressImageGroundConnectionSubset::crosses_dateline() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::crosses_dateline\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_number_line_scan", _wrap_EcostressImageGroundConnectionSubset__v_number_line_scan, METH_O, "\n"
-		"_v_number_line_scan(EcostressImageGroundConnectionSubset self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressImageGroundConnectionSubset::number_line_scan() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::number_line_scan\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_number_scan", _wrap_EcostressImageGroundConnectionSubset__v_number_scan, METH_O, "\n"
-		"_v_number_scan(EcostressImageGroundConnectionSubset self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressImageGroundConnectionSubset::number_scan() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::number_scan\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_number_good_scan", _wrap_EcostressImageGroundConnectionSubset__v_number_good_scan, METH_O, "\n"
-		"_v_number_good_scan(EcostressImageGroundConnectionSubset self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressImageGroundConnectionSubset::number_good_scan() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::number_good_scan\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_underlying_igc", _wrap_EcostressImageGroundConnectionSubset__v_underlying_igc, METH_O, "\n"
-		"_v_underlying_igc(EcostressImageGroundConnectionSubset self) -> boost::shared_ptr< Ecostress::EcostressImageGroundConnection >\n"
 		"\n"
 		"const boost::shared_ptr< EcostressImageGroundConnection > & Ecostress::EcostressImageGroundConnectionSubset::underlying_igc() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::underlying_igc\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_start_sample", _wrap_EcostressImageGroundConnectionSubset__v_start_sample, METH_O, "\n"
-		"_v_start_sample(EcostressImageGroundConnectionSubset self) -> int\n"
 		"\n"
 		"int Ecostress::EcostressImageGroundConnectionSubset::start_sample() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::start_sample\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_camera", _wrap_EcostressImageGroundConnectionSubset__v_camera, METH_O, "\n"
-		"_v_camera(EcostressImageGroundConnectionSubset self) -> boost::shared_ptr< GeoCal::Camera >\n"
 		"\n"
 		"const boost::shared_ptr< GeoCal::Camera > & Ecostress::EcostressImageGroundConnectionSubset::camera() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::camera\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_orbit", _wrap_EcostressImageGroundConnectionSubset__v_orbit, METH_O, "\n"
-		"_v_orbit(EcostressImageGroundConnectionSubset self) -> boost::shared_ptr< GeoCal::Orbit >\n"
 		"\n"
 		"const boost::shared_ptr< GeoCal::Orbit > & Ecostress::EcostressImageGroundConnectionSubset::orbit() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::orbit\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_sub_time_table", _wrap_EcostressImageGroundConnectionSubset__v_sub_time_table, METH_O, "\n"
-		"_v_sub_time_table(EcostressImageGroundConnectionSubset self) -> boost::shared_ptr< Ecostress::EcostressTimeTableSubset >\n"
 		"\n"
 		"boost::shared_ptr< EcostressTimeTableSubset > Ecostress::EcostressImageGroundConnectionSubset::sub_time_table() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::sub_time_table\n"
 		""},
 	 { "delete_EcostressImageGroundConnectionSubset", _wrap_delete_EcostressImageGroundConnectionSubset, METH_O, "\n"
-		"delete_EcostressImageGroundConnectionSubset(EcostressImageGroundConnectionSubset self)\n"
 		"\n"
 		"virtual Ecostress::EcostressImageGroundConnectionSubset::~EcostressImageGroundConnectionSubset()\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::~EcostressImageGround\n"
