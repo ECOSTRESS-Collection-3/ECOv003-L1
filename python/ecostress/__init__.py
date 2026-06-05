@@ -31,6 +31,10 @@ from .ecostress_interpolate import (
 from .exception import (
     VicarRunError,
 )
+from .find_store import (
+    walk_store,
+    walk_store_parse,
+)
 from .gaussian_stretch import (
     gaussian_stretch,
 )
@@ -224,6 +228,8 @@ __all__ = [
     "setup_spice",
     "time_split",
     "time_to_file_string",
+    "walk_store",
+    "walk_store_parse",
     "x_o_10",
     "x_o_a",
     "x_o_ef",

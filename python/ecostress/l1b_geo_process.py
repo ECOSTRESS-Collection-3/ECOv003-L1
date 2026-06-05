@@ -72,9 +72,11 @@ class L1bGeoProcess:
         # We don't set up the log file until later. We were loosing the log messages
         # about creating things, so now we do ahead and set up a memory buffer to
         # save this
-        self.log_memory_buffer : list[str] = []
-        def buffer_sink(message : str) -> None:
+        self.log_memory_buffer: list[str] = []
+
+        def buffer_sink(message: str) -> None:
             self.log_memory_buffer.append(message)
+
         self.log_memory_buffer_hid = logger.add(buffer_sink)
         self.strategy: L1bGeoStrategy = L1bCollection2GeoStrategy()
         self._line_order_reversed: bool | None = None

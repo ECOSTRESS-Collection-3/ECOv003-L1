@@ -117,4 +117,6 @@ ecostress_swig.EcostressImageGroundConnection.match_all_overlap = _match_all_ove
 
 ecostress_igc_extension_loaded = True
 
-__all__ = [ "ecostress_igc_extension_loaded", ]
+__all__ = [
+    "ecostress_igc_extension_loaded",
+]
