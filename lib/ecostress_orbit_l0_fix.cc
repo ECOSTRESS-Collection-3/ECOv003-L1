@@ -51,6 +51,39 @@ void EcostressOrbitL0Fix::print(std::ostream& Os) const
        << pos_off_(2) << ")\n";
 }
 
+//-------------------------------------------------------------------------
+/// Constructor, directly give data.
+//-------------------------------------------------------------------------
+
+EcostressOrbitL0Fix::EcostressOrbitL0Fix
+(
+ const blitz::Array<double, 1>& eph_time_j2000,
+ const blitz::Array<double, 2>& eci_position,
+ const blitz::Array<double, 2>& eci_velocity,
+ const blitz::Array<double, 2>& attitude,		      
+ const blitz::Array<double, 1>& time_correction,		      
+ double Extrapolation_pad,
+ double Large_gap,
+ bool Apply_fix)
+  : fname("no_file"),
+    apply_fix_(Apply_fix),
+    large_gap_(Large_gap),
+    pad_(Extrapolation_pad)
+{
+  blitz::Array<double, 1> t = eph_time_j2000.copy();
+  if(apply_fix())
+    t.reference(fix_l0_j2000_time(t));
+  t -= time_correction;
+  OrbitArray<Eci, TimeJ2000Creator>::init(t,
+     eci_position, eci_velocity, t, attitude,
+     OrbitArray<Eci, TimeJ2000Creator>::att_from_sc_to_ref_frame,
+     false);
+
+  // Add padding to min and max time.
+  min_tm -= pad_;
+  max_tm += pad_;
+}
+  
 
 //-------------------------------------------------------------------------
 /// Initialize data.

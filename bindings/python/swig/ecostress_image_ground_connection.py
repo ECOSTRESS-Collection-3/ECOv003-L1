@@ -61,6 +61,8 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _ecostress_image_ground_connection.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
+    r"""Proxy of C++ swig::SwigPyIterator class."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -89,6 +91,7 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _ecostress_image_ground_connection:
 _ecostress_image_ground_connection.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _ecostress_image_ground_connection.SHARED_PTR_DISOWN
+
 
 import os
 
@@ -157,9 +160,11 @@ class EcostressImageGroundConnection(geocal_swig.image_ground_connection.ImageGr
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
     REF_BAND = _ecostress_image_ground_connection.EcostressImageGroundConnection_REF_BAND
+    
 
     def __init__(self, *args):
         r"""
+        __init__(EcostressImageGroundConnection self, boost::shared_ptr< GeoCal::Orbit > const & Orb, boost::shared_ptr< GeoCal::TimeTable > const & Tt, boost::shared_ptr< GeoCal::Camera > const & Cam, boost::shared_ptr< Ecostress::EcostressScanMirror > const & Scan_mirror, boost::shared_ptr< GeoCal::Dem > const & D, boost::shared_ptr< GeoCal::RasterImage > const & Img, std::string const & Title="", double Resolution=30, int Band=REF_BAND, double Max_height=9000) -> EcostressImageGroundConnection
 
         EcostressImageGroundConnection::EcostressImageGroundConnection(const boost::shared_ptr< GeoCal::Orbit > &Orb, const
         boost::shared_ptr< GeoCal::TimeTable > &Tt, const boost::shared_ptr<

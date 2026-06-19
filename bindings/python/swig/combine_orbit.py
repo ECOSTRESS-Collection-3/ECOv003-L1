@@ -61,6 +61,8 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _combine_orbit.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
+    r"""Proxy of C++ swig::SwigPyIterator class."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -89,6 +91,7 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _combine_orbit:
 _combine_orbit.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _combine_orbit.SHARED_PTR_DISOWN
+
 
 import os
 
@@ -153,6 +156,7 @@ class CombineOrbit(geocal_swig.orbit.Orbit):
 
     def __init__(self):
         r"""
+        __init__(CombineOrbit self) -> CombineOrbit
 
         Ecostress::CombineOrbit::CombineOrbit()
         Ecostress::CombineOrbit::CombineOrbit

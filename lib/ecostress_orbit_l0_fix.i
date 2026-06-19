@@ -19,6 +19,14 @@ public:
 		 const blitz::Array<double, 1>& Pos_off,
 		 double Extrapolation_pad = 5.0,
 		 double Large_gap = 10.0, bool Apply_fix = true);
+  EcostressOrbitL0Fix(const blitz::Array<double, 1>& eph_time_j2000,
+		      const blitz::Array<double, 2>& eci_position,
+		      const blitz::Array<double, 2>& eci_velocity,
+		      const blitz::Array<double, 2>& attitude,		      
+		      const blitz::Array<double, 1>& time_correction,		      
+		      double Extrapolation_pad = 5.0,
+		      double Large_gap = 10.0,
+		      bool Apply_fix = false);
   static double fix_l0_j2000_time(double Wrong_j2000_time);
   static blitz::Array<double, 1>
   fix_l0_j2000_time(const blitz::Array<double, 1>& Wrong_j2000_time);

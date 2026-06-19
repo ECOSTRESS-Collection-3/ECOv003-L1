@@ -4721,14 +4721,14 @@ SWIG_AsVal_ptrdiff_t (PyObject * obj, ptrdiff_t *val)
 #include <boost/make_shared.hpp>
 
 
-  // This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
-  std::string parse_python_exception();
+  // This is defined in swig_wrap.tmpl, so it gets put into
+  // swig_wrap.cc
+  #include "python_exception.h"
 
 
 #include "serialize_function.h"
+#include "python_exception.h"  
 #include <stdexcept>
-// This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
-std::string parse_python_exception();
 
 
 //--------------------------------------------------------------
@@ -4749,7 +4749,7 @@ inline std::string cpickle_dumps(PyObject* obj)
 					     PyString_FromString("dumps"),
 					     obj, NULL);
   if(PyErr_Occurred()) {
-    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
+    throw PythonException();
   }
   char *buf;
   Py_ssize_t len;
@@ -4764,7 +4764,7 @@ inline PyObject* cpickle_loads(const std::string& S)
 					     PyBytes_FromStringAndSize(S.c_str(), S.size()), 
 					     NULL);
   if(PyErr_Occurred()) {
-    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
+    throw PythonException();
   }
   return res;
 }
@@ -6718,13 +6718,16 @@ SWIGINTERN PyObject *_wrap_coordinate_convert(PyObject *self, PyObject *args) {
       result = Ecostress::coordinate_convert((blitz::Array< double,1 > const &)*arg1,(blitz::Array< double,1 > const &)*arg2,(boost::shared_ptr< GeoCal::OgrWrapper > const &)*arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
   }
   {
     // Treat as pointer for the purposes of the macro
-    /*@SWIG:/project/sandbox/smyth/ecostress-build/build-fresh/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
+    /*@SWIG:/ldata/smyth/EcostressOrbit/.pixi/envs/default/share/geocal/swig/swig_array.i,197,%blitz_to_numpy@*/
     // Copy out dimensions and stride from blitz array
     npy_intp dims[2], stride[2];
     for(int i = 0; i < 2; ++i) {
@@ -6796,6 +6799,9 @@ SWIGINTERN PyObject *_wrap_set_fill_value(PyObject *self, PyObject *args) {
       Ecostress::set_fill_value((boost::shared_ptr< GeoCal::GdalRasterImage > const &)*arg1,arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6853,6 +6859,9 @@ SWIGINTERN PyObject *_wrap_set_scale(PyObject *self, PyObject *args) {
       Ecostress::set_scale((boost::shared_ptr< GeoCal::GdalRasterImage > const &)*arg1,arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -6909,6 +6918,9 @@ SWIGINTERN PyObject *_wrap_set_offset(PyObject *self, PyObject *args) {
     try {
       Ecostress::set_offset((boost::shared_ptr< GeoCal::GdalRasterImage > const &)*arg1,arg2);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -6978,6 +6990,9 @@ SWIGINTERN PyObject *_wrap_write_data(PyObject *self, PyObject *args) {
     try {
       Ecostress::write_data((boost::shared_ptr< GeoCal::GdalRasterImage > const &)*arg1,(blitz::Array< double,2 > const &)*arg2);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7069,6 +7084,9 @@ SWIGINTERN PyObject *_wrap_write_gdal(PyObject *self, PyObject *args) {
       Ecostress::write_gdal((std::string const &)*arg1,(std::string const &)*arg2,(GeoCal::GdalRasterImage const &)*arg3,(std::string const &)*arg4);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7133,6 +7151,9 @@ SWIGINTERN PyObject *_wrap_gdal_band(PyObject *self, PyObject *args) {
       result = Ecostress::gdal_band((boost::shared_ptr< GeoCal::GdalRasterImage > const &)*arg1,arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7186,6 +7207,9 @@ SWIGINTERN PyObject *_wrap_to_proj4(PyObject *self, PyObject *args) {
       result = Ecostress::to_proj4((boost::shared_ptr< GeoCal::OgrCoordinate > const &)*arg1);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7200,25 +7224,29 @@ fail:
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "SwigPyIterator_value(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "SwigPyIterator_incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "SwigPyIterator_decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "SwigPyIterator_distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "SwigPyIterator_equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "SwigPyIterator_copy(SwigPyIterator self) -> SwigPyIterator"},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "SwigPyIterator_next(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "SwigPyIterator___next__(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "SwigPyIterator_previous(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "SwigPyIterator_advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "SwigPyIterator___eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "SwigPyIterator___ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "SwigPyIterator___iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "SwigPyIterator___isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "SwigPyIterator___add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
+		"SwigPyIterator___sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
+		"SwigPyIterator___sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
+		""},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "coordinate_convert", _wrap_coordinate_convert, METH_VARARGS, "\n"
+		"coordinate_convert(BlitzArray_double_1 latitude, BlitzArray_double_1 longitude, boost::shared_ptr< GeoCal::OgrWrapper > const & ogr) -> BlitzArray_double_2\n"
 		"\n"
 		"blitz::Array< double, 2 > Ecostress::coordinate_convert(const blitz::Array< double, 1 > &latitude, const blitz::Array<\n"
 		"double, 1 > &longitude, const boost::shared_ptr< GeoCal::OgrWrapper >\n"
@@ -7229,6 +7257,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "set_fill_value", _wrap_set_fill_value, METH_VARARGS, "\n"
+		"set_fill_value(boost::shared_ptr< GeoCal::GdalRasterImage > const & Img, double Fill_value)\n"
 		"\n"
 		"void Ecostress::set_fill_value(const boost::shared_ptr< GeoCal::GdalRasterImage > &Img, double\n"
 		"Fill_value)\n"
@@ -7239,6 +7268,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "set_scale", _wrap_set_scale, METH_VARARGS, "\n"
+		"set_scale(boost::shared_ptr< GeoCal::GdalRasterImage > const & Img, double Scale_value)\n"
 		"\n"
 		"void Ecostress::set_scale(const boost::shared_ptr< GeoCal::GdalRasterImage > &Img, double\n"
 		"Scale_value)\n"
@@ -7249,6 +7279,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "set_offset", _wrap_set_offset, METH_VARARGS, "\n"
+		"set_offset(boost::shared_ptr< GeoCal::GdalRasterImage > const & Img, double Offset_value)\n"
 		"\n"
 		"void Ecostress::set_offset(const boost::shared_ptr< GeoCal::GdalRasterImage > &Img, double\n"
 		"Offset_value)\n"
@@ -7259,6 +7290,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "write_data", _wrap_write_data, METH_VARARGS, "\n"
+		"write_data(boost::shared_ptr< GeoCal::GdalRasterImage > const & Img, BlitzArray_double_2 Data)\n"
 		"\n"
 		"void Ecostress::write_data(const boost::shared_ptr< GeoCal::GdalRasterImage > &Img, const\n"
 		"blitz::Array< double, 2 > &Data)\n"
@@ -7268,6 +7300,7 @@ static PyMethodDef SwigMethods[] = {
 		"older version of geocal. \n"
 		""},
 	 { "write_gdal", _wrap_write_gdal, METH_VARARGS, "\n"
+		"write_gdal(std::string const & Fname, std::string const & Driver_name, GdalRasterImage Img, std::string const & Options)\n"
 		"\n"
 		"void Ecostress::write_gdal(const std::string &Fname, const std::string &Driver_name, const\n"
 		"GeoCal::GdalRasterImage &Img, const std::string &Options)\n"
@@ -7278,11 +7311,13 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "gdal_band", _wrap_gdal_band, METH_VARARGS, "\n"
+		"gdal_band(boost::shared_ptr< GeoCal::GdalRasterImage > const & G, int B) -> boost::shared_ptr< GeoCal::GdalRasterImage >\n"
 		"\n"
 		"boost::shared_ptr< GeoCal::GdalRasterImage > Ecostress::gdal_band(const boost::shared_ptr< GeoCal::GdalRasterImage > &G, int B)\n"
 		"Ecostress::gdal_band\n"
 		""},
 	 { "to_proj4", _wrap_to_proj4, METH_O, "\n"
+		"to_proj4(boost::shared_ptr< GeoCal::OgrCoordinate > const & G) -> std::string\n"
 		"\n"
 		"std::string Ecostress::to_proj4(const boost::shared_ptr< GeoCal::OgrCoordinate > &G)\n"
 		"Ecostress::to_proj4\n"
@@ -7297,25 +7332,29 @@ static PyMethodDef SwigMethods[] = {
 static PyMethodDef SwigMethods_proxydocs[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "value(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "copy(SwigPyIterator self) -> SwigPyIterator"},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "next(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "__next__(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "previous(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "__eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "__ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "__iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "__isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "__add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
+		"__sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
+		"__sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
+		""},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "coordinate_convert", _wrap_coordinate_convert, METH_VARARGS, "\n"
+		"coordinate_convert(BlitzArray_double_1 latitude, BlitzArray_double_1 longitude, boost::shared_ptr< GeoCal::OgrWrapper > const & ogr) -> BlitzArray_double_2\n"
 		"\n"
 		"blitz::Array< double, 2 > Ecostress::coordinate_convert(const blitz::Array< double, 1 > &latitude, const blitz::Array<\n"
 		"double, 1 > &longitude, const boost::shared_ptr< GeoCal::OgrWrapper >\n"
@@ -7326,6 +7365,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "set_fill_value", _wrap_set_fill_value, METH_VARARGS, "\n"
+		"set_fill_value(boost::shared_ptr< GeoCal::GdalRasterImage > const & Img, double Fill_value)\n"
 		"\n"
 		"void Ecostress::set_fill_value(const boost::shared_ptr< GeoCal::GdalRasterImage > &Img, double\n"
 		"Fill_value)\n"
@@ -7336,6 +7376,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "set_scale", _wrap_set_scale, METH_VARARGS, "\n"
+		"set_scale(boost::shared_ptr< GeoCal::GdalRasterImage > const & Img, double Scale_value)\n"
 		"\n"
 		"void Ecostress::set_scale(const boost::shared_ptr< GeoCal::GdalRasterImage > &Img, double\n"
 		"Scale_value)\n"
@@ -7346,6 +7387,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "set_offset", _wrap_set_offset, METH_VARARGS, "\n"
+		"set_offset(boost::shared_ptr< GeoCal::GdalRasterImage > const & Img, double Offset_value)\n"
 		"\n"
 		"void Ecostress::set_offset(const boost::shared_ptr< GeoCal::GdalRasterImage > &Img, double\n"
 		"Offset_value)\n"
@@ -7356,6 +7398,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "write_data", _wrap_write_data, METH_VARARGS, "\n"
+		"write_data(boost::shared_ptr< GeoCal::GdalRasterImage > const & Img, BlitzArray_double_2 Data)\n"
 		"\n"
 		"void Ecostress::write_data(const boost::shared_ptr< GeoCal::GdalRasterImage > &Img, const\n"
 		"blitz::Array< double, 2 > &Data)\n"
@@ -7365,6 +7408,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"older version of geocal. \n"
 		""},
 	 { "write_gdal", _wrap_write_gdal, METH_VARARGS, "\n"
+		"write_gdal(std::string const & Fname, std::string const & Driver_name, GdalRasterImage Img, std::string const & Options)\n"
 		"\n"
 		"void Ecostress::write_gdal(const std::string &Fname, const std::string &Driver_name, const\n"
 		"GeoCal::GdalRasterImage &Img, const std::string &Options)\n"
@@ -7375,11 +7419,13 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "gdal_band", _wrap_gdal_band, METH_VARARGS, "\n"
+		"gdal_band(boost::shared_ptr< GeoCal::GdalRasterImage > const & G, int B) -> boost::shared_ptr< GeoCal::GdalRasterImage >\n"
 		"\n"
 		"boost::shared_ptr< GeoCal::GdalRasterImage > Ecostress::gdal_band(const boost::shared_ptr< GeoCal::GdalRasterImage > &G, int B)\n"
 		"Ecostress::gdal_band\n"
 		""},
 	 { "to_proj4", _wrap_to_proj4, METH_O, "\n"
+		"to_proj4(boost::shared_ptr< GeoCal::OgrCoordinate > const & G) -> std::string\n"
 		"\n"
 		"std::string Ecostress::to_proj4(const boost::shared_ptr< GeoCal::OgrCoordinate > &G)\n"
 		"Ecostress::to_proj4\n"

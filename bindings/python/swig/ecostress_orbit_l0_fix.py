@@ -61,6 +61,8 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _ecostress_orbit_l0_fix.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
+    r"""Proxy of C++ swig::SwigPyIterator class."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -89,6 +91,7 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _ecostress_orbit_l0_fix:
 _ecostress_orbit_l0_fix.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _ecostress_orbit_l0_fix.SHARED_PTR_DISOWN
+
 
 import os
 
@@ -162,6 +165,9 @@ class EcostressOrbitL0Fix(geocal_swig.orbit_array.OrbitArray_Eci_TimeJ2000):
 
     def __init__(self, *args):
         r"""
+        __init__(EcostressOrbitL0Fix self, std::string const & Fname, double Extrapolation_pad=5.0, double Large_gap=10.0, bool Apply_fix=True) -> EcostressOrbitL0Fix
+        __init__(EcostressOrbitL0Fix self, std::string const & Fname, BlitzArray_double_1 Pos_off, double Extrapolation_pad=5.0, double Large_gap=10.0, bool Apply_fix=True) -> EcostressOrbitL0Fix
+        __init__(EcostressOrbitL0Fix self, BlitzArray_double_1 eph_time_j2000, BlitzArray_double_2 eci_position, BlitzArray_double_2 eci_velocity, BlitzArray_double_2 attitude, BlitzArray_double_1 time_correction, double Extrapolation_pad=5.0, double Large_gap=10.0, bool Apply_fix=False) -> EcostressOrbitL0Fix
 
         Ecostress::EcostressOrbitL0Fix::EcostressOrbitL0Fix(const std::string &Fname, double Extrapolation_pad=5.0, double
         Large_gap=10.0, bool Apply_fix=true)

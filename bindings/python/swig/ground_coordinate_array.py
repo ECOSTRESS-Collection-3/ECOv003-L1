@@ -61,6 +61,8 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _ground_coordinate_array.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
+    r"""Proxy of C++ swig::SwigPyIterator class."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -89,6 +91,7 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _ground_coordinate_array:
 _ground_coordinate_array.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _ground_coordinate_array.SHARED_PTR_DISOWN
+
 
 import os
 
@@ -172,6 +175,7 @@ class GroundCoordinateArray(geocal_swig.generic_object.GenericObject):
 
     def __init__(self, Igc, Include_angle=False, Nsub_line=1, Nsub_sample=1):
         r"""
+        __init__(GroundCoordinateArray self, boost::shared_ptr< GeoCal::ImageGroundConnection > const & Igc, bool Include_angle=False, int Nsub_line=1, int Nsub_sample=1) -> GroundCoordinateArray
 
         Ecostress::GroundCoordinateArray::GroundCoordinateArray(const boost::shared_ptr< GeoCal::ImageGroundConnection > &Igc, bool
         Include_angle=false, int Nsub_line=1, int Nsub_sample=1)

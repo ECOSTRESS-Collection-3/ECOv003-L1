@@ -61,6 +61,8 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _hdfeos_filehandle.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
+    r"""Proxy of C++ swig::SwigPyIterator class."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -89,6 +91,7 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _hdfeos_filehandle:
 _hdfeos_filehandle.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _hdfeos_filehandle.SHARED_PTR_DISOWN
+
 
 import os
 
@@ -164,12 +167,17 @@ class HdfEosFileHandle(geocal_swig.generic_object.GenericObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
     READ = _hdfeos_filehandle.HdfEosFileHandle_READ
+    
     READWRITE = _hdfeos_filehandle.HdfEosFileHandle_READWRITE
+    
     TRUNC = _hdfeos_filehandle.HdfEosFileHandle_TRUNC
+    
     CREATE = _hdfeos_filehandle.HdfEosFileHandle_CREATE
+    
 
     def __init__(self, *args):
         r"""
+        __init__(HdfEosFileHandle self, std::string const & Fname, int mode=READ) -> HdfEosFileHandle
 
         HdfEosFileHandle::HdfEosFileHandle(const std::string &Fname, int mode=READ)
         Ecostress::HdfEosFileHandle::HdfEosFileHandle

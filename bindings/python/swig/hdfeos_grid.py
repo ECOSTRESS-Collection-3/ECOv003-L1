@@ -61,6 +61,8 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _hdfeos_grid.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
+    r"""Proxy of C++ swig::SwigPyIterator class."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -89,6 +91,7 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _hdfeos_grid:
 _hdfeos_grid.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _hdfeos_grid.SHARED_PTR_DISOWN
+
 
 import os
 
@@ -158,6 +161,8 @@ class HdfEosGrid(geocal_swig.generic_object.GenericObject):
 
     def __init__(self, *args):
         r"""
+        __init__(HdfEosGrid self, boost::shared_ptr< Ecostress::HdfEosFileHandle > const & Fhandle, std::string const & Grid_name) -> HdfEosGrid
+        __init__(HdfEosGrid self, boost::shared_ptr< Ecostress::HdfEosFileHandle > const & Fhandle, std::string const & Grid_name, MapInfo Minfo) -> HdfEosGrid
 
         HdfEosGrid::HdfEosGrid(const boost::shared_ptr< HdfEosFileHandle > &Fhandle, const
         std::string &Grid_name, const GeoCal::MapInfo &Minfo, int

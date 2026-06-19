@@ -61,6 +61,8 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _ecostress_rad_average.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
+    r"""Proxy of C++ swig::SwigPyIterator class."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -89,6 +91,7 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _ecostress_rad_average:
 _ecostress_rad_average.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _ecostress_rad_average.SHARED_PTR_DISOWN
+
 
 import os
 
@@ -156,6 +159,7 @@ class EcostressRadAverage(geocal_swig.calc_raster.CalcRaster):
 
     def __init__(self, Original_data):
         r"""
+        __init__(EcostressRadAverage self, boost::shared_ptr< GeoCal::RasterImage > const & Original_data) -> EcostressRadAverage
 
         EcostressRadAverage::EcostressRadAverage(const boost::shared_ptr< GeoCal::RasterImage > &Original_data)
         Ecostress::EcostressRadAverage::EcostressRadAverage

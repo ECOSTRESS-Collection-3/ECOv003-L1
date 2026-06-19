@@ -34,6 +34,15 @@ public:
     init();
   }
 
+  EcostressOrbitL0Fix(const blitz::Array<double, 1>& eph_time_j2000,
+		      const blitz::Array<double, 2>& eci_position,
+		      const blitz::Array<double, 2>& eci_velocity,
+		      const blitz::Array<double, 2>& attitude,		      
+		      const blitz::Array<double, 1>& time_correction,		      
+		      double Extrapolation_pad = 5.0,
+		      double Large_gap = 10.0,
+		      bool Apply_fix = false);
+  
 //-------------------------------------------------------------------------
 /// Constructor, read the give file and allow the given amount of
 /// extrapolation pad. Treat gaps in the data > Large_gap as a large

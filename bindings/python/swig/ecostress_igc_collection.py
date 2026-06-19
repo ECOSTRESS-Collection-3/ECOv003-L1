@@ -61,6 +61,8 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _ecostress_igc_collection.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
+    r"""Proxy of C++ swig::SwigPyIterator class."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -89,6 +91,7 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _ecostress_igc_collection:
 _ecostress_igc_collection.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _ecostress_igc_collection.SHARED_PTR_DISOWN
+
 
 import os
 
@@ -154,6 +157,7 @@ class EcostressIgcCollection(geocal_swig.igc_array.IgcArray):
 
     def __init__(self):
         r"""
+        __init__(EcostressIgcCollection self) -> EcostressIgcCollection
 
         Ecostress::EcostressIgcCollection::EcostressIgcCollection()
         Ecostress::EcostressIgcCollection::EcostressIgcCollection

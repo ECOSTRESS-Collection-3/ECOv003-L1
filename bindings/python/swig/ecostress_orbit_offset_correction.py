@@ -61,6 +61,8 @@ import weakref
 
 SWIG_MODULE_ALREADY_DONE = _ecostress_orbit_offset_correction.SWIG_MODULE_ALREADY_DONE
 class SwigPyIterator(object):
+    r"""Proxy of C++ swig::SwigPyIterator class."""
+
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
@@ -89,6 +91,7 @@ class SwigPyIterator(object):
 # Register SwigPyIterator in _ecostress_orbit_offset_correction:
 _ecostress_orbit_offset_correction.SwigPyIterator_swigregister(SwigPyIterator)
 SHARED_PTR_DISOWN = _ecostress_orbit_offset_correction.SHARED_PTR_DISOWN
+
 
 import os
 
@@ -152,6 +155,7 @@ class EcostressOrbitOffsetCorrection(geocal_swig.orbit.Orbit):
 
     def __init__(self, Orb_uncorr):
         r"""
+        __init__(EcostressOrbitOffsetCorrection self, boost::shared_ptr< GeoCal::Orbit > const Orb_uncorr) -> EcostressOrbitOffsetCorrection
 
         Ecostress::EcostressOrbitOffsetCorrection::EcostressOrbitOffsetCorrection(const boost::shared_ptr< GeoCal::Orbit > Orb_uncorr)
         Ecostress::EcostressOrbitOffsetCorrection::EcostressOrbitOffsetCorrect

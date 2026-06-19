@@ -4571,14 +4571,14 @@ SWIG_AsVal_ptrdiff_t (PyObject * obj, ptrdiff_t *val)
 #include <boost/make_shared.hpp>
 
 
-  // This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
-  std::string parse_python_exception();
+  // This is defined in swig_wrap.tmpl, so it gets put into
+  // swig_wrap.cc
+  #include "python_exception.h"
 
 
 #include "serialize_function.h"
+#include "python_exception.h"  
 #include <stdexcept>
-// This is defined in swig_wrap.tmpl, so it gets put into swig_wrap.cc
-std::string parse_python_exception();
 
 
 //--------------------------------------------------------------
@@ -4599,7 +4599,7 @@ inline std::string cpickle_dumps(PyObject* obj)
 					     PyString_FromString("dumps"),
 					     obj, NULL);
   if(PyErr_Occurred()) {
-    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
+    throw PythonException();
   }
   char *buf;
   Py_ssize_t len;
@@ -4614,7 +4614,7 @@ inline PyObject* cpickle_loads(const std::string& S)
 					     PyBytes_FromStringAndSize(S.c_str(), S.size()), 
 					     NULL);
   if(PyErr_Occurred()) {
-    throw std::runtime_error("Python error occurred:\n" + parse_python_exception());
+    throw PythonException();
   }
   return res;
 }
@@ -7021,6 +7021,9 @@ SWIGINTERN PyObject *_wrap_new_HdfEosGrid__SWIG_0(PyObject *self, Py_ssize_t nob
       result = (Ecostress::HdfEosGrid *)new Ecostress::HdfEosGrid((boost::shared_ptr< Ecostress::HdfEosFileHandle > const &)*arg1,(std::string const &)*arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7117,6 +7120,9 @@ SWIGINTERN PyObject *_wrap_new_HdfEosGrid__SWIG_1(PyObject *self, Py_ssize_t nob
       result = (Ecostress::HdfEosGrid *)new Ecostress::HdfEosGrid((boost::shared_ptr< Ecostress::HdfEosFileHandle > const &)*arg1,(std::string const &)*arg2,(GeoCal::MapInfo const &)*arg3);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7193,6 +7199,9 @@ SWIGINTERN PyObject *_wrap_HdfEosGrid_close(PyObject *self, PyObject *args) {
       (arg1)->close();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7225,6 +7234,9 @@ SWIGINTERN PyObject *_wrap_HdfEosGrid_dms_to_deg(PyObject *self, PyObject *args)
       result = (double)Ecostress::HdfEosGrid::dms_to_deg(arg1);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7256,6 +7268,9 @@ SWIGINTERN PyObject *_wrap_HdfEosGrid_deg_to_dms(PyObject *self, PyObject *args)
     try {
       result = (double)Ecostress::HdfEosGrid::deg_to_dms(arg1);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7301,6 +7316,9 @@ SWIGINTERN PyObject *_wrap_HdfEosGrid__v_grid_name(PyObject *self, PyObject *arg
       result = ((Ecostress::HdfEosGrid const *)arg1)->grid_name();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7344,6 +7362,9 @@ SWIGINTERN PyObject *_wrap_HdfEosGrid__v_file_handle(PyObject *self, PyObject *a
     try {
       result = ((Ecostress::HdfEosGrid const *)arg1)->file_handle();
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7391,6 +7412,9 @@ SWIGINTERN PyObject *_wrap_HdfEosGrid__v_grid_id(PyObject *self, PyObject *args)
       result = ((Ecostress::HdfEosGrid const *)arg1)->grid_id();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7434,6 +7458,9 @@ SWIGINTERN PyObject *_wrap_HdfEosGrid__v_map_info(PyObject *self, PyObject *args
     try {
       result = ((Ecostress::HdfEosGrid const *)arg1)->map_info();
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7482,6 +7509,9 @@ SWIGINTERN PyObject *_wrap_HdfEosGrid__v_field_name(PyObject *self, PyObject *ar
     try {
       result = ((Ecostress::HdfEosGrid const *)arg1)->field_name();
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7537,6 +7567,9 @@ SWIGINTERN PyObject *_wrap_HdfEosGrid_add_field_uchar(PyObject *self, PyObject *
     try {
       (arg1)->add_field_uchar((std::string const &)*arg2);
     } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
       SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -7595,6 +7628,9 @@ SWIGINTERN PyObject *_wrap_HdfEosGrid_add_field_float(PyObject *self, PyObject *
       (arg1)->add_field_float((std::string const &)*arg2);
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7641,6 +7677,9 @@ SWIGINTERN PyObject *_wrap_HdfEosGrid___str__(PyObject *self, PyObject *args) {
       result = ((Ecostress::HdfEosGrid const *)arg1)->print_to_string();
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7684,6 +7723,9 @@ SWIGINTERN PyObject *_wrap_delete_HdfEosGrid(PyObject *self, PyObject *args) {
       (void)arg1; delete smartarg1;
     } catch (Swig::DirectorException &e) {
       SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
     } catch (const std::exception& e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
     }
@@ -7709,25 +7751,30 @@ SWIGINTERN PyObject *HdfEosGrid_swiginit(PyObject *SWIGUNUSEDPARM(self), PyObjec
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "SwigPyIterator_value(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "SwigPyIterator_incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "SwigPyIterator_decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "SwigPyIterator_distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "SwigPyIterator_equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "SwigPyIterator_copy(SwigPyIterator self) -> SwigPyIterator"},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "SwigPyIterator_next(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "SwigPyIterator___next__(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "SwigPyIterator_previous(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "SwigPyIterator_advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "SwigPyIterator___eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "SwigPyIterator___ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "SwigPyIterator___iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "SwigPyIterator___isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "SwigPyIterator___add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
+		"SwigPyIterator___sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
+		"SwigPyIterator___sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
+		""},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "new_HdfEosGrid", _wrap_new_HdfEosGrid, METH_VARARGS, "\n"
+		"HdfEosGrid(boost::shared_ptr< Ecostress::HdfEosFileHandle > const & Fhandle, std::string const & Grid_name)\n"
+		"new_HdfEosGrid(boost::shared_ptr< Ecostress::HdfEosFileHandle > const & Fhandle, std::string const & Grid_name, MapInfo Minfo) -> HdfEosGrid\n"
 		"\n"
 		"HdfEosGrid::HdfEosGrid(const boost::shared_ptr< HdfEosFileHandle > &Fhandle, const\n"
 		"std::string &Grid_name, const GeoCal::MapInfo &Minfo, int\n"
@@ -7737,6 +7784,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid_close", _wrap_HdfEosGrid_close, METH_O, "\n"
+		"HdfEosGrid_close(HdfEosGrid self)\n"
 		"\n"
 		"void HdfEosGrid::close()\n"
 		"Ecostress::HdfEosGrid::close\n"
@@ -7744,6 +7792,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid_dms_to_deg", _wrap_HdfEosGrid_dms_to_deg, METH_O, "\n"
+		"HdfEosGrid_dms_to_deg(double dms) -> double\n"
 		"\n"
 		"double HdfEosGrid::dms_to_deg(double dms)\n"
 		"Ecostress::HdfEosGrid::dms_to_deg\n"
@@ -7751,6 +7800,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid_deg_to_dms", _wrap_HdfEosGrid_deg_to_dms, METH_O, "\n"
+		"HdfEosGrid_deg_to_dms(double deg) -> double\n"
 		"\n"
 		"double HdfEosGrid::deg_to_dms(double deg)\n"
 		"Ecostress::HdfEosGrid::deg_to_dms\n"
@@ -7758,6 +7808,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid__v_grid_name", _wrap_HdfEosGrid__v_grid_name, METH_O, "\n"
+		"HdfEosGrid__v_grid_name(HdfEosGrid self) -> std::string\n"
 		"\n"
 		"const std::string & Ecostress::HdfEosGrid::grid_name() const\n"
 		"Ecostress::HdfEosGrid::grid_name\n"
@@ -7765,6 +7816,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid__v_file_handle", _wrap_HdfEosGrid__v_file_handle, METH_O, "\n"
+		"HdfEosGrid__v_file_handle(HdfEosGrid self) -> boost::shared_ptr< Ecostress::HdfEosFileHandle >\n"
 		"\n"
 		"const boost::shared_ptr< HdfEosFileHandle > & Ecostress::HdfEosGrid::file_handle() const\n"
 		"Ecostress::HdfEosGrid::file_handle\n"
@@ -7772,6 +7824,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid__v_grid_id", _wrap_HdfEosGrid__v_grid_id, METH_O, "\n"
+		"HdfEosGrid__v_grid_id(HdfEosGrid self) -> hid_t\n"
 		"\n"
 		"hid_t Ecostress::HdfEosGrid::grid_id() const\n"
 		"Ecostress::HdfEosGrid::grid_id\n"
@@ -7779,6 +7832,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid__v_map_info", _wrap_HdfEosGrid__v_map_info, METH_O, "\n"
+		"HdfEosGrid__v_map_info(HdfEosGrid self) -> MapInfo\n"
 		"\n"
 		"const GeoCal::MapInfo & Ecostress::HdfEosGrid::map_info() const\n"
 		"Ecostress::HdfEosGrid::map_info\n"
@@ -7786,6 +7840,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid__v_field_name", _wrap_HdfEosGrid__v_field_name, METH_O, "\n"
+		"HdfEosGrid__v_field_name(HdfEosGrid self) -> vector_string\n"
 		"\n"
 		"const std::vector< std::string > & Ecostress::HdfEosGrid::field_name() const\n"
 		"Ecostress::HdfEosGrid::field_name\n"
@@ -7793,6 +7848,7 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid_add_field_uchar", _wrap_HdfEosGrid_add_field_uchar, METH_VARARGS, "\n"
+		"HdfEosGrid_add_field_uchar(HdfEosGrid self, std::string const & Name)\n"
 		"\n"
 		"void HdfEosGrid::add_field_uchar(const std::string &Name)\n"
 		"Ecostress::HdfEosGrid::add_field_uchar\n"
@@ -7800,14 +7856,16 @@ static PyMethodDef SwigMethods[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid_add_field_float", _wrap_HdfEosGrid_add_field_float, METH_VARARGS, "\n"
+		"HdfEosGrid_add_field_float(HdfEosGrid self, std::string const & Name)\n"
 		"\n"
 		"void HdfEosGrid::add_field_float(const std::string &Name)\n"
 		"Ecostress::HdfEosGrid::add_field_float\n"
 		"Add field.\n"
 		"\n"
 		""},
-	 { "HdfEosGrid___str__", _wrap_HdfEosGrid___str__, METH_O, NULL},
+	 { "HdfEosGrid___str__", _wrap_HdfEosGrid___str__, METH_O, "HdfEosGrid___str__(HdfEosGrid self) -> std::string"},
 	 { "delete_HdfEosGrid", _wrap_delete_HdfEosGrid, METH_O, "\n"
+		"delete_HdfEosGrid(HdfEosGrid self)\n"
 		"\n"
 		"virtual Ecostress::HdfEosGrid::~HdfEosGrid()\n"
 		"Ecostress::HdfEosGrid::~HdfEosGrid\n"
@@ -7820,25 +7878,30 @@ static PyMethodDef SwigMethods[] = {
 static PyMethodDef SwigMethods_proxydocs[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { "SWIG_PyStaticMethod_New", SWIG_PyStaticMethod_New, METH_O, NULL},
-	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, NULL},
-	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, NULL},
-	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, NULL},
-	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, NULL},
-	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, NULL},
-	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, NULL},
-	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, NULL},
-	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, NULL},
-	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, NULL},
-	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, NULL},
-	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, NULL},
-	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, NULL},
+	 { "delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_O, "delete_SwigPyIterator(SwigPyIterator self)"},
+	 { "SwigPyIterator_value", _wrap_SwigPyIterator_value, METH_O, "value(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_incr", _wrap_SwigPyIterator_incr, METH_VARARGS, "incr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_decr", _wrap_SwigPyIterator_decr, METH_VARARGS, "decr(SwigPyIterator self, size_t n=1) -> SwigPyIterator"},
+	 { "SwigPyIterator_distance", _wrap_SwigPyIterator_distance, METH_VARARGS, "distance(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t"},
+	 { "SwigPyIterator_equal", _wrap_SwigPyIterator_equal, METH_VARARGS, "equal(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator_copy", _wrap_SwigPyIterator_copy, METH_O, "copy(SwigPyIterator self) -> SwigPyIterator"},
+	 { "SwigPyIterator_next", _wrap_SwigPyIterator_next, METH_O, "next(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator___next__", _wrap_SwigPyIterator___next__, METH_O, "__next__(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_previous", _wrap_SwigPyIterator_previous, METH_O, "previous(SwigPyIterator self) -> PyObject *"},
+	 { "SwigPyIterator_advance", _wrap_SwigPyIterator_advance, METH_VARARGS, "advance(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___eq__", _wrap_SwigPyIterator___eq__, METH_VARARGS, "__eq__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___ne__", _wrap_SwigPyIterator___ne__, METH_VARARGS, "__ne__(SwigPyIterator self, SwigPyIterator x) -> bool"},
+	 { "SwigPyIterator___iadd__", _wrap_SwigPyIterator___iadd__, METH_VARARGS, "__iadd__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___isub__", _wrap_SwigPyIterator___isub__, METH_VARARGS, "__isub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___add__", _wrap_SwigPyIterator___add__, METH_VARARGS, "__add__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator"},
+	 { "SwigPyIterator___sub__", _wrap_SwigPyIterator___sub__, METH_VARARGS, "\n"
+		"__sub__(SwigPyIterator self, ptrdiff_t n) -> SwigPyIterator\n"
+		"__sub__(SwigPyIterator self, SwigPyIterator x) -> ptrdiff_t\n"
+		""},
 	 { "SwigPyIterator_swigregister", SwigPyIterator_swigregister, METH_O, NULL},
 	 { "new_HdfEosGrid", _wrap_new_HdfEosGrid, METH_VARARGS, "\n"
+		"HdfEosGrid(boost::shared_ptr< Ecostress::HdfEosFileHandle > const & Fhandle, std::string const & Grid_name)\n"
+		"new_HdfEosGrid(boost::shared_ptr< Ecostress::HdfEosFileHandle > const & Fhandle, std::string const & Grid_name, MapInfo Minfo) -> HdfEosGrid\n"
 		"\n"
 		"HdfEosGrid::HdfEosGrid(const boost::shared_ptr< HdfEosFileHandle > &Fhandle, const\n"
 		"std::string &Grid_name, const GeoCal::MapInfo &Minfo, int\n"
@@ -7848,6 +7911,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid_close", _wrap_HdfEosGrid_close, METH_O, "\n"
+		"close(HdfEosGrid self)\n"
 		"\n"
 		"void HdfEosGrid::close()\n"
 		"Ecostress::HdfEosGrid::close\n"
@@ -7855,6 +7919,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid_dms_to_deg", _wrap_HdfEosGrid_dms_to_deg, METH_O, "\n"
+		"dms_to_deg(double dms) -> double\n"
 		"\n"
 		"double HdfEosGrid::dms_to_deg(double dms)\n"
 		"Ecostress::HdfEosGrid::dms_to_deg\n"
@@ -7862,6 +7927,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid_deg_to_dms", _wrap_HdfEosGrid_deg_to_dms, METH_O, "\n"
+		"deg_to_dms(double deg) -> double\n"
 		"\n"
 		"double HdfEosGrid::deg_to_dms(double deg)\n"
 		"Ecostress::HdfEosGrid::deg_to_dms\n"
@@ -7869,6 +7935,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid__v_grid_name", _wrap_HdfEosGrid__v_grid_name, METH_O, "\n"
+		"_v_grid_name(HdfEosGrid self) -> std::string\n"
 		"\n"
 		"const std::string & Ecostress::HdfEosGrid::grid_name() const\n"
 		"Ecostress::HdfEosGrid::grid_name\n"
@@ -7876,6 +7943,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid__v_file_handle", _wrap_HdfEosGrid__v_file_handle, METH_O, "\n"
+		"_v_file_handle(HdfEosGrid self) -> boost::shared_ptr< Ecostress::HdfEosFileHandle >\n"
 		"\n"
 		"const boost::shared_ptr< HdfEosFileHandle > & Ecostress::HdfEosGrid::file_handle() const\n"
 		"Ecostress::HdfEosGrid::file_handle\n"
@@ -7883,6 +7951,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid__v_grid_id", _wrap_HdfEosGrid__v_grid_id, METH_O, "\n"
+		"_v_grid_id(HdfEosGrid self) -> hid_t\n"
 		"\n"
 		"hid_t Ecostress::HdfEosGrid::grid_id() const\n"
 		"Ecostress::HdfEosGrid::grid_id\n"
@@ -7890,6 +7959,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid__v_map_info", _wrap_HdfEosGrid__v_map_info, METH_O, "\n"
+		"_v_map_info(HdfEosGrid self) -> MapInfo\n"
 		"\n"
 		"const GeoCal::MapInfo & Ecostress::HdfEosGrid::map_info() const\n"
 		"Ecostress::HdfEosGrid::map_info\n"
@@ -7897,6 +7967,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid__v_field_name", _wrap_HdfEosGrid__v_field_name, METH_O, "\n"
+		"_v_field_name(HdfEosGrid self) -> vector_string\n"
 		"\n"
 		"const std::vector< std::string > & Ecostress::HdfEosGrid::field_name() const\n"
 		"Ecostress::HdfEosGrid::field_name\n"
@@ -7904,6 +7975,7 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid_add_field_uchar", _wrap_HdfEosGrid_add_field_uchar, METH_VARARGS, "\n"
+		"add_field_uchar(HdfEosGrid self, std::string const & Name)\n"
 		"\n"
 		"void HdfEosGrid::add_field_uchar(const std::string &Name)\n"
 		"Ecostress::HdfEosGrid::add_field_uchar\n"
@@ -7911,14 +7983,16 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"\n"
 		""},
 	 { "HdfEosGrid_add_field_float", _wrap_HdfEosGrid_add_field_float, METH_VARARGS, "\n"
+		"add_field_float(HdfEosGrid self, std::string const & Name)\n"
 		"\n"
 		"void HdfEosGrid::add_field_float(const std::string &Name)\n"
 		"Ecostress::HdfEosGrid::add_field_float\n"
 		"Add field.\n"
 		"\n"
 		""},
-	 { "HdfEosGrid___str__", _wrap_HdfEosGrid___str__, METH_O, NULL},
+	 { "HdfEosGrid___str__", _wrap_HdfEosGrid___str__, METH_O, "__str__(HdfEosGrid self) -> std::string"},
 	 { "delete_HdfEosGrid", _wrap_delete_HdfEosGrid, METH_O, "\n"
+		"delete_HdfEosGrid(HdfEosGrid self)\n"
 		"\n"
 		"virtual Ecostress::HdfEosGrid::~HdfEosGrid()\n"
 		"Ecostress::HdfEosGrid::~HdfEosGrid\n"
