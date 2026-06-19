@@ -23,9 +23,10 @@ public:
 //-------------------------------------------------------------------------
 /// Add an orbit to the list
 ///
-/// IMPORTANT: Each orbit may overlap with at most ONE other orbit.
+/// IMPORTANT: Each orbit may have at most one overlap at its min_time
+/// and at most one overlap at its max_time (up to 2 overlaps total).
 /// When multiple orbits contain a time, the orbit with earliest min_time
-/// is preferred. This function validates the single-overlap constraint
+/// is preferred. This function validates the overlap constraints
 /// and throws an exception if violated.
 //-------------------------------------------------------------------------
 

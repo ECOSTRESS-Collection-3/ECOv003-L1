@@ -24,46 +24,93 @@ ECOSTRESS_IMPLEMENT(CombineOrbit);
 /// Add an orbit to the list - see header for full documentation
 void CombineOrbit::add_orbit(const boost::shared_ptr<GeoCal::Orbit>& orb)
 {
-  // Step 1: Find which existing orbits overlap with the new orbit
-  std::vector<int> overlapping_indices;
+  // Step 1: Find and classify overlaps with the new orbit
+  std::vector<int> min_time_overlaps;  // Orbits that overlap new orbit's min_time
+  std::vector<int> max_time_overlaps;  // Orbits that overlap new orbit's max_time
+
   for(size_t i = 0; i < orb_list_.size(); ++i) {
     bool overlaps = !(orb->max_time() <= orb_list_[i]->min_time() ||
                       orb_list_[i]->max_time() <= orb->min_time());
-    if(overlaps) {
-      overlapping_indices.push_back(i);
+    if(!overlaps) continue;
+
+    // Classify the type of overlap
+    if(orb_list_[i]->min_time() < orb->min_time() &&
+       orb_list_[i]->max_time() > orb->min_time()) {
+      // Existing orbit overlaps new orbit's min_time
+      min_time_overlaps.push_back(i);
+    }
+
+    if(orb_list_[i]->min_time() >= orb->min_time() &&
+       orb_list_[i]->min_time() < orb->max_time()) {
+      // Existing orbit overlaps new orbit's max_time
+      max_time_overlaps.push_back(i);
     }
   }
 
-  // Step 2: Validate constraint - at most one overlap allowed
-  if(overlapping_indices.size() > 1) {
+  // Step 2: Validate constraint for new orbit - at most 1 overlap each end
+  if(min_time_overlaps.size() > 1) {
     GeoCal::Exception e;
     e << "Cannot add orbit with time range ["
       << orb->min_time() << ", " << orb->max_time()
-      << ") - overlaps with " << overlapping_indices.size() << " existing orbits. "
-      << "Each orbit may overlap with at most one other orbit.";
+      << ") - has " << min_time_overlaps.size()
+      << " overlaps at its min_time, maximum 1 allowed";
+    throw e;
+  }
+  if(max_time_overlaps.size() > 1) {
+    GeoCal::Exception e;
+    e << "Cannot add orbit with time range ["
+      << orb->min_time() << ", " << orb->max_time()
+      << ") - has " << max_time_overlaps.size()
+      << " overlaps at its max_time, maximum 1 allowed";
     throw e;
   }
 
-  // Step 3: If there's one overlap, verify that orbit doesn't already
-  // overlap with any OTHER existing orbit
-  if(overlapping_indices.size() == 1) {
-    int overlap_idx = overlapping_indices[0];
+  // Step 3: For each overlapping orbit, verify it doesn't exceed its limits
+  // Check the orbit that overlaps new orbit's min_time
+  if(min_time_overlaps.size() == 1) {
+    int idx = min_time_overlaps[0];
+    // This overlap is at existing orbit's max_time
+    // Count how many orbits already overlap this existing orbit's max_time
+    int max_time_overlap_count = 0;
     for(size_t i = 0; i < orb_list_.size(); ++i) {
-      if((int)i == overlap_idx) continue;  // Skip self
-
-      bool already_overlaps =
-        !(orb_list_[overlap_idx]->max_time() <= orb_list_[i]->min_time() ||
-          orb_list_[i]->max_time() <= orb_list_[overlap_idx]->min_time());
-
-      if(already_overlaps) {
-        GeoCal::Exception e;
-        e << "Cannot add orbit with time range ["
-          << orb->min_time() << ", " << orb->max_time()
-          << ") - it overlaps with existing orbit at index " << overlap_idx
-          << " which already overlaps with orbit at index " << i
-          << ". Each orbit may overlap with at most one other orbit.";
-        throw e;
+      if((int)i == idx) continue;
+      // Does orbit i overlap orbit[idx]'s max_time?
+      if(orb_list_[i]->min_time() >= orb_list_[idx]->min_time() &&
+         orb_list_[i]->min_time() < orb_list_[idx]->max_time()) {
+        max_time_overlap_count++;
       }
+    }
+    if(max_time_overlap_count >= 1) {
+      GeoCal::Exception e;
+      e << "Cannot add orbit with time range ["
+        << orb->min_time() << ", " << orb->max_time()
+        << ") - existing orbit at index " << idx
+        << " already has a max_time overlap";
+      throw e;
+    }
+  }
+
+  // Check the orbit that overlaps new orbit's max_time
+  if(max_time_overlaps.size() == 1) {
+    int idx = max_time_overlaps[0];
+    // This overlap is at existing orbit's min_time
+    // Count how many orbits already overlap this existing orbit's min_time
+    int min_time_overlap_count = 0;
+    for(size_t i = 0; i < orb_list_.size(); ++i) {
+      if((int)i == idx) continue;
+      // Does orbit i overlap orbit[idx]'s min_time?
+      if(orb_list_[i]->min_time() < orb_list_[idx]->min_time() &&
+         orb_list_[i]->max_time() > orb_list_[idx]->min_time()) {
+        min_time_overlap_count++;
+      }
+    }
+    if(min_time_overlap_count >= 1) {
+      GeoCal::Exception e;
+      e << "Cannot add orbit with time range ["
+        << orb->min_time() << ", " << orb->max_time()
+        << ") - existing orbit at index " << idx
+        << " already has a min_time overlap";
+      throw e;
     }
   }
 
@@ -147,21 +194,25 @@ boost::shared_ptr<OrbitData> CombineOrbit::orbit_data(Time T) const
 
   auto candidate = std::prev(upper);
 
-  // Check previous orbit first (earlier min_time, preferred on overlap)
-  if(candidate != orb_list_.begin()) {
-    auto prev = std::prev(candidate);
-    if(T >= (*prev)->min_time() && T < (*prev)->max_time()) {
-      last_used_orbit_ = *prev;
-      last_used_index_ = std::distance(orb_list_.begin(), prev);
-      return (*prev)->orbit_data(T);
+  // Walk backwards from candidate to find earliest orbit containing T
+  // Stop when we find an orbit with max_time <= T (no earlier orbit can contain T)
+  for(auto it = candidate; ; --it) {
+    if(T >= (*it)->min_time() && T < (*it)->max_time()) {
+      // Found orbit containing T with earliest min_time
+      last_used_orbit_ = *it;
+      last_used_index_ = std::distance(orb_list_.begin(), it);
+      return (*it)->orbit_data(T);
     }
-  }
 
-  // Check candidate orbit
-  if(T >= (*candidate)->min_time() && T < (*candidate)->max_time()) {
-    last_used_orbit_ = *candidate;
-    last_used_index_ = std::distance(orb_list_.begin(), candidate);
-    return (*candidate)->orbit_data(T);
+    // If this orbit ends before T, no earlier orbit can contain T
+    if((*it)->max_time() <= T) {
+      break;
+    }
+
+    // Stop if we've reached the beginning
+    if(it == orb_list_.begin()) {
+      break;
+    }
   }
 
   GeoCal::Exception e;
@@ -204,21 +255,25 @@ CombineOrbit::orbit_data(const GeoCal::TimeWithDerivative& T) const
 
   auto candidate = std::prev(upper);
 
-  // Check previous orbit first (earlier min_time, preferred on overlap)
-  if(candidate != orb_list_.begin()) {
-    auto prev = std::prev(candidate);
-    if(T >= (*prev)->min_time() && T < (*prev)->max_time()) {
-      last_used_orbit_ = *prev;
-      last_used_index_ = std::distance(orb_list_.begin(), prev);
-      return (*prev)->orbit_data(T);
+  // Walk backwards from candidate to find earliest orbit containing T
+  // Stop when we find an orbit with max_time <= T (no earlier orbit can contain T)
+  for(auto it = candidate; ; --it) {
+    if(T >= (*it)->min_time() && T < (*it)->max_time()) {
+      // Found orbit containing T with earliest min_time
+      last_used_orbit_ = *it;
+      last_used_index_ = std::distance(orb_list_.begin(), it);
+      return (*it)->orbit_data(T);
     }
-  }
 
-  // Check candidate orbit
-  if(T >= (*candidate)->min_time() && T < (*candidate)->max_time()) {
-    last_used_orbit_ = *candidate;
-    last_used_index_ = std::distance(orb_list_.begin(), candidate);
-    return (*candidate)->orbit_data(T);
+    // If this orbit ends before T, no earlier orbit can contain T
+    if((*it)->max_time() <= T) {
+      break;
+    }
+
+    // Stop if we've reached the beginning
+    if(it == orb_list_.begin()) {
+      break;
+    }
   }
 
   GeoCal::Exception e;
