@@ -23,48 +23,13 @@ public:
 //-------------------------------------------------------------------------
 /// Add an orbit to the list
 ///
-/// IMPORTANT: Orbits must have disjoint (non-overlapping) time ranges.
-/// This function validates the disjoint property and throws an exception
-/// if a new orbit overlaps with any existing orbit.
+/// IMPORTANT: Each orbit may overlap with at most ONE other orbit.
+/// When multiple orbits contain a time, the orbit with earliest min_time
+/// is preferred. This function validates the single-overlap constraint
+/// and throws an exception if violated.
 //-------------------------------------------------------------------------
 
-  void add_orbit(const boost::shared_ptr<GeoCal::Orbit>& orb)
-  {
-    // Check for overlap with existing orbits (validate disjoint invariant)
-    for(const auto& existing : orb_list_) {
-      // Orbits overlap if neither is completely before the other
-      bool disjoint = (orb->max_time() <= existing->min_time()) ||
-                      (existing->max_time() <= orb->min_time());
-      if(!disjoint) {
-        GeoCal::Exception e;
-        e << "Cannot add orbit with time range ["
-          << orb->min_time() << ", " << orb->max_time()
-          << ") - overlaps with existing orbit ["
-          << existing->min_time() << ", " << existing->max_time() << ")";
-        throw e;
-      }
-    }
-
-    orb_list_.push_back(orb);
-
-    // Update combined orbit's time range
-    if(orb_list_.size() == 1) {
-      min_tm = orb->min_time();
-      max_tm = orb->max_time();
-    } else {
-      if(orb->min_time() < min_tm)
-        min_tm = orb->min_time();
-      if(orb->max_time() > max_tm)
-        max_tm = orb->max_time();
-    }
-
-    // Mark as unsorted - will sort on first access
-    is_sorted_ = false;
-
-    // Invalidate cache
-    last_used_index_ = -1;
-    last_used_orbit_.reset();
-  }
+  void add_orbit(const boost::shared_ptr<GeoCal::Orbit>& orb);
 
 //-------------------------------------------------------------------------
 /// List of orbits  
