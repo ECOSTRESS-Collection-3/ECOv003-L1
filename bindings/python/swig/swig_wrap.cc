@@ -2,7 +2,6 @@
 #include "geocal/python_lib_init.h"
 
 extern "C" {
-  INIT_TYPE INIT_FUNC(_combine_orbit)(void);
   INIT_TYPE INIT_FUNC(_ecostress_swig_array)(void);
   INIT_TYPE INIT_FUNC(_ecostress_dqi)(void);
   INIT_TYPE INIT_FUNC(_ecostress_camera)(void);
@@ -30,7 +29,6 @@ extern "C" {
 
 static void module_init(PyObject* module)
 {
-  INIT_MODULE(module, "_combine_orbit", INIT_FUNC(_combine_orbit));
   INIT_MODULE(module, "_ecostress_swig_array", INIT_FUNC(_ecostress_swig_array));
   INIT_MODULE(module, "_ecostress_dqi", INIT_FUNC(_ecostress_dqi));
   INIT_MODULE(module, "_ecostress_camera", INIT_FUNC(_ecostress_camera));
