@@ -70,12 +70,13 @@ EcostressOrbitL0Fix::EcostressOrbitL0Fix
     large_gap_(Large_gap),
     pad_(Extrapolation_pad)
 {
+  OrbitArray<GeoCal::Eci, GeoCal::TimeJ2000Creator>::att_from_sc_to_ref_frame = true;
   blitz::Array<double, 1> t = eph_time_j2000.copy();
   if(apply_fix())
     t.reference(fix_l0_j2000_time(t));
   t -= time_correction;
-  OrbitArray<Eci, TimeJ2000Creator>::init(t,
-     eci_position, eci_velocity, t, attitude,
+  OrbitArray<Eci, TimeJ2000Creator>::init(t.copy(),
+     eci_position.copy(), eci_velocity.copy(), t.copy(), attitude.copy(),
      OrbitArray<Eci, TimeJ2000Creator>::att_from_sc_to_ref_frame,
      false);
 
