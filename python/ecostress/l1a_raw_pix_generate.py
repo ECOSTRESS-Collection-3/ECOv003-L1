@@ -698,7 +698,7 @@ class L1aRawPixGenerate(object):
             if sts.gps > gpt[tot_pkts - 1]:
                 t0 = Time.time_gps(gpt[tot_pkts - 1])
                 print(
-                    "Scene time %s(%f) past data time %s(%f)"
+                    "Scene start time %s(%f) past last data packet time %s(%f)"
                     % (sts, sts.gps, t0, gpt[tot_pkts - 1])
                 )
                 continue  # go to next scene
@@ -909,12 +909,12 @@ class L1aRawPixGenerate(object):
                         line = scan * PPFP
 
                     elif seq == 2:  # save and replicate IMG start time
+                        pix_time[line : line + PPFP] = Time.time_gps(p0t).j2000
                         print(
-                            "Orbit %s SCENE %d SCAN %d P0T=%f"
-                            % (orb, scene_id, scan, p0t)
+                            "Orbit %s SCENE %d SCAN %d LINE=%d PIX_TIME[%d]=%f P0T=%f"
+                            % (orb, scene_id, scan, line, line, pix_time[line], p0t)
                         )
                         # pix_time[line:line+PPFP] = Time.time_gps( p0t-tc ).j2000
-                        pix_time[line : line + PPFP] = Time.time_gps(p0t).j2000
 
                     print(
                         "Found %s LID[%d,%d]=%d PH=%d SCENE=%s SCAN=%d GPS=%f DPT=%f %s"
@@ -1266,6 +1266,16 @@ class L1aRawPixGenerate(object):
             l1a_qamissing.attrs["Units"] = "percentage"
             l1a_qamissing.attrs["valid_min"] = 0
             l1a_qamissing.attrs["valid_max"] = 100
+
+            # save FLEX FSW time, SYNC FPIE, and SYNC FSW
+
+            e0 = np.argmax(rst < gpt)
+            e1 = np.argmax(rse < gpt)
+            if e1 - e0 > 0:
+                print("Saving FLEX time_fsw, sync_fpie, sync_fsw E0=%d E1=%d" % ( e0, e1) )
+                l1a_metag.create_dataset("time_fsw", data=fswt[e0:e1], dtype="f8")
+                l1a_metag.create_dataset("time_sync_fpie", data=fpie_sync[e0:e1], dtype="u8")
+                l1a_metag.create_dataset("time_sync_fsw", data=fsw_sync[e0:e1], dtype="u8")
 
             if iss_tcorr > 0:  #  record ISS time error correction into L1A_RAW file
                 e0 = np.argmax(rst < terr)

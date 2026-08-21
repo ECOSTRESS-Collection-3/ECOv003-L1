@@ -9,7 +9,7 @@ from pathlib import Path
 @pytest.fixture(scope="function")
 def unit_test_data():
     """Return the unit test directory"""
-    yield Path(os.path.dirname(__file__)).parent.parent.parent / "unit_test_data"
+    return Path(os.path.dirname(__file__)).parent.parent.parent / "unit_test_data"
 
 
 @pytest.fixture(scope="function")
@@ -42,7 +42,7 @@ def test_data():
         if not os.path.exists(tdata):
             pytest.skip("Don't have ecostress-test-data, so skipping test")
     if os.path.exists(tdata):
-        yield tdata
+        return tdata
     else:
         pytest.skip("Don't have ecostress-test-data, so skipping test")
 
@@ -64,7 +64,7 @@ def test_data_latest():
         if not os.path.exists(tdata):
             pytest.skip("Don't have ecostress-test-data, so skipping test")
     if os.path.exists(tdata):
-        yield tdata
+        return tdata
     else:
         pytest.skip("Don't have ecostress-test-data, so skipping test")
 
@@ -87,21 +87,29 @@ def vicar_path():
 
 @pytest.fixture(scope="function")
 def dn_fname(test_data):
-    yield test_data / "ECOSTRESS_L1A_PIX_80005_001_20150124T204250_0100_02.h5.expected"
+    return test_data / "ECOSTRESS_L1A_PIX_80005_001_20150124T204250_0100_02.h5.expected"
 
 
 @pytest.fixture(scope="function")
 def gain_fname(test_data):
-    yield test_data / "L1A_RAD_GAIN_80005_001_20150124T204250_0100_02.h5.expected"
+    return test_data / "L1A_RAD_GAIN_80005_001_20150124T204250_0100_02.h5.expected"
 
 
 @pytest.fixture(scope="function")
 def dn_latest_fname(test_data_latest):
-    yield (
+    return (
         test_data_latest / "ECOv003_L1A_PIX_03663_001_20190227T101222_02.h5.expected"
     )
 
 
 @pytest.fixture(scope="function")
 def gain_latest_fname(test_data_latest):
-    yield (test_data_latest / "L1A_RAD_GAIN_03663_001_20190227T101222_02.h5.expected")
+    return (test_data_latest / "L1A_RAD_GAIN_03663_001_20190227T101222_02.h5.expected")
+
+@pytest.fixture(scope="session")
+def end_to_end_run_dir():
+    res = Path(os.path.dirname(__file__)).parent.parent / "end_to_end_run"
+    # Create directory if it isn't already there
+    res.mkdir(parents=True, exist_ok=True)
+    return res
+    
