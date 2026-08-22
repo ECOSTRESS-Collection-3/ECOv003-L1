@@ -16,7 +16,6 @@ class L0TimeCalc:
     second time is what is reported with the ephemeris and attitude,
     and is the source of the time data in L1A_RAW_ATT files.
 
-
     There are several errors in the L0B timing.
 
     One error was fixed in version 7.13 of the L0B software, an error
@@ -197,10 +196,10 @@ class L0TimeCalc:
         # whole orbit and downstream code may process many scenes with it -
         # this lets a caller check once at the end whether *any* scene in
         # the orbit hit this degraded-quality condition, rather than having
-        # to check the return value of every single gps_time() call.
+        # to check the return value of every single gps_time_for_scene() call.
         self.no_uncorrupted_bad_error_correction_data = False
 
-    def gps_time(
+    def gps_time_for_scene(
         self,
         time_fsw: np.ndarray,
         time_sync_fsw: np.ndarray,
@@ -210,6 +209,17 @@ class L0TimeCalc:
         scene as returns j2000 times. This combines the data, and
         applies our corrections (see description of class for
         details).
+
+        Note the data passed in should be for a single scene, not a full
+        orbit or multiple scenes. The corrupt-data handling here (see
+        _robust_time_fsw_range and _robust_bad_time_error_correction) relies
+        on knowing a scene is 52 seconds long - it uses that to decide
+        whether a given time_fsw or bad_time_error_correction sample is
+        wildly inconsistent with the rest and should be treated as corrupt.
+        If you pass in more than a scene of data (e.g. a whole orbit), that
+        assumption no longer holds and the corrupt-data checks will not
+        behave correctly (they may reject genuine samples, or fail to
+        reject actually corrupt ones).
         """
         # Correct fractional part of time_fsw, see description of class for details
         tfrac, tint = np.modf(time_fsw)
