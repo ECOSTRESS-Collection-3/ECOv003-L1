@@ -4,6 +4,7 @@ import pytest
 import subprocess
 import os
 
+
 @pytest.mark.long_test
 def test_l1a_raw_pix_generate(isolated_dir, test_data):
     l0b = str(test_data / "L0B_80005_20150124T204251_0100_01.h5")
@@ -58,16 +59,26 @@ def test_process_scene_file2(test_data, unit_test_data):
     assert t[1][3] == Time.parse_time("2015-01-24T20:44:51.000000Z")
     assert t[2][3] == Time.parse_time("2015-01-24T20:45:36.000000Z")
 
+
 def test_hawaii_orbit_l1a_raw(end_to_end_run_dir, test_data_latest):
-    '''This runs a full orbit that we used when testing out geolocation.
+    """This runs a full orbit that we used when testing out geolocation.
     This contains a hawaii scene in the first scene that had poor geolocation
-    in collection 2. We will use this to test out the time fixes.'''
+    in collection 2. We will use this to test out the time fixes."""
     os.environ["AFIDS_DATA"] = "/opt/afids/data"
     os.environ["AFIDS_VDEV_DATA"] = "/opt/afids/data/vdev"
-    subprocess.run(["l1a_raw_process",
-                      "/arcdata/smyth/L0B/2019/08/23/L0B_06415_20190823T151324_0713_02.h5",
-                      "/arcdata/smyth/ObstFile/",
-                      "/arcdata/smyth/SceneFile/2019/08/23/Scene_06415_20190823T151325_20190823T163757_20260602T010722.txt",
-                      str(test_data_latest / "l1_osp_dir"),
-                      str(end_to_end_run_dir / "l1a_raw_06415")])
-    
+    subprocess.run(
+        [
+            "l1a_raw_process",
+            "/arcdata/smyth/L0B/2019/08/23/L0B_06415_20190823T151324_0713_02.h5",
+            "/arcdata/smyth/ObstFile/",
+            "/arcdata/smyth/SceneFile/2019/08/23/Scene_06415_20190823T151325_20190823T163757_20260602T010722.txt",
+            str(test_data_latest / "l1_osp_dir"),
+            str(end_to_end_run_dir / "l1a_raw_06415"),
+        ]
+    )
+    # Offset for scene 1 is 90, if we want to compare to L0B
+    # fin = h5py.File("/home/smyth/Local/ecostress-level1/python/end_to_end_run/l1a_raw_06415/L1A_RAW_PIX_06415_001_20190823T151326_01.h5")
+    # fin2 = h5py.File("/arcdata/smyth/l0_flex_time_data.h5")
+    # time_fsw = fin["/L1A_RAW_PIXMetadata/time_fsw"][:]
+    # time_fsw2 = fin2["/6415/time_fsw"][:]
+    # np.count_nonzero(np.abs(time_fsw2[90:90+3714] - time_fsw)) is 0

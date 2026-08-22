@@ -1272,10 +1272,16 @@ class L1aRawPixGenerate(object):
             e0 = np.argmax(rst < gpt)
             e1 = np.argmax(rse < gpt)
             if e1 - e0 > 0:
-                print("Saving FLEX time_fsw, sync_fpie, sync_fsw E0=%d E1=%d" % ( e0, e1) )
+                print(
+                    "Saving FLEX time_fsw, sync_fpie, sync_fsw E0=%d E1=%d" % (e0, e1)
+                )
                 l1a_metag.create_dataset("time_fsw", data=fswt[e0:e1], dtype="f8")
-                l1a_metag.create_dataset("time_sync_fpie", data=fpie_sync[e0:e1], dtype="u8")
-                l1a_metag.create_dataset("time_sync_fsw", data=fsw_sync[e0:e1], dtype="u8")
+                l1a_metag.create_dataset(
+                    "time_sync_fpie", data=fpie_sync[e0:e1], dtype="u8"
+                )
+                l1a_metag.create_dataset(
+                    "time_sync_fsw", data=fsw_sync[e0:e1], dtype="u8"
+                )
 
             if iss_tcorr > 0:  #  record ISS time error correction into L1A_RAW file
                 e0 = np.argmax(rst < terr)
