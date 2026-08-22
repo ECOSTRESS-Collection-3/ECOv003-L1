@@ -1,5 +1,6 @@
 from __future__ import annotations
 import numpy as np
+from loguru import logger
 
 
 class L0TimeCalc:
@@ -77,6 +78,43 @@ class L0TimeCalc:
     error correction time stamp.  So we just take the median value
     over the time of the scene, which is good enough.
 
+    A follow-up AI analysis looking for corrupt bad_time_error_correction
+    values mission wide found that genuine values are essentially always
+    within +/-1 second, with rare (a handful of orbits out of the full
+    mission) genuine step changes of a few seconds within a single scene
+    (real ISS clock discipline events, not corruption). But there is a
+    large, completely empty gap in the per-orbit maximum magnitude between
+    about 25 seconds and about 395,000 seconds - no genuine value, and no
+    known corrupted value, ever falls in that range. Two distinct known
+    corruption modes land well above that gap: garbled/bit-flip-like
+    telemetry (values of order 1e8-8e8 seconds) and an apparent GPS
+    week-number rollover bug (values within a fraction of a second of
+    +/-604800, i.e. exactly one week). So we treat any
+    bad_time_error_correction sample with a magnitude at or above
+    CORRUPT_TIME_ERROR_CORRECTION_THRESHOLD as corrupt and exclude it before
+    taking the median. Note this threshold intentionally does *not* try to
+    catch corruption in the plausible few-second range (that also occurs,
+    but rarely, and can't be distinguished from a genuine fast clock
+    correction step by magnitude alone); the wide scene-spanning median
+    window already gives good robustness against that since it takes a
+    large number of samples across the whole scene, not just a couple of
+    points at the edges.
+
+    We also saw the occasional corrupt time_fsw value (the L0A/L0B science
+    data time stamp), which if used directly for time_fsw_fixed.min()/max()
+    can badly distort the scene time window used to select
+    bad_time_error_correction samples. We guard against this the same way,
+    by excluding time_fsw values that are wildly inconsistent (more than
+    CORRUPT_TIME_FSW_THRESHOLD seconds from the median) with the rest of the
+    scene before taking min/max.
+
+    Finally, we occasionally see the scene's time window contain no valid
+    (non-corrupt) bad_time_error_correction samples at all - either because
+    of a real gap in BAD telemetry (this happens fairly often right at the
+    start of a scene) or because every sample nearby happens to be
+    corrupted. In that case we fall back to the single closest valid sample
+    anywhere in the orbit, logging a warning since that value may be stale.
+
     The third error is a L0A error. The BAD time stamp associated with
     the science data is made up of two pieces, a count of seconds and
     a fractional part. The L0A incorrectly handles the fractional part
@@ -117,6 +155,20 @@ class L0TimeCalc:
 
     """
 
+    # See discussion above. Any bad_time_error_correction sample with a
+    # magnitude at or above this (seconds) is treated as corrupt and
+    # excluded. Chosen to sit in the middle of the empty gap (~25s to
+    # ~395,000s) found in the mission-wide analysis, so it can't accidentally
+    # reject genuine data.
+    CORRUPT_TIME_ERROR_CORRECTION_THRESHOLD = 50.0
+
+    # A scene is 52 seconds. Any time_fsw sample more than this many seconds
+    # from the median time_fsw for the scene is treated as corrupt and
+    # excluded before computing the scene's time_fsw_fixed.min()/max(). This
+    # is intentionally more than half a scene so we don't reject legitimate
+    # samples near the edges of the scene.
+    CORRUPT_TIME_FSW_THRESHOLD = 60.0
+
     def __init__(self, hr_time: np.ndarray, time_error_correction: np.ndarray) -> None:
         """This take the L0B /hk/bad/hr/time time (the PS BAD time stamp, in GPS time)
         and the L0B /hk/bad/hr/time_error_correction (error correction, in seconds).
@@ -140,22 +192,95 @@ class L0TimeCalc:
         tfrac, tint = np.modf(time_fsw)
         time_fsw_fixed = tint + 1e3 * tfrac
 
-        # Take median of time error corrections near the edges of the
-        # scene. We add a buffer of 2 seconds just so we don't
-        # truncate at the edges
-
-        # TODO Add handling for bad time_fsw_fixed and bad bad_time_error_correction
-        bcorr = np.median(
-            self._bad_time_error_correction[
-                (self._bad_time >= time_fsw_fixed.min() - 2)
-                & (self._bad_time <= time_fsw_fixed.max() + 2)
-            ]
-        )
+        tmin, tmax = self._robust_time_fsw_range(time_fsw_fixed)
+        bcorr = self._robust_bad_time_error_correction(tmin, tmax)
 
         # Note the sign on bcorr really is right here, this is just the convention used
         # by the ISS in reporting bad_time_error_correction. The 1e6 is because the
         # sync times are actually 1MHz counter values
         return time_fsw_fixed - bcorr + (time_sync_fpie - time_sync_fsw) * 1e-6
+
+    def _robust_time_fsw_range(self, time_fsw_fixed: np.ndarray) -> tuple[float, float]:
+        """Return (min, max) of time_fsw_fixed for the scene, excluding any
+        samples that are wildly inconsistent with the rest (a corrupt
+        time_fsw_fixed value), since a single corrupt value would otherwise
+        badly distort the min/max and hence the scene time window used to
+        select bad_time_error_correction samples.
+        """
+        med = np.median(time_fsw_fixed)
+        good = np.abs(time_fsw_fixed - med) <= self.CORRUPT_TIME_FSW_THRESHOLD
+        n_bad = int((~good).sum())
+        if n_bad == 0:
+            return float(time_fsw_fixed.min()), float(time_fsw_fixed.max())
+        if not np.any(good):
+            logger.warning(
+                "All time_fsw values for this scene disagree with each other "
+                f"by more than {self.CORRUPT_TIME_FSW_THRESHOLD}s. Falling "
+                "back to the raw min/max; results may be unreliable."
+            )
+            return float(time_fsw_fixed.min()), float(time_fsw_fixed.max())
+        logger.warning(
+            f"Found {n_bad} corrupt time_fsw value(s) for this scene (more "
+            f"than {self.CORRUPT_TIME_FSW_THRESHOLD}s from the scene "
+            "median). Excluding these before determining the scene time window."
+        )
+        good_vals = time_fsw_fixed[good]
+        return float(good_vals.min()), float(good_vals.max())
+
+    def _robust_bad_time_error_correction(self, tmin: float, tmax: float) -> float:
+        """Return the median bad_time_error_correction over the scene
+        [tmin, tmax], robust to corrupt sample values (see class
+        description). We add a buffer of 2 seconds just so we don't truncate
+        at the edges.
+        """
+        in_scene = (self._bad_time >= tmin - 2) & (self._bad_time <= tmax + 2)
+        candidate = self._bad_time_error_correction[in_scene]
+
+        good = np.abs(candidate) < self.CORRUPT_TIME_ERROR_CORRECTION_THRESHOLD
+        n_bad = int((~good).sum())
+        if n_bad > 0:
+            logger.warning(
+                f"Found {n_bad} corrupt bad_time_error_correction value(s) "
+                f"(|value| >= {self.CORRUPT_TIME_ERROR_CORRECTION_THRESHOLD}s) "
+                "near this scene. Excluding these before taking the median."
+            )
+        good_candidate = candidate[good]
+
+        if len(good_candidate) > 0:
+            return float(np.median(good_candidate))
+
+        logger.warning(
+            "No valid bad_time_error_correction samples found within the "
+            "scene time window (either a gap in BAD telemetry, or everything "
+            "nearby is corrupt). Falling back to the closest valid sample "
+            "anywhere in the orbit."
+        )
+        return self._closest_valid_bad_time_error_correction(0.5 * (tmin + tmax))
+
+    def _closest_valid_bad_time_error_correction(self, t: float) -> float:
+        """Fall back for when the scene time window has no valid
+        bad_time_error_correction samples: return the value of the single
+        closest valid (non-corrupt) sample anywhere in the orbit.
+        """
+        good = (
+            np.abs(self._bad_time_error_correction)
+            < self.CORRUPT_TIME_ERROR_CORRECTION_THRESHOLD
+        )
+        if not np.any(good):
+            raise RuntimeError(
+                "No valid bad_time_error_correction samples found anywhere "
+                "in this orbit - all data is corrupt."
+            )
+        good_time = self._bad_time[good]
+        good_value = self._bad_time_error_correction[good]
+        idx = np.argmin(np.abs(good_time - t))
+        distance = abs(good_time[idx] - t)
+        if distance > 10:
+            logger.warning(
+                f"Closest valid bad_time_error_correction sample is "
+                f"{distance:.1f}s away from the scene - value may be stale."
+            )
+        return float(good_value[idx])
 
 
 __all__ = [
