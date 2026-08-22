@@ -115,6 +115,18 @@ class L0TimeCalc:
     corrupted. In that case we fall back to the single closest valid sample
     anywhere in the orbit, logging a warning since that value may be stale.
 
+    It is possible (though not seen so far) for an entire orbit to have no
+    valid bad_time_error_correction data at all, so there is nothing to fall
+    back to. This is L1A - we would rather produce degraded output than no
+    output at all, since a downstream user/QA process can decide whether
+    degraded data for a given scene/orbit is usable. So rather than raising
+    an exception in this case, we log a warning, use a correction of 0
+    (i.e., leave the BAD time stamp uncorrected - within a second or so, per
+    the ISS spec quoted above, rather than an arbitrary/nonsensical value),
+    and set the no_uncorrupted_bad_error_correction_data flag so callers can
+    check after the fact whether this happened and decide how to handle it
+    (e.g. flagging the affected scenes as degraded quality downstream).
+
     The third error is a L0A error. The BAD time stamp associated with
     the science data is made up of two pieces, a count of seconds and
     a fractional part. The L0A incorrectly handles the fractional part
@@ -176,6 +188,17 @@ class L0TimeCalc:
         """
         self._bad_time = hr_time
         self._bad_time_error_correction = time_error_correction
+
+        # Flag that gets set to True if we ever hit the (expected to be
+        # very rare) condition of having no uncorrupted
+        # bad_time_error_correction data anywhere in the orbit to fall back
+        # on, for any scene processed by this instance. Starts False, and is
+        # sticky (stays True) once set, since a single instance covers the
+        # whole orbit and downstream code may process many scenes with it -
+        # this lets a caller check once at the end whether *any* scene in
+        # the orbit hit this degraded-quality condition, rather than having
+        # to check the return value of every single gps_time() call.
+        self.no_uncorrupted_bad_error_correction_data = False
 
     def gps_time(
         self,
@@ -267,10 +290,21 @@ class L0TimeCalc:
             < self.CORRUPT_TIME_ERROR_CORRECTION_THRESHOLD
         )
         if not np.any(good):
-            raise RuntimeError(
+            # This is L1A, and we would rather produce degraded output than
+            # fail outright - a downstream QA process can decide whether
+            # this scene/orbit is usable. Use a correction of 0 (i.e., leave
+            # the BAD time stamp uncorrected) since that is a bounded, sane
+            # fallback (the ISS spec says the uncorrected error is within
+            # +/-1 second - see class description) rather than propagating
+            # a corrupted or arbitrary value. Set the sticky flag so this
+            # can be detected and handled downstream.
+            logger.warning(
                 "No valid bad_time_error_correction samples found anywhere "
-                "in this orbit - all data is corrupt."
+                "in this orbit - all data is corrupt. Using a correction of "
+                "0 and setting no_uncorrupted_bad_error_correction_data."
             )
+            self.no_uncorrupted_bad_error_correction_data = True
+            return 0.0
         good_time = self._bad_time[good]
         good_value = self._bad_time_error_correction[good]
         idx = np.argmin(np.abs(good_time - t))

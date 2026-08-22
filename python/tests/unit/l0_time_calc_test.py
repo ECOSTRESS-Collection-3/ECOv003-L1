@@ -1,5 +1,4 @@
 import numpy as np
-import pytest
 
 from ecostress.l0_time_calc import L0TimeCalc
 
@@ -58,7 +57,9 @@ def test_gps_time_corrupt_time_fsw():
     real_times = np.linspace(1050.0, 1102.0, 44)
     time_fsw = _make_scene_time_fsw(real_times)
     bad_idx = 10
-    time_fsw[bad_idx] = 99999.0 + (real_times[bad_idx] - np.floor(real_times[bad_idx])) / 1000.0
+    time_fsw[bad_idx] = (
+        99999.0 + (real_times[bad_idx] - np.floor(real_times[bad_idx])) / 1000.0
+    )
 
     out = calc.gps_time(time_fsw, np.zeros(44), np.zeros(44))
     good = np.arange(44) != bad_idx
@@ -81,18 +82,27 @@ def test_gps_time_falls_back_when_window_fully_corrupted():
 
     out = calc.gps_time(time_fsw, np.zeros(44), np.zeros(44))
     np.testing.assert_allclose(out, real_times - 0.05, atol=1e-6)
+    # Valid data existed elsewhere in the orbit, so this is not the
+    # no-uncorrupted-data-anywhere condition.
+    assert calc.no_uncorrupted_bad_error_correction_data is False
 
 
-def test_gps_time_raises_when_orbit_entirely_corrupted():
+def test_gps_time_degrades_when_orbit_entirely_corrupted():
     """If there is no valid bad_time_error_correction data anywhere in the
-    orbit, fail loudly rather than silently returning a corrupted value.
+    orbit, this is L1A - we would rather produce degraded output (using a
+    correction of 0, i.e. leaving the BAD time stamp uncorrected) than fail
+    outright, but we should flag that this happened so it can be checked
+    downstream.
     """
     bad_time = np.arange(1000.0, 1200.0, 1.0)
     bad_tec = np.full_like(bad_time, 7e8)
     calc = L0TimeCalc(bad_time, bad_tec)
+    assert calc.no_uncorrupted_bad_error_correction_data is False
 
     real_times = np.linspace(1050.0, 1102.0, 44)
     time_fsw = _make_scene_time_fsw(real_times)
 
-    with pytest.raises(RuntimeError):
-        calc.gps_time(time_fsw, np.zeros(44), np.zeros(44))
+    out = calc.gps_time(time_fsw, np.zeros(44), np.zeros(44))
+    # bcorr of 0 means time_fsw_fixed is returned uncorrected
+    np.testing.assert_allclose(out, real_times, atol=1e-6)
+    assert calc.no_uncorrupted_bad_error_correction_data is True
