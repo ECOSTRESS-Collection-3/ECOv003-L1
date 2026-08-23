@@ -260,7 +260,9 @@ Data quality indicator.
         if "BandSpecification" in self.l1a_pix["L1A_PIXMetadata"]:
             band_specification = self.l1a_pix["L1A_PIXMetadata/BandSpecification"][:]
         if "PGEBuildIDVersionHistory" in self.l1a_pix["L1A_PIXMetadata"]:
-            pge_build_id_version_history = eval(self.l1a_pix["L1A_PIXMetadata/PGEBuildIDVersionHistory"][()])
+            pge_build_id_version_history = eval(
+                self.l1a_pix["L1A_PIXMetadata/PGEBuildIDVersionHistory"][()]
+            )
         else:
             pge_build_id_version_history = {}
         pge_build_id_version_history["L1B_RAD_PGE"] = self.build_id

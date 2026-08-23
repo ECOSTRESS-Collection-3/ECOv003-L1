@@ -99,6 +99,13 @@ class L1cgGenerate:
         cal_correction = np.empty((2, t.shape[0]))
         cal_correction[0, :] = t
         cal_correction[1, :] = fin_rad["L1B_RADMetadata/CalibrationOffsetCorrection"][:]
+        if "PGEBuildIDVersionHistory" in fin_geo["L1GEOMetadata"]:
+            pge_build_id_version_history = eval(
+                fin_geo["L1GEOMetadata/PGEBuildIDVersionHistory"][()]
+            )
+        else:
+            pge_build_id_version_history = {}
+        pge_build_id_version_history["L1C"] = self.build_id
         m = L1cgWriteStandardMetadata(
             fout,
             xml_file=f"{self.output_name}.met",
@@ -121,6 +128,7 @@ class L1cgGenerate:
             band_specification=fin_rad["L1B_RADMetadata/BandSpecification"],
             cal_correction=cal_correction,
             local_granule_id=self.local_granule_id,
+            pge_build_id_version_history=pge_build_id_version_history,
         )
         if self.run_config is not None:
             m.process_run_config_metadata(self.run_config)

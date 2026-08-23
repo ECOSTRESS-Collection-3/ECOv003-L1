@@ -181,7 +181,15 @@ class L1bGeoGenerate(object):
         lat, lon, height, vzenith, vazimuth, szenith, sazimuth, lfrac, tlinestart = (
             self.loc(pool)
         )
-        rad_band_4 = h5py.File(self.radfname, "r")["//Radiance/radiance_4"][:, :]
+        with h5py.File(self.radfname, "r") as fh:
+            rad_band_4 = fh["//Radiance/radiance_4"][:, :]
+            if "PGEBuildIDVersionHistory" in fh["L1B_RADMetadata"]:
+                self.pge_build_id_version_history = eval(
+                    fh["L1B_RADMetadata/PGEBuildIDVersionHistory"][()]
+                )
+            else:
+                self.pge_build_id_version_history = {}
+        self.pge_build_id_version_history["L1B_GEO"] = self.build_id
         if hasattr(self.igc, "start_sample"):
             # Subset if we are working with subsetted data
             rad_band_4 = rad_band_4[
@@ -208,6 +216,7 @@ class L1bGeoGenerate(object):
             tcorr_after=self.tcorr_after,
             geolocation_accuracy_qa=self.geolocation_accuracy_qa,
             local_granule_id=self.local_granule_id,
+            pge_build_id_version_history=self.pge_build_id_version_history,
         )
         if self.run_config is not None:
             m.process_run_config_metadata(self.run_config)

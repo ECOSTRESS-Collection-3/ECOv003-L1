@@ -20,6 +20,7 @@ class L1ctWriteStandardMetadata(WriteStandardMetadata):
         qa_precentage_missing: float | None = None,
         band_specification: None | list[float] = None,
         cal_correction: None | np.ndarray = None,
+        pge_build_id_version_history: None | dict[str, str] = None,
         **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
@@ -32,6 +33,7 @@ class L1ctWriteStandardMetadata(WriteStandardMetadata):
         self.qa_precentage_missing = qa_precentage_missing
         self.band_specification = band_specification
         self.cal_correction = cal_correction
+        self.pge_build_id_version_history = pge_build_id_version_history
         if geolocation_accuracy_qa in (
             "Best",
             "Good",
@@ -79,6 +81,8 @@ Poor - No matches in the orbit. Expect largest geolocation errors.
         jdict["StandardMetadata"] = {}
         jdict["ProductMetadata"] = {"AncillaryFiles": 0}
         pg = jdict["ProductMetadata"]
+        if self.pge_build_id_version_history is not None:
+            pg["PGEBuildIDVersionHistory"] = str(self.pge_build_id_version_history)
         pg["OrbitCorrectionPerformed"] = "True" if self.orbit_corrected else "False"
         pg["GeolocationAccuracyQA"] = self.geolocation_accuracy_qa
         pg["DeltaTimeOfCorrectionBeforeScene"] = float(self.tcorr_before)

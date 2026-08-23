@@ -33,7 +33,7 @@ class WriteStandardMetadata(object):
         orbit_based: bool = False,
         level0_file: bool = False,
         hdfeos_file: bool = False,
-        pge_build_id_version_history: dict[str,str] | None = None,
+        pge_build_id_version_history: dict[str, str] | None = None,
     ) -> None:
         """hdf_file should be the h5py.File handler. You can pass the
         local_granule_id, or if None we assume the filename for the hdf_file is
@@ -133,10 +133,12 @@ class WriteStandardMetadata(object):
         """Take a list of file names, and generates the InputPointer from this"""
         self.set("InputPointer", ",".join(os.path.basename(i) for i in flist))
 
-    def set_pge_build_id_version_history(self, pge_build_id_version_history: dict[str,str]) -> None:
+    def set_pge_build_id_version_history(
+        self, pge_build_id_version_history: dict[str, str]
+    ) -> None:
         """Take a list of file names, and generates the InputPointer from this"""
         self.pge_build_id_version_history = pge_build_id_version_history
-        
+
     def set(self, m: str, v: Any) -> None:
         if m not in self.data:
             raise RuntimeError(f"Key '{m}' is not in standard metadata")

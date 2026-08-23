@@ -562,6 +562,7 @@ class L1bGeoProcess:
     ) -> None:
         """Once we have the final corrected igccol, generate all the output"""
         avg_md = np.full((len(self.radlist), 3), -9999.0)
+        pge_build_id_version_history: None | dict[str, str] = None
         for i, radfname in enumerate(self.radlist):
             logger.info(f"Doing scene number {self.scene_list[i]}")
             fin = h5py.File(radfname, "r")
@@ -619,6 +620,7 @@ class L1bGeoProcess:
                     geolocation_accuracy_qa=self.geo_qa[i],
                 )
                 l1bgeo.run(pool)
+                pge_build_id_version_history = l1bgeo.pge_build_id_version_history
                 avg_md[i, 0] = l1bgeo.avg_sz
                 avg_md[i, 1] = l1bgeo.oa_lf
                 avg_md[i, 2] = l1bgeo.cloud_cover
@@ -676,6 +678,7 @@ class L1bGeoProcess:
             build_id=self.build_id,
             pge_version=self.pge_version["l1b_geo"],
             correction_done=self.correction_done,
+            pge_build_id_version_history=pge_build_id_version_history,
         )
         l1batt.run()
 

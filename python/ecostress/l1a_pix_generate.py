@@ -205,7 +205,9 @@ class L1aPixGenerate(object):
         if "BandSpecification" in fin["L1A_RAW_PIXMetadata"]:
             band_specification = fin["L1A_RAW_PIXMetadata/BandSpecification"][:]
         if "PGEBuildIDVersionHistory" in fin["L1A_RAW_PIXMetadata"]:
-            pge_build_id_version_history = eval(fin["L1A_RAW_PIXMetadata/PGEBuildIDVersionHistory"][()])
+            pge_build_id_version_history = eval(
+                fin["L1A_RAW_PIXMetadata/PGEBuildIDVersionHistory"][()]
+            )
         else:
             pge_build_id_version_history = {}
         pge_build_id_version_history["L1A_CAL_PGE"] = self.build_id

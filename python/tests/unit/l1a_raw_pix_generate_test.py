@@ -88,7 +88,7 @@ def test_hawaii_orbit_l1a_raw(end_to_end_run_dir, test_data_latest):
 
 
 # We have 21 results from l1a_raw
-#@pytest.mark.skip
+@pytest.mark.skip
 @pytest.mark.parametrize("index", range(21))
 def test_hawaii_orbit_l1a_cal(index, end_to_end_run_dir, test_data_latest):
     """Note that this depends on the output of

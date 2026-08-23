@@ -34,6 +34,7 @@ class L1bAttGenerate(object):
         collection_label: str = "ECOSTRESS",
         pge_version: str = "0.30",
         correction_done: bool = True,
+        pge_build_id_version_history: None | dict[str, str] = None,
     ) -> None:
         """Create a L1bAttGenerate with the given ImageGroundConnection
         and output file name. To actually generate, execute the 'run'
@@ -56,6 +57,7 @@ class L1bAttGenerate(object):
         self.inlist = inlist
         self.correction_done = correction_done
         self.qa_file = qa_file
+        self.pge_build_id_version_history = pge_build_id_version_history
 
     def run(self) -> None:
         """Do the actual generation of data."""
@@ -71,6 +73,7 @@ class L1bAttGenerate(object):
             pge_version=self.pge_version,
             orbit_corrected=self.correction_done,
             local_granule_id=self.local_granule_id,
+            pge_build_id_version_history=self.pge_build_id_version_history,
         )
         if self.run_config is not None:
             m.process_run_config_metadata(self.run_config)
