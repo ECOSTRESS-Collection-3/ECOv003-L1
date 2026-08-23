@@ -259,6 +259,11 @@ Data quality indicator.
         band_specification = [1.6, 8.2, 8.7, 9.0, 10.5, 12.0]
         if "BandSpecification" in self.l1a_pix["L1A_PIXMetadata"]:
             band_specification = self.l1a_pix["L1A_PIXMetadata/BandSpecification"][:]
+        if "PGEBuildIDVersionHistory" in self.l1a_pix["L1A_PIXMetadata"]:
+            pge_build_id_version_history = eval(self.l1a_pix["L1A_PIXMetadata/PGEBuildIDVersionHistory"][()])
+        else:
+            pge_build_id_version_history = {}
+        pge_build_id_version_history["L1B_RAD_PGE"] = self.build_id
         m = RadWriteStandardMetadata(
             fout,
             product_specfic_group="L1B_RADMetadata",
@@ -272,6 +277,7 @@ Data quality indicator.
             qa_precentage_missing=qa_precentage_missing,
             band_specification=band_specification,
             cal_correction=self.cal_correction,
+            pge_build_id_version_history=pge_build_id_version_history,
         )
         if self.run_config is not None:
             m.process_run_config_metadata(self.run_config)
