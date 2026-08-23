@@ -1,4 +1,4 @@
-ECOSTRESS_VERSION=8.01
+ECOSTRESS_VERSION=8.03
 DOCKER_BASE_VERSION=20251022
 AFIDS_CONDA_PACKAGE=/home/smyth/Local/afids-conda-package
 ECOSTRESS_SOURCE=/home/smyth/Local/ecostress-level1

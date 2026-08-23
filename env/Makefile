@@ -3,7 +3,7 @@
 # Things the user can change. Note you can change this by creating a Makefile.local
 # to set these variables
 
-ECOSTRESS_VERSION=8.01
+ECOSTRESS_VERSION=8.03
 
 # Should we install the latest conda packages, or the "pixi.lock" set known to
 # work (which will often lag the latest conda packages). Most of the time
