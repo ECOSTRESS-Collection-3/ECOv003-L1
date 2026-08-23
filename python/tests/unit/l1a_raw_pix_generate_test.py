@@ -4,13 +4,13 @@ import geocal
 import pytest
 import subprocess
 import os
-import pytest
 from pathlib import Path
+
 
 @pytest.mark.long_test
 def test_l1a_raw_pix_generate(isolated_dir, test_data):
     l0b = str(test_data / "L0B_80005_20150124T204251_0100_01.h5")
-    obst_dir = str(test_data / "obst_dir")
+    obst_dir = str(test_data)
     l1_osp_dir = str(test_data / "l1_osp_dir")
     scene_file = str(test_data / "Scene_80005_20150124T204251_20150124T204533.txt")
     l1arawpix = L1aRawPixGenerate(l0b, obst_dir, l1_osp_dir, scene_file)
@@ -86,35 +86,44 @@ def test_hawaii_orbit_l1a_raw(end_to_end_run_dir, test_data_latest):
     # time_fsw2 = fin2["/6415/time_fsw"][:]
     # np.count_nonzero(np.abs(time_fsw2[90:90+3714] - time_fsw)) is 0
 
+
 # We have 21 results from l1a_raw
 @pytest.mark.skip
 @pytest.mark.parametrize("index", range(21))
 def test_hawaii_orbit_l1a_cal(index, end_to_end_run_dir, test_data_latest):
-    '''Note that this depends on the output of
+    """Note that this depends on the output of
     test_hawaii_orbit_l1a_raw. We can actually set this up with some
     pytest extensions (pytest-order and pytest-dependency), but we aren't
     going to be running these tests often. So we just "know" that we need
-    to run one before the other'''
-    l1a_bb = sorted((end_to_end_run_dir / "l1a_raw_06415").glob("ECOv003_L1A_BB_*.h5"))[index]
-    l1a_raw_pix = sorted((end_to_end_run_dir / "l1a_raw_06415").glob("L1A_RAW_PIX_*.h5"))[index]
+    to run one before the other"""
+    l1a_bb = sorted((end_to_end_run_dir / "l1a_raw_06415").glob("ECOv003_L1A_BB_*.h5"))[
+        index
+    ]
+    l1a_raw_pix = sorted(
+        (end_to_end_run_dir / "l1a_raw_06415").glob("L1A_RAW_PIX_*.h5")
+    )[index]
     prod_dir = end_to_end_run_dir / f"l1a_cal_06415/{index:03d}"
     os.environ["AFIDS_DATA"] = "/opt/afids/data"
     os.environ["AFIDS_VDEV_DATA"] = "/opt/afids/data/vdev"
     subprocess.run(
         [
             "l1a_cal_process",
-            l1a_bb, l1a_raw_pix, str(test_data_latest / "l1_osp_dir"), prod_dir,
+            l1a_bb,
+            l1a_raw_pix,
+            str(test_data_latest / "l1_osp_dir"),
+            prod_dir,
         ]
     )
+
 
 @pytest.mark.skip
 @pytest.mark.parametrize("index", range(21))
 def test_hawaii_orbit_l1b_rad(index, end_to_end_run_dir, test_data_latest):
-    '''Note that this depends on the output of
+    """Note that this depends on the output of
     test_hawaii_orbit_l1a_cal. We can actually set this up with some
     pytest extensions (pytest-order and pytest-dependency), but we aren't
     going to be running these tests often. So we just "know" that we need
-    to run one before the other'''
+    to run one before the other"""
     l1a_cal_dir = sorted((end_to_end_run_dir / "l1a_cal_06415").glob("0*"))[index]
     l1a_pix = next(l1a_cal_dir.glob("ECOv003_L1A_PIX_*.h5"))
     l1a_gain = next(l1a_cal_dir.glob("L1A_RAD_GAIN_*.h5"))
@@ -125,37 +134,46 @@ def test_hawaii_orbit_l1b_rad(index, end_to_end_run_dir, test_data_latest):
     subprocess.run(
         [
             "l1b_rad_process",
-            l1a_pix, l1a_gain, l1a_raw_att, 
-            str(test_data_latest / "l1_osp_dir"), prod_dir,
+            l1a_pix,
+            l1a_gain,
+            l1a_raw_att,
+            str(test_data_latest / "l1_osp_dir"),
+            prod_dir,
         ]
     )
-    
+
+
 @pytest.mark.skip
 def test_hawaii_orbit_l1b_geo(end_to_end_run_dir, test_data_latest):
-    '''Note that this depends on the output of
+    """Note that this depends on the output of
     test_hawaii_orbit_l1b_rad. We can actually set this up with some
     pytest extensions (pytest-order and pytest-dependency), but we aren't
     going to be running these tests often. So we just "know" that we need
-    to run one before the other'''
+    to run one before the other"""
     l1a_raw_att = next((end_to_end_run_dir / "l1a_raw_06415").glob("L1A_RAW_ATT_*.h5"))
     prod_dir = end_to_end_run_dir / "l1b_geo_06415"
     os.environ["AFIDS_DATA"] = "/opt/afids/data"
     os.environ["AFIDS_VDEV_DATA"] = "/opt/afids/data/vdev"
     args = [
-            "l1b_geo_process",
-            l1a_raw_att, str(test_data_latest / "l1_osp_dir"), prod_dir,
+        "l1b_geo_process",
+        l1a_raw_att,
+        str(test_data_latest / "l1_osp_dir"),
+        prod_dir,
     ]
-    args.extend(sorted((end_to_end_run_dir / "l1b_rad_06415").glob("ECOv003_L1B_RAD*.h5")))
+    args.extend(
+        sorted((end_to_end_run_dir / "l1b_rad_06415").glob("ECOv003_L1B_RAD*.h5"))
+    )
     subprocess.run(args)
+
 
 @pytest.mark.skip
 def test_hawaii_orbit_l1b_proj(end_to_end_run_dir, test_data_latest):
-    '''Note that this depends on the output of
+    """Note that this depends on the output of
     test_hawaii_orbit_l1b_geo. We can actually set this up with some
     pytest extensions (pytest-order and pytest-dependency), but we aren't
     going to be running these tests often. So we just "know" that we need
-    to run one before the other'''
-    l1_osp_dir = test_data_latest / "l1_osp_dir"    
+    to run one before the other"""
+    l1_osp_dir = test_data_latest / "l1_osp_dir"
     l1b_geo_config = ecostress.L1bGeoQaFile.l1b_geo_config(l1_osp_dir)
     if os.path.exists("/raid22/band5_VICAR"):
         ortho_base_dir = Path("/raid22")
@@ -167,18 +185,22 @@ def test_hawaii_orbit_l1b_proj(end_to_end_run_dir, test_data_latest):
     )
     ortho_scale = round(60.0 / ortho_base.map_info.resolution_meter)
     mi = ortho_base.map_info.scale(ortho_scale, ortho_scale)
-    l1b_geo_file = next((end_to_end_run_dir / "l1b_geo_06415").glob("ECOv003_L1B_GEO_06415_001*.h5"))
-    l1b_rad_file = next((end_to_end_run_dir / "l1b_rad_06415").glob("ECOv003_L1B_RAD_06415_001*.h5"))
+    l1b_geo_file = next(
+        (end_to_end_run_dir / "l1b_geo_06415").glob("ECOv003_L1B_GEO_06415_001*.h5")
+    )
+    l1b_rad_file = next(
+        (end_to_end_run_dir / "l1b_rad_06415").glob("ECOv003_L1B_RAD_06415_001*.h5")
+    )
     lat = geocal.GdalRasterImage(f'HDF5:"{l1b_geo_file}"://Geolocation/latitude')
     lon = geocal.GdalRasterImage(f'HDF5:"{l1b_geo_file}"://Geolocation/longitude')
     number_subpixel = 3
     res = ecostress.Resampler(lon, lat, mi, number_subpixel)
-    rad_data = geocal.GdalRasterImage(f'HDF5:"{l1b_rad_file}"://Radiance/radiance_{l1b_geo_config.ecostress_day_band}')
-    fname = end_to_end_run_dir / f"l1b_geo_06415/final_proj_06415_01.img"
-    fname2 = end_to_end_run_dir / f"l1b_geo_06415/final_proj_06415_01.tif"
-    fname3 = end_to_end_run_dir / f"l1b_geo_06415/final_ref_06415_01.tif"
-    res.resample_field(str(fname), rad_data, 100.0, "HALF", True)
-    subprocess.run(
-        ["gdalenhance", "-equalize", fname, fname2]
+    rad_data = geocal.GdalRasterImage(
+        f'HDF5:"{l1b_rad_file}"://Radiance/radiance_{l1b_geo_config.ecostress_day_band}'
     )
+    fname = end_to_end_run_dir / "l1b_geo_06415/final_proj_06415_01.img"
+    fname2 = end_to_end_run_dir / "l1b_geo_06415/final_proj_06415_01.tif"
+    fname3 = end_to_end_run_dir / "l1b_geo_06415/final_ref_06415_01.tif"
+    res.resample_field(str(fname), rad_data, 100.0, "HALF", True)
+    subprocess.run(["gdalenhance", "-equalize", fname, fname2])
     ortho_base.create_subset_file(str(fname3), "GTIFF", [], res.map_info, "-ot Int16")

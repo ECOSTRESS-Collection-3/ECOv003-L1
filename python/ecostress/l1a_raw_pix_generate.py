@@ -215,6 +215,7 @@ class L1aRawPixGenerate(object):
         dt, tm = time_split(end_time)
         m.set("RangeEndingDate", dt)
         m.set("RangeEndingTime", tm)
+        breakpoint()
         m.set_input_pointer([self.l0b, self.scene_file])
         return fout, m, fname
 
