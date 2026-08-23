@@ -204,6 +204,11 @@ class L1aPixGenerate(object):
         band_specification = [1.6, 8.2, 8.7, 9.0, 10.5, 12.0]
         if "BandSpecification" in fin["L1A_RAW_PIXMetadata"]:
             band_specification = fin["L1A_RAW_PIXMetadata/BandSpecification"][:]
+        if "PGEBuildIDVersionHistory" in fin["L1A_RAW_PIXMetadata"]:
+            pge_build_id_version_history = eval(fin["L1A_RAW_PIXMetadata/PGEBuildIDVersionHistory"][()])
+        else:
+            pge_build_id_version_history = {}
+        pge_build_id_version_history["L1A_CAL_PGE"] = self.build_id
 
         m = WriteStandardMetadata(
             fout,
@@ -216,6 +221,7 @@ class L1aPixGenerate(object):
             local_granule_id=self.local_granule_id,
             qa_precentage_missing=qa_precentage_missing,
             band_specification=band_specification,
+            pge_build_id_version_history=pge_build_id_version_history,
         )
         m2 = WriteStandardMetadata(
             fout_gain,
@@ -228,6 +234,7 @@ class L1aPixGenerate(object):
             local_granule_id=self.local_granule_id,
             qa_precentage_missing=qa_precentage_missing,
             band_specification=band_specification,
+            pge_build_id_version_history=pge_build_id_version_history,
         )
 
         if self.run_config is not None:
