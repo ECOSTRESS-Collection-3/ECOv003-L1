@@ -82,3 +82,62 @@ def test_hawaii_orbit_l1a_raw(end_to_end_run_dir, test_data_latest):
     # time_fsw = fin["/L1A_RAW_PIXMetadata/time_fsw"][:]
     # time_fsw2 = fin2["/6415/time_fsw"][:]
     # np.count_nonzero(np.abs(time_fsw2[90:90+3714] - time_fsw)) is 0
+
+# We have 21 results from l1a_raw
+@pytest.mark.parametrize("index", range(21))
+def test_hawaii_orbit_l1a_cal(index, end_to_end_run_dir, test_data_latest):
+    '''Note that this depends on the output of
+    test_hawaii_orbit_l1a_raw. We can actually set this up with some
+    pytest extensions (pytest-order and pytest-dependency), but we aren't
+    going to be running these tests often. So we just "know" that we need
+    to run one before the other'''
+    l1a_bb = sorted((end_to_end_run_dir / "l1a_raw_06415").glob("ECOv003_L1A_BB_*.h5"))[index]
+    l1a_raw_pix = sorted((end_to_end_run_dir / "l1a_raw_06415").glob("L1A_RAW_PIX_*.h5"))[index]
+    prod_dir = end_to_end_run_dir / f"l1a_cal_06415/{index:03d}"
+    os.environ["AFIDS_DATA"] = "/opt/afids/data"
+    os.environ["AFIDS_VDEV_DATA"] = "/opt/afids/data/vdev"
+    subprocess.run(
+        [
+            "l1a_cal_process",
+            l1a_bb, l1a_raw_pix, str(test_data_latest / "l1_osp_dir"), prod_dir,
+        ]
+    )
+
+@pytest.mark.parametrize("index", range(21))
+def test_hawaii_orbit_l1b_rad(index, end_to_end_run_dir, test_data_latest):
+    '''Note that this depends on the output of
+    test_hawaii_orbit_l1a_cal. We can actually set this up with some
+    pytest extensions (pytest-order and pytest-dependency), but we aren't
+    going to be running these tests often. So we just "know" that we need
+    to run one before the other'''
+    l1a_cal_dir = sorted((end_to_end_run_dir / "l1a_cal_06415").glob("0*"))[index]
+    l1a_pix = next(l1a_cal_dir.glob("ECOv003_L1A_PIX_*.h5"))
+    l1a_gain = next(l1a_cal_dir.glob("L1A_RAD_GAIN_*.h5"))
+    l1a_raw_att = next((end_to_end_run_dir / "l1a_raw_06415").glob("L1A_RAW_ATT_*.h5"))
+    prod_dir = end_to_end_run_dir / "l1b_rad_06415"
+    os.environ["AFIDS_DATA"] = "/opt/afids/data"
+    os.environ["AFIDS_VDEV_DATA"] = "/opt/afids/data/vdev"
+    subprocess.run(
+        [
+            "l1b_rad_process",
+            l1a_pix, l1a_gain, l1a_raw_att, 
+            str(test_data_latest / "l1_osp_dir"), prod_dir,
+        ]
+    )
+    
+def test_hawaii_orbit_l1b_geo(end_to_end_run_dir, test_data_latest):
+    '''Note that this depends on the output of
+    test_hawaii_orbit_l1b_rad. We can actually set this up with some
+    pytest extensions (pytest-order and pytest-dependency), but we aren't
+    going to be running these tests often. So we just "know" that we need
+    to run one before the other'''
+    l1a_raw_att = next((end_to_end_run_dir / "l1a_raw_06415").glob("L1A_RAW_ATT_*.h5"))
+    prod_dir = end_to_end_run_dir / "l1b_geo_06415"
+    os.environ["AFIDS_DATA"] = "/opt/afids/data"
+    os.environ["AFIDS_VDEV_DATA"] = "/opt/afids/data/vdev"
+    args = [
+            "l1b_geo_process",
+            l1a_raw_att, str(test_data_latest / "l1_osp_dir"), prod_dir,
+    ]
+    args.extend(sorted((end_to_end_run_dir / "l1b_rad_06415").glob("ECOv003_L1B_RAD*.h5")))
+    subprocess.run(args)
