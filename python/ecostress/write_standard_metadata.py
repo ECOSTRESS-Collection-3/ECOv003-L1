@@ -33,6 +33,7 @@ class WriteStandardMetadata(object):
         orbit_based: bool = False,
         level0_file: bool = False,
         hdfeos_file: bool = False,
+        pge_build_id_version_history: dict[str,str] | None = None,
     ) -> None:
         """hdf_file should be the h5py.File handler. You can pass the
         local_granule_id, or if None we assume the filename for the hdf_file is
@@ -43,6 +44,7 @@ class WriteStandardMetadata(object):
         self.orbit_based = orbit_based
         self.product_specfic_group = product_specfic_group
         self.hdfeos_file = hdfeos_file
+        self.pge_build_id_version_history = pge_build_id_version_history
         if local_granule_id is None:
             if hdf_file is not None:
                 local_granule_id = os.path.basename(hdf_file.filename)
@@ -131,6 +133,10 @@ class WriteStandardMetadata(object):
         """Take a list of file names, and generates the InputPointer from this"""
         self.set("InputPointer", ",".join(os.path.basename(i) for i in flist))
 
+    def set_pge_build_id_version_history(self, pge_build_id_version_history: dict[str,str]) -> None:
+        """Take a list of file names, and generates the InputPointer from this"""
+        self.pge_build_id_version_history = pge_build_id_version_history
+        
     def set(self, m: str, v: Any) -> None:
         if m not in self.data:
             raise RuntimeError(f"Key '{m}' is not in standard metadata")
@@ -294,6 +300,8 @@ class WriteStandardMetadata(object):
         else:
             pg = self.hdf_file.create_group(pgname)
         pg["AncillaryFiles"] = np.int32(0)
+        if self.pge_build_id_version_history is not None:
+            pg["PGEBuildIDVersionHistory"] = str(self.pge_build_id_version_history)
         if self.qa_precentage_missing is not None:
             pg["QAPercentMissingData"] = np.float32(self.qa_precentage_missing)
             pg["QAPercentMissingData"].attrs["Units"] = "percentage"

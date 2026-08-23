@@ -215,7 +215,10 @@ class L1aRawPixGenerate(object):
         dt, tm = time_split(end_time)
         m.set("RangeEndingDate", dt)
         m.set("RangeEndingTime", tm)
-        breakpoint()
+        with h5py.File(self.l0b) as fh:
+            pge_build_id_version_history = {"L0B" : fh["/StandardMetadata/BuildID"][()].decode('utf-8')}
+        pge_build_id_version_history["L1A_RAW_PIX"] = self.build_id
+        m.set_pge_build_id_version_history(pge_build_id_version_history)
         m.set_input_pointer([self.l0b, self.scene_file])
         return fout, m, fname
 
