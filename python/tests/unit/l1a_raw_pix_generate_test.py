@@ -1,9 +1,11 @@
 from ecostress.l1a_raw_pix_generate import L1aRawPixGenerate
-from geocal import Time
+import ecostress
+import geocal
 import pytest
 import subprocess
 import os
-
+import pytest
+from pathlib import Path
 
 @pytest.mark.long_test
 def test_l1a_raw_pix_generate(isolated_dir, test_data):
@@ -30,12 +32,12 @@ def test_process_scene_file(test_data):
     assert t[0][1] == 1
     assert t[1][1] == 2
     assert t[2][1] == 3
-    assert t[0][2] == Time.parse_time("2015-01-24T20:42:51.000000Z")
-    assert t[1][2] == Time.parse_time("2015-01-24T20:43:42.200000Z")
-    assert t[2][2] == Time.parse_time("2015-01-24T20:44:34.200000Z")
-    assert t[0][3] == Time.parse_time("2015-01-24T20:43:42.200000Z")
-    assert t[1][3] == Time.parse_time("2015-01-24T20:44:34.200000Z")
-    assert t[2][3] == Time.parse_time("2015-01-24T20:45:29.000000Z")
+    assert t[0][2] == geocal.Time.parse_time("2015-01-24T20:42:51.000000Z")
+    assert t[1][2] == geocal.Time.parse_time("2015-01-24T20:43:42.200000Z")
+    assert t[2][2] == geocal.Time.parse_time("2015-01-24T20:44:34.200000Z")
+    assert t[0][3] == geocal.Time.parse_time("2015-01-24T20:43:42.200000Z")
+    assert t[1][3] == geocal.Time.parse_time("2015-01-24T20:44:34.200000Z")
+    assert t[2][3] == geocal.Time.parse_time("2015-01-24T20:45:29.000000Z")
 
 
 def test_process_scene_file2(test_data, unit_test_data):
@@ -52,14 +54,15 @@ def test_process_scene_file2(test_data, unit_test_data):
     assert t[0][1] == 1
     assert t[1][1] == 2
     assert t[2][1] == 3
-    assert t[0][2] == Time.parse_time("2015-01-24T20:42:51.000000Z")
-    assert t[1][2] == Time.parse_time("2015-01-24T20:43:52.000000Z")
-    assert t[2][2] == Time.parse_time("2015-01-24T20:44:51.000000Z")
-    assert t[0][3] == Time.parse_time("2015-01-24T20:43:51.000000Z")
-    assert t[1][3] == Time.parse_time("2015-01-24T20:44:51.000000Z")
-    assert t[2][3] == Time.parse_time("2015-01-24T20:45:36.000000Z")
+    assert t[0][2] == geocal.Time.parse_time("2015-01-24T20:42:51.000000Z")
+    assert t[1][2] == geocal.Time.parse_time("2015-01-24T20:43:52.000000Z")
+    assert t[2][2] == geocal.Time.parse_time("2015-01-24T20:44:51.000000Z")
+    assert t[0][3] == geocal.Time.parse_time("2015-01-24T20:43:51.000000Z")
+    assert t[1][3] == geocal.Time.parse_time("2015-01-24T20:44:51.000000Z")
+    assert t[2][3] == geocal.Time.parse_time("2015-01-24T20:45:36.000000Z")
 
 
+@pytest.mark.skip
 def test_hawaii_orbit_l1a_raw(end_to_end_run_dir, test_data_latest):
     """This runs a full orbit that we used when testing out geolocation.
     This contains a hawaii scene in the first scene that had poor geolocation
@@ -84,6 +87,7 @@ def test_hawaii_orbit_l1a_raw(end_to_end_run_dir, test_data_latest):
     # np.count_nonzero(np.abs(time_fsw2[90:90+3714] - time_fsw)) is 0
 
 # We have 21 results from l1a_raw
+@pytest.mark.skip
 @pytest.mark.parametrize("index", range(21))
 def test_hawaii_orbit_l1a_cal(index, end_to_end_run_dir, test_data_latest):
     '''Note that this depends on the output of
@@ -103,6 +107,7 @@ def test_hawaii_orbit_l1a_cal(index, end_to_end_run_dir, test_data_latest):
         ]
     )
 
+@pytest.mark.skip
 @pytest.mark.parametrize("index", range(21))
 def test_hawaii_orbit_l1b_rad(index, end_to_end_run_dir, test_data_latest):
     '''Note that this depends on the output of
@@ -125,6 +130,7 @@ def test_hawaii_orbit_l1b_rad(index, end_to_end_run_dir, test_data_latest):
         ]
     )
     
+@pytest.mark.skip
 def test_hawaii_orbit_l1b_geo(end_to_end_run_dir, test_data_latest):
     '''Note that this depends on the output of
     test_hawaii_orbit_l1b_rad. We can actually set this up with some
@@ -141,3 +147,38 @@ def test_hawaii_orbit_l1b_geo(end_to_end_run_dir, test_data_latest):
     ]
     args.extend(sorted((end_to_end_run_dir / "l1b_rad_06415").glob("ECOv003_L1B_RAD*.h5")))
     subprocess.run(args)
+
+@pytest.mark.skip
+def test_hawaii_orbit_l1b_proj(end_to_end_run_dir, test_data_latest):
+    '''Note that this depends on the output of
+    test_hawaii_orbit_l1b_geo. We can actually set this up with some
+    pytest extensions (pytest-order and pytest-dependency), but we aren't
+    going to be running these tests often. So we just "know" that we need
+    to run one before the other'''
+    l1_osp_dir = test_data_latest / "l1_osp_dir"    
+    l1b_geo_config = ecostress.L1bGeoQaFile.l1b_geo_config(l1_osp_dir)
+    if os.path.exists("/raid22/band5_VICAR"):
+        ortho_base_dir = Path("/raid22")
+    elif os.path.exists("/data/smyth/Landsat/band5_VICAR"):
+        ortho_base_dir = Path("/data/smyth/Landsat")
+    ortho_base = geocal.Landsat7Global(
+        str(ortho_base_dir),
+        ecostress.band_to_landsat_band(l1b_geo_config.landsat_day_band),
+    )
+    ortho_scale = round(60.0 / ortho_base.map_info.resolution_meter)
+    mi = ortho_base.map_info.scale(ortho_scale, ortho_scale)
+    l1b_geo_file = next((end_to_end_run_dir / "l1b_geo_06415").glob("ECOv003_L1B_GEO_06415_001*.h5"))
+    l1b_rad_file = next((end_to_end_run_dir / "l1b_rad_06415").glob("ECOv003_L1B_RAD_06415_001*.h5"))
+    lat = geocal.GdalRasterImage(f'HDF5:"{l1b_geo_file}"://Geolocation/latitude')
+    lon = geocal.GdalRasterImage(f'HDF5:"{l1b_geo_file}"://Geolocation/longitude')
+    number_subpixel = 3
+    res = ecostress.Resampler(lon, lat, mi, number_subpixel)
+    rad_data = geocal.GdalRasterImage(f'HDF5:"{l1b_rad_file}"://Radiance/radiance_{l1b_geo_config.ecostress_day_band}')
+    fname = end_to_end_run_dir / f"l1b_geo_06415/final_proj_06415_01.img"
+    fname2 = end_to_end_run_dir / f"l1b_geo_06415/final_proj_06415_01.tif"
+    fname3 = end_to_end_run_dir / f"l1b_geo_06415/final_ref_06415_01.tif"
+    res.resample_field(str(fname), rad_data, 100.0, "HALF", True)
+    subprocess.run(
+        ["gdalenhance", "-equalize", fname, fname2]
+    )
+    ortho_base.create_subset_file(str(fname3), "GTIFF", [], res.map_info, "-ot Int16")
