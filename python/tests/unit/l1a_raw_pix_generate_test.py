@@ -62,6 +62,8 @@ def test_process_scene_file2(test_data, unit_test_data):
     assert t[2][3] == geocal.Time.parse_time("2015-01-24T20:45:36.000000Z")
 
 
+# Can run everything by 1) commenting out the skip markers and 2) running:
+# pytest -s tests/unit/l1a_raw_pix_generate_test.py::test_hawaii_orbit_l1a_raw && pytest -n 30 tests/unit/l1a_raw_pix_generate_test.py::test_hawaii_orbit_l1a_cal && pytest -n 30 tests/unit/l1a_raw_pix_generate_test.py::test_hawaii_orbit_l1b_rad && pytest -s tests/unit/l1a_raw_pix_generate_test.py::test_hawaii_orbit_l1b_geo && pytest -s tests/unit/l1a_raw_pix_generate_test.py::test_hawaii_orbit_l1b_proj
 @pytest.mark.skip
 def test_hawaii_orbit_l1a_raw(end_to_end_run_dir, test_data_latest):
     """This runs a full orbit that we used when testing out geolocation.

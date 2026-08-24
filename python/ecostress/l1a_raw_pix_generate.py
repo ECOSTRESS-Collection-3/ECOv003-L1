@@ -21,6 +21,7 @@ from .misc import (
     create_time_table,
     create_scan_mirror,
 )
+from .l0_time_calc import L0TimeCalc
 from ecostress_swig import (  # type: ignore
     EcostressOrbit,
     EcostressImageGroundConnection,
@@ -497,24 +498,10 @@ class L1aRawPixGenerate(object):
             bs = [8.7, 10.5, 12.0]
         BandSpec = np.zeros(BANDS, dtype=np.float64)
 
-        tdpuio = [0]
-        tcorr = [0.0]
-        iss_tcorr = 0
-        if (
-            "/hk/bad/hr/time_dpuio" in self.fin
-            and "/hk/bad/hr/time_error_correction" in self.fin
-        ):
-            tdpuio = self.fin["/hk/bad/hr/time_dpuio"]
-            tcorr = self.fin["/hk/bad/hr/time_error_correction"]
-            if tdpuio.shape[0] > 0 and tcorr.shape[0] > 0:
-                print(
-                    "ISS %s time error correction %d %f" % (onum, tdpuio[0], tcorr[0])
-                )
-                iss_tcorr = tcorr.shape[0]
-            else:
-                print("No ISS %s time correction in file" % onum)
-        else:
-            print("No ISS %s time correction in file" % onum)
+        tdpuio = self.fin["/hk/bad/hr/time_dpuio"]
+        tcorr = self.fin["/hk/bad/hr/time_error_correction"]
+        iss_tcorr = tcorr.shape[0]
+        self.l0_time_calc = L0TimeCalc(att_time[:], tcorr[:])
 
         epc = bb_time.shape[0]
         bbtime = np.zeros(epc, dtype=np.float64)
@@ -644,8 +631,7 @@ class L1aRawPixGenerate(object):
 
         # calculate FSW times of each packet (GPS times)
 
-        gpt = np.zeros(tot_pkts, dtype=np.float64)
-        gpt[:] = fswt[:] + (fpie_sync[:] - fsw_sync[:]) / 1000000.0
+        gpt = self.l0_time_calc.gps_time_for_scene(fswt, fsw_sync, fpie_sync)
 
         # extract encoder values
         i, j = lid.shape
