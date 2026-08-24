@@ -132,16 +132,22 @@ def create_orbit_raw(
             l1b_geo_config.extrapolation_pad,
             l1b_geo_config.large_gap,
         )
-    have_match = False
+    version = None
     with h5py.File(orb_fname, "r") as fh:
-        for t in re.split(
-            ",", fh["/StandardMetadata/InputPointer"][()].decode("utf-8")
-        ):
-            m = re.match(r"L0B_.*_(\d\d\d\d)_(\d\d)\.h5", t)
-            if m:
-                have_match = True
-                version = m[1]
-    if not have_match:
+        # Look for PGEBuildIDVersionHistory if available. This was added in 8.03, so it
+        # isn't present in older data
+        if "PGEBuildIDVersionHistory" in fh["L1A_RAW_ATTMetadata"]:
+            pge_build_id_version_history = eval(fh["L1A_RAW_ATTMetadata/PGEBuildIDVersionHistory"][()])
+            version = pge_build_id_version_history.get("L0B")
+        if version is None:
+            # For older data, fall back to looking at the file name.
+            for t in re.split(
+                    ",", fh["/StandardMetadata/InputPointer"][()].decode("utf-8")
+            ):
+                m = re.match(r"L0B_.*_(\d\d\d\d)_(\d\d)\.h5", t)
+                if m:
+                    version = m[1]
+    if version is None:
         logger.warning(
             "Couldn't find L0B build version for /StandardMetadata/InputPointer. Assume we do not need to do the L0 time tag fix"
         )
@@ -153,14 +159,14 @@ def create_orbit_raw(
         )
     logger.info(f"Build version of L0B is {version}")
     if version <= "0712":
-        logger.info("Applying L0 time tag fix")
+        logger.info(f"L0B was version {version}. Applying L0 time tag fix, since needed before 0713")
         return EcostressOrbitL0Fix(
             str(orb_fname),
             l1b_geo_config.x_offset_iss,
             l1b_geo_config.extrapolation_pad,
             l1b_geo_config.large_gap,
         )
-    logger.info("LOB is new enough that we don't need the L0 time tag fix")
+    logger.info(f"LOB version {version} is new enough that we don't need the L0 time tag fix")
     return EcostressOrbit(
         str(orb_fname),
         l1b_geo_config.x_offset_iss,
