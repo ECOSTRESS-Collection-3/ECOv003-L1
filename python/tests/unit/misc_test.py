@@ -9,7 +9,8 @@ from ecostress import (
     create_igc,
     create_orbit_raw,
     create_time_table_fix,
-    L1bGeoQaFile
+    L1bGeoQaFile,
+    L1aRawPixGenerate,
 )
 from geocal import Time, ImageCoordinate, cib01_mapinfo
 
@@ -91,6 +92,11 @@ def create_orbit_raw_(test_data_latest):
     )
     print(orb)
 
+# Depends on a number of test data files we don't always have available. This just
+# checked that L1A_RAW_PIX for 8.03 and our fixed time tables using L0B data give
+# the same values. Data is different by 0.000003 seconds, which is way below anything
+# we care about. 
+@pytest.mark.skip    
 def test_create_time_table_fix(test_data_latest):
     l1_osp_dir = test_data_latest / "l1_osp_dir"
     l1b_geo_config = L1bGeoQaFile.l1b_geo_config(l1_osp_dir)
@@ -104,5 +110,13 @@ def test_create_time_table_fix(test_data_latest):
     print(tt2)
     print(tt3)
     print(tt4)
-    
+
+@pytest.mark.skip    
+def test_run_raw(test_data_latest):
+    l1_osp_dir = str(test_data_latest / "l1_osp_dir")
+    l0b = "/arcdata/smyth/L0B/2019/08/23/L0B_06415_20190823T151324_0713_02.h5"
+    obst_dir = "/arcdata/smyth/ObstFile/"
+    scene_file = "/arcdata/smyth/SceneFile/2019/08/23/Scene_06415_20190823T151325_20190823T163757_20260602T010722.txt"
+    l1arawpix = L1aRawPixGenerate(l0b, obst_dir, l1_osp_dir, scene_file)
+    l1arawpix.run()
     
