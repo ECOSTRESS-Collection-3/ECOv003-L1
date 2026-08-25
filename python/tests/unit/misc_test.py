@@ -92,18 +92,43 @@ def create_orbit_raw_(test_data_latest):
     )
     print(orb)
 
+
 # Depends on a number of test data files we don't always have available. This just
 # checked that L1A_RAW_PIX for 8.03 and our fixed time tables using L0B data give
 # the same values. Data is different by 0.000003 seconds, which is way below anything
-# we care about. 
-@pytest.mark.skip    
+# we care about.
+@pytest.mark.skip
 def test_create_time_table_fix(test_data_latest):
     l1_osp_dir = test_data_latest / "l1_osp_dir"
     l1b_geo_config = L1bGeoQaFile.l1b_geo_config(l1_osp_dir)
-    tt1 = create_time_table_fix("/home/smyth/Local/ecostress-level1/python/end_to_end_run/l1b_rad_06415/ECOv003_L1B_RAD_06415_001_20190823T151326_01.h5", None, l1b_geo_config.mirror_rpm, l1b_geo_config.frame_time)
-    tt2 = create_time_table_fix("/arcdata/smyth/L1B_RAD/2019/08/23/ECOv002_L1B_RAD_06415_001_20190823T151325_0713_04.h5", "/arcdata/smyth/L0B/2019/08/23/L0B_06415_20190823T151324_0713_02.h5", l1b_geo_config.mirror_rpm, l1b_geo_config.frame_time)
-    tt3 = create_time_table_fix("/arcdata/smyth/L1B_RAD/2019/08/23/ECOv002_L1B_RAD_06415_001_20190823T151325_0713_04.h5", "/arcdata/smyth/l0_flex_time_data.h5", l1b_geo_config.mirror_rpm, l1b_geo_config.frame_time, l0b_data_fname = "/arcdata/smyth/l0_data.h5")
-    tt4 = create_time_table_fix("/arcdata/smyth/rad_data.h5", "/arcdata/smyth/l0_flex_time_data.h5", l1b_geo_config.mirror_rpm, l1b_geo_config.frame_time, onum=6415, scn=1, l0b_data_fname = "/arcdata/smyth/l0_data.h5")
+    tt1 = create_time_table_fix(
+        "/home/smyth/Local/ecostress-level1/python/end_to_end_run/l1b_rad_06415/ECOv003_L1B_RAD_06415_001_20190823T151326_01.h5",
+        None,
+        l1b_geo_config.mirror_rpm,
+        l1b_geo_config.frame_time,
+    )
+    tt2 = create_time_table_fix(
+        "/arcdata/smyth/L1B_RAD/2019/08/23/ECOv002_L1B_RAD_06415_001_20190823T151325_0713_04.h5",
+        "/arcdata/smyth/L0B/2019/08/23/L0B_06415_20190823T151324_0713_02.h5",
+        l1b_geo_config.mirror_rpm,
+        l1b_geo_config.frame_time,
+    )
+    tt3 = create_time_table_fix(
+        "/arcdata/smyth/L1B_RAD/2019/08/23/ECOv002_L1B_RAD_06415_001_20190823T151325_0713_04.h5",
+        "/arcdata/smyth/l0_flex_time_data.h5",
+        l1b_geo_config.mirror_rpm,
+        l1b_geo_config.frame_time,
+        l0b_data_fname="/arcdata/smyth/l0_data.h5",
+    )
+    tt4 = create_time_table_fix(
+        "/arcdata/smyth/rad_data.h5",
+        "/arcdata/smyth/l0_flex_time_data.h5",
+        l1b_geo_config.mirror_rpm,
+        l1b_geo_config.frame_time,
+        onum=6415,
+        scn=1,
+        l0b_data_fname="/arcdata/smyth/l0_data.h5",
+    )
     # Note tt1 is slightly different (0.012 seconds). This is because L1A_RAW_PIX grabs a
     # different starting pixel because of the time difference
     print(tt1)
@@ -111,7 +136,8 @@ def test_create_time_table_fix(test_data_latest):
     print(tt3)
     print(tt4)
 
-@pytest.mark.skip    
+
+@pytest.mark.skip
 def test_run_raw(test_data_latest):
     l1_osp_dir = str(test_data_latest / "l1_osp_dir")
     l0b = "/arcdata/smyth/L0B/2019/08/23/L0B_06415_20190823T151324_0713_02.h5"
@@ -119,4 +145,3 @@ def test_run_raw(test_data_latest):
     scene_file = "/arcdata/smyth/SceneFile/2019/08/23/Scene_06415_20190823T151325_20190823T163757_20260602T010722.txt"
     l1arawpix = L1aRawPixGenerate(l0b, obst_dir, l1_osp_dir, scene_file)
     l1arawpix.run()
-    

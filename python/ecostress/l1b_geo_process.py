@@ -58,6 +58,8 @@ class L1bGeoProcess:
         l1a_raw_att: Path | None = None,
         l1_osp_dir: Path | None = None,
         l1b_rad: list[Path] | None = None,
+        l0b_fname: str | os.pathLike[str] | None = None,
+        l0b_data_fname: str | os.pathLike[str] | None = None,
         ecostress_band: int = -1,
         landsat_band: int = -1,
         number_cpu: int = 10,
@@ -68,6 +70,7 @@ class L1bGeoProcess:
         skip_sba: bool = False,
         igccol_use: Path | None = None,
         tpcol_use: Path | None = None,
+        allow_older_l1a_l0b_data: bool = False,
     ):
         # We don't set up the log file until later. We were loosing the log messages
         # about creating things, so now we do ahead and set up a memory buffer to
@@ -80,6 +83,13 @@ class L1bGeoProcess:
         self.log_memory_buffer_hid = logger.add(buffer_sink)
         self.strategy: L1bGeoStrategy = L1bCollection2GeoStrategy()
         self._line_order_reversed: bool | None = None
+        self.allow_older_l1a_l0b_data = allow_older_l1a_l0b_data
+        # Our end to end tests data has an older version of L0B. This should get updated
+        # a some point, but for now we want to just maintain backwards compatibility.
+        # So we check for the ECOSTRESS_END_TO_END_TEST environment variable, and if
+        # it is present we automatically allow older data.
+        if "ECOSTRESS_END_TO_END_TEST" in os.environ:
+            self.allow_older_l1a_l0b_data = True
         self.force_night = force_night
         self.correction_done = False
         self.number_line = number_line
@@ -99,7 +109,15 @@ class L1bGeoProcess:
                 raise RuntimeError(
                     "Need to supply either run_config or prod_dir, l1a_raw_att, l1_osp_dir and l1b_rad"
                 )
-            self.process_args(prod_dir, l1a_raw_att, l1_osp_dir, l1b_rad, number_cpu)
+            self.process_args(
+                prod_dir,
+                l1a_raw_att,
+                l1_osp_dir,
+                l1b_rad,
+                l0b_fname,
+                l0b_data_fname,
+                number_cpu,
+            )
         self.setup_orthobase(landsat_band, ecostress_band)
         if orbit_offset is not None:
             self.setup_orbit_offset(orbit_offset)
@@ -116,6 +134,26 @@ class L1bGeoProcess:
             self.radlist, key=lambda f: orbit_from_metadata(f)[2]
         )
         orbit, scene, acquisition_time = orbit_from_metadata(self.radlist[0])
+        # Check that we have new enough version, or if not that we have L0B data
+        need_l0_fix = False
+        for fname in self.radlist:
+            with h5py.File(fname) as fh:
+                if "PGEBuildIDVersionHistory" in fh["/L1B_RADMetadata"]:
+                    pge_build_id_version_history = eval(
+                        fh["/L1B_RADMetadata/PGEBuildIDVersionHistory"][()]
+                    )
+                    if pge_build_id_version_history["L1A_RAW_PIX"] < "0803":
+                        need_l0_fix = True
+                else:
+                    need_l0_fix = True
+        if need_l0_fix and not self.allow_older_l1a_l0b_data:
+            raise RuntimeError(
+                "We require the L1A_RAW_PIX to be generated with a build_id >= 0803 because older versions had timing errors. Update the L1A_RAW_PIX version and try rerunning."
+            )
+        if need_l0_fix and self.l0b_fname is None:
+            raise RuntimeError(
+                "To use older versions of L1A_RAW_PIX, you need to also supply the L0B data to use to fix this. L1A_RAW_PIX should be build_id >= 0803 or you should supply L0B"
+            )
         self.log_file = Path(
             ecostress_file_name(
                 "L1B_GEO",
@@ -196,13 +234,26 @@ class L1bGeoProcess:
         self.l1_osp_dir = Path(
             self.config.as_list("StaticAncillaryFileGroup", "L1_OSP_DIR")[0]
         ).absolute()
+        if not self.allow_older_l1a_l0b_data:
+            self.allow_older_l1a_l0b_data = self.l1b_geo_config.allow_older_l1a_l0b_data
+        if self.allow_older_l1a_l0b_data:
+            logger.info("Allowing older version of L0B and L1A_RAW_PIX")
+        self.l0b_fname = None
+        self.l0b_data_fname = None
         self.ncpu = int(self.config.as_list("Process", "NumberCpu")[0])
         self.orb_initial = create_orbit_raw_from_config(
-            self.config, self.l1b_geo_config
+            self.config,
+            self.l1b_geo_config,
+            allow_older_l1a_l0b_data=self.allow_older_l1a_l0b_data,
         )
         self.dem = create_dem(self.config)
         self.lwm = create_lwm(self.config)
         self.ortho_base_dir: Path = ortho_base_directory(self.config)
+        try:
+            # Not normally in file, but can be for special runs with older data
+            self.l0b_fname = self.config.as_list("InputFileGroup", "L0B")[0]
+        except KeyError:
+            pass
         self.radlist = [
             Path(i).absolute() for i in self.config.as_list("InputFileGroup", "L1B_RAD")
         ]
@@ -227,14 +278,38 @@ class L1bGeoProcess:
         l1a_raw_att: Path,
         l1_osp_dir: Path,
         l1b_rad: list[Path],
+        l0b_fname: str | os.pathLike[str] | None,
+        l0b_data_fname: str | os.pathLike[str] | None,
         number_cpu: int,
     ) -> None:
         """Set up things using command line arguments, if supplied"""
         self.l1_osp_dir = l1_osp_dir.absolute()
+        if not self.allow_older_l1a_l0b_data:
+            self.allow_older_l1a_l0b_data = self.l1b_geo_config.allow_older_l1a_l0b_data
+        if self.allow_older_l1a_l0b_data:
+            logger.info("Allowing older version of L0B and L1A_RAW_PIX")
         self.prod_dir = prod_dir.absolute()
         self.ncpu = number_cpu
         self.file_version = "01"
         self.orbfname = l1a_raw_att.absolute()
+        self.l0b_fname = None
+        self.l0b_data_fname = None
+        if l0b_fname is not None:
+            self.l0b_fname = Path(l0b_fname).absolute()
+        if l0b_data_fname is not None:
+            self.l0b_data_fname = Path(l0b_data_fname).absolute()
+        if not self.allow_older_l1a_l0b_data:
+            version = None
+            with h5py.File(self.orbfname, "r") as fh:
+                if "PGEBuildIDVersionHistory" in fh["L1A_RAW_ATTMetadata"]:
+                    pge_build_id_version_history = eval(
+                        fh["L1A_RAW_ATTMetadata/PGEBuildIDVersionHistory"][()]
+                    )
+                    version = pge_build_id_version_history.get("L0B")
+            if version is None or version <= "0712":
+                raise RuntimeError(
+                    "We require the L0B to be generated with a build_id >= 0713 because older versions had timing errors. Update the L0B version and try rerunning."
+                )
         self.orb_initial = create_orbit_raw(self.orbfname, self.l1b_geo_config)
         self.dem = geocal.SrtmDem(
             os.environ["ELEV_ROOT"],
@@ -282,7 +357,11 @@ class L1bGeoProcess:
     ) -> EcostressImageGroundConnection:
         orbit, scene, acquisition_time = orbit_from_metadata(radfname)
         tt = create_time_table_fix(
-            radfname, None, self.l1b_geo_config.mirror_rpm, self.l1b_geo_config.frame_time
+            radfname,
+            self.l0b_fname,
+            self.l1b_geo_config.mirror_rpm,
+            self.l1b_geo_config.frame_time,
+            l0b_data_fname=self.l0b_data_fname,
         )
         sm = create_scan_mirror(
             radfname,

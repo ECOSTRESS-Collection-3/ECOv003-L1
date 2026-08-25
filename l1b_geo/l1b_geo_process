@@ -10,6 +10,7 @@ with warnings.catch_warnings():
 import ecostress
 from loguru import logger
 from pathlib import Path
+import re
 import sys
 
 version = "1.0"
@@ -24,6 +25,19 @@ This runs the L1B Geo process.
 Options:
   -h --help         
        Print this message
+
+  --allow-older-l1a-l0b-data
+       We had a number of timings errors in older data. We can somewhat
+       handle this, but for production we really just want to require
+       newer data. This flag allows older data to be used. Can also
+       pass as a command line argument. Note you need to supply l0 data to handle
+       this.
+
+  --l0b-data=f
+       We can use older data by going back to the original L0B and fixing
+       timing errors. This should either be a normal L0B file, or a
+       pair of files (with a comma) that has the full mission data,
+       e.g. "/arcdata/smyth/l0_flex_time_data.h5,/arcdata/smyth/l0_data.h"a
 
   --ecostress-band=d
        Ecostress band to use. Band 1 is 8.28 micron, Band 2 is 8.63
@@ -79,6 +93,12 @@ else:
     logger.add(sys.stderr, level="INFO")
 
 try:
+    l0b_fname = None
+    l0b_data_fname = None
+    if args.l0b_data is not None:
+        l0b_fname, *t = re.split(',', args.l0b_data)
+        if len(t) > 0:
+            l0b_data_fname = t[0]
     with logger.catch(reraise=True):
         l1bgeo = ecostress.L1bGeoProcess(
             run_config=Path(args.run_config) if args.run_config is not None else None,
@@ -88,6 +108,8 @@ try:
             l1b_rad=[Path(i) for i in args.l1b_rad]
             if args.l1b_rad is not None
             else None,
+            l0b_fname=l0b_fname,
+            l0b_data_fname=l0b_data_fname,
             ecostress_band=args.ecostress_band,
             landsat_band=args.landsat_band,
             number_cpu=args.number_cpu,
@@ -96,6 +118,7 @@ try:
             if args.orbit_offset is not None
             else None,
             force_night=args.force_night,
+            allow_older_l1a_l0b_data=args.allow_older_l1a_l0b_data,
         )
         l1bgeo.run()
         logger.info("L1B_GEO_PGE:INFO-0-[Job Successful]")

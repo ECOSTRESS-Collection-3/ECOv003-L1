@@ -1,6 +1,10 @@
 from __future__ import annotations
 import numpy as np
 from loguru import logger
+import typing
+
+if typing.TYPE_CHECKING:
+    import geocal
 
 
 class L0TimeCalc:
@@ -204,7 +208,7 @@ class L0TimeCalc:
         time_fsw: np.ndarray,
         time_sync_fsw: np.ndarray,
         time_sync_fpie: np.ndarray,
-        scene_file: list[tuple[int, int, Time, Time]],
+        scene_file: list[tuple[int, int, geocal.Time, geocal.Time]],
         onum: int,
     ) -> np.ndarray:
         """Turns out it is easier in l1a_raw_pix_generate to do the whole orbit at once.
@@ -228,13 +232,14 @@ class L0TimeCalc:
         # each time_fsw_fixed - to for time_fsw_fixed actually in the scene range it
         # goes with that scene and for time_fsw_fixed outside we just pick the closest
         # one. We then look up the BAD error correction for that scene
-        bcorr = np.array(err_corr)[np.abs(np.array(midtm) - time_fsw_fixed[:,None]).argmin(axis=1)]
-        
+        bcorr = np.array(err_corr)[
+            np.abs(np.array(midtm) - time_fsw_fixed[:, None]).argmin(axis=1)
+        ]
+
         # Note the sign on bcorr really is right here, this is just the convention used
         # by the ISS in reporting bad_time_error_correction. The 1e6 is because the
         # sync times are actually 1MHz counter values
         return time_fsw_fixed - bcorr + (time_sync_fpie - time_sync_fsw) * 1e-6
-
 
     def gps_time_for_scene(
         self,
