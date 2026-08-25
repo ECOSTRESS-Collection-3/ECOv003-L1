@@ -13,6 +13,8 @@ class GeoWriteStandardMetadata(WriteStandardMetadata):
         tcorr_before: float = -9999,
         tcorr_after: float = -9999,
         geolocation_accuracy_qa: str = "Poor",
+        geolocation_number_tiepoint: int = 0,
+        geolocation_tiepoint_ce68: float = -9999,
         **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
@@ -20,6 +22,8 @@ class GeoWriteStandardMetadata(WriteStandardMetadata):
         self.geolocation_accuracy_qa = geolocation_accuracy_qa
         self.tcorr_before = tcorr_before
         self.tcorr_after = tcorr_after
+        self.geolocation_number_tiepoint = geolocation_number_tiepoint
+        self.geolocation_tiepoint_ce68 = geolocation_tiepoint_ce68
         if (self.orbit_based and orbit_corrected) or geolocation_accuracy_qa in (
             "Best",
             "Good",
@@ -49,6 +53,10 @@ class GeoWriteStandardMetadata(WriteStandardMetadata):
         if not self.orbit_based:
             pg["GeolocationAccuracyQA"] = self.geolocation_accuracy_qa
             g["GeolocationAccuracyQA"] = self.geolocation_accuracy_qa
+            pg["GeolocationNumberTiepoint"] = self.geolocation_number_tiepoint
+            g["GeolocationNumberTiepoint"] = self.geolocation_number_tiepoint
+            pg["GeolocationTiepointCE68"] = self.geolocation_tiepoint_ce68
+            g["GeolocationTiepointCE68"] = self.geolocation_tiepoint_ce68
             pg["DeltaTimeOfCorrectionBeforeScene"] = self.tcorr_before
             pg["DeltaTimeOfCorrectionAfterScene"] = self.tcorr_after
             txt = """Best - Image matching was performed for this scene, expect 

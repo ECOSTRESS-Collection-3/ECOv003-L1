@@ -621,6 +621,13 @@ class L1bGeoProcess:
                 self.tcorr_after,
                 self.geo_qa,
             )
+        self.geo_number_tipoint = self.qa_file.tp_stat[pass_number][
+            :, self.qa_file.NUM_TIEPONT_INDEX
+        ]
+        self.geo_tipoint_ce68 = self.qa_file.tp_stat[pass_number][
+            :, self.qa_file.TIEPOINT_CE68_INDEX
+        ]
+
         self.qa_file.add_orbit(pass_number, igccol.image_ground_connection(0).orbit)
         # TODO Add support for multiple passes. Although maybe it doesn't matter,
         # we don't ever do anything with this. Maybe just the original igccol_initial
@@ -697,6 +704,8 @@ class L1bGeoProcess:
                     tcorr_before=self.tcorr_before[i],
                     tcorr_after=self.tcorr_after[i],
                     geolocation_accuracy_qa=self.geo_qa[i],
+                    geolocation_number_tiepoint=self.geo_number_tipoint[i],
+                    geolocation_tiepoint_ce68=self.geo_tipoint_ce68[i],
                 )
                 l1bgeo.run(pool)
                 pge_build_id_version_history = l1bgeo.pge_build_id_version_history

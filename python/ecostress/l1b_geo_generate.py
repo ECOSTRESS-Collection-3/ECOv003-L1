@@ -44,6 +44,8 @@ class L1bGeoGenerate(object):
         tcorr_before: float = -9999,
         tcorr_after: float = -9999,
         geolocation_accuracy_qa: str = "Poor",
+        geolocation_number_tiepoint: int = 0,
+        geolocation_tiepoint_ce68: float = -9999,
     ) -> None:
         """Create a L1bGeoGenerate with the given ImageGroundConnection
         and output file name. To actually generate, execute the "run"
@@ -74,6 +76,8 @@ class L1bGeoGenerate(object):
         self.tcorr_before = tcorr_before
         self.tcorr_after = tcorr_after
         self.geolocation_accuracy_qa = geolocation_accuracy_qa
+        self.geolocation_number_tiepoint = geolocation_number_tiepoint
+        self.geolocation_tiepoint_ce68 = geolocation_tiepoint_ce68
 
     def loc_parallel_func(
         self, it: tuple[int, int]
@@ -215,6 +219,8 @@ class L1bGeoGenerate(object):
             tcorr_before=self.tcorr_before,
             tcorr_after=self.tcorr_after,
             geolocation_accuracy_qa=self.geolocation_accuracy_qa,
+            geolocation_number_tiepoint=self.geolocation_number_tiepoint,
+            geolocation_tiepoint_ce68=self.geolocation_tiepoint_ce68,
             local_granule_id=self.local_granule_id,
             pge_build_id_version_history=self.pge_build_id_version_history,
         )

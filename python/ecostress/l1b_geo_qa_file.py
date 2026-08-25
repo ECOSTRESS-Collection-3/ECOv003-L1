@@ -226,6 +226,8 @@ offset."""
                 scene_name, data=log, dtype=h5py.special_dtype(vlen=bytes)
             )
 
+    NUM_TIEPONT_INDEX: int = 2
+
     def add_tp_single_scene(
         self,
         pass_number: int,
@@ -283,6 +285,8 @@ coordinate sample.
 The remaining three columns are the location of the ground coordinate in
 the reference image, in Ecr coordinates (in meters).
 """
+
+    TIEPOINT_CE68_INDEX: int = 5
 
     def add_final_accuracy(
         self,
