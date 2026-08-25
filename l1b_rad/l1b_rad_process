@@ -84,8 +84,11 @@ if args.run_config:
     file_version = config["ProductPathGroup", "ProductCounter"]
     build_id = config["PrimaryExecutable", "BuildID"]
     collection_label = config["ProductPathGroup", "CollectionLabel"]
+    # While the older L0b data has timing errors, these are all small enough that
+    # we don't care here. the orb is just used for band to band determination, and
+    # we can accept the older data.
     orb = ecostress.create_orbit_raw_from_config(
-        config, l1b_geo_config
+        config, l1b_geo_config, allow_older_l1a_l0b_data=True
     )
     dem = ecostress.create_dem(config)
 else:
@@ -94,7 +97,10 @@ else:
     dirname = os.path.abspath(args.prod_dir)
     file_version = "01"
     orbfname = os.path.abspath(args.l1a_raw_att)
-    orb = ecostress.create_orbit_raw(orbfname, l1b_geo_config)
+    # While the older L0b data has timing errors, these are all small enough that
+    # we don't care here. the orb is just used for band to band determination, and
+    # we can accept the older data.
+    orb = ecostress.create_orbit_raw(orbfname, l1b_geo_config, allow_older_l1a_l0b_data=True)
     dem = geocal.SrtmDem(
         os.environ["ELEV_ROOT"],
         False,

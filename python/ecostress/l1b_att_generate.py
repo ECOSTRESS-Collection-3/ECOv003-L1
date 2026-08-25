@@ -17,6 +17,21 @@ class L1bAttGenerate(object):
     corrected orbit.
 
     Note that despite the name, this is actually both attitude and ephemeris.
+
+    Note that for corrected ephemeris for the older L0B timing
+    error(EcostressOrbitL0Fix) we put the uncorrected orbit out with
+    the old wrong times (so it is a copy of L1A_RAW_ATT), and also we
+    sample the new orbit at the old times. Doing the old times doesn't
+    actually cause any error since we are using the new corrected
+    orbit, just returning the position and attitude at times other
+    than what the corrected L1A_RAW_ATT would have had. We have
+    accepted this error, it would be a bit hard to fix and the real
+    solution is to require newer orbit data in production (which we
+    now do). Just be aware of this issue, and that we accept it. Other
+    than the Uncorrected data, this is find (and even for Uncorrected,
+    if by that we mean before doing the time fix in
+    EcostressOrbitL0Fix).
+
     """
 
     def __init__(
