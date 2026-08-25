@@ -1,5 +1,5 @@
 import pytest
-from ecostress.misc import (
+from ecostress import (
     determine_rotated_map_igc,
     ecostress_file_name,
     time_to_file_string,
@@ -8,6 +8,8 @@ from ecostress.misc import (
     find_radiance_file,
     create_igc,
     create_orbit_raw,
+    create_time_table_fix,
+    L1bGeoQaFile
 )
 from geocal import Time, ImageCoordinate, cib01_mapinfo
 
@@ -88,3 +90,19 @@ def create_orbit_raw_(test_data_latest):
         test_data_latest / "l1_osp_dir",
     )
     print(orb)
+
+def test_create_time_table_fix(test_data_latest):
+    l1_osp_dir = test_data_latest / "l1_osp_dir"
+    l1b_geo_config = L1bGeoQaFile.l1b_geo_config(l1_osp_dir)
+    tt1 = create_time_table_fix("/home/smyth/Local/ecostress-level1/python/end_to_end_run/l1b_rad_06415/ECOv003_L1B_RAD_06415_001_20190823T151326_01.h5", None, l1b_geo_config.mirror_rpm, l1b_geo_config.frame_time)
+    tt2 = create_time_table_fix("/arcdata/smyth/L1B_RAD/2019/08/23/ECOv002_L1B_RAD_06415_001_20190823T151325_0713_04.h5", "/arcdata/smyth/L0B/2019/08/23/L0B_06415_20190823T151324_0713_02.h5", l1b_geo_config.mirror_rpm, l1b_geo_config.frame_time)
+    tt3 = create_time_table_fix("/arcdata/smyth/L1B_RAD/2019/08/23/ECOv002_L1B_RAD_06415_001_20190823T151325_0713_04.h5", "/arcdata/smyth/l0_flex_time_data.h5", l1b_geo_config.mirror_rpm, l1b_geo_config.frame_time, l0b_data_fname = "/arcdata/smyth/l0_data.h5")
+    tt4 = create_time_table_fix("/arcdata/smyth/rad_data.h5", "/arcdata/smyth/l0_flex_time_data.h5", l1b_geo_config.mirror_rpm, l1b_geo_config.frame_time, onum=6415, scn=1, l0b_data_fname = "/arcdata/smyth/l0_data.h5")
+    # Note tt1 is slightly different (0.012 seconds). This is because L1A_RAW_PIX grabs a
+    # different starting pixel because of the time difference
+    print(tt1)
+    print(tt2)
+    print(tt3)
+    print(tt4)
+    
+    

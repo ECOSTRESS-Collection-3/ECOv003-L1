@@ -5,7 +5,7 @@ from .misc import (
     create_orbit_raw,
     create_dem,
     create_lwm,
-    create_time_table,
+    create_time_table_fix,
     create_scan_mirror,
     ortho_base_directory,
     band_to_landsat_band,
@@ -281,8 +281,8 @@ class L1bGeoProcess:
         self, radfname: Path, include_image: bool, eband: int
     ) -> EcostressImageGroundConnection:
         orbit, scene, acquisition_time = orbit_from_metadata(radfname)
-        tt = create_time_table(
-            radfname, self.l1b_geo_config.mirror_rpm, self.l1b_geo_config.frame_time
+        tt = create_time_table_fix(
+            radfname, None, self.l1b_geo_config.mirror_rpm, self.l1b_geo_config.frame_time
         )
         sm = create_scan_mirror(
             radfname,

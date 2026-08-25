@@ -18,6 +18,7 @@ from ecostress_swig import (  # type: ignore
     EcostressImageGroundConnection,
     EcostressIgcCollection,
 )
+from .l0_time_calc import L0TimeCalc
 from pathlib import Path
 import pickle
 from loguru import logger
@@ -355,7 +356,144 @@ def create_time_table(
     """Create the time table using the data from the given input."""
     return EcostressTimeTable(str(fname), mirror_rpm, frame_time, time_offset)
 
+class L0FlexData:
+    """We grab these values during L1A processing now, but we didn't before version 8.03.
+    For older data,  have this class to work backwards, finding the L0 data that was used
+    to calculate a specific time.
+    """
+    def __init__(
+        self, l0_flex_time_data_fname: str | os.PathLike[str],
+        l0_data_fname: str | os.PathLike[str] | None, onum: int
+    ) -> None:
+        self.l0_flex_time_data_fname = Path(l0_flex_time_data_fname)
+        with h5py.File(self.l0_flex_time_data_fname) as fh:
+            # Determine if we are using a normal L0B file, or the
+            # l0_data.h5 with all data
+            if "hk" in fh:
+                self.tm_fsw = fh["/flex/time_fsw"][:]
+                self.tm_sync_fpie = fh["/flex/time_sync_fpie"][:]
+                self.tm_sync_fsw = fh["/flex/time_sync_fsw"][:]
+                # Also save bad time
+                self.bad_time = fh["/hk/bad/hr/time"][:]
+                self.bad_error_correction = fh["/hk/bad/hr/time_error_correction"][:]
+            else:
+                self.tm_fsw = fh[f"/{onum}/time_fsw"][:]
+                self.tm_sync_fpie = fh[f"/{onum}/time_sync_fpie"][:]
+                self.tm_sync_fsw = fh[f"/{onum}/time_sync_fsw"][:]
+                # Also save bad time
+                with h5py.File(l0_data_fname) as fh2:
+                    self.bad_time = fh2[f"/{onum}/time"][:]
+                    self.bad_error_correction = fh2[f"/{onum}/time_error_correction"][:]
+                
+            # Calculated gps time in l1a, before doing corrections. Note this
+            # doesn't include the packet time adjustment done in l1a_raw_pix_generate,
+            # this is good enough to find the data and we can then get
+            # the offset
+            self.gpt = self.tm_fsw + (self.tm_sync_fpie - self.tm_sync_fsw) * 1e-6
 
+    def flex_data(self, tm: geocal.Time) -> tuple[float, np.uint64, np.uint64]:
+        i = np.abs(self.gpt - tm.gps).argmin()
+        return self.tm_fsw[i], self.tm_sync_fpie[i], self.tm_sync_fsw[i], tm.gps - self.gpt[i]
+
+
+def create_time_table_fix(
+    fname: str | os.PathLike[str],
+    l0b_fname: str | os.PathLike[str] | None,
+    mirror_rpm: float,
+    frame_time: float,
+    onum: int | None = None,
+    scn: int | None = None,
+    l0b_data_fname: str | os.PathLike[str] | None = None
+) -> geocal.TimeTable:
+    """We had a number of timing errors that we fixed in 8.03. This check the version,
+    and if it is older we can use the L0 data to fix this.
+
+    We can take either a normal L1B_RAD file, or the aggregate /arcdata/smyth/rad_data.h5
+    that has all the mission data (used in ecostress-geolocation-examination repo).
+
+    Likewise, the L0B file can be a normal LOB file, or the /arcdata/smyth/l0_data.h5.
+    It can also be None, which is the normal way geolocation PGE runs. We only complain
+    about this if the version of the rad data is old enough to need the correction.
+
+    If you give the aggregate file, you also need to supply the orbit and scene to
+    read, since the file contains all orbits and scenes.
+    """
+    if onum is not None:
+        with h5py.File(fname) as fh:
+            # We may need to change this in the future, but right now the rad_data.h5
+            # doesn't contain the L1A_RAW version, and all the data was pre 8.03.
+            need_l0_fix = True
+            line_start_time_j2000 = fh[str(onum)][str(scn)]["line_start_time_j2000"][:]
+    else:
+        with h5py.File(fname) as fh:
+            onum = int(fh["StandardMetadata/StartOrbitNumber"][()])
+            scn = int(fh["StandardMetadata/SceneID"][()])
+            line_start_time_j2000 = fh["Time/line_start_time_j2000"][:]
+            if "PGEBuildIDVersionHistory" in fh["/L1B_RADMetadata"]:
+                pge_build_id_version_history = eval(fh["/L1B_RADMetadata/PGEBuildIDVersionHistory"][()])
+                need_l0_fix = pge_build_id_version_history["L1A_RAW_PIX"] < '0803'
+            else:
+                need_l0_fix = True
+    tv = geocal.Vector_Time()
+    nominal_scan_time = (60.0 / mirror_rpm) / 2
+    if need_l0_fix:
+        if l0b_fname is None:
+            raise RuntimeError("l1b_geo_process requires a L1A_RAW_PIX with a build number 0803 or later, because earlier versions had a number of timing errors. You can also supply a L0B filename that can be used to generate the correct data")
+        l0_flex = L0FlexData(l0b_fname, l0b_data_fname, onum)
+        tcalc = L0TimeCalc(l0_flex.bad_time, l0_flex.bad_error_correction)
+        time_fsw = []
+        time_sync_fsw = []
+        time_sync_fpie = []
+        time_offset = []
+        for t in line_start_time_j2000[::128]:
+            # We sometimes get fill data. Skip, we'll fill that in when we go through
+            # the next look
+            if t == 0.0:
+                pass
+            else:
+                tfsw, tsync_fpie, tsync_fsw, toffset= l0_flex.flex_data(geocal.Time.time_j2000(t))
+                time_fsw.append(tfsw)
+                time_sync_fpie.append(tsync_fpie)
+                time_sync_fsw.append(tsync_fsw)
+                time_offset.append(toffset)
+
+        tmlist = tcalc.gps_time_for_scene(np.array(time_fsw), np.array(time_sync_fsw),
+                                          np.array(time_sync_fpie))
+        i = 0
+        for t in line_start_time_j2000[::128]:
+            # We sometimes get fill data. We need a reasonable value even if the
+            # time is missing, we use the nominal_scan_time
+            if t == 0.0:
+                if last_t is None:
+                    raise RuntimeError(
+                        "We currently don't handle fill data at the first line"
+                    )
+                tv.push_back(geocal.Time.time_j2000(last_t + nominal_scan_time))
+                last_t += nominal_scan_time
+            else:
+                tm = geocal.Time.time_gps(tmlist[i]+time_offset[i])
+                i += 1
+                tv.push_back(tm)
+                last_t = tm.j2000
+    else:
+        last_t = None
+        for t in line_start_time_j2000[::128]:
+            # We sometimes get fill data. We need a reasonable value even if the
+            # time is missing, we use the nominal_scan_time
+            if t == 0.0:
+                if last_t is None:
+                    raise RuntimeError(
+                        "We currently don't handle fill data at the first line"
+                    )
+                tv.push_back(geocal.Time.time_j2000(last_t + nominal_scan_time))
+                last_t += nominal_scan_time
+            else:
+                tv.push_back(geocal.Time.time_j2000(t))
+                last_t = t
+    return EcostressTimeTable(
+        tv, True, mirror_rpm, frame_time
+    )
+            
 def create_scan_mirror(
     fname: str | os.PathLike[str],
     max_encoder_value: int,
@@ -667,6 +805,7 @@ __all__ = [
     "create_orbit_raw",
     "create_orbit_raw_from_config",
     "create_time_table",
+    "create_time_table_fix",
     "create_scan_mirror",
     "is_day",
     "aster_radiance_scale_factor",
