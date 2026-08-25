@@ -199,6 +199,43 @@ class L0TimeCalc:
         # to check the return value of every single gps_time_for_scene() call.
         self.no_uncorrupted_bad_error_correction_data = False
 
+    def gps_time_for_orbit(
+        self,
+        time_fsw: np.ndarray,
+        time_sync_fsw: np.ndarray,
+        time_sync_fpie: np.ndarray,
+        scene_file: list[tuple[int, int, Time, Time]],
+        onum: int,
+    ) -> np.ndarray:
+        """Turns out it is easier in l1a_raw_pix_generate to do the whole orbit at once.
+        Instead of using time_fsw to figure out the range for the BAD data, we just
+        pass in the scene times. We then calculate the time error correction over the scene.
+        For time_fsw not exactly in a scene, we put it in the scene closest to a scene.
+
+        Note this isn't exactly the same as gps_time_for_scene, but should be pretty
+        close.
+        """
+        err_corr = []
+        midtm = []
+        for orb, scn_id, tmin, tmax in scene_file:
+            if orb != onum:
+                continue
+            err_corr.append(self._robust_bad_time_error_correction(tmin.gps, tmax.gps))
+            midtm.append(tmin.gps + (tmax.gps - tmin.gps) / 2)
+        tfrac, tint = np.modf(time_fsw)
+        time_fsw_fixed = tint + 1e3 * tfrac
+        # This somewhat obscure expression finds the index for the closest midpoint
+        # each time_fsw_fixed - to for time_fsw_fixed actually in the scene range it
+        # goes with that scene and for time_fsw_fixed outside we just pick the closest
+        # one. We then look up the BAD error correction for that scene
+        bcorr = np.array(err_corr)[np.abs(np.array(midtm) - time_fsw_fixed[:,None]).argmin(axis=1)]
+        
+        # Note the sign on bcorr really is right here, this is just the convention used
+        # by the ISS in reporting bad_time_error_correction. The 1e6 is because the
+        # sync times are actually 1MHz counter values
+        return time_fsw_fixed - bcorr + (time_sync_fpie - time_sync_fsw) * 1e-6
+
+
     def gps_time_for_scene(
         self,
         time_fsw: np.ndarray,
@@ -220,6 +257,12 @@ class L0TimeCalc:
         assumption no longer holds and the corrupt-data checks will not
         behave correctly (they may reject genuine samples, or fail to
         reject actually corrupt ones).
+
+        This works well with our IgcManager that we did a lot of testing with.
+        Doesn't work with l1a_raw_pix_generate where we have a chicken and egg
+        problem - we need to know the times to break data into scenes and we need
+        to know the scenes to call this function. Instead, use gps_time_for_orbit
+        which takes in the approximate scene times.
         """
         # Correct fractional part of time_fsw, see description of class for details
         tfrac, tint = np.modf(time_fsw)

@@ -631,8 +631,7 @@ class L1aRawPixGenerate(object):
 
         # calculate FSW times of each packet (GPS times)
 
-        gpt = self.l0_time_calc.gps_time_for_scene(fswt, fsw_sync, fpie_sync)
-
+        gpt = self.l0_time_calc.gps_time_for_orbit(fswt, fsw_sync, fpie_sync, self.process_scene_file(), int(onum))
         # extract encoder values
         i, j = lid.shape
         lev = np.zeros((i, j), dtype=np.int32)
