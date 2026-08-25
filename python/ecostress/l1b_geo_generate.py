@@ -311,7 +311,7 @@ GEOGCS["WGS 84",
         )
         t.attrs["Units"] = "dimensionless"
         t.attrs["valid_min"] = 0
-        t.attrs["valid_max"] = 0
+        t.attrs["valid_max"] = 1
         t.attrs["fill"] = 255
         t.attrs["Description"] = (
             "This is the preliminary cloud mask. O for clear, 1 for cloudy, 255 for pixels we can't calculate cloud mask for"
