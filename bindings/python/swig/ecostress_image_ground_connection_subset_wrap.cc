@@ -12759,19 +12759,17 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_camera(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_camera__SWIG_0(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::EcostressImageGroundConnectionSubset *arg1 = (Ecostress::EcostressImageGroundConnectionSubset *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset const > tempshared1 ;
   boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset const > *smartarg1 = 0 ;
-  PyObject *swig_obj[1] ;
   boost::shared_ptr< GeoCal::Camera > result;
   
   (void)self;
-  if (!args) SWIG_fail;
-  swig_obj[0] = args;
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
   {
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnectionSubset_t, 0 |  0 , &newmem);
@@ -12808,19 +12806,116 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_orbit(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_camera__SWIG_1(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressImageGroundConnectionSubset *arg1 = (Ecostress::EcostressImageGroundConnectionSubset *) 0 ;
+  boost::shared_ptr< GeoCal::Camera > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset > *smartarg1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  boost::shared_ptr< GeoCal::Camera > tempshared2 ;
+  boost::shared_ptr< GeoCal::Camera > temp2shared2 ;
+  
+  (void)self;
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnectionSubset_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressImageGroundConnectionSubset__v_camera" "', argument " "1"" of type '" "Ecostress::EcostressImageGroundConnectionSubset *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnectionSubset * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnectionSubset * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__Camera_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "EcostressImageGroundConnectionSubset__v_camera" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::Camera > const &""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp2) tempshared2 = *reinterpret_cast< boost::shared_ptr< GeoCal::Camera > * >(argp2);
+      delete reinterpret_cast< boost::shared_ptr< GeoCal::Camera > * >(argp2);
+      arg2 = &tempshared2;
+    } else {
+      arg2 = (argp2) ? reinterpret_cast< boost::shared_ptr< GeoCal::Camera > * >(argp2) : &tempshared2;
+    }
+    // Added mms
+    // Special handling if this is a director class.
+    // See DirectorNotes.md for discussion of this.
+    Swig::Director* dp = dynamic_cast<Swig::Director*>(arg2->get());
+    if(dp) {
+      temp2shared2.reset(arg2->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      arg2 = &temp2shared2;
+    }
+  }
+  {
+    try {
+      (arg1)->camera((boost::shared_ptr< GeoCal::Camera > const &)*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_camera(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[3] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args, "EcostressImageGroundConnectionSubset__v_camera", 0, 2, argv))) SWIG_fail;
+  --argc;
+  if (argc == 1) {
+    PyObject *retobj = _wrap_EcostressImageGroundConnectionSubset__v_camera__SWIG_0(self, argc, argv);
+    if (!SWIG_Python_TypeErrorOccurred(retobj)) return retobj;
+    SWIG_fail;
+  }
+  if (argc == 2) {
+    PyObject *retobj = _wrap_EcostressImageGroundConnectionSubset__v_camera__SWIG_1(self, argc, argv);
+    if (!SWIG_Python_TypeErrorOccurred(retobj)) return retobj;
+    SWIG_fail;
+  }
+  
+fail:
+  SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'EcostressImageGroundConnectionSubset__v_camera'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressImageGroundConnectionSubset::camera() const\n"
+    "    Ecostress::EcostressImageGroundConnectionSubset::camera(boost::shared_ptr< GeoCal::Camera > const &)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_orbit__SWIG_0(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   Ecostress::EcostressImageGroundConnectionSubset *arg1 = (Ecostress::EcostressImageGroundConnectionSubset *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset const > tempshared1 ;
   boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset const > *smartarg1 = 0 ;
-  PyObject *swig_obj[1] ;
   boost::shared_ptr< GeoCal::Orbit > result;
   
   (void)self;
-  if (!args) SWIG_fail;
-  swig_obj[0] = args;
+  if ((nobjs < 1) || (nobjs > 1)) SWIG_fail;
   {
     int newmem = 0;
     res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnectionSubset_t, 0 |  0 , &newmem);
@@ -12854,6 +12949,105 @@ SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_orbit(PyObjec
   return resultobj;
 fail:
   return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_orbit__SWIG_1(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  Ecostress::EcostressImageGroundConnectionSubset *arg1 = (Ecostress::EcostressImageGroundConnectionSubset *) 0 ;
+  boost::shared_ptr< GeoCal::Orbit > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset > tempshared1 ;
+  boost::shared_ptr< Ecostress::EcostressImageGroundConnectionSubset > *smartarg1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  boost::shared_ptr< GeoCal::Orbit > tempshared2 ;
+  boost::shared_ptr< GeoCal::Orbit > temp2shared2 ;
+  
+  (void)self;
+  if ((nobjs < 2) || (nobjs > 2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(swig_obj[0], &argp1, SWIGTYPE_p_boost__shared_ptrT_Ecostress__EcostressImageGroundConnectionSubset_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "EcostressImageGroundConnectionSubset__v_orbit" "', argument " "1"" of type '" "Ecostress::EcostressImageGroundConnectionSubset *""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      delete reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnectionSubset * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< boost::shared_ptr<  Ecostress::EcostressImageGroundConnectionSubset > * >(argp1);
+      arg1 = const_cast< Ecostress::EcostressImageGroundConnectionSubset * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(swig_obj[1], &argp2, SWIGTYPE_p_boost__shared_ptrT_GeoCal__Orbit_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "EcostressImageGroundConnectionSubset__v_orbit" "', argument " "2"" of type '" "boost::shared_ptr< GeoCal::Orbit > const &""'");
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp2) tempshared2 = *reinterpret_cast< boost::shared_ptr< GeoCal::Orbit > * >(argp2);
+      delete reinterpret_cast< boost::shared_ptr< GeoCal::Orbit > * >(argp2);
+      arg2 = &tempshared2;
+    } else {
+      arg2 = (argp2) ? reinterpret_cast< boost::shared_ptr< GeoCal::Orbit > * >(argp2) : &tempshared2;
+    }
+    // Added mms
+    // Special handling if this is a director class.
+    // See DirectorNotes.md for discussion of this.
+    Swig::Director* dp = dynamic_cast<Swig::Director*>(arg2->get());
+    if(dp) {
+      temp2shared2.reset(arg2->get(), PythonRefPtrCleanup(dp->swig_get_self()));
+      arg2 = &temp2shared2;
+    }
+  }
+  {
+    try {
+      (arg1)->orbit((boost::shared_ptr< GeoCal::Orbit > const &)*arg2);
+    } catch (Swig::DirectorException &e) {
+      SWIG_fail; 
+    } catch (const PythonException& e) {
+      e.restore_python_exception();
+      SWIG_fail; 
+    } catch (const std::exception& e) {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_EcostressImageGroundConnectionSubset__v_orbit(PyObject *self, PyObject *args) {
+  Py_ssize_t argc;
+  PyObject *argv[3] = {
+    0
+  };
+  
+  if (!(argc = SWIG_Python_UnpackTuple(args, "EcostressImageGroundConnectionSubset__v_orbit", 0, 2, argv))) SWIG_fail;
+  --argc;
+  if (argc == 1) {
+    PyObject *retobj = _wrap_EcostressImageGroundConnectionSubset__v_orbit__SWIG_0(self, argc, argv);
+    if (!SWIG_Python_TypeErrorOccurred(retobj)) return retobj;
+    SWIG_fail;
+  }
+  if (argc == 2) {
+    PyObject *retobj = _wrap_EcostressImageGroundConnectionSubset__v_orbit__SWIG_1(self, argc, argv);
+    if (!SWIG_Python_TypeErrorOccurred(retobj)) return retobj;
+    SWIG_fail;
+  }
+  
+fail:
+  SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'EcostressImageGroundConnectionSubset__v_orbit'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Ecostress::EcostressImageGroundConnectionSubset::orbit() const\n"
+    "    Ecostress::EcostressImageGroundConnectionSubset::orbit(boost::shared_ptr< GeoCal::Orbit > const &)\n");
+  return 0;
 }
 
 
@@ -13112,16 +13306,18 @@ static PyMethodDef SwigMethods[] = {
 		"int Ecostress::EcostressImageGroundConnectionSubset::start_sample() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::start_sample\n"
 		""},
-	 { "EcostressImageGroundConnectionSubset__v_camera", _wrap_EcostressImageGroundConnectionSubset__v_camera, METH_O, "\n"
+	 { "EcostressImageGroundConnectionSubset__v_camera", _wrap_EcostressImageGroundConnectionSubset__v_camera, METH_VARARGS, "\n"
 		"EcostressImageGroundConnectionSubset__v_camera(EcostressImageGroundConnectionSubset self) -> boost::shared_ptr< GeoCal::Camera >\n"
+		"EcostressImageGroundConnectionSubset__v_camera(EcostressImageGroundConnectionSubset self, boost::shared_ptr< GeoCal::Camera > const & V)\n"
 		"\n"
-		"const boost::shared_ptr< GeoCal::Camera > & Ecostress::EcostressImageGroundConnectionSubset::camera() const\n"
+		"void Ecostress::EcostressImageGroundConnectionSubset::camera(const boost::shared_ptr< GeoCal::Camera > &Cam)\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::camera\n"
 		""},
-	 { "EcostressImageGroundConnectionSubset__v_orbit", _wrap_EcostressImageGroundConnectionSubset__v_orbit, METH_O, "\n"
+	 { "EcostressImageGroundConnectionSubset__v_orbit", _wrap_EcostressImageGroundConnectionSubset__v_orbit, METH_VARARGS, "\n"
 		"EcostressImageGroundConnectionSubset__v_orbit(EcostressImageGroundConnectionSubset self) -> boost::shared_ptr< GeoCal::Orbit >\n"
+		"EcostressImageGroundConnectionSubset__v_orbit(EcostressImageGroundConnectionSubset self, boost::shared_ptr< GeoCal::Orbit > const & V)\n"
 		"\n"
-		"const boost::shared_ptr< GeoCal::Orbit > & Ecostress::EcostressImageGroundConnectionSubset::orbit() const\n"
+		"void Ecostress::EcostressImageGroundConnectionSubset::orbit(const boost::shared_ptr< GeoCal::Orbit > &Orb)\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::orbit\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_sub_time_table", _wrap_EcostressImageGroundConnectionSubset__v_sub_time_table, METH_O, "\n"
@@ -13291,16 +13487,18 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 		"int Ecostress::EcostressImageGroundConnectionSubset::start_sample() const\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::start_sample\n"
 		""},
-	 { "EcostressImageGroundConnectionSubset__v_camera", _wrap_EcostressImageGroundConnectionSubset__v_camera, METH_O, "\n"
+	 { "EcostressImageGroundConnectionSubset__v_camera", _wrap_EcostressImageGroundConnectionSubset__v_camera, METH_VARARGS, "\n"
 		"_v_camera(EcostressImageGroundConnectionSubset self) -> boost::shared_ptr< GeoCal::Camera >\n"
+		"_v_camera(EcostressImageGroundConnectionSubset self, boost::shared_ptr< GeoCal::Camera > const & V)\n"
 		"\n"
-		"const boost::shared_ptr< GeoCal::Camera > & Ecostress::EcostressImageGroundConnectionSubset::camera() const\n"
+		"void Ecostress::EcostressImageGroundConnectionSubset::camera(const boost::shared_ptr< GeoCal::Camera > &Cam)\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::camera\n"
 		""},
-	 { "EcostressImageGroundConnectionSubset__v_orbit", _wrap_EcostressImageGroundConnectionSubset__v_orbit, METH_O, "\n"
+	 { "EcostressImageGroundConnectionSubset__v_orbit", _wrap_EcostressImageGroundConnectionSubset__v_orbit, METH_VARARGS, "\n"
 		"_v_orbit(EcostressImageGroundConnectionSubset self) -> boost::shared_ptr< GeoCal::Orbit >\n"
+		"_v_orbit(EcostressImageGroundConnectionSubset self, boost::shared_ptr< GeoCal::Orbit > const & V)\n"
 		"\n"
-		"const boost::shared_ptr< GeoCal::Orbit > & Ecostress::EcostressImageGroundConnectionSubset::orbit() const\n"
+		"void Ecostress::EcostressImageGroundConnectionSubset::orbit(const boost::shared_ptr< GeoCal::Orbit > &Orb)\n"
 		"Ecostress::EcostressImageGroundConnectionSubset::orbit\n"
 		""},
 	 { "EcostressImageGroundConnectionSubset__v_sub_time_table", _wrap_EcostressImageGroundConnectionSubset__v_sub_time_table, METH_O, "\n"

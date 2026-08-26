@@ -171,11 +171,19 @@ class EcostressIgcCollection(geocal_swig.igc_array.IgcArray):
     def orbit(self):
         return self._v_orbit()
 
+    @orbit.setter
+    def orbit(self, value):
+      self._v_orbit(value)
+
     _v_camera = _swig_new_instance_method(_ecostress_igc_collection.EcostressIgcCollection__v_camera)
 
     @property
     def camera(self):
         return self._v_camera()
+
+    @camera.setter
+    def camera(self, value):
+      self._v_camera(value)
 
 
     def __reduce__(self):

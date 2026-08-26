@@ -108,6 +108,30 @@ const boost::shared_ptr<GeoCal::Orbit>& EcostressIgcCollection::orbit() const
 }
 
 //-----------------------------------------------------------------------
+/// Set orbit.
+//-----------------------------------------------------------------------
+
+void EcostressIgcCollection::orbit(const boost::shared_ptr<GeoCal::Orbit>& Orb)
+{
+  for(int i = 0; i < number_image(); ++i) {
+    auto igc = image_ground_connection(i); 
+    auto igc1 = boost::dynamic_pointer_cast<EcostressImageGroundConnection>(igc);
+    auto igc2 = boost::dynamic_pointer_cast<EcostressImageGroundConnectionSubset>(igc);
+    if(igc1) {
+      igc1->orbit(Orb);
+      continue;
+    }
+    if(igc2) {
+      igc2->orbit(Orb);
+      continue;
+    }
+    throw GeoCal::Exception("Don't recoginize igc type");
+  }
+  if(number_image() > 0)
+    add_igc_object();
+}
+
+//-----------------------------------------------------------------------
 /// The Camera is shared between all the
 /// EcostressImageGroundConnection, return this shared camera.
 //-----------------------------------------------------------------------
@@ -127,3 +151,58 @@ const boost::shared_ptr<GeoCal::Camera>& EcostressIgcCollection::camera() const
   
 }
 
+//-----------------------------------------------------------------------
+/// Set camera.
+//-----------------------------------------------------------------------
+
+void EcostressIgcCollection::camera(const boost::shared_ptr<GeoCal::Camera>& Cam)
+{
+  for(int i = 0; i < number_image(); ++i) {
+    auto igc = image_ground_connection(i); 
+    auto igc1 = boost::dynamic_pointer_cast<EcostressImageGroundConnection>(igc);
+    auto igc2 = boost::dynamic_pointer_cast<EcostressImageGroundConnectionSubset>(igc);
+    if(igc1) {
+      igc1->camera(Cam);
+      continue;
+    }
+    if(igc2) {
+      igc2->camera(Cam);
+      continue;
+    }
+    throw GeoCal::Exception("Don't recoginize igc type");
+  }
+  if(number_image() > 0)
+    add_igc_object();
+}
+
+//-----------------------------------------------------------------------
+/// Add objects from the first IGC. This clears whatever was already
+/// added, so this can be used when we change the orbit or camera.
+//-----------------------------------------------------------------------
+
+void EcostressIgcCollection::add_igc_object()
+{
+  if(number_image() < 1)
+    throw GeoCal::Exception("Need to have a Igc in place before calling add_igc_object()");
+  auto igc = image_ground_connection(0);
+  auto igc1 = boost::dynamic_pointer_cast<EcostressImageGroundConnection>(igc);
+  if(igc1) {
+    clear_object();
+    add_object(igc1->scan_mirror());
+    add_object(igc1->camera());
+    add_object(igc1->orbit());
+    add_object(igc1->time_table());
+    return;
+  }
+
+  auto igc2 = boost::dynamic_pointer_cast<EcostressImageGroundConnectionSubset>(igc);
+  if(igc2) {
+    clear_object();
+    add_object(igc2->underlying_igc()->scan_mirror());
+    add_object(igc2->underlying_igc()->camera());
+    add_object(igc2->underlying_igc()->orbit());
+    add_object(igc2->underlying_igc()->time_table());
+    return;
+  }
+  throw GeoCal::Exception("Don't recoginize igc type");
+}

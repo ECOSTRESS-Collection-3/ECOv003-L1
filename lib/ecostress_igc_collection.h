@@ -16,26 +16,18 @@ public:
   { assume_igc_independent_ = false; }
   virtual ~EcostressIgcCollection() {}
   const boost::shared_ptr<GeoCal::Orbit>& orbit() const;
+  void orbit(const boost::shared_ptr<GeoCal::Orbit>& Orb);
   const boost::shared_ptr<GeoCal::Camera>& camera() const;
-  virtual void add_igc
-  (const boost::shared_ptr<EcostressImageGroundConnection>& Igc)
-  { igc_list.push_back(Igc);
-    if((int) igc_list.size() == 1) {
-      add_object(Igc->scan_mirror());
-      add_object(Igc->camera());
-      add_object(Igc->orbit());
-      add_object(Igc->time_table());
-    }
-  }
-  virtual void add_igc
-  (const boost::shared_ptr<EcostressImageGroundConnectionSubset>& Igc)
-  { igc_list.push_back(Igc);
-    if((int) igc_list.size() == 1) {
-      add_object(Igc->underlying_igc()->scan_mirror());
-      add_object(Igc->underlying_igc()->camera());
-      add_object(Igc->underlying_igc()->orbit());
-      add_object(Igc->underlying_igc()->time_table());
-    }
+  void camera(const boost::shared_ptr<GeoCal::Camera>& Cam);
+  virtual void add_igc(const boost::shared_ptr<GeoCal::ImageGroundConnection>& Igc)
+  {
+    auto igc1 = boost::dynamic_pointer_cast<EcostressImageGroundConnection>(Igc);
+    auto igc2 = boost::dynamic_pointer_cast<EcostressImageGroundConnectionSubset>(Igc);
+    if(!(igc1 || igc2))
+      throw GeoCal::Exception("Unsupported ImageGroundConnection type");
+    igc_list.push_back(Igc);
+    if((int) igc_list.size() == 1)
+      add_igc_object();
   }
   void nearest_attitude_time_point(const boost::shared_ptr<GeoCal::Time>& T,
 				   boost::shared_ptr<GeoCal::Time>& Tbefore,
@@ -45,6 +37,7 @@ private:
   friend class boost::serialization::access;
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version);
+  void add_igc_object();
 };
 }
 

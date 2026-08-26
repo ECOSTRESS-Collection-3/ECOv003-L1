@@ -34,8 +34,8 @@ public:
   %python_attribute(number_good_scan, int);
   %python_attribute(underlying_igc, boost::shared_ptr<EcostressImageGroundConnection>);
   %python_attribute(start_sample, int);
-  %python_attribute(camera, boost::shared_ptr<GeoCal::Camera>);
-  %python_attribute(orbit, boost::shared_ptr<GeoCal::Orbit>);
+  %python_attribute_with_set(camera, boost::shared_ptr<GeoCal::Camera>);
+  %python_attribute_with_set(orbit, boost::shared_ptr<GeoCal::Orbit>);
   %python_attribute(sub_time_table, boost::shared_ptr<EcostressTimeTableSubset>);
   %pickle_serialization();
 };

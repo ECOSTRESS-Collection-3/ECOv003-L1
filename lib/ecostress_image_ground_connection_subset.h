@@ -85,8 +85,11 @@ public:
   { return igc_->pixel_time(ic_from_subset(Ic)); }
   const boost::shared_ptr<GeoCal::Camera>& camera() const
   { return igc_->camera(); }
+  void camera(const boost::shared_ptr<GeoCal::Camera>& Cam)
+  { igc_->camera(Cam); }
   const boost::shared_ptr<GeoCal::Orbit>& orbit() const
   { return igc_->orbit(); }
+  void orbit(const boost::shared_ptr<GeoCal::Orbit>& Orb) { igc_->orbit(Orb); }
   boost::shared_ptr<EcostressTimeTableSubset> sub_time_table() const
   {
     auto tt = boost::dynamic_pointer_cast<EcostressTimeTable>(igc_->time_table());

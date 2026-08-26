@@ -15,15 +15,12 @@ namespace Ecostress {
 class EcostressIgcCollection : public GeoCal::IgcArray {
 public:
   EcostressIgcCollection();
-  virtual void add_igc
-    (const boost::shared_ptr<EcostressImageGroundConnection>& Igc);
-  virtual void add_igc
-    (const boost::shared_ptr<EcostressImageGroundConnectionSubset>& Igc);
+  virtual void add_igc(const boost::shared_ptr<ImageGroundConnection>& Igc);
   void nearest_attitude_time_point(const boost::shared_ptr<GeoCal::Time>& T,
 				   boost::shared_ptr<GeoCal::Time>& OUTPUT,
 				   boost::shared_ptr<GeoCal::Time>& OUTPUT) const;
-  %python_attribute(orbit, boost::shared_ptr<GeoCal::Orbit>);
-  %python_attribute(camera, boost::shared_ptr<GeoCal::Camera>);
+  %python_attribute_with_set(orbit, boost::shared_ptr<GeoCal::Orbit>);
+  %python_attribute_with_set(camera, boost::shared_ptr<GeoCal::Camera>);
   %pickle_serialization();
 };
 }

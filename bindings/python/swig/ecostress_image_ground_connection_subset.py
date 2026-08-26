@@ -441,11 +441,19 @@ class EcostressImageGroundConnectionSubset(geocal_swig.image_ground_connection.I
     def camera(self):
         return self._v_camera()
 
+    @camera.setter
+    def camera(self, value):
+      self._v_camera(value)
+
     _v_orbit = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnectionSubset__v_orbit)
 
     @property
     def orbit(self):
         return self._v_orbit()
+
+    @orbit.setter
+    def orbit(self, value):
+      self._v_orbit(value)
 
     _v_sub_time_table = _swig_new_instance_method(_ecostress_image_ground_connection_subset.EcostressImageGroundConnectionSubset__v_sub_time_table)
 
