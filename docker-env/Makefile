@@ -1,5 +1,5 @@
 ECOSTRESS_VERSION=8.03
-DOCKER_BASE_VERSION=20251022
+DOCKER_BASE_VERSION=20260825
 AFIDS_CONDA_PACKAGE=/home/smyth/Local/afids-conda-package
 ECOSTRESS_SOURCE=/home/smyth/Local/ecostress-level1
 BASE_DOCKER=oraclelinux:8

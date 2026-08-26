@@ -5,9 +5,6 @@ name = "build-pixi"
 platforms = ["linux-64"]
 version = "0.1.0"
 
-[tasks]
-configure = "/ldata/smyth/ecostress-level1/configure --prefix=$CONDA_PREFIX --with-test-data=/home/smyth/Local/ecostress-test-data --enable-maintainer-mode"
-
 [dependencies]
 geocal = "*"
 afids-development-tools = "*"
@@ -27,9 +24,15 @@ git-annex = "*"
 # Swig 4.4.0 just came out, and doesn't seem to work. We'll fix this
 # at some point, for for now restrict ourselves to the older version of swig
 swig = "<4.4.0"
+openpyxl = "*"
+xlsxwriter = "*"
+ty = "*"
+pdbpp = "*"
 
 [pypi-dependencies]
 # There isn't  currently a conda-forge package for the
 # python 3.13 verions we are using. So for now, grab the
 # pip package. Can change to conda-forge when it is available.
 tensorflow = "*"
+mkinit = ">=1.2.0, <2"
+
