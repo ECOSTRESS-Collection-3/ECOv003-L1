@@ -167,6 +167,7 @@ def test_hawaii_orbit_l1b_geo(end_to_end_run_dir, test_data_latest):
     )
     subprocess.run(args)
 
+
 @pytest.mark.skip
 def test_incorrect_best_orbit_l1b_geo(end_to_end_run_dir, test_data_latest):
     """Run a l1b_geo that had an incorrect best indication."""
@@ -183,10 +184,9 @@ def test_incorrect_best_orbit_l1b_geo(end_to_end_run_dir, test_data_latest):
         str(test_data_latest / "l1_osp_dir"),
         prod_dir,
     ]
-    args.extend(
-        sorted(Path("/arcdata/smyth/L1B_RAD/2025/04/14").glob("*38390*h5"))
-    )
+    args.extend(sorted(Path("/arcdata/smyth/L1B_RAD/2025/04/14").glob("*38390*h5")))
     subprocess.run(args)
+
 
 @pytest.mark.skip
 def test_hawaii_orbit_l1b_proj(end_to_end_run_dir, test_data_latest):

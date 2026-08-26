@@ -163,7 +163,6 @@ class EcostressIgcCollection(geocal_swig.igc_array.IgcArray):
         Ecostress::EcostressIgcCollection::EcostressIgcCollection
         """
         _ecostress_igc_collection.EcostressIgcCollection_swiginit(self, _ecostress_igc_collection.new_EcostressIgcCollection())
-    add_igc = _swig_new_instance_method(_ecostress_igc_collection.EcostressIgcCollection_add_igc)
     nearest_attitude_time_point = _swig_new_instance_method(_ecostress_igc_collection.EcostressIgcCollection_nearest_attitude_time_point)
     _v_orbit = _swig_new_instance_method(_ecostress_igc_collection.EcostressIgcCollection__v_orbit)
 

@@ -20,7 +20,6 @@ from .l1b_geo_generate import L1bGeoGenerate
 from .l1b_geo_generate_map import L1bGeoGenerateMap
 from .l1b_geo_generate_kmz import L1bGeoGenerateKmz
 from .l1b_att_generate import L1bAttGenerate
-from .l1b_geo_strategy import L1bCollection2GeoStrategy
 import geocal  # type: ignore
 from ecostress_swig import (  # type: ignore
     EcostressImageGroundConnection,
@@ -121,7 +120,6 @@ class L1bGeoProcess:
         self.strategy: L1bGeoStrategy = self.l1b_geo_config.l1b_geo_strategy
         if orbit_offset is not None:
             self.setup_orbit_offset(orbit_offset)
-        self.orb_initial: geocal.Orbit = self.strategy.modify_orbit(self.orb_initial)
         self.cam_initial = geocal.read_shelve(str(self.l1_osp_dir / "camera.xml"))
         # Don't fit any of the camera parameters, hold them all fixed
         self.cam_initial.mask_all_parameter()
@@ -569,9 +567,15 @@ class L1bGeoProcess:
         igccol: EcostressImageGroundConnection,
         tpcol: geocal.TiePointCollection | None,
         pass_number: int,
+        tcorr_before: list[float] | None = None,
+        tcorr_after: list[float] | None = None,
+        geo_qa: list[str] | None = None,
     ) -> None:
         """Collect information on the time of correction before and after scene,
-        and populate QA file with this."""
+        and populate QA file with this.
+
+        Note that this normally gets called by L1bGeoStrategy object, since in general we
+        have multiple passes and L1bGeoStrategy needs to coordinate."""
         if self.qa_file is None:
             return
         if pass_number == 1:
@@ -584,32 +588,21 @@ class L1bGeoProcess:
                     igc.time_table,
                     self._line_order_reversed,
                 )
-        self.tcorr_before = []
-        self.tcorr_after = []
-        self.geo_qa = []
-        for i in range(igccol.number_image):
-            igc = igccol.image_ground_connection(i)
-            if hasattr(igc, "time_table"):
-                tt = igc.time_table
-            else:
-                tt = igc.sub_time_table
-            t = tt.min_time + (tt.max_time - tt.min_time)
-            t1 = -9999.0
-            t2 = -9999.0
-            # Get points, but only if we actually have at
-            # least on correction point
-            if len(igc.orbit.parameter) > 0:
-                tb, ta = igccol.nearest_attitude_time_point(t)
-                if tb < geocal.Time.max_valid_time - 1:
-                    t1 = t - tb
-                if ta < geocal.Time.max_valid_time - 1:
-                    t2 = ta - t
-            self.tcorr_before.append(t1)
-            self.tcorr_after.append(t2)
-            self.geo_qa.append(self.l1b_geo_config.geocal_accuracy_qa(t1, t2))
-            logger.info(
-                f"Scene {self.scene_list[i]} geolocation accuracy QA: {self.geo_qa[-1]}"
-            )
+        self.tcorr_before = tcorr_before
+        self.tcorr_after = tcorr_after
+        self.geo_qa = geo_qa
+        if self.tcorr_before is None:
+            self.tcorr_before = [
+                -9999.0,
+            ] * igccol.number_image
+        if self.tcorr_after is None:
+            self.tcorr_after = [
+                -9999.0,
+            ] * igccol.number_image
+        if self.geo_qa is None:
+            self.geo_qa = [
+                "Best",
+            ] * igccol.number_image
 
         # Write out QA data
         if tpcol:
