@@ -81,7 +81,6 @@ class L1bGeoProcess:
             self.log_memory_buffer.append(message)
 
         self.log_memory_buffer_hid = logger.add(buffer_sink)
-        self.strategy: L1bGeoStrategy = L1bCollection2GeoStrategy()
         self._line_order_reversed: bool | None = None
         self.allow_older_l1a_l0b_data = allow_older_l1a_l0b_data
         # Our end to end tests data has an older version of L0B. This should get updated
@@ -119,6 +118,7 @@ class L1bGeoProcess:
                 number_cpu,
             )
         self.setup_orthobase(landsat_band, ecostress_band)
+        self.strategy: L1bGeoStrategy = self.l1b_geo_config.l1b_geo_strategy
         if orbit_offset is not None:
             self.setup_orbit_offset(orbit_offset)
         self.orb_initial: geocal.Orbit = self.strategy.modify_orbit(self.orb_initial)
