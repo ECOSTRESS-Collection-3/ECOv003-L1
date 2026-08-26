@@ -22,6 +22,12 @@ class GeoWriteStandardMetadata(WriteStandardMetadata):
         self.geolocation_accuracy_qa = geolocation_accuracy_qa
         self.tcorr_before = tcorr_before
         self.tcorr_after = tcorr_after
+        if tcorr_before <= -9990:
+            self.delta_time = self.tcorr_after
+        elif tcorr_after <= -9990:
+            self.delta_time = self.tcorr_before
+        else:
+            self.delta_time = min(self.tcorr_before, self.tcorr_after)
         self.geolocation_number_tiepoint = geolocation_number_tiepoint
         self.geolocation_tiepoint_ce68 = geolocation_tiepoint_ce68
         if (self.orbit_based and orbit_corrected) or geolocation_accuracy_qa in (
@@ -55,6 +61,8 @@ class GeoWriteStandardMetadata(WriteStandardMetadata):
             g["GeolocationAccuracyQA"] = self.geolocation_accuracy_qa
             pg["GeolocationNumberTiepoint"] = self.geolocation_number_tiepoint
             g["GeolocationNumberTiepoint"] = self.geolocation_number_tiepoint
+            pg["GeolocationDeltaTimeCorrection"] = self.delta_time
+            g["GeolocationDeltaTimeCorrection"] = self.delta_time
             pg["GeolocationTiepointCE68"] = self.geolocation_tiepoint_ce68
             g["GeolocationTiepointCE68"] = self.geolocation_tiepoint_ce68
             pg["DeltaTimeOfCorrectionBeforeScene"] = self.tcorr_before
