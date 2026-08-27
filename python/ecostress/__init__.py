@@ -81,6 +81,9 @@ from .l1b_geo_generate_kmz import (
 from .l1b_geo_generate_map import (
     L1bGeoGenerateMap,
 )
+from .l1b_geo_generate_tiff import (
+    L1bGeoGenerateTiff,
+)
 from .l1b_geo_process import (
     L1bGeoProcess,
 )
@@ -182,6 +185,7 @@ __all__ = [
     "L1bGeoGenerate",
     "L1bGeoGenerateKmz",
     "L1bGeoGenerateMap",
+    "L1bGeoGenerateTiff",
     "L1bGeoProcess",
     "L1bGeoQaFile",
     "L1bGeoStrategy",

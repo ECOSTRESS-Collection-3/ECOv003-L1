@@ -18,6 +18,7 @@ from .l1b_geo_qa_file import L1bGeoQaFile
 from .cloud_processing import CloudProcessing
 from .l1b_geo_generate import L1bGeoGenerate
 from .l1b_geo_generate_map import L1bGeoGenerateMap
+from .l1b_geo_generate_tiff import L1bGeoGenerateTiff
 from .l1b_geo_generate_kmz import L1bGeoGenerateKmz
 from .l1b_att_generate import L1bAttGenerate
 import geocal  # type: ignore
@@ -718,6 +719,14 @@ class L1bGeoProcess:
                         number_subpixel=self.l1b_geo_config.map_number_subpixel,
                     )
                     l1bgeo_map.run()
+                if self.l1b_geo_config.generate_tiff:
+                    logger.info(
+                        f"Generating projected tiff file scene number {self.scene_list[i]}"
+                    )
+                    l1bgeo_tiff = L1bGeoGenerateTiff(self, l1bgeo, radfname,
+                                                     self.ofile[i],
+                                                     number_subpixel=self.l1b_geo_config.map_number_subpixel)
+                    l1bgeo_tiff.run()
                 if self.l1b_geo_config.generate_kmz_file:
                     logger.info(
                         f"Generating KMZ file scene number {self.scene_list[i]}"
