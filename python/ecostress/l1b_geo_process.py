@@ -206,6 +206,11 @@ class L1bGeoProcess:
         self.orb_initial.fit_pitch = False
         self.orb_initial.fit_roll = False
 
+    @property
+    def orbit_number(self) -> int:
+        orbnum, _, _ = orbit_from_metadata(self.radlist[0])
+        return orbnum
+
     @cached_property
     def l1b_geo_config(self) -> types.ModuleType:
         try:

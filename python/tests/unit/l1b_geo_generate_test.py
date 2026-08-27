@@ -77,5 +77,5 @@ def test_generate_orbit_fit_db(test_data_latest):
                     "tend_parm_2" : parm_2})
     df = pd.DataFrame(res)
     df.sort_values("orbit")
-    df.to_parquet(test_data_latest / "l1_osp_dir"/ "orbit_fit.paquet")
+    df.to_parquet(test_data_latest / "l1_osp_dir"/ "orbit_fit.parquet")
             
