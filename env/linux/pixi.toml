@@ -28,6 +28,14 @@ openpyxl = "*"
 xlsxwriter = "*"
 ty = "*"
 pdbpp = "*"
+duckdb = "*"
+pyarrow = "*"
+# Our EcostressOrbit test environment also had these. I don't think we currently need these,
+# but make a note about them
+#imagemagick = "*"
+#scikit-image = "*"
+#python-pptx = "*"
+#pandoc = "*"
 
 [pypi-dependencies]
 # There isn't  currently a conda-forge package for the
