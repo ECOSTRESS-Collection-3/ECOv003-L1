@@ -246,7 +246,7 @@ offset."""
             ]
         if pass_number not in self.tp_stat:
             self.tp_stat[pass_number] = np.full((igccol.number_image, 9), -9999.0)
-            self.tp_stat[pass_number][:,8] = 3 # This is poor indicator
+            self.tp_stat[pass_number][:, 8] = 3  # This is poor indicator
         self.tp_stat[pass_number][image_index, 0] = ntpoint_initial
         self.tp_stat[pass_number][image_index, 1] = ntpoint_removed
         self.tp_stat[pass_number][image_index, 2] = ntpoint_final

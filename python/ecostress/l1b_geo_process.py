@@ -627,8 +627,12 @@ class L1bGeoProcess:
                 :, self.qa_file.TIEPOINT_CE68_INDEX
             ]
         else:
-            self.geo_number_tiepoint = [0,] * igccol.number_image
-            self.geo_tiepoint_ce68 = [-9999.0, ] * igccol.number_image
+            self.geo_number_tiepoint = [
+                0,
+            ] * igccol.number_image
+            self.geo_tiepoint_ce68 = [
+                -9999.0,
+            ] * igccol.number_image
         self.qa_file.add_orbit(pass_number, igccol.image_ground_connection(0).orbit)
         # TODO Add support for multiple passes. Although maybe it doesn't matter,
         # we don't ever do anything with this. Maybe just the original igccol_initial
@@ -730,9 +734,13 @@ class L1bGeoProcess:
                     logger.info(
                         f"Generating projected tiff file scene number {self.scene_list[i]}"
                     )
-                    l1bgeo_tiff = L1bGeoGenerateTiff(self, l1bgeo, radfname,
-                                                     self.ofile[i],
-                                                     number_subpixel=self.l1b_geo_config.map_number_subpixel)
+                    l1bgeo_tiff = L1bGeoGenerateTiff(
+                        self,
+                        l1bgeo,
+                        radfname,
+                        self.ofile[i],
+                        number_subpixel=self.l1b_geo_config.map_number_subpixel,
+                    )
                     l1bgeo_tiff.run()
                 if self.l1b_geo_config.generate_kmz_file:
                     logger.info(

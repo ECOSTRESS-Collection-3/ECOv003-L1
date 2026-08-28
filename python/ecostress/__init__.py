@@ -93,7 +93,9 @@ from .l1b_geo_qa_file import (
 from .l1b_geo_strategy import (
     L1bCollection2GeoStrategy,
     L1bGeoStrategy,
-    L1bGeoStrategy2Pass,
+)
+from .l1b_geo_strategy_3pass import (
+    L1bGeoStrategy3Pass,
 )
 from .l1b_proj import (
     L1bProj,
@@ -189,7 +191,7 @@ __all__ = [
     "L1bGeoProcess",
     "L1bGeoQaFile",
     "L1bGeoStrategy",
-    "L1bGeoStrategy2Pass",
+    "L1bGeoStrategy3Pass",
     "L1bProj",
     "L1bRadGenerate",
     "L1bRadSimulate",

@@ -1,9 +1,6 @@
 from __future__ import annotations
 import geocal  # type: ignore
-from ecostress_swig import FILL_VALUE_NOT_SEEN, Resampler, fill_value_threshold  # type: ignore
-from .misc import determine_rotated_map_igc
-import os
-import h5py  # type: ignore
+from ecostress_swig import Resampler, fill_value_threshold  # type: ignore
 import numpy as np
 import scipy  # type: ignore
 import subprocess
@@ -13,6 +10,7 @@ from pathlib import Path
 
 if typing.TYPE_CHECKING:
     from .l1b_geo_generate import L1bGeoGenerate
+    from .l1b_geo_process import L1bGeoProcess
 
 
 class L1bGeoGenerateTiff(object):
@@ -28,7 +26,7 @@ class L1bGeoGenerateTiff(object):
         l1b_rad: Path,
         output_base_name: Path,
         number_subpixel: int = 3,
-        pass_through_error: bool = False, # Don't swallow exceptions, useful for debugging
+        pass_through_error: bool = False,  # Don't swallow exceptions, useful for debugging
     ) -> None:
         self.l1b_geo_process = l1b_geo_process
         self.l1b_geo_generate = l1b_geo_generate
@@ -44,7 +42,8 @@ class L1bGeoGenerateTiff(object):
             mi = ortho_base.map_info.scale(ortho_scale, ortho_scale)
             if (
                 np.count_nonzero(self.l1b_geo_generate.lat < fill_value_threshold) == 0
-                and np.count_nonzero(self.l1b_geo_generate.lon < fill_value_threshold) == 0
+                and np.count_nonzero(self.l1b_geo_generate.lon < fill_value_threshold)
+                == 0
             ):
                 lat = scipy.ndimage.interpolation.zoom(
                     self.l1b_geo_generate.lat, self.number_subpixel, order=2
@@ -79,7 +78,9 @@ class L1bGeoGenerateTiff(object):
             fname4 = f"{self.output_base_name.stem}_ref_enh.tif"
             res.resample_field(str(fname), rad_data, 100.0, "HALF", True)
             subprocess.run(["gdalenhance", "-equalize", fname, fname2])
-            ortho_base.create_subset_file(str(fname3), "GTIFF", [], res.map_info, "-ot Int16")
+            ortho_base.create_subset_file(
+                str(fname3), "GTIFF", [], res.map_info, "-ot Int16"
+            )
             subprocess.run(["gdalenhance", "-equalize", fname3, fname4])
         except Exception:
             # These are diagnostic, so just skip if we run into a problem. One frequent issue
@@ -89,5 +90,6 @@ class L1bGeoGenerateTiff(object):
             logger.warning(
                 f"Exception occurred while generating tiff file {self.output_base_name.stem}_*.tif"
             )
+
 
 __all__ = ["L1bGeoGenerateTiff"]
