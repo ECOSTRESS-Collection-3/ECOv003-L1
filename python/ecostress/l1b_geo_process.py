@@ -627,8 +627,8 @@ class L1bGeoProcess:
                 :, self.qa_file.TIEPOINT_CE68_INDEX
             ]
         else:
-            self.geo_number_tiepoint = None
-            self.geo_tiepoint_ce68 = None
+            self.geo_number_tiepoint = [0,] * igccol.number_image
+            self.geo_tiepoint_ce68 = [-9999.0, ] * igccol.number_image
         self.qa_file.add_orbit(pass_number, igccol.image_ground_connection(0).orbit)
         # TODO Add support for multiple passes. Although maybe it doesn't matter,
         # we don't ever do anything with this. Maybe just the original igccol_initial

@@ -130,10 +130,11 @@ class L1bGeoStrategy(object, metaclass=abc.ABCMeta):
         tpcol = self.filter_tp(tpcol, l1b_geo_process, igccol, pool, pass_number)
         if len(tpcol) == 0:
             logger.info("No tie-points, so skipping SBA correction")
-            tpcol = None
-            return igccol, None
-        self.modify_igc(l1b_geo_process, igccol, tpcol, pass_number)
-        igccol_corrected = l1b_geo_process.run_sba(igccol, tpcol, pass_number)
+            tpcol = geocal.TiePointCollection()
+            igccol_corrected = igccol
+        else:
+            self.modify_igc(l1b_geo_process, igccol, tpcol, pass_number)
+            igccol_corrected = l1b_geo_process.run_sba(igccol, tpcol, pass_number)
         logger.info(f"Done with pass {pass_number}")
         return igccol_corrected, tpcol
 
