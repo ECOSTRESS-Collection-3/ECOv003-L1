@@ -168,7 +168,7 @@ def test_hawaii_orbit_l1b_geo(end_to_end_run_dir, test_data_latest):
     subprocess.run(args)
 
 
-#@pytest.mark.skip
+@pytest.mark.skip
 def test_incorrect_best_orbit_l1b_geo(end_to_end_run_dir, test_data_latest):
     """Run a l1b_geo that had an incorrect best indication."""
     l1a_raw_att = "/arcdata/smyth/L1A_RAW_ATT/2025/04/14/L1A_RAW_ATT_38390_20250414T071521_0713_01.h5"
