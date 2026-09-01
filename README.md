@@ -7,8 +7,44 @@ Generating Code (NTR-53468).
 The ECOSTRESS collection 3 level 1 radiance data product is the
 pre-cursor to the [Surface Biology and Geology (SBG) collection 1 level 1 brightness temperature data product algorithm](https://github.com/sbg-tir/SBG-TIR-L1).
 
+One step build
+=====================
+
+If you just want to build the software, you can:
+
+1. Check if you have pixi installed by trying to use it.
+
+    pixi --help
+	
+2. If pixi isn't installed, folowing the direction in [Use pixi](#use-pixi) below. This
+   only needs to be done once.
+   
+3. Check out the code if not already available:
+
+   cd \<working directory\>
+   git clone git@github.jpl.nasa.gov:ecostress/ecostress-level1.git
+   
+4. Optional - if you want to redirect any of the defaults create a 
+   ecostress-level1/env/Makefile.local file as described in [Create the pixi environment](#create-the-pixi-environment)
+   
+3. Run 
+   
+   cd ecostress-level1/env && make full-build
+	
+4. Set the pixi shell for running:
+
+   pixi shell --manifest-path /project/sandbox/$(USER)/ecostress-build/build
+   
+   Replace the --manifest-path with the actual ENV_DIR if you changed this location
+   
+5. Run a sample
+
+   l1a_raw_pix --help
+
 Building the software
 =====================
+
+One step build is described above, 
 
 We use [pixi](https://pixi.prefix.dev/latest/) for creating our environment, and then
 do a standard configure/make install of the software.
@@ -54,7 +90,7 @@ location that things go to. So an example Makefile.local might be:
 ```
 ENV_DIR=/project/sandbox/$(USER)/ecostress-build/build
 ECOSTRESS_OSP_DIR=/project/test/ASTER/EndToEndTest/latest/l1_osp_dir
-CONDA_PACKAGE_DIR=/project/sandbox/smyth/afids-conda-package
+CONDA_PACKAGE_DIR=/project/sandbox/smyth/afids-conda-package/afids-conda-channel/
 ```
 
 Once this is set up, you can create the environment with:

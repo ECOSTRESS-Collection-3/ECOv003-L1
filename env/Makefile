@@ -19,7 +19,8 @@ mkfile_dir := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 # Location of environment we create
 # --------------------------------------
 
-ENV_DIR=$(abspath $(mkfile_dir)../../ecostress-build/build-pixi)
+#ENV_DIR=$(abspath $(mkfile_dir)../../ecostress-build/build-pixi)
+ENV_DIR=/project/sandbox/$(USER)/ecostress-build/build
 
 # Location of pixi unpack directory, if different
 # --------------------------------------
@@ -30,7 +31,8 @@ UNPACK_ENV_DIR=$(ENV_DIR)
 # git@github.jpl.nasa.gov:Cartography/afids-conda-package.git
 # --------------------------------------
 
-CONDA_PACKAGE_DIR=$(abspath $(mkfile_dir)../../afids-conda-package/afids-conda-channel)
+#CONDA_PACKAGE_DIR=$(abspath $(mkfile_dir)../../afids-conda-package/afids-conda-channel)
+CONDA_PACKAGE_DIR=/project/sandbox/smyth/afids-conda-package/afids-conda-channel/
 
 # Location of various datasets
 # --------------------------------------
@@ -141,5 +143,14 @@ pixi-unpack:
 	UNPACK_ENV_DIR=$(UNPACK_ENV_DIR) bash run-post-link.sh
 
 
+# Simple one step build, where you want all the default behavior
+# --------------------------------------------
+
+full-build:
+	$(MAKE) recreate-env
+	pixi run --manifest-path $(ENV_DIR) configure
+	pixi run --manifest-path $(ENV_DIR) build
+	pixi run --manifest-path $(ENV_DIR) install-editmode
+	echo "Set shell by 'pixi shell --manifest-path $(ENV_DIR)'
 
 
