@@ -16,30 +16,44 @@ If you just want to build the software, you can:
 
     pixi --help
 	
-2. If pixi isn't installed, folowing the direction in [Use pixi](#use-pixi) below. This
+2. If pixi isn't installed, follow the directions in [Use pixi](#use-pixi) below. This
    only needs to be done once.
    
 3. Check out the code if not already available:
 
+   mkdir -p \<working directory\>
    cd \<working directory\>
    git clone git@github.jpl.nasa.gov:ecostress/ecostress-level1.git
    
 4. Optional - if you want to redirect any of the defaults create a 
    ecostress-level1/env/Makefile.local file as described in [Create the pixi environment](#create-the-pixi-environment)
    
-3. Run 
+5. Run 
    
    cd ecostress-level1/env && make full-build
+
+   This creates the pixi environment (downloading and installing conda packages) and then
+   does a full configure/build/install of the C++ and python code. Expect this to take
+   somewhere around 15-20 minutes, depending on network speed and how much is already
+   cached.
 	
-4. Set the pixi shell for running:
+6. Set the pixi shell for running:
 
    pixi shell --manifest-path /project/sandbox/$(USER)/ecostress-build/build
    
-   Replace the --manifest-path with the actual ENV_DIR if you changed this location
+   Replace the path after --manifest-path with the actual ENV_DIR if you changed this
+   location. Note that "pixi shell" needs to be run from an interactive terminal - if you
+   are calling this from a script, use "pixi run --manifest-path \<dir\> \<command\>" to run
+   a single command in the environment instead.
    
-5. Run a sample
+7. Run a sample
 
    l1a_raw_process --help
+
+   Note: the first time you run any of the newly built executables, it can take a minute
+   or two to start up (this can look like it has hung, but it hasn't) - this seems to be
+   the cost of reading the shared libraries over the network for the first time. Later
+   runs only take a few seconds.
 
 Building the software
 =====================
@@ -92,6 +106,13 @@ ENV_DIR=/project/sandbox/$(USER)/ecostress-build/build
 ECOSTRESS_OSP_DIR=/project/test/ASTER/EndToEndTest/latest/l1_osp_dir
 CONDA_PACKAGE_DIR=/project/sandbox/smyth/afids-conda-package/afids-conda-channel/
 ```
+
+Note the Makefile default for CONDA_PACKAGE_DIR currently points at Mike Smyth's personal
+sandbox directory. This works if you are on the JPL network and have read access to that
+path, but if you don't (e.g., you aren't a JPL developer, or that directory is ever removed)
+you will need to override CONDA_PACKAGE_DIR in your Makefile.local. See the note in
+[env/README.md](env/README.md) about building your own channel from the
+[afids conda package](https://github.com/Cartography-jpl/afids-conda-package) repository.
 
 Once this is set up, you can create the environment with:
 
