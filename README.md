@@ -39,7 +39,7 @@ If you just want to build the software, you can:
    
 5. Run a sample
 
-   l1a_raw_pix --help
+   l1a_raw_process --help
 
 Building the software
 =====================

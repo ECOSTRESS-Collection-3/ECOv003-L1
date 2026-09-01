@@ -151,6 +151,6 @@ full-build:
 	pixi run --manifest-path $(ENV_DIR) configure
 	pixi run --manifest-path $(ENV_DIR) build
 	pixi run --manifest-path $(ENV_DIR) install-editmode
-	echo "Set shell by 'pixi shell --manifest-path $(ENV_DIR)'
+	echo "Set shell by 'pixi shell --manifest-path $(ENV_DIR)'"
 
 
