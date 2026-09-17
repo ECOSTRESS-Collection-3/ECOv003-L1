@@ -461,19 +461,19 @@ def create_time_table_fix(
                 pge_build_id_version_history = eval(
                     fh["/L1B_RADMetadata/PGEBuildIDVersionHistory"][()]
                 )
-                need_l0_fix = pge_build_id_version_history["L1A_RAW_PIX"] < "0803"
+                need_l0_fix = pge_build_id_version_history["L1A_RAW_PIX"] < "0802"
             else:
                 need_l0_fix = True
     if need_l0_fix:
         logger.info(
-            "L1A_RAW_PIX version was < 0803, so we need to apply fixed for timing errors using L0B data"
+            "L1A_RAW_PIX version was < 0802, so we need to apply fixed for timing errors using L0B data"
         )
     tv = geocal.Vector_Time()
     nominal_scan_time = (60.0 / mirror_rpm) / 2
     if need_l0_fix:
         if l0b_fname is None:
             raise RuntimeError(
-                "l1b_geo_process requires a L1A_RAW_PIX with a build number 0803 or later, because earlier versions had a number of timing errors. You can also supply a L0B filename that can be used to generate the correct data"
+                "l1b_geo_process requires a L1A_RAW_PIX with a build number 0802 or later, because earlier versions had a number of timing errors. You can also supply a L0B filename that can be used to generate the correct data"
             )
         l0_flex = L0FlexData(l0b_fname, l0b_data_fname, onum)
         tcalc = L0TimeCalc(l0_flex.bad_time, l0_flex.bad_error_correction)

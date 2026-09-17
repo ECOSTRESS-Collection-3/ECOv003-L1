@@ -141,17 +141,17 @@ class L1bGeoProcess:
                     pge_build_id_version_history = eval(
                         fh["/L1B_RADMetadata/PGEBuildIDVersionHistory"][()]
                     )
-                    if pge_build_id_version_history["L1A_RAW_PIX"] < "0803":
+                    if pge_build_id_version_history["L1A_RAW_PIX"] < "0802":
                         need_l0_fix = True
                 else:
                     need_l0_fix = True
         if need_l0_fix and not self.allow_older_l1a_l0b_data:
             raise RuntimeError(
-                "We require the L1A_RAW_PIX to be generated with a build_id >= 0803 because older versions had timing errors. Update the L1A_RAW_PIX version and try rerunning."
+                "We require the L1A_RAW_PIX to be generated with a build_id >= 0802 because older versions had timing errors. Update the L1A_RAW_PIX version and try rerunning."
             )
         if need_l0_fix and self.l0b_fname is None:
             raise RuntimeError(
-                "To use older versions of L1A_RAW_PIX, you need to also supply the L0B data to use to fix this. L1A_RAW_PIX should be build_id >= 0803 or you should supply L0B"
+                "To use older versions of L1A_RAW_PIX, you need to also supply the L0B data to use to fix this. L1A_RAW_PIX should be build_id >= 0802 or you should supply L0B"
             )
         self.log_file = Path(
             ecostress_file_name(
