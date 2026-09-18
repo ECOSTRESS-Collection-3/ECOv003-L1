@@ -17,6 +17,9 @@ class L1ctWriteStandardMetadata(WriteStandardMetadata):
         over_all_land_fraction: float = 0.0,
         average_solar_zenith: float = 0.0,
         geolocation_accuracy_qa: str = "Poor",
+        geolocation_number_tiepoint: int = 0,
+        geolocation_delta_time_correction: float = -9999,
+        geolocation_tiepoint_ce68: float = -9999,
         qa_precentage_missing: float | None = None,
         band_specification: None | list[float] = None,
         cal_correction: None | np.ndarray = None,
@@ -26,6 +29,9 @@ class L1ctWriteStandardMetadata(WriteStandardMetadata):
         super().__init__(*args, **kwargs)
         self.orbit_corrected = orbit_corrected
         self.geolocation_accuracy_qa = geolocation_accuracy_qa
+        self.geolocation_number_tiepoint = geolocation_number_tiepoint
+        self.geolocation_delta_time_correction = geolocation_delta_time_correction
+        self.geolocation_tiepoint_ce68 = geolocation_tiepoint_ce68
         self.tcorr_before = tcorr_before
         self.tcorr_after = tcorr_after
         self.over_all_land_fraction = over_all_land_fraction
@@ -46,20 +52,20 @@ class L1ctWriteStandardMetadata(WriteStandardMetadata):
             self.data["AutomaticQualityFlagExplanation"] = (
                 "Image matching was not successful correcting scene ephemeris/attitude. Ephemeris/attitude may have significant errors."
             )
-        self.set("GeolocationAccuracyQA", self.geolocation_accuracy_qa)
-        self.set(
-            "GeolocationAccuracyQAExplanation",
-            """Best - Image matching was performed for this scene, expect 
+        self.data["CRS"] = "fake"
+        self.data["SceneBoundaryLatLonWKT"] = "fake"
+        self.data["GeolocationAccuracyQA"] = self.geolocation_accuracy_qa
+        self.data["GeolocationAccuracyQAExplanation"] = """Best - Image matching was performed for this scene, expect 
        good geolocation accuracy.
 Good - Image matching was performed on a nearby scene, and correction 
        has been interpolated/extrapolated. Expect good geolocation accuracy.
 Suspect - Matched somewhere in the orbit. Expect better geolocation 
        than orbits w/o image matching, but may still have large errors.
 Poor - No matches in the orbit. Expect largest geolocation errors.
-""",
-        )
-        self.data["CRS"] = "fake"
-        self.data["SceneBoundaryLatLonWKT"] = "fake"
+"""
+        self.data["GeolocationNumberTiepoint"] = self.geolocation_number_tiepoint
+        self.data["GeolocationDeltaTimeCorrection"] = self.geolocation_delta_time_correction
+        self.data["GeolocationTiepointCE68"] = self.geolocation_tiepoint_ce68
 
     @property
     def mlist(self) -> list[tuple[str, str]]:
@@ -85,6 +91,9 @@ Poor - No matches in the orbit. Expect largest geolocation errors.
             pg["PGEBuildIDVersionHistory"] = str(self.pge_build_id_version_history)
         pg["OrbitCorrectionPerformed"] = "True" if self.orbit_corrected else "False"
         pg["GeolocationAccuracyQA"] = self.geolocation_accuracy_qa
+        pg["GeolocationNumberTiepoint"] = self.geolocation_number_tiepoint
+        pg["GeolocationDeltaTimeCorrection"] = self.geolocation_delta_time_correction
+        pg["GeolocationTiepointCE68"] = self.geolocation_tiepoint_ce68
         pg["DeltaTimeOfCorrectionBeforeScene"] = float(self.tcorr_before)
         pg["DeltaTimeOfCorrectionAfterScene"] = float(self.tcorr_after)
         txt = """Best - Image matching was performed for this scene, expect 

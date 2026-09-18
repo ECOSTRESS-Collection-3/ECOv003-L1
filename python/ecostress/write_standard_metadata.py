@@ -67,6 +67,8 @@ class WriteStandardMetadata(object):
                 self.data[k] = None
             elif typ == "Int32":
                 self.data[k] = np.int32(0)
+            elif typ == "Int32orNone":
+                self.data[k] = None
             elif typ == "Float32":
                 self.data[k] = np.float32(0.0)
             else:
@@ -176,6 +178,9 @@ class WriteStandardMetadata(object):
             ("CloudCover", "Float64orNone"),
             ("GeolocationAccuracyQA", "StringorNone"),
             ("GeolocationAccuracyQAExplanation", "StringorNone"),
+            ("GeolocationNumberTiepoint", "Int32orNone"),
+            ("GeolocationDeltaTimeCorrection", "Float64orNone"),
+            ("GeolocationTiepointCE68", "Float64orNone"),
             ("DataFormatType", "String"),
             ("DayNightFlag", "String"),
             ("EastBoundingCoordinate", "Float64"),

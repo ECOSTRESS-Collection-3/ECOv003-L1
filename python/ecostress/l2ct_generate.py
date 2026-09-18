@@ -108,6 +108,11 @@ class L2ctGenerate:
             tcorr_before=l1g2["DeltaTimeOfCorrectionBeforeScene"][()],
             tcorr_after=l1g2["DeltaTimeOfCorrectionAfterScene"][()],
             geolocation_accuracy_qa=l1g2["GeolocationAccuracyQA"][()].decode("utf-8"),
+            geolocation_number_tiepoint=l1g2["GeolocationNumberTiepoint"][()],
+            geolocation_delta_time_correction=l1g2["GeolocationDeltaTimeCorrection"][
+                ()
+            ],
+            geolocation_tiepoint_ce68=l1g2["GeolocationTiepointCE68"][()],
             over_all_land_fraction=l1g2["OverAllLandFraction"][()],
             average_solar_zenith=l1g2["AverageSolarZenith"][()],
             qa_precentage_missing=l1g2["QAPercentMissingData"],

@@ -122,6 +122,15 @@ class L1cgGenerate:
             geolocation_accuracy_qa=fin_geo["L1GEOMetadata/GeolocationAccuracyQA"][
                 ()
             ].decode("utf-8"),
+            geolocation_number_tiepoint=fin_geo[
+                "L1GEOMetadata/GeolocationNumberTiepoint"
+            ][()],
+            geolocation_delta_time_correction=fin_geo[
+                "L1GEOMetadata/GeolocationDeltaTimeCorrection"
+            ][()],
+            geolocation_tiepoint_ce68=fin_geo["L1GEOMetadata/GeolocationTiepointCE68"][
+                ()
+            ],
             over_all_land_fraction=fin_geo["L1GEOMetadata/OverAllLandFraction"][()],
             average_solar_zenith=fin_geo["L1GEOMetadata/AverageSolarZenith"][()],
             qa_precentage_missing=fin_rad["L1B_RADMetadata/QAPercentMissingData"],
