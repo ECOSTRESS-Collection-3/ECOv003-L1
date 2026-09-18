@@ -55,7 +55,9 @@ class L1ctWriteStandardMetadata(WriteStandardMetadata):
         self.data["CRS"] = "fake"
         self.data["SceneBoundaryLatLonWKT"] = "fake"
         self.data["GeolocationAccuracyQA"] = self.geolocation_accuracy_qa
-        self.data["GeolocationAccuracyQAExplanation"] = """Best - Image matching was performed for this scene, expect 
+        self.data[
+            "GeolocationAccuracyQAExplanation"
+        ] = """Best - Image matching was performed for this scene, expect 
        good geolocation accuracy.
 Good - Image matching was performed on a nearby scene, and correction 
        has been interpolated/extrapolated. Expect good geolocation accuracy.
@@ -64,7 +66,9 @@ Suspect - Matched somewhere in the orbit. Expect better geolocation
 Poor - No matches in the orbit. Expect largest geolocation errors.
 """
         self.data["GeolocationNumberTiepoint"] = self.geolocation_number_tiepoint
-        self.data["GeolocationDeltaTimeCorrection"] = self.geolocation_delta_time_correction
+        self.data["GeolocationDeltaTimeCorrection"] = (
+            self.geolocation_delta_time_correction
+        )
         self.data["GeolocationTiepointCE68"] = self.geolocation_tiepoint_ce68
 
     @property

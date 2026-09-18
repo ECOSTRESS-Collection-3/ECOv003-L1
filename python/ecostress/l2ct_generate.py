@@ -108,11 +108,17 @@ class L2ctGenerate:
             tcorr_before=l1g2["DeltaTimeOfCorrectionBeforeScene"][()],
             tcorr_after=l1g2["DeltaTimeOfCorrectionAfterScene"][()],
             geolocation_accuracy_qa=l1g2["GeolocationAccuracyQA"][()].decode("utf-8"),
-            geolocation_number_tiepoint=l1g2["GeolocationNumberTiepoint"][()],
-            geolocation_delta_time_correction=l1g2["GeolocationDeltaTimeCorrection"][
-                ()
-            ],
-            geolocation_tiepoint_ce68=l1g2["GeolocationTiepointCE68"][()],
+            # Older files don't have these newer fields, so fall back to defaults if
+            # needed
+            geolocation_number_tiepoint=l1g2["GeolocationNumberTiepoint"][()]
+            if "GeolocationNumberTiepoint" in l1g2
+            else -9999,
+            geolocation_delta_time_correction=l1g2["GeolocationDeltaTimeCorrection"][()]
+            if "GeolocationDeltaTimeCorrection" in l1g2
+            else -9999.0,
+            geolocation_tiepoint_ce68=l1g2["GeolocationTiepointCE68"][()]
+            if "GeolocationTiepointCE68" in l1g2
+            else -9999.0,
             over_all_land_fraction=l1g2["OverAllLandFraction"][()],
             average_solar_zenith=l1g2["AverageSolarZenith"][()],
             qa_precentage_missing=l1g2["QAPercentMissingData"],
@@ -732,23 +738,38 @@ class L2ctGenerate:
             lrange,
             srange,
         )
-        # SST
-        logger.info(f"Doing SST - {shp['tile_id']}")
+        # WST
+        logger.info(f"Doing WST - {shp['tile_id']}")
         if self.diagnostic:
             ras = geocal.GdalRasterImage(
                 f'HDF5:"{self.l2cg_lste}"://HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data_Fields/SST'
             )
             ras.map_info = ras_map_info
             self.rasm = geocal.MapReprojectedImage(ras, mi)
-        self.process_field(
-            "SST",
-            dirname,
-            mi,
-            res,
-            fin_l2cg_lste["/HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data Fields/SST"],
-            lrange,
-            srange,
-        )
+        # The name of the field changed from SST to WST. Check for the new name, but
+        # if not found fall back to the old name for older files
+        if "SST" in fin_l2cg_lste["/HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data Fields"]:
+            # Old name
+            self.process_field(
+                "WST",
+                dirname,
+                mi,
+                res,
+                fin_l2cg_lste["/HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data Fields/SST"],
+                lrange,
+                srange,
+            )
+        else:
+            # New name
+            self.process_field(
+                "WST",
+                dirname,
+                mi,
+                res,
+                fin_l2cg_lste["/HDFEOS/GRIDS/ECO_L2G_LSTE_70m/Data Fields/WST"],
+                lrange,
+                srange,
+            )
 
         # QC
         logger.info(f"Doing QC - {shp['tile_id']}")

@@ -31,17 +31,17 @@ def test_l2ct_generate(isolated_dir, test_data_latest, lwm):
 
 
 @pytest.mark.long_test
-def test_l2ct_hyun(isolated_dir, test_data_latest, lwm):
+def test_l2ct_generate_new(isolated_dir, test_data_latest, lwm):
     l1_osp_dir = test_data_latest / "l1_osp_dir"
-    l1cg = (
-        Path("/home/smyth/Local/HyunTestCase")
-        / "ECOv003_L1CG_RAD_15801_004_20210419T213526_01.h5"
-    )
+    # Note this doesn't actually match the l2cg_lste. We don't happen to have access to
+    # a matching L1CG. For testing, just pretend like these go together so we can
+    # test proper reading of the LSTE data with the new field name.
+    l1cg = test_data_latest / "ECOv003_L1CG_RAD_03129_002_20190124T012016_0800_01.h5"
     l2cg_lste = (
-        Path("/home/smyth/Local/HyunTestCase")
-        / "ECOv003_L2G_LSTE_15801_004_20210419T213526_01.h5"
+        Path("/home/smyth/Local/ecostress-build/build-pixi")
+        / "ECOv003_L2G_LSTE_15801_001_20210419T213114_97.h5"
     )
-    out_pattern = "ECOv003_L2T_LSTE_15801_004_TILE_20210419T213526_01"
+    out_pattern = "ECOv003_L2T_LSTE_15801_001_TILE_001_20210419T213114_0100_01"
     g = L2ctGenerate(
         l1cg,
         l2cg_lste,
@@ -50,42 +50,8 @@ def test_l2ct_hyun(isolated_dir, test_data_latest, lwm):
         [
             "fake_input.h5",
         ],
-        # tile_list = ["53SKV",]
     )
     if True:
-        pool = Pool(5)
-    else:
-        pool = None
-    g.run(pool=pool)
-    if pool is not None:
-        pool.close()
-
-
-@pytest.mark.long_test
-def test_l2ct_hyun2(isolated_dir, test_data_latest, lwm):
-    l1_osp_dir = test_data_latest / "l1_osp_dir"
-    l1cg = (
-        Path("/home/smyth/Local/HyunTestCase")
-        / "ECOv003_L1CG_RAD_15801_008_20210419T213953_01.h5"
-    )
-    l2cg_lste = (
-        Path("/home/smyth/Local/HyunTestCase")
-        / "ECOv003_L2G_LSTE_15801_008_20210419T213953_01.h5"
-    )
-    out_pattern = "ECOv003_L2T_LSTE_15801_008_TILE_20210419T213953_01"
-    g = L2ctGenerate(
-        l1cg,
-        l2cg_lste,
-        l1_osp_dir,
-        out_pattern,
-        [
-            "fake_input.h5",
-        ],
-        tile_list=[
-            "55TFL",
-        ],
-    )
-    if False:
         pool = Pool(5)
     else:
         pool = None

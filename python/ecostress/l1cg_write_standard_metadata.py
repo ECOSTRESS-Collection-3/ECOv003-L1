@@ -53,7 +53,9 @@ class L1cgWriteStandardMetadata(WriteStandardMetadata):
         self.data["CRS"] = "+proj=longlat +datum=WGS84 +no_defs +type=crs"
         self.data["SceneBoundaryLatLonWKT"] = "fake"
         self.data["GeolocationAccuracyQA"] = self.geolocation_accuracy_qa
-        self.data["GeolocationAccuracyQAExplanation"] = """Best - Image matching was performed for this scene, expect 
+        self.data[
+            "GeolocationAccuracyQAExplanation"
+        ] = """Best - Image matching was performed for this scene, expect 
        good geolocation accuracy.
 Good - Image matching was performed on a nearby scene, and correction 
        has been interpolated/extrapolated. Expect good geolocation accuracy.
@@ -62,7 +64,9 @@ Suspect - Matched somewhere in the orbit. Expect better geolocation
 Poor - No matches in the orbit. Expect largest geolocation errors.
 """
         self.data["GeolocationNumberTiepoint"] = self.geolocation_number_tiepoint
-        self.data["GeolocationDeltaTimeCorrection"] = self.geolocation_delta_time_correction
+        self.data["GeolocationDeltaTimeCorrection"] = (
+            self.geolocation_delta_time_correction
+        )
         self.data["GeolocationTiepointCE68"] = self.geolocation_tiepoint_ce68
 
     @property
@@ -77,7 +81,6 @@ Poor - No matches in the orbit. Expect largest geolocation errors.
         super().write()
         if self.hdf_file is None:
             raise RuntimeError("Need hdf_file to call write")
-        g = self.hdf_file["/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/StandardMetadata"]
         pg = self.hdf_file[
             f"/HDFEOS/ADDITIONAL/FILE_ATTRIBUTES/{self.product_specfic_group}"
         ]
