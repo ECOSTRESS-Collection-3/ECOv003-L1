@@ -1,4 +1,6 @@
+# Rammy prefers unique docker deliveries, so add a RC tag to the delivery version.
 ECOSTRESS_VERSION=8.03
+ECOSTRESS_DELIVERY_VERSION=8.03_rc3
 DOCKER_BASE_VERSION=20260825
 AFIDS_CONDA_PACKAGE=/home/smyth/Local/afids-conda-package
 ECOSTRESS_SOURCE=/home/smyth/Local/ecostress-level1
@@ -95,6 +97,6 @@ ecostress-image-delivery:
 	@echo "this is the normal LDAP username and password we use for"
 	@echo "many JPL logins. The username should already be in the"
 	@echo "right group to have write privileges to the artifactory"
-	docker tag ecostress/ecostress-level1:$(ECOSTRESS_VERSION) cae-artifactory.jpl.nasa.gov:16001/gov/nasa/jpl/ecostress/sds/pge/pge-eco-level-1:$(ECOSTRESS_VERSION)
+	docker tag ecostress/ecostress-level1:$(ECOSTRESS_VERSION) cae-artifactory.jpl.nasa.gov:16001/gov/nasa/jpl/ecostress/sds/pge/pge-eco-level-1:$(ECOSTRESS_DELIVERY_VERSION)
 	docker login cae-artifactory.jpl.nasa.gov:16001
-	docker push cae-artifactory.jpl.nasa.gov:16001/gov/nasa/jpl/ecostress/sds/pge/pge-eco-level-1:$(ECOSTRESS_VERSION)
+	docker push cae-artifactory.jpl.nasa.gov:16001/gov/nasa/jpl/ecostress/sds/pge/pge-eco-level-1:$(ECOSTRESS_DELIVERY_VERSION)
