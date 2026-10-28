@@ -620,9 +620,11 @@ class L1bGeoProcess:
                 self.tcorr_after,
                 self.geo_qa,
             )
+            # tp_stat is a float array, but the number of tiepoints is an
+            # integer. Convert so we write a consistent type to the output.
             self.geo_number_tiepoint = self.qa_file.tp_stat[pass_number][
                 :, self.qa_file.NUM_TIEPONT_INDEX
-            ]
+            ].astype(int)
             self.geo_tiepoint_ce68 = self.qa_file.tp_stat[pass_number][
                 :, self.qa_file.TIEPOINT_CE68_INDEX
             ]

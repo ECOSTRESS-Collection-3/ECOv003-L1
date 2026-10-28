@@ -95,9 +95,14 @@ Poor - No matches in the orbit. Expect largest geolocation errors.
             pg["PGEBuildIDVersionHistory"] = str(self.pge_build_id_version_history)
         pg["OrbitCorrectionPerformed"] = "True" if self.orbit_corrected else "False"
         pg["GeolocationAccuracyQA"] = self.geolocation_accuracy_qa
-        pg["GeolocationNumberTiepoint"] = self.geolocation_number_tiepoint
-        pg["GeolocationDeltaTimeCorrection"] = self.geolocation_delta_time_correction
-        pg["GeolocationTiepointCE68"] = self.geolocation_tiepoint_ce68
+        # These may be numpy types read from the L1B_GEO file (e.g., np.int64
+        # when there are no tiepoints), which json can't serialize. Convert to
+        # python types.
+        pg["GeolocationNumberTiepoint"] = int(self.geolocation_number_tiepoint)
+        pg["GeolocationDeltaTimeCorrection"] = float(
+            self.geolocation_delta_time_correction
+        )
+        pg["GeolocationTiepointCE68"] = float(self.geolocation_tiepoint_ce68)
         pg["DeltaTimeOfCorrectionBeforeScene"] = float(self.tcorr_before)
         pg["DeltaTimeOfCorrectionAfterScene"] = float(self.tcorr_after)
         txt = """Best - Image matching was performed for this scene, expect 
